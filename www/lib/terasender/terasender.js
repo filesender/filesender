@@ -30,7 +30,7 @@ window.filesender.terasender = {
      * Security token
      */
     security_token: null,
-    
+
     /**
      * Send command to worker
      * 
@@ -102,14 +102,14 @@ window.filesender.terasender = {
         
         if(!file.endpoint) file.endpoint = this.transfer.authenticatedEndpoint(filesender.config.terasender_upload_endpoint.replace('{file_id}', file.id), file);
         
-	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=0; //missing from file
+	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=file.uploaded; //missing from file
         var job = {
             chunk: {
                 start: file.uploaded,
                 end: Math.min(file.uploaded + filesender.config.upload_chunk_size, file.size) //MD last chunk was too big
             },
-	    encryption: this.transfer.encryption, //MD
-	    encryption_password: this.transfer.encryption_password, //MD
+	    encryption: this.transfer.encryption,
+	    encryption_details: this.transfer.getEncryptionMetadata(),
             file: {
                 id: file.id,
                 name: file.name,
@@ -140,7 +140,8 @@ window.filesender.terasender = {
      */
     giveJob: function(worker_id, workerinterface) {
         if(this.jobAllocationLocked || (this.status == 'paused')) {
-            this.log('Asking worker:' + worker_id + ' to come back later');
+            this.log('Asking worker:' + worker_id + ' to come back later' +
+                     ' status ' + this.status + ' jobAllocationLocked ' + this.jobAllocationLocked );
             this.sendCommand(workerinterface, 'comeBackLater');
             return false;
         }
@@ -203,6 +204,16 @@ window.filesender.terasender = {
             filesender.ui.error(error);
         }
     },
+
+    ensureBareWorkerID: function(wid) {
+        if( wid.includes('worker:')) {
+            wid = wid.substr( 'worker:'.length );
+        }
+        return wid;
+    },
+    
+    
+    
     
     /**
      * Evaluate progress and report to transfer
@@ -223,10 +234,16 @@ window.filesender.terasender = {
             this.stop();
             return;
         }
-        
+
         var workers_on_same_file = false;
         var min_offset = file.uploaded;
         var fine_progress = 0;
+
+        var uploading_count = 0;
+        for(var i=0; i<this.workers.length; i++) {
+            if(this.workers[i].status.match(/^(uploading)$/)) 
+                uploading_count++;
+        }
         
         for(var i=0; i<this.workers.length; i++) {
             if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
@@ -276,7 +293,24 @@ window.filesender.terasender = {
                     break;
                 }
 
-        if(chunks_pending || workers_uploading) return;
+            if(chunks_pending || workers_uploading) return;
+            
+            //
+            // If the final chunks of the final two files are
+            // uploading it is possible that we can get here for the
+            // second last file and that would present a race
+            // condition between this reportComplete() whih itself
+            // calls transferComplete() which is not the case until we
+            // are finishing the last chunk of the last file.
+            //
+            // NOTE that we can not simply place the uploading_count
+            // test above and set 'var complete = false' because
+            // reportProgress() uses the callable complete as a
+            // boolean to indicate if we are on the last chunk of the
+            // file, which we are, but maybe not the last file as
+            // well.
+            //
+            if( uploading_count > 1 ) return;
           
             // Notify all done
             t.transfer.reportComplete();
@@ -284,6 +318,44 @@ window.filesender.terasender = {
         } : false;
         
         this.transfer.reportProgress(file, complete);
+    },
+
+    /**
+     * Look through all the workers for the file that job is working
+     * on and set the transfer.files starting upload offsets so that
+     * chunks that are currently in flight will always be resent on 
+     * a resume. 
+     * 
+     * Note that the worker that has failed 'job' might not
+     * have the lowest file offset of the currently running workers.
+     * So you can not simply use job.chunk.start as the minimal offset.
+     */
+    setMinUploadedOffsetFromActiveWorkers: function( job ) {
+
+        var files = this.transfer.files;
+        var min_offset = -1;
+        for(var i=0; i<files.length; i++) {
+            if(files[i].id == job.file.id) {
+                min_offset = files[i].uploaded;
+            }
+        }
+                
+        for(var i=0; i<this.workers.length; i++) {
+            if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
+            
+            if(this.workers[i].file_id == job.file.id) {
+                min_offset = Math.min(min_offset, this.workers[i].offset);
+            }
+        }
+
+        var min_uploaded = Math.max(0, min_offset - filesender.config.upload_chunk_size);
+                
+        for(var i=0; i<files.length; i++) {
+            if(files[i].id == job.file.id) {
+                this.transfer.files[i].min_uploaded_offset = min_uploaded;
+                this.transfer.files[i].uploaded = files[i].min_uploaded_offset;
+            }
+        }
     },
     
     /**
@@ -302,6 +374,7 @@ window.filesender.terasender = {
         switch(command) {
             case 'jobProgress' :
                 this.log('Worker job progressed', 'worker:' + worker_id);
+                this.transfer.recordUploadProgressInWatchdog('worker:' + worker_id,data.fine_progress);
                 this.evalProgress(worker_id, data);
                 break;
                 
@@ -313,8 +386,22 @@ window.filesender.terasender = {
                 
             case 'requestJob' :
                 var gave = this.giveJob(worker_id, workerinterface);
-                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id);
+                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id, gave.file);
                 break;
+
+            // This happens after the worker has already
+            // tried many times to upload the chunk
+            case 'jobFailed':
+            {
+                var workerUploaded = data.chunk.start;
+                var job = data;
+
+                this.setMinUploadedOffsetFromActiveWorkers( job );
+                
+                this.error({message: 'failed_after_many_retries offset ' + data.chunk.start + ' fileid ' + data.file.id });
+                this.stop();
+                
+            } break;
             
             case 'securityTokenChanged' :
                 this.security_token = data; // Will be sent to workers along with next jobs
@@ -362,7 +449,7 @@ window.filesender.terasender = {
         this.sendCommand(workerinterface, 'start', id);
         
         this.log('Worker ' + id + ' created');
-        
+
         this.workers.push(workerinterface);
     },
     
@@ -387,7 +474,7 @@ window.filesender.terasender = {
         this.workers = [];
         
         this.transfer = transfer;
-        
+
         // Safety
         var wcnt = parseInt(filesender.config.terasender_worker_count);
         if(isNaN(wcnt) || wcnt < 1 || wcnt > 30)
@@ -406,13 +493,20 @@ window.filesender.terasender = {
         for(var i=0; i<this.workers.length; i++)
             this.workers[i].terminate();
         
-        for(var i=0; i<this.transfer.files.length; i++)
+        for(var i=0; i<this.transfer.files.length; i++) {
             this.transfer.files[i].uploaded = this.transfer.files[i].min_uploaded_offset;
+            if( isNaN(this.transfer.files[i].uploaded))
+                this.transfer.files[i].uploaded = 0;
+        }
         
         this.workers = [];
         
         for(i=0; i<filesender.config.terasender_worker_count; i++)
             this.createWorker();
+
+        var ts = this;
+        this.status = 'running';
+        
     },
     
     /**

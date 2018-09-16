@@ -142,22 +142,24 @@ SELECT
         ELSE 'Unknown'
     END AS "browser",
     AVG(CASE WHEN time_taken > 0 THEN size/time_taken ELSE 0 END) as speed,
-    AVG(CASE WHEN size>1073741824 THEN size/time_taken ELSE NULL END) as gspeed,
+    AVG(CASE WHEN time_taken > 0 AND size>1073741824 THEN size/time_taken ELSE NULL END) as gspeed,
     AVG(size) as avgsize,
     MIN(size) as minsize,
     MAX(size) as maxsize,
     SUM(size) as transfered,
     COUNT(ID) as count,
     MIN($createdTS) as firsttransfer,
-    COUNT(ID)/$createdDD as countperday
+    (CASE WHEN $createdDD > 0 THEN COUNT(ID)/$createdDD ELSE NULL END) as countperday
 FROM StatLogs
 WHERE event='file_uploaded'
 GROUP BY "encryption","os","browser"
 ORDER BY COUNT(ID) DESC, maxsize DESC
 EOF;
+
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
+
 $transfered=0;
 $transfers=0;
 $now=time();

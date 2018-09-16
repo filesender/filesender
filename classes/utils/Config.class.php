@@ -127,7 +127,17 @@ class Config {
 
 
         self::merge(self::$parameters, $config);
+
+
+        // load password file if it is there
+        $pass_config_file = FILESENDER_BASE.'/config/config-passwords.php';
+        if (file_exists($pass_config_file)) {
         
+            $config = array();
+            include_once($pass_config_file);
+            self::merge(self::$parameters, $config);
+        }
+
         // Load virtualhost config if used
         if ($virtualhost === null)
             $virtualhost = self::get('virtualhost');
@@ -145,7 +155,22 @@ class Config {
             
             self::merge(self::$parameters, $config);
         }
+
+        // ensure mandatory config settings file exists
+        $mandatory_config_file = FILESENDER_BASE.'/includes/ConfigMandatorySettings.php';
+        if (!file_exists($mandatory_config_file)) {
+            throw new ConfigBadParameterException('Mandatory config settings file is missing. '
+                                                + 'Please recheck your filesender php code is all installed. '
+                                                + 'Looking for ' . $mandatory_config_file );
+        }
         
+        // load mandatory config settings
+        $config = array();
+        include_once($mandatory_config_file);
+        self::merge(self::$parameters, $config);
+        
+
+
         // Load config overrides if any
         $overrides_cfg = self::get('config_overrides');
         if ($overrides_cfg) {
@@ -169,6 +194,9 @@ class Config {
                 self::$override['parameters'][$key] = $dfn;
             }
         }
+
+        // shorter access again for checks
+        $config = self::$parameters;
         
         // Special parameter checks and sets
         if( self::get('encryption_enabled')) {
@@ -182,6 +210,13 @@ class Config {
         if( Config::get('storage_type') == 'filesystemChunked' ) {
             if( self::get('upload_chunk_size') != self::get('download_chunk_size') ) {
                 throw new ConfigBadParameterException('When storing files as chunks then upload_chunk_size must be the same as download_chunk_size');
+            }
+        }   
+
+        // see the error message for info
+        if( Utilities::startsWith(Config::get('storage_type'),'Cloud' )) {
+            if( self::get('upload_chunk_size') != self::get('download_chunk_size') ) {
+                throw new ConfigBadParameterException('When storing files using the Cloud storage the upload_chunk_size must be the same as download_chunk_size');
             }
         }   
 
@@ -221,8 +256,16 @@ class Config {
             'Maybe you have set $config["log_facilities"] = array("type" => "file",...) instead of $config["log_facilities"] = array(array("type" => "file",...))' );
         }
 
+        if(!self::get('encryption_generated_password_length')) {
+            self::$parameters['encryption_generated_password_length'] = self::get('encryption_min_password_length');
+        }
+        if(self::get('encryption_min_password_length') > self::get('encryption_generated_password_length')) {
+            throw new ConfigBadParameterException('Generated password length must be equal or greater than encryption_min_password_length');
+        }
+
         // verify classes are happy
         Guest::validateConfig();
+        ClientLog::validateConfig();
         
     }
             

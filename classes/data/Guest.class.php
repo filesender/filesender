@@ -47,9 +47,9 @@ class Guest extends DBObject {
             'primary' => true,
             'autoinc' => true
         ),
-        'user_id' => array(
-            'type' => 'string',
-            'size' => 255
+        'userid' => array(
+            'type' => 'uint',
+            'size' => 'big'
         ),
         'user_email' => array(
             'type' => 'string',
@@ -108,21 +108,37 @@ class Guest extends DBObject {
             'null' => true
         )
     );
-    
+
+    public static function getViewMap() {
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_age($dbtype,'expires')
+                        . DBView::columnDefinition_age($dbtype,'last_activity','last_activity_days_ago')
+                        . DBView::columnDefinition_age($dbtype,'last_reminder','last_reminder_days_ago')
+                        . ' , expires < now() as expired '
+                        . " , status = 'available' as is_available "
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        
+    }
+
     /**
      * Set selectors
      */
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const EXPIRED = "expires < :date ORDER BY expires ASC";
-    const FROM_USER = "user_id = :user_id AND expires > :date ORDER BY created DESC";
-    const FROM_USER_AVAILABLE = "user_id = :user_id AND expires > :date AND status = 'available' ORDER BY created DESC";
+    const FROM_USER = "userid = :userid AND expires > :date ORDER BY created DESC";
+    const FROM_USER_AVAILABLE = "userid = :userid AND expires > :date AND status = 'available' ORDER BY created DESC";
     
     /**
      * Properties
      */
     protected $id = null;
-    protected $user_id = null;
     protected $user_email = null;
+    protected $userid = null;
     protected $token = null;
     protected $email = null;
     protected $transfer_count = 0;
@@ -212,7 +228,7 @@ class Guest extends DBObject {
                 throw new BadEmailException($from);
         }
         
-        $guest->user_id = Auth::user()->id;
+        $guest->userid = Auth::user()->id;
         $guest->__set('user_email', $from);
         $guest->__set('email', $recipient); // Throws
         
@@ -285,7 +301,7 @@ class Guest extends DBObject {
     public static function fromUser($user) {
         if($user instanceof User) $user = $user->id;
         
-        return self::all(self::FROM_USER, array(':user_id' => $user, ':date' => date('Y-m-d')));
+        return self::all(self::FROM_USER, array(':userid' => $user, ':date' => date('Y-m-d')));
     }
 
     /**
@@ -298,7 +314,7 @@ class Guest extends DBObject {
     public static function fromUserAvailable($user) {
         if($user instanceof User) $user = $user->id;
         
-        return self::all(self::FROM_USER_AVAILABLE, array(':user_id' => $user, ':date' => date('Y-m-d')));
+        return self::all(self::FROM_USER_AVAILABLE, array(':userid' => $user, ':date' => date('Y-m-d')));
     }
     
     /**
@@ -329,6 +345,17 @@ class Guest extends DBObject {
     public function isExpired() {
         $today = (24 * 3600) * floor(time() / (24 * 3600));
         return $this->expires < $today;
+    }
+
+    /**
+     * Tells wether the guest has expired before a given number of days 
+     * from now
+     * 
+     * @return bool
+     */
+    public function isExpiredDaysAgo( $days ) {
+        $d = (24 * 3600) * floor(time() / (24 * 3600) - ($days * (24*3600)));
+        return $this->expires < $d;
     }
     
     /**
@@ -517,15 +544,21 @@ class Guest extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'user_id', 'user_email', 'token', 'email', 'transfer_count',
-            'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity'
+            'id', 'user_email', 'token', 'email', 'transfer_count',
+            'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity', 'userid'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
-            $user = User::fromId($this->user_id);
+            $user = User::fromId($this->userid);
             $user->email_addresses = $this->user_email;
             return $user;
         }
+
+        if($property == 'saml_user_identification_uid') {
+            $user = User::fromId($this->userid);
+            return $user->saml_user_identification_uid;
+        }
+        
         
         if($property == 'upload_link') {
             return Config::get('site_url').'?s=upload&vid='.$this->token;

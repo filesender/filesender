@@ -240,6 +240,11 @@ div.exception .details {
     margin: 0 0.25em 0.5em 0.25em;
 }
 
+.boxnoframe {
+    padding: 0.5em;
+    margin: 0 0.25em 0.5em 0.25em;
+}
+
 .clickable, [data-action] {
     cursor: pointer;
 }
@@ -524,8 +529,8 @@ table.list .date {
     overflow-y: scroll;
 }
 
-#upload_form .files .file,
-#upload_form .required_files .file {
+.upload_form_regular .files .file,
+.upload_form_regular .required_files .file {
     position: relative;
     margin: 0.2em;
     padding: 0.5em;
@@ -535,6 +540,18 @@ table.list .date {
     background-color: #dedede;
     line-height: 1.8em;
     /*height: 1.8em;*/
+}
+
+.upload_form_stats .files .file,
+.upload_form_stats .required_files .file {
+    position: relative;
+    margin: 0.2em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #dedede;
+    line-height: 5.4em;
 }
 
 #upload_form .required_files .file {
@@ -618,6 +635,69 @@ table.list .date {
     text-align: center;
 }
 
+#upload_form .files_uploadlogtop {
+    border: 1px dashed #666;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.5em 0;
+    background-color: #FFF;
+}
+
+#upload_form .uploadlogheader {
+    font-weight: bold;
+    background-color: #FFF;
+    text-align: center;
+    width: 100%;
+}
+
+#upload_form .files_uploadlogtop .uploadlogbox {
+    font-size: 1.2em;
+    color: #666;
+    font-weight: bold;
+    padding: 0.3em;
+    padding-bottom: 0.4em;
+    height: 5em;
+    text-align: center;
+    max-height: 300em;
+    overflow-y: scroll;   
+}
+
+
+.uploadlog .tpl {
+    display: none;
+}
+
+
+#upload_form .uploading_actions {
+    display: table;
+    width: 100%;
+    margin: 0.25em 1em 0 0;
+}
+
+#upload_form .uploading_actions div {
+    display: table-cell;
+    width: 33%;
+}
+
+#upload_form .uploading_actions .msg {
+    display: table-cell;
+    width: 66%;
+}
+
+.uploading_actions .auto_resume_timer_top {
+    background-color: #fcc;
+}
+
+.uploading_actions .auto_resume_timer_top .auto_resume_timer {
+    font-size: 1.0em;
+    font-weight: bold;
+}
+
+#upload_form .uploading_actions .stats {
+    display: table-cell;
+    width: 33%;
+}
+
 #upload_form .files_actions {
     display: table;
     width: 100%;
@@ -637,17 +717,33 @@ table.list .date {
     text-align: center;
 }
 
+#upload_form .files_actions .stats {
+    width: 33%;
+}
+
 #upload_form .files_actions .stats div {
     text-align: right;
-    font-size: 0.8em;
+    font-size: 1em;
     vertical-align: middle;
     width: 100%;
 }
 
 #upload_form .files_actions .stats .number_of_files,
-#upload_form .files_actions .stats .size,
-#upload_form .files_actions .stats .uploaded,
-#upload_form .files_actions .stats .average_speed {
+#upload_form .files_actions .stats .size
+{
+    display: none;
+}
+
+#upload_form .uploading_actions .stats div {
+    text-align: right;
+    font-size: 1em;
+    vertical-align: middle;
+    width: 100%;
+}
+
+#upload_form .uploading_actions .stats .uploaded,
+#upload_form .uploading_actions .stats .average_speed
+{
     display: none;
 }
 
@@ -986,13 +1082,16 @@ table.guests .guest .to .errors .details {
 
 /* Download page */
 
+.download_page {
+    margin: 1em;
+}
+
 .download_page .disclamer {
     margin: 1em;
 }
 
 .download_page .general div {
     margin-bottom: 0.8em;
-    font-size: 1.2em;
 }
 
 .download_page .files .select_all {
@@ -1014,9 +1113,6 @@ table.guests .guest .to .errors .details {
 .download_page .files .file {
     height: 2.5em;
     margin: 0.25em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
     padding: 1.2em 0.5em 0.5em 0.5em;
 }
 
@@ -1026,7 +1122,6 @@ table.guests .guest .to .errors .details {
 }
 
 .download_page .files .file .name {
-    font-size: 1.7em;
     text-overflow: ellipsis;
     width: 345px;
     display: inline-block;
@@ -1221,7 +1316,44 @@ table.guests .guest .to .errors .details {
 }
 
 
-/* Popups */
+/** Admin users */
+
+.admin_page .users_section .searching,
+.admin_page .users_section .no_results,
+.admin_page .users_section .client-logs,
+.admin_page .users_section .tpl {
+    display: none;
+}
+
+.admin_page .users_section .searching .searching,
+.admin_page .users_section .no_results .no_results {
+    display: table-row;
+    text-align: center;
+}
+
+.admin_page .users_section table {
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.admin_page .users_section th {
+    border: 1px solid silver;
+    text-align: center;
+    font-weight: bold;
+}
+
+.admin_page .users_section td {
+    border: 1px solid silver;
+}
+
+.admin_page .users_section .results th+th,
+.admin_page .users_section .results td+td,
+.admin_page .users_section .client-logs th:first-child,
+.admin_page .users_section .client-logs td:first-child {
+    width: 8rem;
+}
+
+    /* Popups */
 #dialog-help h4 {
     font-size: 1.2em;
     margin: 0.5em 1em;
@@ -1247,6 +1379,7 @@ table.guests .guest .to .errors .details {
 
 /* Encryption */
 #encryption_password_container,
+#encryption_password_container_too_short_message,
 #encryption_password_container_generate,
 #encryption_password_show_container,
 #encryption_description_container_disabled,
@@ -1255,6 +1388,10 @@ table.guests .guest .to .errors .details {
 #encryption_description_disabled_container,
 #encryption_description_container {
     display: none;
+}
+
+#encryption_password_container_too_short_message {
+    color: #f00;
 }
 
 table.paginator .pageprev0 {
@@ -1277,4 +1414,48 @@ table.paginator .pageheader {
 }
 table.paginator a {
     text-decoration: none;
+}
+
+.good {
+    background: #1cff1c;
+}
+
+.middle {
+    background: #ffff1c;
+}
+
+.slow {
+    background: #ff1c1c;
+}
+
+.bad {
+    background: #ff0000;
+}
+
+.uploadthread {
+    font-family: monospace;
+    font: "Lucida Console", Monaco, monospace;
+    font-size: 10px;
+    width: 4em;
+    height: 10px;
+}
+
+.workercrust {
+    width: 100%;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding: 3px;
+}
+
+.crust {
+       float:right;
+}
+
+div.not_displayed {
+    display: none;
+}
+
+.crypto_not_supported_message {
+    display: none;
 }

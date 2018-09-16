@@ -50,7 +50,7 @@ class RestEndpointFile extends RestEndpoint {
             'id' => $file->id,
             'transfer_id' => $file->transfer_id,
             'uid' => $file->uid,
-            'name' => $file->name,
+            'name' => $file->path,
             'size' => $file->size,
             'sha1' => $file->sha1
         );
@@ -140,7 +140,7 @@ class RestEndpointFile extends RestEndpoint {
         // Check parameters
         if(!$id) throw new RestMissingParameterException('file_id');
         if(!is_numeric($id)) throw new RestBadParameterException('file_id');
-        if(!in_array($mode, array('whole'))) throw new RestBadParameterException('mode');
+        if( 'whole' != $mode ) throw new RestBadParameterException('mode');
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
@@ -172,7 +172,7 @@ class RestEndpointFile extends RestEndpoint {
             throw new RestCannotAddDataToCompleteTransferException('File', $file->id);
         }
 
-        
+
         if($mode == 'whole') {
             // Process uploaded file, split into chunks and push to storage
             if(!array_key_exists('file', $_FILES)) throw new RestBadParameterException('file');
@@ -215,7 +215,23 @@ class RestEndpointFile extends RestEndpoint {
             'data' => $data
         );
     }
-    
+
+
+    /**
+     * This is a stub that can have code injected into it for the test suite.
+     * in production this is just an empty method.
+     */
+    public function put_perform_testsuite( $data, $file, $id = null, $mode = null, $offset = null) {
+
+       if( Utilities::isTrue( Config::get('testsuite_run_locally'))) {
+            include_once(FILESENDER_BASE . "/vendor/autoload.php");
+            include_once(FILESENDER_BASE . "/unittests/selenium_tests/SeleniumTest.php");
+            include_once(FILESENDER_BASE . "/unittests/selenium_tests/tests/UploadAutoResumeTest.php");
+            eval(Config::get("PUT_PERFORM_TESTSUITE"));
+       }
+    }
+
+
     /**
      * Add chunk to a file at offset
      * 
@@ -261,10 +277,13 @@ class RestEndpointFile extends RestEndpoint {
         
         // Get request data
         $data = $this->request->input;
-        
+
+        $this->put_perform_testsuite( $data, $file, $id, $mode, $offset );        
+
         if($mode == 'chunk') {
             // Need to put a chunk of data
-            
+
+
             // File's Transfer must be uploading or just started, fail otherwise
             if(
                 $file->transfer->status != TransferStatuses::STARTED &&

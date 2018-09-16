@@ -1,4 +1,4 @@
-<div class="box">
+<div class="boxnoframe">
     <h1>{tr:download_page}</h1>
     
     <?php
@@ -55,6 +55,9 @@
             {tr:download_disclamer_archive}
         <?php } ?>
     </div>
+    <div class="crypto_not_supported_message">
+         {tr:file_encryption_disabled}
+    </div>
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
         <div class="from">{tr:from} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></div>
@@ -90,10 +93,13 @@
         <div class="file" data-id="<?php echo $file->id ?>"
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
-             data-name="<?php echo $file->name; ?>">
+             data-name="<?php echo $file->path; ?>"
+             data-key-version="<?php echo $transfer->key_version; ?>"
+             data-key-salt="<?php echo $transfer->salt; ?>"
+        >
             
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
-            <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
+            <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
             <span class="download_decryption_disabled"><br/>{tr:file_encryption_disabled}</span>
             <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">
@@ -121,5 +127,9 @@
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
     </div>
 </div>
+
+    <div class="transfer_is_encrypted not_displayed">
+        <?php echo $isEncrypted ? 1 : 0;  ?>
+    </div>
 
 <script type="text/javascript" src="{path:js/download_page.js}"></script>

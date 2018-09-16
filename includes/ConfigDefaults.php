@@ -46,17 +46,21 @@ $default = array(
     'email_use_html' => true,   // By default, use HTML on mails
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
+    'upload_display_per_file_stats' => false, //
+    'upload_force_transfer_resume_forget_if_encrypted' => false, //
+    'upload_considered_too_slow_if_no_progress_for_seconds' => 0, // seconds
     'force_ssl' => true,
+    'client_ip_key' => 'REMOTE_ADDR',
     
     'auth_sp_type' => 'saml',  // Authentification type
     'auth_sp_set_idp_as_user_organization' => false,
     'auth_sp_saml_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_saml_name_attribute' => 'cn', // Get name attribute from authentification service
-    'auth_sp_saml_uid_attribute' => 'eduPersonTargetID', // Get uid attribute from authentification service
+    'auth_sp_saml_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     'auth_sp_saml_authentication_source' => 'default-sp', // Get path  attribute from authentification service
     'auth_sp_shibboleth_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
-    'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetId', // Get uid attribute from authentification service
+    'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
@@ -66,7 +70,7 @@ $default = array(
     'aup_default' => false,
     'aup_enabled' => false,
     'mac_unzip_name' => 'The Unarchiver',
-    'mac_unzip_link' => 'http://unarchiver.c3.cx/unarchiver',
+    'mac_unzip_link' => 'https://theunarchiver.com/',
     'ban_extension' => 'exe,bat',
     'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
     
@@ -77,6 +81,8 @@ $default = array(
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
     'transfer_recipients_lang_selector_enabled' => false,
+    'max_transfer_file_size' => 0,
+    'max_transfer_encrypted_file_size' => 0,
     
     'max_guest_recipients' => 50,
     
@@ -87,6 +93,9 @@ $default = array(
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,
+    'encryption_min_password_length' => 0,
+    'encryption_generated_password_length' => 30,
+    'encryption_generated_password_encoding' => 'base64',
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
     'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used
@@ -96,7 +105,11 @@ $default = array(
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
+    'terasender_worker_max_chunk_retries' => 20,    
     'stalling_detection' => false,
+
+    'testing_terasender_worker_uploadRequestChange_function_name' => '',
+
 
     // There are not so many options here, so they are listed
     // to make it easy for users to know what values might be interesting
@@ -107,6 +120,9 @@ $default = array(
     'storage_filesystem_df_command' => 'df {path}',
     'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
     'storage_filesystem_ignore_disk_full_check' => false,
+    'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
+
+    'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',
@@ -125,7 +141,7 @@ $default = array(
     
     'report_format' => ReportFormats::INLINE,
 
-    'valid_filename_regex' => '^[ \\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
+    'valid_filename_regex' => '^[ \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
     'message_can_not_contain_urls_regex' => '',
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
@@ -140,12 +156,8 @@ $default = array(
     'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
 
 
-    'user_page' => false,
-    //'user_page' => array(
-    //    'lang' => 'write',
-    //    'auth_secret' => 'read',
-    //    'created' => 'read'
-    //),
+    //'user_page' => false,
+    'user_page' => array('auth_secret'=>true,'id'=>true,'created'=>true),
 
     // Logging
     'log_facilities' => array(
@@ -161,7 +173,30 @@ $default = array(
     },
     
     'show_storage_statistics_in_admin' => true,
-    
+
+    'cloud_s3_region'   => 'us-east-1',
+    'cloud_s3_version'  => 'latest',
+    'cloud_s3_endpoint' => 'http://localhost:8000',
+    'cloud_s3_use_path_style_endpoint' => true,
+    'cloud_s3_key'    => 'accessKey1',
+    'cloud_s3_secret' => 'verySecretKey1',
+
+    'disable_directory_upload' => true,
+
+    'clientlogs_stashsize' => 10,
+    'clientlogs_lifetime' => 10,
+
+    'automatic_resume_number_of_retries' =>  10,
+    'automatic_resume_delay_to_resume'   => 360,
+
+    'guests_expired_lifetime' => 0,
+    'translatable_emails_lifetime' => 30,
+    'trackingevents_lifetime' => 90,
+
+    'user_quota' => 0,
+
+    'testsuite_run_locally' => false,
+
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,

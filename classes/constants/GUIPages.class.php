@@ -49,5 +49,6 @@ class GUIPages extends Enum {
     const EXCEPTION       = 'exception';
     const MAINTENANCE     = 'maintenance';
     const ABOUT           = 'about';
+    const PRIVACY         = 'privacy';
     const HELP            = 'help';
 }

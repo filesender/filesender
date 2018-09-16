@@ -165,22 +165,8 @@ class StorageFilesystemChunked extends StorageFilesystem {
      */
     public static function deleteFile(File $file) {
         $file_path = self::buildPath($file).$file->uid;
-        
-        if(!file_exists($file_path)) return;
-        
-        if(is_link($file_path)) {
-            if(!unlink($file_path))
-                throw new StorageFilesystemCannotDeleteException($file_path, $file);
-            return;
-        }
-        
-        $rm_command = Config::get('storage_filesystem_tree_deletion_command');
-        $cmd = str_replace('{path}', escapeshellarg($file_path), $rm_command);
-        exec($cmd, $out, $ret);
-        
-        if($ret)
-            throw new StorageFilesystemCannotDeleteException($file_path, $file);
-        
+
+        Filesystem::deleteTreeRecursive( $file_path, $file );
     }
     
     

@@ -520,6 +520,7 @@ class Mail {
         $source = $this->build();
 
         if( self::$TESTING_MODE_SO_DO_NOT_SEND_EMAIL ) {
+            // Logger::warn('testing mode so not really sending mail');
             return true;
         }        
         Logger::warn('Sending mail');

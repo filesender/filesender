@@ -1,93 +1,379 @@
 <?php
-
-/*
- * FileSender www.filesender.org
- * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * *	Redistributions of source code must retain the above copyright
- * 	notice, this list of conditions and the following disclaimer.
- * *	Redistributions in binary form must reproduce the above copyright
- * 	notice, this list of conditions and the following disclaimer in the
- * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
- * 	names of its contributors may be used to endorse or promote products
- * 	derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/* --------------------------------------------------
- * cs_CZ Language File
- * Contributed and maintained by Lubos Kopecky/CESNET
- * --------------------------------------------------
- */
-
-$lang['logon'] = 'Přihlásit';
-
-$lang['about'] = 'O programu';
-$lang['help'] = 'Pomoc';
-$lang['download'] = 'Stáhnout';
-
-$lang['files'] = 'Soubory';
-
-$lang['downloads'] = 'Staženo';
-
-
-$lang['to'] = 'Příjemce';
-$lang['from'] = 'Odesílatel';
-$lang['size'] = 'Velikost';
-$lang['created'] = 'Vytvořeno';
-$lang['subject'] = 'Předmět';
-$lang['message'] = 'Zpráva';
-
-$lang['showhide'] = 'Zobrazit/Skrýt';
-
+$lang['about'] = 'O systému';
+$lang['about_page'] = ' ';
+$lang['access_forbidden'] = 'Nemáte oprávnění přistupovat na tuto stránku';
+$lang['action'] = 'Provedená akce';
+$lang['actions'] = 'Akce';
+$lang['add_me_to_recipients'] = 'Zahrň mě jako příjemce';
+$lang['add_recipient'] = 'Přidat příjemce';
+$lang['admin_config_section'] = 'Konfigurace';
+$lang['admin_guests_section'] = 'Hosté';
+$lang['admin_page'] = 'Admin';
+$lang['admin_statistics_section'] = 'Statistiky';
+$lang['admin_transfers_section'] = 'Přenosy';
+$lang['advanced_settings'] = 'Pokročilá nastavení';
+$lang['anonymous'] = 'Anonymní';
+$lang['anonymous_details'] = 'Přímý odkaz';
+$lang['archive_download'] = 'Stáhnout jako .zip archiv';
+$lang['archive_message'] = 'Zvýrazněné soubory můžete stáhnout jako .zip archiv';
+$lang['auditlog'] = 'Protokol přenosů';
+$lang['auditlog_not_enabled'] = 'Protokolování není zapnuto';
+$lang['auditlog_not_found'] = 'Protokolový soubor nenalezen';
+$lang['auditlog_unknown_event'] = 'Neznámá událost protokolu';
+$lang['auth_authentication_not_found'] = 'Autentizační podsystém nenalezen';
+$lang['auth_remote_signature_check_failed'] = 'Chyba ověření vzdálené signatury';
+$lang['auth_remote_too_late'] = 'Interval pro autentizaci vypršel';
+$lang['auth_remote_unknown_application'] = 'Neznámá vzdálená aplikace';
+$lang['auth_remote_user_rejected'] = 'Uživatel neakceptoval vzdálenou autentizaci';
+$lang['auth_sp_authentication_not_found'] = 'Třída poskytovatele služby autentizace nenalezena';
+$lang['auth_sp_bad_attribute'] = 'Chyba v atributu poskytovatele služby autentizace';
+$lang['auth_sp_missing_attribute'] = 'Atribut služby autentizace nenalezen';
+$lang['auth_sp_missing_delegation_class'] = 'Nenalezena třída služby poskytovatele autentizace';
+$lang['auth_user_not_allowed'] = 'Nemáte oprávnění použít tuto aplikaci';
+$lang['authentication_required'] = 'Autentizace vyžadována';
+$lang['authentication_required_explanation'] = 'Pro provedení akce musíte být autentizován. Možná vypršelo vaše sezení, Klikněte na OK a autentizujte se znovu';
+$lang['available_transfers'] = 'Dostupně přenosy';
+$lang['average_speed'] = 'Průměrná rychlost';
+$lang['bad_email'] = 'Neplatný formát emailové adresy';
+$lang['bad_expire'] = 'Neplatné datum expirace';
+$lang['bad_guest_status'] = 'Neplatný stav hosta';
+$lang['bad_ip_format'] = 'Neplatný tvar IP adresy';
+$lang['bad_ip_format_ipv4'] = 'Neplatný tvar IPv4 adresy';
+$lang['bad_ip_format_ipv6'] = 'Neplatný tvar IPv6 adresy';
+$lang['bad_lang_code'] = 'Neplatný identifikátor jazyka';
+$lang['bad_size_format'] = 'Neplatný formát velikosti';
+$lang['bad_transfer_status'] = 'Neplatný stav přenosu';
+$lang['can_only_send_to_me'] = 'Smí poslat pouze mně';
 $lang['cancel'] = 'Zrušit';
+$lang['cannot_alter_closed_transfer'] = 'Nelze upravit ukončené přenosy';
+$lang['cannot_open_input_file'] = 'Nelze otevřít vstupní soubor';
+$lang['clear_all'] = 'Vyčistit vše';
+$lang['click_to_delete_file'] = 'Odstranit soubor';
+$lang['click_to_delete_recipient'] = 'Odstranit příjemce';
 $lang['close'] = 'Zavřít';
-$lang['ok'] = 'OK';
-$lang['send'] = 'Odeslat';
-$lang['delete'] = 'Smazat';
-$lang['yes'] = 'Ano';
-$lang['no'] = 'Ne';
-$lang['invalid_file'] = 'Chybný soubor';
-$lang['select_file'] = 'Vyberte soubor';
-
-
-$lang['email_separator_msg'] = 'Více emailových adres je možné oddělit pomocí , nebo ;';
-$lang['email_sent'] = 'Zpráva odeslána';
-$lang['expiry_date'] = 'Datum expirace';
-$lang['send_voucher'] = 'Odeslat pozvánku';
-
-
-$lang['optional'] = 'volitelné';
-
-
-$lang['dp_close_text'] = 'Hotovo';
-$lang['dp_prev_text'] = 'Předchozí';
-$lang['dp_next_text'] = 'Další';
+$lang['closed_transfers'] = 'Ukončené přenosy';
+$lang['config_bad_parameter'] = 'Neplatný konfigurační parametr';
+$lang['config_file_missing'] = 'Konfigurační soubor nenalezen';
+$lang['config_missing_parameter'] = 'Konfigurační parametr nenalezen';
+$lang['config_override_cannot_save'] = 'Nelze uložit novou konfiguraci';
+$lang['config_override_disabled'] = 'Přepsání konfigurace není přístupné';
+$lang['config_override_not_allowed'] = 'Přepsání konfigurace nepovoleno';
+$lang['config_override_validation_failed'] = 'Chyba při validaci přepisované konfigurace';
+$lang['config_overriden'] = 'Přepsaná konfigurace uložena';
+$lang['confirm_close_transfer'] = 'Opravdu chcete uzavřít tento přenos? Po uzavření přenosu nelze stahovat žádné soubory a přenos není možné znovu otevřít.';
+$lang['confirm_delete_file'] = 'Jste si jist, že chcete vymazat tento soubor? Po vymazání všech souborů bude přenos automaticky uzavřen. ';
+$lang['confirm_delete_guest'] = 'Opravdu chcete vymazat tohoto hosta? Příjemce již  nebude moci nahrát jakékoliv soubory. ';
+$lang['confirm_delete_recipient'] = 'Opravdu chcete vymazat tohoto příjemce? Po vymazání všech příjemců bude přenos automaticky uzavřen. ';
+$lang['confirm_dialog'] = 'Potvrzení';
+$lang['confirm_download_notify'] = 'Chcete být informováni e-mailem po dokončení stahování?';
+$lang['confirm_extend_expiry'] = 'Opravdu chcete prodloužit datum expirace o {days} dní?';
+$lang['confirm_leave_upload_page'] = 'Opravdu chcete opustit tuto stránku?';
+$lang['confirm_remind_guest'] = 'Opravdu chcete tomuto hostovi poslat upomínku?';
+$lang['confirm_remind_recipient'] = 'Opravdu chcete tomuto příjemci poslat upomínku?';
+$lang['confirm_remind_transfer'] = 'Opravdu chcete příjemcům tohoto přenosu poslat upomínku?';
+$lang['confirm_stop_upload'] = 'Opravdu chcete ukončit nahrávání a vymazat dosud nahraná data?';
+$lang['copy_text'] = 'Zkopírujte text uvedený níže';
+$lang['core_class_not_found'] = 'Základní třída nenalezena';
+$lang['core_file_not_found'] = 'Základní soubor nenalezen';
+$lang['count_from_date_to_date'] = '
+{count} od {date:start} do {date:end}';
+$lang['created'] = 'Vytvořeno';
+$lang['created_transfers'] = 'Vytvořené přenosy';
+$lang['database_access_failure'] = 'Selhalo připojení k databázi';
+$lang['date'] = 'Datum';
+$lang['date_format'] = 'd/m/R';
+$lang['datetime_format'] = 'd/m/R H:m:s';
+$lang['dbi_missing_parameter'] = 'Chybějící konfigurační parametr DB';
+$lang['delete'] = 'Vymazat';
+$lang['delete_transfer_nicely'] = 'Vymazat přenos a informovat příjemce';
+$lang['delete_transfer_roughly'] = 'Vymazat přenos bez oznámení příjemcům';
+$lang['details'] = 'Podrobnosti';
+$lang['dialog_autoclose'] = 'Dialog bude uzavřen za {seconds} sekund';
+$lang['does_not_expire'] = 'Bez expirace';
+$lang['done'] = 'Hotovo';
+$lang['done_uploading'] = 'Nahrávání dokončeno';
+$lang['done_uploading_guest'] = 'Děkujeme za použití Filesenderu {cfg:site_name}. Pokud je pro Vás povoleno vícenásobné nahrávání, můžete tento odkaz použít opakovaně pro nahrávání dalších souborů.';
+$lang['download'] = 'Stáhnout';
+$lang['download_bad_files_ids'] = 'Chybná identifikace souboru';
+$lang['download_bad_token_format'] = 'Neplatný tvar pověření';
+$lang['download_disclamer'] = 'Můžete stáhnout všechny soubory najednou jako jeden komprimovaný archiv .zip. Klikněte na stažené soubory pro rozbalení a přístup k jednotlivým souborům.';
+$lang['download_file'] = 'Stáhnout soubor';
+$lang['download_invalid_range'] = 'Neplatný rozsah';
+$lang['download_link'] = 'Odkaz ke stažení';
+$lang['download_missing_files_ids'] = 'Identifikace souboru ke stažení chybí';
+$lang['download_missing_token'] = 'Pověření ke stažení nenalezeno';
+$lang['download_page'] = 'Stahování';
+$lang['downloads'] = 'Soubory ke stažení';
+$lang['dp_close_text'] = 'Zavřít';
 $lang['dp_current_text'] = 'Dnes';
-$lang['dp_month_names'] = 'Leden,Únor,Březen,Duben,Květen,Červen,Červenec,Srpen,Září,Říjen,Listopad,Prosinec';
-$lang['dp_month_names_short'] = 'Led,Úno,Bře,Dub,Kvě,Čvn,Čvc,Srp,Zář,Říj,Lis,Pro';
+$lang['dp_date_format'] = 'dd/mm/rr';
+$lang['dp_date_format_hint'] = 'Formát dd/mm/rr, maximálně {max} dní';
 $lang['dp_day_names'] = 'Neděle,Pondělí,Úterý,Středa,Čtvrtek,Pátek,Sobota';
-$lang['dp_day_names_short'] = 'Ned,Pon,Úte,Stř,Čtv,Pát,Sob';
 $lang['dp_day_names_min'] = 'Ne,Po,Út,St,Čt,Pá,So';
-$lang['dp_week_header'] = 'Týden';
-$lang['dp_date_format'] = 'dd. mm. yy';
+$lang['dp_day_names_short'] = 'Ne,Po,Út,St,Čt,Pá,So';
 $lang['dp_first_day'] = '1';
-$lang['dp_is_rtl'] = 'false';
-$lang['dp_show_month_after_year'] = 'false';
-$lang['dp_year_suffix'] = '';
+$lang['dp_is_rtl'] = 'Ne';
+$lang['dp_month_names'] = 'Leden,Únor,Březen,Duben,Květen,Červen,Červenec,Srpen,Září,Říjen,Listopad,Prosinec';
+$lang['dp_month_names_short'] = 'Led,Úno,Bře,Dub,Kvě,Čer,Čec,Srp,Zář,Říj,Lis,Pro';
+$lang['dp_next_text'] = 'Další';
+$lang['dp_prev_text'] = 'Předchozí';
+$lang['dp_show_month_after_year'] = 'Ne';
+$lang['dp_week_header'] = 'Týd';
+$lang['dp_year_suffix'] = '
+';
+$lang['drag_and_drop'] = 'Sem přetáhněte soubory k nahrání';
+$lang['duplicate_recipient'] = 'Příjemce již existuje';
+$lang['email_daily_statistics'] = 'Zaslat mi denní statistiku';
+$lang['email_download_complete'] = 'Informovat mne o stažení';
+$lang['email_me_copies'] = 'Zaslat mi kopie všech oznámení';
+$lang['email_report_on_closing'] = 'Po expiraci zaslat souhrn';
+$lang['email_sent'] = 'Zpráva odeslána';
+$lang['email_separator_msg'] = 'E-mailové adresy oddělit pomocí , nebo ;';
+$lang['email_upload_complete'] = 'Oznámit mi ukončení nahrávání';
+$lang['email_upload_page_access'] = 'Oznámit mi přístup hosta na nahrávací stránku';
+$lang['email_upload_started'] = 'Oznámit mi zahájení nahrávání';
+$lang['enable_recipient_email_download_complete'] = 'Umožnit příjemcům dostávat emaily o dokončení stahování';
+$lang['enable_recipient_email_download_complete_warning'] = 'Nepoužívejte toto nastavení při zasílání do emailové konference, jinak každé stažení souboru způsobí zaslání emailu do konference. ';
+$lang['encountered_exception'] = 'Při vykonávání vašeho požadavku nastala chyba';
+$lang['enter_to_email'] = 'Vložte adresy příjemce (příjemců)';
+$lang['error_date'] = 'Chybné datum';
+$lang['error_details'] = 'Chybné technické údaje';
+$lang['error_dialog'] = 'Chyba';
+$lang['error_type'] = 'Chybný typ';
+$lang['expand_all'] = 'Rozbalit vše';
+$lang['expires'] = 'Expiruje';
+$lang['expiry_date'] = 'Datum expirace';
+$lang['extend'] = 'Prodloužit';
+$lang['extend_and_remind'] = 'Prodloužit a zaslat upomínku';
+$lang['extend_expiry_date'] = 'Prodloužit expiraci o {days} dní';
+$lang['failed_to_connect_to_database'] = 'Připojení k databázi selhalo';
+$lang['failed_transfer_found'] = 'Zdá se, že některé z vašich předchozích nahrávání selhalo, chcete restartovat nahrávání od poslední uložené pozice (budete muset znovu přidat soubory)?';
+$lang['file_bad_hash'] = 'Neplatný kontrolní součet';
+$lang['file_chunk_out_of_bounds'] = 'Segment souboru mimo rozsah';
+$lang['file_extension_not_allowed'] = 'Zakázaná přípona ';
+$lang['file_integrity_check_failed'] = 'Test integrity selhal';
+$lang['file_not_found'] = 'Soubor nenalezen';
+$lang['file_size_does_not_match'] = 'Velikost souboru nesouhlasí';
+$lang['files'] = 'Soubory';
+$lang['filtered_transfer_log'] = 'Filtrované zobrazení protokolů přenosu';
+$lang['forget'] = 'Zapomenout';
+$lang['forward'] = 'Vpřed';
+$lang['forward_guest_voucher'] = 'Přeposlat pozvánku pro hosta';
+$lang['from'] = 'Od';
+$lang['get_a_link'] = 'Zobrazit odkaz místo posílání příjemcům';
+$lang['get_full_user_remote_config'] = 'Zobrazit kompletní vzdálenou konfiguraci';
+$lang['global_statistics'] = 'Globální statistiky';
+$lang['guest'] = 'Host';
+$lang['guest_deleted'] = 'Host smazán';
+$lang['guest_not_found'] = 'Host nenalezen';
+$lang['guest_options'] = 'Nastavení pro hosta';
+$lang['guest_reminded'] = 'Upomínka zaslána';
+$lang['guest_too_many_recipients'] = 'Překročen maximální počet příjemců';
+$lang['guest_transfer_options'] = 'Vytvořena nastavení přenosu';
+$lang['guest_vouchers_sent'] = 'Pozvánky pro hosty odeslány';
+$lang['guests'] = 'Hosté';
+$lang['guests_page'] = 'Hosté';
+$lang['guests_transfers'] = 'Přenosy hostů';
+$lang['gui_unknown_admin_section'] = 'Neznámá administrace';
+$lang['help'] = 'Nápověda';
+$lang['hide_details'] = 'Skrýt podrobnosti';
+$lang['host_quota'] = 'Kvóta pro hosta';
+$lang['host_quota_usage'] = 'Využitá kvóta pro hosta';
+$lang['ignore'] = 'Ignorovat';
+$lang['info_dialog'] = 'Informace';
+$lang['invalid_address_format'] = 'Neplatný formát adresy';
+$lang['invalid_file'] = 'Neplatný soubor';
+$lang['invalid_recipient'] = 'Neplatný příjemce';
+$lang['ip'] = 'IP adresa';
+$lang['is_default'] = 'Toto je výchozí hodnota';
+$lang['later'] = 'Zeptat se později';
+$lang['load'] = 'Nahrát nedokončený přenos';
+$lang['logoff'] = 'Odhlášení';
+$lang['logon'] = 'Přihlášení';
+$lang['mac_archive_message'] = 'Tento komrimovaný archiv (.zip file) bude příliš velký pro standardní dekompresní program systému Apple OS X.<br />  Alternativní program pro dekompresi můžete nalézt zde : <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
+$lang['maintenance_autoresume'] = 'Probíhající operace budou automaticky obnoveny po ukončení údržby.';
+$lang['make_default'] = 'Zpět na výchozí hodnotu';
+$lang['me'] = 'Já';
+$lang['message'] = 'Zpráva';
+$lang['missing_files_for_restart'] = 'Soubory nenalezeny, bez nich nelze restartovat';
+$lang['n_more'] = 'dalších {n}';
+$lang['need_to_readd_files'] = 'K obnovení nahrávání je třeba znovu přidat soubory vypsané níže';
+$lang['never'] = 'nikdy';
+$lang['no'] = 'Ne';
+$lang['no_addresses_found'] = 'Žádné adresy nenalezeny';
+$lang['no_auditlog'] = 'Žádné protokoly nenalezeny';
+$lang['no_guests'] = 'Žádní hosté';
+$lang['no_such_property'] = 'Vlastnost nenalezena';
+$lang['no_transfers'] = 'Žádné přenosy';
+$lang['none'] = 'prázdné';
+$lang['noscript'] = 'Pro využití této aplikace je třeba zapnout Javascript';
+$lang['number_of_files'] = 'Počet souborů';
+$lang['ok'] = 'OK';
+$lang['open_auditlog'] = 'Zobrazit protokoly přenosů';
+$lang['open_file_auditlog'] = 'Zobrazit historii souboru';
+$lang['open_recipient_auditlog'] = 'Zobrazit historii akcí příjemce';
+$lang['optional'] = 'volitelné';
+$lang['options'] = 'Volby';
+$lang['pause'] = 'Pauza';
+$lang['paused'] = 'Pozastaveno';
+$lang['preferences_updated'] = 'Uživatelská nastavení aktualizována';
+$lang['quota_usage'] = '{size:used} z {size:total} využito, {size:available} zbývá';
+$lang['reader_not_supported'] = 'Využíváte prohlížeč bez podpory HTML5.<br /><br />Soubory nelze vybírat metodou Táhni a pusť<br /><br />Můžete nahrát soubory do maximální velikosti {size}.';
+$lang['reason'] = 'Důvod';
+$lang['recipient_added'] = 'Příjemce přidán';
+$lang['recipient_error_bounce'] = 'doručení emailu selhalo';
+$lang['recipient_errors'] = 'Chyby příjemců';
+$lang['recipient_not_found'] = 'Příjemce nenalezen';
+$lang['recipient_reminded'] = 'Příjemci zaslána upomínka přenosu';
+$lang['recipients'] = 'Příjemci';
+$lang['recipients_notifications_language'] = 'Jazyk příjemce';
+$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> požaduje detaily vaší autentizace.</p><p>Pro povolení vložte následující kód do <strong>{remote}</strong> : <strong>{code}</strong> (kód je platný 2 minuty).</p><p>Pokud jste tuto akci nevyvolali, ignorujte tuto zprávu.</p>';
+$lang['report_cannot_write_file'] = 'Nelze uložit soubor sestavy';
+$lang['report_event_archive_download_ended'] = 'Příjemce {author.identity} dokončil stahování archivu přenosu';
+$lang['report_event_archive_download_started'] = 'Příjemce {author.identity} zahájil stahování archivu přenosu';
+$lang['report_event_download_ended'] = 'Příjemce {author.identity} dokončil stahování souboru  {file.path} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Příjemce {author.identity} obnovil stahování souboru  {file.path} ({size:file.size})';
+$lang['report_event_download_started'] = 'Příjemce {author.identity} zahájil stahování souboru  {file.path} ({size:file.size})';
+$lang['report_event_file_uploaded'] = 'Soubor {file.path} ({size:file.size}) nahrán (trvání {time:time_taken})';
+$lang['report_event_transfer_available'] = 'Přenos byl zpřístupněn (trvání {time:time_taken})';
+$lang['report_event_transfer_closed'] = 'Přenos byl uzavřen na žádost';
+$lang['report_event_transfer_deleted'] = 'Data přenosu byla vymazána';
+$lang['report_event_transfer_expired'] = 'Přenos expiroval';
+$lang['report_event_transfer_sent'] = 'Odkaz ke stažení odeslán příjemci (příjemcům)';
+$lang['report_event_transfer_started'] = 'Přenos vytvořen';
+$lang['report_event_upload_ended'] = 'Nahrávání ukončeno';
+$lang['report_event_upload_resumed'] = 'Nahrávání obnoveno';
+$lang['report_event_upload_started'] = 'Nahrávání zahájeno';
+$lang['report_exception'] = 'zobrazení chyby';
+$lang['report_format_not_available'] = 'Šablona hlášení není k dispozici';
+$lang['report_guest_event_transfer_sent'] = 'Odkaz ke stažení zaslán příjemci (příjemcům)';
+$lang['report_guest_event_transfer_started'] = 'Přenos vytvořen hostem {author.identity}';
+$lang['report_nothing_found'] = 'Nic k zobrazení';
+$lang['report_owner_event_archive_download_ended'] = 'Vlastník přenosu ukončil stahování archivu';
+$lang['report_owner_event_archive_download_started'] = 'Vlastník přenosu zahájil stahování archivu';
+$lang['report_owner_event_download_ended'] = 'Vlastník dokončil stahování souboru {file.path} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Vlastník obnovil stahování souboru {file.path} ({size:file.size})';
+$lang['report_owner_event_download_started'] = 'Vlastník zahájil stahování souboru {file.path} ({size:file.size})';
+$lang['report_ownership_required'] = 'Musíte být vlastník';
+$lang['report_recipient_event_archive_download_ended'] = 'Příjemce ukončil stahování archivu';
+$lang['report_recipient_event_archive_download_started'] = 'Příjemce zahájil stahování archivu';
+$lang['report_recipient_event_download_ended'] = 'Příjemce dokončil stahování souboru {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Příjemce obnovil stahování souboru {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_started'] = 'Příjemce zahájil stahování souboru {file.path} ({size:file.size})';
+$lang['report_unknown_format'] = 'Neznámý formát sestavy';
+$lang['report_unknown_target_type'] = 'Neznámý typ sestavy';
+$lang['rest_access_forbidden'] = 'Přístup k REST zakázán';
+$lang['rest_admin_required'] = 'Vyžadována práva administrátora';
+$lang['rest_authentication_required'] = 'Vyžadována autentizace pro REST';
+$lang['rest_bad_parameter'] = 'Chybný REST parametr';
+$lang['rest_endpoint_missing'] = 'REST server nenalezl v URL odkaz zdroje';
+$lang['rest_endpoint_not_implemented'] = 'REST zdroj není implementován';
+$lang['rest_jsonp_get_only'] = 'REST server přijímá pro JSONP výstupy pouze GET požadavky';
+$lang['rest_method_not_allowed'] = 'REST server neakceptuje tuto metodu';
+$lang['rest_method_not_implemented'] = 'REST metoda není ve zdroji implementována';
+$lang['rest_missing_parameter'] = 'Chybějící REST parametr';
+$lang['rest_ownership_required'] = 'REST vyžaduje vlastnictví prostředku';
+$lang['rest_sanity_check_failed'] = 'REST selhal test validity';
+$lang['rest_updatedsince_bad_format'] = 'REST špatně formátovaný parametr updatedSince';
+$lang['rest_xsrf_token_did_not_match'] = 'Bezpečnostní pověření nesouhlasí';
+$lang['restart'] = 'Restartovat';
+$lang['restart_failed_transfer'] = 'Restartovat nedokončené přenosy?';
+$lang['resume'] = 'Obnovit';
+$lang['retry'] = 'Zkusit znovu';
+$lang['retry_later'] = 'Uložit stav a zkusit znovu později';
+$lang['save'] = 'Uložit';
+$lang['see_all'] = 'Zobrazit vše';
+$lang['select_all_for_archive_download'] = 'Vybrat všechny soubory ke stažení jako archiv';
+$lang['select_file'] = 'Vybrat soubor';
+$lang['select_files'] = 'Vybrat soubory';
+$lang['select_for_archive_download'] = 'Vybrat ke stažení jako archiv';
+$lang['send'] = 'Odeslat';
+$lang['send_reminder'] = 'Odeslat upomínku';
+$lang['send_to_my_email'] = 'Odeslat na můj mail';
+$lang['send_voucher'] = 'Odeslat pozvánku';
+$lang['show_details'] = 'Ukázat podrobnosti';
+$lang['showhide'] = 'Ukázat/Skrýt';
+$lang['size'] = 'Velikost';
+$lang['size_unit'] = 'B';
+$lang['speed_unit_bits'] = 'b/s';
+$lang['speed_unit_bytes'] = 'B/s';
+$lang['stalled_transfer'] = 'Zamrzlá nahrávání';
+$lang['statlog_not_found'] = 'Nenalezen protokol statistik';
+$lang['statlog_unknown_event'] = 'Neznámá událost';
+$lang['stop'] = 'Stop';
+$lang['stop_transfer_upload'] = 'Zastavit nahrávání přenosu (na straně nahrávajícího bude ohlášena chyba)?';
+$lang['storage_available'] = 'Volný prostor';
+$lang['storage_block'] = 'Blok';
+$lang['storage_chunk_too_large'] = 'Příliš velký segment k uložení';
+$lang['storage_filesystem_bad_resolver_target'] = 'Chyba vyhledání úložiště';
+$lang['storage_filesystem_bad_usage_output'] = 'Chyba použití úložiště';
+$lang['storage_filesystem_cannot_create_path'] = 'Nelze vytvořit cestu na souborovém systému';
+$lang['storage_filesystem_cannot_delete'] = 'Nelze vymazat na souborovém systému';
+$lang['storage_filesystem_cannot_get_usage'] = 'Chyba použití úložiště';
+$lang['storage_filesystem_cannot_read'] = 'Chyba čtení souborového systému';
+$lang['storage_filesystem_cannot_write'] = 'Chyba zápisu souborového systému';
+$lang['storage_filesystem_file_not_found'] = 'Nelze nalézt souborový systém';
+$lang['storage_filesystem_out_of_space'] = 'Nedostatek místa na souborovém systému';
+$lang['storage_main'] = 'Vše';
+$lang['storage_not_enough_space_left'] = 'Nedostatek místa v úložišti';
+$lang['storage_paths'] = 'Související cesty';
+$lang['storage_total'] = 'Celkové místo';
+$lang['storage_usage'] = 'Zaplnění úložiště';
+$lang['storage_used'] = 'Zaplněné místo';
+$lang['subject'] = 'Předmět';
+$lang['success_dialog'] = 'Úspěch';
+$lang['template_not_found'] = 'Šablona nenalezena';
+$lang['terasender_worker_count'] = 'Počítadlo TeraSender ';
+$lang['testterm'] = 'test value';
+$lang['time_format'] = '{h:H\\h} {i:i\\m\\i\\n} {s:s\\s}';
+$lang['to'] = 'Příjemce';
+$lang['tracking_event_not_found'] = 'Událost sledování nenalezena';
+$lang['tracking_unknown_event'] = 'Neznámá událost sledování';
+$lang['transfer_closed'] = 'Přenos uzavřen';
+$lang['transfer_expiry_extension_count_exceeded'] = 'Dosažena maximální doba prodloužení přenosu';
+$lang['transfer_expiry_extension_not_allowed'] = 'Prodloužení doby dostupnosti přenosu není povoleno';
+$lang['transfer_extended'] = 'Datum expirace prodlouženo do {expires}';
+$lang['transfer_extended_reminded'] = 'Datum expirace prodlouženo do {expires}, příjemcům odeslána upomínka';
+$lang['transfer_files_incomplete'] = 'Nahrávání souborů přenosu nebylo dokončeno';
+$lang['transfer_host_quota_exceeded'] = 'Překročena kvóta hostitele';
+$lang['transfer_id'] = 'ID přenosu';
+$lang['transfer_maximum_size_exceeded'] = 'Maximální velikost přenosu překročena';
+$lang['transfer_no_files'] = 'Přenos nemá žádné soubory';
+$lang['transfer_no_recipients'] = 'Přenos nemá žádné příjemce';
+$lang['transfer_not_availabe'] = 'Přenos není k dispozici';
+$lang['transfer_not_found'] = 'Přenos nenalezen';
+$lang['transfer_rejected'] = 'Vytvoření přenosu zamítnuto';
+$lang['transfer_reminded'] = 'Přenos připomenut příjemcům';
+$lang['transfer_seems_to_be_stalled'] = 'Nahrávání zřejmě zamrzlo (nebo probíhá pomaleji, než by mělo), chcete ho restartovat nebo zastavit?';
+$lang['transfer_too_many_files'] = 'Překročen maximální počet souborů';
+$lang['transfer_too_many_recipients'] = 'Překročen maximální počet příjemců';
+$lang['transfer_upload_stopped'] = 'Zastaveno nahrávání přenosu';
+$lang['transfer_user_quota_exceeded'] = 'Uživatelská kvóta překročena';
+$lang['transfers_page'] = 'Mé přenosy';
+$lang['translate_to'] = 'Přeložit do:';
+$lang['undergoing_maintenance'] = 'Právě probíhá údržba';
+$lang['unexpected_file'] = 'Tento soubor není součástí obnovovaného přenosu';
+$lang['unknown_page'] = 'Neznámá stránka';
+$lang['upload_page'] = 'Nahrávání';
+$lang['uploaded'] = 'Nahráno';
+$lang['uploading_transfers'] = 'Právě nahrávané přenosy';
+$lang['user_additionnal'] = 'Další informace';
+$lang['user_auth_secret'] = 'Heslo';
+$lang['user_created'] = 'První přihlášení';
+$lang['user_id'] = 'Identifikace uživatele';
+$lang['user_lang'] = 'Preferovaný jazyk';
+$lang['user_missing_uid'] = 'UID nenalezeno';
+$lang['user_not_found'] = 'Uživatel nenalezen';
+$lang['user_page'] = 'Můj profil';
+$lang['user_preferences'] = 'Nastavení';
+$lang['user_quota'] = 'Uživatelská kvóta';
+$lang['user_remote_authentication'] = 'Vzdálená autentizace';
+$lang['utilities_uid_generator_bad_unicity_checker'] = 'Selhala kontrola jedinečnosti v generátoru UID';
+$lang['utilities_uid_generator_tried_too_much'] = 'Generátor UID nadužíván';
+$lang['valid_only_one_time'] = 'Platný pouze pro jednorázové nahrání';
+$lang['view_full_log'] = 'Zobrazit kompletní protokol';
+$lang['what_to_do'] = 'Co dál?';
+$lang['with_identity'] = 'Odesílatel';
+$lang['yes'] = 'Ano';
+$lang['you_can_report_exception'] = 'Při ohlašování chyby prosím uveďte následující identifikaci chyby';
+$lang['you_can_report_exception_by_email'] = 'Tuto chybu je možné ohlásit emailem';

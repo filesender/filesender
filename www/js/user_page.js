@@ -33,6 +33,23 @@
 $(function() {
     var page = $('.user_page');
     if(!page.length) return;
+
+    $('.delete_my_account a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var redirect_url = filesender.config.logoff_url;
+        filesender.ui.confirm(lang.tr('confirm_delete_my_account'), function() {
+            filesender.client.deleteUserAccount('@me', function() {
+                filesender.ui.alert('success',
+                                    lang.tr('user_deleted'),
+                                    function() { filesender.ui.redirect(redirect_url) });
+
+            });
+        });
+        
+        return false;
+    });
     
     page.find(':input').on('change', function() {
         var i = $(this);

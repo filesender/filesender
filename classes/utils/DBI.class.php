@@ -221,6 +221,14 @@ class DBI {
                 
             return $r;
         } catch(Exception $e) {
+            $dbtype = Config::get('db_type');
+            $code = $e->getCode();
+            if( $dbtype == 'pgsql' ) {
+                // print_r($e,false);
+                if( $code == 42710 ) {
+                    throw new DBIDuplicateException($e->getMessage(), array('name' => $name, 'args' => $args));
+                }
+            }
             throw new DBIUsageException($e->getMessage(), array('name' => $name, 'args' => $args));
         }
     }
@@ -293,10 +301,11 @@ class DBIStatement {
             foreach($args[0] as $key => $value) {
                 if(is_array($value)) {
                     $values = array_values($value);
-                    for($i=0; $i<count($values); $i++)
-                        $args[0][$key.'___'.$i] = $values[$i];
-                    
-                    unset($args[0][$key]);
+	                foreach ( $values as $i => $iValue ) {
+		                $args[0][ $key . '___' . $i ] = $iValue;
+	                }
+
+	                unset($args[0][$key]);
                 }
             }
         }

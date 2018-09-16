@@ -65,7 +65,10 @@ window.filesender.config = {
 
     max_transfer_size: <?php echo Config::get('max_transfer_size') ?>,
     max_transfer_files: <?php echo Config::get('max_transfer_files') ?>,
-    
+
+    max_transfer_file_size: <?php echo Config::get('max_transfer_file_size') ?>,
+    max_transfer_encrypted_file_size: <?php echo Config::get('max_transfer_encrypted_file_size') ?>,
+
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
     extension_whitelist_regex: <?php echo is_string($extension_whitelist_regex) ? "'".$extension_whitelist_regex."'" : 'null' ?>,
     
@@ -80,6 +83,10 @@ window.filesender.config = {
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
     
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
+    encryption_min_password_length: '<?php echo Config::get('encryption_min_password_length') ?>',
+    encryption_generated_password_length: '<?php echo Config::get('encryption_generated_password_length') ?>',
+    encryption_generated_password_encoding: '<?php echo Config::get('encryption_generated_password_encoding') ?>',
+    
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
@@ -91,7 +98,8 @@ window.filesender.config = {
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
-
+    terasender_worker_max_chunk_retries: <?php echo Config::get('terasender_worker_max_chunk_retries')  ?>,
+    
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
@@ -111,6 +119,14 @@ window.filesender.config = {
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',
+    logoff_url: '<?php echo AuthSP::logoffURL() ?>',
+
+    upload_display_per_file_stats: '<?php echo Config::get('upload_display_per_file_stats') ?>',
+    upload_force_transfer_resume_forget_if_encrypted: '<?php echo Config::get('upload_force_transfer_resume_forget_if_encrypted') ?>',
+    upload_considered_too_slow_if_no_progress_for_seconds: '<?php echo Config::get('upload_considered_too_slow_if_no_progress_for_seconds') ?>',
+
+    testing_terasender_worker_uploadRequestChange_function_name: '<?php echo Config::get('testing_terasender_worker_uploadRequestChange_function_name') ?>',
+
 
 	language: {
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
@@ -118,7 +134,16 @@ window.filesender.config = {
 		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
 		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"
-	}
+	},
+    
+    clientlogs: {
+        stash_len: <?php echo ClientLog::stashSize() ?>
+    },
+
+    automatic_resume_number_of_retries: <?php echo Config::get('automatic_resume_number_of_retries') ?>,
+    automatic_resume_delay_to_resume:   <?php echo Config::get('automatic_resume_delay_to_resume') ?>,
+
+
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

@@ -90,6 +90,7 @@ class GUI {
             'js/lang.js',
             'js/client.js',
             'js/transfer.js',
+            'js/logger.js',
             'js/ui.js',
             'js/FileSaver.js',
             'js/crypter/crypto_common.js',
@@ -283,10 +284,10 @@ class GUI {
             if(Auth::isAuthenticated(false)) {
                 if(Auth::isGuest()) {
                     self::$allowed_pages = array('upload',
-                                                 GUIPages::HELP, GUIPages::ABOUT );
+                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY );
                 } else {
                     self::$allowed_pages = array('home', 'upload', 'transfers', 'guests', 'download',
-                                                 GUIPages::HELP, GUIPages::ABOUT );
+                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY );
                     
                     // ... and admin to even more !
                     if(Auth::isAdmin()) self::$allowed_pages[] = 'admin';

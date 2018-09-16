@@ -51,6 +51,11 @@ class DatasetTest extends CommonUnitTestCase {
      */
 
     protected function setUp() {
+        if (Config::get('db_type') == 'mysql' ) {
+            $this->markTestSkipped(
+                'The dataset test only runs on pgsql at the moment.'
+            );
+        }        
         echo "DatasetTest@ " . date("Y-m-d H:i:s") . "\n\n";
         Config::localOverride('db_database','filesenderdataset' );
 
@@ -163,20 +168,20 @@ class DatasetTest extends CommonUnitTestCase {
      */
     public function testDatasetDefaultUser() {
 
-        $email = '';
+        $user_id = '';
         
         try {
             $this->cred->forceCredentialsToDefaultUser();
             $user = Auth::user();
-            $email = $user->email;
-            $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
-            $this->assertTrue($email == 'testdriver@localhost.localdomain');
+            $user_id = $user->saml_user_identification_uid;
+            $this->displayInfo(get_class(), __FUNCTION__, " -- user_id: $user_id" );
+            $this->assertTrue($user_id == 'filesender-testdriver@localhost.localdomain');
             
         } catch (Exception $ex) {
             $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
-        $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
+        $this->displayInfo(get_class(), __FUNCTION__, " -- user_id: $user_id" );
         
         return true;
     }

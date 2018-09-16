@@ -63,6 +63,8 @@ class DBObject {
      */
     protected static $dataMap = array();
 
+    protected static $viewMap = array();
+    
     /**
      * Defines secondary indexes for this table
      *
@@ -85,6 +87,10 @@ class DBObject {
         return static::$dataMap;
     }
 
+    public static function getViewMap() {
+        return static::$viewMap;
+    }
+    
     /**
      * Secondary Index map getter
      * 
@@ -93,8 +99,6 @@ class DBObject {
     public static function getSecondaryIndexMap() {
         return static::$secondaryIndexMap;
     }
-
-
     
     /**
      * Check if object is cached
@@ -157,12 +161,12 @@ class DBObject {
      * @return object instance
      */
     public static function fromId($id) {
-        $class = get_called_class();
+        $class = static::getCacheClassName();
         
         $object = self::getFromCache($class, $id);
         if($object) return $object;
         
-        $object = new static($id);
+        $object = static::createFactory($id);
         self::$objectCache[$class][$id] = $object;
         return $object;
     }
@@ -179,10 +183,10 @@ class DBObject {
      * @return object instance
      */
     public static function fromData($id, $data = null, $transforms = array()) {
-        $class = get_called_class();
+        $class = static::getCacheClassName();
         
         $object = self::getFromCache($class, $id);
-        if(!$object) $object = new static(null, $data);
+        if(!$object) $object = static::createFactory(null, $data);
         
         $object->fillFromDBData($data, $transforms);
         
@@ -307,7 +311,17 @@ class DBObject {
         }
         
         // Cache object
-        self::$objectCache[get_called_class()][$this->id] = $this;
+        self::$objectCache[static::getCacheClassName()][$this->id] = $this;
+    }
+    
+    /**
+     * Add to database
+     */
+    public function insert() {
+        // Insert object
+        $this->insertRecord($this->toDBData());
+        // Cache object
+        self::$objectCache[static::getCacheClassName()][$this->id] = $this;
     }
     
     /**
@@ -320,7 +334,7 @@ class DBObject {
         
         // Remove from database
         $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE id = :id');
-        $s->execute(array('id' => $this->id));
+        $s->execute(array(':id' => $this->id));
         
         // Remove from object cache
         self::purgeCache(get_called_class(), $this->id);
@@ -540,7 +554,7 @@ class DBObject {
         $values = array();
         
         // Filter
-        $key_names = is_array($key_name) ? $key_name : array($key_name);
+        $key_names = (array) $key_name;
         $key_names = array_filter($key_names);
         
         // Build update pairs
@@ -560,6 +574,15 @@ class DBObject {
     }
     
     /**
+     * Allows overloaded creation of an object based off of it's properties
+     * 
+     * @return type DBObject based object
+     */
+    public static function createFactory($id = null, $data = null) {
+        return new static($id, $data);
+    }
+    
+    /**
      * Allows to get the class name
      * 
      * @return type String: the class name
@@ -569,11 +592,24 @@ class DBObject {
     }
     
     /**
+     * Allows overloading the DBObject cache class name
+     * 
+     * @return type String: the class name that should be used for caching
+     */
+    public static function getCacheClassName(){
+        return static::getClassName();
+    }
+    
+    /**
      * String caster
      * 
      * @return string
      */
     public function __toString() {
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved');
+    }
+
+    public function getViewName() {
+        return strtolower(self::getDBTable()) . 'view';
     }
 }

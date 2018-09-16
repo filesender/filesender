@@ -59,7 +59,12 @@ class AuthSPSaml {
      * Cache attributes
      */
     private static $attributes = null;
-    
+
+    /**
+     * Cache authentication status
+     */
+    private static $SimpleSAMLphpVersion = null;
+
     /**
      * Authentication check.
      * 
@@ -185,9 +190,10 @@ class AuthSPSaml {
         if(!$target)
             $target = Config::get('site_logouturl');
         
-        $url = self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?';
-        $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.urlencode($target);
+        $url = Utilities::http_build_query(array(
+            'AuthId' => self::$config['authentication_source'],
+            'ReturnTo' => $target,
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?' );
         
         return $url;
     }
@@ -209,13 +215,27 @@ class AuthSPSaml {
             ) as $key) if(!array_key_exists($key, self::$config))
             throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
         }
-        
+
+        Auth::$authClassLoadingCount++;
         if(is_null(self::$simplesamlphp_auth_simple)) {
-            require_once(self::$config['simplesamlphp_location'] . 'lib/_autoload.php');
+            $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';
+            Utilities::include_once_or_halt( $saml_auto_load_path, 'Failed to include SimpleSAMLphp' );
+
+            // WARNING: grab the version of the library that is in use.
+            // WARNING: this can cause big problems
+            // $samlConfig = SimpleSAML_Configuration::getInstance();
+            // self::$SimpleSAMLphpVersion = $samlConfig->getVersion();
+            // Logger::info('Loaded SimpleSAMLphp version is ' . self::$SimpleSAMLphpVersion);
             
-            self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
+            if (class_exists("\SimpleSAML\Auth\Simple")) {
+                self::$simplesamlphp_auth_simple = new SimpleSAML\Auth\Simple(self::$config['authentication_source']);
+            } else {
+                //For old SSP
+                self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
+            }
         }
         
+        Auth::$authClassLoadingCount--;
         return self::$simplesamlphp_auth_simple;
     }
 }

@@ -42,7 +42,14 @@ class Auth {
     /**
      * The curent user cache.
      */
-    private static $user = null;
+    protected static $user = null;
+
+    /**
+     * LIMITED USE: only Auth classes should call this!
+     */
+    public static function setUserObject( $user ) {
+        self::$user = $user;
+    }
     
     /**
      * Current user allowed state
@@ -68,13 +75,23 @@ class Auth {
      * Last authentication exception for systematic rethrow
      */
     private static $exception = null;
-    
+
+    /**
+     * There can be call loops when setting up classes. For example
+     * if some code calls Auth::user() indirectly while the auth system
+     * is being setup then that can cause troubles.
+     * 
+     * While this is public it should be only used by classes inside
+     * the auth system
+     */
+    public static $authClassLoadingCount = 0;
+
     /**
      * Return current user if it exists.
      * 
      * @return User instance or false
      */
-    public static function user() {
+    private static function user_protected() {
         if(self::$exception)
             throw self::$exception;
         
@@ -157,6 +174,9 @@ class Auth {
                 
                 // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
+                // if we change anything interesting we want to subvert the
+                // too frequent save check in recordActivity
+                $forceSave = false;
                 
                 // Save user additional attributes if enabled
                 if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes'))
@@ -164,13 +184,56 @@ class Auth {
                 
                 // Save user quota for guest uploads
                 $user_quota = Config::get('user_quota');
-                if($user_quota) self::$user->quota = $user_quota;
+                if($user_quota) {
+                    if(self::$user->quota != $user_quota ) {
+                        $forceSave = true;
+                        self::$user->quota = $user_quota;
+                    }
+                }
                 
-                self::$user->recordActivity(); // Saves preferences and all above changes
+                self::$user->recordActivity( $forceSave ); // Saves preferences and all above changes
             }
         }
         
         return self::$user;
+    }
+
+    /**
+     * Return current user if it exists.
+     *
+     * see the private user_protected() for implementation.
+     *
+     * implementation note: this nests a call to user_protected() so that
+     * authClassLoadingCount can be incr/decr paired around the auth work
+     *
+     * This allows code to call other methods that might themselves want
+     * to indirectly call auth::user(). This can happen for example if 
+     * any code calls Logger::info() or the like as that code might well 
+     * call user() on your behalf. Note that if user() is called from code 
+     * inside user() then the nested call will return false, which is better 
+     * than infinite recursion but might not be quite what you expected.
+     * 
+     * @return User instance or false
+     */
+    public static function user() {
+        if(self::$exception)
+            throw self::$exception;
+
+        if( self::$authClassLoadingCount ) {
+            return false;
+        }
+
+        try {
+            self::$authClassLoadingCount++;
+
+            $ret = self::user_protected();
+            self::$authClassLoadingCount--;
+            return $ret;
+        } catch(Exception $e) {
+            self::$authClassLoadingCount--;
+            self::$exception = $e;
+            throw $e;
+        }
     }
 
     /**
@@ -235,7 +298,7 @@ class Auth {
                 $admin = Config::get('admin');
                 if(!is_array($admin)) $admin = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$admin)));
                 
-                self::$isAdmin = in_array(self::user()->id, $admin);
+                self::$isAdmin = in_array(self::user()->saml_user_identification_uid, $admin);
             }
         }
         

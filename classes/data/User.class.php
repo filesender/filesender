@@ -49,9 +49,15 @@ class User extends DBObject {
      */
     protected static $dataMap = array(
         'id' => array(
-            'type' => 'string',
-            'size' => 190,
-            'primary' => true
+            'type' => 'uint',
+            'size' => 'big',
+            'primary' => true,
+            'autoinc' => true
+        ),
+        'authid' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => false
         ),
         'additional_attributes' => array(
             'type' => 'text',
@@ -100,11 +106,35 @@ class User extends DBObject {
             'null' => true
         ),
     );
+
+
+    public static function getViewMap() {
+        $a = array();
+        $userauthviewdef = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_is_encrypted('transfer_preferences','prefers_enceyption')
+                        . DBView::columnDefinition_age($dbtype,'last_activity','last_activity_days_ago')
+                        . DBView::columnDefinition_age($dbtype,'aup_last_ticked_date','aup_last_ticked_days_ago')
+                        . ' , id as email_address '
+                        . ' , id is not null as is_active '
+                                . '  from ' . self::getDBTable();
+            $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
+                                       .self::getDBTable().' up, '.call_user_func('Authentication::getDBTable').' a where up.authid = a.id ';
+        }
+        
+        
+        return array( strtolower(self::getDBTable()) . 'view' => $a,
+                      'userauthview' => $userauthviewdef
+        );
+    }
     
     /**
      * Properties
      */
     protected $id = null;
+    protected $authid = null;
     protected $additional_attributes = null;
     protected $lang = null;
     protected $aup_ticked = false;
@@ -137,11 +167,13 @@ class User extends DBObject {
      * @throws UserNotFoundException
      */
     protected function __construct($id = null, $data = null) {
+        
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
+            $this->id = $id;
         }
         
         if($data) {
@@ -174,13 +206,34 @@ class User extends DBObject {
         if(!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) throw new UserMissingUIDException();
         
         // Get matching user
-        $user = self::fromId($attributes['uid']);
+        $authid = Authentication::ensureAuthIDFromAuthUID( $attributes['uid']);
+        $user = self::fromAuthId( $authid );
         
         // Add metadata from attributes
-        if(array_key_exists('email', $attributes)) $user->email_addresses = is_array($attributes['email']) ? $attributes['email'] : array($attributes['email']);
+        if(array_key_exists('email', $attributes)) $user->email_addresses = (array) $attributes['email'];
         if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
         
         return $user;
+    }
+
+    public static function fromAuthID( $authid ) {
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE authid = :authid');
+        $statement->execute(array(':authid' => $authid));
+        $data = $statement->fetch();
+
+        if( !$data ) {
+            $data = array();
+            $data['authid'] = $authid;
+            $ret = static::createFactory(null,$data);
+            $ret->created = time();
+            $ret->authid = $authid;
+            $ret->insert();
+            return $ret;
+            
+        }
+        $id = $data['id'];
+//        Logger::info('fromAuthID() found authid ' . $authid . ' at id ' . $id );
+        return self::fromId( $id );
     }
     
     /**
@@ -213,14 +266,31 @@ class User extends DBObject {
     /**
      * Record activity
      */
-    public function recordActivity() {
+    public function recordActivity( $forceSave = false ) {
         $now = time();
         
         // Do not record more than once per 1h => reduces number of writes
-        if(abs($now - $this->last_activity) < 3600) return;
+        if( !$forceSave ) {
+            if(abs($now - $this->last_activity) < 3600) {
+                return;
+            }
+        }
         
         $this->last_activity = $now;
         $this->save();
+    }
+    
+    /**
+     * Search users
+     *
+     * @param string $match
+     *
+     * @return self[]
+     */
+    public static function search($match) {
+        $match = str_replace('\\', '', $match); // Remove to-be-used escape char
+        $match = str_replace(array('%', '_'), array('\\%', '\\_'), $match); // Escape special chars
+        return self::all("id LIKE :match ESCAPE '\\\\'", array(':match' => '%'.$match.'%'));
     }
     
     /**
@@ -459,10 +529,15 @@ class User extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
+            'id','additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
-            'email_addresses', 'name', 'quota'
+            'email_addresses', 'name', 'quota', 'authid'
         ))) return $this->$property;
+
+        if($property == 'saml_user_identification_uid') {
+            $a = Authentication::fromId( $this->authid );
+            return $a->saml_user_identification_uid;
+        }
         
         if($property == 'email') return count($this->email_addresses) ? $this->email_addresses[0] : null;
         
@@ -520,4 +595,31 @@ class User extends DBObject {
             
         }else throw new PropertyAccessException($this, $property);
     }
+
+    /**
+     * Delete the user related objects that the database delete will not remove.
+     * for example, all the files on the disk for transfers owned by this user 
+     * or their guests.
+     */
+    public function beforeDelete() {
+
+        $user = $this;
+        $transfers = Transfer::fromGuestsOf($user);
+        foreach($transfers as $t) {
+            $t->delete();
+        }
+        $transfers = Transfer::fromUser($user);
+        foreach($transfers as $t) {
+            $t->delete();
+        }
+
+        // The RI from translatable emails to guests is not 100%
+        // so we have to remove the guests manually to also get that
+        // associated information
+        $guests = Guest::fromUser($user);
+        foreach($guests as $g) {
+            $g->delete();
+        }
+        
+    }    
 }

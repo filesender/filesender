@@ -369,12 +369,15 @@ $(function() {
         var encrypted = $(this).attr('data-encrypted');
         var filename = $(this).attr('data-name');
         var mime = $(this).attr('data-mime');
+        var key_version = $(this).attr('data-key-version');
+        var salt = $(this).attr('data-key-salt');
 
         if (typeof id == 'string'){
             id = [id];
         }
-        
-        window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?files_ids=' + id.join(','), mime, name);
+        window.filesender.crypto_app().decryptDownload(
+            filesender.config.base_path + 'download.php?files_ids=' + id.join(','),
+            mime, filename, key_version, salt );
 
         return false;
     });

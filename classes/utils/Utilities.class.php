@@ -132,7 +132,6 @@ class Utilities {
         return preg_match('/' .  Config::get('valid_filename_regex') . '/u', $filename);
     }
 
-
     /*
      * Generate (pseudo) (super-)random hex string
      * 
@@ -338,7 +337,7 @@ class Utilities {
      * @return string
      */
     public static function getClientIP(){
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        return isset($_SERVER[Config::get('client_ip_key')]) ? $_SERVER[Config::get('client_ip_key')] : '';
     }
     
     /**
@@ -409,6 +408,11 @@ class Utilities {
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    public static function isTrue( $v ) 
+    {
+         return $v == '1' || $v == 'true';
     }
 
     /**
@@ -582,14 +586,43 @@ class Utilities {
      * true if $v is array( array( ... ) )
      */
     public static function is_array_of_array( $v ) {
-            if( !is_array($v)) {
-                return false;
-            }
-            $sl = array_slice($v,0,1);
-            if( is_array(array_shift($sl))) {
-                return true;
-            }
+        if( !is_array($v)) {
             return false;
+        }
+        $sl = array_slice($v,0,1);
+        if( is_array(array_shift($sl))) {
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * This does some sniffing around first to see if the file exists
+     * and can be read before trying to include it. If the include
+     * fails then the haltmsg is logged and the function does not return.
+     *
+     * Note that at the moment no syntax checks are done on the included
+     * file. If the file has errors in it then script execution will halt.
+     *
+     * @param string path the file to include_once()
+     * @param haltmsg the message to halt with. This may be decorated with additional
+     * info such as "file not found" if that specific error has occurred.
+     */
+    public static function include_once_or_halt( $path, $haltmsg ) {
+
+        if( !file_exists($path)) {
+            Logger::haltWithErorr( 'File not found at expected path ' . $path 
+                                 . ' ' . $haltmsg);
+        }
+        if( !is_readable($path)) { 
+            Logger::haltWithErorr('Can not read file at path ' . $path
+                                . ' ' . $haltmsg);
+        }
+
+        // actually bring in the autoload file
+        if ((include_once($path)) == FALSE) {
+            Logger::haltWithErorr('Failed to include file from path ' . $path
+                                . ' ' . $haltmsg);
+        }
+    }
 }

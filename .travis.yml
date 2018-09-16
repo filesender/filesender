@@ -1,9 +1,13 @@
-dist: precise
+dist: trusty
 sudo: required
 language: php
 php:
-- 5.3
+  - 7.0
+services:
+  - postgresql
+  - mariadb
 addons:
+  mariadb: '10.0'
   sauce_connect:
     username: "$SAUCE_USERNAME"
     no-ssl-bump-domains: file_sender.app
@@ -11,51 +15,83 @@ addons:
   - file_sender.app
   jwt:
     secure: Dfap55GeoeDedJPwqtX3o7AEdZ48gGdOcgYOKNDZu4+9xKsuxFG4n9UKbF7H378XCuoS+og+vpdJ+PZhmbsvd09/zdNw8HWoRRixGG1sDLg97NOX3ImjCoeSPcOVoiYwH/uVP22NnW2orhBwzeYo6OaX9Eb7Q9soXgoNRuPC3i7lsHVx7duB3lfc1bv1Bay6RmxtBfGXj4Q7mwMseoejL0PiYICWJ2H5KFt2Cd3qTIXhl2moMREyovwji97bQXv45XW2n7pUfEgSQJvdxd5tJvcu8ngYQq7YIeOmhYf3QyYVB8NIgI/iOI1CldGCE9pTSEfMGzkATi2OKJHrHurETHEhWEgFzNheYxlh/eTZqGuHN767r1XQID/lQ/kNiOjZyvTkGw2oCwpz9G3exNTo95AaG52OB1vb8MwnupmDXk+ozm3ZECsfnad1UAawVvTYB6CgUF1sg2RQH7quhmYyDQB5j9SLJ9xMsYo06ttBtABgiAzs9P/73gVKO9f13Qvy+ZSF2elzpCBO23B1gm9j/zmi3NW8cPmYEq/6spGV4K2T7RGATAPgeX98+QHAOLMWUo7TWl/oJVH4P+ocMgdSgGpp9cyE0kAFQyZ62vU29Z4xIua1t1gDr/LbrpMj5LJls5YfhFwuNYLACKDJto+AlGj4vqWyDi0kivVqsrdGqx4=
-service:
-- postgresql
 before_install:
+- composer self-update
 - composer update --no-interaction
-- cp ./travis/config.travis.pgsql.php ./config/config.php
+- cp ./travis/filesender-config.php ./config/config.php
+- sh -c "if [ '$DB' = 'mysql' ]; then sudo sed -e "s?usemysql=0?usemysql=1?g" --in-place ./config/config.php  ; fi "
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place ./config/config.php
 - chmod -R a+x ./travis/scripts
-- phpenv config-add ./travis/myconfig.ini
+- phpenv config-add ./travis/php-config.ini
 install:
-- "./travis/scripts/postgresql-setup.sh"
-- "./travis/scripts/simplesamlphp-setup.sh"
 - mkdir ./log
 - mkdir ./tmp
 - mkdir ./files
+- sh -c "if [ '$DB' = 'pgsql' ]; then ./travis/scripts/postgresql-setup.sh ; fi "
+- sh -c "if [ '$DB' = 'mysql' ]; then ./travis/scripts/mariadb-setup.sh ; fi "
+- "./travis/scripts/simplesamlphp-setup.sh"
+- php scripts/upgrade/database.php
+- sh -c "if [ '$TESTSUITE' = 'dataset' ]; then php scripts/upgrade/database.php --db_database filesenderdataset ; fi "
+- echo "Sauce connect will start soon if this is a browser test session"
+- echo " otherwise it will close early, "
+- echo "  but that is ok as we will not need it in this VM "
 before_script:
 - sudo apt-get update
+- sudo apt-get install curl
 - sudo apt-get install apache2 libapache2-mod-fastcgi
-- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
-  version-name)/etc/php-fpm.conf
 - sudo a2enmod rewrite actions fastcgi alias ssl headers
-- echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED
-  \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/"
-  /etc/postgresql/9.1/main/pg_hba.conf
+  /etc/postgresql/9.2/main/pg_hba.conf
 - sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/"
-  /etc/postgresql/9.1/main/pg_hba.conf
+  /etc/postgresql/9.2/main/pg_hba.conf
 - sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/ports.conf
 - sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
-- "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
+#- sudo echo '<?php'      >| $TRAVIS_BUILD_DIR/www/info.php
+#- sudo echo 'phpinfo();' >> $TRAVIS_BUILD_DIR/www/info.php
+#- sudo chown www-data       $TRAVIS_BUILD_DIR/www/info.php
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key
   -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
-- sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
-- sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+- sudo cp -f travis/apache2.conf /etc/apache2/sites-enabled/000-default.conf
+- sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 - sudo service postgresql restart
+# enable php-fpm
+- sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED
+  \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+- sudo a2enmod rewrite actions fastcgi alias
+- echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+- sudo chown -R travis:travis /var/lib/apache2/fastcgi
+- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
+#- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
+- ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+- sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo service apache2 restart
-- php scripts/upgrade/database.php
-- php scripts/upgrade/database.php --db_database filesenderdataset
+#- curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/*.log
+# stop the database we are not planning to use
+# to catch bad configurations that might use the wrong database by mistake
+- sh -c "if [ '$DB' = 'pgsql' ]; then sudo service mysql stop  ; fi "
+- sh -c "if [ '$DB' = 'mysql' ]; then sudo service postgresql stop  ; fi "
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
-- phpunit --configuration ./unittests/config_tests_filesender.xml
+- phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
 notifications:
   email: false
-env:
-- SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+##
+## I have used DB as pgsql and mysql as this is what filesender uses for config db_type
+matrix:
+  include:
+    - name: pgsql-core
+      env:  DB=pgsql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
+    - name: pgsql-selenium1
+      env:  DB=pgsql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+    - name: pgsql-dataset
+      env:  DB=pgsql TESTSUITE=dataset   TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
+    - name: mysql-core 
+      env:  DB=mysql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
+    - name: mysql-selemium1
+      env:  DB=mysql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+

@@ -35,6 +35,13 @@ require_once(dirname(__FILE__).'/../../includes/init.php');
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('Cron started');
 
+$testingMode = (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
+if( $testingMode ) {
+    Mail::TESTING_SET_DO_NOT_SEND_EMAIL();
+}
+
+
+
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
 if(!is_null($storage_usage)) {
@@ -65,11 +72,18 @@ foreach(Transfer::allFailed() as $transfer) {
 }
 
 // Close expired guests
+$days = Config::get('guests_expired_lifetime');
 foreach(Guest::allExpired() as $guest) {
-    if($guest->status == GuestStatuses::CLOSED) continue;
     if($guest->getOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
-    Logger::info($guest.' expired, closing it');
-    $guest->close(false);
+
+    if( $days != -1 && $guest->isExpiredDaysAgo($days)) {
+        Logger::info($guest.' expired and before guests_expired_lifetime so deleting it');
+        $guest->delete();
+    } else {
+        if($guest->status == GuestStatuses::CLOSED) continue;
+        Logger::info($guest.' expired, closing it');
+        $guest->close(false);
+    }
 }
 
 // Delete expired audit logs and related data
@@ -139,3 +153,19 @@ if((int)$level) {
 
 // Remove inactive users preferences
 User::removeInactive();
+
+// Clean old client logs
+ClientLog::clean();
+
+// Clean old translated emails
+TranslatableEmail::clean();
+
+// Clean old tracking events 
+TrackingEvent::clean();
+
+// Clean old tracking events 
+StatLog::clean();
+
+// Clean old auditlog events
+AuditLog::cleanup();
+

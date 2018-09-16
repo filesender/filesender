@@ -104,6 +104,21 @@ class FileBadHashException extends FileException {
 }
 
 /**
+ * A File has multiple paths where there should only be one file exception
+ */
+class FileMultiplePathException extends FileException {
+    /**
+     * Constructor
+     * 
+     * @param File $file
+     * @param string $hash the bad hash
+     */
+    public function __construct($file, $hash) {
+        parent::__construct($file, 'multiple_path', array('hash' => $hash));
+    }
+}
+
+/**
  * Chunk out of bounds exception
  */
 class FileChunkOutOfBoundsException extends FileException {

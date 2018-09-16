@@ -37,6 +37,7 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  * Represents a transfer in database
  * 
  * @property array $filesCache related filesCache
+ * @property array $collectionsCache related collectionsCache
  * @property array $recipientsCache related recipientsCache
  */
 class Transfer extends DBObject {
@@ -50,9 +51,9 @@ class Transfer extends DBObject {
             'primary' => true,
             'autoinc' => true
         ),
-        'user_id' => array(
-            'type' => 'string',
-            'size' => 250
+        'userid' => array(
+            'type' => 'uint',
+            'size' => 'big'
         ),
         'user_email' => array(
             'type' => 'string',
@@ -99,12 +100,53 @@ class Transfer extends DBObject {
         'options' => array(
             'type' => 'text',
             'transform' => 'json'
-        )
+        ),
+        'key_version' => array(
+            'type'    => 'uint',
+            'size'    => 'small',
+            'null'    => false,
+            'default' => 0
+        ),
+        'salt' => array(
+            'type'    => 'string',
+            'size'    => '32',
+            'null'    => true,
+        ),
+        
     );
 
+    /**
+     * This is the SQL view definition of the main view for transfers.
+     * This method is here to allow File to use this view in it's own view
+     * without needing an explicit ordering between classes during database upgrades.
+     */
+    public static function getPrimaryViewDefinition( $dbtype ) {
+        return 'select *'
+             . DBView::columnDefinition_age($dbtype,'created')
+             . DBView::columnDefinition_age($dbtype,'expires')
+             . DBView::columnDefinition_age($dbtype,'made_available')
+             . DBView::columnDefinition_is_encrypted('options','is_encrypted')
+             . '  from ' . self::getDBTable();
+    }
+    public static function getViewMap() {
+        $a = array();
+        $authviewdef = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = self::getPrimaryViewDefinition( $dbtype );
+            
+            $authviewdef[$dbtype] = 'select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
+                                      . 't.made_available,t.expires,t.created FROM '
+                                      . self::getDBTable().' t, '
+                                            . call_user_func('User::getDBTable').' u, '
+                                            . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a,
+                      'transfersauthview' => $authviewdef );
+    }
+
     protected static $secondaryIndexMap = array(
-        'user_id' => array( 
-            'user_id' => array()
+        'userid' => array(
+            'userid' => array()
         )
     );
 
@@ -114,17 +156,18 @@ class Transfer extends DBObject {
     const UPLOADING = "status = 'uploading' ORDER BY created DESC";
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const CLOSED = "status = 'closed' ORDER BY created DESC";
-    const EXPIRED = "expires < :date ORDER BY expires ASC";
+    const EXPIRED = "expires <= :date ORDER BY expires ASC";
     const FAILED = "created < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
     const AUDITLOG_EXPIRED = "expires < :date ORDER BY expires ASC";
-    const FROM_USER = "user_id = :user_id AND status='available' ORDER BY created DESC";
-    const FROM_USER_CLOSED = "user_id = :user_id AND status='closed' ORDER BY created DESC";
+    const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
+    const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
     
     /**
      * Properties
      */
     protected $id = null;
+    protected $userid = null;
     protected $status = null;
     protected $user_id = null;
     protected $user_email = null;
@@ -137,11 +180,14 @@ class Transfer extends DBObject {
     protected $expires = 0;
     protected $expiry_extensions = 0;
     protected $options = array();
+    protected $key_version = 0;
+    protected $salt = '';
     
     /**
      * Related objects cache
      */
     private $filesCache = null;
+    private $collectionsCache = null;
     private $recipientsCache = null;
     private $logsCache = null;
     private static $optionsCache = null;
@@ -155,6 +201,7 @@ class Transfer extends DBObject {
      * @throws TransferNotFoundException
      */
     protected function __construct($id = null, $data = null) {
+        
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
@@ -165,6 +212,12 @@ class Transfer extends DBObject {
         
         // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
+
+        // Load collections if they exist
+        if ($this->getOption(TransferOptions::COLLECTION)) {
+            CollectionType::initialize();
+            $this->collectionsCache = Collection::fromTransfer($this);
+        }
     }
     
     /**
@@ -197,7 +250,7 @@ class Transfer extends DBObject {
                                ,'limit' => $limit
                                ,'offset' => $offset
                                )
-                         , array(':user_id' => $user)
+                         , array(':userid' => $user)
                          );
     }
     
@@ -227,7 +280,7 @@ class Transfer extends DBObject {
         // Gather user's guests transfers
         $transfers = array();
         foreach(Guest::fromUser($user) as $gv) {
-            $transfers = array_merge($transfers, $gv->transfers);
+            $transfers = array_merge($transfers, $gv->transfers); 
         }
         
         // Sort by date
@@ -250,12 +303,11 @@ class Transfer extends DBObject {
         $transfer = new self();
         
         // Init caches to empty to avoid db queries
-        $transfer->filesCache = array();
         $transfer->recipientsCache = array();
         $transfer->logsCache = array();
         
-        $transfer->user_id = Auth::user()->id;
-        
+        $transfer->userid = Auth::user()->id;
+
         if(!$user_email) $user_email = Auth::user()->email;
         
         if(Auth::isGuest()) {
@@ -270,12 +322,9 @@ class Transfer extends DBObject {
         }
         
         $transfer->__set('user_email', $user_email);
-        
         $transfer->__set('expires', $expires);
-        
         $transfer->created = time();
         $transfer->status = TransferStatuses::CREATED;
-        
         $transfer->lang = Lang::getCode();
         
         return $transfer;
@@ -372,6 +421,14 @@ class Transfer extends DBObject {
      */
     public function beforeDelete() {
         AuditLog::clean($this);
+        
+        if (!is_null($this->collections)) {
+            foreach ($this->collections as $collection_type_id => $collectionList) {
+                foreach ($collectionList as $collection) {
+                    $this->removeCollection($collection);
+                }
+            }
+        }
         
         foreach($this->files as $file) $this->removeFile($file);
         
@@ -585,13 +642,13 @@ class Transfer extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'status', 'user_id', 'user_email', 'guest_id',
+            'id','status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'made_available',
-            'expires', 'expiry_extensions', 'options', 'lang'
+            'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid'
         ))) return $this->$property;
-        
+
         if($property == 'user' || $property == 'owner') {
-            $user = User::fromId($this->user_id);
+            $user = User::fromID($this->userid);
             $user->email_addresses = $this->user_email;
             return $user;
         }
@@ -604,7 +661,11 @@ class Transfer extends DBObject {
             if(is_null($this->filesCache)) $this->filesCache = File::fromTransfer($this);
             return $this->filesCache;
         }
-        
+
+        if($property == 'collections') {
+            return $this->collectionsCache;
+        }
+
         if($property == 'size') {
             return array_sum(array_map(function($file) {
                 return $file->size;
@@ -673,6 +734,14 @@ class Transfer extends DBObject {
             $recipients = array_values($this->recipients);
             return $recipients[0]->download_link;
         }
+        if($property == 'salt') {
+            if( strlen($this->salt)) {
+                return $this->salt;
+            }
+            $this->salt = Crypto::generateSaltString(32);
+            $this->save();
+            return $this->salt;
+        }
         throw new PropertyAccessException($this, $property);
     }
     
@@ -726,66 +795,44 @@ class Transfer extends DBObject {
             
         }else if($property == 'options') {
             $this->options = self::validateOptions($value);
-            
+
+        }else if($property == 'key_version') {
+            $this->key_version = $value;
+
         }else throw new PropertyAccessException($this, $property);
-    }
-
-    /**
-     * Calculate the encrypted file size
-     *
-     * @param File file the file we are working on
-     * @return int What $file->encrypted_size should be for this file.
-     */
-    private function calculateEncryptedFileSize( $file ) {
-
-        $upload_chunk_size = Config::get('upload_chunk_size');
-        
-        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
-        $chunksMinusOne = ceil($file->size / $upload_chunk_size)-1;
-        $lastChunkSize = $file->size - ($chunksMinusOne * $upload_chunk_size);
-
-        // padding on the last chunk of the file
-        // may not be a full chunk so need to calculate
-        $lastChunkPadding = 16 - $lastChunkSize % 16;
-        if ($lastChunkPadding == 0)
-            $lastChunkPadding = 16;
-            
-        return $file->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
     }
 
     /**
      * Adds a file
      * 
-     * @param string $name the file name
+     * @param string $path the file name
      * @param string $size the file size
+     * @param string $mime_type the optional file mime_type
      * 
      * @return File
      */
-    public function addFile($name, $size, $mime_type = null) {
+    public function addFile($path, $size, $mime_type = null)  {
+        if(is_null($this->filesCache)) {
+            $this->filesCache = File::fromTransfer($this);
+        }
+
         // Check if already exists
-        if(!is_null($this->filesCache)) {
-            $matches = array_filter($this->filesCache, function($file) use($name, $size) {
-                return ($file->name == $name) && ($file->size == $size);
-            });
-            
-            if(count($matches)) return array_shift($matches);
+        $matches = array_filter($this->filesCache, function($file) use($path, $size) {
+            return ($file->path == $path) && ($file->size == $size);
+        });
+        
+        if(count($matches)) return array_shift($matches);
+
+        if( !Utilities::isValidFileName( $path )) {
+            throw new TransferFileNameInvalidException( $path );
         }
 
-        if( !Utilities::isValidFileName( $name )) {
-            throw new TransferFileNameInvalidException( $name );
-        }
-
-        // Create and save new recipient
-        $file = File::create($this);
-        $file->name = $name;
-        $file->size = $size;
-        $file->mime_type = $mime_type ? $mime_type : 'application/binary';
-        $file->encrypted_size = $this->calculateEncryptedFileSize( $file );
-
+        // Create and save new file
+        $file = File::create($this, $path, $size, $mime_type);
         $file->save();
  
         // Update local cache
-        if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
+        $this->filesCache[$file->id] = $file;
         
         Logger::info($file.' added to '.$this);
         
@@ -807,6 +854,79 @@ class Transfer extends DBObject {
         if(!is_null($this->filesCache) && array_key_exists($file->id, $this->filesCache)) unset($this->filesCache[$file->id]);
         
         Logger::info($file.' removed from '.$this);
+    }
+
+    /**
+     * Adds a collection
+     * 
+     * @param CollectionType $type the collection type
+     * @param string $info unique information about the collection
+     * 
+     * @return Collection
+     */
+    public function addCollection(CollectionType $type, $info) {
+        $collections_added = false;
+        
+        if(is_null($this->collectionsCache)) {
+            $this->collectionsCache = array();
+            $collections_added = true;
+        }
+        
+        $type_id = $type->id;
+        $type_exists = array_key_exists($type_id, $this->collectionsCache);
+
+        
+        // Check if already exists
+        if($type_exists) {
+            $matches = array_filter($this->collectionsCache[$type_id], function($collection) use($info) {
+                return ($collection->info == $info);
+            });
+            
+            if(count($matches)) return array_shift($matches);
+        }
+
+        // Create and save new recipient
+        $collection = Collection::create($this, $type, $info);
+        $collection->save();
+
+        if ($collections_added) {
+            $this->options[TransferOptions::COLLECTION] = true;
+            $this->save();
+        }
+        
+        // Update local cache
+        if(!$type_exists) {
+            $this->collectionsCache[$type_id] = array();
+        }
+        
+        $this->collectionsCache[$type_id][$collection->id] = $collection;
+        
+        Logger::info($collection.' added to '.$this);
+        
+        return $collection;
+    }
+
+    /**
+     * Removes a collection
+     * 
+     * @param mixed $collection Collection or collection id
+     */
+    public function removeCollection($collection) {
+        if(!is_object($collection)) $collection = Collection::fromId($collection);
+        $type_id = $collection->type_id;
+        $id = $collection->id;
+
+        // Delete
+        $collection->delete();
+        
+        // Update local cache
+        if(!is_null($this->collectionsCache) &&
+           array_key_exists($type_id, $this->collectionsCache) &&
+           array_key_exists($id, $this->collectionsCache[$type_id])) {
+            unset($this->collectionsCache[$type_id][$id]);
+        }
+        
+        Logger::info($collection.' removed from '.$this);
     }
     
     /**

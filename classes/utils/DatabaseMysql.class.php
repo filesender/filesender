@@ -57,12 +57,28 @@ class DatabaseMysql {
     public static function createTable($table, $definition) {
         $columns = array();
         
+        $primary_keys = null;
         foreach($definition as $column => $def) {
             $columns[] = $column.' '.self::columnDefinition($def);
+            
+            if(array_key_exists('primary', $def) && $def['primary']) {
+                if (is_null($primary_keys)) $primary_keys = $column;
+                else $primary_keys .= ', '.$column;
+            }
         }
-        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).')';
-        
+
+        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).', PRIMARY KEY('.$primary_keys.'))';
+
         DBI::exec($query);
+    }
+
+    public static function createView($table, $viewname, $definitionsql) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+        $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
+        DBI::exec($query);
+    }
+    public static function dropView($table, $viewname) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
     }
     
     /**
@@ -111,13 +127,19 @@ class DatabaseMysql {
     public static function createTableSecondaryIndex( $table, $index, $definition ) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
 
+        $preamble = '';
         $coldefs = '';
         foreach( $definition as $dk => $dm ) {
+            if( $dk == 'UNIQUE' ) {
+                $preamble .= ' UNIQUE ';
+                continue;
+            }
             if( $coldefs != '' )
                 $coldefs .= ',';
             $coldefs .= $dk;
         }
-        $query = 'CREATE INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        $query = 'CREATE '.$preamble.' INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        echo " $query \n";
         DBI::exec($query);
     }
 
@@ -357,6 +379,11 @@ class DatabaseMysql {
         $null = 'NOT NULL';
         if(array_key_exists('null', $definition) && $definition['null']) $null = 'NULL';
         $mysql .= ' '.$null;
+
+        // add primary key constraint
+        if(array_key_exists('addprimary', $definition) && $definition['addprimary']) {
+            $mysql .= ' PRIMARY KEY ';
+        }
         
         // Add default
         if(array_key_exists('default', $definition)) {
@@ -375,7 +402,6 @@ class DatabaseMysql {
         // Add options
         if(array_key_exists('autoinc', $definition) && $definition['autoinc']) $mysql .= ' AUTO_INCREMENT';
         if(array_key_exists('unique', $definition) && $definition['unique']) $mysql .= ' UNIQUE KEY';
-        if(array_key_exists('primary', $definition) && $definition['primary']) $mysql .= ' PRIMARY KEY';
         
         // Return statment
         return $mysql;

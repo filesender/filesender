@@ -51,6 +51,7 @@ class Autoloader {
         'GUIPages' => 'constants/',
         'LogLevels' => 'constants/',
         'ReportFormats' => 'constants/',
+        'DatabaseSchemaVersions' => 'constants/',
         
         'Storage' => 'storage/',
         'Storage*' => 'storage/',
@@ -59,13 +60,19 @@ class Autoloader {
         // WARNING, the migration script uses things in data in a special way
         // WARNING
         'DBObject' => 'data/',
+        'CollectionType' => 'data/',
+        'FileCollection' => 'data/',
+        'Collection' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
+        'ShredFile' => 'data/',
         'Recipient' => 'data/',
         'Guest' => 'data/',
         'User' => 'data/',
         'TrackingEvent' => 'data/',
         'TranslatableEmail' => 'data/',
+        'Metadata' => 'data/',
+        'Authentication' => 'data/',
         '*Log' => 'data/',
 
         'DBLayer' => 'utils/',
@@ -108,14 +115,8 @@ class Autoloader {
                 
                 if(!file_exists($file)) {
 
-                    $file = FILESENDER_BASE.'/lib/'.$path;
-                    if(!$path || substr($path, -1) == '/') $file .= str_replace('\\','/',$class);
-                    $file .= '.php';
-
-                    if(!file_exists($file)) {
-                        Logger::error('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
-                        return;
-                    }
+                    Logger::debug('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
+                    return;
                 }
                 
                 require_once $file;

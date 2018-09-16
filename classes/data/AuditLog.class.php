@@ -100,6 +100,19 @@ class AuditLog extends DBObject {
         
     );
 
+    public static function getViewMap() {
+
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_as_number($dbtype,'target_id')
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        
+    }
+    
     /**
      * Set selectors
      */
@@ -365,4 +378,30 @@ class AuditLog extends DBObject {
         foreach(self::fromTransfer($transfer) as $log)
             $log->delete();
     }
+
+    public static function cleanup() {
+        
+        // delete auditlogs entries for guests who have
+        // already been removed from the system
+        DBI::exec(
+            ""
+           ."delete from ".self::getDBTable()." where id in ("
+           ."   select al.id from ".self::getViewName()." al"
+           ."   left outer join ".Guest::getDBTable()." g"
+           ."      on g.id = target_id_as_number "
+           ."   where target_type = 'Guest' and g.id is null"
+           ." )"
+        );
+        
+        // if there is a sunset lifetime for the auditlog 
+        // then cleanup records that are too old.
+        $lifetime = Config::get('auditlog_lifetime');
+        if( !is_null($lifetime) && $lifetime > 0 ) {
+            // delete auditlogs entries that are too old
+            $statement = DBI::prepare("delete from ".self::getDBTable()." where created < :cutoff ");
+            $statement->execute(array(':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))));
+        }
+        
+    }
+    
 }

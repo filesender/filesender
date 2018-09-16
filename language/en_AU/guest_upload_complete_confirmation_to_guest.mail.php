@@ -1,14 +1,13 @@
-subject: You have uploaded files to FileSender as a Guest
+subject: Guest ended to upload files
 
 {alternative:plain}
 
 Dear Sir or Madam,
 
-You have uploaded files to your guest voucher :
+The following guest ended to upload files using a guest voucher :
 
 Guest: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
-Download link: {recipient.download_link}
 
 The voucher is available until {date:guest.expires} after which time it will be automatically deleted.
 
@@ -18,11 +17,11 @@ Best regards,
 {alternative:html}
 
 <p>
-     Dear Sir or Madam,
+    Dear Sir or Madam,
 </p>
 
 <p>
-  You have uploaded files to your guest voucher :
+The following guest ended to upload files using a guest voucher :
 </p>
 
 <table rules="rows">
@@ -41,10 +40,6 @@ Best regards,
             <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
         </tr>
         <tr>
-            <td>Download link</td>
-            <td><a href="{transfer.download_link}">{transfer.download_link}</a></td>
-        </tr>
-        <tr>
             <td>Valid until</td>
             <td>{date:guest.expires}</td>
         </tr>
@@ -55,3 +50,4 @@ Best regards,
     Best regards,<br />
     {cfg:site_name}
 </p>
+',
