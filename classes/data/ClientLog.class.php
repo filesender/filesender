@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,54 +31,58 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Represents a client log entry in database
  */
-class ClientLog extends DBObject {
+class ClientLog extends DBObject
+{
     /**
      * Database map
      */
-    protected static $dataMap = array(
-        'id' => array(
+    protected static $dataMap = [
+        'id' => [
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true
-        ),
-        'userid' => array(
+        ],
+        'userid' => [
             'type' => 'uint',
             'size' => 'big',
             'null' => true
-        ),
-        'created' => array(
+        ],
+        'created' => [
             'type' => 'datetime'
-        ),
-        'message' => array(
+        ],
+        'message' => [
             'type' => 'text'
-        )
-    );
+        ]
+    ];
 
-    public static function getViewMap() {
-        $a = array();
-        foreach(array('mysql','pgsql') as $dbtype) {
+    public static function getViewMap()
+    {
+        $a = [];
+        foreach (['mysql','pgsql'] as $dbtype) {
             $a[$dbtype] = 'select *'
-                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_age($dbtype, 'created')
                         . '  from ' . self::getDBTable();
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        return [ strtolower(self::getDBTable()) . 'view' => $a ];
     }
     
-    protected static $secondaryIndexMap = array(
-        'userid' => array( 
-            'userid' => array()
-        ),
-        'created_and_userid' => array( 
-            'created' => array(),
-            'userid' => array()
-        )
-    );
+    protected static $secondaryIndexMap = [
+        'userid' => [
+            'userid' => []
+        ],
+        'created_and_userid' => [
+            'created' => [],
+            'userid' => []
+        ]
+    ];
 
     /**
      * Properties
@@ -90,37 +94,45 @@ class ClientLog extends DBObject {
     
     /**
      * Constructor
-     * 
+     *
      * @param integer $id identifier of transfer to load from database (null if loading not wanted)
      * @param array $data data to create the transfer from (if already fetched from database)
-     * 
+     *
      * @throws TransferNotFoundException
      */
-    protected function __construct($id = null, $data = null) {
-        if(!is_null($id)) {
+    protected function __construct($id = null, $data = null)
+    {
+        if (!is_null($id)) {
             // Load from database if id given
             /** @var PDOStatement $statement */
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute(array(':id' => $id));
+            $statement->execute([':id' => $id]);
             $data = $statement->fetch();
-            if(!$data) throw new TransferNotFoundException('id = '.$id);
+            if (!$data) {
+                throw new TransferNotFoundException('id = '.$id);
+            }
         }
         
         // Fill properties from provided data
-        if($data) $this->fillFromDBData($data);
+        if ($data) {
+            $this->fillFromDBData($data);
+        }
     }
     
     /**
      * Get client logs from user
-     * 
+     *
      * @param mixed $user User or user id
      *
      * @return ClientLog[]
      */
-    public static function fromUser($user) {
-        if($user instanceof User) $user = $user->id;
+    public static function fromUser($user)
+    {
+        if ($user instanceof User) {
+            $user = $user->id;
+        }
 
-        return self::all('userid = :userid ORDER BY id ASC', array(':userid' => $user));
+        return self::all('userid = :userid ORDER BY id ASC', [':userid' => $user]);
     }
     
     /**
@@ -131,7 +143,8 @@ class ClientLog extends DBObject {
      *
      * @return self
      */
-    public static function create(User $user, $message) {
+    public static function create(User $user, $message)
+    {
         $log = new self();
         $log->userid = $user->id;
         $log->message = $message;
@@ -148,18 +161,20 @@ class ClientLog extends DBObject {
      *
      * @return self[]
      */
-    public static function stash(User $user, $logs) {
+    public static function stash(User $user, $logs)
+    {
         $stash = self::fromUser($user);
         $len = self::stashSize();
-        while($stash && (count($stash) + count($logs) > $len)) {
+        while ($stash && (count($stash) + count($logs) > $len)) {
             $log = array_shift($stash);
             $log->delete();
         }
     
-        while(count($logs) > $len) // stash is empty if this runs
+        while (count($logs) > $len) { // stash is empty if this runs
             array_shift($logs);
+        }
     
-        foreach($logs as $message) {
+        foreach ($logs as $message) {
             $log = self::create($user, $message);
             $log->save();
             $stash[] = $log;
@@ -173,37 +188,43 @@ class ClientLog extends DBObject {
      *
      * @return int
      */
-    public static function stashSize() {
+    public static function stashSize()
+    {
         return Config::get('clientlogs_stashsize');
     }
     
     /**
      * Clean old entries
      */
-    public static function clean() {
+    public static function clean()
+    {
         $days = Config::get('clientlogs_lifetime');
         
         /** @var PDOStatement $statement */
         $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
-        $statement->execute(array(':date' => date('Y-m-d', time() - $days * 86400)));
+        $statement->execute([':date' => date('Y-m-d', time() - $days * 86400)]);
     }
     
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return mixed
      */
-    public function __get($property) {
-        if(in_array($property, array(
+    public function __get($property)
+    {
+        if (in_array($property, [
             'id', 'userid', 'message', 'created'
-        ))) return $this->$property;
+        ])) {
+            return $this->$property;
+        }
         
-        if($property == 'user' || $property == 'owner')
+        if ($property == 'user' || $property == 'owner') {
             return User::fromId($this->userid);
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -214,28 +235,29 @@ class ClientLog extends DBObject {
      * by calling class::validateConfig() so that particular pages do not
      * have to be loaded to find configuration issues.
      */
-    public static function validateConfig() {
+    public static function validateConfig()
+    {
         $days = Config::get('clientlogs_lifetime');
-        if(!$days || !is_int($days) || $days <= 0) {
-             throw new ConfigBadParameterException('clientlogs_lifetime must be a positive integer');
+        if (!$days || !is_int($days) || $days <= 0) {
+            throw new ConfigBadParameterException('clientlogs_lifetime must be a positive integer');
         }
 
         $size = Config::get('clientlogs_stashsize');
         if (!is_int($size) || ($size <= 0)) {
-             throw new ConfigBadParameterException('clientlogs_stashsize must be a positive integer');
+            throw new ConfigBadParameterException('clientlogs_stashsize must be a positive integer');
         }
-        
     }
 
     /**
      * Setter
-     * 
+     *
      * @param string $property property to get
      * @param mixed $value value to set property to
-     * 
+     *
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
+    public function __set($property, $value)
+    {
         throw new PropertyAccessException($this, $property);
     }
 }

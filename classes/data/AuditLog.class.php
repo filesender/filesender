@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,62 +31,65 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Represents an user in database
  */
-class AuditLog extends DBObject {
+class AuditLog extends DBObject
+{
     /**
      * Database map
      */
-    protected static $dataMap = array(
-        'id' => array(
+    protected static $dataMap = [
+        'id' => [
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true
-        ),
-        'event' => array(
+        ],
+        'event' => [
             'type' => 'string',
             'size' => 32
-        ),
-        'target_type' => array(
+        ],
+        'target_type' => [
             'type' => 'string',
             'size' => 255
-        ),
-        'target_id' => array(
+        ],
+        'target_id' => [
             'type' => 'string',
             'size' => 255
-        ),
-        'author_type' => array(
+        ],
+        'author_type' => [
             'type' => 'string',
             'size' => 255,
             'null' => true
-        ),
-        'author_id' => array(
+        ],
+        'author_id' => [
             'type' => 'string',
             'size' => 255,
             'null' => true
-        ),
-        'ip' => array(
+        ],
+        'ip' => [
             'type' => 'string',
             'size' => 39,
-        ),
-        'created' => array(
+        ],
+        'created' => [
             'type' => 'datetime'
-        )
-    );
+        ]
+    ];
 
-    protected static $secondaryIndexMap = array(
-        'Type_ID' => array( 
-            'target_type' => array(),
-            'target_id'   => array()
-        ),
-        'Author_ID' => array( 
-            'author_type' => array(),
-            'author_id'   => array()
-        )
+    protected static $secondaryIndexMap = [
+        'Type_ID' => [
+            'target_type' => [],
+            'target_id'   => []
+        ],
+        'Author_ID' => [
+            'author_type' => [],
+            'author_id'   => []
+        ]
         
 //        'Type_ID_AType_AID_IP_Event_Created' => array(
 //            'target_type' => array(),
@@ -98,19 +101,18 @@ class AuditLog extends DBObject {
 //            'created'     => array()
 //        ),
         
-    );
+    ];
 
-    public static function getViewMap() {
-
-        $a = array();
-        foreach(array('mysql','pgsql') as $dbtype) {
+    public static function getViewMap()
+    {
+        $a = [];
+        foreach (['mysql','pgsql'] as $dbtype) {
             $a[$dbtype] = 'select *'
-                        . DBView::columnDefinition_age($dbtype,'created')
-                        . DBView::columnDefinition_as_number($dbtype,'target_id')
+                        . DBView::columnDefinition_age($dbtype, 'created')
+                        . DBView::columnDefinition_as_number($dbtype, 'target_id')
                         . '  from ' . self::getDBTable();
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a );
-        
+        return [ strtolower(self::getDBTable()) . 'view' => $a ];
     }
     
     /**
@@ -134,42 +136,49 @@ class AuditLog extends DBObject {
     
     /**
      * Constructor
-     * 
+     *
      * @param integer $id identifier of user to load from database (null if loading not wanted)
      * @param array $data data to create the auditlog from (if already fetched from database)
-     * 
+     *
      * @throws AuditLogNotFoundException
      */
-    protected function __construct($id = null, $data = null) {
-        if(!is_null($id)) {
+    protected function __construct($id = null, $data = null)
+    {
+        if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute(array(':id' => $id));
+            $statement->execute([':id' => $id]);
             $data = $statement->fetch();
-            if(!$data) throw new AuditLogNotFoundException('id = '.$id);
+            if (!$data) {
+                throw new AuditLogNotFoundException('id = '.$id);
+            }
         }
 
         // Fill properties from provided data
-        if($data) $this->fillFromDBData($data);
-        
+        if ($data) {
+            $this->fillFromDBData($data);
+        }
     }
     
     /**
      * Create a new audit log
-     * 
+     *
      * @param LogEventTypes $event the event to be logged
      * @param DBObject the target to be logged
      * @param DBObject the author of the action
-     * 
+     *
      * @return AuditLog auditlog
      */
-    public static function create($event, DBObject $target, $author = null) {
-        if(is_null(Config::get('auditlog_lifetime'))) // Auditlog disabled
+    public static function create($event, DBObject $target, $author = null)
+    {
+        if (is_null(Config::get('auditlog_lifetime'))) { // Auditlog disabled
             return;
+        }
         
         // Check event type
-        if(!LogEventTypes::isValidValue($event))
+        if (!LogEventTypes::isValidValue($event)) {
             throw new AuditLogUnknownEventException($event);
+        }
         
         $auditLog = new self();
         
@@ -179,9 +188,11 @@ class AuditLog extends DBObject {
         $auditLog->target_id = $target->id;
         $auditLog->target_type = get_class($target);
         
-        if(!$author) $author = Auth::user();
+        if (!$author) {
+            $author = Auth::user();
+        }
         
-        if(is_object($author)) {
+        if (is_object($author)) {
             $auditLog->author_type = get_class($author);
             $auditLog->author_id = $author->id;
         }
@@ -194,66 +205,78 @@ class AuditLog extends DBObject {
     /**
      * Save in database
      */
-    public function save() {
+    public function save()
+    {
         $this->insertRecord($this->toDBData());
     }
     
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return property value
      */
-    public function __get($property) {
-        if(in_array($property, array(
-            'id', 
+    public function __get($property)
+    {
+        if (in_array($property, [
+            'id',
             'event',
             'target_type',
             'target_id',
             'author_type',
             'author_id',
             'created',
-            'ip', 
-        ))) return $this->$property;
+            'ip',
+        ])) {
+            return $this->$property;
+        }
         
-        if($property == 'target') {
+        if ($property == 'target') {
             try {
                 return call_user_func($this->target_type.'::fromId', $this->target_id);
-            } catch(Exception $e) {
-                return (object)array(
+            } catch (Exception $e) {
+                return (object)[
                     'made_available_time' => 1,
                     'upload_time' => 1,
                     'name' => 'unknown',
                     'size' => 1,
                     'email' => 'unknown'
-                );
+                ];
             }
         }
         
-        if($property == 'author') {
-            if(!$this->author_type || !$this->author_id) return null;
+        if ($property == 'author') {
+            if (!$this->author_type || !$this->author_id) {
+                return null;
+            }
             
             try {
                 return call_user_func($this->author_type.'::fromId', $this->author_id);
-            } catch(Exception $e) {
-                return (object)array(
+            } catch (Exception $e) {
+                return (object)[
                     'identity' => 'unknown',
                     'email' => 'unknown'
-                );
+                ];
             }
         }
         
-        if($property == 'time_taken') {
-            if($this->target_type == 'Transfer') {
-                if($this->event == LogEventTypes::TRANSFER_AVAILABLE) return $this->target->made_available_time;
-                if($this->event == LogEventTypes::UPLOAD_ENDED) return $this->target->upload_time;
+        if ($property == 'time_taken') {
+            if ($this->target_type == 'Transfer') {
+                if ($this->event == LogEventTypes::TRANSFER_AVAILABLE) {
+                    return $this->target->made_available_time;
+                }
+                if ($this->event == LogEventTypes::UPLOAD_ENDED) {
+                    return $this->target->upload_time;
+                }
             }
             
-            if($this->target_type == 'File') {
-                if($this->event == LogEventTypes::FILE_UPLOADED) return $this->target->upload_time;
+            if ($this->target_type == 'File') {
+                if ($this->event == LogEventTypes::FILE_UPLOADED) {
+                    return $this->target->upload_time;
+                }
             }
             
             return 0;
@@ -264,16 +287,17 @@ class AuditLog extends DBObject {
     
     /**
      * Get logs related to a target
-     * 
+     *
      * @param DBObject $transfer
-     * 
+     *
      * @return array of AuditLog
      */
-    public static function fromTarget(DBObject $target, $event = null) {
-        $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => (string)$target->id));
+    public static function fromTarget(DBObject $target, $event = null)
+    {
+        $logs = self::all(self::FROM_TARGET, ['type' => $target->getClassName(), 'id' => (string)$target->id]);
         
-        if($event && LogEventTypes::isValidValue($event)) {
-            $logs = array_filter($logs, function($log) use($event) {
+        if ($event && LogEventTypes::isValidValue($event)) {
+            $logs = array_filter($logs, function ($log) use ($event) {
                 return $log->event == $event;
             });
         }
@@ -283,16 +307,17 @@ class AuditLog extends DBObject {
     
     /**
      * Get logs related to an author
-     * 
+     *
      * @param DBObject $author
-     * 
+     *
      * @return array of AuditLog
      */
-    public static function fromAuthor(DBObject $author, $event = null) {
-        $logs = self::all(self::FROM_AUTHOR, array('type' => $author->getClassName(), 'id' => (string)$author->id));
+    public static function fromAuthor(DBObject $author, $event = null)
+    {
+        $logs = self::all(self::FROM_AUTHOR, ['type' => $author->getClassName(), 'id' => (string)$author->id]);
         
-        if($event && LogEventTypes::isValidValue($event)) {
-            $logs = array_filter($logs, function($log) use($event) {
+        if ($event && LogEventTypes::isValidValue($event)) {
+            $logs = array_filter($logs, function ($log) use ($event) {
                 return $log->event == $event;
             });
         }
@@ -302,41 +327,50 @@ class AuditLog extends DBObject {
     
     /**
      * Get logs related to a transfer
-     * 
+     *
      * @param Transfer $transfer
-     * 
+     *
      * @return array of AuditLog
      */
-    public static function fromTransfer(Transfer $transfer, $event = null) {
-        if(
+    public static function fromTransfer(Transfer $transfer, $event = null)
+    {
+        if (
             !is_object($transfer)
             || !$transfer->id
-        ) throw new TransferNotFoundException($transfer->id);
+        ) {
+            throw new TransferNotFoundException($transfer->id);
+        }
         
         // Get and delete all audit logs related to the transfer
-        $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => (string)$transfer->id)));
+        $logs = array_values(self::all(self::FROM_TARGET, ['type' => $transfer->getClassName(), 'id' => (string)$transfer->id]));
         
         // Add events related to the transfer's files
-        foreach(self::all('target_type=\'File\' AND target_id IN :ids', array(':ids' => array_map(function($file) {
+        foreach (self::all('target_type=\'File\' AND target_id IN :ids', [':ids' => array_map(function ($file) {
             return $file->id;
-        }, $transfer->files))) as $log) $logs[] = $log;
+        }, $transfer->files)]) as $log) {
+            $logs[] = $log;
+        }
         
         // Add events related to the transfer's recipients
-        foreach(self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function($recipient) {
+        foreach (self::all('target_type=\'Recipient\' AND target_id IN :ids', [':ids' => array_map(function ($recipient) {
             return $recipient->id;
-        }, $transfer->recipients))) as $log) $logs[] = $log;
+        }, $transfer->recipients)]) as $log) {
+            $logs[] = $log;
+        }
          
         
         // Sort by event date
-        usort($logs, function($a, $b) {
+        usort($logs, function ($a, $b) {
             $d = $a->created - $b->created;
-            if($d != 0) return $d;
+            if ($d != 0) {
+                return $d;
+            }
             return $a->id - $b->id;
         });
         
         // filter by type if required
-        if($event && LogEventTypes::isValidValue($event)) {
-            $logs = array_filter($logs, function($log) use($event) {
+        if ($event && LogEventTypes::isValidValue($event)) {
+            $logs = array_filter($logs, function ($log) use ($event) {
                 return $log->event == $event;
             });
         }
@@ -346,23 +380,24 @@ class AuditLog extends DBObject {
     
     /**
      * Tells wether the client already downloaded the file set over a past range
-     * 
+     *
      * @param Recipient $recipient
      * @param array $files_ids
      * @param int $range in seconds
-     * 
+     *
      * @return bool
      */
-    public static function clientRecentlyDownloaded($recipient, $files_ids, $range = 3600) {
+    public static function clientRecentlyDownloaded($recipient, $files_ids, $range = 3600)
+    {
         // Get a single download for each file if it exists over the range
         $downloaded = self::all(
             'target_type=\'File\' AND target_id IN :ids AND author_type=\'Recipient\' AND author_id=:rcptid AND ip = :ip AND event=\'download_ended\' AND created > :since GROUP BY target_id, id',
-            array(
+            [
                 ':ids' => $files_ids,
                 ':rcptid' => $recipient->id,
                 ':ip' => Utilities::getClientIP(),
                 ':since' => date('Y-m-d H:i:s', time() - $range)
-            )
+            ]
         );
         
         // Same number of items means all files where downloaded (individually or not) over the range
@@ -371,15 +406,18 @@ class AuditLog extends DBObject {
     
     /**
      * Remove entries related to a transfer
-     * 
+     *
      * @param Transfer $transfer
      */
-    public static function clean(Transfer $transfer) {
-        foreach(self::fromTransfer($transfer) as $log)
+    public static function clean(Transfer $transfer)
+    {
+        foreach (self::fromTransfer($transfer) as $log) {
             $log->delete();
+        }
     }
 
-    public static function cleanup() {
+    public static function cleanup()
+    {
         
         // delete auditlogs entries for guests who have
         // already been removed from the system
@@ -393,15 +431,13 @@ class AuditLog extends DBObject {
            ." )"
         );
         
-        // if there is a sunset lifetime for the auditlog 
+        // if there is a sunset lifetime for the auditlog
         // then cleanup records that are too old.
         $lifetime = Config::get('auditlog_lifetime');
-        if( !is_null($lifetime) && $lifetime > 0 ) {
+        if (!is_null($lifetime) && $lifetime > 0) {
             // delete auditlogs entries that are too old
             $statement = DBI::prepare("delete from ".self::getDBTable()." where created < :cutoff ");
-            $statement->execute(array(':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))));
+            $statement->execute([':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))]);
         }
-        
     }
-    
 }

@@ -1,13 +1,13 @@
 <?php
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -16,7 +16,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,8 +30,9 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  *  Represents file in the database
@@ -42,75 +43,75 @@ class File extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = array(
+    protected static $dataMap = [
         //file id, as in the database
-        'id' => array(
+        'id' => [
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
             'autoinc' => true,   //indicates that 'id' is auto-incremented
-        ),
-        'transfer_id' => array(
+        ],
+        'transfer_id' => [
             'type' => 'uint',
             'size' => 'medium',
-        ),
-        'uid' => array(
+        ],
+        'uid' => [
             'type' => 'string',
             'size' => 60
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => 'string',
             'size' => 255,
-        ),
-        'mime_type' => array(
+        ],
+        'mime_type' => [
             'type' => 'string',
             'size' => 255
-        ),
-        'size' => array(
+        ],
+        'size' => [
             'type' => 'uint',
             'size' => 'big'
-        ),
-        'encrypted_size' => array(
+        ],
+        'encrypted_size' => [
             'type' => 'uint',
             'null' => true,
             'size' => 'big'
-        ),
-        'upload_start' => array(
+        ],
+        'upload_start' => [
             'type' => 'datetime',
             'null' => true
-        ),
-        'upload_end' => array(
+        ],
+        'upload_end' => [
             'type' => 'datetime',
             'null' => true
-        ),
-        'sha1' => array(
+        ],
+        'sha1' => [
             'type' => 'string',
             'size' => 40,
             'null' => true
-        ),
-        'storage_class_name' => array(
+        ],
+        'storage_class_name' => [
             'type' => 'string',
             'size' => 60,
             'null' => true,
             'default' => 'StorageFilesystem'
-        )
-    );
+        ]
+    ];
 
-    protected static $secondaryIndexMap = array(
-        'transfer_id' => array( 
-            'transfer_id' => array()
-        )
-    );
+    protected static $secondaryIndexMap = [
+        'transfer_id' => [
+            'transfer_id' => []
+        ]
+    ];
 
 
-    public static function getViewMap() {
-        $a = array();
-        $filesbywhodef = array();
-        foreach(array('mysql','pgsql') as $dbtype) {
-            
+    public static function getViewMap()
+    {
+        $a = [];
+        $filesbywhodef = [];
+        foreach (['mysql','pgsql'] as $dbtype) {
             $a[$dbtype] = 'select *'
-                        . DBView::columnDefinition_age($dbtype,'upload_start')
-                        . DBView::columnDefinition_age($dbtype,'upload_end')
+                        . DBView::columnDefinition_age($dbtype, 'upload_start')
+                        . DBView::columnDefinition_age($dbtype, 'upload_end')
                         . '  from ' . self::getDBTable();
 
             // This view exists only to allow mariadb 10.0 and older database
@@ -118,16 +119,16 @@ class File extends DBObject
             $transferviewdef[$dbtype] = Transfer::getPrimaryViewDefinition($dbtype);
 
             $filesbywhodef[$dbtype] = 'select t.id as transferid,name,upload_end,f.id as fileid,mime_type,size,'
-	                            . ' t.* from '.self::getDBTable().' f, '
+                                . ' t.* from '.self::getDBTable().' f, '
                                     . ' filestranferviewcopy t '
                                     . ' where f.transfer_id = t.id order by t.id';
         }
         
         
-        return array( strtolower(self::getDBTable()) . 'view' => $a ,
+        return [ strtolower(self::getDBTable()) . 'view' => $a ,
                       'filestranferviewcopy' => $transferviewdef    ,
                       'filesbywhoview'       => $filesbywhodef
-        );
+        ];
     }
     
     
@@ -157,34 +158,38 @@ class File extends DBObject
     /**
      * Set the name of a File, optionally creating a Path
      * object internally if pathedName contains slashes
-     * 
+     *
      * @param string $pathName a potentially fully pathed name for the File
      */
-    protected function setName($pathName) {
-        if (is_null($pathName)) return;
+    protected function setName($pathName)
+    {
+        if (is_null($pathName)) {
+            return;
+        }
         $this->name = $pathName;
         $pos = strrpos($pathName, '/');
       
         // If the name for this file appears to be a path because it
         // contains a '/' (slash), add the file to a CollectionDirectory
         if (!($pos === false)) {
-           CollectionType::initialize();
-           $this->name = substr($pathName, $pos + 1);
-           $this->pathCache = $pathName;
-           $this->directoryCache = $this->transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos));
-           $this->directoryCache->addFile($this);
+            CollectionType::initialize();
+            $this->name = substr($pathName, $pos + 1);
+            $this->pathCache = $pathName;
+            $this->directoryCache = $this->transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos));
+            $this->directoryCache->addFile($this);
         }
     }
 
     /**
      * Get a File's full path, which may just be the File's name
      * if it does not belong to a CollectionDirectory
-     * 
+     *
      * @return string the File's full path
-     * 
+     *
      * @throws FileMultiplePathException
      */
-    protected function loadDirectoryPath() {
+    protected function loadDirectoryPath()
+    {
         // Taking advantage of two $pathCache states:
         // 1. null -> need to see if File belongs to a CollectionDirectory
         // 2. !null -> we have checked whether a FIle belongs to a CollectionDirectory
@@ -222,8 +227,8 @@ class File extends DBObject
      *
      * @return int What $file->encrypted_size should be for this file.
      */
-    private function calculateEncryptedFileSize() {
-
+    private function calculateEncryptedFileSize()
+    {
         $upload_chunk_size = Config::get('upload_chunk_size');
         
         $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
@@ -233,66 +238,74 @@ class File extends DBObject
         // padding on the last chunk of the file
         // may not be a full chunk so need to calculate
         $lastChunkPadding = 16 - $lastChunkSize % 16;
-        if ($lastChunkPadding == 0)
+        if ($lastChunkPadding == 0) {
             $lastChunkPadding = 16;
+        }
             
         return $this->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
     }
 
     /**
      * Constructor
-     * 
+     *
      * @param integer $id identifier of file to load from database (null if loading not wanted)
      * @param array $data data to create the file from (if already fetched from database)
-     * 
+     *
      * @throws FileNotFoundException
      */
-    public function __construct($id = null, $data = null) {
-    
+    public function __construct($id = null, $data = null)
+    {
         $this->storage_class_name = Storage::getDefaultStorageClass();
         
-        if(!is_null($id)) {
+        if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute(array(':id' => $id));
+            $statement->execute([':id' => $id]);
             $data = $statement->fetch();
-            if(!$data) throw new FileNotFoundException('id = '.$id);
+            if (!$data) {
+                throw new FileNotFoundException('id = '.$id);
+            }
         }
 
         // Fill properties from provided data
-        if($data) $this->fillFromDBData($data);
+        if ($data) {
+            $this->fillFromDBData($data);
+        }
     }
     
     /**
      * Create a file (for upload)
-     * 
+     *
      * @param Transfer $transfer the relater transfer
      * @param string $name the file name
      * @param string $size the file size
      * @param string $mime_type the optional file mime_type
-     * 
+     *
      * @return File
      */
-    public static function create(Transfer $transfer, $name = null, $size = null, $mime_type = null) {
+    public static function create(Transfer $transfer, $name = null, $size = null, $mime_type = null)
+    {
         $file = new self();
         
         // Init cache to empty to avoid db queries
-        $file->logsCache = array();
+        $file->logsCache = [];
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
         
         // Generate uid until it is indeed unique
-        $file->uid = Utilities::generateUID(function($uid, $tries) {
+        $file->uid = Utilities::generateUID(function ($uid, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
+            $statement->execute([':uid' => $uid]);
             $data = $statement->fetch();
-            if(!$data) Logger::info('File uid generation took '.$tries.' tries');
+            if (!$data) {
+                Logger::info('File uid generation took '.$tries.' tries');
+            }
             return !$data;
         });
 
         $file->storage_class_name = Storage::getDefaultStorageClass();
 
-        if (!is_null($size)) {      
+        if (!is_null($size)) {
             $file->size = $size;
             $file->encrypted_size = $file->calculateEncryptedFileSize();
         }
@@ -305,7 +318,8 @@ class File extends DBObject
     /**
      * Delete the file
      */
-    public function beforeDelete() {
+    public function beforeDelete()
+    {
         Storage::deleteFile($this);
         
         Logger::info($this.' deleted');
@@ -313,42 +327,45 @@ class File extends DBObject
     
     /**
      * Get file from uid
-     * 
+     *
      * @param string $uid
-     * 
+     *
      * @return File
      */
-    public static function fromUid($uid) {
+    public static function fromUid($uid)
+    {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
-        $s->execute(array(':uid' => $uid));
+        $s->execute([':uid' => $uid]);
         $data = $s->fetch();
         
-        if(!$data) throw FileNotFoundException('uid = '.$uid);
+        if (!$data) {
+            throw FileNotFoundException('uid = '.$uid);
+        }
         
         return self::fromData($data['id'], $data); // Don't query twice, use loaded data
     }
     
     /**
      * Get files from Transfer
-     * 
+     *
      * @param Transfer $transfer the relater transfer
-     * 
+     *
      * @return array of File
      */
-    public static function fromTransfer(Transfer $transfer) {
+    public static function fromTransfer(Transfer $transfer)
+    {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
-        $s->execute(array(':transfer_id' => $transfer->id));
-        $tree_files = array();
-        $files = array();
-        foreach($s->fetchAll() as $data) {
+        $s->execute([':transfer_id' => $transfer->id]);
+        $tree_files = [];
+        $files = [];
+        foreach ($s->fetchAll() as $data) {
             $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
             // mirror loadDirectoryPath(): Default that path and filename are the same
             $file->pathCache = $file->name;
             if ($file->size == 0 &&
                 $file->mime_type === CollectionTree::FILE_MIME_TYPE) {
                 $tree_files[$data['id']] = $file;
-            }
-            else {
+            } else {
                 $files[$data['id']] = $file;
             }
         }
@@ -359,9 +376,9 @@ class File extends DBObject
             $directories = $collections[CollectionType::DIRECTORY_ID];
             // Set path info if it exists
             $t = DBI::prepare('SELECT fc.file_id AS id, c.info AS dirpath, c.id as dir_id FROM FileCollections fc, Collections c WHERE c.transfer_id = :transfer_id AND c.type_id = :collection_type AND fc.collection_id = c.id');
-            $t->execute(array(':transfer_id' => $transfer->id,
-                              ':collection_type' => CollectionType::DIRECTORY_ID));
-            foreach($t->fetchAll() as $data) {
+            $t->execute([':transfer_id' => $transfer->id,
+                              ':collection_type' => CollectionType::DIRECTORY_ID]);
+            foreach ($t->fetchAll() as $data) {
                 $file = $files[$data['id']];
                 $file->pathCache = $data['dirpath'].'/'.$file->name;
                 $file->directoryCache = $directories[$data['dir_id']];
@@ -372,12 +389,13 @@ class File extends DBObject
     
     /**
      * Store a chunk at offset
-     * 
+     *
      * @param mixed $chunk the chunk data (binary)
      * @param int $offset the chunk offset in the file, if null appends at end of file
      */
-    public function writeChunk($chunk, $offset = null) {
-        if(!$this->upload_start) {
+    public function writeChunk($chunk, $offset = null)
+    {
+        if (!$this->upload_start) {
             $this->upload_start = time();
             $this->save();
         }
@@ -392,8 +410,11 @@ class File extends DBObject
     /**
      * End file upload
      */
-    public function complete() {
-        if($this->upload_end) return true; // Already completed
+    public function complete()
+    {
+        if ($this->upload_end) {
+            return true;
+        } // Already completed
         
         $r = Storage::completeFile($this);
         
@@ -408,71 +429,84 @@ class File extends DBObject
     
     /**
      * Read a chunk at offset
-     * 
+     *
      * @param int $offset the chunk offset in the file, if null reads next chunk (Storage keeps track of it)
      * @param int $length the chunk length, if null will use download_chunk_size from config
-     * 
+     *
      * @return mixed chunk data or null if no more data is available
      */
-    public function readChunk($offset = null, $length = null) {
+    public function readChunk($offset = null, $length = null)
+    {
         return Storage::readChunk($this, $offset, $length);
     }
     
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return property value
      */
-    public function __get($property) {
-        if(in_array($property, array(
+    public function __get($property)
+    {
+        if (in_array($property, [
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
-        ))) return $this->$property;
+        ])) {
+            return $this->$property;
+        }
 
-        if($property == 'id') {
+        if ($property == 'id') {
             if (is_null($this->id)) {
                 $this->save();
             }
             return $this->id;
         }
         
-        if($property == 'transfer') {
-            if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
+        if ($property == 'transfer') {
+            if (is_null($this->transferCache)) {
+                $this->transferCache = Transfer::fromId($this->transfer_id);
+            }
             return $this->transferCache;
         }
         
-        if($property == 'path') {
-            if(is_null($this->pathCache)) $this->loadDirectoryPath();
+        if ($property == 'path') {
+            if (is_null($this->pathCache)) {
+                $this->loadDirectoryPath();
+            }
             return $this->pathCache;
         }
         
-        if($property == 'directory') {
+        if ($property == 'directory') {
             // $pathCache controls if $directoryCache was initialized.
-            if(is_null($this->pathCache)) $this->loadDirectoryPath();
+            if (is_null($this->pathCache)) {
+                $this->loadDirectoryPath();
+            }
             return $this->directoryCache;
         }
         
-        if($property == 'owner') {
+        if ($property == 'owner') {
             return $this->transfer->owner;
         }
         
-        if($property == 'auditlogs') {
-            if(is_null($this->logsCache)) $this->logsCache = AuditLog::fromTarget($this);
+        if ($property == 'auditlogs') {
+            if (is_null($this->logsCache)) {
+                $this->logsCache = AuditLog::fromTarget($this);
+            }
             return $this->logsCache;
         }
         
-        if($property == 'downloads') {
-            return array_filter($this->auditlogs, function($log) {
+        if ($property == 'downloads') {
+            return array_filter($this->auditlogs, function ($log) {
                 return $log->event == LogEventTypes::DOWNLOAD_ENDED;
             });
         }
         
-        if($property == 'upload_time') {
-            if(!$this->upload_start || !$this->upload_end)
+        if ($property == 'upload_time') {
+            if (!$this->upload_start || !$this->upload_end) {
                 return null;
+            }
             
             return $this->upload_end - $this->upload_start;
         }
@@ -482,43 +516,49 @@ class File extends DBObject
     
     /**
      * Setter
-     * 
+     *
      * @param string $property property to get
      * @param mixed $value value to set property to
-     * 
+     *
      * @throws FileBadHashException
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
-        if($property == 'name') {
+    public function __set($property, $value)
+    {
+        if ($property == 'name') {
             $this->setName((string)$value);
-        }else if($property == 'auditlogs') {
+        } elseif ($property == 'auditlogs') {
             $this->logsCache = (array)$value;
-        }else if($property == 'mime_type') {
+        } elseif ($property == 'mime_type') {
             $this->mime_type = (string)$value;
-        }else if($property == 'size') {
+        } elseif ($property == 'size') {
             $this->size = (int)$value;
-        }else if($property == 'encrypted_size') {
+        } elseif ($property == 'encrypted_size') {
             $this->encrypted_size = (int)$value;
-        }else if($property == 'sha1') {
-            if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($this, $value);
+        } elseif ($property == 'sha1') {
+            if (!preg_match('`^[0-9a-f]{40}$`', $value)) {
+                throw new FileBadHashException($this, $value);
+            }
             $this->sha1 = (string)$value;
-        }else if($property == 'storage_class_name') {
+        } elseif ($property == 'storage_class_name') {
             $this->storage_class_name = (string)$value;
-        }else throw new PropertyAccessException($this, $property);
+        } else {
+            throw new PropertyAccessException($this, $property);
+        }
     }
     
     /**
      * String caster
-     * 
+     *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.$this->size.' bytes)';
     }
 
-    public function getStream() {
+    public function getStream()
+    {
         return Storage::getStream($this);
     }
-
 }

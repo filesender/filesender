@@ -1,13 +1,13 @@
 <?php
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -16,7 +16,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,8 +30,9 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  *  Represents collection in the database
@@ -41,22 +42,22 @@ class CollectionType extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = array(
+    protected static $dataMap = [
         //collection id, as in the database
-        'id' => array(
+        'id' => [
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => 'string',
             'size' => 60,
-        ),
-        'description' => array(
+        ],
+        'description' => [
             'type' => 'string',
             'size' => 512
-        ),
-    );
+        ],
+    ];
 
     /**
      * Properties
@@ -76,57 +77,61 @@ class CollectionType extends DBObject
     /**
      * Predefined Types
      */
-    static $UNKNOWN = null;
-    static $TREE = null;
-    static $DIRECTORY = null;
-    static $LASTSTATIC = null;
-    static $LATEST = null;
+    public static $UNKNOWN = null;
+    public static $TREE = null;
+    public static $DIRECTORY = null;
+    public static $LASTSTATIC = null;
+    public static $LATEST = null;
 
     /**
      * Constructor
-     * 
+     *
      * @param integer $id identifier of collection to load from database (null if loading not wanted)
      * @param array $data data to create the collection from (if already fetched from database)
-     * 
+     *
      * @throws ClassificationNotFoundException
      */
-    public function __construct($id = null, $data = null) {
-    
-        if(!is_null($id)) {
+    public function __construct($id = null, $data = null)
+    {
+        if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute(array(':id' => $id));
+            $statement->execute([':id' => $id]);
             $data = $statement->fetch();
-            if(!$data) throw new ClassificationNotFoundException('id = '.$id);
+            if (!$data) {
+                throw new ClassificationNotFoundException('id = '.$id);
+            }
         }
 
         // Fill properties from provided data
-        if($data) $this->fillFromDBData($data);
+        if ($data) {
+            $this->fillFromDBData($data);
+        }
     }
     
     /**
      * Initializes the CollectionType table
-     * 
+     *
      */
-    public static function initialize() {
-
+    public static function initialize()
+    {
         if (!is_null(self::$UNKNOWN)) {
             return;
         }
-        $types = array();
+        $types = [];
         
         // Load all CollectionTypes from database
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' ORDER BY :id');
-        $s->execute(array(':id' => 'id'));
-        foreach($s->fetchAll() as $data) {
+        $s->execute([':id' => 'id']);
+        foreach ($s->fetchAll() as $data) {
             $type = self::fromData($data['id'], $data);
             $types[$data['id']] = $type;
             self::$LATEST = $type;
         }
         
-        if (array_key_exists(self::UNKNOWN_ID, $types))
+        if (array_key_exists(self::UNKNOWN_ID, $types)) {
             self::$UNKNOWN = $types[self::UNKNOWN_ID];
-        else {
+        } else {
             self::$UNKNOWN = new self();
             self::$UNKNOWN->id = self::UNKNOWN_ID;
             self::$UNKNOWN->name = 'UNKNOWN';
@@ -134,19 +139,19 @@ class CollectionType extends DBObject
             self::$UNKNOWN->insert();
         }
 
-        if (array_key_exists(self::TREE_ID, $types))
+        if (array_key_exists(self::TREE_ID, $types)) {
             self::$TREE = $types[self::TREE_ID];
-        else {
+        } else {
             self::$TREE = new self();
             self::$TREE->id = self::TREE_ID;
             self::$TREE->name = 'TREE';
             self::$TREE->description = 'directory tree collection';
             self::$TREE->insert();
-            }
+        }
 
-        if (array_key_exists(self::DIRECTORY_ID, $types))
+        if (array_key_exists(self::DIRECTORY_ID, $types)) {
             self::$DIRECTORY = $types[self::DIRECTORY_ID];
-        else {
+        } else {
             self::$DIRECTORY = new self();
             self::$DIRECTORY->id = self::DIRECTORY_ID;
             self::$DIRECTORY->name = 'DIRECTORY';
@@ -154,9 +159,9 @@ class CollectionType extends DBObject
             self::$DIRECTORY->insert();
         }
 
-        if (array_key_exists(self::LASTSTATIC_ID, $types))
+        if (array_key_exists(self::LASTSTATIC_ID, $types)) {
             self::$LASTSTATIC = $types[self::LASTSTATIC_ID];
-        else {
+        } else {
             self::$LASTSTATIC = new self();
             self::$LASTSTATIC->id = self::LASTSTATIC_ID;
             self::$LASTSTATIC->name = 'LASTSTATIC';
@@ -168,43 +173,50 @@ class CollectionType extends DBObject
 
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return property value
      */
-    public function __get($property) {
-        if(in_array($property, array(
+    public function __get($property)
+    {
+        if (in_array($property, [
             'id', 'name', 'description'
-        ))) return $this->$property;
+        ])) {
+            return $this->$property;
+        }
         throw new PropertyAccessException($this, $property);
     }
     
     /**
      * Setter
-     * 
+     *
      * @param string $property property to get
      * @param mixed $value value to set property to
-     * 
+     *
      * @throws ClassificationBadHashException
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
-        if($property == 'name') {
+    public function __set($property, $value)
+    {
+        if ($property == 'name') {
             $this->name = (string)$value;
-        }else if($property == 'description') {
+        } elseif ($property == 'description') {
             $this->description = (string)$value;
-        }else throw new PropertyAccessException($this, $property);
+        } else {
+            throw new PropertyAccessException($this, $property);
+        }
     }
     
     /**
      * String caster
-     * 
+     *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.(strlen($this->name)+strlen($this->description)+1).' bytes)';
     }
 }

@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,55 +31,58 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Represents an user in database
  */
-class Authentication extends DBObject {
+class Authentication extends DBObject
+{
     
     /**
      * Database map
      */
-    protected static $dataMap = array(
-        'id' => array(
+    protected static $dataMap = [
+        'id' => [
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true,
-        ),
-        'saml_user_identification_uid' => array(
+        ],
+        'saml_user_identification_uid' => [
             'type' => 'string',
             'size' => 170,
-        ),
-        'saml_user_identification_uid_hash' => array(
+        ],
+        'saml_user_identification_uid_hash' => [
             'type' => 'string',
             'size' => 200,
             'null' => true
-        ),
-        'created' => array(
+        ],
+        'created' => [
             'type' => 'datetime',
             'null' => true
-        ),
-        'last_activity' => array(
+        ],
+        'last_activity' => [
             'type' => 'datetime',
             'null' => true
-        ),
-        'comment' => array(
+        ],
+        'comment' => [
             'type' => 'string',
             'size' => 100,
             'null' => true
-        ),
-    );
-    protected static $secondaryIndexMap = array(
-        'saml_user_identification_uid' => array( 
-            'saml_user_identification_uid' => array(),
-            'UNIQUE' => array()
-        ),
-        'saml_user_identification_uid_hash' => array( 
-            'saml_user_identification_uid_hash' => array()
-        )
-    );
+        ],
+    ];
+    protected static $secondaryIndexMap = [
+        'saml_user_identification_uid' => [
+            'saml_user_identification_uid' => [],
+            'UNIQUE' => []
+        ],
+        'saml_user_identification_uid_hash' => [
+            'saml_user_identification_uid_hash' => []
+        ]
+    ];
 
 
     
@@ -96,22 +99,23 @@ class Authentication extends DBObject {
     
     /**
      * Constructor
-     * 
+     *
      * @param integer $id identifier of record to load from database (null if loading not wanted)
      * @param array $data data to create the record from (if already fetched from database)
-     * 
+     *
      */
-    protected function __construct($id = null, $data = null) {
-        if(!is_null($id)) {
+    protected function __construct($id = null, $data = null)
+    {
+        if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute(array(':id' => $id));
+            $statement->execute([':id' => $id]);
             $data = $statement->fetch();
         }
         
-        if($data) {
+        if ($data) {
             $this->fillFromDBData($data);
-        }else{
+        } else {
             $this->id = $id;
             $this->created = time();
         }
@@ -120,30 +124,30 @@ class Authentication extends DBObject {
     /**
      * Create or return the auth object
      */
-    public static function ensure($saml_auth_uid, $comment = null) {
+    public static function ensure($saml_auth_uid, $comment = null)
+    {
         $saml_uid = $saml_auth_uid;
-        Logger::info('authentication::create(1) saml_uid ' . $saml_uid );
+        Logger::info('authentication::create(1) saml_uid ' . $saml_uid);
 
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE saml_user_identification_uid = :samluid');
-        $statement->execute(array(':samluid' => $saml_uid));
+        $statement->execute([':samluid' => $saml_uid]);
         $data = $statement->fetch();
-        if($data)
-        {
-            $ret = static::createFactory(null,$data);
+        if ($data) {
+            $ret = static::createFactory(null, $data);
             $ret->fillFromDBData($data);
-            Logger::info('authentication::create(2) FOUND AND RETURNING ' . $data['id'] );
+            Logger::info('authentication::create(2) FOUND AND RETURNING ' . $data['id']);
             return $ret;
         }
         
         $ret = static::createFactory();
         $ret->saml_user_identification_uid = $saml_uid;
-        Logger::info('authentication::create(2) NOT FOUND! ' . $saml_uid );
+        Logger::info('authentication::create(2) NOT FOUND! ' . $saml_uid);
         $ret->created = time();
         $ret->last_activity = $ret->created;
-        Logger::info('authentication::create(3) ' . $saml_uid );
+        Logger::info('authentication::create(3) ' . $saml_uid);
         $ret->updateHash();
-        Logger::info('authentication::create(4) ' . $ret->id );
-        Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash );
+        Logger::info('authentication::create(4) ' . $ret->id);
+        Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash);
         $ret->save();
         return $ret;
     }
@@ -155,12 +159,13 @@ class Authentication extends DBObject {
      *
      * @return self
      */
-    public static function ensureAuthIDFromAuthUID( $saml_auth_uid )
+    public static function ensureAuthIDFromAuthUID($saml_auth_uid)
     {
-        return self::ensure( $saml_auth_uid )->id;
+        return self::ensure($saml_auth_uid)->id;
     }
 
-    private function updateHash() {
+    private function updateHash()
+    {
         $h = sha1($this->saml_user_identification_uid);
         $this->saml_user_identification_uid_hash = $h;
         return $h;
@@ -168,34 +173,38 @@ class Authentication extends DBObject {
     
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return property value
      */
-    public function __get($property) {
-        if(in_array($property, array(
+    public function __get($property)
+    {
+        if (in_array($property, [
             'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'created','last_activity'
-        ))) return $this->$property;
+        ])) {
+            return $this->$property;
+        }
 
         throw new PropertyAccessException($this, $property);
     }
     
     /**
      * Setter
-     * 
+     *
      * @param string $property property to get
      * @param mixed $value value to set property to
-     * 
+     *
      * @throws BadVoucherException
      * @throws BadStatusException
      * @throws BadExpireException
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
-        if($property == 'saml_user_identification_uid_hash') {
+    public function __set($property, $value)
+    {
+        if ($property == 'saml_user_identification_uid_hash') {
             $this->saml_user_identification_uid_hash = $value;
         } else {
             throw new PropertyAccessException($this, $property);
