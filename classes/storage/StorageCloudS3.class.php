@@ -31,25 +31,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 require_once dirname(__FILE__).'/../../optional-dependencies/s3/vendor/autoload.php';
 use Aws\S3\S3Client;
 
-
 /**
- *  Gives access to a file on azure cloud 
+ *  Gives access to a file on azure cloud
  *
  *  This class stores the chunks that are sent as individual blobs
  *
  */
-class StorageCloudS3 extends StorageFilesystem {
-
+class StorageCloudS3 extends StorageFilesystem
+{
     private static $client = null;
 
-    public static function getClient() {
-
-        if( self::$client ) {
+    public static function getClient()
+    {
+        if (self::$client) {
             return self::$client;
         }
         
@@ -66,15 +67,17 @@ class StorageCloudS3 extends StorageFilesystem {
         return self::$client;
     }
     
-    public static function getOffsetWithinBlob($offset) {
+    public static function getOffsetWithinBlob($offset)
+    {
         $file_chunk_size = Config::get('upload_chunk_size');
         return ($offset % $file_chunk_size);
     }
     
-    public static function getObjectName($offset) {
+    public static function getObjectName($offset)
+    {
         $file_chunk_size = Config::get('upload_chunk_size');
         $offset = $offset - ($offset % $file_chunk_size);
-	return str_pad($offset,24,'0',STR_PAD_LEFT);
+        return str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -83,16 +86,17 @@ class StorageCloudS3 extends StorageFilesystem {
      * @param File $file
      * @param uint $offset offset in bytes
      * @param uint $length length in bytes
-     * 
+     *
      * @return mixed chunk data encoded as string or null if no chunk remaining
-     * 
+     *
      * @throws StorageFilesystemFileNotFoundException
      * @throws StorageFilesystemCannotReadException
      */
-    public static function readChunk(File $file, $offset, $length) {
-
-	if ($file->transfer->options['encryption'])
-	    $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+    public static function readChunk(File $file, $offset, $length)
+    {
+        if ($file->transfer->options['encryption']) {
+            $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+        }
 
         $bucket_name = $file->uid;
         $object_name = self::getObjectName($offset);
@@ -100,39 +104,39 @@ class StorageCloudS3 extends StorageFilesystem {
         try {
             $client = self::getClient();
 
-            $result = $client->getObject(array(
+            $result = $client->getObject([
                 'Bucket' => $bucket_name,
                 'Key'    => $object_name,
-            ));
+            ]);
             
             $data = $result['Body'];
-            if ($data === FALSE) return null;
-	    return $data;
-        }
-        catch (ServiceException $e)
-        {
+            if ($data === false) {
+                return null;
+            }
+            return $data;
+        } catch (ServiceException $e) {
             $msg = 'S3: readChunk() Can not read to object_name: ' . $object_name . ' offset ' . $offset;
             Logger::info($msg);
             throw new StorageFilesystemCannotReadException($msg);
         }
 
-	return null;
+        return null;
     }
     
     /**
      * Write a chunk of data to file at offset
-     * 
+     *
      * @param File $file
      * @param string $data the chunk data
      * @param uint $offset offset in bytes
-     * 
+     *
      * @return array with offset and written amount of bytes
-     * 
+     *
      * @throws StorageFilesystemOutOfSpaceException
      * @throws StorageFilesystemCannotWriteException
      */
-    public static function writeChunk(File $file, $data, $offset = null) {
-
+    public static function writeChunk(File $file, $data, $offset = null)
+    {
         $chunk_size     = strlen($data);
         $bucket_name = $file->uid;
         $object_name = self::getObjectName($offset);
@@ -140,20 +144,20 @@ class StorageCloudS3 extends StorageFilesystem {
         try {
             $client = self::getClient();
 
-            $client->createBucket(array(
+            $client->createBucket([
                 'Bucket' => $bucket_name,
-            ));
+            ]);
 
-            $result = $client->putObject(array(
+            $result = $client->putObject([
                 'Bucket' => $bucket_name,
                 'Key'    => $object_name,
                 'Body'   => $data,
-            ));
+            ]);
             
-            return array(
+            return [
                 'offset' => $offset,
                 'written' => $written
-            );
+            ];
         } catch (Exception $e) {
             $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
             Logger::info($msg);
@@ -163,23 +167,24 @@ class StorageCloudS3 extends StorageFilesystem {
 
     /**
      * Handles file completion checks
-     * 
+     *
      * @param File $file
      */
-    public static function completeFile(File $file) {
+    public static function completeFile(File $file)
+    {
         self::setup();
         $file_path = self::buildPath($file).$file->uid;
-        
     }
 
     /**
      * Deletes a file
-     * 
+     *
      * @param File $file
-     * 
+     *
      * @throws StorageFilesystemCannotDeleteException
      */
-    public static function deleteFile(File $file) {
+    public static function deleteFile(File $file)
+    {
         $file_path = self::buildPath($file).$file->uid;
         $bucket_name = $file->uid;
         $object_name = self::getObjectName($offset);
@@ -187,17 +192,17 @@ class StorageCloudS3 extends StorageFilesystem {
         try {
             $client = self::getClient();
 
-            $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name));
+            $objects = $client->getIterator('ListObjects', ['Bucket' => $bucket_name]);
 
             foreach ($objects as $object) {
-                $result = $client->deleteObject(array(
+                $result = $client->deleteObject([
                     'Bucket' => $bucket_name,
                     'Key'    => $object['Key']
-                ));  
+                ]);
             }
-            $result = $client->deleteBucket(array(
+            $result = $client->deleteBucket([
                 'Bucket' => $bucket_name,
-            ));  
+            ]);
         } catch (Exception $e) {
             Logger::info('deleteFile() error ' . $e);
             throw new StorageFilesystemCannotDeleteException($file_path, $file);
@@ -209,23 +214,24 @@ class StorageCloudS3 extends StorageFilesystem {
 
     /**
      * Store a whole file
-     * 
+     *
      * @param File $file
      * @param string $source_path path to file data
-     * 
+     *
      * @return bool
-     * 
+     *
      * @throws StorageFilesystemOutOfSpaceException
      */
-    public static function storeWholeFile(File $file, $source_path) {
+    public static function storeWholeFile(File $file, $source_path)
+    {
         return self::writeChunk($file, file_get_contents($source_path), 0);
     }
 
-    public static function getStream(File $file) {
+    public static function getStream(File $file)
+    {
         StorageCloudS3Stream::ensureRegistered();
         $path = "StorageCloudS3Stream://" . $file->uid;
-        $fp = fopen( $path, "r+");
+        $fp = fopen($path, "r+");
         return $fp;
     }
-
 }

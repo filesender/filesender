@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,27 +31,29 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * Credential handling.
  *
  * Call forceCredentialsToDefaultUser() to auth as a default user
  * Create users with createUsers(), create guests with createGuests().
- * 
+ *
  * switchToUser( number ) can be used to switch to a user createed by createUsers().
  */
-class TestDatabaseCredentials {
-
+class TestDatabaseCredentials
+{
     protected $creator = null;
     
     /**
-     * @param $creator is the TestDatabaseCreator object. Use 
+     * @param $creator is the TestDatabaseCreator object. Use
      * TestDatabaseCreator::getTestDatabaseCredentials() to get an object of this class.
-     * 
+     *
      */
-    public function __construct( $creator ) {
+    public function __construct($creator)
+    {
         $this->creator = $creator;
     }
 
@@ -67,24 +69,26 @@ class TestDatabaseCredentials {
      *
      * @param string uid
      * @param string email
-     * @param string name 
+     * @param string name
      *
      * @see forceCredentialsToDefaultUser()
      */
-    function forceCredentialsToUser( $uid, $email, $name = null )
+    public function forceCredentialsToUser($uid, $email, $name = null)
     {
-        Auth::testingForceToUser( $uid, $email, $name );
+        Auth::testingForceToUser($uid, $email, $name);
         // $this->output('switched to user ' . $uid );
     }
 
     /**
      * Move to being authenticated by the primary test user
      */
-    function forceCredentialsToDefaultUser()
+    public function forceCredentialsToDefaultUser()
     {
-        $this->forceCredentialsToUser( 'filesender-testdriver@localhost.localdomain',
+        $this->forceCredentialsToUser(
+            'filesender-testdriver@localhost.localdomain',
                                        'filesender-testdriver@localhost.localdomain',
-                                       'testdriver' );
+                                       'testdriver'
+        );
     }
 
     /**
@@ -92,11 +96,11 @@ class TestDatabaseCredentials {
      *  and username for a user with an id number this function
      * handles how that data is structured
      */
-    function getUserNameAndEmail( $id )
+    public function getUserNameAndEmail($id)
     {
         $name  = 'tester' . $id;
         $email = $name . '@localhost.localdomain';
-        return array( $name, $email );
+        return [ $name, $email ];
     }
     
     /**
@@ -104,10 +108,10 @@ class TestDatabaseCredentials {
      * switch to that user as your credentials
      *
      */
-    function switchToUser( $id )
+    public function switchToUser($id)
     {
-        list ($name, $email) = $this->getUserNameAndEmail( $id );
-        $this->forceCredentialsToUser( $email, $email, $name );
+        list($name, $email) = $this->getUserNameAndEmail($id);
+        $this->forceCredentialsToUser($email, $email, $name);
     }
     
     /**
@@ -116,33 +120,31 @@ class TestDatabaseCredentials {
      *
      * @param int num the number of users to create
      */
-    function createUsers( $num = 100 )
+    public function createUsers($num = 100)
     {
         $this->output("creating $num users...");
-        for( $i = 0; $i < $num; $i++ )
-        {
-            list ($name, $email) = $this->getUserNameAndEmail( $i );
-            $this->forceCredentialsToUser( $email, $email, $name );
+        for ($i = 0; $i < $num; $i++) {
+            list($name, $email) = $this->getUserNameAndEmail($i);
+            $this->forceCredentialsToUser($email, $email, $name);
         }
         
         $this->forceCredentialsToDefaultUser();
     }
 
     private $email_guest_created_receipt_value = 0;
-    function createGuests( $num = 100 )
+    public function createGuests($num = 100)
     {
         $this->output("creating $num guests...");
-        for( $i = 0; $i < $num; $i++ )
-        {
+        for ($i = 0; $i < $num; $i++) {
             $recipient = 'guest' . $i . '@localhost.localdomain';
             $g = Guest::create($recipient);
             $this->email_guest_created_receipt_value++;
 
             // only half guest creates will send a receeipt
-            $g->options = array( 'can_only_send_to_me' => false,
+            $g->options = [ 'can_only_send_to_me' => false,
                                  'email_upload_started' => true,
                                  'email_guest_created_receipt' =>
-                                     !($this->email_guest_created_receipt_value % 2) );
+                                     !($this->email_guest_created_receipt_value % 2) ];
             $g->makeAvailable();
         }
     }

@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -37,48 +37,55 @@
 /**
  * Test suite support functions
  */
-class TestSuiteSupport {
+class TestSuiteSupport
+{
 
     //
     // Server side callable only, not directly from the test suite
-    // 
-    public static function serverside_guard_prefix() {
-          $fn = FILESENDER_BASE . "/tmp/testsute-guards/";
-          if(!is_dir($fn)) {
-              // This has to be widely writable so the web server and user
-              // running the test suite can both access the path
-              $old = umask(0);
-              mkdir($fn,0777);
-              umask($old);
-          }
-          return $fn;
+    //
+    public static function serverside_guard_prefix()
+    {
+        $fn = FILESENDER_BASE . "/tmp/testsute-guards/";
+        if (!is_dir($fn)) {
+            // This has to be widely writable so the web server and user
+            // running the test suite can both access the path
+            $old = umask(0);
+            mkdir($fn, 0777);
+            umask($old);
+        }
+        return $fn;
     }
 
     //
     // Server side callable only, not directly from the test suite
-    // 
-    public static function serverside_clear( $fn )  {
+    //
+    public static function serverside_clear($fn)
+    {
         $fn = self::serverside_guard_prefix() . $fn;
-        if( file_exists($fn))
+        if (file_exists($fn)) {
             unlink($fn);
+        }
     }
 
     //
     // Server side callable only, not directly from the test suite
-    // 
-    public static function serverside_clear_all()  {
+    //
+    public static function serverside_clear_all()
+    {
         self::deleteDirectory(self::serverside_guard_prefix());
         self::serverside_guard_prefix();
     }
 
     //
     // Server side callable only, not directly from the test suite
-    // 
-    public static function serverside_guard_first_call( $fn )  {
+    //
+    public static function serverside_guard_first_call($fn)
+    {
         $fn = self::serverside_guard_prefix() . $fn;
-        if( file_exists($fn))
+        if (file_exists($fn)) {
             return false;
-        touch( $fn );
+        }
+        touch($fn);
         return true;
     }
 
@@ -87,7 +94,7 @@ class TestSuiteSupport {
         self::changeConfigValue("PUT_PERFORM_TESTSUITE", "''");
     }
 
-    public static function function_override_set( $k, $v )
+    public static function function_override_set($k, $v)
     {
         self::changeConfigValue($k, "'" . $v . "'");
     }
@@ -98,10 +105,9 @@ class TestSuiteSupport {
         $str=file_get_contents('config/config.php');
 
         //replace something in the file string
-        $str=preg_replace("/\\\$config\['".$type."'\]\s*=\s*(.*);/", "\$config['".$type."'] = $value;",$str, -1, $count);
+        $str=preg_replace("/\\\$config\['".$type."'\]\s*=\s*(.*);/", "\$config['".$type."'] = $value;", $str, -1, $count);
 
-        if($count == 0)
-        {
+        if ($count == 0) {
             throw new \Exception($type .' config could not be set to value '. $value ."Regex: /\\\$config\['".$type."'\] = (.*);/\n");
         }
 
@@ -111,10 +117,12 @@ class TestSuiteSupport {
 
     public static function deleteDirectory($dir)
     {
-        if(file_exists($dir)) {
+        if (file_exists($dir)) {
             $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-            $files = new RecursiveIteratorIterator($it,
-                                                   RecursiveIteratorIterator::CHILD_FIRST);
+            $files = new RecursiveIteratorIterator(
+                $it,
+                                                   RecursiveIteratorIterator::CHILD_FIRST
+            );
             foreach ($files as $file) {
                 if ($file->isDir()) {
                     rmdir($file->getRealPath());
@@ -125,6 +133,4 @@ class TestSuiteSupport {
             rmdir($dir);
         }
     }
-
 }
-

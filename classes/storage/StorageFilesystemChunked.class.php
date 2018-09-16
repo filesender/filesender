@@ -31,29 +31,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 
 /**
- *  Gives access to a file on the filesystem 
+ *  Gives access to a file on the filesystem
  *
- *  This class stores the chunks that are sent as individual files 
+ *  This class stores the chunks that are sent as individual files
  *
  *  One use case for this is to use FUSE to efficiently hand the data off to EOS
- *  https://twiki.cern.ch/twiki/bin/view/EOS/WebHome 
+ *  https://twiki.cern.ch/twiki/bin/view/EOS/WebHome
  */
-class StorageFilesystemChunked extends StorageFilesystem {
-    
-    
-    public static function getOffsetWithinChunkedFile($file_path,$offset) {
+class StorageFilesystemChunked extends StorageFilesystem
+{
+    public static function getOffsetWithinChunkedFile($file_path, $offset)
+    {
         $file_chunk_size = Config::get('upload_chunk_size');
         return ($offset % $file_chunk_size);
     }
     
-    public static function getChunkFilename($file_path,$offset) {
+    public static function getChunkFilename($file_path, $offset)
+    {
         $file_chunk_size = Config::get('upload_chunk_size');
         $offset = $offset - ($offset % $file_chunk_size);
-	return $file_path.'/'.str_pad($offset,24,'0',STR_PAD_LEFT);
+        return $file_path.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -62,61 +65,66 @@ class StorageFilesystemChunked extends StorageFilesystem {
      * @param File $file
      * @param uint $offset offset in bytes
      * @param uint $length length in bytes
-     * 
+     *
      * @return mixed chunk data encoded as string or null if no chunk remaining
-     * 
+     *
      * @throws StorageFilesystemFileNotFoundException
      * @throws StorageFilesystemCannotReadException
      */
-    public static function readChunk(File $file, $offset, $length) {
-
-	if ($file->transfer->options['encryption'])
-	    $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+    public static function readChunk(File $file, $offset, $length)
+    {
+        if ($file->transfer->options['encryption']) {
+            $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+        }
 
         $file_path = self::buildPath($file).$file->uid;
 
-	$chunkFile=self::getChunkFilename($file_path,$offset);
+        $chunkFile=self::getChunkFilename($file_path, $offset);
 
-        if(!file_exists($chunkFile))
+        if (!file_exists($chunkFile)) {
             throw new StorageFilesystemFileNotFoundException($file_path, $file);
+        }
 
-	$data = file_get_contents($chunkFile);
-	if ($data === FALSE) return null;
+        $data = file_get_contents($chunkFile);
+        if ($data === false) {
+            return null;
+        }
 
-	return $data;
+        return $data;
     }
     
     /**
      * Write a chunk of data to file at offset
-     * 
+     *
      * @param File $file
      * @param string $data the chunk data
      * @param uint $offset offset in bytes
-     * 
+     *
      * @return array with offset and written amount of bytes
-     * 
+     *
      * @throws StorageFilesystemOutOfSpaceException
      * @throws StorageFilesystemCannotWriteException
      */
-    public static function writeChunk(File $file, $data, $offset = null) {
-
+    public static function writeChunk(File $file, $data, $offset = null)
+    {
         $chunk_size = strlen($data);
         
         $path = self::buildPath($file);
         
         $free_space = disk_free_space($path);
         //Logger::info('MD Chunked: writeChunk free_space:'.$free_space);
-        if($free_space <= $chunk_size)
+        if ($free_space <= $chunk_size) {
             throw new StorageNotEnoughSpaceLeftException($chunk_size);
+        }
         
         $file_path = $path.$file->uid;
         
 
-	if (!file_exists($file_path)) {
+        if (!file_exists($file_path)) {
             //Logger::info('MD Chunked: Chunk folder missing for file. Creating');
-	    mkdir($file_path, 0770, true);
-	}
-	$chunkFile=self::getChunkFilename($file_path,$offset);
+            mkdir($file_path, 0770, true);
+        }
+        $chunkFile=self::getChunkFilename($file_path, $offset);
         $i=0;
         $fh = fopen($chunkFile, 'wb');
         while ($fh === false && $i<100) {
@@ -124,22 +132,20 @@ class StorageFilesystemChunked extends StorageFilesystem {
             $fh = fopen($chunkFile, 'wb');
             $i++;
         }
-        if($fh !== false) {
-
+        if ($fh !== false) {
             $written = fwrite($fh, $data, $chunk_size);
             fclose($fh);
 
-            if( $chunk_size != $written ) {
+            if ($chunk_size != $written) {
                 Logger::info('writeChunk() Can not write to : '.$chunkFile);
-                throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written );
+                throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
             }
 
-            return array(
+            return [
                 'offset' => $offset,
                 'written' => $written
-            );
+            ];
         } else {
-
             Logger::info('MD Chunked: writeChunk() Can not write to : '.$chunkFile);
             throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file);
         }
@@ -147,26 +153,27 @@ class StorageFilesystemChunked extends StorageFilesystem {
     
     /**
      * Handles file completion checks
-     * 
+     *
      * @param File $file
      */
-    public static function completeFile(File $file) {
+    public static function completeFile(File $file)
+    {
         self::setup();
         $file_path = self::buildPath($file).$file->uid;
-        
     }
     
     /**
      * Deletes a file
-     * 
+     *
      * @param File $file
-     * 
+     *
      * @throws StorageFilesystemCannotDeleteException
      */
-    public static function deleteFile(File $file) {
+    public static function deleteFile(File $file)
+    {
         $file_path = self::buildPath($file).$file->uid;
 
-        Filesystem::deleteTreeRecursive( $file_path, $file );
+        Filesystem::deleteTreeRecursive($file_path, $file);
     }
     
     
@@ -174,23 +181,24 @@ class StorageFilesystemChunked extends StorageFilesystem {
     
     /**
      * Store a whole file
-     * 
+     *
      * @param File $file
      * @param string $source_path path to file data
-     * 
+     *
      * @return bool
-     * 
+     *
      * @throws StorageFilesystemOutOfSpaceException
      */
-    public static function storeWholeFile(File $file, $source_path) {
-	return self::writeChunk($file, file_get_contents($source_path), 0);
+    public static function storeWholeFile(File $file, $source_path)
+    {
+        return self::writeChunk($file, file_get_contents($source_path), 0);
     }
 
-    public static function getStream(File $file) {
+    public static function getStream(File $file)
+    {
         StorageFilesystemChunkedStream::ensureRegistered();
         $path = "StorageFilesystemChunkedStream://" . $file->uid;
-        $fp = fopen( $path, "r+");
+        $fp = fopen($path, "r+");
         return $fp;
     }
-
 }

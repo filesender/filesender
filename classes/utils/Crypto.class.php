@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,8 +31,9 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 
@@ -40,23 +41,24 @@ require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 /**
  * Utility functions holder
  */
-class Crypto {
+class Crypto
+{
 
     /**
      * Generate a salt for use in crypto function that is $len
      * bytes long. The salt is encoded for easy storage and transmission
      * and the $len is the length of that encoded string rather than the
      * number of octets of entropy that you desire.
-     * 
+     *
      * Currently the string is encoded as base64 so you will be getting around
      * 75% of len as entropy from the function. The return value might be truncated
      * so base64 decoding is impossible. This is not an issue as it is designed to be
      * used only as a salt and never require decoding.
      */
-    public static function generateSaltString( $len = 32 ) {
-
-        $v = random_bytes( $len );
-        $v = base64_encode( $v );
-        return substr( $v, 0, $len );
-    }      
+    public static function generateSaltString($len = 32)
+    {
+        $v = random_bytes($len);
+        $v = base64_encode($v);
+        return substr($v, 0, $len);
+    }
 }

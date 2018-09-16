@@ -2,13 +2,13 @@
 
 /**
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,15 +31,17 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * Guest authentication class
- * 
+ *
  * Handles guest authentication.
  */
-class AuthGuest {
+class AuthGuest
+{
     /**
      * Cache authentication status
      */
@@ -57,23 +59,25 @@ class AuthGuest {
     
     /**
      * Authentication check.
-     * 
+     *
      * @return bool
      */
-    public static function isAuthenticated() {
-        if(is_null(self::$isAuthenticated)) {
+    public static function isAuthenticated()
+    {
+        if (is_null(self::$isAuthenticated)) {
             self::$isAuthenticated = false;
             
             // Do we have a valid guest token in the query ?
-            if(array_key_exists('vid', $_REQUEST))  {
+            if (array_key_exists('vid', $_REQUEST)) {
                 $vid = $_REQUEST['vid'];
-                if(
+                if (
                     Utilities::isValidUID($vid)
                 ) {
                     $guest = Guest::fromToken($vid);
                     
-                    if($guest->status != GuestStatuses::AVAILABLE || $guest->isExpired())
+                    if ($guest->status != GuestStatuses::AVAILABLE || $guest->isExpired()) {
                         throw new GuestExpiredException($guest);
+                    }
                     
                     self::$isAuthenticated = true;
                     self::$guest = $guest;
@@ -81,7 +85,7 @@ class AuthGuest {
                     // Update last guest activity
                     self::$guest->last_activity = time();
                     self::$guest->save();
-                }else{
+                } else {
                     throw new TokenHasBadFormatException($vid);
                 }
             }
@@ -92,19 +96,22 @@ class AuthGuest {
     
     /**
      * Retreive user attributes.
-     * 
+     *
      * @retrun array
      */
-    public static function attributes() {
-        if(is_null(self::$attributes)) {
-            if(!self::isAuthenticated()) throw new AuthAuthenticationNotFoundException();
+    public static function attributes()
+    {
+        if (is_null(self::$attributes)) {
+            if (!self::isAuthenticated()) {
+                throw new AuthAuthenticationNotFoundException();
+            }
             
-            self::$attributes = array(
+            self::$attributes = [
                 'uid' => self::$guest->saml_user_identification_uid,
                 'email' => self::$guest->owner->email,
                 'name' => null,
                 'guest' => self::$guest
-            );
+            ];
         }
         
         return self::$attributes;
@@ -112,10 +119,11 @@ class AuthGuest {
     
     /**
      * Retreive guest
-     * 
+     *
      * @return Guest object
      */
-    public static function getGuest() {
+    public static function getGuest()
+    {
         return self::isAuthenticated() ? self::$guest : null;
     }
 }

@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,18 +31,20 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 
 /**
  * Report class
  */
-class Report {
+class Report
+{
     /**
      * Related audit log entries
      */
-    private $logs = array();
+    private $logs = [];
     
     /**
      * Target type
@@ -51,15 +53,16 @@ class Report {
     
     /**
      * Constructor
-     * 
+     *
      * @param DBObject $target target to get report about
-     * 
+     *
      * @throws AuthAuthenticationNotFoundException
      * @throws ReportFormatNotFoundException
      */
-    public function __construct(DBObject $target) {
-        $this->logs = array();
-        switch(get_class($target)) {
+    public function __construct(DBObject $target)
+    {
+        $this->logs = [];
+        switch (get_class($target)) {
             case 'Transfer': // Get all log about transfer or its related files and recipients
                 $this->logs = AuditLog::fromTransfer($target);
                 break;
@@ -78,25 +81,32 @@ class Report {
     
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return property value
      */
-    public function __get($property) {
-        if(in_array($property, array(
-            'logs', 
+    public function __get($property)
+    {
+        if (in_array($property, [
+            'logs',
             'target',
-        ))) return $this->$property;
+        ])) {
+            return $this->$property;
+        }
         
-        if($property == 'target_type') return get_class($this->target);
+        if ($property == 'target_type') {
+            return get_class($this->target);
+        }
         
-        if($property == 'transfer') switch($this->target_type) {
+        if ($property == 'transfer') {
+            switch ($this->target_type) {
             case 'Transfer': return $this->target;
             case 'Recipient':
             case 'File': return $this->target->transfer;
+        }
         }
         
         throw new PropertyAccessException($this, $property);
@@ -104,48 +114,57 @@ class Report {
     
     /**
      * Sends report by email
-     * 
+     *
      * @param mixed $recipient User, email address
      */
-    public function sendTo($recipient) {
+    public function sendTo($recipient)
+    {
         // try to get recipient's lang
         $lang = null;
-        if(is_object($recipient) && ($recipient instanceof User)) {
+        if (is_object($recipient) && ($recipient instanceof User)) {
             $lang = $recipient->lang;
         }
         
         // Get format, default if not defined
         $format = Config::get('report_format');
-        if(!$format) $format = ReportFormats::INLINE;
+        if (!$format) {
+            $format = ReportFormats::INLINE;
+        }
         
         // Check format
-        if(!ReportFormats::isValidName($format))
+        if (!ReportFormats::isValidName($format)) {
             throw new ReportUnknownFormatException($format);
+        }
         
         // Need iconv utility for pdf rendering (dompdf dependency)
-        if(($format == ReportFormats::PDF) && !extension_loaded('iconv'))
+        if (($format == ReportFormats::PDF) && !extension_loaded('iconv')) {
             throw new ReportFormatNotAvailableException('iconv not found');
+        }
         
-        $content = array('plain' => '', 'html' => '');
+        $content = ['plain' => '', 'html' => ''];
         $attachment = null;
         
         // Build mail body depending on format
-        if($format == ReportFormats::PDF) {
-            $html = Template::process('!report_pdf', array('report' => $this));
+        if ($format == ReportFormats::PDF) {
+            $html = Template::process('!report_pdf', ['report' => $this]);
             
-            $styles = array(
+            $styles = [
                 'www/css/mail.css',
                 'www/skin/mail.css',
                 'www/css/pdf.css',
                 'www/skin/pdf.css'
-            );
+            ];
             $css = '';
-            foreach($styles as $cssfile)
-                if(file_exists(FILESENDER_BASE.'/'.$cssfile))
+            foreach ($styles as $cssfile) {
+                if (file_exists(FILESENDER_BASE.'/'.$cssfile)) {
                     $css .= "\n\n".file_get_contents(FILESENDER_BASE.'/'.$cssfile);
+                }
+            }
             $css = trim($css);
             
-            if($css) $html = '<style type="text/css">'.$css.'</style>'.$html;
+            if ($css) {
+                $html = '<style type="text/css">'.$css.'</style>'.$html;
+            }
             
             $pdf = new DOMPDF();
             $pdf->load_html($html);
@@ -154,24 +173,26 @@ class Report {
             $attachment = new MailAttachment('report_'.strtolower($this->target_type).'_'.$this->target->id.'.pdf');
             $attachment->content = $pdf->output();
         } else { // INLINE
-            $content['plain'] = Template::process('!report_plain', array('report' => $this));
-            $content['html'] = Template::process('!report_html', array('report' => $this));
+            $content['plain'] = Template::process('!report_plain', ['report' => $this]);
+            $content['html'] = Template::process('!report_html', ['report' => $this]);
         }
         
         // Build translated email
         $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
-        $mail = TranslatableEmail::prepare('report_'.$lid, $recipient, $this->target, array(
-            'target' => array(
+        $mail = TranslatableEmail::prepare('report_'.$lid, $recipient, $this->target, [
+            'target' => [
                 'type' => $this->target_type,
                 'id' => $this->target->id
-            ),
+            ],
             'content' => $content,
-        ));
+        ]);
         
         $mail->setDebugTemplate($lid);
 
         // Attach report file if any
-        if($attachment) $mail->attach($attachment);
+        if ($attachment) {
+            $mail->attach($attachment);
+        }
         
         // Send the report
         $mail->send();

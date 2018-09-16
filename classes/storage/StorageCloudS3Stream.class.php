@@ -31,20 +31,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Allow reading a chunked file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
-class StorageCloudS3Stream {
-
+class StorageCloudS3Stream
+{
     protected $offset = 0;
     protected $uid    = null;
     protected $gameOver = false;
     protected $file   = null;
     
-    function stream_open($path, $mode, $options, &$opened_path)
+    public function stream_open($path, $mode, $options, &$opened_path)
     {
         $url = parse_url($path);
         $this->offset = 0;
@@ -54,28 +56,32 @@ class StorageCloudS3Stream {
     }
 
 
-    function stream_read($count) {
+    public function stream_read($count)
+    {
         $file   = $this->file;
         $offset = $this->offset;
 
-        if( $this->gameOver )
-            return FALSE;
+        if ($this->gameOver) {
+            return false;
+        }
 
         $data = StorageCloudS3::readChunk($file, $this->offset, $count);
-        if( $data == null ) {
+        if ($data == null) {
             $this->gameOver = true;
-            return FALSE;
+            return false;
         }
 
         $this->offset += strlen($data);
         return $data;
     }
 
-    function stream_eof() {
+    public function stream_eof()
+    {
         return $this->offset >= $this->file->size;
     }
 
-    static function ensureRegistered() {
+    public static function ensureRegistered()
+    {
         // this happens when the file is parsed
     }
 };

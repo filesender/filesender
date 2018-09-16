@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,14 +31,16 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 
 /**
  * Logging exception
  */
-class LoggingException extends Exception {
+class LoggingException extends Exception
+{
     /**
      * Holds exception unique id
      */
@@ -46,29 +48,36 @@ class LoggingException extends Exception {
     
     /**
      * Constructor
-     * 
+     *
      * Logs all info to server log
-     * 
+     *
      * @param string $msg_code message code to be used to present error
      * @param mixed $log lines to log by categories
      */
-    public function __construct($msg_code, $log = null) {
-        if( !$this->uid )
+    public function __construct($msg_code, $log = null)
+    {
+        if (!$this->uid) {
             $this->uid = uniqid();
+        }
         
         // normalize arguments
-        if(!$log) $log = $msg_code;
-        if ($log && (!is_array($log) || !preg_match('`[a-z]`', key($log))))
-            $log = array('exception' => $log);
+        if (!$log) {
+            $log = $msg_code;
+        }
+        if ($log && (!is_array($log) || !preg_match('`[a-z]`', key($log)))) {
+            $log = ['exception' => $log];
+        }
         
         // Log info
         if ($log) {
             foreach ($log as $category => $lines) {
-                if (!is_array($lines)) 
-                    $lines = array($lines);
+                if (!is_array($lines)) {
+                    $lines = [$lines];
+                }
                 
-                foreach ($lines as $line)
-                $this->log( $category, $line );
+                foreach ($lines as $line) {
+                    $this->log($category, $line);
+                }
             }
         }
         
@@ -83,7 +92,7 @@ class LoggingException extends Exception {
      * @param string $groupmsg something about the line
      * @param string $line     the line to log
      */
-    function log($groupmsg,$line)
+    public function log($groupmsg, $line)
     {
         Logger::error(
             '['.get_class($this).' '.
@@ -94,21 +103,23 @@ class LoggingException extends Exception {
     /**
      * Log the whole array as a series of lines with log($groupmsg,$line)
      */
-    function logArray($groupmsg,$arr)
+    public function logArray($groupmsg, $arr)
     {
         foreach ($arr as $line) {
-            LoggingException::log($groupmsg,$line);
+            LoggingException::log($groupmsg, $line);
         }
     }
     
     /**
      * Uid getter
-     * 
+     *
      * @return string the exception uid
      */
-    public function getUid() {
-        if( !$this->uid )
+    public function getUid()
+    {
+        if (!$this->uid) {
             $this->uid = uniqid();
+        }
         return $this->uid;
     }
 }
@@ -116,7 +127,8 @@ class LoggingException extends Exception {
 /**
  * Detailed exception
  */
-class DetailedException extends LoggingException {
+class DetailedException extends LoggingException
+{
     /**
      * Public exception details
      */
@@ -124,32 +136,39 @@ class DetailedException extends LoggingException {
     
     /**
      * Constructor
-     * 
+     *
      * Logs all info to server log
-     * 
+     *
      * @param string $msg_code message code to be used to present error
      * @param mixed $internal_details details to log
      * @param mixed $public_details details to give to the user (logged as well)
      */
-    public function __construct($msg_code, $internal_details = null, $public_details = null) {
+    public function __construct($msg_code, $internal_details = null, $public_details = null)
+    {
         $this->uid = uniqid();
         
         // Build data
         $this->details = $public_details;
         
-        if(!$internal_details) $internal_details = array();
-        if(!is_array($internal_details)) $internal_details = array($internal_details);
+        if (!$internal_details) {
+            $internal_details = [];
+        }
+        if (!is_array($internal_details)) {
+            $internal_details = [$internal_details];
+        }
         
-        if($public_details) {
-            if(!is_array($public_details)) $public_details = array($public_details);
+        if ($public_details) {
+            if (!is_array($public_details)) {
+                $public_details = [$public_details];
+            }
             $internal_details = array_merge($public_details, $internal_details);
         }
         
-        $log = array(
+        $log = [
             'exception' => $msg_code,
             'trace' => explode("\n", $this->getTraceAsString()),
-            'details' => array(),
-        );
+            'details' => [],
+        ];
 
         $log['details'] = $this->convertArrayToLogArray($internal_details);
         parent::__construct($msg_code, $log);
@@ -164,16 +183,16 @@ class DetailedException extends LoggingException {
      *
      * @return array the same data as $arr but in a log friendly format
      */
-    public static function convertArrayToLogArray($arr,$prefix='')
+    public static function convertArrayToLogArray($arr, $prefix='')
     {
-        $ret = array();
+        $ret = [];
         foreach ($arr as $key => $detail) {
             $key = is_int($key) ? '' : $key.' = ';
             
             if (is_scalar($detail)) {
-                if(is_bool($detail)) {
+                if (is_bool($detail)) {
                     $detail = $detail ? 'true' : 'false';
-                } else if(!is_int($detail) && !is_float($detail)) {
+                } elseif (!is_int($detail) && !is_float($detail)) {
                     $detail = '"'.$detail.'"';
                 }
                 
@@ -189,10 +208,11 @@ class DetailedException extends LoggingException {
     
     /**
      * Info getter
-     * 
+     *
      * @return mixed the exception info
      */
-    public function getDetails() {
+    public function getDetails()
+    {
         return $this->details;
     }
 
@@ -200,9 +220,12 @@ class DetailedException extends LoggingException {
      * return true if the needle (exception name) matches the config
      * for additional verbose logging
      */
-    public static function additionalLoggingDesired( $needle ) {
-        if( Utilities::configMatch( 'exception_additional_logging_regex',
-                                    $needle )) {
+    public static function additionalLoggingDesired($needle)
+    {
+        if (Utilities::configMatch(
+            'exception_additional_logging_regex',
+                                    $needle
+        )) {
             return true;
         }
         return false;
@@ -210,19 +233,21 @@ class DetailedException extends LoggingException {
 
     /**
      */
-    public function additionalLogFile( $msg, $file ) {
-            if( $file ) {
-                $this->log($msg,'file size:' . $file->size );
-                $this->log($msg,'file name:' . $file->name );
-                $this->log($msg,'file uid:'  . $file->uid );
-            }
+    public function additionalLogFile($msg, $file)
+    {
+        if ($file) {
+            $this->log($msg, 'file size:' . $file->size);
+            $this->log($msg, 'file name:' . $file->name);
+            $this->log($msg, 'file uid:'  . $file->uid);
+        }
     }
 }
 
 /**
  * Storable exception
  */
-class StorableException {
+class StorableException
+{
     /**
      * Holds exception unique id
      */
@@ -240,15 +265,18 @@ class StorableException {
     
     /**
      * Constructor
-     * 
+     *
      * @param Exception $exception
      */
-    public function __construct($exception) {
-        if(is_array($exception)) {
+    public function __construct($exception)
+    {
+        if (is_array($exception)) {
             // Got array, extract data from specific keys
-            foreach(array('message', 'uid', 'details') as $p)
-            if(array_key_exists($p, $exception))
-                $this->$p = $exception[$p];
+            foreach (['message', 'uid', 'details'] as $p) {
+                if (array_key_exists($p, $exception)) {
+                    $this->$p = $exception[$p];
+                }
+            }
             
             return;
         }
@@ -257,68 +285,75 @@ class StorableException {
         
         $this->message = $exception->getMessage();
         
-        if($exception instanceof LoggingException)
+        if ($exception instanceof LoggingException) {
             $this->uid = $exception->getUid();
+        }
         
-        if($exception instanceof DetailedException)
+        if ($exception instanceof DetailedException) {
             $this->details = $exception->getDetails();
-        
+        }
     }
     
     /**
      * Message getter
-     * 
+     *
      * @return string the exception message
      */
-    public function getMessage() {
+    public function getMessage()
+    {
         return $this->message;
     }
     
     /**
      * Uid getter
-     * 
+     *
      * @return string the exception uid
      */
-    public function getUid() {
+    public function getUid()
+    {
         return $this->uid;
     }
     
     /**
      * Info getter
-     * 
+     *
      * @return mixed the exception info
      */
-    public function getDetails() {
+    public function getDetails()
+    {
         return $this->details;
     }
     
     /**
      * Serialize exception for path transmission
-     * 
+     *
      * @return string
      */
-    public function serialize() {
-        return base64_encode(json_encode(array(
+    public function serialize()
+    {
+        return base64_encode(json_encode([
             'message' => $this->message,
             'uid' => $this->uid,
             'details' => $this->details,
-        )));
+        ]));
     }
     
     /**
      * Unerialize exception from path transmission
-     * 
+     *
      * @param string $serialized
-     * 
+     *
      * @return StorableException
-     * 
+     *
      * @throws DetailedException
      */
-    public static function unserialize($serialized) {
+    public static function unserialize($serialized)
+    {
         $exception = (array)json_decode(base64_decode($serialized));
         
-        if(!array_key_exists('message', $exception))
+        if (!array_key_exists('message', $exception)) {
             throw new DetailedException('not_an_exception', $exception);
+        }
         
         return new self($exception);
     }

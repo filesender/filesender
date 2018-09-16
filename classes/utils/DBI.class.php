@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,14 +31,17 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Database access abstraction class
- * 
+ *
  * Handles connexion setup, provides PDO instance methods shorthands and easing methods
  */
-class DBI {
+class DBI
+{
     /**
      * Connexion data
      */
@@ -56,40 +59,57 @@ class DBI {
     
     /**
      * Connect to database
-     * 
+     *
      * @throws DBIConnexionMissingParameterException
      * @throws DBIConnexionException
      */
-    private static function load() {
+    private static function load()
+    {
         // Get config, check mandatory parameters
         $config = Config::get('db_*');
         $config['dsn'] = Config::get('dsn');
-        foreach(array('type', 'host', 'database', 'port', 'username', 'password', 'driver_options', 'charset', 'collation') as $p) {
-            if(!array_key_exists($p, $config)) $config[$p] = null;
+        foreach (['type', 'host', 'database', 'port', 'username', 'password', 'driver_options', 'charset', 'collation'] as $p) {
+            if (!array_key_exists($p, $config)) {
+                $config[$p] = null;
+            }
         }
         
         // Build dsn from individual components if not defined
-        if(!$config['dsn']) {
-            if(!$config['type']) $config['type'] = 'pgsql';
+        if (!$config['dsn']) {
+            if (!$config['type']) {
+                $config['type'] = 'pgsql';
+            }
             
-            $params = array();
+            $params = [];
             
-            if(!$config['host']) throw new DBIConnexionMissingParameterException('host');
+            if (!$config['host']) {
+                throw new DBIConnexionMissingParameterException('host');
+            }
             $params[] = 'host='.$config['host'];
             
-            if(!$config['database']) throw new DBIConnexionMissingParameterException('database');
+            if (!$config['database']) {
+                throw new DBIConnexionMissingParameterException('database');
+            }
             $params[] = 'dbname='.$config['database'];
             
-            if($config['port']) $params[] = 'port='.$config['port'];
+            if ($config['port']) {
+                $params[] = 'port='.$config['port'];
+            }
             
             $config['dsn'] = $config['type'].':'.implode(';', $params);
         }
         
         // Check that required parameters are not empty
-        if(!$config['username']) throw new DBIConnexionMissingParameterException('username');
-        if(!$config['password']) throw new DBIConnexionMissingParameterException('password');
+        if (!$config['username']) {
+            throw new DBIConnexionMissingParameterException('username');
+        }
+        if (!$config['password']) {
+            throw new DBIConnexionMissingParameterException('password');
+        }
         
-        if(!$config['driver_options']) $config['driver_options'] = array();
+        if (!$config['driver_options']) {
+            $config['driver_options'] = [];
+        }
         
         self::$config = $config;
     }
@@ -103,26 +123,32 @@ class DBI {
      * which might be useful if you are testing and want to use another database
      * than the one in the real config settings.
      */
-    public static function forceReconnect() {
-         self::$config = null;
-         self::connect(true);
+    public static function forceReconnect()
+    {
+        self::$config = null;
+        self::connect(true);
     }
 
     /**
      * Connect to database
-     * 
+     *
      * @param boolean $force_reconnect
-     * 
+     *
      * @throws DBIConnexionMissingParameterException
      * @throws DBIConnexionException
      */
-    private static function connect($force_reconnect = false) {
-        if(!$force_reconnect && self::$instance) return;
+    private static function connect($force_reconnect = false)
+    {
+        if (!$force_reconnect && self::$instance) {
+            return;
+        }
         
         // Close any existing connexion
         self::$instance = null;
         
-        if(is_null(self::$config)) self::load();
+        if (is_null(self::$config)) {
+            self::load();
+        }
         
         // Try to connect, cast any thrown exception
         try {
@@ -142,20 +168,19 @@ class DBI {
             self::$last_request = time();
             
             // db_charset given in config ?
-            if(self::$config['charset']) {
-                if(self::$config['collation']) {
-                    self::prepare('SET NAMES :charset COLLATE :collation')->execute(array(
+            if (self::$config['charset']) {
+                if (self::$config['collation']) {
+                    self::prepare('SET NAMES :charset COLLATE :collation')->execute([
                         ':charset' => self::$config['charset'],
                         ':collation' => self::$config['collation']
-                    ));
-                }else{
-                    self::prepare('SET NAMES :charset')->execute(array(
+                    ]);
+                } else {
+                    self::prepare('SET NAMES :charset')->execute([
                         ':charset' => self::$config['charset']
-                    ));
+                    ]);
                 }
             }
-            
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             throw new DBIConnexionException('DBI connect error : '.$e->getMessage());
         }
     }
@@ -163,19 +188,24 @@ class DBI {
     /**
      * Ping connection
      */
-    private static function ping() {
+    private static function ping()
+    {
         // Do not ping if last request less than Xmin ago
         $timeout = array_key_exists('timeout', self::$config) ? (int)self::$config['timeout'] : null;
-        if(!$timeout) $timeout = 900;
+        if (!$timeout) {
+            $timeout = 900;
+        }
         
-        if(self::$instance && (microtime(true) - self::$last_request < $timeout))
+        if (self::$instance && (microtime(true) - self::$last_request < $timeout)) {
             return;
+        }
         
-        if(self::$instance) {
+        if (self::$instance) {
             try {
                 self::$instance->query('SELECT 1');
                 return;
-            } catch(PDOException $e) {}
+            } catch (PDOException $e) {
+            }
         }
         
         // Ping failed, reconnect
@@ -187,70 +217,80 @@ class DBI {
     
     /**
      * Magic call handler
-     * 
+     *
      * Forwards calls to static methods to existing PDO instance methods
-     * 
+     *
      * @param string $name name of the wanted method
      * @param array $args arguments to forward
-     * 
+     *
      * @throws DBIUsageException
-     * 
+     *
      * @return mixed value returned by PDO call
      */
-    public static function __callStatic($name, $args) {
+    public static function __callStatic($name, $args)
+    {
         // Connect if not already done
         self::connect();
         
         // Log usual queries
-        if(in_array($name, array('prepare', 'query', 'exec'))) Logger::debug('DBI call');
+        if (in_array($name, ['prepare', 'query', 'exec'])) {
+            Logger::debug('DBI call');
+        }
         
         // Does the called method exist ?
-        if(!method_exists(self::$instance, $name)) throw new DBIUsageException('Calling unknown DBI method '.$name);
+        if (!method_exists(self::$instance, $name)) {
+            throw new DBIUsageException('Calling unknown DBI method '.$name);
+        }
         
         // Try to call, cast any thrown exception
         try {
             self::ping();
             
-            $r = call_user_func_array(array(self::$instance, $name), $args);
+            $r = call_user_func_array([self::$instance, $name], $args);
             
             self::$last_request = time();
             
             // Cast any returned PDOStatment to a DBIStatment so that fetches and such may be logged
-            if(is_object($r) && ($r instanceof PDOStatement))
+            if (is_object($r) && ($r instanceof PDOStatement)) {
                 return new DBIStatement($r);
+            }
                 
             return $r;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $dbtype = Config::get('db_type');
             $code = $e->getCode();
-            if( $dbtype == 'pgsql' ) {
+            if ($dbtype == 'pgsql') {
                 // print_r($e,false);
-                if( $code == 42710 ) {
-                    throw new DBIDuplicateException($e->getMessage(), array('name' => $name, 'args' => $args));
+                if ($code == 42710) {
+                    throw new DBIDuplicateException($e->getMessage(), ['name' => $name, 'args' => $args]);
                 }
             }
-            throw new DBIUsageException($e->getMessage(), array('name' => $name, 'args' => $args));
+            throw new DBIUsageException($e->getMessage(), ['name' => $name, 'args' => $args]);
         }
     }
     
     /**
      * Prepare IN query
-     * 
+     *
      * @param string $query
      * @param array $sets pairs of identifiers and values sets or values sets counts
-     * 
+     *
      * @return string
      */
-    public static function prepareInQuery($query, $sets) {
-        foreach($sets as $key => $values) {
-            if(is_array($values)) $values = count($values);
+    public static function prepareInQuery($query, $sets)
+    {
+        foreach ($sets as $key => $values) {
+            if (is_array($values)) {
+                $values = count($values);
+            }
             
             // If there is values replace by fitting amount of OR clauses, set falsy clause otherwise
-            if(is_int($values) && $values) {
-                $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'\b`i', function($m) use($key, $values) {
-                    $cdn = array();
-                    for($i=0; $i<$values; $i++)
+            if (is_int($values) && $values) {
+                $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'\b`i', function ($m) use ($key, $values) {
+                    $cdn = [];
+                    for ($i=0; $i<$values; $i++) {
                         $cdn[] = $m[1].' = '.$key.'___'.$i;
+                    }
                     
                     return ' ('.implode(' OR ', $cdn).') ';
                 }, $query);
@@ -267,7 +307,8 @@ class DBI {
 /**
  * Wrapper around PDOStatement for better exception handling
  */
-class DBIStatement {
+class DBIStatement
+{
     /**
      * Real statement
      */
@@ -275,49 +316,55 @@ class DBIStatement {
     
     /**
      * Creates statement
-     * 
+     *
      * @param PDOStatement $statement
      */
-    public function __construct(PDOStatement $statement) {
+    public function __construct(PDOStatement $statement)
+    {
         $this->statement = $statement;
     }
     
     /**
      * Call forwarder
-     * 
+     *
      * @param string $method
      * @param array $args
-     * 
+     *
      * @return mixed
-     * 
+     *
      * @throws DBIUsageException
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         // Log execute calls
-        if($method == 'execute') Logger::debug('DBI call');
+        if ($method == 'execute') {
+            Logger::debug('DBI call');
+        }
         
         // Transform any IN subset into serialized OR values
-        if($method == 'execute') {
-            foreach($args[0] as $key => $value) {
-                if(is_array($value)) {
+        if ($method == 'execute') {
+            foreach ($args[0] as $key => $value) {
+                if (is_array($value)) {
                     $values = array_values($value);
-	                foreach ( $values as $i => $iValue ) {
-		                $args[0][ $key . '___' . $i ] = $iValue;
-	                }
+                    foreach ($values as $i => $iValue) {
+                        $args[0][ $key . '___' . $i ] = $iValue;
+                    }
 
-	                unset($args[0][$key]);
+                    unset($args[0][$key]);
                 }
             }
         }
         
         // Is the required method valid ?
-        if(!method_exists($this->statement, $method)) throw new DBIUsageException('Calling unknown DBIStatement method '.$method);
+        if (!method_exists($this->statement, $method)) {
+            throw new DBIUsageException('Calling unknown DBIStatement method '.$method);
+        }
         
         // Tries to propagate the call, cast any thrown exception
         try {
-            return call_user_func_array(array($this->statement, $method), $args);
-        } catch(Exception $e) {
-            throw new DBIUsageException($e->getMessage(), array('method' => $method, 'args' => $args, 'query' => $this->statement->queryString));
+            return call_user_func_array([$this->statement, $method], $args);
+        } catch (Exception $e) {
+            throw new DBIUsageException($e->getMessage(), ['method' => $method, 'args' => $args, 'query' => $this->statement->queryString]);
         }
     }
 }

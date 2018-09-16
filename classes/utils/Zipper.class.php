@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -37,14 +37,15 @@ require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/lib/Count64.php');
 /**
  * Stream multiple files at once as an uncompressed ZIP archive. The archive is created on-the-fly and does not require
  * large files to be loaded into memory all at once.
- * 
+ *
  * See http://www.pkware.com/documents/casestudies/APPNOTE.TXT for a full specification of the .ZIP file format.
  * Code inspired by Paul Duncan's (@link http://pablotron.org/software/zipstream-php/ ZipStream-PHP).
  */
-class Zipper {
+class Zipper
+{
     
-    /* 
-     * Array of File 
+    /*
+     * Array of File
      * Containing :
      *      ['data'] => $file       // the file
      *      ['content'] => array(   // Informations about the files
@@ -59,8 +60,9 @@ class Zipper {
     /**
      * Constuctor of Zipper class
      */
-    public function __construct(){
-        $this->files = array();
+    public function __construct()
+    {
+        $this->files = [];
     }
 
     
@@ -71,16 +73,17 @@ class Zipper {
     
     /*
      * Adds a file to be sent as part of the ZIP. Nothing is sent at this stage.
-     * $file must be a File DBObject 
-     * 
+     * $file must be a File DBObject
+     *
      * @param File $file: the file to add
      */
-    public function addFile(File $file){
+    public function addFile(File $file)
+    {
         $this->files[$file->id]['data'] = $file;
     }
 
     /**
-     * Creates a ZIP archive on-the-fly and streams it to the client. 
+     * Creates a ZIP archive on-the-fly and streams it to the client.
      * <b>The files in the archive are not compressed.</b>
      */
     public function sendZip($recipient = null, $withHeaders = true)
@@ -92,8 +95,8 @@ class Zipper {
         $file = reset($this->files);
         $tid = $file['data']->transfer_id;
         $filename = 'transfer_' . $tid . '_files_' . $fuid . '.zip';
-        if( $withHeaders ) {
-            $zip->sendHeaders( $filename, "application/octet-stream" );
+        if ($withHeaders) {
+            $zip->sendHeaders($filename, "application/octet-stream");
         }
         
         // send each file
@@ -101,8 +104,9 @@ class Zipper {
             $file = $data['data'];
             $transfer = $file->transfer;
 
-            if($recipient)
+            if ($recipient) {
                 Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+            }
             
             // Set up metadata and send the local header.
             $name = preg_replace('/^\\/+/', '', $file->path); // Strip leading slashes from filename.
@@ -116,9 +120,11 @@ class Zipper {
 
         // finish up and log everything
         $zip->finalize();
-        if($recipient) foreach ($this->files as $data) {
-            $file = $data['data'];
-            Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+        if ($recipient) {
+            foreach ($this->files as $data) {
+                $file = $data['data'];
+                Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+            }
         }
         
         // ok
@@ -134,10 +140,11 @@ class Zipper {
      * Returns the an extimate of the total file size of the ZIP archive.
      *  depending on the number and sizes of the files and whether
      * or not the ZIP64 format is being used.
-     * 
+     *
      * @return int: the total filesize of the archive
      */
-    public function calculateTotalFileSize() {
+    public function calculateTotalFileSize()
+    {
         $fileSize = 22; // Size of the end-of-file TOC record.
 
         foreach ($this->files as $data) {

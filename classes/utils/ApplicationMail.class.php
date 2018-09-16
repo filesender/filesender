@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,27 +31,32 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
-class ApplicationMail extends Mail {
-    private $to = array('email' => null, 'name' => null, 'object' => null);
+class ApplicationMail extends Mail
+{
+    private $to = ['email' => null, 'name' => null, 'object' => null];
     
     /**
      * Constructor
-     * 
+     *
      * @param mixed $content Lang instance or subject as string
      */
-    public function __construct($content = 'No subject') {
+    public function __construct($content = 'No subject')
+    {
         $use_html = Config::get('email_use_html');
         
         // Cast content to string if translation object
         $subject = ($content instanceof Translation) ? $content->subject : $content;
         
-        if($subject instanceof Translation) $subject = $subject->out();
+        if ($subject instanceof Translation) {
+            $subject = $subject->out();
+        }
         
-        if(is_array($subject)) {
-            $subject = array_filter($subject, function($s) { // Drop subjects with remaining placeholders
+        if (is_array($subject)) {
+            $subject = array_filter($subject, function ($s) { // Drop subjects with remaining placeholders
                 return !preg_match('`\{([a-z_]+:)?[a-z][a-z0-9_\.\(\)]\}`i', $s);
             });
             $subject = $subject['prefix'].' '.array_pop($subject);
@@ -61,39 +66,45 @@ class ApplicationMail extends Mail {
         parent::__construct(null, $subject, $use_html);
         
         // Write content if a translation object was given
-        if($content instanceof Translation) {
+        if ($content instanceof Translation) {
             $this->writePlain($content->plain);
             
-            if($use_html)
+            if ($use_html) {
                 $this->writeHTML($content->html);
+            }
         }
     }
     
     /**
      * Quick translated sending
-     * 
+     *
      * @param string $translation_id
      * @param mixed $to recipient / guest / email
      * @param mixed ... additional translation variables
      */
-    public static function quickSend($translation_id, $to /*, ... */) {
+    public static function quickSend($translation_id, $to /*, ... */)
+    {
         // Get additional arguments
         $vars = array_slice(func_get_args(), 2);
         
         // Manage recipient if object given, get language if possible
         $lang = null;
-        if(is_object($to)) {
+        if (is_object($to)) {
             array_unshift($vars, $to);
-            if($to instanceof User) {
+            if ($to instanceof User) {
                 $lang = $to->lang;
                 $to = $to->email;
             }
-            if($to instanceof Recipient) $lang = $to->transfer->lang;
+            if ($to instanceof Recipient) {
+                $lang = $to->transfer->lang;
+            }
         }
         
         // Translate email and replace variables
         $tr = Lang::translateEmail($translation_id, $lang);
-        if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
+        if ($vars) {
+            $tr = call_user_func_array([$tr, 'replace'], $vars);
+        }
         
         $ctx = $vars ? self::getContext($vars) : null;
         
@@ -106,32 +117,38 @@ class ApplicationMail extends Mail {
     
     /**
      * Get context from set of variables by order of priority
-     * 
+     *
      * @param array $vars
-     * 
+     *
      * @return DBObject
      */
-    public static function getContext($vars) {
-        $dbos = array();
-        foreach($vars as $var)
-            if(is_object($var) && ($var instanceof DBObject))
+    public static function getContext($vars)
+    {
+        $dbos = [];
+        foreach ($vars as $var) {
+            if (is_object($var) && ($var instanceof DBObject)) {
                 $dbos[get_class($var)] = $var;
+            }
+        }
         
-        foreach(array('Recipient', 'Guest', 'File', 'Transfer') as $p)
-            if(array_key_exists($p, $dbos))
+        foreach (['Recipient', 'Guest', 'File', 'Transfer'] as $p) {
+            if (array_key_exists($p, $dbos)) {
                 return $dbos[$p];
+            }
+        }
         
         return null;
     }
     
     /**
      * Adds to
-     * 
+     *
      * @param mixed $who DBObject or email address
      * @param string $name optional name
      */
-    public function to($who, $name = '') {
-        if(is_object($who)) {
+    public function to($who, $name = '')
+    {
+        if (is_object($who)) {
             $this->to['email'] = $who->email;
             $this->to['object'] = $who;
         } else {
@@ -144,35 +161,40 @@ class ApplicationMail extends Mail {
     
     /**
      * Sends the mail
-     * 
+     *
      * @param DBObject $context
-     * 
+     *
      * @return bool success
      */
-    public function send($context = null) {
+    public function send($context = null)
+    {
         // Add registered recipient
         parent::to($this->to['email'], $this->to['name']);
         
         // Get sender from recipient data
         $sender = null;
-        if(!$this->to['object'] && $context && ($context instanceof DBObject))
+        if (!$this->to['object'] && $context && ($context instanceof DBObject)) {
             $this->to['object'] = $context;
-        
-        if($this->to['object']) {
-            if(in_array(get_class($this->to['object']), array('Recipient', 'Guest', 'File', 'Transfer')))
-                $sender = $this->to['object']->owner;
         }
         
-        if(!$sender) $sender = (object)array('email' => $this->to['email']); // Own action
+        if ($this->to['object']) {
+            if (in_array(get_class($this->to['object']), ['Recipient', 'Guest', 'File', 'Transfer'])) {
+                $sender = $this->to['object']->owner;
+            }
+        }
+        
+        if (!$sender) {
+            $sender = (object)['email' => $this->to['email']];
+        } // Own action
         
         // Context identifier
         $context = $this->to['object'] ? strtolower(get_class($this->to['object'])).'-'.$this->to['object']->id : 'no_context';
         
         // Build from field depending on config
         $from = Config::get('email_from');
-        if(is_array($from)) {
-            if(!($sender instanceof User)) {
-                $from = array_filter($from, function($f) {
+        if (is_array($from)) {
+            if (!($sender instanceof User)) {
+                $from = array_filter($from, function ($f) {
                     return $f !== 'sender';
                 });
             }
@@ -180,35 +202,43 @@ class ApplicationMail extends Mail {
             $from = array_shift($from);
         }
         
-        if($from) {
-            if($from != 'sender' && !Utilities::validateEmail($from))
+        if ($from) {
+            if ($from != 'sender' && !Utilities::validateEmail($from)) {
                 throw new ConfigBadParameterException('email_from');
+            }
             
-            if($from == 'sender') $from = $sender->email;
+            if ($from == 'sender') {
+                $from = $sender->email;
+            }
             
             // Got one, validate and set header
-            if($from) {
-                if(!Utilities::validateEmail($from))
+            if ($from) {
+                if (!Utilities::validateEmail($from)) {
                     throw new BadEmailException($from);
+                }
                 
                 $from_name = Config::get('email_from_name');
-                if(is_array($from_name))
+                if (is_array($from_name)) {
                     $from_name = ($sender instanceof User) ? array_shift($from_name) : array_pop($from_name);
+                }
                 
-                if($from_name) {
-                    $attributes = array();
-                    if($sender instanceof User)
+                if ($from_name) {
+                    $attributes = [];
+                    if ($sender instanceof User) {
                         $attributes = (array)$sender->additional_attributes;
+                    }
                     
                     $attributes['email'] = $sender->email;
                     
                     list($loc, $dom) = explode('@', $sender->email);
                     
-                    if(!array_key_exists('name', $attributes)) // Default name
+                    if (!array_key_exists('name', $attributes)) { // Default name
                         $attributes['name'] = $loc;
+                    }
                     
-                    foreach($attributes as $k => $v)
+                    foreach ($attributes as $k => $v) {
                         $from_name = str_replace('{'.$k.'}', $v, $from_name);
+                    }
                     
                     $from = '"'.mb_encode_mimeheader($from_name).'" <'.$from.'>';
                 }
@@ -219,46 +249,57 @@ class ApplicationMail extends Mail {
         
         // Build reply-to field depending on config
         $reply_to = Config::get('email_reply_to');
-        if($reply_to) {
-            if($reply_to != 'sender' && !Utilities::validateEmail($reply_to))
+        if ($reply_to) {
+            if ($reply_to != 'sender' && !Utilities::validateEmail($reply_to)) {
                 throw new ConfigBadParameterException('email_reply_to');
+            }
             
-            if($reply_to == 'sender') $reply_to = $sender->email;
+            if ($reply_to == 'sender') {
+                $reply_to = $sender->email;
+            }
             
             // Got one, validate and set header
-            if($reply_to) {
-                if(!Utilities::validateEmail($reply_to))
+            if ($reply_to) {
+                if (!Utilities::validateEmail($reply_to)) {
                     throw new BadEmailException($reply_to);
+                }
                 
                 $reply_to_name = Config::get('email_reply_to_name');
-                if($reply_to_name) $reply_to = '"'.mb_encode_mimeheader($reply_to_name).'" <'.$reply_to.'>';
+                if ($reply_to_name) {
+                    $reply_to = '"'.mb_encode_mimeheader($reply_to_name).'" <'.$reply_to.'>';
+                }
                 $this->addHeader('Reply-To', $reply_to);
             }
         }
         
         // Build return path field depending on config
         $return_path = Config::get('email_return_path');
-        if($return_path) {
-            if($return_path != 'sender' && !Utilities::validateEmail(str_replace('<verp>', 'verp', $return_path)))
+        if ($return_path) {
+            if ($return_path != 'sender' && !Utilities::validateEmail(str_replace('<verp>', 'verp', $return_path))) {
                 throw new ConfigBadParameterException('email_return_path');
+            }
             
-            if($return_path == 'sender') $return_path = $sender->email;
+            if ($return_path == 'sender') {
+                $return_path = $sender->email;
+            }
             
             // Got one, validate and set property to be passed to PHP's mail internal
-            if($return_path) {
+            if ($return_path) {
                 // If verp pattern insert context so that return path alone tells which object the bounce is related to
-                if(preg_match('`^(.+)<verp>(.+)$`i', $return_path, $match))
+                if (preg_match('`^(.+)<verp>(.+)$`i', $return_path, $match)) {
                     $return_path = $match[1].$context.$match[2];
+                }
                 
-                if(!Utilities::validateEmail($return_path))
+                if (!Utilities::validateEmail($return_path)) {
                     throw new BadEmailException($return_path);
+                }
                 
                 $this->return_path = $return_path;
             }
         }
         
         // Set context in headers so that it is returned along with bounces
-        if($context) {
+        if ($context) {
             $this->msg_id = '<'.$context.'-'.uniqid().'@filesender>';
             $this->addHeader('X-Filesender-Context', $context);
         }

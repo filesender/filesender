@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,22 +30,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
     die('Missing environment');
+}
 
 /**
  * Request came in too late
  */
-class AuthRemoteTooLateException extends DetailedException {
+class AuthRemoteTooLateException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $by too late by
      */
-    public function __construct($by) {
+    public function __construct($by)
+    {
         parent::__construct(
             'auth_remote_too_late', // Message to give to the user
-            array('late_by_seconds' => $by) // Details to log
+            ['late_by_seconds' => $by] // Details to log
         );
     }
 }
@@ -53,24 +56,26 @@ class AuthRemoteTooLateException extends DetailedException {
 /**
  * Signature check failed
  */
-class AuthRemoteSignatureCheckFailedException extends DetailedException {
+class AuthRemoteSignatureCheckFailedException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $signed body that was signed
      * @param string $secret secret used while signing
      * @param string $received_signature received signature
      * @param string $signature expected signature
      */
-    public function __construct($signed, $secret, $received_signature, $signature) {
+    public function __construct($signed, $secret, $received_signature, $signature)
+    {
         parent::__construct(
             'auth_remote_signature_check_failed', // Message to give to the user
-            array(
+            [
                 'signed' => $signed,
                 'secret' => $secret,
                 'received_signature' => $received_signature,
                 'signature' => $signature
-            )
+            ]
         );
     }
 }
@@ -78,16 +83,18 @@ class AuthRemoteSignatureCheckFailedException extends DetailedException {
 /**
  * Unknown remote application
  */
-class AuthRemoteUknownApplicationException extends DetailedException {
+class AuthRemoteUknownApplicationException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $name name of the remote application
      */
-    public function __construct($name) {
+    public function __construct($name)
+    {
         parent::__construct(
             'auth_remote_unknown_application', // Message to give to the user
-            array('application' => $name) // Details to log
+            ['application' => $name] // Details to log
         );
     }
 }
@@ -95,17 +102,19 @@ class AuthRemoteUknownApplicationException extends DetailedException {
 /**
  * User does not accept remote authentication
  */
-class AuthRemoteUserRejectedException extends DetailedException {
+class AuthRemoteUserRejectedException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $uid user id
      * @param string $reason
      */
-    public function __construct($uid, $reason) {
+    public function __construct($uid, $reason)
+    {
         parent::__construct(
             'auth_remote_user_rejected', // Message to give to the user
-            array('uid' => $uid, 'reason' => $reason) // Details to log
+            ['uid' => $uid, 'reason' => $reason] // Details to log
         );
     }
 }

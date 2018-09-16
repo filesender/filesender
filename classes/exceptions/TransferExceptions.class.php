@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,22 +30,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
     die('Missing environment');
+}
 
 /**
  * Unknown transfer exception
  */
-class TransferNotFoundException extends DetailedException {
+class TransferNotFoundException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $selector column used to select transfer
      */
-    public function __construct($selector) {
+    public function __construct($selector)
+    {
         parent::__construct(
             'transfer_not_found', // Message to give to the user
-            array('selector' => $selector) // Real message to log
+            ['selector' => $selector] // Real message to log
         );
     }
 }
@@ -53,16 +56,18 @@ class TransferNotFoundException extends DetailedException {
 /**
  * Bad status exception
  */
-class TransferBadStatusException extends DetailedException {
+class TransferBadStatusException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $status the bad lang status
      */
-    public function __construct($status) {
+    public function __construct($status)
+    {
         parent::__construct(
             'bad_transfer_status', // Message to give to the user
-            array('status' => $status) // Details to log
+            ['status' => $status] // Details to log
         );
     }
 }
@@ -70,56 +75,64 @@ class TransferBadStatusException extends DetailedException {
 /**
  * File name has bad characters
  */
-class TransferFileNameInvalidException extends DetailedException {
+class TransferFileNameInvalidException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $wanted
      * @param int $max
      */
-    public function __construct($name) {
-        parent::__construct('transfer_file_name_invalid', array('name' => $name));
+    public function __construct($name)
+    {
+        parent::__construct('transfer_file_name_invalid', ['name' => $name]);
     }
 }
 
 /**
  * Collection name has bad characters
  */
-class TransferCollectionNameInvalidException extends DetailedException {
+class TransferCollectionNameInvalidException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $wanted
      * @param int $max
      */
-    public function __construct($name) {
-        parent::__construct('transfer_collection_name_invalid', array('name' => $name));
+    public function __construct($name)
+    {
+        parent::__construct('transfer_collection_name_invalid', ['name' => $name]);
     }
 }
 
 /**
  * Missing too many recipients exception
  */
-class TransferTooManyRecipientsException extends DetailedException {
+class TransferTooManyRecipientsException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $wanted
      * @param int $max
      */
-    public function __construct($wanted, $max) {
-        parent::__construct('transfer_too_many_recipients', array('wanted' => $wanted, 'max' => $max));
+    public function __construct($wanted, $max)
+    {
+        parent::__construct('transfer_too_many_recipients', ['wanted' => $wanted, 'max' => $max]);
     }
 }
 
 /**
  * Missing recipients exception
  */
-class TransferNoRecipientsException extends DetailedException {
+class TransferNoRecipientsException extends DetailedException
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('transfer_no_recipients');
     }
 }
@@ -127,26 +140,30 @@ class TransferNoRecipientsException extends DetailedException {
 /**
  * Missing too many files exception
  */
-class TransferTooManyFilesException extends DetailedException {
+class TransferTooManyFilesException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $wanted
      * @param int $max
      */
-    public function __construct($wanted, $max) {
-        parent::__construct('transfer_too_many_files', array('wanted' => $wanted, 'max' => $max));
+    public function __construct($wanted, $max)
+    {
+        parent::__construct('transfer_too_many_files', ['wanted' => $wanted, 'max' => $max]);
     }
 }
 
 /**
  * Missing files exception
  */
-class TransferNoFilesException extends DetailedException {
+class TransferNoFilesException extends DetailedException
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('transfer_no_files');
     }
 }
@@ -154,14 +171,16 @@ class TransferNoFilesException extends DetailedException {
 /**
  * Maximum size exeeded exception
  */
-class TransferMaximumSizeExceededException extends DetailedException {
+class TransferMaximumSizeExceededException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $size
      * @param int $max
      */
-    public function __construct($size, $max) {
+    public function __construct($size, $max)
+    {
         parent::__construct('transfer_maximum_size_exceeded', 'size='.$wanted.' max='.$max);
     }
 }
@@ -169,14 +188,16 @@ class TransferMaximumSizeExceededException extends DetailedException {
 /**
  * Maximum file size exeeded exception
  */
-class TransferMaximumFileSizeExceededException extends DetailedException {
+class TransferMaximumFileSizeExceededException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $size
      * @param int $max
      */
-    public function __construct($size, $max) {
+    public function __construct($size, $max)
+    {
         parent::__construct('transfer_maximum_file_size_exceeded', 'size='.$wanted.' max='.$max);
     }
 }
@@ -184,14 +205,16 @@ class TransferMaximumFileSizeExceededException extends DetailedException {
 /**
  * Maximum file size exeeded exception
  */
-class TransferMaximumEncryptedFileSizeExceededException extends DetailedException {
+class TransferMaximumEncryptedFileSizeExceededException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $size
      * @param int $max
      */
-    public function __construct($size, $max) {
+    public function __construct($size, $max)
+    {
         parent::__construct('transfer_maximum_encrypted_file_size_exceeded', 'size='.$wanted.' max='.$max);
     }
 }
@@ -199,25 +222,29 @@ class TransferMaximumEncryptedFileSizeExceededException extends DetailedExceptio
 /**
  * Validation failed exception
  */
-class TransferRejectedException extends DetailedException {
+class TransferRejectedException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $reason
      */
-    public function __construct($reason) {
-        parent::__construct('transfer_rejected', null, array('reason' => $reason));
+    public function __construct($reason)
+    {
+        parent::__construct('transfer_rejected', null, ['reason' => $reason]);
     }
 }
 
 /**
  * Host quota exceeded
  */
-class TransferHostQuotaExceededException extends DetailedException {
+class TransferHostQuotaExceededException extends DetailedException
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('transfer_host_quota_exceeded');
     }
 }
@@ -225,11 +252,13 @@ class TransferHostQuotaExceededException extends DetailedException {
 /**
  * User quota exceeded
  */
-class TransferUserQuotaExceededException extends DetailedException {
+class TransferUserQuotaExceededException extends DetailedException
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('transfer_user_quota_exceeded');
     }
 }
@@ -237,17 +266,19 @@ class TransferUserQuotaExceededException extends DetailedException {
 /**
  * Generic identified transfer exception
  */
-class TransferException extends DetailedException {
+class TransferException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      * @param string $msg_code message code to be used to present error
      * @param mixed $internal_details details to log
      * @param mixed $public_details details to give to the user (logged as well)
      */
-    public function __construct($transfer, $msg_code, $internal_details = null, $public_details = null) {
-        $internal_details = $internal_details ? (array)$internal_details : array();
+    public function __construct($transfer, $msg_code, $internal_details = null, $public_details = null)
+    {
+        $internal_details = $internal_details ? (array)$internal_details : [];
         $internal_details['transfer'] = (string)$transfer;
         
         parent::__construct('transfer_'.$msg_code, $internal_details, $public_details);
@@ -257,13 +288,15 @@ class TransferException extends DetailedException {
 /**
  * Files incomplete exception
  */
-class TransferFilesIncompleteException extends TransferException {
+class TransferFilesIncompleteException extends TransferException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      */
-    public function __construct($transfer) {
+    public function __construct($transfer)
+    {
         parent::__construct($transfer, 'files_incomplete');
     }
 }
@@ -271,13 +304,15 @@ class TransferFilesIncompleteException extends TransferException {
 /**
  * We filter out URLs in the personal message
  */
-class TransferMessageBodyCanNotIncludeURLsException extends TransferException {
+class TransferMessageBodyCanNotIncludeURLsException extends TransferException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      */
-    public function __construct($transfer) {
+    public function __construct($transfer)
+    {
         parent::__construct($transfer, 'message_can_not_contain_urls');
     }
 }
@@ -285,13 +320,15 @@ class TransferMessageBodyCanNotIncludeURLsException extends TransferException {
 /**
  * Expired
  */
-class TransferExpiredException extends TransferException {
+class TransferExpiredException extends TransferException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      */
-    public function __construct($transfer) {
+    public function __construct($transfer)
+    {
         parent::__construct($transfer, 'expired');
     }
 }
@@ -299,13 +336,15 @@ class TransferExpiredException extends TransferException {
 /**
  * Not available
  */
-class TransferNotAvailableException extends TransferException {
+class TransferNotAvailableException extends TransferException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      */
-    public function __construct($transfer) {
+    public function __construct($transfer)
+    {
         parent::__construct($transfer, 'not_availabe');
     }
 }
@@ -313,13 +352,15 @@ class TransferNotAvailableException extends TransferException {
 /**
  * Expiry extension not allowed
  */
-class TransferExpiryExtensionNotAllowedException extends TransferException {
+class TransferExpiryExtensionNotAllowedException extends TransferException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      */
-    public function __construct($transfer) {
+    public function __construct($transfer)
+    {
         parent::__construct($transfer, 'expiry_extension_not_allowed');
     }
 }
@@ -327,14 +368,15 @@ class TransferExpiryExtensionNotAllowedException extends TransferException {
 /**
  * Expiry extension count exceeded
  */
-class TransferExpiryExtensionCountExceededException extends TransferException {
+class TransferExpiryExtensionCountExceededException extends TransferException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      */
-    public function __construct($transfer) {
+    public function __construct($transfer)
+    {
         parent::__construct($transfer, 'expiry_extension_count_exceeded');
     }
 }
-

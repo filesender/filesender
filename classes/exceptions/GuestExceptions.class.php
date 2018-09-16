@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copynright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,22 +30,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
     die('Missing environment');
+}
 
 /**
  * Unknown guest exception
  */
-class GuestNotFoundException extends DetailedException {
+class GuestNotFoundException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $selector column used to select guest
      */
-    public function __construct($selector) {
+    public function __construct($selector)
+    {
         parent::__construct(
             'guest_not_found', // Message to give to the user
-            array('selector' => $selector) // Real message to log
+            ['selector' => $selector] // Real message to log
         );
     }
 }
@@ -53,13 +56,15 @@ class GuestNotFoundException extends DetailedException {
 /**
  * We filter out URLs in the personal message
  */
-class GuestMessageBodyCanNotIncludeURLsException extends DetailedException {
+class GuestMessageBodyCanNotIncludeURLsException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Transfer $transfer
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('message_can_not_contain_urls');
     }
 }
@@ -67,16 +72,18 @@ class GuestMessageBodyCanNotIncludeURLsException extends DetailedException {
 /**
  * Bad status exception
  */
-class GuestBadStatusException extends DetailedException {
+class GuestBadStatusException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $status the bad status
      */
-    public function __construct($status) {
+    public function __construct($status)
+    {
         parent::__construct(
             'bad_guest_status', // Message to give to the user
-            array('status' => $status) // Details to log
+            ['status' => $status] // Details to log
         );
     }
 }
@@ -84,13 +91,15 @@ class GuestBadStatusException extends DetailedException {
 /**
  * Hit the limit of reminders
  */
-class GuestReminderLimitReachedException extends DetailedException {
+class GuestReminderLimitReachedException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $status the bad status
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             'guest_reminder_limit_reached'
         );
@@ -100,17 +109,19 @@ class GuestReminderLimitReachedException extends DetailedException {
 /**
  * Generic identified guest exception
  */
-class GuestException extends DetailedException {
+class GuestException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Guest $guest
      * @param string $msg_code message code to be used to present error
      * @param mixed $internal_details details to log
      * @param mixed $public_details details to give to the user (logged as well)
      */
-    public function __construct($guest, $msg_code, $internal_details = null, $public_details = null) {
-        $internal_details = $internal_details ? (array)$internal_details : array();
+    public function __construct($guest, $msg_code, $internal_details = null, $public_details = null)
+    {
+        $internal_details = $internal_details ? (array)$internal_details : [];
         $internal_details['guest'] = (string)$guest;
         
         parent::__construct('guest_'.$msg_code, $internal_details, $public_details);
@@ -120,13 +131,15 @@ class GuestException extends DetailedException {
 /**
  * Expired
  */
-class GuestExpiredException extends GuestException {
+class GuestExpiredException extends GuestException
+{
     /**
      * Constructor
-     * 
+     *
      * @param Guest $guest
      */
-    public function __construct($guest) {
+    public function __construct($guest)
+    {
         parent::__construct($guest, 'expired');
     }
 }

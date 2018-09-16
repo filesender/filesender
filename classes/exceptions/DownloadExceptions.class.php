@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,17 +31,20 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * Missing files ids exception
  */
-class DownloadMissingFilesIDsException extends DetailedException {
+class DownloadMissingFilesIDsException extends DetailedException
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('download_missing_files_ids');
     }
 }
@@ -49,16 +52,18 @@ class DownloadMissingFilesIDsException extends DetailedException {
 /**
  * Bad files ids exception
  */
-class DownloadBadFilesIDsException extends DetailedException {
+class DownloadBadFilesIDsException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param array $bad bad files ids
      */
-    public function __construct($bad) {
+    public function __construct($bad)
+    {
         parent::__construct(
-            'download_bad_files_ids', 
-            array('ids' => $bad)
+            'download_bad_files_ids',
+            ['ids' => $bad]
         );
     }
 }
@@ -66,16 +71,18 @@ class DownloadBadFilesIDsException extends DetailedException {
 /**
  * Invalid range exception
  */
-class DownloadInvalidRangeException extends DetailedException {
+class DownloadInvalidRangeException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $range the bad range
      */
-    public function __construct($range) {
+    public function __construct($range)
+    {
         parent::__construct(
-            'download_invalid_range', 
-            array('range' => $range)
+            'download_invalid_range',
+            ['range' => $range]
         );
     }
 }

@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,23 +30,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
     die('Missing environment');
+}
 
 /**
  * Chunk too large exception
  */
-class StorageChunkTooLargeException extends DetailedException {
+class StorageChunkTooLargeException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $length actual data length
      * @param int $max maximum allowed length
      */
-    public function __construct($length, $max) {
+    public function __construct($length, $max)
+    {
         parent::__construct(
             'storage_chunk_too_large', // Message to give to the user
-            array('length' => $length, 'max' => $max) // Details to log
+            ['length' => $length, 'max' => $max] // Details to log
         );
     }
 }
@@ -54,16 +57,18 @@ class StorageChunkTooLargeException extends DetailedException {
 /**
  * Not enough space left exception
  */
-class StorageNotEnoughSpaceLeftException extends DetailedException {
+class StorageNotEnoughSpaceLeftException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param int $required_space
      */
-    public function __construct($required_space) {
+    public function __construct($required_space)
+    {
         parent::__construct(
             'storage_not_enough_space_left', // Message to give to the user
-            array('required_space' => $required_space)
+            ['required_space' => $required_space]
         );
     }
 }
