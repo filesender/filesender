@@ -74,7 +74,8 @@ DBI::beginTransaction();
 // Get data classes
 function getClasses() {
     $classes = array();
-    $classes[] = 'User'; // This must be before Authentication so users can be setup too
+    // This must be before Authentication so users can be setup too    
+    array_push($classes, 'User');
     foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
         if(substr($i, -10) != '.class.php') continue;
         $class = substr($i, 0, -10);
@@ -226,56 +227,40 @@ function updateIntoTable( $updateTable, $fromTable, $setClause, $whereClause )
 }
 
 //
-// Create forign keys if they are not there already
+// Create foreign keys if they are not there already
 //
 function ensureFK()
 {
     $dbtype = Config::get('db_type');
-    $tbl_auth      = call_user_func('Authentication::getDBTable');
-    $tbl_transfers = call_user_func('Transfer::getDBTable');
-    $tbl_guests    = call_user_func('Guest::getDBTable');
-    $tbl_clientlog = call_user_func('ClientLog::getDBTable');
-    $tbl_user      = call_user_func('User::getDBTable');
 
-    $if_not_exists = '';
-    if( $dbtype == 'mysql' ) {
-        $if_not_exists = ' IF NOT EXISTS ';
+    $fks = array();
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'users.authid refers to authentications.id',
+	            call_user_func('User::getDBTable'), 'UserPreferences_authid', 'authid',
+	            call_user_func('Authentication::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'transfers.userid refers to users.id',
+	            call_user_func('Transfer::getDBTable'), 'Transfers_userid', 'userid',
+	            call_user_func('User::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'guests.userid refers to users.id',
+	            call_user_func('Guest::getDBTable'), 'Guests_userid', 'userid',
+	            call_user_func('User::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'clientlogs.userid refers to users.id',
+	            call_user_func('ClientLog::getDBTable'), 'ClientLog_userid', 'userid',
+	            call_user_func('User::getDBTable'), 'id' ));
+    
+    foreach ( $fks as $fk ) {
+        $fk->ensure();
     }
+    
+    
 
-    $a = array();
-    array_push( $a,'ALTER TABLE '.$tbl_user
-                 . ' ADD CONSTRAINT UserPreferences_authid FOREIGN KEY '
-                 . $if_not_exists
-                 . ' (authid) REFERENCES '.$tbl_auth.' (id) '
-                 . ' on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_transfers
-                  . ' ADD CONSTRAINT Transfers_userid       FOREIGN KEY '
-                  . $if_not_exists
-                  . ' (userid) REFERENCES '.$tbl_user.' (id) '
-                  . ' on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_guests
-                  . ' ADD CONSTRAINT Guests_userid FOREIGN KEY '
-                  . $if_not_exists
-                  . ' (userid) REFERENCES '.$tbl_user.' (id)  '
-                  . ' on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_clientlog
-                   .' ADD CONSTRAINT ClientLog_userid       FOREIGN KEY '
-                  . $if_not_exists
-                  . ' (userid) REFERENCES '.$tbl_user.' (id)  '
-                  . ' on delete cascade on update restrict ;');
-
-    // There is no if not exists for psql so we just make
-    // all the fks and ignore the duplicate error coming back.
-    // Other errors are left to hit top level as fatal
-    foreach ($a as $key => $sql)
-    {
-        try {
-            echo $sql . "\n";
-            DBI::exec( $sql );
-        } catch(DBIDuplicateException $e ) {
-            echo "... already there!\n";
-        }
-    }
 }
 
 
