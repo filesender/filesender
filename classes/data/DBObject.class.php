@@ -43,7 +43,7 @@ class DBObject
     /**
      * Instances cache
      */
-    protected static $objectCache = [];
+    protected static $objectCache = array();
     
     /**
      * Defines data in database
@@ -64,9 +64,9 @@ class DBObject
      *   - unique : bool indicating if field is unique or string pointing unicity column set
      *   - default : default value for this field
      */
-    protected static $dataMap = [];
+    protected static $dataMap = array();
 
-    protected static $viewMap = [];
+    protected static $viewMap = array();
     
     /**
      * Defines secondary indexes for this table
@@ -79,7 +79,7 @@ class DBObject
      *   <field_def> associative array of field definition entries in :
      *     - notused : This is an associative array to allow later expansion.
      */
-    protected static $secondaryIndexMap = [];
+    protected static $secondaryIndexMap = array();
 
     /**
      * DataMap getter
@@ -161,10 +161,10 @@ class DBObject
                 }
                 unset(self::$objectCache[$class][$id]);
             } else {
-                self::$objectCache[$class] = [];
+                self::$objectCache[$class] = array();
             }
         } else {
-            self::$objectCache = [];
+            self::$objectCache = array();
         }
         
         return true;
@@ -204,7 +204,7 @@ class DBObject
      *
      * @return object instance
      */
-    public static function fromData($id, $data = null, $transforms = [])
+    public static function fromData($id, $data = null, $transforms = array())
     {
         $class = static::getCacheClassName();
         
@@ -244,7 +244,7 @@ class DBObject
      *
      * @return array of objects or page object
      */
-    public static function all($criteria = null, $placeholders = [], $run = null)
+    public static function all($criteria = null, $placeholders = array(), $run = null)
     {
         $query = 'SELECT * FROM '.static::getDBTable();
         $count = null;
@@ -300,7 +300,7 @@ class DBObject
         }
         
         // Look for primary key(s) name(s)
-        $pk = [];
+        $pk = array();
         foreach (static::getDataMap() as $k => $d) {
             if (array_key_exists('primary', $d) && $d['primary']) {
                 $pk[] = $k;
@@ -318,10 +318,10 @@ class DBObject
         
         // Fetch records, register them with id build from primary key(s) value(s)
         $records = $statement->fetchAll();
-        $objects = [];
+        $objects = array();
         
         foreach ($records as $r) {
-            $id = [];
+            $id = array();
             foreach ($pk as $k) {
                 $id[] = $r[$k];
             }
@@ -332,7 +332,7 @@ class DBObject
         
         // Apply callback if provided
         if ($run && is_callable($run)) {
-            $new_things = [];
+            $new_things = array();
             foreach ($objects as $id => $o) {
                 $objects[$id] = $run($o);
             }
@@ -394,7 +394,7 @@ class DBObject
         
         // Remove from database
         $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE id = :id');
-        $s->execute([':id' => $this->id]);
+        $s->execute(array(':id' => $this->id));
         
         // Remove from object cache
         self::purgeCache(get_called_class(), $this->id);
@@ -411,7 +411,7 @@ class DBObject
      * @param mixed $data associative array or stdClass instance of data from the database
      * @param array $transforms associative array of <field_name> => <transform> (optionnal)
      */
-    protected function fillFromDBData($data, $transforms = [])
+    protected function fillFromDBData($data, $transforms = array())
     {
         if (!is_array($data)) {
             $data = (array)$data;
@@ -470,7 +470,7 @@ class DBObject
             // Do we asked for further transformations ?
             if (array_key_exists($field_name, $transforms)) {
                 if (is_string($transforms[$field_name]) || is_callable($transforms[$field_name])) {
-                    $transforms[$field_name] = [$transforms[$field_name]];
+                    $transforms[$field_name] = array($transforms[$field_name]);
                 }
                 
                 if (is_array($transforms[$field_name])) {
@@ -478,9 +478,9 @@ class DBObject
                         if (is_string($transform)) {
                             $field_name = $transform;
                         } // Key change
-                    if (is_callable($transform)) {
-                        $value = $transform($value);
-                    } // Value transformation
+                        if (is_callable($transform)) {
+                            $value = $transform($value);
+                        } // Value transformation
                     }
                 } elseif (!$transform[$field_name]) {
                     continue;
@@ -504,11 +504,11 @@ class DBObject
      *
      * @return array database ready data
      */
-    public function toDBData($transforms = [])
+    public function toDBData($transforms = array())
     {
         $field_names = array_keys(static::$dataMap);
         
-        $data = [];
+        $data = array();
         
         // Iterate over keys
         foreach ($field_names as $field_name) {
@@ -518,7 +518,7 @@ class DBObject
             // Does the value need transformation ?
             if (array_key_exists($field_name, $transforms)) {
                 if (is_string($transforms[$field_name]) || is_callable($transforms[$field_name])) {
-                    $transforms[$field_name] = [$transforms[$field_name]];
+                    $transforms[$field_name] = array($transforms[$field_name]);
                 }
                 
                 if (is_array($transforms[$field_name])) {
@@ -526,9 +526,9 @@ class DBObject
                         if (is_string($transform)) {
                             $property_name = $transform;
                         } // Key change
-                    if (is_callable($transform)) {
-                        $value_transform = $transform;
-                    } // Value transformation
+                        if (is_callable($transform)) {
+                            $value_transform = $transform;
+                        } // Value transformation
                     }
                 }
             }
@@ -617,7 +617,7 @@ class DBObject
         }
         
         // Insert data
-        $values = [];
+        $values = array();
         foreach ($data as $field_name => $value) {
             $values[':'.$field_name] = $value;
         }
@@ -625,7 +625,7 @@ class DBObject
         $s->execute($values);
         
         // Get primary key(s) back
-        $pks = [];
+        $pks = array();
         foreach (static::$dataMap as $field_name => $dfn) {
             if (array_key_exists('autoinc', $dfn) && $dfn['autoinc']) {
                 $pks[$field_name] = DBI::lastInsertId($table.'_'.$field_name.'_seq');
@@ -645,8 +645,8 @@ class DBObject
     {
         $table = static::getDBTable();
         
-        $placeholders = [];
-        $values = [];
+        $placeholders = array();
+        $values = array();
         
         // Filter
         $key_names = (array) $key_name;
@@ -661,7 +661,7 @@ class DBObject
         }
         
         // Build filter
-        $where_parts = [];
+        $where_parts = array();
         foreach ($key_names as $key_name) {
             $where_parts[] = $key_name.' = :'.$key_name;
         }

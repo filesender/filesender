@@ -48,7 +48,7 @@ class GuestNotFoundException extends DetailedException
     {
         parent::__construct(
             'guest_not_found', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -83,7 +83,7 @@ class GuestBadStatusException extends DetailedException
     {
         parent::__construct(
             'bad_guest_status', // Message to give to the user
-            ['status' => $status] // Details to log
+            array('status' => $status) // Details to log
         );
     }
 }
@@ -121,7 +121,7 @@ class GuestException extends DetailedException
      */
     public function __construct($guest, $msg_code, $internal_details = null, $public_details = null)
     {
-        $internal_details = $internal_details ? (array)$internal_details : [];
+        $internal_details = $internal_details ? (array)$internal_details : array();
         $internal_details['guest'] = (string)$guest;
         
         parent::__construct('guest_'.$msg_code, $internal_details, $public_details);

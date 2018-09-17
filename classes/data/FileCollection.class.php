@@ -42,28 +42,28 @@ class FileCollection extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
+    protected static $dataMap = array(
         //primary key pair <collection_id,file_id>
-        'collection_id' => [
+        'collection_id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium',
             'primary' => true,
-        ],
-        'file_id' => [
+        ),
+        'file_id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium',
                         'primary' => true,
-        ],
-    ];
+        ),
+    );
 
     // the primary key pair<collection_id, file_id>
     // should implicitly create a secondary index on just
     // collection_id, but we also want to quickly sort on file_id
-    protected static $secondaryIndexMap = [
-        'file_id' => [
-            'file_id' => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'file_id' => array(
+            'file_id' => array()
+        )
+    );
     
     /**
      * Properties
@@ -90,8 +90,8 @@ class FileCollection extends DBObject
         if (!is_null($collection_id) && !is_null($file_id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id = :collection_id AND file_id = :file_id');
-            $statement->execute([':collection_id' => $collection_id,
-                                      ':file_id' => $file_id]);
+            $statement->execute(array(':collection_id' => $collection_id,
+                                      ':file_id' => $file_id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new FileCollectionNotFoundException('collection_id = '.$collection_id.', file_id = '.$file_id);
@@ -163,11 +163,11 @@ class FileCollection extends DBObject
     public static function fromCollection(Collection $collection, $full_load = null)
     {
         $owner_id = $collection->id;
-        $files = [];
+        $files = array();
         
         if (!is_null($full_load)) {
             $s = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE id IN (SELECT file_id FROM '.self::getDBTable().' WHERE collection_id = :collection_id)');
-            $s->execute([':collection_id' => $owner_id]);
+            $s->execute(array(':collection_id' => $owner_id));
             foreach ($s->fetchAll() as $data) {
                 $file_id = $data['id'];
                 $filecollection = self::create($owner_id, $file_id);
@@ -177,7 +177,7 @@ class FileCollection extends DBObject
             }
         } else {
             $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id = :collection_id');
-            $s->execute([':collection_id' => $owner_id]);
+            $s->execute(array(':collection_id' => $owner_id));
             foreach ($s->fetchAll() as $data) {
                 $file_id = $data['file_id'];
                 $filecollection = self::create($owner_id, $file_id);
@@ -197,9 +197,9 @@ class FileCollection extends DBObject
     public static function fromCollectionIds($collectionIds)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN ('.implode(", ", $collectionIds).') ORDER BY :order1, :order2');
-        $s->execute([':order1' => 'collection_id',
-                          ':order2' => 'file_id']);
-        $set = [];
+        $s->execute(array(':order1' => 'collection_id',
+                          ':order2' => 'file_id'));
+        $set = array();
         $current = null;
         $current_id = -1;
         foreach ($s->fetchAll() as $data) {
@@ -210,7 +210,7 @@ class FileCollection extends DBObject
                 if (!is_null($current)) {
                     $set[$current_id] = $current;
                 }
-                $current = [];
+                $current = array();
                 $current_id = $collection_id;
             }
             $current[$file_id] = self::create($collection_id, $file_id);
@@ -233,11 +233,11 @@ class FileCollection extends DBObject
     public static function fromFile(File $file, $full_load = null)
     {
         $file_id = $file->id;
-        $collections = [];
+        $collections = array();
         
         if (!is_null($full_load)) {
             $s = DBI::prepare('SELECT * FROM '.Collection::getDBTable().' WHERE id IN (SELECT collection_id FROM '.self::getDBTable().' WHERE file_id = :file_id)');
-            $s->execute([':file_id' => $file_id]);
+            $s->execute(array(':file_id' => $file_id));
             foreach ($s->fetchAll() as $data) {
                 $collection_id = $data['id'];
                 $filecollection = self::create($collection_id, $file_id);
@@ -247,7 +247,7 @@ class FileCollection extends DBObject
             }
         } else {
             $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE file_id = :file_id');
-            $s->execute([':file_id' => $file_id]);
+            $s->execute(array(':file_id' => $file_id));
             foreach ($s->fetchAll() as $data) {
                 $collection_id = $data['collection_id'];
                 $filecollection = self::create($collection_id, $file_id);
@@ -272,8 +272,8 @@ class FileCollection extends DBObject
     {
         // Remove from database
         $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE collection_id = :collection_id AND file_id = :file_id');
-        $s->execute([':collection_id' => $this->collection_id,
-                          ':file_id' => $this->file_id]);
+        $s->execute(array(':collection_id' => $this->collection_id,
+                          ':file_id' => $this->file_id));
     }
     
     /**
@@ -287,9 +287,9 @@ class FileCollection extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'collection_id', 'file_id'
-        ])) {
+        ))) {
             return $this->$property;
         }
         

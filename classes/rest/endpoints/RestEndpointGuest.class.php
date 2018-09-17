@@ -49,7 +49,7 @@ class RestEndpointGuest extends RestEndpoint
      */
     public static function cast(Guest $guest)
     {
-        return [
+        return array(
             'id' => $guest->id,
             'userid' => $guest->userid,
             'user_email' => $guest->user_email,
@@ -64,13 +64,13 @@ class RestEndpointGuest extends RestEndpoint
             'expires' => RestUtilities::formatDate($guest->expires),
             'upload_url' => $guest->upload_link,
             'errors' => array_values(array_map(function ($error) {
-                return [
+                return array(
                     'type' => $error->type,
                     'date' => RestUtilities::formatDate($error->created, true),
                     'details' => $error->details
-                ];
+                );
             }, $guest->errors))
-        ];
+        );
     }
     
     /**
@@ -119,7 +119,7 @@ class RestEndpointGuest extends RestEndpoint
         }
         
         // Check parameters
-        if (!in_array($id, ['', '@me', '@all'])) {
+        if (!in_array($id, array('', '@me', '@all'))) {
             throw new RestBadParameterException('guest_id');
         }
         
@@ -136,7 +136,7 @@ class RestEndpointGuest extends RestEndpoint
         }
         
         // Cast and return
-        $out = [];
+        $out = array();
         foreach ($guests as $guest) {
             $out[] = self::cast($guest);
         }
@@ -192,7 +192,7 @@ class RestEndpointGuest extends RestEndpoint
         $allowed_options = array_keys(Auth::isRemoteApplication() ? Guest::allOptions() : Guest::availableOptions());
         
         // Set options based on provided ones and defaults
-        $guest_options = [];
+        $guest_options = array();
         if (isset($data->options->guest)) {
             foreach (Guest::allOptions() as $name => $dfn) {
                 if (in_array($name, $allowed_options)
@@ -209,7 +209,7 @@ class RestEndpointGuest extends RestEndpoint
         // Allow any options for remote applications, check against allowed options otherwise
         $allowed_transfer_options = array_keys(Auth::isRemoteApplication() ? Transfer::allOptions() : Transfer::availableOptions());
         
-        $transfer_options = [];
+        $transfer_options = array();
         if (isset($data->options->transfer)) {
             foreach (Transfer::allOptions() as $name => $dfn) {
                 if (in_array($name, $allowed_transfer_options)
@@ -227,10 +227,10 @@ class RestEndpointGuest extends RestEndpoint
         // Make guest available, this saves the object and send email to the guest
         $guest->makeAvailable();
         
-        return [
+        return array(
             'path' => '/guest/'.$guest->id,
             'data' => self::cast($guest)
-        ];
+        );
     }
     
     /**

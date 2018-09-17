@@ -44,7 +44,7 @@ class Report
     /**
      * Related audit log entries
      */
-    private $logs = [];
+    private $logs = array();
     
     /**
      * Target type
@@ -61,7 +61,7 @@ class Report
      */
     public function __construct(DBObject $target)
     {
-        $this->logs = [];
+        $this->logs = array();
         switch (get_class($target)) {
             case 'Transfer': // Get all log about transfer or its related files and recipients
                 $this->logs = AuditLog::fromTransfer($target);
@@ -90,10 +90,10 @@ class Report
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'logs',
             'target',
-        ])) {
+        ))) {
             return $this->$property;
         }
         
@@ -141,19 +141,19 @@ class Report
             throw new ReportFormatNotAvailableException('iconv not found');
         }
         
-        $content = ['plain' => '', 'html' => ''];
+        $content = array('plain' => '', 'html' => '');
         $attachment = null;
         
         // Build mail body depending on format
         if ($format == ReportFormats::PDF) {
-            $html = Template::process('!report_pdf', ['report' => $this]);
+            $html = Template::process('!report_pdf', array('report' => $this));
             
-            $styles = [
+            $styles = array(
                 'www/css/mail.css',
                 'www/skin/mail.css',
                 'www/css/pdf.css',
                 'www/skin/pdf.css'
-            ];
+            );
             $css = '';
             foreach ($styles as $cssfile) {
                 if (file_exists(FILESENDER_BASE.'/'.$cssfile)) {
@@ -173,19 +173,19 @@ class Report
             $attachment = new MailAttachment('report_'.strtolower($this->target_type).'_'.$this->target->id.'.pdf');
             $attachment->content = $pdf->output();
         } else { // INLINE
-            $content['plain'] = Template::process('!report_plain', ['report' => $this]);
-            $content['html'] = Template::process('!report_html', ['report' => $this]);
+            $content['plain'] = Template::process('!report_plain', array('report' => $this));
+            $content['html'] = Template::process('!report_html', array('report' => $this));
         }
         
         // Build translated email
         $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
-        $mail = TranslatableEmail::prepare('report_'.$lid, $recipient, $this->target, [
-            'target' => [
+        $mail = TranslatableEmail::prepare('report_'.$lid, $recipient, $this->target, array(
+            'target' => array(
                 'type' => $this->target_type,
                 'id' => $this->target->id
-            ],
+            ),
             'content' => $content,
-        ]);
+        ));
         
         $mail->setDebugTemplate($lid);
 

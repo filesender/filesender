@@ -89,7 +89,7 @@ class TestDatabaseTransfers
         $path,
                              $subject = null,
                              $message = 'no message given',
-                             $options = ['encryption' => false ]
+                             $options = array('encryption' => false )
     ) {
         $expires = Config::get('default_transfer_days_valid');
         $transfer = Transfer::create(time() + $expires * 24 * 3600);
@@ -171,7 +171,7 @@ class TestDatabaseTransfers
         $targetTransfers,
                                $filesPerTransfer = 1,
                                $addRecipients = null,
-                               $callbackObjects = []
+                               $callbackObjects = array()
     ) {
         $this->output("Performing $targetTransfers Transfers with $filesPerTransfer file...");
 
@@ -190,9 +190,9 @@ class TestDatabaseTransfers
                 $path,
                                                'testdriver test',
                                                'testdriver',
-                                               ['encryption' => false,
+                                               array('encryption' => false,
                                                      'get_a_link' => false,
-                                                     'email_upload_complete' => true ]
+                                                     'email_upload_complete' => true )
             );
             for ($j = 1; $j < $filesPerTransfer; $j++) {
                 $fn = array_shift($numbers);
@@ -203,7 +203,7 @@ class TestDatabaseTransfers
                 $recipient = $transfer->addRecipient('tester@localhost.localdomain');
             } else {
                 $recipient = call_user_func(
-                    [$addRecipients, 'visitTransfer'],
+                    array($addRecipients, 'visitTransfer'),
                                             $transfer
                 );
             }
@@ -216,7 +216,7 @@ class TestDatabaseTransfers
             $f = reset($files);
             foreach ($callbackObjects as $cbobj) {
                 call_user_func(
-                    [$cbobj, 'visitTransfer'],
+                    array($cbobj, 'visitTransfer'),
                                $transfer,
                     $f,
                     $recipient

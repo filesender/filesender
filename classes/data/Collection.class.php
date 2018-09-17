@@ -42,45 +42,45 @@ class Collection extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
+    protected static $dataMap = array(
         //collection id, as in the database
-        'id' => [
+        'id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
             'autoinc' => true,   //indicates that 'id' is auto-incremented
-        ],
-        'transfer_id' => [
+        ),
+        'transfer_id' => array(
             'type' => 'uint',
             'size' => 'medium',
-        ],
-        'parent_id' => [
+        ),
+        'parent_id' => array(
             'type' => 'uint',
             'null' => true,
             'size' => 'medium',
-        ],
-        'type_id' => [
+        ),
+        'type_id' => array(
             'type' => 'uint',
             'size' => 'medium',
-        ],
-        'info' => [
+        ),
+        'info' => array(
             'type' => 'string',
             'null' => true,
             'size' => 2048
-        ],
-    ];
+        ),
+    );
 
-    protected static $secondaryIndexMap = [
-        'transfer_id' => [
-            'transfer_id' => []
-        ],
-        'type_id' => [
-            'type_id' => []
-        ],
-        'parent_id' => [
-            'parent_id' => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'transfer_id' => array(
+            'transfer_id' => array()
+        ),
+        'type_id' => array(
+            'type_id' => array()
+        ),
+        'parent_id' => array(
+            'parent_id' => array()
+        )
+    );
 
     /**
      * Properties
@@ -150,7 +150,7 @@ class Collection extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new ClassificationNotFoundException('id = '.$id);
@@ -199,7 +199,7 @@ class Collection extends DBObject
         
         $collection->type_id = $type->id;
         $collection->typeCache = $type;
-        $collection->filesCache = [];
+        $collection->filesCache = array();
         $collection->info = $info;
         $collection->processInfo();
         
@@ -230,14 +230,14 @@ class Collection extends DBObject
     public static function fromTransfer(Transfer $transfer)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id ORDER BY type_id');
-        $s->execute([':transfer_id' => $transfer->id]);
-        $collections = [];
-        $collectionIds = [];
+        $s->execute(array(':transfer_id' => $transfer->id));
+        $collections = array();
+        $collectionIds = array();
         foreach ($s->fetchAll() as $data) {
             $type_id = $data['type_id'];
             $id = $data['id'];
             if (!array_key_exists($type_id, $collections)) {
-                $collections[$type_id] = [];
+                $collections[$type_id] = array();
             }
             $collection = static::fromData($id, $data);
             $collections[$type_id][$id] = $collection;
@@ -250,7 +250,7 @@ class Collection extends DBObject
                 if (array_key_exists($id, $set)) {
                     $collection->filesCache = $set[$id];
                 } else {
-                    $collection->filesCache = [];
+                    $collection->filesCache = array();
                 }
             }
         }
@@ -351,9 +351,9 @@ class Collection extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'transfer_id', 'type_id', 'parent_id', 'info'
-        ])) {
+        ))) {
             return $this->$property;
         }
         
@@ -475,9 +475,9 @@ class CollectionTree extends Collection
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'uid', 'file'
-        ])) {
+        ))) {
             if (is_null($this->uid)) {
                 $this->loadInfo();
             }

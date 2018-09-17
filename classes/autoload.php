@@ -42,7 +42,7 @@ class Autoloader
     /**
      * Class name to path mappers
      */
-    private static $mappers = [
+    private static $mappers = array(
         'PropertyAccessException' => 'exceptions/DBObjectExceptions',
         '*Exception' => 'exceptions/@package(Exception)',
         
@@ -95,7 +95,7 @@ class Autoloader
 
         // Must be last
         '*' => 'utils/'
-    ];
+    );
     
     /**
      * Load a class
@@ -149,7 +149,7 @@ class Autoloader
             $path .= '/';
         }
         
-        $tokens = [];
+        $tokens = array();
         $bits = preg_split('`([A-Z][a-z0-9]*)`', $class, null, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         while ($bit = array_shift($bits)) {

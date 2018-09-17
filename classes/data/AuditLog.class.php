@@ -43,53 +43,53 @@ class AuditLog extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true
-        ],
-        'event' => [
+        ),
+        'event' => array(
             'type' => 'string',
             'size' => 32
-        ],
-        'target_type' => [
+        ),
+        'target_type' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'target_id' => [
+        ),
+        'target_id' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'author_type' => [
+        ),
+        'author_type' => array(
             'type' => 'string',
             'size' => 255,
             'null' => true
-        ],
-        'author_id' => [
+        ),
+        'author_id' => array(
             'type' => 'string',
             'size' => 255,
             'null' => true
-        ],
-        'ip' => [
+        ),
+        'ip' => array(
             'type' => 'string',
             'size' => 39,
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ]
-    ];
+        )
+    );
 
-    protected static $secondaryIndexMap = [
-        'Type_ID' => [
-            'target_type' => [],
-            'target_id'   => []
-        ],
-        'Author_ID' => [
-            'author_type' => [],
-            'author_id'   => []
-        ]
+    protected static $secondaryIndexMap = array(
+        'Type_ID' => array(
+            'target_type' => array(),
+            'target_id'   => array()
+        ),
+        'Author_ID' => array(
+            'author_type' => array(),
+            'author_id'   => array()
+        )
         
 //        'Type_ID_AType_AID_IP_Event_Created' => array(
 //            'target_type' => array(),
@@ -101,18 +101,18 @@ class AuditLog extends DBObject
 //            'created'     => array()
 //        ),
         
-    ];
+    );
 
     public static function getViewMap()
     {
-        $a = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . DBView::columnDefinition_as_number($dbtype, 'target_id')
                         . '  from ' . self::getDBTable();
         }
-        return [ strtolower(self::getDBTable()) . 'view' => $a ];
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
     
     /**
@@ -147,7 +147,7 @@ class AuditLog extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new AuditLogNotFoundException('id = '.$id);
@@ -221,7 +221,7 @@ class AuditLog extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id',
             'event',
             'target_type',
@@ -230,7 +230,7 @@ class AuditLog extends DBObject
             'author_id',
             'created',
             'ip',
-        ])) {
+        ))) {
             return $this->$property;
         }
         
@@ -238,13 +238,13 @@ class AuditLog extends DBObject
             try {
                 return call_user_func($this->target_type.'::fromId', $this->target_id);
             } catch (Exception $e) {
-                return (object)[
+                return (object)array(
                     'made_available_time' => 1,
                     'upload_time' => 1,
                     'name' => 'unknown',
                     'size' => 1,
                     'email' => 'unknown'
-                ];
+                );
             }
         }
         
@@ -256,10 +256,10 @@ class AuditLog extends DBObject
             try {
                 return call_user_func($this->author_type.'::fromId', $this->author_id);
             } catch (Exception $e) {
-                return (object)[
+                return (object)array(
                     'identity' => 'unknown',
                     'email' => 'unknown'
-                ];
+                );
             }
         }
         
@@ -294,7 +294,7 @@ class AuditLog extends DBObject
      */
     public static function fromTarget(DBObject $target, $event = null)
     {
-        $logs = self::all(self::FROM_TARGET, ['type' => $target->getClassName(), 'id' => (string)$target->id]);
+        $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => (string)$target->id));
         
         if ($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function ($log) use ($event) {
@@ -314,7 +314,7 @@ class AuditLog extends DBObject
      */
     public static function fromAuthor(DBObject $author, $event = null)
     {
-        $logs = self::all(self::FROM_AUTHOR, ['type' => $author->getClassName(), 'id' => (string)$author->id]);
+        $logs = self::all(self::FROM_AUTHOR, array('type' => $author->getClassName(), 'id' => (string)$author->id));
         
         if ($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function ($log) use ($event) {
@@ -342,19 +342,19 @@ class AuditLog extends DBObject
         }
         
         // Get and delete all audit logs related to the transfer
-        $logs = array_values(self::all(self::FROM_TARGET, ['type' => $transfer->getClassName(), 'id' => (string)$transfer->id]));
+        $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => (string)$transfer->id)));
         
         // Add events related to the transfer's files
-        foreach (self::all('target_type=\'File\' AND target_id IN :ids', [':ids' => array_map(function ($file) {
+        foreach (self::all('target_type=\'File\' AND target_id IN :ids', array(':ids' => array_map(function ($file) {
             return $file->id;
-        }, $transfer->files)]) as $log) {
+        }, $transfer->files))) as $log) {
             $logs[] = $log;
         }
         
         // Add events related to the transfer's recipients
-        foreach (self::all('target_type=\'Recipient\' AND target_id IN :ids', [':ids' => array_map(function ($recipient) {
+        foreach (self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function ($recipient) {
             return $recipient->id;
-        }, $transfer->recipients)]) as $log) {
+        }, $transfer->recipients))) as $log) {
             $logs[] = $log;
         }
          
@@ -392,12 +392,12 @@ class AuditLog extends DBObject
         // Get a single download for each file if it exists over the range
         $downloaded = self::all(
             'target_type=\'File\' AND target_id IN :ids AND author_type=\'Recipient\' AND author_id=:rcptid AND ip = :ip AND event=\'download_ended\' AND created > :since GROUP BY target_id, id',
-            [
+            array(
                 ':ids' => $files_ids,
                 ':rcptid' => $recipient->id,
                 ':ip' => Utilities::getClientIP(),
                 ':since' => date('Y-m-d H:i:s', time() - $range)
-            ]
+            )
         );
         
         // Same number of items means all files where downloaded (individually or not) over the range
@@ -437,7 +437,7 @@ class AuditLog extends DBObject
         if (!is_null($lifetime) && $lifetime > 0) {
             // delete auditlogs entries that are too old
             $statement = DBI::prepare("delete from ".self::getDBTable()." where created < :cutoff ");
-            $statement->execute([':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))]);
+            $statement->execute(array(':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))));
         }
     }
 }

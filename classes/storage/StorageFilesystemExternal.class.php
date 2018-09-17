@@ -53,12 +53,12 @@ class StorageFilesystemExternal extends StorageFilesystem
             $cmd.=' '.$cmdOptions;
         }
 
-        $output=[];
-        $descriptorspec = [
-       0 => ["pipe", "r"],
-       1 => ["pipe", "w"],
-       2 => ["pipe", "w"]
-    ];
+        $output=array();
+        $descriptorspec = array(
+       0 => array("pipe", "r"),
+       1 => array("pipe", "w"),
+       2 => array("pipe", "w")
+    );
         $process = proc_open(
         $cmd,
             $descriptorspec,
@@ -78,18 +78,18 @@ class StorageFilesystemExternal extends StorageFilesystem
         $exit_status = proc_close($process);
 
         if ($exit_status!=0) {
-            Logger::info('StorageFilesystemExternal: stdout'.str_replace(["\r\n","\n"], "\n", $stdout));
-            Logger::info('StorageFilesystemExternal: stderror'.str_replace(["\r\n","\n"], "\n", $stderr));
+            Logger::info('StorageFilesystemExternal: stdout'.str_replace(array("\r\n","\n"), "\n", $stdout));
+            Logger::info('StorageFilesystemExternal: stderror'.str_replace(array("\r\n","\n"), "\n", $stderr));
         }
         if ($stderr!='') {
-            Logger::info('StorageFilesystemExternal: stderror'.str_replace(["\r\n","\n"], "\n", $stderr));
+            Logger::info('StorageFilesystemExternal: stderror'.str_replace(array("\r\n","\n"), "\n", $stderr));
         }
 
-        return [
+        return array(
         'stdout' => $stdout,
         'stderror' => $stderr,
         'status' => $exit_status
-    ];
+    );
     }
 
     public static function canStore(Transfer $transfer)
@@ -156,10 +156,10 @@ class StorageFilesystemExternal extends StorageFilesystem
                 Logger::info('writeChunk() cmd: fs_writeChunk "'.$file->uid.'" '.$offset.' '.$chunk_size.' '.$size);
                 throw new StorageFilesystemCannotWriteException('writeChunk( '.$file->uid, $file, $data, $offset, $written);
             }
-            return [
+            return array(
             'offset' => $offset,
             'written' => $written
-        ];
+        );
         }
     }
     

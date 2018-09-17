@@ -95,22 +95,22 @@ class AuthSPSaml
             
             $raw_attributes = self::loadSimpleSAML()->getAttributes();
             
-            $attributes = [];
+            $attributes = array();
             
             // Wanted attributes
-            foreach (['uid', 'name', 'email'] as $attr) {
+            foreach (array('uid', 'name', 'email') as $attr) {
                 // Keys in raw_attributes (can be array of key)
                 $keys = self::$config[$attr.'_attribute'];
                 if (!is_array($keys)) {
-                    $keys = [$keys];
+                    $keys = array($keys);
                 }
                 
-                $values = [];
+                $values = array();
                 foreach ($keys as $key) { // For all possible keys for attribute
                     if (array_key_exists($key, $raw_attributes)) {
                         $value = $raw_attributes[$key];
                         if (!is_array($value)) {
-                            $value = [$value];
+                            $value = array($value);
                         }
                         foreach ($value as $v) {
                             $values[] = $v;
@@ -161,7 +161,7 @@ class AuthSPSaml
             // Gather additional attributes if required
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if ($additional_attributes) {
-                $attributes['additional'] = [];
+                $attributes['additional'] = array();
                 foreach ($additional_attributes as $key => $from) {
                     if (is_numeric($key) && is_callable($from)) {
                         continue;
@@ -204,10 +204,10 @@ class AuthSPSaml
             $target = Config::get('site_url').'index.php?s='.$landing_page;
         }
         
-        $url = Utilities::http_build_query([
+        $url = Utilities::http_build_query(array(
             'AuthId' => self::$config['authentication_source'],
             'ReturnTo' => $target,
-        ], self::$config['simplesamlphp_url'].'module.php/core/as_login.php?');
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_login.php?');
 
         return $url;
     }
@@ -227,10 +227,10 @@ class AuthSPSaml
             $target = Config::get('site_logouturl');
         }
         
-        $url = Utilities::http_build_query([
+        $url = Utilities::http_build_query(array(
             'AuthId' => self::$config['authentication_source'],
             'ReturnTo' => $target,
-        ], self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?');
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?');
         
         return $url;
     }
@@ -243,14 +243,14 @@ class AuthSPSaml
         if (is_null(self::$config)) {
             self::$config = Config::get('auth_sp_saml_*');
             
-            foreach ([
+            foreach (array(
                 'simplesamlphp_location',
                 'simplesamlphp_url',
                 'authentication_source',
                 'uid_attribute',
                 'name_attribute',
                 'email_attribute'
-            ] as $key) {
+            ) as $key) {
                 if (!array_key_exists($key, self::$config)) {
                     throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
                 }

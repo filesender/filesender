@@ -48,7 +48,7 @@ class AuthSPMissingDelegationClassException extends DetailedException
     {
         parent::__construct(
             'auth_sp_missing_delegation_class', // Message to give to the user
-            ['class' => $name] // Details to log
+            array('class' => $name) // Details to log
         );
     }
 }
@@ -86,7 +86,7 @@ class AuthSPMissingAttributeException extends DetailedException
      */
     public function __construct($name, $attributes, $attrkey, $attrname='')
     {
-        $info = ['attribute' => $name];
+        $info = array('attribute' => $name);
         
         $lid = 'auth_sp_attribute_'.$name.'_hint';
         $hint = (string)Lang::tr($lid);
@@ -117,7 +117,7 @@ class AuthSPBadAttributeException extends DetailedException
      */
     public function __construct($name)
     {
-        $info = ['attribute' => $name];
+        $info = array('attribute' => $name);
         
         $lid = 'auth_sp_attribute_'.$name.'_hint';
         $hint = (string)Lang::tr($lid);

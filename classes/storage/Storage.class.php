@@ -46,7 +46,7 @@ class Storage
     /**
      * Stream reading offsets
      */
-    private static $reading_offsets = [];
+    private static $reading_offsets = array();
     
     /**
      *  Gets the configs and sets other needed properties

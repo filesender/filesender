@@ -40,7 +40,7 @@ class Upgrader
     /**
      * Tasks to run before and after database update
      */
-    private static $tasks = ['pre' => [], 'post' => []];
+    private static $tasks = array('pre' => array(), 'post' => array());
     
     /**
      * Look for things to do and load them
@@ -51,7 +51,7 @@ class Upgrader
     private static function load($from, $to)
     {
         $path = FILESENDER_BASE.'/scripts/upgrade/versions/';
-        $files = [];
+        $files = array();
         foreach (scandir($path) as $i) {
             if (!preg_match('`^upgrade_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)\.php$`', $i, $m)) {
                 continue;
@@ -68,11 +68,11 @@ class Upgrader
                 throw new Exception('Upgrade script '.$i.' is badly designed');
             }
             
-            $files[] = [
+            $files[] = array(
                 'path' => $path.$i,
                 'from' => $m[1],
                 'to' => $m[2]
-            ];
+            );
         }
         
         if (!count($files)) {
@@ -100,7 +100,7 @@ class Upgrader
      */
     public static function register($position, $task)
     {
-        if (!in_array($position, ['pre', 'post'])) {
+        if (!in_array($position, array('pre', 'post'))) {
             throw new Exception('Position must be pre or post');
         }
         

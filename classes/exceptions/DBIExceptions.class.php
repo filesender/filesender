@@ -67,7 +67,7 @@ class DBIConnexionMissingParameterException extends DetailedException
     {
         parent::__construct(
             'dbi_missing_parameter',
-            ['parameter' => $parameter]
+            array('parameter' => $parameter)
         );
     }
 }
@@ -86,7 +86,7 @@ class DBIUsageException extends DetailedException
     {
         parent::__construct(
             'database_access_failure', // Message to give to the user
-            [$message, $details] // Details to log
+            array($message, $details) // Details to log
         );
     }
 }
@@ -110,7 +110,7 @@ class DBIBackendExplicitHandlerUnimplementedException extends DetailedException
     {
         parent::__construct(
             'database_access_failure', // Message to give to the user
-            [$message, $details] // Details to log
+            array($message, $details) // Details to log
         );
     }
 }
@@ -127,7 +127,7 @@ class DBIDuplicateException extends DetailedException
     {
         parent::__construct(
             'duplicate_object', // Message to give to the user
-            [$message, $details] // Details to log
+            array($message, $details) // Details to log
         );
     }
 }

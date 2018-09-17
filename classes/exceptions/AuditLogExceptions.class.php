@@ -44,7 +44,7 @@ class AuditLogNotFoundException extends DetailedException
     {
         parent::__construct(
             'auditlog_not_found', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -63,7 +63,7 @@ class AuditLogUnknownEventException extends DetailedException
     {
         parent::__construct(
             'auditlog_unknown_event', // Message to give to the user
-            ['event' => $event] // Real message to log
+            array('event' => $event) // Real message to log
         );
     }
 }
@@ -83,7 +83,7 @@ class AuditLogNotEnabledException extends DetailedException
     {
         parent::__construct(
                 'auditlog_not_enabled', // Message to give to the user
-                ['message' => $message] // Real message to log
+                array('message' => $message) // Real message to log
         );
     }
 }

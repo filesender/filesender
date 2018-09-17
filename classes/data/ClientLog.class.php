@@ -43,46 +43,46 @@ class ClientLog extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true
-        ],
-        'userid' => [
+        ),
+        'userid' => array(
             'type' => 'uint',
             'size' => 'big',
             'null' => true
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-        'message' => [
+        ),
+        'message' => array(
             'type' => 'text'
-        ]
-    ];
+        )
+    );
 
     public static function getViewMap()
     {
-        $a = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . '  from ' . self::getDBTable();
         }
-        return [ strtolower(self::getDBTable()) . 'view' => $a ];
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
     
-    protected static $secondaryIndexMap = [
-        'userid' => [
-            'userid' => []
-        ],
-        'created_and_userid' => [
-            'created' => [],
-            'userid' => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'userid' => array(
+            'userid' => array()
+        ),
+        'created_and_userid' => array(
+            'created' => array(),
+            'userid' => array()
+        )
+    );
 
     /**
      * Properties
@@ -106,7 +106,7 @@ class ClientLog extends DBObject
             // Load from database if id given
             /** @var PDOStatement $statement */
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new TransferNotFoundException('id = '.$id);
@@ -132,7 +132,7 @@ class ClientLog extends DBObject
             $user = $user->id;
         }
 
-        return self::all('userid = :userid ORDER BY id ASC', [':userid' => $user]);
+        return self::all('userid = :userid ORDER BY id ASC', array(':userid' => $user));
     }
     
     /**
@@ -202,7 +202,7 @@ class ClientLog extends DBObject
         
         /** @var PDOStatement $statement */
         $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
-        $statement->execute([':date' => date('Y-m-d', time() - $days * 86400)]);
+        $statement->execute(array(':date' => date('Y-m-d', time() - $days * 86400)));
     }
     
     /**
@@ -216,9 +216,9 @@ class ClientLog extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id', 'userid', 'message', 'created'
-        ])) {
+        ))) {
             return $this->$property;
         }
         

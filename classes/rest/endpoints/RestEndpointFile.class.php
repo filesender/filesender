@@ -49,14 +49,14 @@ class RestEndpointFile extends RestEndpoint
      */
     public static function cast(File $file)
     {
-        return [
+        return array(
             'id' => $file->id,
             'transfer_id' => $file->transfer_id,
             'uid' => $file->uid,
             'name' => $file->path,
             'size' => $file->size,
             'sha1' => $file->sha1
-        ];
+        );
     }
     
     /**
@@ -246,10 +246,10 @@ class RestEndpointFile extends RestEndpoint
             $data['security_token'] = Utilities::getSecurityToken();
         }
         
-        return [
+        return array(
             'path' => '/file/'.$file->id,
             'data' => $data
-        ];
+        );
     }
 
 
@@ -292,7 +292,7 @@ class RestEndpointFile extends RestEndpoint
         if (!is_numeric($id)) {
             throw new RestBadParameterException('file_id');
         }
-        if (!in_array($mode, [null, 'chunk'])) {
+        if (!in_array($mode, array(null, 'chunk'))) {
             throw new RestBadParameterException('mode');
         }
         if ($offset && !is_numeric($offset)) {
@@ -345,8 +345,8 @@ class RestEndpointFile extends RestEndpoint
             }
             
             // Get integrity check data sent from the client
-            $client = [];
-            foreach (['X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size', 'X-Filesender-Encrypted'] as $h) {
+            $client = array();
+            foreach (array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size', 'X-Filesender-Encrypted') as $h) {
                 $k = 'HTTP_' . strtoupper(str_replace('-', '_', $h));
                 $client[$h] = array_key_exists($k, $_SERVER) ? (int) $_SERVER[$k] : null;
             }

@@ -48,72 +48,72 @@ class User extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true
-        ],
-        'authid' => [
+        ),
+        'authid' => array(
             'type' => 'uint',
             'size' => 'big',
             'null' => false
-        ],
-        'additional_attributes' => [
+        ),
+        'additional_attributes' => array(
             'type' => 'text',
             'transform' => 'json',
             'null' => true
-        ],
-        'lang' => [
+        ),
+        'lang' => array(
             'type' => 'string',
             'size' => 8,
             'null' => true
-        ],
-        'aup_ticked' => [
+        ),
+        'aup_ticked' => array(
             'type' => 'bool'
-        ],
-        'aup_last_ticked_date' => [
+        ),
+        'aup_last_ticked_date' => array(
             'type' => 'date',
             'null' => true
-        ],
-        'transfer_preferences' => [
+        ),
+        'transfer_preferences' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'guest_preferences' => [
+        ),
+        'guest_preferences' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'frequent_recipients' => [
+        ),
+        'frequent_recipients' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-        'last_activity' => [
+        ),
+        'last_activity' => array(
             'type' => 'datetime',
             'null' => true
-        ],
-        'auth_secret' => [
+        ),
+        'auth_secret' => array(
             'type' => 'string',
             'size' => 64,
             'null' => true
-        ],
-        'quota' => [
+        ),
+        'quota' => array(
             'type' => 'uint',
             'size' => 'big',
             'null' => true
-        ],
-    ];
+        ),
+    );
 
 
     public static function getViewMap()
     {
-        $a = [];
-        $userauthviewdef = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        $userauthviewdef = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . DBView::columnDefinition_is_encrypted('transfer_preferences', 'prefers_enceyption')
@@ -127,9 +127,9 @@ class User extends DBObject
         }
         
         
-        return [ strtolower(self::getDBTable()) . 'view' => $a,
+        return array( strtolower(self::getDBTable()) . 'view' => $a,
                       'userauthview' => $userauthviewdef
-        ];
+        );
     }
     
     /**
@@ -152,7 +152,7 @@ class User extends DBObject
     /**
      * From Auth if it makes sense
      */
-    private $email_addresses = [];
+    private $email_addresses = array();
     private $name = null;
     
     /**
@@ -173,7 +173,7 @@ class User extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             $this->id = $id;
         }
@@ -227,11 +227,11 @@ class User extends DBObject
     public static function fromAuthID($authid)
     {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE authid = :authid');
-        $statement->execute([':authid' => $authid]);
+        $statement->execute(array(':authid' => $authid));
         $data = $statement->fetch();
 
         if (!$data) {
-            $data = [];
+            $data = array();
             $data['authid'] = $authid;
             $ret = static::createFactory(null, $data);
             $ret->created = time();
@@ -300,8 +300,8 @@ class User extends DBObject
     public static function search($match)
     {
         $match = str_replace('\\', '', $match); // Remove to-be-used escape char
-        $match = str_replace(['%', '_'], ['\\%', '\\_'], $match); // Escape special chars
-        return self::all("id LIKE :match ESCAPE '\\\\'", [':match' => '%'.$match.'%']);
+        $match = str_replace(array('%', '_'), array('\\%', '\\_'), $match); // Escape special chars
+        return self::all("id LIKE :match ESCAPE '\\\\'", array(':match' => '%'.$match.'%'));
     }
     
     /**
@@ -321,7 +321,7 @@ class User extends DBObject
             }
         }
         
-        return User::all('last_activity >= :date', [':date' => date('Y-m-d', time() - $days * 24 * 3600)]);
+        return User::all('last_activity >= :date', array(':date' => date('Y-m-d', time() - $days * 24 * 3600)));
     }
     
     /**
@@ -334,7 +334,7 @@ class User extends DBObject
             return;
         }
         
-        foreach (User::all('last_activity < :date', [':date' => date('Y-m-d', time() - $days * 24 * 3600)]) as $user) {
+        foreach (User::all('last_activity < :date', array(':date' => date('Y-m-d', time() - $days * 24 * 3600))) as $user) {
             $user->delete();
         } // No need to remove transfers and guests as only saved preferences are deleted (not user account which is managed by identity federation)
     }
@@ -351,13 +351,13 @@ class User extends DBObject
         // Get max number of returned recipients from config
         $size = Config::get('autocomplete');
         if (!$size || !is_int($size) || $size <= 0) {
-            return [];
+            return array();
         }
         
         // Get recipients from preferences
         $recipients = $this->frequent_recipients;
         if (!$recipients) {
-            $recipients = [];
+            $recipients = array();
         }
         
         // Filter if requested
@@ -379,12 +379,12 @@ class User extends DBObject
      * @param array $mails: mails to save
      * @return boolean true if saved successfuly, false otherwise
      */
-    public function saveFrequentRecipients($mails = [])
+    public function saveFrequentRecipients($mails = array())
     {
         // Get already set recipients
         $recipients = $this->frequent_recipients;
         if (!$recipients) {
-            $recipients = [];
+            $recipients = array();
         }
         
         // Process given recipients
@@ -400,7 +400,7 @@ class User extends DBObject
             });
             
             // Add in front of the list
-            array_unshift($recipients, (object)['email' => $mail, 'date' => time()]);
+            array_unshift($recipients, (object)array('email' => $mail, 'date' => time()));
         }
         
         // Limit number of stored recipients depending on config
@@ -416,7 +416,7 @@ class User extends DBObject
             }
         }
         
-        $recipients = $size ? array_slice($recipients, 0, $size) : [];
+        $recipients = $size ? array_slice($recipients, 0, $size) : array();
         
         // Save if something changed
         if ($recipients !== $this->frequent_recipients) {
@@ -431,24 +431,24 @@ class User extends DBObject
      * @param string $target "transfer" or "guest"
      * @param array $options
      */
-    private function saveOptions($target, $options = [])
+    private function saveOptions($target, $options = array())
     {
         $prop = $target.'_preferences';
         if (!property_exists($this, $prop)) {
             return;
         }
         
-        $prefs = $this->$prop ? (array)$this->$prop : [];
+        $prefs = $this->$prop ? (array)$this->$prop : array();
         
         // Analyse options
         foreach (Transfer::allOptions() as $name => $dfn) {
             if (
                 isset($options[TransferOptions::GET_A_LINK]) &&
-                in_array($name, [
+                in_array($name, array(
                         TransferOptions::EMAIL_ME_COPIES,
                         TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
                         TransferOptions::ADD_ME_TO_RECIPIENTS
-                ])
+                ))
             ) {
                 continue;
             }
@@ -489,7 +489,7 @@ class User extends DBObject
      *
      * @param array $options
      */
-    public function saveTransferOptions($options = [])
+    public function saveTransferOptions($options = array())
     {
         $this->saveOptions('transfer', $options);
     }
@@ -499,7 +499,7 @@ class User extends DBObject
      *
      * @param array $options
      */
-    public function saveGuestOptions($options = [])
+    public function saveGuestOptions($options = array())
     {
         $this->saveOptions('guest', $options);
     }
@@ -573,11 +573,11 @@ class User extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id','additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
-        ])) {
+        ))) {
             return $this->$property;
         }
 
@@ -631,7 +631,7 @@ class User extends DBObject
             $this->frequent_recipients = $value;
         } elseif ($property == 'email_addresses') {
             if (!is_array($value)) {
-                $value = [$value];
+                $value = array($value);
             }
             foreach ($value as $email) {
                 if (!Utilities::validateEmail($email)) {

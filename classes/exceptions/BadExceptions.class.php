@@ -48,7 +48,7 @@ class BadEmailException extends DetailedException
     {
         parent::__construct(
             'bad_email', // Message to give to the user
-            ['email' => $email] // Real message to log
+            array('email' => $email) // Real message to log
         );
     }
 }
@@ -69,7 +69,7 @@ class BadIPFormatException extends DetailedException
     {
         parent::__construct(
             $protocol == null ? 'bad_ip_format' :'bad_ip_format_'.$protocol, // Message to give to the user
-            ['ip' => $ip] // Real message to log
+            array('ip' => $ip) // Real message to log
         );
     }
 }
@@ -89,7 +89,7 @@ class BadExpireException extends DetailedException
     {
         parent::__construct(
             'bad_expire', // Message to give to the user
-            ['expire' => $expire] // Real message to log
+            array('expire' => $expire) // Real message to log
         );
     }
 }
@@ -108,7 +108,7 @@ class BadSizeFormatException extends DetailedException
     {
         parent::__construct(
             'bad_size_format', // Message to give to the user
-            ['size' => $size] // Details to log
+            array('size' => $size) // Details to log
         );
     }
 }
@@ -127,7 +127,7 @@ class BadLangCodeException extends DetailedException
     {
         parent::__construct(
             'bad_lang_code', // Message to give to the user
-            ['code' => $code] // Details to log
+            array('code' => $code) // Details to log
         );
     }
 }
@@ -146,7 +146,7 @@ class BadOptionNameException extends DetailedException
     {
         parent::__construct(
             'bad_option_name', // Message to give to the user
-            ['name' => $name,'noteToAdmin' => $notetoadmin] // Details to log
+            array('name' => $name,'noteToAdmin' => $notetoadmin) // Details to log
         );
     }
 }
@@ -165,7 +165,7 @@ class BadURLException extends DetailedException
     {
         parent::__construct(
             'bad_url_code', // Message to give to the user
-            ['url' => $url] // Details to log
+            array('url' => $url) // Details to log
         );
     }
 }
@@ -185,7 +185,7 @@ class BadAuthIDException extends DetailedException
     {
         parent::__construct(
             'bad_url_code', // Message to give to the user
-            ['aid' => $aid] // Details to log
+            array('aid' => $aid) // Details to log
         );
     }
 }

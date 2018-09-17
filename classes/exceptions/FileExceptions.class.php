@@ -48,7 +48,7 @@ class FileNotFoundException extends DetailedException
     {
         parent::__construct(
             'file_not_found', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -67,7 +67,7 @@ class FileExtensionNotAllowedException extends DetailedException
     {
         parent::__construct(
             'file_extension_not_allowed', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -87,7 +87,7 @@ class FileException extends DetailedException
      */
     public function __construct($file, $msg_code, $internal_details = null, $public_details = null)
     {
-        $internal_details = $internal_details ? (array)$internal_details : [];
+        $internal_details = $internal_details ? (array)$internal_details : array();
         $internal_details['file'] = (string)$file;
         $internal_details['transfer'] = (string)$file->transfer;
         
@@ -108,7 +108,7 @@ class FileBadHashException extends FileException
      */
     public function __construct($file, $hash)
     {
-        parent::__construct($file, 'bad_hash', ['hash' => $hash]);
+        parent::__construct($file, 'bad_hash', array('hash' => $hash));
     }
 }
 
@@ -125,7 +125,7 @@ class FileMultiplePathException extends FileException
      */
     public function __construct($file, $hash)
     {
-        parent::__construct($file, 'multiple_path', ['hash' => $hash]);
+        parent::__construct($file, 'multiple_path', array('hash' => $hash));
     }
 }
 
@@ -144,7 +144,7 @@ class FileChunkOutOfBoundsException extends FileException
      */
     public function __construct($file, $offset, $length, $max)
     {
-        parent::__construct($file, 'chunk_out_of_bounds', ['offset' => $offset, 'length' => $length, 'max' => $max]);
+        parent::__construct($file, 'chunk_out_of_bounds', array('offset' => $offset, 'length' => $length, 'max' => $max));
     }
 }
 
@@ -161,6 +161,6 @@ class FileIntegrityCheckFailedException extends FileException
      */
     public function __construct($file, $reason)
     {
-        parent::__construct($file, 'integrity_check_failed', ['reason' => $reason]);
+        parent::__construct($file, 'integrity_check_failed', array('reason' => $reason));
     }
 }

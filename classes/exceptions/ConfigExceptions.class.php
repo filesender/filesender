@@ -48,7 +48,7 @@ class ConfigFileMissingException extends DetailedException
     {
         parent::__construct(
             'config_file_missing', // Message to give to the user
-            ['file' => $file] // Details to log
+            array('file' => $file) // Details to log
         );
     }
 }
@@ -67,7 +67,7 @@ class ConfigBadParameterException extends DetailedException
     {
         parent::__construct(
             'config_bad_parameter', // Message to give to the user
-            ['parameter' => $key] // Details to log
+            array('parameter' => $key) // Details to log
         );
     }
 }
@@ -86,7 +86,7 @@ class ConfigMissingParameterException extends DetailedException
     {
         parent::__construct(
             'config_missing_parameter', // Message to give to the user
-            ['parameter' => $key, 'noteToAdmin' => $notetoadmin] // Details to log
+            array('parameter' => $key, 'noteToAdmin' => $notetoadmin) // Details to log
         );
     }
 }
@@ -123,7 +123,7 @@ class ConfigOverrideValidationFailedException extends DetailedException
         parent::__construct(
             'config_override_validation_failed', // Message to give to the user
             null,
-            ['parameter' => $key, 'validator' => $validator] // Public info
+            array('parameter' => $key, 'validator' => $validator) // Public info
         );
     }
 }
@@ -142,7 +142,7 @@ class ConfigOverrideNotAllowedException extends DetailedException
     {
         parent::__construct(
             'config_override_not_allowed', // Message to give to the user
-            ['parameter' => $key] // Details to log
+            array('parameter' => $key) // Details to log
         );
     }
 }

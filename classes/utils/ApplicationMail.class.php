@@ -37,7 +37,7 @@ if (!defined('FILESENDER_BASE')) {
 
 class ApplicationMail extends Mail
 {
-    private $to = ['email' => null, 'name' => null, 'object' => null];
+    private $to = array('email' => null, 'name' => null, 'object' => null);
     
     /**
      * Constructor
@@ -103,7 +103,7 @@ class ApplicationMail extends Mail
         // Translate email and replace variables
         $tr = Lang::translateEmail($translation_id, $lang);
         if ($vars) {
-            $tr = call_user_func_array([$tr, 'replace'], $vars);
+            $tr = call_user_func_array(array($tr, 'replace'), $vars);
         }
         
         $ctx = $vars ? self::getContext($vars) : null;
@@ -124,14 +124,14 @@ class ApplicationMail extends Mail
      */
     public static function getContext($vars)
     {
-        $dbos = [];
+        $dbos = array();
         foreach ($vars as $var) {
             if (is_object($var) && ($var instanceof DBObject)) {
                 $dbos[get_class($var)] = $var;
             }
         }
         
-        foreach (['Recipient', 'Guest', 'File', 'Transfer'] as $p) {
+        foreach (array('Recipient', 'Guest', 'File', 'Transfer') as $p) {
             if (array_key_exists($p, $dbos)) {
                 return $dbos[$p];
             }
@@ -178,13 +178,13 @@ class ApplicationMail extends Mail
         }
         
         if ($this->to['object']) {
-            if (in_array(get_class($this->to['object']), ['Recipient', 'Guest', 'File', 'Transfer'])) {
+            if (in_array(get_class($this->to['object']), array('Recipient', 'Guest', 'File', 'Transfer'))) {
                 $sender = $this->to['object']->owner;
             }
         }
         
         if (!$sender) {
-            $sender = (object)['email' => $this->to['email']];
+            $sender = (object)array('email' => $this->to['email']);
         } // Own action
         
         // Context identifier
@@ -223,7 +223,7 @@ class ApplicationMail extends Mail
                 }
                 
                 if ($from_name) {
-                    $attributes = [];
+                    $attributes = array();
                     if ($sender instanceof User) {
                         $attributes = (array)$sender->additional_attributes;
                     }

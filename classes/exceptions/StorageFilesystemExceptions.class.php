@@ -48,7 +48,7 @@ class StorageFilesystemException extends DetailedException
      */
     public function __construct($msg_code, $path, $file = null)
     {
-        $info = ['path' => $path];
+        $info = array('path' => $path);
         
         if ($file) {
             $info['file'] = (string)$file;
@@ -170,7 +170,7 @@ class StorageFilesystemOutOfSpaceException extends DetailedException
     {
         parent::__construct(
             'storage_filesystem_out_of_space', // Message to give to the user
-            ['needed' => $needed_space, 'free' => $free_space] // Details to log
+            array('needed' => $needed_space, 'free' => $free_space) // Details to log
         );
     }
 }
@@ -189,7 +189,7 @@ class StorageFilesystemBadResolverTargetException extends DetailedException
     {
         parent::__construct(
             'storage_filesystem_bad_resolver_target', // Message to give to the user
-            ['what' => str_replace(["\n", "\t"], ' ', print_r($what, true))]
+            array('what' => str_replace(array("\n", "\t"), ' ', print_r($what, true)))
         );
     }
 }
@@ -210,7 +210,7 @@ class StorageFilesystemCannotResolveException extends DetailedException
     {
         parent::__construct(
             'storage_filesystem_cannot_get_usage', // Message to give to the user
-            ['cmd' => $cmd, 'ret' => $ret, 'out' => implode('<nl>', $out)] // Details to log
+            array('cmd' => $cmd, 'ret' => $ret, 'out' => implode('<nl>', $out)) // Details to log
         );
     }
 }
@@ -230,7 +230,7 @@ class StorageFilesystemBadResolverOutputException extends DetailedException
     {
         parent::__construct(
             'storage_filesystem_bad_usage_output', // Message to give to the user
-            ['cmd' => $cmd, 'line' => $line]
+            array('cmd' => $cmd, 'line' => $line)
         );
     }
 }

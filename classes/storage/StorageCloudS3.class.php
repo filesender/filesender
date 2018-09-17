@@ -54,16 +54,16 @@ class StorageCloudS3 extends StorageFilesystem
             return self::$client;
         }
         
-        self::$client = S3Client::factory([
+        self::$client = S3Client::factory(array(
             'region'   => Config::get('cloud_s3_region'),
             'version'  => Config::get('cloud_s3_version'),
             'endpoint' => Config::get('cloud_s3_endpoint'),
             'use_path_style_endpoint' => Config::get('cloud_s3_use_path_style_endpoint'),
-            'credentials' => [
+            'credentials' => array(
                 'key'    => Config::get('cloud_s3_key'),
                 'secret' => Config::get('cloud_s3_secret'),
-            ]
-        ]);
+            )
+        ));
         return self::$client;
     }
     
@@ -104,10 +104,10 @@ class StorageCloudS3 extends StorageFilesystem
         try {
             $client = self::getClient();
 
-            $result = $client->getObject([
+            $result = $client->getObject(array(
                 'Bucket' => $bucket_name,
                 'Key'    => $object_name,
-            ]);
+            ));
             
             $data = $result['Body'];
             if ($data === false) {
@@ -144,20 +144,20 @@ class StorageCloudS3 extends StorageFilesystem
         try {
             $client = self::getClient();
 
-            $client->createBucket([
+            $client->createBucket(array(
                 'Bucket' => $bucket_name,
-            ]);
+            ));
 
-            $result = $client->putObject([
+            $result = $client->putObject(array(
                 'Bucket' => $bucket_name,
                 'Key'    => $object_name,
                 'Body'   => $data,
-            ]);
+            ));
             
-            return [
+            return array(
                 'offset' => $offset,
                 'written' => $written
-            ];
+            );
         } catch (Exception $e) {
             $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
             Logger::info($msg);
@@ -192,17 +192,17 @@ class StorageCloudS3 extends StorageFilesystem
         try {
             $client = self::getClient();
 
-            $objects = $client->getIterator('ListObjects', ['Bucket' => $bucket_name]);
+            $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name));
 
             foreach ($objects as $object) {
-                $result = $client->deleteObject([
+                $result = $client->deleteObject(array(
                     'Bucket' => $bucket_name,
                     'Key'    => $object['Key']
-                ]);
+                ));
             }
-            $result = $client->deleteBucket([
+            $result = $client->deleteBucket(array(
                 'Bucket' => $bucket_name,
-            ]);
+            ));
         } catch (Exception $e) {
             Logger::info('deleteFile() error ' . $e);
             throw new StorageFilesystemCannotDeleteException($file_path, $file);

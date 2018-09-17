@@ -45,12 +45,12 @@ class Logger
     /**
      * Log levels to log priorities conversion table
      */
-    private static $levels = [
+    private static $levels = array(
         LogLevels::ERROR    => 0,
         LogLevels::WARN     => 1,
         LogLevels::INFO     => 2,
         LogLevels::DEBUG    => 3
-    ];
+    );
     
     
     /**
@@ -84,10 +84,10 @@ class Logger
     {
         return in_array(
             self::$process,
-                         [ ProcessTypes::CRON,
+                         array( ProcessTypes::CRON,
                                 ProcessTypes::FEEDBACK,
                                 ProcessTypes::INSTALL,
-                                ProcessTypes::UPGRADE ]
+                                ProcessTypes::UPGRADE )
         );
     }
     
@@ -100,18 +100,18 @@ class Logger
             return;
         }
 
-        self::$facilities = [['type' => 'error_log', 'method' => 'logErrorLog']]; // Failsafe facility so we have at least one if no valid ones defined in config
+        self::$facilities = array(array('type' => 'error_log', 'method' => 'logErrorLog')); // Failsafe facility so we have at least one if no valid ones defined in config
         
         // Get facilities from config, cast to single type
         $facilities = Config::get('log_facilities');
         if (!$facilities) {
-            $facilities = [];
+            $facilities = array();
         }
         if (!is_array($facilities)) {
-            $facilities = ['type' => $facilities];
+            $facilities = array('type' => $facilities);
         }
         if (!is_numeric(key($facilities))) {
-            $facilities = [$facilities];
+            $facilities = array($facilities);
         }
         
         // Lookup valid facilities
@@ -119,7 +119,7 @@ class Logger
             
             // Casting and facility defaults
             if (!is_array($facility)) {
-                $facility = ['type' => $facility];
+                $facility = array('type' => $facility);
             }
             
             if (!array_key_exists('type', $facility)) {
@@ -143,7 +143,7 @@ class Logger
                     }
                     
                     // If defined rotation rate must be valid
-                    if (array_key_exists('rotate', $facility) && !in_array($facility['rotate'], ['hourly', 'daily', 'weekly', 'monthly', 'yearly'])) {
+                    if (array_key_exists('rotate', $facility) && !in_array($facility['rotate'], array('hourly', 'daily', 'weekly', 'monthly', 'yearly'))) {
                         throw new ConfigBadParameterException('log_facilities['.$index.'][rotate]');
                     }
                     
@@ -316,13 +316,13 @@ class Logger
                 }
                 
                 // Resolve magics so that log is easier to read
-                if (in_array($caller['function'], ['__call', '__callStatic'])) {
+                if (in_array($caller['function'], array('__call', '__callStatic'))) {
                     $caller['function'] = $caller['args'][0];
                     $caller['args'] = $caller['args'][1];
                 }
                 
                 // Add arguments (objects are mentionned as just "object" without details)
-                $args = [];
+                $args = array();
                 foreach ($caller['args'] as $arg) {
                     $a = '';
                     if (is_bool($arg)) {
@@ -330,7 +330,7 @@ class Logger
                     } elseif (is_scalar($arg)) {
                         $a = '('.$arg.')';
                     } elseif (is_array($arg)) {
-                        $a = [];
+                        $a = array();
                         foreach ($arg as $k => $v) {
                             $a[] = (is_numeric($k) ? '' : $k.' => ').gettype($v).(is_scalar($v) ? (is_bool($v) ? ($v ? '(true)' : '(false)') : '('.$v.')') : '');
                         }
@@ -345,12 +345,12 @@ class Logger
             }
         }
         
-        $messageArray = [
+        $messageArray = array(
             'app' => 'FileSender',
             'process' => self::$process,
             'level' => $level,
             'message' => $message
-        ];
+        );
 
         // Add authenticated user id if any, except in debug mode as line is already long
         try {
@@ -471,7 +471,7 @@ class Logger
      */
     private static function logSyslog($facility, $level, $message)
     {
-        $priorities = [LOG_ERR, LOG_WARNING, LOG_INFO, LOG_DEBUG];
+        $priorities = array(LOG_ERR, LOG_WARNING, LOG_INFO, LOG_DEBUG);
         syslog($priorities[self::$levels[$level]], $message);
     }
     

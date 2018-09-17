@@ -47,76 +47,76 @@ class Transfer extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'primary' => true,
             'autoinc' => true
-        ],
-        'userid' => [
+        ),
+        'userid' => array(
             'type' => 'uint',
             'size' => 'big'
-        ],
-        'user_email' => [
+        ),
+        'user_email' => array(
             'type' => 'string',
             'size' => 250
-        ],
-        'guest_id' => [
+        ),
+        'guest_id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'null' => true
-        ],
-        'lang' => [
+        ),
+        'lang' => array(
             'type' => 'string',
             'size' => 8,
             'null' => true
-        ],
-        'subject' => [
+        ),
+        'subject' => array(
             'type' => 'string',
             'size' => 250,
             'null' => true
-        ],
-        'message' => [
+        ),
+        'message' => array(
             'type' => 'text',
             'null' => true
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-        'made_available' => [
+        ),
+        'made_available' => array(
             'type' => 'datetime',
             'null' => true
-        ],
-        'expires' => [
+        ),
+        'expires' => array(
             'type' => 'datetime'
-        ],
-        'expiry_extensions' => [
+        ),
+        'expiry_extensions' => array(
             'type' => 'uint',
             'size' => 'small',
             'default' => 0
-        ],
-        'status' => [
+        ),
+        'status' => array(
             'type' => 'string',
             'size' => 32
-        ],
-        'options' => [
+        ),
+        'options' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'key_version' => [
+        ),
+        'key_version' => array(
             'type'    => 'uint',
             'size'    => 'small',
             'null'    => false,
             'default' => 0
-        ],
-        'salt' => [
+        ),
+        'salt' => array(
             'type'    => 'string',
             'size'    => '32',
             'null'    => true,
-        ],
+        ),
         
-    ];
+    );
 
     /**
      * This is the SQL view definition of the main view for transfers.
@@ -134,9 +134,9 @@ class Transfer extends DBObject
     }
     public static function getViewMap()
     {
-        $a = [];
-        $authviewdef = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        $authviewdef = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = self::getPrimaryViewDefinition($dbtype);
             
             $authviewdef[$dbtype] = 'select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
@@ -145,15 +145,15 @@ class Transfer extends DBObject
                                             . call_user_func('User::getDBTable').' u, '
                                             . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
         }
-        return [ strtolower(self::getDBTable()) . 'view' => $a,
-                      'transfersauthview' => $authviewdef ];
+        return array( strtolower(self::getDBTable()) . 'view' => $a,
+                      'transfersauthview' => $authviewdef );
     }
 
-    protected static $secondaryIndexMap = [
-        'userid' => [
-            'userid' => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'userid' => array(
+            'userid' => array()
+        )
+    );
 
     /**
      * Set selectors
@@ -184,7 +184,7 @@ class Transfer extends DBObject
     protected $made_available = null;
     protected $expires = 0;
     protected $expiry_extensions = 0;
-    protected $options = [];
+    protected $options = array();
     protected $key_version = 0;
     protected $salt = '';
     
@@ -210,7 +210,7 @@ class Transfer extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new TransferNotFoundException('id = '.$id);
@@ -232,7 +232,7 @@ class Transfer extends DBObject
     /**
      * Related to legacy options support
      */
-    protected function fillFromDBData($data, $transforms = [])
+    protected function fillFromDBData($data, $transforms = array())
     {
         parent::fillFromDBData($data, $transforms);
         
@@ -264,11 +264,11 @@ class Transfer extends DBObject
         }
 
         return self::all(
-            ['where' => $closed ? self::FROM_USER_CLOSED : self::FROM_USER
+            array('where' => $closed ? self::FROM_USER_CLOSED : self::FROM_USER
                                ,'limit' => $limit
                                ,'offset' => $offset
-                               ],
-            [':userid' => $user]
+                               ),
+            array(':userid' => $user)
                          );
     }
     
@@ -285,7 +285,7 @@ class Transfer extends DBObject
             $guest = $guest->id;
         }
         
-        return self::all(self::FROM_GUEST, [':guest_id' => $guest]);
+        return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
     }
     
     /**
@@ -302,7 +302,7 @@ class Transfer extends DBObject
         }
         
         // Gather user's guests transfers
-        $transfers = [];
+        $transfers = array();
         foreach (Guest::fromUser($user) as $gv) {
             $transfers = array_merge($transfers, $gv->transfers);
         }
@@ -328,8 +328,8 @@ class Transfer extends DBObject
         $transfer = new self();
         
         // Init caches to empty to avoid db queries
-        $transfer->recipientsCache = [];
-        $transfer->logsCache = [];
+        $transfer->recipientsCache = array();
+        $transfer->logsCache = array();
         
         $transfer->userid = Auth::user()->id;
 
@@ -400,11 +400,11 @@ class Transfer extends DBObject
             $used += $r['size'];
         }
         
-        return [
+        return array(
             'total' => $quota,
             'used' => $used,
             'available' => $quota ? max(0, $quota - $used) : null
-        ];
+        );
     }
     
     /**
@@ -424,7 +424,7 @@ class Transfer extends DBObject
      */
     public static function allExpired()
     {
-        return self::all(self::EXPIRED, [':date' => date('Y-m-d')]);
+        return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
     }
     
     /**
@@ -436,9 +436,9 @@ class Transfer extends DBObject
     {
         $days = Config::get('failed_transfer_cleanup_days');
         if (!$days) {
-            return [];
+            return array();
         }
-        return self::all(self::FAILED, [':date' => date('Y-m-d', time() - ($days * 24 * 3600))]);
+        return self::all(self::FAILED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
     }
     
     /**
@@ -452,7 +452,7 @@ class Transfer extends DBObject
         if (is_null($days)) {
             $days = 0;
         }
-        return self::all(self::EXPIRED, [':date' => date('Y-m-d', time() - ($days * 24 * 3600))]);
+        return self::all(self::EXPIRED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
     }
     
     /**
@@ -570,19 +570,19 @@ class Transfer extends DBObject
         if (is_null(self::$optionsCache)) {
             $options = Config::get('transfer_options');
             if (!is_array($options)) {
-                $options = [];
+                $options = array();
             }
             
             foreach (TransferOptions::all() as $d => $name) {
                 if (!array_key_exists($name, $options)) {
-                    $options[$name] = [
+                    $options[$name] = array(
                         'available' => false,
                         'advanced' => false,
                         'default' => false
-                    ];
+                    );
                 }
                 
-                foreach (['available', 'advanced', 'default'] as $p) {
+                foreach (array('available', 'advanced', 'default') as $p) {
                     if (!array_key_exists($p, $options[$name])) {
                         $options[$name][$p] = false;
                     }
@@ -674,7 +674,7 @@ class Transfer extends DBObject
      */
     public static function validateOptions($raw_options)
     {
-        $options = [];
+        $options = array();
         foreach ((array)$raw_options as $name => $value) {
             if (!TransferOptions::isValidValue($name)) {
                 throw new BadOptionNameException($name);
@@ -709,11 +709,11 @@ class Transfer extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id','status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'made_available',
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid'
-        ])) {
+        ))) {
             return $this->$property;
         }
 
@@ -771,7 +771,7 @@ class Transfer extends DBObject
         
         if ($property == 'downloads') {
             return array_filter($this->auditlogs, function ($log) {
-                return in_array($log->event, [LogEventTypes::DOWNLOAD_ENDED, LogEventTypes::ARCHIVE_DOWNLOAD_ENDED]);
+                return in_array($log->event, array(LogEventTypes::DOWNLOAD_ENDED, LogEventTypes::ARCHIVE_DOWNLOAD_ENDED));
             });
         }
         
@@ -970,7 +970,7 @@ class Transfer extends DBObject
         $collections_added = false;
         
         if (is_null($this->collectionsCache)) {
-            $this->collectionsCache = [];
+            $this->collectionsCache = array();
             $collections_added = true;
         }
         
@@ -1000,7 +1000,7 @@ class Transfer extends DBObject
         
         // Update local cache
         if (!$type_exists) {
-            $this->collectionsCache[$type_id] = [];
+            $this->collectionsCache[$type_id] = array();
         }
         
         $this->collectionsCache[$type_id][$collection->id] = $collection;
@@ -1215,7 +1215,7 @@ class Transfer extends DBObject
             $recipients = $this->recipients;
         }
         if (!is_array($recipients)) {
-            $recipients = [$recipients];
+            $recipients = array($recipients);
         }
         
         foreach ($recipients as $recipient) {
@@ -1236,7 +1236,7 @@ class Transfer extends DBObject
         }
         
         if (!is_array($rms)) {
-            $rms = [$rms];
+            $rms = array($rms);
         }
         
         $rms = array_filter($rms, function ($r) {
@@ -1285,9 +1285,9 @@ class Transfer extends DBObject
                 'transfer_autoreminder_receipt',
                 $transfer->owner,
                 $transfer,
-                [
+                array(
                     'recipients' => $recipients_no_download
-                ]
+                )
             );
         }
     }
@@ -1350,7 +1350,7 @@ class Transfer extends DBObject
         }
         
         if (!is_array($pattern)) {
-            $pattern = [$pattern];
+            $pattern = array($pattern);
         }
         
         // Get nth

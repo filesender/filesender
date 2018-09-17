@@ -50,7 +50,7 @@ class RestEndpointUser extends RestEndpoint
      */
     public static function cast(User $user)
     {
-        return [
+        return array(
             'id' => $user->id,
             'additional_attributes' => $user->additional_attributes,
             'aup_ticked' => $user->aup_ticked,
@@ -60,7 +60,7 @@ class RestEndpointUser extends RestEndpoint
             'last_activity' => RestUtilities::formatDate($user->last_activity),
             'lang' => $user->lang,
             'frequent_recipients' => $user->frequent_recipients
-        ];
+        );
     }
     
     
@@ -86,7 +86,7 @@ class RestEndpointUser extends RestEndpoint
             $minchars = 3;
         }
         
-        $mails = [];
+        $mails = array();
         
         // Get matching if no search or search long enough
         if ($needle == '' || strlen($needle) >= $minchars) {
@@ -151,7 +151,7 @@ class RestEndpointUser extends RestEndpoint
     
             $match = Utilities::sanitizeInput($_REQUEST['match']);
             if (strlen($match) < 3) {
-                return [];
+                return array();
             }
             
             return array_map(function ($user) {
@@ -161,7 +161,7 @@ class RestEndpointUser extends RestEndpoint
         
         if ($property == 'frequent_recipients') {
             // Get frequent recipients with optionnal filter
-            $rcpt = [];
+            $rcpt = array();
             
             if (
                 array_key_exists('email', $this->request->filterOp)
@@ -186,11 +186,11 @@ class RestEndpointUser extends RestEndpoint
                 return $t->size;
             }, Transfer::fromUser(Auth::user())));
             
-            return [
+            return array(
                 'total' => $user_quota,
                 'used' => $used,
                 'available' => max(0, $user_quota - $used)
-            ];
+            );
         }
         
         if ($property == 'remote_auth_config') {
@@ -218,7 +218,7 @@ class RestEndpointUser extends RestEndpoint
                 throw new AuthRemoteUserRejectedException($user->id, 'no secret set');
             }
             
-            return ['remote_config' => $user->remote_config];
+            return array('remote_config' => $user->remote_config);
         }
         
         if (!$property) {

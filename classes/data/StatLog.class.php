@@ -43,61 +43,61 @@ class StatLog extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true
-        ],
-        'event' => [
+        ),
+        'event' => array(
             'type' => 'string',
             'size' => 32,
-        ],
-        'target_type' => [
+        ),
+        'target_type' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'size' => [
+        ),
+        'size' => array(
             'type' => 'int',
             'size' => 'big',
             'null' => true
-        ],
-        'time_taken' => [
+        ),
+        'time_taken' => array(
             'type' => 'int',
             'size' => 'big',
             'null' => true
-        ],
-        'additional_attributes' => [
+        ),
+        'additional_attributes' => array(
             'type' => 'text',
             'transform' => 'json',
             'null' => true
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ]
-    ];
+        )
+    );
 
-    protected static $secondaryIndexMap = [
-        'created' => [
-            'created' => []
-        ],
-        'event_tt' => [
-            'event' => [],
-            'target_type' => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'created' => array(
+            'created' => array()
+        ),
+        'event_tt' => array(
+            'event' => array(),
+            'target_type' => array()
+        )
+    );
 
     public static function getViewMap()
     {
-        $a = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . DBView::columnDefinition_is_encrypted()
                         . '  from ' . self::getDBTable();
         }
-        return [ strtolower(self::getDBTable()) . 'view' => $a ];
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
     
     /**
@@ -125,7 +125,7 @@ class StatLog extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new StatLogNotFoundException('id = '.$id);
@@ -180,7 +180,7 @@ class StatLog extends DBObject
                 
                 if ($event == LogEventTypes::FILE_UPLOADED) {
                     $log->time_taken = $target->upload_time;
-                    $log->additional_attributes = ['encryption'=>$target->transfer->options['encryption']];
+                    $log->additional_attributes = array('encryption'=>$target->transfer->options['encryption']);
                 }
                 break;
             
@@ -303,14 +303,14 @@ class StatLog extends DBObject
         
         // Run the search
         $statement = DBI::prepare($query);
-        $statement->execute([':event' => $event]);
+        $statement->execute(array(':event' => $event));
         $data = $statement->fetch();
         
-        return [
+        return array(
             'count' => $data['cnt'],
             'start' => strtotime($data['start']),
             'end' => strtotime($data['end'])
-        ];
+        );
     }
     
     /**
@@ -324,7 +324,7 @@ class StatLog extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id',
             'event',
             'created',
@@ -332,7 +332,7 @@ class StatLog extends DBObject
             'size',
             'time_taken',
             'additional_attributes',
-        ])) {
+        ))) {
             return $this->$property;
         }
         
@@ -366,6 +366,6 @@ class StatLog extends DBObject
         
         Logger::info('Removing statlogs older than '.(int)$lt.' days');
         $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < DATE_SUB(NOW(), INTERVAL :days DAY)');
-        $s->execute([':days' => (int)$lt]);
+        $s->execute(array(':days' => (int)$lt));
     }
 }

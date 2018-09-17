@@ -42,14 +42,14 @@ class RestEndpointEcho extends RestEndpoint
 {
     public function get()
     {
-        return [
+        return array(
             'args' => func_get_args(),
             'request' => $this->request,
             'user' => Auth::user() ? Auth::user()->id : null,
-            'auth' => [
+            'auth' => array(
                 'remote' => Auth::isRemoteApplication(),
                 'attr' => Auth::attributes()
-            ]
-        ];
+            )
+        );
     }
 }

@@ -64,7 +64,7 @@ class Config
     /**
      * List of already evaluated parameters' keys (special loaders, lambda functions)
      */
-    private static $cached_parameters = [];
+    private static $cached_parameters = array();
     
     /**
      * Merge down
@@ -101,13 +101,13 @@ class Config
         } // Do not load twice, except if switching virtualhost
         
         // Load default configuration
-        self::$parameters = [];
+        self::$parameters = array();
         
         // Load defaults if needed
         if (is_null(self::$defaults)) {
-            self::$defaults = [];
+            self::$defaults = array();
             $defaults_file = FILESENDER_BASE.'/includes/ConfigDefaults.php';
-            $default = [];
+            $default = array();
 
             if (file_exists($defaults_file)) {
                 include_once($defaults_file);
@@ -125,7 +125,7 @@ class Config
         self::$parameters = self::$defaults;
         
         // Load base config
-        $config = [];
+        $config = array();
         include_once($main_config_file);
         if ($virtualhost != null) {
             $config['virtualhost'] = $virtualhost;
@@ -138,7 +138,7 @@ class Config
         // load password file if it is there
         $pass_config_file = FILESENDER_BASE.'/config/config-passwords.php';
         if (file_exists($pass_config_file)) {
-            $config = [];
+            $config = array();
             include_once($pass_config_file);
             self::merge(self::$parameters, $config);
         }
@@ -158,7 +158,7 @@ class Config
                 throw new ConfigFileMissingException($config_file);
             } // Should exist even if empty
             
-            $config = [];
+            $config = array();
             include_once $config_file;
             
             self::merge(self::$parameters, $config);
@@ -173,7 +173,7 @@ class Config
         }
         
         // load mandatory config settings
-        $config = [];
+        $config = array();
         include_once($mandatory_config_file);
         self::merge(self::$parameters, $config);
         
@@ -186,13 +186,13 @@ class Config
             
             $overrides = file_exists($overrides_file) ? json_decode(trim(file_get_contents($overrides_file))) : new StdClass();
             
-            self::$override = ['file' => $overrides_file, 'parameters' => []];
+            self::$override = array('file' => $overrides_file, 'parameters' => array());
             foreach ($overrides_cfg as $key => $dfn) {
                 // Casting
                 if (is_string($dfn)) {
-                    $dfn = ['type' => $dfn];
+                    $dfn = array('type' => $dfn);
                 } elseif (is_array($dfn) && !array_key_exists('type', $dfn)) {
-                    $dfn = ['type' => 'enum', 'values' => $dfn];
+                    $dfn = array('type' => 'enum', 'values' => $dfn);
                 } elseif (!is_array($dfn)) {
                     throw new ConfigBadParameterException('config_overrides');
                 }
@@ -288,7 +288,7 @@ class Config
      */
     public static function getVirtualhosts()
     {
-        $virtualhosts = [];
+        $virtualhosts = array();
         foreach (scandir(FILESENDER_BASE.'/config') as $item) {
             if (!preg_match('`^(.+)\.conf\.php$`', $item, $match)) {
                 continue;
@@ -356,7 +356,7 @@ class Config
         // Do we require a family ?
         if (substr($key, -1) == '*') {
             $search = substr($key, 0, -1);
-            $set = [];
+            $set = array();
             array_unshift($args, null); // Prepare place for key for sub-calls
             foreach (array_keys(self::$parameters) as $key) {
                 if (substr($key, 0, strlen($search)) == $search) {
@@ -495,7 +495,7 @@ class Config
         // Apply any changes
         if ($set) {
             if (!is_array($set)) {
-                $set = [$set => array_shift($args)];
+                $set = array($set => array_shift($args));
             }
             
             foreach ($set as $k => $v) {
@@ -508,7 +508,7 @@ class Config
                 if (array_key_exists('validator', self::$override['parameters'][$k])) {
                     $validators = self::$override['parameters'][$k]['validator'];
                     if (!is_array($validators)) {
-                        $validators = [$validators];
+                        $validators = array($validators);
                     }
                     
                     if (!is_null($v)) {
@@ -529,7 +529,7 @@ class Config
         $save = count($args) ? array_shift($args) : true;
         if ($save) {
             // Gather values without ones that got back to default
-            $overrides = [];
+            $overrides = array();
             foreach (self::$override['parameters'] as $k => $dfn) {
                 if (!is_null($dfn['value'])) {
                     $overrides[$k] = $dfn['value'];
@@ -565,7 +565,7 @@ class ConfigValidator
     /**
      * Checks
      */
-    private static $checks = [];
+    private static $checks = array();
     
     /**
      * Add new check(s)
@@ -580,12 +580,12 @@ class ConfigValidator
         }
         
         if (!array_key_exists($parameter_name, self::$checks)) {
-            self::$checks[$parameter_name] = [];
+            self::$checks[$parameter_name] = array();
         }
         
         foreach (array_slice(func_get_args(), 1) as $arg) {
             if (is_string($arg)) {
-                $ored = [];
+                $ored = array();
                 foreach (array_map('trim', explode('|', $arg)) as $p) {
                     if (preg_match('`^(is_)?(set|not_empty|null|bool|string|int|float|array|callable)$`', $p)) {
                         $ored[] = $p;

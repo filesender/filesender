@@ -43,79 +43,79 @@ class Guest extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'primary' => true,
             'autoinc' => true
-        ],
-        'userid' => [
+        ),
+        'userid' => array(
             'type' => 'uint',
             'size' => 'big'
-        ],
-        'user_email' => [
+        ),
+        'user_email' => array(
             'type' => 'string',
             'size' => 250
-        ],
-        'token' => [
+        ),
+        'token' => array(
             'type' => 'string',
             'size' => 60,
             'unique' => true
-        ],
-        'email' => [
+        ),
+        'email' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'transfer_count' => [
+        ),
+        'transfer_count' => array(
             'type' => 'uint',
             'size' => 'medium'
-        ],
-        'subject' => [
+        ),
+        'subject' => array(
             'type' => 'string',
             'size' => 255,
             'null' => true
-        ],
-        'message' => [
+        ),
+        'message' => array(
             'type' => 'text',
             'null' => true
-        ],
-        'options' => [
+        ),
+        'options' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'transfer_options' => [
+        ),
+        'transfer_options' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'status' => [
+        ),
+        'status' => array(
             'type' => 'string',
             'size' => 32
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-        'expires' => [
+        ),
+        'expires' => array(
             'type' => 'datetime'
-        ],
-        'last_activity' => [
+        ),
+        'last_activity' => array(
             'type' => 'datetime'
-        ],
-        'reminder_count' => [
+        ),
+        'reminder_count' => array(
             'type' => 'uint',
             'size' => 'medium',
             'default' => 0
-        ],
-        'last_reminder' => [
+        ),
+        'last_reminder' => array(
             'type' => 'datetime',
             'null' => true
-        ]
-    ];
+        )
+    );
 
     public static function getViewMap()
     {
-        $a = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . DBView::columnDefinition_age($dbtype, 'expires')
@@ -125,7 +125,7 @@ class Guest extends DBObject
                         . " , status = 'available' as is_available "
                         . '  from ' . self::getDBTable();
         }
-        return [ strtolower(self::getDBTable()) . 'view' => $a ];
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
 
     /**
@@ -175,7 +175,7 @@ class Guest extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new GuestNotFoundException('id = '.$id);
@@ -191,7 +191,7 @@ class Guest extends DBObject
     /**
      * Related to legacy options support
      */
-    protected function fillFromDBData($data, $transforms = [])
+    protected function fillFromDBData($data, $transforms = array())
     {
         parent::fillFromDBData($data, $transforms);
         
@@ -233,7 +233,7 @@ class Guest extends DBObject
         $time = time();
         
         // Init cache to empty to avoid db queries
-        $guest->trackingEventsCache = [];
+        $guest->trackingEventsCache = array();
         
         if (!$from) {
             $from = Auth::user()->email;
@@ -256,7 +256,7 @@ class Guest extends DBObject
         // Generate token until it is indeed unique
         $guest->token = Utilities::generateUID(function ($token, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.Guest::getDBTable().' WHERE token = :token');
-            $statement->execute([':token' => $token]);
+            $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
             if (!$data) {
                 Logger::info('Guest uid generation took '.$tries.' tries');
@@ -318,7 +318,7 @@ class Guest extends DBObject
      */
     public static function allExpired()
     {
-        return self::all(self::EXPIRED, [':date' => date('Y-m-d')]);
+        return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
     }
     
     /**
@@ -334,7 +334,7 @@ class Guest extends DBObject
             $user = $user->id;
         }
         
-        return self::all(self::FROM_USER, [':userid' => $user, ':date' => date('Y-m-d')]);
+        return self::all(self::FROM_USER, array(':userid' => $user, ':date' => date('Y-m-d')));
     }
 
     /**
@@ -350,7 +350,7 @@ class Guest extends DBObject
             $user = $user->id;
         }
         
-        return self::all(self::FROM_USER_AVAILABLE, [':userid' => $user, ':date' => date('Y-m-d')]);
+        return self::all(self::FROM_USER_AVAILABLE, array(':userid' => $user, ':date' => date('Y-m-d')));
     }
     
     /**
@@ -365,7 +365,7 @@ class Guest extends DBObject
     public static function fromToken($token)
     {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
-        $statement->execute([':token' => $token]);
+        $statement->execute(array(':token' => $token));
         $data = $statement->fetch();
         if (!$data) {
             throw new GuestNotFoundException('token = '.$token);
@@ -420,7 +420,7 @@ class Guest extends DBObject
         $this->save();
         
         // Update sender's frequent recipient list
-        Auth::user()->saveFrequentRecipients([$this->email]);
+        Auth::user()->saveFrequentRecipients(array($this->email));
         
         // Save choosen guest options in user preferences
         $this->owner->saveGuestOptions($this->options);
@@ -495,7 +495,7 @@ class Guest extends DBObject
         // Get defaults
         $options = Config::get('guest_options');
         if (!is_array($options)) {
-            $options = [];
+            $options = array();
         }
 
         self::validateOptions($options);
@@ -580,7 +580,7 @@ class Guest extends DBObject
      */
     public static function validateOptions($raw_options)
     {
-        $options = [];
+        $options = array();
         foreach ((array)$raw_options as $name => $value) {
             if (!GuestOptions::isValidValue($name)) {
                 throw new BadOptionNameException(
@@ -608,10 +608,10 @@ class Guest extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id', 'user_email', 'token', 'email', 'transfer_count',
             'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity', 'userid'
-        ])) {
+        ))) {
             return $this->$property;
         }
         
@@ -647,7 +647,7 @@ class Guest extends DBObject
         
         if ($property == 'errors') {
             return array_filter($this->tracking_events, function ($tracking_event) {
-                return in_array($tracking_event->type, [TrackingEventTypes::BOUNCE]);
+                return in_array($tracking_event->type, array(TrackingEventTypes::BOUNCE));
             });
         }
         

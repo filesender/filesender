@@ -46,7 +46,7 @@ class DatabasePgsql
     public static function tableExists($table)
     {
         $s = DBI::prepare('SELECT * FROM pg_tables WHERE tablename=:table');
-        $s->execute([':table' => strtolower($table)]);
+        $s->execute(array(':table' => strtolower($table)));
         return (bool)$s->fetch();
     }
     
@@ -59,7 +59,7 @@ class DatabasePgsql
      */
     public static function createTable($table, $definition)
     {
-        $columns = [];
+        $columns = array();
         
         $primary_keys = null;
         foreach ($definition as $column => $def) {
@@ -105,7 +105,7 @@ class DatabasePgsql
     public static function getTableColumns($table)
     {
         $s = DBI::query('SELECT column_name FROM information_schema.columns WHERE table_name=\''.strtolower($table).'\'');
-        $columns = [];
+        $columns = array();
         foreach ($s->fetchAll() as $r) {
             $columns[] = $r['column_name'];
         }
@@ -167,10 +167,10 @@ class DatabasePgsql
     {
         if ($test_ownership) {
             $s = DBI::prepare('SELECT c.relname AS seq FROM pg_class c JOIN pg_depend d ON d.objid=c.oid AND d.classid=\'pg_class\'::regclass AND d.refclassid=\'pg_class\'::regclass JOIN pg_class t ON t.oid=d.refobjid JOIN pg_attribute a ON a.attrelid=t.oid AND a.attnum=d.refobjsubid WHERE c.relkind=\'S\' and d.deptype=\'a\' AND t.relname=:table AND a.attname=:column');
-            $s->execute([':table' => strtolower($table), ':column' => strtolower($column)]);
+            $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
         } else {
             $s = DBI::prepare('SELECT c.relname AS seq FROM pg_class c WHERE c.relkind = \'S\' AND c.relname = :sequence');
-            $s->execute([':sequence' => strtolower($table.'_'.$column.'_seq')]);
+            $s->execute(array(':sequence' => strtolower($table.'_'.$column.'_seq')));
         }
         
         $r = $s->fetch();
@@ -262,7 +262,7 @@ class DatabasePgsql
             };
         }
 
-        $expected = [];
+        $expected = array();
         foreach ($definition as $dk => $dm) {
             $expected[] = $dk;
         }
@@ -278,9 +278,9 @@ class DatabasePgsql
                 . '    LIMIT 1 ) '
                 . ' AND a.attnum > 0 AND NOT a.attisdropped '
                 . 'ORDER BY a.attnum');
-        $s->execute([]);
+        $s->execute(array());
 
-        $existingCols = [];
+        $existingCols = array();
         foreach ($s->fetchAll() as $r) {
             $existingCols[] = $r['attname'];
         }
@@ -317,10 +317,10 @@ class DatabasePgsql
         
         // Get current definition
         $s = DBI::prepare('SELECT * FROM information_schema.columns WHERE table_name=:table AND column_name=:column');
-        $s->execute([':table' => strtolower($table), ':column' => strtolower($column)]);
+        $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
         $column_dfn = $s->fetch();
         
-        $non_respected = [];
+        $non_respected = array();
         
         $typematcher = '';
         $length = null;
@@ -333,7 +333,7 @@ class DatabasePgsql
                 if (!$size) {
                     $size = 'medium';
                 }
-                $s2s = ['small' => 'smallint', 'medium' => 'integer', 'big' => 'bigint'];
+                $s2s = array('small' => 'smallint', 'medium' => 'integer', 'big' => 'bigint');
                 $typematcher = $s2s[$size];
                 break;
             
@@ -395,7 +395,7 @@ class DatabasePgsql
         }
         
         // Options defaults
-        foreach (['null', 'primary', 'unique', 'autoinc'] as $k) {
+        foreach (array('null', 'primary', 'unique', 'autoinc') as $k) {
             if (!array_key_exists($k, $definition)) {
                 $definition[$k] = false;
             }
@@ -414,7 +414,7 @@ class DatabasePgsql
         // Check primary
         $is_primary = false;
         $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = \'r\' AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = \'p\'');
-        $s->execute([':table' => strtolower($table), ':column' => strtolower($column)]);
+        $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
         if ($s->fetch()) {
             $is_primary = true;
         }
@@ -429,7 +429,7 @@ class DatabasePgsql
         // Check unique
         $is_unique = false;
         $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = \'r\' AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = \'u\'');
-        $s->execute([':table' => strtolower($table), ':column' => strtolower($column)]);
+        $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
         if ($s->fetch()) {
             $is_unique = true;
         }
@@ -475,7 +475,7 @@ class DatabasePgsql
                     if (!$size) {
                         $size = 'medium';
                     }
-                    $s2s = ['small' => 'smallint', 'medium' => 'integer', 'big' => 'bigint'];
+                    $s2s = array('small' => 'smallint', 'medium' => 'integer', 'big' => 'bigint');
                     $type .= $s2s[$size];
                     break;
                 
@@ -510,7 +510,7 @@ class DatabasePgsql
         }
         
         // Options defaults
-        foreach (['null', 'primary', 'unique', 'autoinc'] as $k) {
+        foreach (array('null', 'primary', 'unique', 'autoinc') as $k) {
             if (!array_key_exists($k, $definition)) {
                 $definition[$k] = false;
             }
@@ -533,7 +533,7 @@ class DatabasePgsql
                 } elseif (is_bool($definition['default'])) {
                     DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT '.($definition['default'] ? '1' : '0'));
                 } else {
-                    DBI::prepare('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT :default')-execute([':default' => $definition['default']]);
+                    DBI::prepare('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT :default')-execute(array(':default' => $definition['default']));
                 }
             } else {
                 DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' DROP DEFAULT');
@@ -587,7 +587,7 @@ class DatabasePgsql
                 if (!$size) {
                     $size = 'medium';
                 }
-                $s2s = ['small' => 'smallint', 'medium' => 'integer', 'big' => 'bigint'];
+                $s2s = array('small' => 'smallint', 'medium' => 'integer', 'big' => 'bigint');
                 $sql .= $s2s[$size];
                 break;
             
@@ -630,7 +630,7 @@ class DatabasePgsql
                 $sql .= 'NULL';
             } elseif (is_bool($default)) {
                 $sql .= $default ? '1' : '0';
-            } elseif (is_numeric($default) && in_array($definition['type'], ['int', 'uint'])) {
+            } elseif (is_numeric($default) && in_array($definition['type'], array('int', 'uint'))) {
                 $sql .= $default;
             } else {
                 $sql .= "'".str_replace("'", "\\'", $default)."'";

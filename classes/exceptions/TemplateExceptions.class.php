@@ -48,7 +48,7 @@ class TemplateNotFoundException extends DetailedException
     {
         parent::__construct(
             'template_not_found', // Message to give to the user
-            ['id' => $id] // Real message to log
+            array('id' => $id) // Real message to log
         );
     }
 }

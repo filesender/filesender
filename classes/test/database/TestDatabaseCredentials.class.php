@@ -100,7 +100,7 @@ class TestDatabaseCredentials
     {
         $name  = 'tester' . $id;
         $email = $name . '@localhost.localdomain';
-        return [ $name, $email ];
+        return array( $name, $email );
     }
     
     /**
@@ -141,10 +141,10 @@ class TestDatabaseCredentials
             $this->email_guest_created_receipt_value++;
 
             // only half guest creates will send a receeipt
-            $g->options = [ 'can_only_send_to_me' => false,
+            $g->options = array( 'can_only_send_to_me' => false,
                                  'email_upload_started' => true,
                                  'email_guest_created_receipt' =>
-                                     !($this->email_guest_created_receipt_value % 2) ];
+                                     !($this->email_guest_created_receipt_value % 2) );
             $g->makeAvailable();
         }
     }

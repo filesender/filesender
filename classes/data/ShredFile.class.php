@@ -43,24 +43,24 @@ class ShredFile extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
+    protected static $dataMap = array(
         //file id, as in the database
-        'id' => [
+        'id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
             'autoinc' => true,   //indicates that 'id' is auto-incremented
-        ],
-        'name' => [
+        ),
+        'name' => array(
             'type' => 'string',
             'size' => 60
-        ],
-        'errormessage' => [
+        ),
+        'errormessage' => array(
             'type' => 'string',
             'size' => 300,
             'null' => true
-        ],
-    ];
+        ),
+    );
 
 
     /**
@@ -84,7 +84,7 @@ class ShredFile extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new FileNotFoundException('id = '.$id);
@@ -137,7 +137,7 @@ class ShredFile extends DBObject
         // Generate uid until it is indeed unique
         $file->name = Utilities::generateUID(function ($uid, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute([':uid' => $uid]);
+            $statement->execute(array(':uid' => $uid));
             $data = $statement->fetch();
             if (!$data) {
                 Logger::info('File uid generation took '.$tries.' tries');
@@ -187,7 +187,7 @@ class ShredFile extends DBObject
     public static function fromName($name)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE name = :name');
-        $s->execute([':name' => $name]);
+        $s->execute(array(':name' => $name));
         $data = $s->fetch();
         
         if (!$data) {
@@ -209,9 +209,9 @@ class ShredFile extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id', 'name'
-        ])) {
+        ))) {
             return $this->$property;
         }
         

@@ -50,7 +50,7 @@ class RestEndpointTransfer extends RestEndpoint
      */
     public static function cast(Transfer $transfer, $files_cids = null)
     {
-        return [
+        return array(
             'id' => $transfer->id,
             'userid' => $transfer->userid,
             'user_email' => $transfer->user_email,
@@ -70,7 +70,7 @@ class RestEndpointTransfer extends RestEndpoint
                 return $file;
             }, array_values($transfer->files)),
             'recipients' => array_map('RestEndpointRecipient::cast', array_values($transfer->recipients)),
-        ];
+        );
     }
     
     /**
@@ -225,22 +225,22 @@ class RestEndpointTransfer extends RestEndpoint
                     $author = $log->author;
                     
                     // Build action author data
-                    $author_data = [
+                    $author_data = array(
                         'type' => $log->author_type,
                         'id' => $log->author_id,
                         'identity' => $author ? (string)$author->identity : null,
                         'ip' => $log->ip
-                    ];
+                    );
                     if ($log->author_type == 'Recipient') {
                         $author_data['email'] = $log->author->email;
                     }
                     
                     // Build action target data
                     $target = $log->target;
-                    $target_data = [
+                    $target_data = array(
                         'type' => $log->target_type,
                         'id' => $log->target_id
-                    ];
+                    );
                     $time_taken = null;
                     
                     // Add additional data depending on target type
@@ -269,16 +269,16 @@ class RestEndpointTransfer extends RestEndpoint
                             break;
                     }
                     
-                    return [
+                    return array(
                         'date' => RestUtilities::formatDate($log->created, true),
                         'event' => $log->event,
                         'author' => $author_data,
                         'target' => $target_data,
-                        'time_taken' => [
+                        'time_taken' => array(
                             'raw' => $time_taken,
                             'formatted' => $time_taken ? Utilities::formatTime($time_taken) : '0s'
-                        ],
-                    ];
+                        ),
+                    );
                 }, $transfer->auditlogs));
             }
             
@@ -289,7 +289,7 @@ class RestEndpointTransfer extends RestEndpoint
         // All transfers request
         
         // Check parameters
-        if (!in_array($id, ['', '@me', '@all'])) {
+        if (!in_array($id, array('', '@me', '@all'))) {
             throw new RestBadParameterException('transfer_id');
         }
         
@@ -304,7 +304,7 @@ class RestEndpointTransfer extends RestEndpoint
             $transfers = Transfer::fromUser($user);
         }
         
-        $out = [];
+        $out = array();
         foreach ($transfers as $transfer) {
             $out[] = self::cast($transfer);
         }
@@ -373,10 +373,10 @@ class RestEndpointTransfer extends RestEndpoint
                     TranslatableEmail::quickSend('transfer_available', $recipient, $transfer);
                 }
                 
-                return [
+                return array(
                     'path' => '/recipient/'.$recipient->id,
                     'data' => RestEndpointRecipient::cast($recipient)
-                ];
+                );
             }
         } else {
             // Create new transfer
@@ -406,10 +406,10 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Build options from provided data and defaults
             $allOptions = Transfer::allOptions();
-            $options = [
+            $options = array(
                 TransferOptions::GET_A_LINK => $allOptions[TransferOptions::GET_A_LINK]['default'],
                 TransferOptions::ADD_ME_TO_RECIPIENTS => $allOptions[TransferOptions::ADD_ME_TO_RECIPIENTS]['default'],
-            ];
+            );
             
             foreach ($allOptions as $name => $dfn) {
                 if (in_array($name, $allowed_options)) {
@@ -556,7 +556,7 @@ class RestEndpointTransfer extends RestEndpoint
             $extension_whitelist_regex = Config::get('extension_whitelist_regex');
             
             // Add files after checking that they do not have a banned extension, fail otherwise
-            $files_cids = [];
+            $files_cids = array();
             foreach ($data->files as $filedata) {
                 $ext = pathinfo($filedata->name, PATHINFO_EXTENSION);
 
@@ -618,10 +618,10 @@ class RestEndpointTransfer extends RestEndpoint
             // Tag the transfer as started, that is, ready for file upload
             $transfer->start();
             
-            return [
+            return array(
                 'path' => '/transfer/'.$transfer->id,
                 'data' => self::cast($transfer, $files_cids)
-            ];
+            );
         }
     }
     

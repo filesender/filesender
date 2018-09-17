@@ -43,7 +43,7 @@ class Mime
     /**
      * Dictionary
      */
-    private static $mimeexts = [
+    private static $mimeexts = array(
         '123' => 'application/vnd.lotus-1-2-3',
         '3dm' => 'x-world/x-3dmf',
         '3dmf' => 'x-world/x-3dmf',
@@ -483,7 +483,7 @@ class Mime
         'z' => 'application/x-compress',
         'zip' => 'application/zip',
         'zpa' => 'application/pcphoto'
-    ];
+    );
     
     /**
      * Get file mime type

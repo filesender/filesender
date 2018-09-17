@@ -49,7 +49,7 @@ class RestEndpointRecipient extends RestEndpoint
      */
     public static function cast(Recipient $recipient)
     {
-        return [
+        return array(
             'id' => $recipient->id,
             'transfer_id' => $recipient->transfer_id,
             'token' => $recipient->token,
@@ -59,13 +59,13 @@ class RestEndpointRecipient extends RestEndpoint
             'options' => $recipient->options,
             'download_url' => $recipient->download_link,
             'errors' => array_values(array_map(function ($error) {
-                return [
+                return array(
                     'type' => $error->type,
                     'date' => RestUtilities::formatDate($error->created, true),
                     'details' => $error->details
-                ];
+                );
             }, $recipient->errors))
-        ];
+        );
     }
     
     /**

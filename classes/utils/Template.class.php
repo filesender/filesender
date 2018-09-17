@@ -50,7 +50,7 @@ class Template
     private static function resolve($id)
     {
         // Look in possible locations
-        foreach (['config/templates', 'templates'] as $location) {
+        foreach (array('config/templates', 'templates') as $location) {
             $location = FILESENDER_BASE.'/'.$location;
             if (!is_dir($location)) {
                 continue;
@@ -74,7 +74,7 @@ class Template
      *
      * @return string parsed template content
      */
-    public static function process($id, $vars = [])
+    public static function process($id, $vars = array())
     {
         // Are we asked to not output context related html comments ?
         $addctx = true;
@@ -138,7 +138,7 @@ class Template
         }
         
         if ($important && $exception) {
-            return (object)['content' => $content, 'exception' => $exception];
+            return (object)array('content' => $content, 'exception' => $exception);
         }
         
         // If rendering threw rethrow
@@ -159,7 +159,7 @@ class Template
      */
     public static function sanitize($data)
     {
-        return str_replace(['{', '}'], ['&#123;', '&#125;'], $data);
+        return str_replace(array('{', '}'), array('&#123;', '&#125;'), $data);
     }
     
     /**
@@ -200,7 +200,7 @@ class Template
      *
      * @return string parsed template content
      */
-    public static function display($id, $vars = [])
+    public static function display($id, $vars = array())
     {
         $content = self::process($id, $vars);
         

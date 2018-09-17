@@ -72,22 +72,22 @@ class Mail
     /**
      * text body parts
      */
-    private $contents = ['html' => '', 'plain' => ''];
+    private $contents = array('html' => '', 'plain' => '');
     
     /**
      * Recipients
      */
-    private $rcpt = ['To' => [], 'Cc' => [], 'Bcc' => []];
+    private $rcpt = array('To' => array(), 'Cc' => array(), 'Bcc' => array());
     
     /**
      * Attached files
      */
-    private $attachments = [];
+    private $attachments = array();
     
     /**
      * Additional headers
      */
-    private $headers = [];
+    private $headers = array();
     
     /**
      * New line style
@@ -129,7 +129,7 @@ class Mail
     public function __set($property, $value)
     {
         if ($property == 'subject') {
-            $this->subject = mb_encode_mimeheader(trim(str_replace(["\n", "\r"], ' ', $value)), mb_internal_encoding(), 'Q', $this->nl);
+            $this->subject = mb_encode_mimeheader(trim(str_replace(array("\n", "\r"), ' ', $value)), mb_internal_encoding(), 'Q', $this->nl);
         } elseif ($property == 'return_path') {
             if (!Utilities::validateEmail($value)) {
                 throw new BadEmailException($value);
@@ -198,7 +198,7 @@ class Mail
     public function addHeader($header, $value = null)
     {
         if (!is_array($header)) {
-            $header = [$header => $value];
+            $header = array($header => $value);
         }
         
         foreach ($header as $name => $value) {
@@ -232,7 +232,7 @@ class Mail
                 }
                 $this->contents['html'] .= $ctn;
             }
-            $contents = strip_tags(preg_replace(['`(?<!\n)<br\s*/?>`i', '`<br\s*/?>(?!\n)`i'], "\n", $ctns));
+            $contents = strip_tags(preg_replace(array('`(?<!\n)<br\s*/?>`i', '`<br\s*/?>(?!\n)`i'), "\n", $ctns));
         }
 
         if ($asis) {
@@ -397,7 +397,7 @@ class Mail
         }
         
         // Get HTML mail styles
-        $styles = ['www/css/mail.css', 'www/skin/mail.css'];
+        $styles = array('www/css/mail.css', 'www/skin/mail.css');
         $css = '';
         foreach ($styles as $file) {
             if (file_exists(FILESENDER_BASE.'/'.$file)) {
@@ -545,7 +545,7 @@ class Mail
             return $headers . $this->nl.$this->nl . $content;
         }
         
-        return ['to' => $to, 'subject' => $this->subject, 'body' => $content, 'headers' => $headers];
+        return array('to' => $to, 'subject' => $this->subject, 'body' => $content, 'headers' => $headers);
     }
     
     /**
@@ -609,7 +609,7 @@ class Mail
         }
 
         $other_recipients = '';
-        foreach (['To', 'Cc', 'Bcc'] as $recipient_type) {
+        foreach (array('To', 'Cc', 'Bcc') as $recipient_type) {
             foreach ($this->rcpt[$recipient_type] as $recipient) {
                 $other_recipients .= strtoupper($recipient_type).": ".$recipient."\n";
             }
@@ -793,9 +793,9 @@ class MailAttachment
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'path', 'name', 'content', 'mime_type', 'disposition', 'transfer_encoding', 'cid'
-        ])) {
+        ))) {
             return $this->$property;
         }
         
@@ -830,13 +830,13 @@ class MailAttachment
         } elseif ($property == 'name') {
             $this->name = $value;
         } elseif ($property == 'disposition') {
-            if (!in_array($value, ['inline', 'attachment'])) {
+            if (!in_array($value, array('inline', 'attachment'))) {
                 throw new MailAttachmentBadDispositionException($value);
             }
             
             $this->disposition = $value;
         } elseif ($property == 'transfer_encoding') {
-            if ($value && !in_array($value, ['raw', 'base64'])) {
+            if ($value && !in_array($value, array('raw', 'base64'))) {
                 throw new MailAttachmentBadTransferEncodingException($value);
             }
             

@@ -79,12 +79,12 @@ class Lang
     {
         // Already cached ?
         if (is_null(self::$available_languages)) {
-            self::$available_languages = [];
+            self::$available_languages = array();
             
             // Include first found locale list
-            $sources = ['config/language/locale.php', 'language/locale.php'];
+            $sources = array('config/language/locale.php', 'language/locale.php');
             
-            $locales = [];
+            $locales = array();
             foreach ($sources as $file) {
                 if (file_exists(FILESENDER_BASE.'/'.$file)) {
                     include FILESENDER_BASE.'/'.$file;
@@ -104,10 +104,10 @@ class Lang
                     }
                 }
                 
-                self::$available_languages[$id] = [
+                self::$available_languages[$id] = array(
                     'name' => $name,
                     'path' => $path
-                ];
+                );
             }
         }
         
@@ -150,7 +150,7 @@ class Lang
     private static function getCodeStack()
     {
         if (is_null(self::$code_stack)) {
-            $stack = [];
+            $stack = array();
             
             $available = self::getAvailableLanguages();
             
@@ -197,7 +197,7 @@ class Lang
                 
                 // Browser language
                 if (Config::get('lang_browser_enabled') && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
-                    $codes = [];
+                    $codes = array();
                     foreach (array_map('trim', explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])) as $part) {
                         $code = $part;
                         $weight = 1;
@@ -245,7 +245,7 @@ class Lang
             
             // Add to cached stack (most significant first)
             $main = array_shift($stack);
-            self::$code_stack = ['main' => $main, 'fallback' => $stack];
+            self::$code_stack = array('main' => $main, 'fallback' => $stack);
             
             Logger::debug(self::$code_stack);
         }
@@ -308,13 +308,13 @@ class Lang
     {
         Logger::debug($rel_path);
         
-        $dictionary = [];
+        $dictionary = array();
         
         // Translations locations
-        $locations = [
+        $locations = array(
             'language',
             'config/language'
-        ];
+        );
         
         // Lookup locations for translation files
         foreach ($locations as $location) {
@@ -327,10 +327,10 @@ class Lang
             
             // Main translation file
             if (file_exists($path.'/lang.php')) {
-                $lang = [];
+                $lang = array();
                 include $path.'/lang.php';
                 foreach ($lang as $id => $s) {
-                    $dictionary[self::cleanId($id)] = ['text' => $s];
+                    $dictionary[self::cleanId($id)] = array('text' => $s);
                 }
             }
             
@@ -345,7 +345,7 @@ class Lang
                         continue;
                     }
                     if (!array_key_exists($m[1], $dictionary)) {
-                        $dictionary[$m[1]] = ['text' => null];
+                        $dictionary[$m[1]] = array('text' => null);
                     }
                     $dictionary[$m[1]]['file'] = $path.'/'.$i;
                 }
@@ -372,11 +372,11 @@ class Lang
         // Get list of available languages
         $available = self::getAvailableLanguages();
         if (!array_key_exists('en', $available)) {
-            $available['en'] = ['path' => 'en_AU'];
+            $available['en'] = array('path' => 'en_AU');
         }
         
         // Build fallback dictionaries
-        $fallback = [];
+        $fallback = array();
         foreach ($stack['fallback'] as $code) {
             $dictionary = self::loadDictionary($available[$code]['path']);
             
@@ -388,10 +388,10 @@ class Lang
         }
         
         // Set dictionaries cache
-        self::$translations = [
+        self::$translations = array(
             'main' => self::loadDictionary($available[$stack['main']]['path']),
             'fallback' => $fallback
-        ];
+        );
         
         self::$loading = false;
     }
@@ -510,10 +510,10 @@ class Lang
         }
         
         // Translations locations
-        $locations = [
+        $locations = array(
             'config/language',
             'language'
-        ];
+        );
         
         // List available languages
         $available = self::getAvailableLanguages();
@@ -554,7 +554,7 @@ class Lang
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
                 // Do we have headings
-                $subject = ['prefix' => trim((string)Config::get('email_subject_prefix')), '{cfg:site_name}'];
+                $subject = array('prefix' => trim((string)Config::get('email_subject_prefix')), '{cfg:site_name}');
                 if (count($parts) > 1) {
                     $headers = explode("\n", array_shift($parts));
                     foreach ($headers as $line) {
@@ -566,9 +566,9 @@ class Lang
                 }
                 
                 // Try to split body based on alternatives tags
-                $misc = [];
-                $plain = [];
-                $html = [];
+                $misc = array();
+                $plain = array();
+                $html = array();
                 $mode = null;
                 foreach (explode("\n", array_shift($parts)) as $line) {
                     if (trim($line) == '{alternative:plain}') {
@@ -617,14 +617,14 @@ class Lang
                 
                 // Config syntax replacements
                 $subject = self::replaceConfigValues($subject);
-                list($plain, $html) = self::replaceConfigValues([$plain, $html]);
+                list($plain, $html) = self::replaceConfigValues(array($plain, $html));
                 
                 // Convert to Translation instance with sub-Translations
-                return new Translation([
+                return new Translation(array(
                     'subject' => new Translation($subject, true, true), // Raw outputting, will be encoded
                     'plain' => new Translation($plain, true, true), // Raw outputting
                     'html' => $html
-                ]);
+                ));
             }
         }
         
@@ -677,7 +677,7 @@ class Translation
         if (is_string($translation)) {
             $this->translation = $translation;
         } else {
-            $this->translation = [];
+            $this->translation = array();
             foreach ((array)$translation as $k => $v) {
                 $this->translation[$k] = is_string($v) ? new self($v, $allow_replace, $raw) : $v;
             }
@@ -710,16 +710,16 @@ class Translation
         
         // Forward call to any sub-Translations
         if (!is_string($this->translation)) {
-            $t = [];
+            $t = array();
             foreach ($this->translation as $k => $v) {
-                $t[$k] = call_user_func_array([$v, 'replace'], $args);
+                $t[$k] = call_user_func_array(array($v, 'replace'), $args);
             }
             
             return new self($t);
         }
         
         // Transform function arguments into placeholders values array
-        $placeholders = [];
+        $placeholders = array();
         while ($arg = array_shift($args)) {
             if (is_string($arg)) {
                 $placeholders[$arg] = array_shift($args);
@@ -836,9 +836,9 @@ class Translation
             }
             
             // Loop and replace inner variables
-            $out = [];
+            $out = array();
             foreach ($src as $item) {
-                $out[] = $content->replace(array_merge($placeholders, [$itemname => $item]))->out();
+                $out[] = $content->replace(array_merge($placeholders, array($itemname => $item)))->out();
             }
             
             // Return serialized content
@@ -858,10 +858,10 @@ class Translation
             
             // Evaluate test (and before or fashion)
             $match = false;
-            $leftor = [];
+            $leftor = array();
             foreach (array_map('trim', array_filter(explode('|', $condition))) as $orpart) {
                 $smatch = true;
-                $leftand = [];
+                $leftand = array();
                 foreach (array_map('trim', array_filter(explode('&', $orpart))) as $andpart) {
                     $op = 'bool';
                     $ov = true;

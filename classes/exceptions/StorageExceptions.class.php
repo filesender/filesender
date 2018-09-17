@@ -49,7 +49,7 @@ class StorageChunkTooLargeException extends DetailedException
     {
         parent::__construct(
             'storage_chunk_too_large', // Message to give to the user
-            ['length' => $length, 'max' => $max] // Details to log
+            array('length' => $length, 'max' => $max) // Details to log
         );
     }
 }
@@ -68,7 +68,7 @@ class StorageNotEnoughSpaceLeftException extends DetailedException
     {
         parent::__construct(
             'storage_not_enough_space_left', // Message to give to the user
-            ['required_space' => $required_space]
+            array('required_space' => $required_space)
         );
     }
 }

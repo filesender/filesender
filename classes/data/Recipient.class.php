@@ -45,52 +45,52 @@ class Recipient extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'primary' => true,
             'autoinc' => true
-        ],
-        'transfer_id' => [
+        ),
+        'transfer_id' => array(
             'type' => 'uint',
             'size' => 'medium',
-        ],
-        'email' => [
+        ),
+        'email' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'token' => [
+        ),
+        'token' => array(
             'type' => 'string',
             'size' => 60
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-        'last_activity' => [
+        ),
+        'last_activity' => array(
             'type' => 'datetime',
             'null' => true
-        ],
-        'options' => [
+        ),
+        'options' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'reminder_count' => [
+        ),
+        'reminder_count' => array(
             'type' => 'uint',
             'size' => 'medium',
             'default' => 0
-        ],
-        'last_reminder' => [
+        ),
+        'last_reminder' => array(
             'type' => 'datetime',
             'null' => true
-        ]
-    ];
+        )
+    );
 
-    protected static $secondaryIndexMap = [
-        'token' => [
-            'token' => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'token' => array(
+            'token' => array()
+        )
+    );
     
 
     /**
@@ -126,7 +126,7 @@ class Recipient extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new RecipientNotFoundException('id = '.$id);
@@ -151,7 +151,7 @@ class Recipient extends DBObject
     public static function fromToken($token)
     {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
-        $statement->execute([':token' => $token]);
+        $statement->execute(array(':token' => $token));
         $data = $statement->fetch();
         if (!$data) {
             throw new RecipientNotFoundException('token = '.$token);
@@ -175,8 +175,8 @@ class Recipient extends DBObject
         $recipient = new self();
         
         // Init caches to empty to avoid db queries
-        $recipient->logsCache = [];
-        $recipient->trackingEventsCache = [];
+        $recipient->logsCache = array();
+        $recipient->trackingEventsCache = array();
         
         $recipient->transfer_id = $transfer->id;
         $recipient->transferCache = $transfer;
@@ -191,7 +191,7 @@ class Recipient extends DBObject
         // Generate token until it is indeed unique
         $recipient->token = Utilities::generateUID(function ($token, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.Recipient::getDBTable().' WHERE token = :token');
-            $statement->execute([':token' => $token]);
+            $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
             if (!$data) {
                 Logger::info('Recipient uid generation took '.$tries.' tries');
@@ -212,8 +212,8 @@ class Recipient extends DBObject
     public static function fromTransfer(Transfer $transfer)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
-        $s->execute(['transfer_id' => $transfer->id]);
-        $recipients = [];
+        $s->execute(array('transfer_id' => $transfer->id));
+        $recipients = array();
         foreach ($s->fetchAll() as $data) {
             $recipients[$data['id']] = self::fromData($data['id'], $data);
         } // Don't query twice, use loaded data
@@ -266,7 +266,7 @@ class Recipient extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, ['id', 'transfer_id', 'email', 'token', 'created', 'last_activity', 'options'])) {
+        if (in_array($property, array('id', 'transfer_id', 'email', 'token', 'created', 'last_activity', 'options'))) {
             return $this->$property;
         }
         
@@ -290,8 +290,8 @@ class Recipient extends DBObject
         
         if ($property == 'download_link') {
             return Utilities::http_build_query(
-                [ 's'     => 'download',
-                       'token' => $this->token ]
+                array( 's'     => 'download',
+                       'token' => $this->token )
             );
         }
         
@@ -310,7 +310,7 @@ class Recipient extends DBObject
         
         if ($property == 'errors') {
             return array_filter($this->tracking_events, function ($tracking_event) {
-                return in_array($tracking_event->type, [TrackingEventTypes::BOUNCE]);
+                return in_array($tracking_event->type, array(TrackingEventTypes::BOUNCE));
             });
         }
         
@@ -319,7 +319,7 @@ class Recipient extends DBObject
         }
         
         if ($property == 'name') {
-            $identity = $this->email ? explode('@', $this->email) : [Lang::tr('anonymous')];
+            $identity = $this->email ? explode('@', $this->email) : array(Lang::tr('anonymous'));
             return $identity[0];
         }
         

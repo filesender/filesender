@@ -44,7 +44,7 @@ class MailAttachmentBadDispositionException extends DetailedException
     {
         parent::__construct(
             'mail_attachment_bad_disposition', // Message to give to the user
-            ['disposition' => $disposition] // Real message to log
+            array('disposition' => $disposition) // Real message to log
         );
     }
 }
@@ -63,7 +63,7 @@ class MailAttachmentBadTransferEncodingException extends DetailedException
     {
         parent::__construct(
             'mail_attachment_bad_transfer_encoding', // Message to give to the user
-            ['transfer_encoding' => $transfer_encoding] // Real message to log
+            array('transfer_encoding' => $transfer_encoding) // Real message to log
         );
     }
 }
@@ -82,7 +82,7 @@ class MailAttachmentNoContentException extends DetailedException
     {
         parent::__construct(
             'mail_attachment_no_content', // Message to give to the user
-            ['path' => $path] // Real message to log
+            array('path' => $path) // Real message to log
         );
     }
 }

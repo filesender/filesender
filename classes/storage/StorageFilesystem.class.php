@@ -134,7 +134,7 @@ class StorageFilesystem
     public static function canStore(Transfer $transfer)
     {
         self::setup();
-        $filesystems = [];
+        $filesystems = array();
 
         // If the user is doing something with FUSE
         // then they might not want to check disk space.
@@ -149,10 +149,10 @@ class StorageFilesystem
             $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
             
             if (!array_key_exists($filesystem, $filesystems)) {
-                $filesystems[$filesystem] = [
+                $filesystems[$filesystem] = array(
                 'free_space' => disk_free_space($path),
-                'files' => []
-            ];
+                'files' => array()
+            );
             }
             
             $filesystems[$filesystem]['files'][] = $file;
@@ -201,7 +201,7 @@ class StorageFilesystem
      */
     protected static function getHashedPaths($level, $prefix = '')
     {
-        $paths = [];
+        $paths = array();
         
         for ($i=0; $i<=15; $i++) {
             $p = $prefix.dechex($i);
@@ -228,15 +228,15 @@ class StorageFilesystem
         
         // Simple analysis if hashing disabled
         if (!self::$hashing) {
-            return ['main' => [
+            return array('main' => array(
             'total_space' => disk_total_space(self::$path),
             'free_space' => disk_free_space(self::$path),
-            'paths' => []
-        ]];
+            'paths' => array()
+        ));
         }
         
         // Get all possible storage paths based on hashing
-        $paths = [''];
+        $paths = array('');
         if (is_numeric(self::$hashing)) {
             $paths = self::getHashedPaths(self::$hashing);
         } elseif (is_callable(self::$hashing)) {
@@ -245,18 +245,18 @@ class StorageFilesystem
         
         // Get space usage for each possible path
         // but if the path isn't used yet, don't try to df that path
-        $filesystems = [];
+        $filesystems = array();
         foreach ($paths as $path) {
             $subdirPath = self::$path.$path;
             if (is_dir($subdirPath)) {
                 $filesystem = self::getFilesystem($subdirPath);
                 
                 if (!array_key_exists($filesystem, $filesystems)) {
-                    $filesystems[$filesystem] = [
+                    $filesystems[$filesystem] = array(
                         'total_space' => disk_total_space($subdirPath),
                         'free_space'  => disk_free_space($subdirPath),
-                        'paths' => []
-                    ];
+                        'paths' => array()
+                    );
                 }
                 
                 $filesystems[$filesystem]['paths'][] = $path;
@@ -429,10 +429,10 @@ class StorageFilesystem
                 throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
             }
 
-            return [
+            return array(
                 'offset' => $offset,
                 'written' => $written
-            ];
+            );
         } else {
             throw new StorageFilesystemCannotWriteException($file_path, $file);
         }

@@ -48,7 +48,7 @@ class AuthRemoteTooLateException extends DetailedException
     {
         parent::__construct(
             'auth_remote_too_late', // Message to give to the user
-            ['late_by_seconds' => $by] // Details to log
+            array('late_by_seconds' => $by) // Details to log
         );
     }
 }
@@ -70,12 +70,12 @@ class AuthRemoteSignatureCheckFailedException extends DetailedException
     {
         parent::__construct(
             'auth_remote_signature_check_failed', // Message to give to the user
-            [
+            array(
                 'signed' => $signed,
                 'secret' => $secret,
                 'received_signature' => $received_signature,
                 'signature' => $signature
-            ]
+            )
         );
     }
 }
@@ -94,7 +94,7 @@ class AuthRemoteUknownApplicationException extends DetailedException
     {
         parent::__construct(
             'auth_remote_unknown_application', // Message to give to the user
-            ['application' => $name] // Details to log
+            array('application' => $name) // Details to log
         );
     }
 }
@@ -114,7 +114,7 @@ class AuthRemoteUserRejectedException extends DetailedException
     {
         parent::__construct(
             'auth_remote_user_rejected', // Message to give to the user
-            ['uid' => $uid, 'reason' => $reason] // Details to log
+            array('uid' => $uid, 'reason' => $reason) // Details to log
         );
     }
 }

@@ -83,10 +83,10 @@ class AuthSPFake
                 throw new AuthSPAuthenticationNotFoundException();
             }
             
-            $attributes = [];
+            $attributes = array();
             
             // Wanted attributes
-            foreach (['uid', 'name', 'email'] as $attr) {
+            foreach (array('uid', 'name', 'email') as $attr) {
                 // Keys in raw_attributes (can be array of key)
                 $attributes[$attr] = Config::get('auth_sp_fake_'.$attr);
             }
@@ -111,7 +111,7 @@ class AuthSPFake
             }
             
             if (!is_array($attributes['email'])) {
-                $attributes['email'] = [$attributes['email']];
+                $attributes['email'] = array($attributes['email']);
             }
             
             foreach ($attributes['email'] as $email) {
@@ -128,7 +128,7 @@ class AuthSPFake
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if ($additional_attributes) {
                 $additional_attributes_values = (array)Config::get('auth_sp_fake_additional_attributes_values');
-                $attributes['additional'] = [];
+                $attributes['additional'] = array();
                 foreach ($additional_attributes as $key => $from) {
                     if (is_numeric($key) && is_callable($from)) {
                         continue;

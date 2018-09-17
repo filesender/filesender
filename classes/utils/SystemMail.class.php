@@ -68,7 +68,7 @@ class SystemMail extends ApplicationMail
         
         $tr = Lang::translateEmail($translation_id);
         if ($vars) {
-            $tr = call_user_func_array([$tr, 'replace'], $vars);
+            $tr = call_user_func_array(array($tr, 'replace'), $vars);
         }
         
         $mail = new self($tr);

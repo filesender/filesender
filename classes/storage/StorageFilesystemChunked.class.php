@@ -141,10 +141,10 @@ class StorageFilesystemChunked extends StorageFilesystem
                 throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
             }
 
-            return [
+            return array(
                 'offset' => $offset,
                 'written' => $written
-            ];
+            );
         } else {
             Logger::info('MD Chunked: writeChunk() Can not write to : '.$chunkFile);
             throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file);

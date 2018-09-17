@@ -48,7 +48,7 @@ class FileCollectionNotFoundException extends DetailedException
     {
         parent::__construct(
             'filecollection_not_found', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -67,7 +67,7 @@ class InvalidFileCollectionException extends DetailedException
     {
         parent::__construct(
             'invalid_filecollection', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }

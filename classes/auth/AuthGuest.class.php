@@ -106,12 +106,12 @@ class AuthGuest
                 throw new AuthAuthenticationNotFoundException();
             }
             
-            self::$attributes = [
+            self::$attributes = array(
                 'uid' => self::$guest->saml_user_identification_uid,
                 'email' => self::$guest->owner->email,
                 'name' => null,
                 'guest' => self::$guest
-            ];
+            );
         }
         
         return self::$attributes;

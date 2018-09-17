@@ -62,13 +62,13 @@ class GUI
      */
     public static function stylesheets()
     {
-        return self::filterSources([
+        return self::filterSources(array(
             'lib/reset/reset.css',
             'lib/jquery/smoothness/jquery-ui-1.10.2.custom.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'css/default.css',
             'skin/styles.css'
-        ]);
+        ));
     }
     
     /**
@@ -88,7 +88,7 @@ class GUI
      */
     public static function scripts()
     {
-        $sources = [
+        $sources = array(
             'lib/jquery/jquery-1.9.1.min.js',
             'lib/jquery/jquery-ui-1.10.2.custom.min.js',
             'vendor/node_modules/promise-polyfill/promise.js',
@@ -104,7 +104,7 @@ class GUI
             'js/crypter/crypto_blob_reader.js',
             'js/crypter/crypto_app.js',
             'vendor/node_modules/xregexp/xregexp-all.js'
-        ];
+        );
         
         if (Config::get('terasender_enabled')) {
             $sources[] = 'lib/terasender/terasender.js';
@@ -132,14 +132,14 @@ class GUI
      */
     public static function favicon()
     {
-        $locations = self::filterSources([
+        $locations = self::filterSources(array(
             'images/favicon.ico',
             'images/favicon.gif',
             'images/favicon.png',
             'skin/favicon.ico',
             'skin/favicon.gif',
             'skin/favicon.png'
-        ]);
+        ));
         
         return array_pop($locations);
     }
@@ -164,10 +164,10 @@ class GUI
      */
     public static function logo()
     {
-        $locations = self::filterSources([
+        $locations = self::filterSources(array(
             'images/logo.png',
             'skin/logo.png'
-        ]);
+        ));
         
         return array_pop($locations);
     }
@@ -317,16 +317,16 @@ class GUI
     {
         // Already cached ?
         if (is_null(self::$allowed_pages)) {
-            self::$allowed_pages = [];
+            self::$allowed_pages = array();
             
             // Authenticated users have access to lots ...
             if (Auth::isAuthenticated(false)) {
                 if (Auth::isGuest()) {
-                    self::$allowed_pages = ['upload',
-                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY ];
+                    self::$allowed_pages = array('upload',
+                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY );
                 } else {
-                    self::$allowed_pages = ['home', 'upload', 'transfers', 'guests', 'download',
-                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY ];
+                    self::$allowed_pages = array('home', 'upload', 'transfers', 'guests', 'download',
+                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY );
                     
                     // ... and admin to even more !
                     if (Auth::isAdmin()) {
@@ -341,12 +341,12 @@ class GUI
             }
             
             // Always accessible pages
-            foreach (['download', 'translate_email', 'logout', 'exception', GUIPages::HELP, GUIPages::ABOUT] as $p) {
+            foreach (array('download', 'translate_email', 'logout', 'exception', GUIPages::HELP, GUIPages::ABOUT) as $p) {
                 self::$allowed_pages[] = $p;
             }
             
             if (Config::get('maintenance')) {
-                self::$allowed_pages = ['maintenance'];
+                self::$allowed_pages = array('maintenance');
             }
         }
         

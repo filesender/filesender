@@ -48,7 +48,7 @@ class RestServer
 
     public static function validateCallback_iframe_callback($cb)
     {
-        $acceptable = ["legacyUploadResultHandler"];
+        $acceptable = array("legacyUploadResultHandler");
         if (in_array($cb, $acceptable)) {
             return $cb;
         }
@@ -57,7 +57,7 @@ class RestServer
     
     public static function validateCallback_callback($cb)
     {
-        $acceptable = ["lang.setTranslations"];
+        $acceptable = array("lang.setTranslations");
         if (in_array($cb, $acceptable)) {
             return $cb;
         }
@@ -84,14 +84,14 @@ class RestServer
             }
             
             // Split request path to get tokens
-            $path = [];
+            $path = array();
             if (array_key_exists('PATH_INFO', $_SERVER)) {
                 $path = array_filter(explode('/', $_SERVER['PATH_INFO']));
             }
             
             // Get method from possible headers
             $method = null;
-            foreach (['X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD'] as $k) {
+            foreach (array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
                 if (!array_key_exists($k, $_SERVER)) {
                     continue;
                 }
@@ -100,7 +100,7 @@ class RestServer
             
             // Record called method (for log), fail if unknown
             RestException::setContext('method', $method);
-            if (!in_array($method, ['get', 'post', 'put', 'delete'])) {
+            if (!in_array($method, array('get', 'post', 'put', 'delete'))) {
                 throw new RestException('rest_method_not_allowed', 405);
             }
             
@@ -128,7 +128,7 @@ class RestServer
             $type = array_shift($type_parts);
             $request->properties['type'] = $type;
             
-            $type_properties = [];
+            $type_properties = array();
             foreach ($type_parts as $part) {
                 $part = array_map('trim', explode('=', $part));
                 if (count($part) == 2) {
@@ -150,7 +150,7 @@ class RestServer
                     break;
                 
                 case 'application/x-www-form-urlencoded':
-                    $data = [];
+                    $data = array();
                     parse_str($input, $data);
                     $request->input = (object)Utilities::sanitizeInput($data);
                     break;
@@ -172,7 +172,7 @@ class RestServer
                 }
             } elseif (Auth::isRemoteUser()) {
                 // Nothing peculiar to do
-            } elseif (in_array($method, ['post', 'put', 'delete'])) {
+            } elseif (in_array($method, array('post', 'put', 'delete'))) {
                 // SP or Guest, lets do XSRF check
                 $token_name = 'HTTP_X_FILESENDER_SECURITY_TOKEN';
                 $security_token = array_key_exists($token_name, $_SERVER) ? $_SERVER[$token_name] : '';
@@ -193,7 +193,7 @@ class RestServer
             }
                 
             if (array_key_exists('callback', $_GET) || array_key_exists('iframe_callback', $_REQUEST)) {
-                $allowed_by_default = ['/info', '/lang', '/file/[0-9]+/whole'];
+                $allowed_by_default = array('/info', '/lang', '/file/[0-9]+/whole');
                 
                 if (Config::get('auth_remote_user_enabled')) {
                     $allowed_by_default[] = '/user/@me/remote_auth_config';
@@ -234,8 +234,8 @@ class RestServer
                 case 'filterOp':
                     if (is_array($v)) {
                         foreach ($v as $p => $f) {
-                            $request->filterOp[$p] = [];
-                            foreach (['equals', 'startWith', 'contains', 'present'] as $k) {
+                            $request->filterOp[$p] = array();
+                            foreach (array('equals', 'startWith', 'contains', 'present') as $k) {
                                 if (array_key_exists($k, $f)) {
                                     $request->filterOp[$p][$k] = $f[$k];
                                 }
@@ -245,7 +245,7 @@ class RestServer
                     break;
                 
                 case 'sortOrder':
-                    if (in_array($v, ['ascending', 'descending'])) {
+                    if (in_array($v, array('ascending', 'descending'))) {
                         $request->sortOrder = $v;
                     }
                     break;
@@ -266,7 +266,7 @@ class RestServer
                     } // Epoch timestamp
                     
                     if (!$updatedSince || !is_numeric($updatedSince)) {
-                        throw new RestException('rest_updatedsince_bad_format', 400, ['since' => $updatedSince]);
+                        throw new RestException('rest_updatedsince_bad_format', 400, array('since' => $updatedSince));
                     }
                     
                     $request->updatedSince = $updatedSince;
@@ -287,7 +287,7 @@ class RestServer
             
             if (
                 !AuthRemote::isAuthenticated() &&
-                in_array($method, ['post', 'put', 'delete']) &&
+                in_array($method, array('post', 'put', 'delete')) &&
                 $handler->requireSecurityTokenMatch($method, $path) &&
                 !$security_token_matches
             ) {
@@ -296,7 +296,7 @@ class RestServer
             
             Logger::debug('Forwarding call to '.$class.'::'.$method.'() handler');
             
-            $data = call_user_func_array([$handler, $method], $path);
+            $data = call_user_func_array(array($handler, $method), $path);
             
             Logger::debug('Got data to send back');
             
@@ -340,11 +340,11 @@ class RestServer
             }
             RestUtilities::sendResponseCode($code);
             header('Content-Type: application/json');
-            echo json_encode([
+            echo json_encode(array(
                 'message' => $e->getMessage(),
                 'uid' => method_exists($e, 'getUid') ? $e->getUid() : null,
                 'details' => method_exists($e, 'getDetails') ? $e->getDetails() : null
-            ]);
+            ));
         }
     }
 }

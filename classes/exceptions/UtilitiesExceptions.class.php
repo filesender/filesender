@@ -64,7 +64,7 @@ class UtilitiesUidGeneratorTriedTooMuchException extends DetailedException
     {
         parent::__construct(
             'utilities_uid_generator_tried_too_much', // Message to give to the user
-            ['tries' => $tries] // Real message to log
+            array('tries' => $tries) // Real message to log
         );
     }
 }

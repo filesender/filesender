@@ -168,7 +168,7 @@ class Args
                 throw new Exception('No '.$name.' provided');
             }
             
-            return $multiple ? [] : null;
+            return $multiple ? array() : null;
         }
         
         $value = array_map(function ($v) {
@@ -180,7 +180,7 @@ class Args
                 throw new Exception('No '.$name.' provided');
             }
             
-            return $multiple ? [] : null;
+            return $multiple ? array() : null;
         }
         
         if (!$multiple) {

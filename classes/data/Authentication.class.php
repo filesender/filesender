@@ -44,45 +44,45 @@ class Authentication extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'big',
             'primary' => true,
             'autoinc' => true,
-        ],
-        'saml_user_identification_uid' => [
+        ),
+        'saml_user_identification_uid' => array(
             'type' => 'string',
             'size' => 170,
-        ],
-        'saml_user_identification_uid_hash' => [
+        ),
+        'saml_user_identification_uid_hash' => array(
             'type' => 'string',
             'size' => 200,
             'null' => true
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime',
             'null' => true
-        ],
-        'last_activity' => [
+        ),
+        'last_activity' => array(
             'type' => 'datetime',
             'null' => true
-        ],
-        'comment' => [
+        ),
+        'comment' => array(
             'type' => 'string',
             'size' => 100,
             'null' => true
-        ],
-    ];
-    protected static $secondaryIndexMap = [
-        'saml_user_identification_uid' => [
-            'saml_user_identification_uid' => [],
-            'UNIQUE' => []
-        ],
-        'saml_user_identification_uid_hash' => [
-            'saml_user_identification_uid_hash' => []
-        ]
-    ];
+        ),
+    );
+    protected static $secondaryIndexMap = array(
+        'saml_user_identification_uid' => array(
+            'saml_user_identification_uid' => array(),
+            'UNIQUE' => array()
+        ),
+        'saml_user_identification_uid_hash' => array(
+            'saml_user_identification_uid_hash' => array()
+        )
+    );
 
 
     
@@ -109,7 +109,7 @@ class Authentication extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
         }
         
@@ -130,7 +130,7 @@ class Authentication extends DBObject
         Logger::info('authentication::create(1) saml_uid ' . $saml_uid);
 
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE saml_user_identification_uid = :samluid');
-        $statement->execute([':samluid' => $saml_uid]);
+        $statement->execute(array(':samluid' => $saml_uid));
         $data = $statement->fetch();
         if ($data) {
             $ret = static::createFactory(null, $data);
@@ -182,9 +182,9 @@ class Authentication extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'created','last_activity'
-        ])) {
+        ))) {
             return $this->$property;
         }
 

@@ -62,7 +62,7 @@ class Zipper
      */
     public function __construct()
     {
-        $this->files = [];
+        $this->files = array();
     }
 
     

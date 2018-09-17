@@ -84,11 +84,11 @@ class AuthLocal
         if (is_null($user_id)) { // Virtually closes the local session
             self::$attributes = null;
         } else {
-            self::$attributes = [
+            self::$attributes = array(
                 'uid' => $user_id,
                 'email' => $email,
                 'name' => $name
-            ];
+            );
             /* $authid = Authentication::ensure('filesender-authlocal@localhost.localdomain', 'auth local')->id;
              * $user = User::fromAuthId( $authid );
              * $user->email_addresses = 'filesender-authlocal@localhost.localdomain';

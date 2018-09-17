@@ -44,24 +44,24 @@ class Metadata extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'primary' => true,
             'autoinc' => true,
-        ],
-        'schemaversion' => [
+        ),
+        'schemaversion' => array(
             'type' => 'uint',
             'size' => 'medium',
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-        'message' => [
+        ),
+        'message' => array(
             'type' => 'text'
-        ]
-    ];
+        )
+    );
 
 
     
@@ -86,7 +86,7 @@ class Metadata extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
         }
         
@@ -106,7 +106,7 @@ class Metadata extends DBObject
         
         try {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' order by schemaversion desc limit 1');
-            $statement->execute([]);
+            $statement->execute(array());
             $data = $statement->fetch();
             if ($data) {
                 return $data['schemaversion'];
@@ -155,9 +155,9 @@ class Metadata extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id', 'schemaversion', 'created', 'message'
-        ])) {
+        ))) {
             return $this->$property;
         }
         

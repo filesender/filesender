@@ -43,72 +43,72 @@ class File extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
+    protected static $dataMap = array(
         //file id, as in the database
-        'id' => [
+        'id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
             'autoinc' => true,   //indicates that 'id' is auto-incremented
-        ],
-        'transfer_id' => [
+        ),
+        'transfer_id' => array(
             'type' => 'uint',
             'size' => 'medium',
-        ],
-        'uid' => [
+        ),
+        'uid' => array(
             'type' => 'string',
             'size' => 60
-        ],
-        'name' => [
+        ),
+        'name' => array(
             'type' => 'string',
             'size' => 255,
-        ],
-        'mime_type' => [
+        ),
+        'mime_type' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'size' => [
+        ),
+        'size' => array(
             'type' => 'uint',
             'size' => 'big'
-        ],
-        'encrypted_size' => [
+        ),
+        'encrypted_size' => array(
             'type' => 'uint',
             'null' => true,
             'size' => 'big'
-        ],
-        'upload_start' => [
+        ),
+        'upload_start' => array(
             'type' => 'datetime',
             'null' => true
-        ],
-        'upload_end' => [
+        ),
+        'upload_end' => array(
             'type' => 'datetime',
             'null' => true
-        ],
-        'sha1' => [
+        ),
+        'sha1' => array(
             'type' => 'string',
             'size' => 40,
             'null' => true
-        ],
-        'storage_class_name' => [
+        ),
+        'storage_class_name' => array(
             'type' => 'string',
             'size' => 60,
             'null' => true,
             'default' => 'StorageFilesystem'
-        ]
-    ];
+        )
+    );
 
-    protected static $secondaryIndexMap = [
-        'transfer_id' => [
-            'transfer_id' => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'transfer_id' => array(
+            'transfer_id' => array()
+        )
+    );
 
 
     public static function getViewMap()
     {
-        $a = [];
-        $filesbywhodef = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        $filesbywhodef = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'upload_start')
                         . DBView::columnDefinition_age($dbtype, 'upload_end')
@@ -125,10 +125,10 @@ class File extends DBObject
         }
         
         
-        return [ strtolower(self::getDBTable()) . 'view' => $a ,
+        return array( strtolower(self::getDBTable()) . 'view' => $a ,
                       'filestranferviewcopy' => $transferviewdef    ,
                       'filesbywhoview'       => $filesbywhodef
-        ];
+        );
     }
     
     
@@ -260,7 +260,7 @@ class File extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new FileNotFoundException('id = '.$id);
@@ -288,14 +288,14 @@ class File extends DBObject
         $file = new self();
         
         // Init cache to empty to avoid db queries
-        $file->logsCache = [];
+        $file->logsCache = array();
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
         
         // Generate uid until it is indeed unique
         $file->uid = Utilities::generateUID(function ($uid, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute([':uid' => $uid]);
+            $statement->execute(array(':uid' => $uid));
             $data = $statement->fetch();
             if (!$data) {
                 Logger::info('File uid generation took '.$tries.' tries');
@@ -335,7 +335,7 @@ class File extends DBObject
     public static function fromUid($uid)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
-        $s->execute([':uid' => $uid]);
+        $s->execute(array(':uid' => $uid));
         $data = $s->fetch();
         
         if (!$data) {
@@ -355,9 +355,9 @@ class File extends DBObject
     public static function fromTransfer(Transfer $transfer)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
-        $s->execute([':transfer_id' => $transfer->id]);
-        $tree_files = [];
-        $files = [];
+        $s->execute(array(':transfer_id' => $transfer->id));
+        $tree_files = array();
+        $files = array();
         foreach ($s->fetchAll() as $data) {
             $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
             // mirror loadDirectoryPath(): Default that path and filename are the same
@@ -376,8 +376,8 @@ class File extends DBObject
             $directories = $collections[CollectionType::DIRECTORY_ID];
             // Set path info if it exists
             $t = DBI::prepare('SELECT fc.file_id AS id, c.info AS dirpath, c.id as dir_id FROM FileCollections fc, Collections c WHERE c.transfer_id = :transfer_id AND c.type_id = :collection_type AND fc.collection_id = c.id');
-            $t->execute([':transfer_id' => $transfer->id,
-                              ':collection_type' => CollectionType::DIRECTORY_ID]);
+            $t->execute(array(':transfer_id' => $transfer->id,
+                              ':collection_type' => CollectionType::DIRECTORY_ID));
             foreach ($t->fetchAll() as $data) {
                 $file = $files[$data['id']];
                 $file->pathCache = $data['dirpath'].'/'.$file->name;
@@ -451,9 +451,9 @@ class File extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
-        ])) {
+        ))) {
             return $this->$property;
         }
 

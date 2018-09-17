@@ -106,7 +106,7 @@ class Auth
             // Authentication logic with exception memory
             try {
                 if (Logger::isLocalProcess()) {
-                    self::$attributes = [];
+                    self::$attributes = array();
                     self::$type = 'localprocess';
                 } elseif (AuthGuest::isAuthenticated()) { // Guest
                     self::$attributes = AuthGuest::attributes();
@@ -136,7 +136,7 @@ class Auth
 
             // If no session has been made at this point, we make one ourselves.
             // Only types 'guest' and 'sp' are browsers.
-            if (in_array(self::$type, ['sp', 'guest']) && self::isSessionStarted() === false) {
+            if (in_array(self::$type, array('sp', 'guest')) && self::isSessionStarted() === false) {
                 session_start();
             }
             
@@ -160,7 +160,7 @@ class Auth
                 }
                 
                 if (!array_key_exists('additional', self::$attributes)) {
-                    self::$attributes['additional'] = [];
+                    self::$attributes['additional'] = array();
                 }
                 
                 // Add name to additional attributes by default so that we can use it when sending out emails

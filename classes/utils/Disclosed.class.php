@@ -58,7 +58,7 @@ class Disclosed
             return;
         }
         
-        self::$informations = [];
+        self::$informations = array();
         
         // Do we have disclosable ?
         $disclose = Config::get('disclose');
@@ -74,7 +74,7 @@ class Disclosed
                 
             $d = array_unique(array_filter(array_map('trim', preg_split('/[,;|]/', $disclose))));
             
-            $disclose = [];
+            $disclose = array();
             foreach ($d as $k) {
                 $disclose[$k] = $k;
             }
@@ -87,18 +87,18 @@ class Disclosed
             if (!$key && is_callable($v)) {
                 $data = $v();
                 foreach ($data as $k => $v) {
-                    self::$informations[$k] = ['value' => $v];
+                    self::$informations[$k] = array('value' => $v);
                 }
             } elseif (is_callable($v)) {
-                self::$informations[$key] = ['callable' => $v];
+                self::$informations[$key] = array('callable' => $v);
             } elseif (Config::exists($key)) {
-                self::$informations[$key] = ['config' => $v];
+                self::$informations[$key] = array('config' => $v);
             } else { // Specials
-                self::$informations[$v] = ['callable' => function () use ($v) {
+                self::$informations[$v] = array('callable' => function () use ($v) {
                     if ($v == 'version') {
                         return Version::get();
                     }
-                }];
+                });
             }
         }
     }
@@ -157,7 +157,7 @@ class Disclosed
         // Load disclosables if not already done
         self::load();
         
-        $info = [];
+        $info = array();
         
         foreach (self::$informations as $key => $d) {
             $info[$key] = self::get($key);

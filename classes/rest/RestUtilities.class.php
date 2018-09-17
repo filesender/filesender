@@ -51,7 +51,7 @@ class RestUtilities
      */
     public static function flatten($a, $p = null)
     {
-        $o = [];
+        $o = array();
         ksort($a);
         foreach ($a as $k => $v) {
             if (is_array($v)) {
@@ -76,7 +76,7 @@ class RestUtilities
             return http_response_code($code);
         }
             
-        $messages = [
+        $messages = array(
             100 => 'Continue',
             101 => 'Switching Protocols',
             200 => 'OK',
@@ -114,7 +114,7 @@ class RestUtilities
             503 => 'Service Unavailable',
             504 => 'Gateway Time-out',
             505 => 'HTTP Version not supported'
-        ];
+        );
         
         $protocol = array_key_exists('SERVER_PROTOCOL', $_SERVER) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
         header($protocol.' '.$code.' '.$messages[$code]);
@@ -132,9 +132,9 @@ class RestUtilities
      */
     public static function formatDate($date, $with_time = false)
     {
-        return [
+        return array(
             'raw' => $date,
             'formatted' => Utilities::formatDate($date, $with_time)
-        ];
+        );
     }
 }

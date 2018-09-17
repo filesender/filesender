@@ -85,7 +85,7 @@ class AuthRemote
                 return false;
             }
             
-            self::$attributes = [];
+            self::$attributes = array();
             
             // Get data
             $received_signature = $_GET['signature'];
@@ -110,7 +110,7 @@ class AuthRemote
             
             // Get method from headers
             $method = null;
-            foreach (['X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD'] as $k) {
+            foreach (array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
                 if (!array_key_exists($k, $_SERVER)) {
                     continue;
                 }
@@ -233,7 +233,7 @@ class RemoteApplication
     /**
      * ACLs
      */
-    private $acl = [];
+    private $acl = array();
     
     /**
      * Admin status
@@ -309,7 +309,7 @@ class RemoteApplication
      */
     public function __get($property)
     {
-        if (in_array($property, ['name', 'secret', 'acl', 'isAdmin'])) {
+        if (in_array($property, array('name', 'secret', 'acl', 'isAdmin'))) {
             return $this->$property;
         }
         

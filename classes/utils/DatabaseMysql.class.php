@@ -46,7 +46,7 @@ class DatabaseMysql
     public static function tableExists($table)
     {
         $s = DBI::prepare('SHOW TABLES LIKE :table');
-        $s->execute([':table' => $table]);
+        $s->execute(array(':table' => $table));
         return (bool)$s->fetch();
     }
     
@@ -59,7 +59,7 @@ class DatabaseMysql
      */
     public static function createTable($table, $definition)
     {
-        $columns = [];
+        $columns = array();
         
         $primary_keys = null;
         foreach ($definition as $column => $def) {
@@ -100,7 +100,7 @@ class DatabaseMysql
     public static function getTableColumns($table)
     {
         $s = DBI::query('SHOW COLUMNS FROM '.$table);
-        $columns = [];
+        $columns = array();
         foreach ($s->fetchAll() as $r) {
             $columns[] = $r['Field'];
         }
@@ -182,16 +182,16 @@ class DatabaseMysql
             };
         }
 
-        $expected = [];
+        $expected = array();
         foreach ($definition as $dk => $dm) {
             $expected[] = $dk;
         }
 
         // Get current definition
         $s = DBI::prepare('SHOW INDEX FROM '.$table.'');
-        $s->execute([':key_name' => $index]);
+        $s->execute(array(':key_name' => $index));
 
-        $existingCols = [];
+        $existingCols = array();
         foreach ($s->fetchAll() as $r) {
             if ($r['Key_name'] == $index) {
                 $existingCols[] = $r['Column_name'];
@@ -225,10 +225,10 @@ class DatabaseMysql
         
         // Get current definition
         $s = DBI::prepare('SHOW COLUMNS FROM '.$table.' LIKE :column');
-        $s->execute([':column' => $column]);
+        $s->execute(array(':column' => $column));
         $column_dfn = $s->fetch();
         
-        $non_respected = [];
+        $non_respected = array();
         $typematcher = '';
         
         // Build type matcher
@@ -299,7 +299,7 @@ class DatabaseMysql
         }
         
         // Options defaults
-        foreach (['null', 'primary', 'unique', 'autoinc'] as $k) {
+        foreach (array('null', 'primary', 'unique', 'autoinc') as $k) {
             if (!array_key_exists($k, $definition)) {
                 $definition[$k] = false;
             }
@@ -443,7 +443,7 @@ class DatabaseMysql
                 $mysql .= 'NULL';
             } elseif (is_bool($default)) {
                 $mysql .= $default ? '1' : '0';
-            } elseif (is_numeric($default) && in_array($definition['type'], ['int', 'uint'])) {
+            } elseif (is_numeric($default) && in_array($definition['type'], array('int', 'uint'))) {
                 $mysql .= $default;
             } else {
                 $mysql .= '"'.str_replace('"', '\\"', $default).'"';

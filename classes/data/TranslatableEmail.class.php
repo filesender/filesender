@@ -45,47 +45,47 @@ class TranslatableEmail extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'primary' => true,
             'autoinc' => true
-        ],
-        'context_type' => [
+        ),
+        'context_type' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'context_id' => [
+        ),
+        'context_id' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'token' => [
+        ),
+        'token' => array(
             'type' => 'string',
             'size' => 60
-        ],
-        'translation_id' => [
+        ),
+        'translation_id' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'variables' => [
+        ),
+        'variables' => array(
             'type' => 'text',
             'transform' => 'json'
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-    ];
+        ),
+    );
 
     public static function getViewMap()
     {
-        $a = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . '  from ' . self::getDBTable();
         }
-        return [ strtolower(self::getDBTable()) . 'view' => $a ];
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
     
     /**
@@ -112,7 +112,7 @@ class TranslatableEmail extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new TranslatableEmailNotFoundException('id = '.$id);
@@ -137,7 +137,7 @@ class TranslatableEmail extends DBObject
     public static function fromToken($token)
     {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
-        $statement->execute([':token' => $token]);
+        $statement->execute(array(':token' => $token));
         $data = $statement->fetch();
         if (!$data) {
             throw new TranslatableEmailNotFoundException('token = '.$token);
@@ -158,9 +158,9 @@ class TranslatableEmail extends DBObject
     public static function fromContext(DBObject $context)
     {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE context_type = :type AND context_id = :id');
-        $statement->execute([':type' => get_class($context), ':id' => $context->id]);
+        $statement->execute(array(':type' => get_class($context), ':id' => $context->id));
         
-        $emails = [];
+        $emails = array();
         foreach ($statement->fetchAll() as $data) {
             $emails[$data['id']] = self::fromData($data['id'], $data);
         } // Don't query twice, use loaded data
@@ -188,15 +188,15 @@ class TranslatableEmail extends DBObject
         // Get translation data and variables
         $email->translation_id = $translation_id;
         
-        $email->variables = [];
+        $email->variables = array();
         if ($variables) {
             foreach ($variables as $k => $v) {
                 // Convert DBObject types to type/id pairs for saving
                 if ($v instanceof DBObject) {
-                    $v = [
+                    $v = array(
                 'dbobject_type' => get_class($v),
                 'dbobject_id' => $v->id
-            ];
+            );
                 }
                 $email->variables[$k] = $v;
             }
@@ -208,7 +208,7 @@ class TranslatableEmail extends DBObject
         // Generate token until it is indeed unique
         $email->token = Utilities::generateUID(function ($token, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.TranslatableEmail::getDBTable().' WHERE token = :token');
-            $statement->execute([':token' => $token]);
+            $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
             if (!$data) {
                 Logger::info('TranslatableEmail uid generation took '.$tries.' tries');
@@ -252,7 +252,7 @@ class TranslatableEmail extends DBObject
                         continue;
                     }
                     
-                    if (in_array(get_class($v), ['Transfer', 'Guest'])) {
+                    if (in_array(get_class($v), array('Transfer', 'Guest'))) {
                         $context = $v;
                     }
                     
@@ -280,7 +280,7 @@ class TranslatableEmail extends DBObject
         }
         
         // Translate mail parts
-        $email_translation = call_user_func_array([Lang::translateEmail($translation_id, $lang), 'replace'], $vars);
+        $email_translation = call_user_func_array(array(Lang::translateEmail($translation_id, $lang), 'replace'), $vars);
         
         // Build mail with body and footer
         $plain = $email_translation->plain->out();
@@ -298,11 +298,11 @@ class TranslatableEmail extends DBObject
             $html .= "\n\n".$footer_translation->html->out();
         }
         
-        $mail = new ApplicationMail(new Translation([
+        $mail = new ApplicationMail(new Translation(array(
             'subject' => $email_translation->subject->out(),
             'plain' => $plain,
             'html' => $html,
-        ]));
+        )));
         
         // Add recipient
         $mail->to($to);
@@ -336,7 +336,7 @@ class TranslatableEmail extends DBObject
     public function translate($lang = null)
     {
         // Recreate translation variables
-        $variables = [];
+        $variables = array();
         if ($this->variables) {
             foreach ($this->variables as $k => $v) {
                 if (is_object($v)) {
@@ -356,7 +356,7 @@ class TranslatableEmail extends DBObject
         $translation = Lang::translateEmail($this->translation_id, $lang);
         
         // Replace variables
-        return call_user_func_array([$translation, 'replace'], $variables);
+        return call_user_func_array(array($translation, 'replace'), $variables);
     }
     
     /**
@@ -370,7 +370,7 @@ class TranslatableEmail extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, ['id', 'context_type', 'context_id', 'token', 'translation_id', 'variables', 'created'])) {
+        if (in_array($property, array('id', 'context_type', 'context_id', 'token', 'translation_id', 'variables', 'created'))) {
             return $this->$property;
         }
         
@@ -380,8 +380,8 @@ class TranslatableEmail extends DBObject
         
         if ($property == 'link') {
             return Utilities::http_build_query(
-                [ 's'     => 'translate_email',
-                       'token' => $this->token ]
+                array( 's'     => 'translate_email',
+                       'token' => $this->token )
             );
         }
         
@@ -411,6 +411,6 @@ class TranslatableEmail extends DBObject
         
         /** @var PDOStatement $statement */
         $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
-        $statement->execute([':date' => date('Y-m-d', time() - $days * 86400)]);
+        $statement->execute(array(':date' => date('Y-m-d', time() - $days * 86400)));
     }
 }

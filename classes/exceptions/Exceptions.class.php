@@ -65,14 +65,14 @@ class LoggingException extends Exception
             $log = $msg_code;
         }
         if ($log && (!is_array($log) || !preg_match('`[a-z]`', key($log)))) {
-            $log = ['exception' => $log];
+            $log = array('exception' => $log);
         }
         
         // Log info
         if ($log) {
             foreach ($log as $category => $lines) {
                 if (!is_array($lines)) {
-                    $lines = [$lines];
+                    $lines = array($lines);
                 }
                 
                 foreach ($lines as $line) {
@@ -151,24 +151,24 @@ class DetailedException extends LoggingException
         $this->details = $public_details;
         
         if (!$internal_details) {
-            $internal_details = [];
+            $internal_details = array();
         }
         if (!is_array($internal_details)) {
-            $internal_details = [$internal_details];
+            $internal_details = array($internal_details);
         }
         
         if ($public_details) {
             if (!is_array($public_details)) {
-                $public_details = [$public_details];
+                $public_details = array($public_details);
             }
             $internal_details = array_merge($public_details, $internal_details);
         }
         
-        $log = [
+        $log = array(
             'exception' => $msg_code,
             'trace' => explode("\n", $this->getTraceAsString()),
-            'details' => [],
-        ];
+            'details' => array(),
+        );
 
         $log['details'] = $this->convertArrayToLogArray($internal_details);
         parent::__construct($msg_code, $log);
@@ -185,7 +185,7 @@ class DetailedException extends LoggingException
      */
     public static function convertArrayToLogArray($arr, $prefix='')
     {
-        $ret = [];
+        $ret = array();
         foreach ($arr as $key => $detail) {
             $key = is_int($key) ? '' : $key.' = ';
             
@@ -272,7 +272,7 @@ class StorableException
     {
         if (is_array($exception)) {
             // Got array, extract data from specific keys
-            foreach (['message', 'uid', 'details'] as $p) {
+            foreach (array('message', 'uid', 'details') as $p) {
                 if (array_key_exists($p, $exception)) {
                     $this->$p = $exception[$p];
                 }
@@ -331,11 +331,11 @@ class StorableException
      */
     public function serialize()
     {
-        return base64_encode(json_encode([
+        return base64_encode(json_encode(array(
             'message' => $this->message,
             'uid' => $this->uid,
             'details' => $this->details,
-        ]));
+        )));
     }
     
     /**

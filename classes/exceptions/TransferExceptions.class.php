@@ -48,7 +48,7 @@ class TransferNotFoundException extends DetailedException
     {
         parent::__construct(
             'transfer_not_found', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -67,7 +67,7 @@ class TransferBadStatusException extends DetailedException
     {
         parent::__construct(
             'bad_transfer_status', // Message to give to the user
-            ['status' => $status] // Details to log
+            array('status' => $status) // Details to log
         );
     }
 }
@@ -85,7 +85,7 @@ class TransferFileNameInvalidException extends DetailedException
      */
     public function __construct($name)
     {
-        parent::__construct('transfer_file_name_invalid', ['name' => $name]);
+        parent::__construct('transfer_file_name_invalid', array('name' => $name));
     }
 }
 
@@ -102,7 +102,7 @@ class TransferCollectionNameInvalidException extends DetailedException
      */
     public function __construct($name)
     {
-        parent::__construct('transfer_collection_name_invalid', ['name' => $name]);
+        parent::__construct('transfer_collection_name_invalid', array('name' => $name));
     }
 }
 
@@ -119,7 +119,7 @@ class TransferTooManyRecipientsException extends DetailedException
      */
     public function __construct($wanted, $max)
     {
-        parent::__construct('transfer_too_many_recipients', ['wanted' => $wanted, 'max' => $max]);
+        parent::__construct('transfer_too_many_recipients', array('wanted' => $wanted, 'max' => $max));
     }
 }
 
@@ -150,7 +150,7 @@ class TransferTooManyFilesException extends DetailedException
      */
     public function __construct($wanted, $max)
     {
-        parent::__construct('transfer_too_many_files', ['wanted' => $wanted, 'max' => $max]);
+        parent::__construct('transfer_too_many_files', array('wanted' => $wanted, 'max' => $max));
     }
 }
 
@@ -231,7 +231,7 @@ class TransferRejectedException extends DetailedException
      */
     public function __construct($reason)
     {
-        parent::__construct('transfer_rejected', null, ['reason' => $reason]);
+        parent::__construct('transfer_rejected', null, array('reason' => $reason));
     }
 }
 
@@ -278,7 +278,7 @@ class TransferException extends DetailedException
      */
     public function __construct($transfer, $msg_code, $internal_details = null, $public_details = null)
     {
-        $internal_details = $internal_details ? (array)$internal_details : [];
+        $internal_details = $internal_details ? (array)$internal_details : array();
         $internal_details['transfer'] = (string)$transfer;
         
         parent::__construct('transfer_'.$msg_code, $internal_details, $public_details);

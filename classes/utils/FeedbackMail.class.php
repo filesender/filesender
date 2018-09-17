@@ -41,7 +41,7 @@ if (!defined('FILESENDER_BASE')) {
 class FeedbackMail
 {
     private $headers = null;
-    private $parts = [];
+    private $parts = array();
     
     /**
      * Constructor, private (see parse method)
@@ -106,7 +106,7 @@ class FeedbackMail
  */
 class FeedbackMailHeaders
 {
-    private $headers = [];
+    private $headers = array();
     
     /**
      * Constructor, private (see parse method)
@@ -127,7 +127,7 @@ class FeedbackMailHeaders
         $o = new self();
         
         // Separate headers
-        $entries = [];
+        $entries = array();
         foreach (explode("\n", trim($raw_headers)) as $line) {
             if (preg_match('/^\s+/', $line)) {
                 $entries[count($entries) - 1] .= ' '.trim($line);
@@ -244,7 +244,7 @@ class FeedbackMailPart
     public static function parseOnly($type)
     {
         if (!is_array($type)) {
-            $type = [$type];
+            $type = array($type);
         }
         
         foreach ($type as $rule) {

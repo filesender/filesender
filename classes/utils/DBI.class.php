@@ -68,7 +68,7 @@ class DBI
         // Get config, check mandatory parameters
         $config = Config::get('db_*');
         $config['dsn'] = Config::get('dsn');
-        foreach (['type', 'host', 'database', 'port', 'username', 'password', 'driver_options', 'charset', 'collation'] as $p) {
+        foreach (array('type', 'host', 'database', 'port', 'username', 'password', 'driver_options', 'charset', 'collation') as $p) {
             if (!array_key_exists($p, $config)) {
                 $config[$p] = null;
             }
@@ -80,7 +80,7 @@ class DBI
                 $config['type'] = 'pgsql';
             }
             
-            $params = [];
+            $params = array();
             
             if (!$config['host']) {
                 throw new DBIConnexionMissingParameterException('host');
@@ -108,7 +108,7 @@ class DBI
         }
         
         if (!$config['driver_options']) {
-            $config['driver_options'] = [];
+            $config['driver_options'] = array();
         }
         
         self::$config = $config;
@@ -170,14 +170,14 @@ class DBI
             // db_charset given in config ?
             if (self::$config['charset']) {
                 if (self::$config['collation']) {
-                    self::prepare('SET NAMES :charset COLLATE :collation')->execute([
+                    self::prepare('SET NAMES :charset COLLATE :collation')->execute(array(
                         ':charset' => self::$config['charset'],
                         ':collation' => self::$config['collation']
-                    ]);
+                    ));
                 } else {
-                    self::prepare('SET NAMES :charset')->execute([
+                    self::prepare('SET NAMES :charset')->execute(array(
                         ':charset' => self::$config['charset']
-                    ]);
+                    ));
                 }
             }
         } catch (Exception $e) {
@@ -233,7 +233,7 @@ class DBI
         self::connect();
         
         // Log usual queries
-        if (in_array($name, ['prepare', 'query', 'exec'])) {
+        if (in_array($name, array('prepare', 'query', 'exec'))) {
             Logger::debug('DBI call');
         }
         
@@ -246,7 +246,7 @@ class DBI
         try {
             self::ping();
             
-            $r = call_user_func_array([self::$instance, $name], $args);
+            $r = call_user_func_array(array(self::$instance, $name), $args);
             
             self::$last_request = time();
             
@@ -262,10 +262,10 @@ class DBI
             if ($dbtype == 'pgsql') {
                 // print_r($e,false);
                 if ($code == 42710) {
-                    throw new DBIDuplicateException($e->getMessage(), ['name' => $name, 'args' => $args]);
+                    throw new DBIDuplicateException($e->getMessage(), array('name' => $name, 'args' => $args));
                 }
             }
-            throw new DBIUsageException($e->getMessage(), ['name' => $name, 'args' => $args]);
+            throw new DBIUsageException($e->getMessage(), array('name' => $name, 'args' => $args));
         }
     }
     
@@ -287,7 +287,7 @@ class DBI
             // If there is values replace by fitting amount of OR clauses, set falsy clause otherwise
             if (is_int($values) && $values) {
                 $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'\b`i', function ($m) use ($key, $values) {
-                    $cdn = [];
+                    $cdn = array();
                     for ($i=0; $i<$values; $i++) {
                         $cdn[] = $m[1].' = '.$key.'___'.$i;
                     }
@@ -362,9 +362,9 @@ class DBIStatement
         
         // Tries to propagate the call, cast any thrown exception
         try {
-            return call_user_func_array([$this->statement, $method], $args);
+            return call_user_func_array(array($this->statement, $method), $args);
         } catch (Exception $e) {
-            throw new DBIUsageException($e->getMessage(), ['method' => $method, 'args' => $args, 'query' => $this->statement->queryString]);
+            throw new DBIUsageException($e->getMessage(), array('method' => $method, 'args' => $args, 'query' => $this->statement->queryString));
         }
     }
 }

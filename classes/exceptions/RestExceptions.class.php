@@ -43,7 +43,7 @@ class RestException extends DetailedException
     /**
      * Holds context information
      */
-    private static $context = [];
+    private static $context = array();
     
     /**
      * Set a context element
@@ -115,7 +115,7 @@ class RestOwnershipRequiredException extends RestException
      */
     public function __construct($uid, $resource)
     {
-        parent::__construct('rest_ownership_required', 403, ['uid' => $uid, 'ressource' => $resource]);
+        parent::__construct('rest_ownership_required', 403, array('uid' => $uid, 'ressource' => $resource));
     }
 }
 
@@ -131,7 +131,7 @@ class RestMissingParameterException extends RestException
      */
     public function __construct($name)
     {
-        parent::__construct('rest_missing_parameter', 400, ['parameter' => $name]);
+        parent::__construct('rest_missing_parameter', 400, array('parameter' => $name));
     }
 }
 
@@ -147,7 +147,7 @@ class RestBadParameterException extends RestException
      */
     public function __construct($name)
     {
-        parent::__construct('rest_bad_parameter', 400, ['parameter' => $name]);
+        parent::__construct('rest_bad_parameter', 400, array('parameter' => $name));
     }
 }
 
@@ -204,6 +204,6 @@ class RestCannotAddDataToCompleteTransferException extends RestException
      */
     public function __construct($target_type, $target_id)
     {
-        parent::__construct('cannot_add_data_to_complete_transfer', 400, ['target_type' => $target_type, 'target_id' => $target_id]);
+        parent::__construct('cannot_add_data_to_complete_transfer', 400, array('target_type' => $target_type, 'target_id' => $target_id));
     }
 }

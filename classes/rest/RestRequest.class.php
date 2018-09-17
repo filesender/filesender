@@ -43,7 +43,7 @@ class RestRequest
     /**
      * Properties of the request (content type, charset ...)
      */
-    public $properties = [];
+    public $properties = array();
     
     /**
      * Request body
@@ -56,7 +56,7 @@ class RestRequest
     public $count = null;
     public $startIndex = null;
     public $format = null;
-    public $filterOp = [];
+    public $filterOp = array();
     public $sortOrder = null;
     public $updatedSince = null;
     
@@ -95,7 +95,7 @@ class RestInput
     /**
      * Body data holder
      */
-    private $data = [];
+    private $data = array();
     
     /**
      * Recursive crawler that converts raw data into browsable data

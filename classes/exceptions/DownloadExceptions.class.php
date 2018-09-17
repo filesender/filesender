@@ -63,7 +63,7 @@ class DownloadBadFilesIDsException extends DetailedException
     {
         parent::__construct(
             'download_bad_files_ids',
-            ['ids' => $bad]
+            array('ids' => $bad)
         );
     }
 }
@@ -82,7 +82,7 @@ class DownloadInvalidRangeException extends DetailedException
     {
         parent::__construct(
             'download_invalid_range',
-            ['range' => $range]
+            array('range' => $range)
         );
     }
 }

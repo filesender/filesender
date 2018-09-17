@@ -42,22 +42,22 @@ class CollectionType extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
+    protected static $dataMap = array(
         //collection id, as in the database
-        'id' => [
+        'id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
-        ],
-        'name' => [
+        ),
+        'name' => array(
             'type' => 'string',
             'size' => 60,
-        ],
-        'description' => [
+        ),
+        'description' => array(
             'type' => 'string',
             'size' => 512
-        ],
-    ];
+        ),
+    );
 
     /**
      * Properties
@@ -96,7 +96,7 @@ class CollectionType extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new ClassificationNotFoundException('id = '.$id);
@@ -118,11 +118,11 @@ class CollectionType extends DBObject
         if (!is_null(self::$UNKNOWN)) {
             return;
         }
-        $types = [];
+        $types = array();
         
         // Load all CollectionTypes from database
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' ORDER BY :id');
-        $s->execute([':id' => 'id']);
+        $s->execute(array(':id' => 'id'));
         foreach ($s->fetchAll() as $data) {
             $type = self::fromData($data['id'], $data);
             $types[$data['id']] = $type;
@@ -182,9 +182,9 @@ class CollectionType extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id', 'name', 'description'
-        ])) {
+        ))) {
             return $this->$property;
         }
         throw new PropertyAccessException($this, $property);

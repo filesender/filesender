@@ -151,10 +151,10 @@ class StorageCloudAzure extends StorageFilesystem
                     $az->createBlockBlob($container_name, $blob_name, $data);
                 }
             }
-            return [
+            return array(
                 'offset' => $offset,
                 'written' => $written
-            ];
+            );
         } catch (ServiceException $e) {
             $msg = 'Azure: writeChunk() Can not write to blob: ' . $blob_name . ' offset ' . $offset
                . $e->getErrorText() . ' ' . $e->getErrorReason();

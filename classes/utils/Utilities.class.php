@@ -280,7 +280,7 @@ class Utilities
         }
         
         // convert time to time parts
-        $bits = [];
+        $bits = array();
         $bits['h'] = floor($time / 3600);
         $time %= 3600;
         $bits['i'] = floor($time / 60);
@@ -366,7 +366,7 @@ class Utilities
             $unit = 'b';
         }
         
-        $multipliers = ['', 'k', 'M', 'G', 'T'];
+        $multipliers = array('', 'k', 'M', 'G', 'T');
         
         // Compute multiplier
         $bytes = max($bytes, 0);
@@ -535,19 +535,19 @@ class Utilities
         }
         
         if (!$token) { // First access
-            $token = [
+            $token = array(
                 'value' => Utilities::generateUID(),
                 'valid_until' => time() + self::SECURITY_TOKEN_LIFETIME,
                 'old' => null
-            ];
+            );
             Logger::debug('Generated security token, value is '.$token['value'].', valid until '.date('Y-m-d H:i:s', $token['valid_until']));
         } elseif ($token['valid_until'] < time()) { // Must renew
             Logger::debug('Security token expired, value was '.$token['value']);
             
-            $token['old'] = [
+            $token['old'] = array(
                 'value' => $token['value'],
                 'valid_until' => time() + self::OLD_SECURITY_TOKEN_LIFETIME
-            ];
+            );
             
             $token['value'] = Utilities::generateUID();
             $token['valid_until'] = time() + self::SECURITY_TOKEN_LIFETIME;
@@ -644,9 +644,9 @@ class Utilities
             }
         }
 
-        $options = [
-            'options' => [ 'default' => $def ],
-        ];
+        $options = array(
+            'options' => array( 'default' => $def ),
+        );
         $r = filter_var($r, $filter, $options);
         return $r;
     }

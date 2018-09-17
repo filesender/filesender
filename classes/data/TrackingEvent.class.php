@@ -42,55 +42,55 @@ class TrackingEvent extends DBObject
     /**
      * Database map
      */
-    protected static $dataMap = [
-        'id' => [
+    protected static $dataMap = array(
+        'id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'primary' => true,
             'autoinc' => true
-        ],
-        'type' => [
+        ),
+        'type' => array(
             'type' => 'string',
             'size' => 16
-        ],
-        'target_type' => [
+        ),
+        'target_type' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'target_id' => [
+        ),
+        'target_id' => array(
             'type' => 'string',
             'size' => 255
-        ],
-        'details' => [
+        ),
+        'details' => array(
             'type' => 'text'
-        ],
-        'created' => [
+        ),
+        'created' => array(
             'type' => 'datetime'
-        ],
-        'reported' => [
+        ),
+        'reported' => array(
             'type' => 'datetime',
             'null' => true
-        ]
-    ];
+        )
+    );
 
     public static function getViewMap()
     {
-        $a = [];
-        foreach (['mysql','pgsql'] as $dbtype) {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . DBView::columnDefinition_age($dbtype, 'reported')
                         . '  from ' . self::getDBTable();
         }
-        return [ strtolower(self::getDBTable()) . 'view' => $a ];
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
     
-    protected static $secondaryIndexMap = [
-        'type_id' => [
-            'target_type' => [],
-            'id'          => []
-        ]
-    ];
+    protected static $secondaryIndexMap = array(
+        'type_id' => array(
+            'target_type' => array(),
+            'id'          => array()
+        )
+    );
 
     /**
      * Properties
@@ -116,7 +116,7 @@ class TrackingEvent extends DBObject
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
-            $statement->execute([':id' => $id]);
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if (!$data) {
                 throw new TrackingEventNotFoundException('id = '.$id);
@@ -164,7 +164,7 @@ class TrackingEvent extends DBObject
      */
     public function report()
     {
-        self::reportSet([$this]);
+        self::reportSet(array($this));
     }
     
     /**
@@ -175,17 +175,17 @@ class TrackingEvent extends DBObject
     public static function reportSet($tracking_events)
     {
         // Group events by type (bounce ...)
-        $by_type = [];
+        $by_type = array();
         foreach ($tracking_events as $tracking_event) {
             if (!array_key_exists($tracking_event->type, $by_type)) {
-                $by_type[$tracking_event->type] = [];
+                $by_type[$tracking_event->type] = array();
             }
             $by_type[$tracking_event->type][] = $tracking_event;
         }
         
         // Send separate notification for each type
         foreach ($by_type as $type => $set) {
-            ApplicationMail::quickSend($type.'_report', $set[0]->target->owner->email, [$type.'s' => $set]);
+            ApplicationMail::quickSend($type.'_report', $set[0]->target->owner->email, array($type.'s' => $set));
             
             foreach ($set as $tracking_event) {
                 $tracking_event->reported = time();
@@ -208,10 +208,10 @@ class TrackingEvent extends DBObject
             throw new TrackingEventUnknownEventException($type);
         }
         
-        $tracking_events = [];
+        $tracking_events = array();
         
         // Gather and group by target
-        foreach (self::all('reported IS NULL AND type = :type ORDER BY created', [':type' => $type]) as $tracking_event) {
+        foreach (self::all('reported IS NULL AND type = :type ORDER BY created', array(':type' => $type)) as $tracking_event) {
             if ($tracking_event->target_type == 'Recipient') {
                 $tid = 'Transfer#'.$tracking_event->target->transfer->id;
             } elseif ($tracking_event->target_type == 'Guest') {
@@ -219,7 +219,7 @@ class TrackingEvent extends DBObject
             }
             
             if (!array_key_exists($tid, $tracking_events)) {
-                $tracking_events[$tid] = [];
+                $tracking_events[$tid] = array();
             }
             $tracking_events[$tid][] = $tracking_event;
         }
@@ -243,10 +243,10 @@ class TrackingEvent extends DBObject
         
         // Recipientless transfer cannot have tracking events
         if (!count($ids)) {
-            return [];
+            return array();
         }
         
-        return self::all('target_type=\'Recipient\' AND target_id IN :ids ORDER BY created', [':ids' => $ids]);
+        return self::all('target_type=\'Recipient\' AND target_id IN :ids ORDER BY created', array(':ids' => $ids));
     }
     
     /**
@@ -258,7 +258,7 @@ class TrackingEvent extends DBObject
      */
     public static function fromRecipient($recipient)
     {
-        return self::all('target_type=\'Recipient\' AND target_id = :id ORDER BY created', [':id' => $recipient->id]);
+        return self::all('target_type=\'Recipient\' AND target_id = :id ORDER BY created', array(':id' => $recipient->id));
     }
     
     /**
@@ -270,7 +270,7 @@ class TrackingEvent extends DBObject
      */
     public static function fromGuest($guest)
     {
-        return self::all('target_type=\'Guest\' AND target_id = :id ORDER BY created', [':id' => $guest->id]);
+        return self::all('target_type=\'Guest\' AND target_id = :id ORDER BY created', array(':id' => $guest->id));
     }
     
     /**
@@ -284,9 +284,9 @@ class TrackingEvent extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, [
+        if (in_array($property, array(
             'id', 'type', 'target_type', 'target_id', 'details', 'created', 'reported'
-        ])) {
+        ))) {
             return $this->$property;
         }
         
@@ -321,6 +321,6 @@ class TrackingEvent extends DBObject
         
         /** @var PDOStatement $statement */
         $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
-        $statement->execute([':date' => date('Y-m-d', time() - $days * 86400)]);
+        $statement->execute(array(':date' => date('Y-m-d', time() - $days * 86400)));
     }
 }

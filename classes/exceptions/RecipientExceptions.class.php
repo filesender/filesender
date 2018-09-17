@@ -48,7 +48,7 @@ class RecipientNotFoundException extends DetailedException
     {
         parent::__construct(
             'recipient_not_found', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -67,7 +67,7 @@ class InvalidRecipientException extends DetailedException
     {
         parent::__construct(
             'invalid_recipient', // Message to give to the user
-            ['selector' => $selector] // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }

@@ -85,17 +85,17 @@ class AuthSPShibboleth
             
             self::load();
             
-            $attributes = ['idp' => getenv('Shib-Identity-Provider')];
+            $attributes = array('idp' => getenv('Shib-Identity-Provider'));
             
             // Wanted attributes
-            foreach (['uid', 'name', 'email'] as $attr) {
+            foreach (array('uid', 'name', 'email') as $attr) {
                 // Keys in raw_attributes (can be array of key)
                 $keys = self::$config[$attr.'_attribute'];
                 if (!is_array($keys)) {
-                    $keys = [$keys];
+                    $keys = array($keys);
                 }
                 
-                $values = [];
+                $values = array();
                 foreach ($keys as $key) { // For all possible keys for attribute
                     $value = explode(';', getenv($key));
                     foreach ($value as $v) {
@@ -146,7 +146,7 @@ class AuthSPShibboleth
             // Gather additional attributes if required
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if ($additional_attributes) {
-                $attributes['additional'] = [];
+                $attributes['additional'] = array();
                 foreach ($additional_attributes as $key => $from) {
                     if (is_numeric($key) && is_callable($from)) {
                         continue;
@@ -219,13 +219,13 @@ class AuthSPShibboleth
         if (is_null(self::$config)) {
             self::$config = Config::get('auth_sp_shibboleth_*');
             
-            foreach ([
+            foreach (array(
                 'uid_attribute',
                 'name_attribute',
                 'email_attribute',
                 'login_url',
                 'logout_url'
-            ] as $key) {
+            ) as $key) {
                 if (!array_key_exists($key, self::$config)) {
                     throw new ConfigMissingParameterException('auth_sp_shibboleth_'.$key);
                 }
