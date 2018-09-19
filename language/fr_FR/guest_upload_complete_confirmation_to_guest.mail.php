@@ -1,14 +1,25 @@
-subject: Vous avez téléchargé des fichiers vers FileSender en tant qu'invité
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+
+ subject: L'invité a terminé le téléversement
 
 {alternative:plain}
 
 Madame, Monsieur,
 
-Vous avez téléchargé des fichiers dans votre bon de visite
+L'invité suivant a terminé le téléversement en utilisant une invitation :
 
-invité: {guest.email}
-Lien Voucher: {cfg:site_url}?s=upload&vid={guest.token}
-Lien de téléchargement: {recipient.download_link}
+Invité: {guest.email}
+Lien du dépôt: {cfg:site_url}?s=upload&vid={guest.token}
+
+Le dépôt est disponible jusqu'au {date:guest.expires}, après coup il sera automatiquement supprimé.
 
 Cordialement,
 {cfg:site_name}
@@ -20,13 +31,13 @@ Cordialement,
 </p>
 
 <p>
-    Vous avez téléchargé des fichiers dans votre bon de visite.
+L'invité suivant a terminé le téléversement en utilisant une invitation :
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Voucher details</th>
+            <th colspan="2">Détails du dépôt</th>
         </tr>
     </thead>
     <tbody>
@@ -35,15 +46,11 @@ Cordialement,
             <td><a href="mailto:{guest.email}">{guest.email}</a></td>
         </tr>
         <tr>
-            <td>Lien Voucher</td>
+            <td>Lien du dépôt</td>
             <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
         </tr>
         <tr>
-            <td>Lien de téléchargement</td>
-            <td><a href="{transfer.download_link}">{transfer.download_link}</a></td>
-        </tr>
-        <tr>
-            <td>Valable jusque</td>
+            <td>Valide jusqu'au</td>
             <td>{date:guest.expires}</td>
         </tr>
     </tbody>
@@ -53,3 +60,4 @@ Cordialement,
     Cordialement,<br />
     {cfg:site_name}
 </p>
+',
