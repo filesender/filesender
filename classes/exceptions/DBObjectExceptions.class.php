@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,22 +30,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
     die('Missing environment');
+}
 
 /**
  * Unknown property access exception
- * 
+ *
  * To be used in derived classes
  */
-class PropertyAccessException extends DetailedException {
+class PropertyAccessException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param mixed $object object or class name to report access about
      * @param string $property name of the property that was wanted
      */
-    public function __construct($object, $property) {
+    public function __construct($object, $property)
+    {
         $name = is_object($object) ? get_class($object) : (string)$object;
         parent::__construct(
             'no_such_property', // Message to give to the user

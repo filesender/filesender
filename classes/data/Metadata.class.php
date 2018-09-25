@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,12 +31,15 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Represents an user in database
  */
-class Metadata extends DBObject {
+class Metadata extends DBObject
+{
     
     /**
      * Database map
@@ -73,30 +76,31 @@ class Metadata extends DBObject {
     
     /**
      * Constructor
-     * 
+     *
      * @param integer $id identifier of record to load from database (null if loading not wanted)
      * @param array $data data to create the record from (if already fetched from database)
-     * 
+     *
      */
-    protected function __construct($id = null, $data = null) {
-        if(!is_null($id)) {
+    protected function __construct($id = null, $data = null)
+    {
+        if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
         }
         
-        if($data) {
+        if ($data) {
             $this->fillFromDBData($data);
-        }else{
+        } else {
             $this->id = $id;
             $this->created = time();
         }
     }
 
-    public static function getLatestUsedSchemaVersion() {
-
-        if( !Database::tableExists(self::getDBTable())) {
+    public static function getLatestUsedSchemaVersion()
+    {
+        if (!Database::tableExists(self::getDBTable())) {
             return DatabaseSchemaVersions::VERSION_MIN;
         }
         
@@ -104,17 +108,18 @@ class Metadata extends DBObject {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' order by schemaversion desc limit 1');
             $statement->execute(array());
             $data = $statement->fetch();
-            if($data) {
+            if ($data) {
                 return $data['schemaversion'];
             }
             return DatabaseSchemaVersions::VERSION_MIN;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             echo $e;
             return DatabaseSchemaVersions::VERSION_MIN;
         }
     }
 
-    public static function add( $message ) {
+    public static function add($message)
+    {
         $ret = new self();
 
         $ret->schemaversion = DatabaseSchemaVersions::VERSION_CURRENT;
@@ -127,12 +132,13 @@ class Metadata extends DBObject {
     
     /**
      * Create a new record
-     * 
+     *
      * @param string $id record id, mandatory
-     * 
+     *
      * @return record
      */
-    public static function create($id) {
+    public static function create($id)
+    {
         return self::fromId($id);
     }
     
@@ -140,34 +146,38 @@ class Metadata extends DBObject {
     
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return property value
      */
-    public function __get($property) {
-        if(in_array($property, array(
+    public function __get($property)
+    {
+        if (in_array($property, array(
             'id', 'schemaversion', 'created', 'message'
-        ))) return $this->$property;
+        ))) {
+            return $this->$property;
+        }
         
         throw new PropertyAccessException($this, $property);
     }
     
     /**
      * Setter
-     * 
+     *
      * @param string $property property to get
      * @param mixed $value value to set property to
-     * 
+     *
      * @throws BadVoucherException
      * @throws BadStatusException
      * @throws BadExpireException
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
-        if($property == 'message') {
+    public function __set($property, $value)
+    {
+        if ($property == 'message') {
             $this->message = $value;
         } else {
             throw new PropertyAccessException($this, $property);

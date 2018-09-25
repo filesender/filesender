@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,8 +31,9 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * A general high level class for creating a test database full of data.
@@ -40,8 +41,8 @@ if (!defined('FILESENDER_BASE'))
  * Call getTestDatabaseCredentials(), getTestDatabaseTransfers() etc to get
  * specific objects that handle one aspect of the database creation.
  */
-class TestDatabaseCreator {
-
+class TestDatabaseCreator
+{
     protected $nextmsgid = 1;
     protected $verbose = true;
     protected $credentials = null;
@@ -49,50 +50,56 @@ class TestDatabaseCreator {
     
     /**
      * Constructor
-     * 
+     *
      * @param string $to (optionnal)
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     public function getTestDatabaseCredentials()
     {
-        if( $this->credentials )
+        if ($this->credentials) {
             return $this->credentials;
+        }
 
-        $this->credentials = new TestDatabaseCredentials( $this );
+        $this->credentials = new TestDatabaseCredentials($this);
         return $this->credentials;
     }
 
     public function getTestDatabaseTransfers()
     {
-        if( $this->transfers )
+        if ($this->transfers) {
             return $this->transfers;
+        }
 
-        $this->transfers = new TestDatabaseTransfers( $this );
+        $this->transfers = new TestDatabaseTransfers($this);
         return $this->transfers;
     }
     
     /**
      * Setter
-     * 
+     *
      * @param string $property property to get
      * @param mixed $value value to set property to
-     * 
+     *
      * @throws FileBadHashException
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
-        if($property == 'verbose') {
+    public function __set($property, $value)
+    {
+        if ($property == 'verbose') {
             $this->verbose = (int)$value;
-        }else throw new PropertyAccessException($this, $property);
+        } else {
+            throw new PropertyAccessException($this, $property);
+        }
     }
 
-    public function output($msg) {
-        if(!$this->verbose) return;
+    public function output($msg)
+    {
+        if (!$this->verbose) {
+            return;
+        }
         echo $msg."\n";
     }
-    
-
-
 }

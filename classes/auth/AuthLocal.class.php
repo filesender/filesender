@@ -2,13 +2,13 @@
 
 /**
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,15 +31,17 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * Guest authentication class
- * 
+ *
  * Handles guest authentication.
  */
-class AuthLocal {
+class AuthLocal
+{
     /**
      * Cache attributes
      */
@@ -47,37 +49,40 @@ class AuthLocal {
     
     /**
      * Authentication check.
-     * 
+     *
      * @return bool
      */
-    public static function isAuthenticated() {
+    public static function isAuthenticated()
+    {
         return !is_null(self::$attributes);
     }
     
     /**
      * Retreive user attributes.
-     * 
+     *
      * @retrun array
      */
-    public static function attributes() {
-        if(is_null(self::$attributes))
+    public static function attributes()
+    {
+        if (is_null(self::$attributes)) {
             throw new AuthAuthenticationNotFoundException();
+        }
         
         return self::$attributes;
     }
     
     /**
      * Set local user
-     * 
+     *
      * @param string $user_id user id
      * @param string $email user email
      * @param string $name user name
-     * 
+     *
      */
-    public static function setUser($user_id, $email, $name = null) {
-        if(is_null($user_id)) { // Virtually closes the local session
+    public static function setUser($user_id, $email, $name = null)
+    {
+        if (is_null($user_id)) { // Virtually closes the local session
             self::$attributes = null;
-            
         } else {
             self::$attributes = array(
                 'uid' => $user_id,
@@ -89,11 +94,11 @@ class AuthLocal {
              * $user->email_addresses = 'filesender-authlocal@localhost.localdomain';
              */
             $authid = Authentication::ensure($user_id, 'auth local')->id;
-            $user = User::fromAuthId( $authid );
+            $user = User::fromAuthId($authid);
             $user->email_addresses = $email;
             $user->name = $name;
             
-            Auth::setUserObject( $user );
+            Auth::setUserObject($user);
         }
     }
 }
