@@ -418,8 +418,8 @@ try {
                                  call_user_func($class.'::getDataMap'));
                     // First, ensure the dbid column exists using the same mechanism that would
                     // normally create it
-                    $classes = array('User','Guest','ClientLog','Transfer');
-                    foreach($classes as $class) {
+                    $classesToMigrate = array('User','Guest','ClientLog','Transfer');
+                    foreach($classesToMigrate as $class) {
                         $datamap = call_user_func($class.'::getDataMap');
                         $table   = call_user_func($class.'::getDBTable');
                         if( $class == 'User' ) {

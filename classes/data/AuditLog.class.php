@@ -385,12 +385,11 @@ class AuditLog extends DBObject {
         // already been removed from the system
         DBI::exec(
             ""
-           ."delete from ".self::getDBTable()." where id in ("
-           ."   select al.id from ".self::getViewName()." al"
+           ."delete au from ".self::getDBTable()." as au"
+           ."   join ".self::getViewName()." al on al.id = au.id"
            ."   left outer join ".Guest::getDBTable()." g"
-           ."      on g.id = target_id_as_number "
-           ."   where target_type = 'Guest' and g.id is null"
-           ." )"
+           ."   on g.id = al.target_id_as_number "
+           ."   where al.target_type = 'Guest' and g.id is null"
         );
         
         // if there is a sunset lifetime for the auditlog 
