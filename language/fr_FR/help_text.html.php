@@ -1,3 +1,12 @@
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
 <h3>Connexion</h3> 
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i> Si vous ne voyez pas votre institution dans la liste des fournisseurs d'Identité (IdPs), ou si la connexion avec votre nom d'utilisateur au sein de votre institution échoue, veuillez contacter votre service informatique local.</li>
@@ -6,13 +15,13 @@
 <h3>Capacités de votre navigateur</h3>
 <ul class="fa-ul">
     <li data-feature="html5"><i class="fa-li fa fa-caret-right"></i><img src="images/html5_installed.png" alt="Téléversement HTML5 disponible" /> Vous pouvez déposer des fichiers de toutes tailles jusqu'à {size:cfg:max_transfer_size} par dépôt.</li>
-    <li data-feature="nohtml5"><i class="fa-li fa fa-caret-right"></i><img src="images/html5_none.png" alt="Téléversement HTML5 indisponible" /> Vous pouvez déposer des fichiers d'au maximum {size:cfg:max_legacy_file_size} chacun et jusqu'a {size:cfg:max_transfer_size} par dépôt.</li>
+    <li data-feature="nohtml5"><i class="fa-li fa fa-caret-right"></i><img src="images/html5_none.png" alt="Téléversement HTML5 indisponible" /> Vous pouvez déposer des fichiers d'au maximum {size:cfg:max_legacy_file_size} chacun et jusqu'à {size:cfg:max_transfer_size} par dépôt.</li>
 </ul>
 
 <h3>Dépôts vers FileSender <strong>de toutes tailles</strong> avec HTML5</h3>
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>Vous pourrez utiliser cette méthode si le symbole <img src="images/html5_installed.png" alt="Téléversement HTML5 disponible" /> est affiché ci-dessus.</li>
-    <li><i class="fa-li fa fa-caret-right"></i>Vous avez besoin d'un navigateur web récent qui supporte HTML5, la version la plus récente du "language du web".</li>
+    <li><i class="fa-li fa fa-caret-right"></i>Vous avez besoin d'un navigateur web récent qui supporte HTML5, la version la plus récente du "langage du web".</li>
     <li><i class="fa-li fa fa-caret-right"></i>Une version à jour de Firefox ou Chrome pour Windows, Mac OS X ou Linux suffit pour bénéficier de cette fonctionnalité.</li>
     <li><i class="fa-li fa fa-caret-right"></i>
         Vous pourrez <strong>redémarrer</strong> un dépôt interrompu, il vous suffira de <strong>re-selectionner les mêmes fichiers</strong>.
