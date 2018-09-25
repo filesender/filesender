@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,10 +31,12 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
-class Upgrader {
+class Upgrader
+{
     /**
      * Tasks to run before and after database update
      */
@@ -42,21 +44,29 @@ class Upgrader {
     
     /**
      * Look for things to do and load them
-     * 
+     *
      * @param string $from starting version
      * @param string $to target version
      */
-    private static function load($from, $to) {
+    private static function load($from, $to)
+    {
         $path = FILESENDER_BASE.'/scripts/upgrade/versions/';
         $files = array();
-        foreach(scandir($path) as $i) {
-            if(!preg_match('`^upgrade_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)\.php$`', $i, $m)) continue;
+        foreach (scandir($path) as $i) {
+            if (!preg_match('`^upgrade_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)\.php$`', $i, $m)) {
+                continue;
+            }
             
-            if(version_compare($m[1], $from) < 0) continue; // Starting below from
-            if(version_compare($m[2], $to) > 0) continue; // Starting below from
+            if (version_compare($m[1], $from) < 0) {
+                continue;
+            } // Starting below from
+            if (version_compare($m[2], $to) > 0) {
+                continue;
+            } // Starting below from
             
-            if(version_compare($m[1], $m[2]) >= 0)
+            if (version_compare($m[1], $m[2]) >= 0) {
                 throw new Exception('Upgrade script '.$i.' is badly designed');
+            }
             
             $files[] = array(
                 'path' => $path.$i,
@@ -65,29 +75,34 @@ class Upgrader {
             );
         }
         
-        if(!count($files))
+        if (!count($files)) {
             throw new Exception('No upgrading tasks found, maybe this is ok, maybe not ...');
+        }
         
-        usort($files, function($a, $b) {
+        usort($files, function ($a, $b) {
             $fvc = version_compare($a['from'], $b['from']);
             
             return ($fvc == 0) ? version_compare($a['to'], $b['to']) : $fvc;
         });
         
         // Scope insulation
-        $inc = function($path) {
+        $inc = function ($path) {
             include $path;
         };
         
-        foreach($files as $file) $inc($file['path']);
+        foreach ($files as $file) {
+            $inc($file['path']);
+        }
     }
     
     /**
      * Registers task
      */
-    public static function register($position, $task) {
-        if(!in_array($position, array('pre', 'post')))
+    public static function register($position, $task)
+    {
+        if (!in_array($position, array('pre', 'post'))) {
             throw new Exception('Position must be pre or post');
+        }
         
         self::$tasks[$position][] = $task;
     }
@@ -95,15 +110,17 @@ class Upgrader {
     /**
      * Run the upgrade
      */
-    public static function run() {
+    public static function run()
+    {
         echo 'Starting upgrade'."\n";
         
         $diff = Version::compare();
         
-        if($diff > 0)
+        if ($diff > 0) {
             throw new Exception('Code version is older than data version, this is not normal, exiting');
+        }
         
-        if($diff == 0) {
+        if ($diff == 0) {
             echo 'Already up to date, no need to upgrade'."\n";
             return;
         }
@@ -114,7 +131,9 @@ class Upgrader {
         
         // Run pre tasks
         echo 'Running '.count(self::$tasks['pre']).' pre tasks'."\n";
-        foreach(self::$tasks['pre'] as $task) $task();
+        foreach (self::$tasks['pre'] as $task) {
+            $task();
+        }
         
         // Upgrade database structure
         echo 'Upgrading database structure'."\n";
@@ -122,7 +141,9 @@ class Upgrader {
         
         // Run post tasks
         echo 'Running '.count(self::$tasks['post']).' post tasks'."\n";
-        foreach(self::$tasks['post'] as $task) $task();
+        foreach (self::$tasks['post'] as $task) {
+            $task();
+        }
         
         // Update version number
         //Version::update();

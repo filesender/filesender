@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -33,13 +33,15 @@
 /**
  * Unknown target type
  */
-class ReportUnknownTargetTypeException extends DetailedException {
+class ReportUnknownTargetTypeException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $type
      */
-    public function __construct($type) {
+    public function __construct($type)
+    {
         parent::__construct(
             'report_unknown_target_type', // Message to give to the user
              array('type' => $type) // Real message to log
@@ -50,13 +52,15 @@ class ReportUnknownTargetTypeException extends DetailedException {
 /**
  * Unknown format
  */
-class ReportOwnershipRequiredException extends DetailedException {
+class ReportOwnershipRequiredException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $selector
      */
-    public function __construct($selector) {
+    public function __construct($selector)
+    {
         parent::__construct(
             'report_ownership_required', // Message to give to the user
              array('selector' => $selector) // Real message to log
@@ -67,13 +71,15 @@ class ReportOwnershipRequiredException extends DetailedException {
 /**
  * Unknown format
  */
-class ReportUnknownFormatException extends DetailedException {
+class ReportUnknownFormatException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $format
      */
-    public function __construct($format) {
+    public function __construct($format)
+    {
         parent::__construct(
             'report_unknown_format', // Message to give to the user
              array('format' => $format) // Real message to log
@@ -84,11 +90,13 @@ class ReportUnknownFormatException extends DetailedException {
 /**
  * No report data matching target
  */
-class ReportNothingFoundException extends DetailedException {
+class ReportNothingFoundException extends DetailedException
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             'report_nothing_found' // Message to give to the user
         );
@@ -98,17 +106,18 @@ class ReportNothingFoundException extends DetailedException {
 /**
  * Format not available due to requirement not met
  */
-class ReportFormatNotAvailableException extends DetailedException {
+class ReportFormatNotAvailableException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $reason
      */
-    public function __construct($reason) {
+    public function __construct($reason)
+    {
         parent::__construct(
             'report_format_not_available', // Message to give to the user
             array('reason' => $reason)
         );
     }
 }
-

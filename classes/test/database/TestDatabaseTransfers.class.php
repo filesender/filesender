@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,15 +31,17 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * Handle creating Transactions.
  *
- * 
+ *
  */
-class TestDatabaseTransfers {
+class TestDatabaseTransfers
+{
     /**
      * For bringing in data
      */
@@ -49,14 +51,16 @@ class TestDatabaseTransfers {
 
     
     /**
-     * @param $creator is the TestDatabaseCreator object. Use 
+     * @param $creator is the TestDatabaseCreator object. Use
      * TestDatabaseCreator::getTestDatabaseTransfers() to get an object of this class.
-     * 
+     *
      */
-    public function __construct($creator) {
+    public function __construct($creator)
+    {
         $this->creator = $creator;
-        if(!function_exists('finfo_open'))
+        if (!function_exists('finfo_open')) {
             throw new Exception('File Info PHP extention is required but not found');
+        }
         $this->mimeinfo = finfo_open(FILEINFO_MIME_TYPE);
     }
 
@@ -81,19 +85,26 @@ class TestDatabaseTransfers {
      * @param string message (optional) message for transfer
      * @param array options (optional) options for transfer
      */
-    function createTransfer( $path,
+    public function createTransfer(
+        $path,
                              $subject = null,
                              $message = 'no message given',
-                             $options = array('encryption' => false ) )
-    {
-        $expires = Config::get('default_transfer_days_valid');    
+                             $options = array('encryption' => false )
+    ) {
+        $expires = Config::get('default_transfer_days_valid');
         $transfer = Transfer::create(time() + $expires * 24 * 3600);
-        if($subject == null) {
+        if ($subject == null) {
             $subject = 'subject of message number ' . $this->nextmsgid++;
         }
-        if($subject) $transfer->subject = $subject;
-        if($message) $transfer->message = $message;
-        if($options) $transfer->options = $options;
+        if ($subject) {
+            $transfer->subject = $subject;
+        }
+        if ($message) {
+            $transfer->message = $message;
+        }
+        if ($options) {
+            $transfer->options = $options;
+        }
         $transfer->save();
         $transfer->start();
         //        $this->output('Empty transfer created');
@@ -108,10 +119,10 @@ class TestDatabaseTransfers {
      * @param obj $transfer to add file to
      * @param string $path of the file to add to transfer
      */
-    function transferAddFile( $transfer, $path )
+    public function transferAddFile($transfer, $path)
     {
-        if( strlen($path)) {
-            if( $path[0] != '/' ) {
+        if (strlen($path)) {
+            if ($path[0] != '/') {
                 $dataset = __DIR__ . '/../../../unittests/data/dataset/';
                 $path = $dataset . $path;
             }
@@ -123,24 +134,25 @@ class TestDatabaseTransfers {
         
         //        $this->output('Adding '.$path.' ('.$mime.', '.filesize($path).' bytes) ... ');
         
-        if(Storage::supportsWholeFile()) {
+        if (Storage::supportsWholeFile()) {
             Storage::storeWholeFile($file, $path);
-            
         } else {
             $chunk_size = Config::get('upload_chunk_size');
-            if($fh = fopen($path, 'rb')) {
-                for($offset=0; $offset<=$file->size; $offset+=$chunk_size) {
+            if ($fh = fopen($path, 'rb')) {
+                for ($offset=0; $offset<=$file->size; $offset+=$chunk_size) {
                     $data = fread($fh, $chunk_size);
                     $file->writeChunk($data, $offset);
                     $this->output('Chunk '.$offset.'..'.($offset + $chunk_size).' added');
                 }
                 
                 fclose($fh);
-            } else throw new CoreCannotReadFileException($path);
+            } else {
+                throw new CoreCannotReadFileException($path);
+            }
         }
         
         $file->complete();
-        //        $this->output('Done for '.$path);    
+        //        $this->output('Done for '.$path);
         return $file;
     }
 
@@ -152,20 +164,20 @@ class TestDatabaseTransfers {
      * @param targetTransfers   the number of transfers to create
      * @param filesPerTransfer  the number of files to add to each created transfer
      * @param addRecipients     a callback to add however many recipients to each transfer
-     * @param callbackObjects   array of objects to call the visitTransfer method of 
+     * @param callbackObjects   array of objects to call the visitTransfer method of
      *                          these are called in foreach() order
      */
-    function performTransfers( $targetTransfers,
+    public function performTransfers(
+        $targetTransfers,
                                $filesPerTransfer = 1,
                                $addRecipients = null,
-                               $callbackObjects = array() )
-    {
+                               $callbackObjects = array()
+    ) {
         $this->output("Performing $targetTransfers Transfers with $filesPerTransfer file...");
 
         $fileCount = $this->getFileCount();
-        for( $i = 0; $i < $targetTransfers; $i++ )
-        {
-            if(!($i%500)) {
+        for ($i = 0; $i < $targetTransfers; $i++) {
+            if (!($i%500)) {
                 $this->output("progress $i of $targetTransfers Transfers with $filesPerTransfer files...");
             }
             $lastFile = null;
@@ -174,22 +186,26 @@ class TestDatabaseTransfers {
             $numbers = array_slice($numbers, 0, $filesPerTransfer);
             $fn = array_shift($numbers);
             $path = 'file' . $fn;
-            $transfer = $this->createTransfer( $path,
+            $transfer = $this->createTransfer(
+                $path,
                                                'testdriver test',
                                                'testdriver',
                                                array('encryption' => false,
                                                      'get_a_link' => false,
-                                                     'email_upload_complete' => true ));
-            for( $j = 1; $j < $filesPerTransfer; $j++ ) {
+                                                     'email_upload_complete' => true )
+            );
+            for ($j = 1; $j < $filesPerTransfer; $j++) {
                 $fn = array_shift($numbers);
                 $path = 'file' . $fn;
                 $this->transferAddFile($transfer, $path);
             }
-            if( $addRecipients == null ) {
+            if ($addRecipients == null) {
                 $recipient = $transfer->addRecipient('tester@localhost.localdomain');
             } else {
-                $recipient = call_user_func(array($addRecipients, 'visitTransfer'),
-                                            $transfer);
+                $recipient = call_user_func(
+                    array($addRecipients, 'visitTransfer'),
+                                            $transfer
+                );
             }
             $transfer->makeAvailable();
 
@@ -198,11 +214,14 @@ class TestDatabaseTransfers {
              */
             $files = $transfer->files;
             $f = reset($files);
-            foreach ( $callbackObjects as $cbobj) {
-                call_user_func(array($cbobj, 'visitTransfer'),
-                               $transfer,$f,$recipient);
-            }               
-            
+            foreach ($callbackObjects as $cbobj) {
+                call_user_func(
+                    array($cbobj, 'visitTransfer'),
+                               $transfer,
+                    $f,
+                    $recipient
+                );
+            }
         }
     }
 }

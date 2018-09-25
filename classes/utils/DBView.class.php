@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,45 +31,49 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Base class for database stored objects
  */
-class DBView {
-
-    public static function columnDefinition_age( $dbtype,
+class DBView
+{
+    public static function columnDefinition_age(
+        $dbtype,
                                                  $basecolname,
-                                                 $viewcolname = '' )
-    {
-        if( !strlen($viewcolname)) {
+                                                 $viewcolname = ''
+    ) {
+        if (!strlen($viewcolname)) {
             $viewcolname = $basecolname . "_days_ago";
         }
-        if( $dbtype == 'pgsql' ) {
+        if ($dbtype == 'pgsql') {
             return ' , extract(day from now() - ' . $basecolname . ' ) as ' . $viewcolname . ' ';
         }
-        if( $dbtype == 'mysql' ) {
+        if ($dbtype == 'mysql') {
             return ' , DATEDIFF(now(),' . $basecolname . ') as ' . $viewcolname . ' ';
         }
     }
-    public static function columnDefinition_is_encrypted( $basecolname = 'additional_attributes',
-                                                          $viewcolname = 'is_encrypted' )
-    {
+    public static function columnDefinition_is_encrypted(
+        $basecolname = 'additional_attributes',
+                                                          $viewcolname = 'is_encrypted'
+    ) {
         return "  , " . $basecolname . " LIKE '%encryption\":true%' as " . $viewcolname . " ";
     }
-    public static function columnDefinition_as_number( $dbtype,
+    public static function columnDefinition_as_number(
+        $dbtype,
                                                        $basecolname,
-                                                       $viewcolname = '' )
-    {
-        if( !strlen($viewcolname)) {
+                                                       $viewcolname = ''
+    ) {
+        if (!strlen($viewcolname)) {
             $viewcolname = $basecolname . "_as_number";
         }
-        if( $dbtype == 'pgsql' ) {
+        if ($dbtype == 'pgsql') {
             return ', cast( '. $basecolname . ' as bigint) as ' . $viewcolname;
         }
-        if( $dbtype == 'mysql' ) {
+        if ($dbtype == 'mysql') {
             return ', cast( '. $basecolname . ' as unsigned) as ' . $viewcolname;
         }
-        
-    }    
+    }
 };

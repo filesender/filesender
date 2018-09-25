@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,14 +31,17 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Enum like type base
- * 
+ *
  * Should be used for any limited values option handling
  */
-abstract class Enum {
+abstract class Enum
+{
     /**
      * Defined values cache
      */
@@ -51,12 +54,13 @@ abstract class Enum {
     
     /**
      * Get defined values
-     * 
+     *
      * @return array
      */
-    private static function getConstants() {
+    private static function getConstants()
+    {
         // Use Reflexion to get constants defined in child class
-        if(self::$calledClass != get_called_class() || self::$constCache === null) {
+        if (self::$calledClass != get_called_class() || self::$constCache === null) {
             $reflect = new ReflectionClass(get_called_class());
             self::$constCache = $reflect->getConstants();
         }
@@ -66,17 +70,19 @@ abstract class Enum {
     
     /**
      * Check if a constant name is known
-     * 
+     *
      * @param string $name constant name
      * @param bool $strict check case
-     * 
+     *
      * @return bool
      */
-    public static function isValidName($name, $strict = false) {
+    public static function isValidName($name, $strict = false)
+    {
         $constants = self::getConstants();
         
-        if($strict)
+        if ($strict) {
             return array_key_exists($name, $constants);
+        }
         
         $keys = array_map('strtolower', array_keys($constants));
         return in_array(strtolower($name), $keys);
@@ -84,32 +90,35 @@ abstract class Enum {
     
     /**
      * Check if a value is known
-     * 
+     *
      * @param mixed $value
-     * 
+     *
      * @return bool
      */
-    public static function isValidValue($value) {
+    public static function isValidValue($value)
+    {
         $values = array_values(self::getConstants());
         return in_array($value, $values, true);
     }
     
     /**
      * Get defined values (shorthand)
-     * 
+     *
      * @return array
      */
-    public static function all() {
+    public static function all()
+    {
         return self::getConstants();
     }
 
     /**
      * get an array of the config keys from all()
      */
-    public static function getConfigKeys() {
+    public static function getConfigKeys()
+    {
         $constants = self::getConstants();
         $keys = array_map('strtolower', array_keys($constants));
-        return $keys;        
+        return $keys;
     }
 
     /**
@@ -117,8 +126,9 @@ abstract class Enum {
      * string and all the possible config keys for this enum type to help
      * the administrator.
      */
-    public static function getConfigKeysAsLogString( $msgprefix = ' possible keys are: ') {
-        $vv = implode(' ',GuestOptions::getConfigKeys());
-        return $msgprefix . print_r($vv,true);
+    public static function getConfigKeysAsLogString($msgprefix = ' possible keys are: ')
+    {
+        $vv = implode(' ', GuestOptions::getConfigKeys());
+        return $msgprefix . print_r($vv, true);
     }
 }

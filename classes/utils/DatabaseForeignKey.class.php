@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,19 +31,20 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * Database Foreign Key managing
- * 
+ *
  * description is for showing the user a short item
  * tablename is the base table
  * indexname is the fk name for checking if it already exists
  * basecolumns are the colums in tablename that refer to the other table
  * reference is the table that tablename.basecolumns refer to
  * referencecolumns are the columns in the reference table that the basecolumns refer to
- * 
+ *
  * For example, from https:*www.postgresql.org/docs/9.2/static/ddl-constraints.html
  *
  * CREATE TABLE t1 (
@@ -55,9 +56,8 @@ if (!defined('FILESENDER_BASE'))
  *
  * tablename = t1, basecolumns = b,c  reference = other_table, referencecolumns = c1,c2
  */
-class DatabaseForeignKey {
-
-    
+class DatabaseForeignKey
+{
     protected $description = null;
     protected $tablename = null;
     protected $indexname = null;
@@ -66,7 +66,7 @@ class DatabaseForeignKey {
     protected $referencecolumns = null;
     protected $fkExists = 0;
     
-    function __construct( $description, $tablename, $indexname, $basecolumns, $reference, $referencecolumns )
+    public function __construct($description, $tablename, $indexname, $basecolumns, $reference, $referencecolumns)
     {
         $this->description      = $description;
         $this->tablename        = $tablename;
@@ -85,32 +85,27 @@ class DatabaseForeignKey {
         $dbname = Config::get('db_database');
         $dbtype = Config::get('db_type');
 
-	// We check the presence of the foreign key
-	if( $dbtype == 'pgsql' )
-        {
-	    $statement = DBI::prepare("SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.table_constraints "
+        // We check the presence of the foreign key
+        if ($dbtype == 'pgsql') {
+            $statement = DBI::prepare("SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.table_constraints "
                                     ." WHERE lower(constraint_name)=lower('".$this->indexname."')"
                                     ." AND lower(table_name)=lower('".$this->tablename."');");
-	}
-	else
-        {
+        } else {
             $sql = "SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS "
                  . " where CONSTRAINT_SCHEMA = '".$dbname."'"
                  . " AND table_name='".$this->tablename."'"
                  . "  and CONSTRAINT_NAME = '".$this->indexname ."';";
             Logger::info($sql);
-	    $statement = DBI::prepare($sql);
-            
-
-	}
+            $statement = DBI::prepare($sql);
+        }
 
         $statement->execute();
         $data = $statement->fetch();
-        if( $data ) {
+        if ($data) {
             $this->fkExists = $data['c'];
         }
         
-        Logger::info('fk ' . $this->description . ' already have fk ' . $this->fkExists );
+        Logger::info('fk ' . $this->description . ' already have fk ' . $this->fkExists);
         return $this->fkExists;
     }
 
@@ -123,7 +118,6 @@ class DatabaseForeignKey {
               .$this->indexname.' FOREIGN KEY (' . $this->basecolumns . ') '
              . ' REFERENCES '.$this->reference.' (' . $this->referencecolumns . ')  '
              . ' on delete cascade on update restrict ;';
-        
     }
 
     /**
@@ -132,8 +126,9 @@ class DatabaseForeignKey {
     public function create()
     {
         $sql = $this->getCreationSQL();
-        Logger::info("fk SQL is " . $sql);;
-        DBI::exec( $sql );
+        Logger::info("fk SQL is " . $sql);
+        ;
+        DBI::exec($sql);
     }
 
     /**
@@ -143,12 +138,11 @@ class DatabaseForeignKey {
     public function ensure()
     {
         try {
-            if( !$this->exists()) {
+            if (!$this->exists()) {
                 $this->create();
             }
-        } catch(DBIDuplicateException $e ) {
+        } catch (DBIDuplicateException $e) {
             Logger::info("... fk already there!");
         }
     }
-    
 };

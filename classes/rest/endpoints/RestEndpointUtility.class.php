@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,34 +31,39 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * REST utility endpoint
  */
-class RestEndpointUtility extends RestEndpoint {
+class RestEndpointUtility extends RestEndpoint
+{
     
     
     /**
      * Set user client logs
-     * 
+     *
      * Call examples :
      *  /utility/cleartestlog : clear the test logs ts_serverside_clear()
      *
      * @return mixed
-     * 
+     *
      * @throws RestAuthenticationRequiredException
      * @throws RestOwnershipRequiredException
      */
-    public function get($methid = null) {
+    public function get($methid = null)
+    {
         // Need to be authenticated
-        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+        if (!Auth::isAuthenticated()) {
+            throw new RestAuthenticationRequiredException();
+        }
 
         $user = Auth::user();
         
-        if( $methid == "cleartestlog" ) {
-            if( Utilities::isTrue( Config::get("testsuite_run_locally"))) {
+        if ($methid == "cleartestlog") {
+            if (Utilities::isTrue(Config::get("testsuite_run_locally"))) {
                 TestSuiteSupport::serverside_clear_all();
                 return true;
             }
@@ -68,7 +73,8 @@ class RestEndpointUtility extends RestEndpoint {
     }
 
 
-    public function requireSecurityTokenMatch($method, $path) {
+    public function requireSecurityTokenMatch($method, $path)
+    {
         return false;
-    }    
+    }
 }

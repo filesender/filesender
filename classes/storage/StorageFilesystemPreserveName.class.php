@@ -29,38 +29,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  *  Gives access to a file on the filesystem, preserving uploaded filenames
- *  
+ *
  *  Main use case is where after upload into Filesender's storage
  *  another application on the same system needs access to the files in
  *  the storage preserving the original filenames for easy recognition.
- *  
+ *
  */
-class StorageFilesystemPreserveName extends StorageFilesystem {
+class StorageFilesystemPreserveName extends StorageFilesystem
+{
   
     /**
      * Build file storage name (without base path)
-     * 
+     *
      * @param File $file
-     * 
+     *
      * @return string filename
      */
-    public static function buildFilename(File $file) {
+    public static function buildFilename(File $file)
+    {
         static::setup();
         return $file->name;
     }
   
     /**
      * Build file storage path (without filename)
-     * 
+     *
      * @param File $file
-     * 
+     *
      * @return string path
      */
-    public static function buildPath(File $file) {
+    public static function buildPath(File $file)
+    {
         static::setup();
 
         $owner = $file->owner;
@@ -76,7 +81,7 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
         $pos = strrpos($owner, '#');
       
         if (!($pos === false)) {
-          $subpath = '/'.substr($owner, $pos + 1);
+            $subpath = '/'.substr($owner, $pos + 1);
         }
 
         // Check if the file belongs to a directory tree. If so, have
@@ -87,10 +92,9 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
             $tree = $directory->parent;
             $tree_uid = $tree->uid;
             $subpath .= '/'.$tree_uid.'='.$directory->info;
-        }
-        else {
-            // For archive systems such as archivematica, any set of files 
-            // belonging to an archival set needs to be in an enclosing 
+        } else {
+            // For archive systems such as archivematica, any set of files
+            // belonging to an archival set needs to be in an enclosing
             // directory. Defaulting to naming the directory "uid=name",
             // which also should guarentee unique folder name
             $subpath .= '/'.$file->uid.'='.$file->name;
@@ -99,14 +103,16 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
         // validate owner/uid=name subpath, creating dirs if needed
         $path = $storage_root_path;
 
-        foreach(array_filter(explode('/', $subpath)) as $sub) {
+        foreach (array_filter(explode('/', $subpath)) as $sub) {
             $path .= $sub;
             
-            if(!is_dir($path) && !mkdir($path))
+            if (!is_dir($path) && !mkdir($path)) {
                 throw new StorageFilesystemCannotCreatePathException($path, $file);
+            }
             
-            if(!is_writable($path))
+            if (!is_writable($path)) {
                 throw new StorageFilesystemCannotWriteException($path, $file);
+            }
             
             $path .= '/';
         }
