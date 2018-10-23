@@ -759,8 +759,8 @@ filesender.ui.startUpload = function() {
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), close);
         
         var t = null;
-        if(filesender.ui.transfer.download_link) {
-            var dl = $('<div class="download_link" />').text(lang.tr('download_link') + ' :').appendTo(p);
+        if(filesender.ui.transfer.download_link || filesender.config.transfer_options.get_a_link) {
+            var dl = $('<div class="download_link" />').text(lang.tr('download_link') + ':').appendTo(p);
             t = $('<textarea class="wide" readonly="readonly" />').appendTo(dl);
             t.val(filesender.ui.transfer.download_link).focus().select();
         }
