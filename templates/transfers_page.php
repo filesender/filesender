@@ -28,6 +28,4 @@
         'header' => '{tr:closed_transfers}'
     )) ?>
     <?php } ?>
-
-    <?php if(Config::get('auth_remote_user_enabled')) echo '<h2>API key</h2>'.Auth::user()->auth_secret; ?>
 </div>
