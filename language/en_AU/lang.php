@@ -462,5 +462,5 @@ $lang['confirm_delete_my_account'] = 'This will delete your files, guests, and o
 $lang['user_deleted'] = 'You have been removed from the server. Have a nice day!';
 
 $lang['user_preferences_body'] = 'Some preferences for your account that you might like to change.';
-$lang['user_remote_authentication_body'] = 'Use this information to authenticate with the system if you are developing REST clients.';
+$lang['user_remote_authentication_body'] = 'Use this information to authenticate with the system if you are developing REST clients. (API Key)';
 $lang['user_additional_body'] = 'This is the information that we have about your account.';
