@@ -204,10 +204,6 @@ class GUI
             }, $location);
         }
         
-        if ($location && substr($location, -1) != '/' && substr($location, 0, 1) != '?') {
-            $location .= (strpos($location, '?') ? '&' : '?').'v='.Utilities::runningInstanceUID();
-        }
-        
         return self::$path.$location;
     }
     
