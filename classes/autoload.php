@@ -78,6 +78,10 @@ class Autoloader
         'Authentication' => 'data/',
         '*Log' => 'data/',
 
+        // In database constants
+        'DBConstant*' => 'data/constants/',
+        
+
         'DBLayer' => 'utils/',
 
         'Auth*' => 'auth/',
