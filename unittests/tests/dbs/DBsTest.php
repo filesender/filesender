@@ -74,6 +74,8 @@ class DBsTest extends CommonUnitTestCase {
      */
     public function testUpsert() {
 
+/*
+// Have to find minimal version of pgsql that can use "ON keyword"
  
         $tableName = 'DBTestingTableStringNumbers';
 
@@ -87,7 +89,7 @@ class DBsTest extends CommonUnitTestCase {
             "insert into $tableName (id,data,created) values (1,'second',now())",
             "id",
             "id = 1, data = 'second', created = now()" );
-        
+*/        
         
     }
     
