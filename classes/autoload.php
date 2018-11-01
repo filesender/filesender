@@ -77,6 +77,11 @@ class Autoloader
         'Metadata' => 'data/',
         'Authentication' => 'data/',
         '*Log' => 'data/',
+        'DBTestingTable*' => 'data/',
+
+        // In database constants
+        'DBConstant*' => 'data/constants/',
+        
 
         'DBLayer' => 'utils/',
 
