@@ -166,7 +166,7 @@ class AuthSPFake
             if (!$landing_page) {
                 $landing_page = 'upload';
             }
-            $target = Config::get('site_url').'index.php?s='.$landing_page;
+            $target = Utilities::http_build_query(array('s' => $landing_page));
         }
         
         return Config::get('site_url').'#logon-'.urlencode($target);

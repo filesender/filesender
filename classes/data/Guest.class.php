@@ -628,7 +628,10 @@ class Guest extends DBObject
         
         
         if ($property == 'upload_link') {
-            return Config::get('site_url').'?s=upload&vid='.$this->token;
+            return Utilities::http_build_query(
+                array( 's'   => 'upload',
+                       'vid' => $this->token )
+            );
         }
         
         if ($property == 'transfers') {
