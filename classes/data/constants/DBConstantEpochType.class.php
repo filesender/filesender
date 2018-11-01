@@ -35,7 +35,8 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 /**
- *  
+ * Time epochs used in the statistics system. These are ranges of time like hour, day etc
+ * that can be used in graphs to select data from the database.
  */
 class DBConstantEpochType extends DBConstant
 {
@@ -44,14 +45,23 @@ class DBConstantEpochType extends DBConstant
         return new self();
     }
 
+    const HOUR  = 'hour';
+    const DAY   = 'day';
+    const WEEK  = 'week';
+    const MONTH = 'month';
+    const YEAR  = 'year';
+    
     protected function getEnum()
     {
         return array(
-            'hour'  => 1,
-            'day'   => 2,
-            'week'  => 3,
-            'month' => 4,
-            'year'  => 5,
+            // disable these until ready to use.
+            /*
+            self::HOUR  => 1,
+            self::DAY   => 2,
+            self::WEEK  => 3,
+            self::MONTH => 4,
+            self::YEAR  => 5,
+            */
         );
     }
     

@@ -208,10 +208,6 @@ function ensureAllTables()
     foreach($classes as $class) {
         ensureTable( $class );
         call_user_func($class.'::ensure');
-        // FIXME
-DBI::commit();
-        Logger::error('exiting');
-        exit(0);
     }
 
     $classes = getClasses();

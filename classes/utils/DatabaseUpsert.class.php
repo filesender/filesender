@@ -40,31 +40,51 @@ if (!defined('FILESENDER_BASE')) {
  *
  * This handles the common case where you want to either insert or update
  * a value in the database and do not know or care if the tuple already exists.
+ * One might be tempted to solve this problem by trying to select or insert the 
+ * data first and then taking either the insert or update route depending on what
+ * was found. The problem with that is it is not atomic, you have to hold open a transaction
+ * around that whole block to ensure that nobody else is doing the same two part check.
+ * Using an Upsert is an atomic operation without you having to wrap in a transaction.
  * 
  * In PostgreSQL this is handled by INSERT .ON CONFLICT DO UPDATE
  *   https://www.postgresql.org/docs/9.5/static/sql-insert.html
+ *
+ *      insert into dbtestingtablestringnumbers
+ *             (id,data,created) values (1,'first',now())
+ *      ON CONFLICT (id) DO UPDATE SET
+ *             id = 1, data = 'second', created = now();
+ *
  * In MariaDB this is handled by INSERT ... ON DUPLICATE KEY UPDATE
  *   https://mariadb.com/kb/en/library/insert-on-duplicate-key-update/
+ *
+ *      insert into DBTestingTableStringNumbers    
+ *             (id,data,created) values (1,'first',now())
+ *      ON DUPLICATE KEY UPDATE
+ *             id = 1, data = 'second', created = now();
+ *
+ * 
+ * The conflict keys are needed by some databases (ie, which keys to check for existing tuples)
+ * The updateSetOnlySQL is only the a=b part of the update
  */
 class DatabaseUpsert
 {
-    static function upsert( $insertSQL, $updateSQL )
+    static function upsert( $insertSQL, $conflictKeys, $updateSetOnlySQL )
     {
         $dbname = Config::get('db_database');
         $dbtype = Config::get('db_type');
         
         $sql = $insertSQL;
         if ($dbtype == 'pgsql') {
-            $sql .= ' ON CONFLICT DO UPDATE ';
+            $sql .= ' ON CONFLICT (' . $conflictKeys . ') DO UPDATE SET ';
         } else if ($dbtype == 'mysql') {
             $sql .= ' ON DUPLICATE KEY UPDATE ';
         } else {
             Logger::haltWithErorr("upsert is not programmed for your database type $dbtype");
         }
-        $sql .= $updateSQL;
+        $sql .= $updateSetOnlySQL;
 
         Logger::info($sql);
         $statement = DBI::prepare($sql);
-        $statement->execute();
+        $statement->execute(Array());
     }
 }

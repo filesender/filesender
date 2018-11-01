@@ -69,4 +69,26 @@ class DBsTest extends CommonUnitTestCase {
         return true;
     }
 
+    /**
+     * Test the Insert/Update "Upsert" class
+     */
+    public function testUpsert() {
+
+ 
+        $tableName = 'DBTestingTableStringNumbers';
+
+        DatabaseUpsert::upsert( 
+            "insert into $tableName (id,data,created) values (1,'first',now())",
+            "id",
+            "id = 1, data = 'first', created = now()" );
+
+
+        DatabaseUpsert::upsert( 
+            "insert into $tableName (id,data,created) values (1,'second',now())",
+            "id",
+            "id = 1, data = 'second', created = now()" );
+        
+        
+    }
+    
 }

@@ -35,7 +35,9 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 /**
- *  
+ * These are events that have happened that might be of interest
+ * resume is recorded so that we can see how many times users have
+ * been having issues uploading.
  */
 class DBConstantStatsEvent extends DBConstant
 {
@@ -44,15 +46,25 @@ class DBConstantStatsEvent extends DBConstant
         return new self();
     }
 
+    const UPLOAD_START  = 'upload_start';
+    const UPLOAD_RESUME = 'upload_resume';
+    const UPLOAD_END    = 'upload_end';
+    const USER_CREATED  = 'user_created';
+    const USER_DELETED  = 'user_deleted';
+    const USER_RETIRED  = 'user_retired';
+    
     protected function getEnum()
     {
         return array(
-            'upload_start'  => 1,
-            'upload_resume' => 2,
-            'upload_end'    => 3,
-            'user_created'  => 4,
-            'user_deleted'  => 5,
-            'user_retired'  => 6,
+            // disable these until ready to use.
+            /*
+            self::UPLOAD_START  => 1,
+            self::UPLOAD_RESUME => 2,
+            self::UPLOAD_END    => 3,
+            self::USER_CREATED  => 4,
+            self::USER_DELETED  => 5,
+            self::USER_RETIRED  => 6,
+*/            
         );
     }
     

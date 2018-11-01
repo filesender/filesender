@@ -2,7 +2,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2018, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,23 +37,68 @@ if (!defined('FILESENDER_BASE')) {
 /**
  * This creates a mapping of id to a string description in the database.
  * Once an integer id is used it should never be changed or deleted.
+ * The use case for this is having a table of strings that another table uses
+ * without needing to denomalize the string table (AnimalTypes) into the base
+ * table (Schedule). Having these in PHP allows programs to know what the number
+ * will be for the lookup without needing to perform a join or SQL.
+ *
+ * AnimalTypes Table
+ * ID | Animal
+ * ---+-------
+ *  1 | Emu
+ *  2 | Kangaroo
+ *  3 | Nessie
+ *
+ *
+ * Schedule Table. AnimalType refers to AnimalTypes.ID
+ * ID | AnimalType | Other Data
+ * ---+------------+---------------------------------------
+ * 55 | 3          | Having lunch with this lovely creature
+ *  
+ * 
  *
  * Subclasses of DBConstant can easily create database tables with
- * these id->description mappings and add new entries which will be created
- * by the database.php script so that the system can assume the database is
+ * these ID to Description mappings and add new entries which will be created
+ * for them by the database.php script so that the system can assume the database is
  * up to date with these constant types.
+ *
+ * Subclasses will be interested in overriding getEnum() and createObject().
+ * Subclasses should have a class name starting with DBConstant for the class loader to find them.
  */
 class DBConstant extends DBObject
 {
+    /**
+     * This method allows this class to be able to make objects of the subclass
+     * A subclass should be able to return new self();
+     */
     public static function createObject()
     {
         return new DBConstant();
     }
     
+    /**
+     * Return an array mapping each string to a number that will be the database ID.
+     * The returned data should only ever be appended to during updates, once something
+     * is in the database it should not ever be changed.
+     */
+    protected function getEnum()
+    {
+        Logger::haltWithErorr("getEnum() was called on the base db constant class");
+    }
+
+
+    //
+    // END OF METHODS THAT SUBLCASS NEEDS TO OVERRIDE
+    //
+    //////////////////////////////////////////////////////////////////////////////////
+    
     // properties from dataMap
     protected $id   = null;
     protected $description = null;
 
+    // Because this is an enum we use the medium type for the ID key
+    // The PHP code is going to need to list each tuple so we can't really
+    // have more than billions of these tuples in the system
     protected static $dataMap = array(
         'id' => array(
             'type' => 'uint',
@@ -63,17 +108,13 @@ class DBConstant extends DBObject
         ),
         'description' => array(
             'type' => 'string',
-            'size' => 60
+            'size' => 160
         )
     );
 
     public static function getDataMap()
     {
         return self::$dataMap;
-    }
-    protected function getEnum()
-    {
-        Logger::haltWithErorr("getEnum() was called on the base db constant class");
     }
     
     protected static $secondaryIndexMap = array(
@@ -104,7 +145,9 @@ class DBConstant extends DBObject
         }
     }
 
-    
+    //
+    // Get and Set only allow the properties from the datamap
+    //
     public function __get($property)
     {
         if (in_array($property, self::getDataMap())) {
@@ -131,8 +174,7 @@ class DBConstant extends DBObject
         $obj = call_user_func($class.'::createObject');
         $newItems = $obj->getEnum();
 
-        echo "db table " . self::getDBTable() . "\n";
-        print_r($newItems);
+        echo "ensure that database constants are set for database table " . self::getDBTable() . "\n";
         // Load all CollectionTypes from database
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' ORDER BY :id');
         $s->execute(array(':id' => 'id'));
@@ -143,18 +185,10 @@ class DBConstant extends DBObject
 
         foreach ($newItems as $k=>$v) {
 
-            echo "k $k  v $v\n";
             $class = get_called_class();
-            echo "class $class\n";
             $obj = call_user_func($class.'::createObject');
             $obj->id = $v;
             $obj->description = $k;
-            echo "data ";
-            print_r($obj->toDBData());
-            echo  "\n";
-            echo "dbtable1 " . $obj->getDBTable() . "\n";
-            echo "dbtable2 " . self::getDBTable() . "\n";
-            echo "ID " . self::lookup($k) . "\n";
             $obj->insert();
         }
         
@@ -162,6 +196,8 @@ class DBConstant extends DBObject
 
     /**
      * Allow a lookup from the string description to it's ID number.
+     * It is preferable for code to use the defined constant string names
+     * in the subclasses to avoid trying to lookup a key that does not exist.
      */
     public static function lookup( $desc )
     {
