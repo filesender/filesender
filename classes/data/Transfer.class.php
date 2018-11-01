@@ -804,7 +804,7 @@ class Transfer extends DBObject
         }
         
         if ($property == 'link') {
-            $tr_url = Config::get('site_url').'index.php?s=transfers#transfer_'.$this->id;
+            $tr_url = Utilities::http_build_query(array('s' => 'transfers#transfer_'.$this->id));
             $auth_url = AuthSP::logonURL($tr_url);
             
             if (!preg_match('`^https?://[^/]+`', $auth_url)) {
