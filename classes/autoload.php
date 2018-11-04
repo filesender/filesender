@@ -78,6 +78,8 @@ class Autoloader
         'Authentication' => 'data/',
         '*Log' => 'data/',
         'DBTestingTable*' => 'data/',
+        'AggregateStatistic' => 'data/',
+        'AggregateStatisticMetadata' => 'data/',
 
         // In database constants
         'DBConstant*' => 'data/constants/',

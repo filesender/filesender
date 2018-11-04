@@ -197,6 +197,11 @@ $default = array(
 
     'testsuite_run_locally' => false,
 
+    'aggregate_statlog_lifetime' => false,
+    'aggregate_statlog_send_report_days' => 0,
+    'aggregate_statlog_send_report_email_address' => '',
+
+    
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,

@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2018, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,29 +30,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Unknown StatLog exception
- */
-class StatLogNotFoundException extends DetailedException
-{
-    /**
-     * Constructor
-     *
-     * @param string $selector column used to select user
-     */
-    public function __construct($selector)
-    {
-        parent::__construct(
-            'statlog_not_found', // Message to give to the user
-            array('selector' => $selector) // Real message to log
-        );
-    }
-}
 
-/**
- * Unknown event exception
- */
-class StatLogUnknownEventException extends DetailedException
+
+class EpochTypeUnknownException extends DetailedException
 {
     /**
      * Constructor
@@ -62,7 +42,7 @@ class StatLogUnknownEventException extends DetailedException
     public function __construct($selector)
     {
         parent::__construct(
-            'statlog_unknown_event', // Message to give to the user
+            'epochtype_unknown_event', // Message to give to the user
             array('selector' => $selector) // Real message to log
         );
     }

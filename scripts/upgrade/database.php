@@ -213,6 +213,9 @@ function ensureAllTables()
     $classes = getClasses();
     foreach($classes as $class) {
         ensureTable( $class );
+        if( $class == 'AggregateStatisticMetadata' ) {
+            call_user_func($class.'::ensure');
+        }
     }
 }
 
@@ -277,6 +280,18 @@ function ensureFK()
                     'clientlogs.userid refers to users.id',
 	            call_user_func('ClientLog::getDBTable'), 'ClientLog_userid', 'userid',
 	            call_user_func('User::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'aggregatestatistics.epochtype refers to dbconstantepochtypes.id',
+	            call_user_func('AggregateStatistic::getDBTable'), 'AggregateStatistic_epochtype', 'epochtype',
+	            call_user_func('DBConstantEpochType::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'aggregatestatistics.eventtype refers to dbconstanteventtypes.id',
+	            call_user_func('AggregateStatistic::getDBTable'), 'AggregateStatistic_eventtype', 'eventtype',
+	            call_user_func('DBConstantStatsEvent::getDBTable'), 'id' ));
+
     
     foreach ( $fks as $fk ) {
         $fk->ensure();
