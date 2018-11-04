@@ -46,26 +46,69 @@ class DBConstantStatsEvent extends DBConstant
         return new self();
     }
 
-    const UPLOAD_START  = 'upload_start';
-    const UPLOAD_RESUME = 'upload_resume';
-    const UPLOAD_END    = 'upload_end';
-    const USER_CREATED  = 'user_created';
-    const USER_DELETED  = 'user_deleted';
-    const USER_RETIRED  = 'user_retired';
+    const UPLOAD_STARTED  = LogEventTypes::UPLOAD_STARTED;
+    const UPLOAD_RESUMED  = LogEventTypes::UPLOAD_RESUMED;
+    const UPLOAD_ENDED    = LogEventTypes::UPLOAD_ENDED;
+    const USER_CREATED    = LogEventTypes::USER_CREATED;
+    const USER_PURGED     = LogEventTypes::USER_PURGED;
+    const USER_INACTIVED  = LogEventTypes::USER_INACTIVED;
+    const DOWNLOAD_STARTED = LogEventTypes::DOWNLOAD_STARTED;
+    const DOWNLOAD_RESUMED = LogEventTypes::DOWNLOAD_RESUMED;
+    const DOWNLOAD_ENDED = LogEventTypes::DOWNLOAD_ENDED;
     
     protected function getEnum()
     {
         return array(
-            // disable these until ready to use.
-            /*
-            self::UPLOAD_START  => 1,
-            self::UPLOAD_RESUME => 2,
-            self::UPLOAD_END    => 3,
-            self::USER_CREATED  => 4,
-            self::USER_DELETED  => 5,
-            self::USER_RETIRED  => 6,
-*/            
+            self::UPLOAD_STARTED  => 1,
+            self::UPLOAD_RESUMED  => 2,
+            self::UPLOAD_ENDED    => 3,
+            self::USER_CREATED    => 4,
+            self::USER_PURGED     => 5,
+            self::USER_INACTIVED  => 6,
+            self::DOWNLOAD_STARTED  => 7,
+            self::DOWNLOAD_RESUMED  => 8,
+            self::DOWNLOAD_ENDED    => 9,
         );
     }
-    
+
+    static function validateCGIParamOrDIE( $v )
+    {
+        if (!preg_match('`^[a-z_-]{1,40}$`', $v)) {
+            Logger::haltWithErorr('invalid db contant stats event given '.$v);
+        }
+        self::lookup($v);
+        return $v;
+    }
+
+    static function fromLogEventType( $t )
+    {
+        if( $t == LogEventTypes::UPLOAD_STARTED ) {
+            return self::lookup(self::UPLOAD_STARTED);
+        }
+        if( $t == LogEventTypes::UPLOAD_RESUMED ) {
+            return self::lookup(self::UPLOAD_RESUMED);
+        }
+        if( $t == LogEventTypes::UPLOAD_ENDED ) {
+            return self::lookup(self::UPLOAD_ENDED);
+        }
+        if( $t == LogEventTypes::USER_CREATED ) {
+            return self::lookup(self::USER_CREATED);
+        }
+        if( $t == LogEventTypes::USER_INACTIVED ) {
+            return self::lookup(self::USER_INACTIVED);
+        }
+        if( $t == LogEventTypes::USER_PURGED ) {
+            return self::lookup(self::USER_PURGED);
+        }
+        if( $t == LogEventTypes::DOWNLOAD_STARTED ) {
+            return self::lookup(self::DOWNLOAD_STARTED);
+        }
+        if( $t == LogEventTypes::DOWNLOAD_RESUMED ) {
+            return self::lookup(self::DOWNLOAD_RESUMED);
+        }
+        if( $t == LogEventTypes::DOWNLOAD_ENDED ) {
+            return self::lookup(self::DOWNLOAD_ENDED);
+        }
+        return null;
+    }
 }

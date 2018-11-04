@@ -524,7 +524,7 @@ class DatabasePgsql
                 DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET NOT NULL');
             }
         }
-        
+
         // Change default
         if (in_array('default', $problems)) {
             if (array_key_exists('default', $definition)) {
@@ -533,7 +533,8 @@ class DatabasePgsql
                 } elseif (is_bool($definition['default'])) {
                     DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT '.($definition['default'] ? '1' : '0'));
                 } else {
-                    DBI::prepare('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT :default')-execute(array(':default' => $definition['default']));
+                    $s = DBI::prepare('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT :default');
+                    $s->execute(array(':default' => $definition['default']));
                 }
             } else {
                 DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' DROP DEFAULT');
@@ -581,6 +582,12 @@ class DatabasePgsql
         
         // Build type part
         switch ($definition['type']) {
+            case 'numeric':
+                // if we do not stipulate the range then we get the great range of
+                // up to 131072 digits before the decimal point;
+                // up to 16383 digits after the decimal point
+                $sql = ' numeric '; 
+                break;
             case 'int':
             case 'uint':
                 $size = array_key_exists('size', $definition) ? $definition['size'] : 'medium';

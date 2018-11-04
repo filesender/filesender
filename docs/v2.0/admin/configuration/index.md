@@ -184,6 +184,13 @@ A note about colours;
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
 * [rest_allow_jsonp](#rest_allow_jsonp)
 
+## Aggregate statistics
+
+* [aggregate_statlog_lifetime](#aggregate_statlog_lifetime)
+* [aggregate_statlog_send_report_days](#aggregate_statlog_send_report_days)
+* [aggregate_statlog_send_report_email_address](#aggregate_statlog_send_report_email_address)
+
+
 ## Other
 
 * [host_quota](#host_quota)
@@ -1743,6 +1750,41 @@ under rest.php), example :
 $config['rest_allow_jsonp'] = array(
 '/transfer/[0-9]+/auditlog'
 );
+
+---
+
+## Aggregate statistics
+
+### aggregate_statlog_lifetime
+
+* __description:__ True to enable. This is left as a lifetime to allow extension for deleting really old aggregate event data from the database if desired.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.5
+* __1.x name:__
+* __comment:__
+
+### aggregate_statlog_send_report_days
+
+* __description:__ The number of days between sends for a aggregate statistics report. Set this to 0 (the default) to disable.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.5
+* __1.x name:__
+* __comment:__
+
+### aggregate_statlog_send_report_email_address
+
+* __description:__ email address to send aggregate statistics report to.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.5
+* __1.x name:__
+* __comment:__
+
 
 ---
 

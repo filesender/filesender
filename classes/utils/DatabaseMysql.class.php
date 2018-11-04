@@ -380,6 +380,11 @@ class DatabaseMysql
         
         // Build type part
         switch ($definition['type']) {
+            case 'numeric':
+
+                // would be nice to go above this
+                $mysql = ' decimal(65) ';
+                break;
             case 'int':
             case 'uint':
                 $size = array_key_exists('size', $definition) ? $definition['size'] : 'medium';

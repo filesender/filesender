@@ -45,6 +45,8 @@ class DBConstantEpochType extends DBConstant
         return new self();
     }
 
+    const NARROWEST_TYPE = 'fifteen_minutes';
+    const FIFTEEN_MINUTES = 'fifteen_minutes';
     const HOUR  = 'hour';
     const DAY   = 'day';
     const WEEK  = 'week';
@@ -54,15 +56,47 @@ class DBConstantEpochType extends DBConstant
     protected function getEnum()
     {
         return array(
-            // disable these until ready to use.
-            /*
-            self::HOUR  => 1,
-            self::DAY   => 2,
-            self::WEEK  => 3,
-            self::MONTH => 4,
-            self::YEAR  => 5,
-            */
+            self::FIFTEEN_MINUTES => 1,
+            self::HOUR  => 2,
+            self::DAY   => 3,
+            self::WEEK  => 4,
+            self::MONTH => 5,
+            self::YEAR  => 6,
         );
+    }
+
+    /////////////////////////////
+    //
+    //
+
+    static function validateCGIParamOrDIE( $v )
+    {
+        if (!preg_match('`^[a-z_]{1,40}$`', $v)) {
+            exit(1);
+        }
+        self::lookup($v);
+        return $v;
+    }
+    
+    static function broaden( $v ) {
+        if( $v == self::FIFTEEN_MINUTES ) {
+            return self::HOUR;
+        }
+        if( $v == self::HOUR ) {
+            return self::DAY;
+        }
+        if( $v == self::DAY ) {
+            return self::WEEK;
+        }
+        if( $v == self::WEEK ) {
+            return self::MONTH;
+        }
+        if( $v == self::MONTH ) {
+            return self::YEAR;
+        }
+        if( $v == self::YEAR ) {
+            return null;
+        }
     }
     
 }
