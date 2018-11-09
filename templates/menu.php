@@ -1,5 +1,7 @@
 <?php
 
+$maybe_display_aggregate_statistics_menu = false;
+
 $pagemenuitem = function($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
     $class = ($page == GUI::currentPage()) ? 'current' : '';
@@ -24,6 +26,13 @@ $pagemenuitem = function($page) {
                     $pagemenuitem('user');
                 
                 $pagemenuitem('admin');
+
+                if( $maybe_display_aggregate_statistics_menu ) {
+                    if (AggregateStatistic::enabled()) {
+                        $pagemenuitem('aggregate_statistics');
+                    }
+                }
+                    
             }
             
             ?>
