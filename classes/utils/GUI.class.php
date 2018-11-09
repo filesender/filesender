@@ -328,6 +328,10 @@ class GUI
                     if (Auth::isAdmin()) {
                         self::$allowed_pages[] = 'admin';
                     }
+
+                    if (Auth::canViewAggregateStatistics()) {
+                        self::$allowed_pages[] = 'aggregate_statistics';
+                    }
                     
                     // Is user page enabled ?
                     if (Config::get('user_page')) {

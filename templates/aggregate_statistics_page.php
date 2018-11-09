@@ -1,4 +1,4 @@
-<h2>{tr:admin_aggregate_statistics_section}</h2>
+<h2>{tr:aggregate_statistics_page}</h2>
 
 
 <?php if (!AggregateStatistic::enabled()) { ?>

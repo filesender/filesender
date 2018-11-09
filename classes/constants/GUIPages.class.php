@@ -46,6 +46,7 @@ class GUIPages extends Enum
     const HOME            = 'home';
     const DOWNLOAD        = 'download';
     const TRANSLATE_EMAIL = 'translate_email';
+    const AGGREGATE_STATISTICS = 'aggregate_statistics';
     const LOGOUT          = 'logout';
     const EXCEPTION       = 'exception';
     const MAINTENANCE     = 'maintenance';

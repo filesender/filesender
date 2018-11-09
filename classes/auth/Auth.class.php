@@ -68,6 +68,11 @@ class Auth
      * Admin status of the current user.
      */
     private static $isAdmin = null;
+
+    /**
+     * If current user is authorized to view aggregate statistics.
+     */
+    private static $canViewAggregateStats = null;
     
     /**
      * Auth provider if any auth found
@@ -319,6 +324,24 @@ class Auth
         }
         
         return self::$isAdmin && !self::isGuest();
+    }
+
+    public static function canViewAggregateStatistics()
+    {
+        if (is_null(self::$canViewAggregateStats)) {
+            self::$canViewAggregateStats = false;
+            
+            if (self::user()) {
+                $keys = Config::get('can_view_aggregate_statistics');
+                if (!is_array($keys)) {
+                    $keys = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$keys)));
+                }
+                
+                self::$canViewAggregateStats = in_array(self::user()->saml_user_identification_uid, $keys);
+            }
+        }
+        
+        return self::$canViewAggregateStats && !self::isGuest();
     }
     
     /**
