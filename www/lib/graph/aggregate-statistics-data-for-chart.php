@@ -2,23 +2,26 @@
 header('Content-Type: application/json');
 require_once('../../../includes/init.php');
 
+/**
+ * This page writes the JSON data for a chart using the given data:
+ * 
+ * epochtype - string DBConstantEpochType
+ * eventtype - string DBConstantStatsEvent
+ * querytype - string AggregateStatisticsQueryType
+ * 
+ * Note that the above parameters must resolve to valid values
+ * or page loading will halt.
+ */
 
-// These calls to validateCGIParamOrDIE() are defensive
-// and should use regex and direct lookup to ensure
-// we have valid data from the _GET[]
 $epochtype = DBConstantEpochType::validateCGIParamOrDIE($_GET["epochtype"]);
 $eventtype = DBConstantStatsEvent::validateCGIParamOrDIE($_GET["eventtype"]);
-
-$v = $_GET["querytype"];
-if (!preg_match('`^[a-z_-]{1,40}$`', $v)) {
-    Logger::haltWithErorr('invalid query type given '.$v);
-}
-$queryType = $v;
+$querytype = AggregateStatisticsQueryType::validateCGIParamOrDIE($_GET["querytype"]);
 
 
 //
 // Prepare some variables for later use
 //
+$prettyPrint = false;
 $eventtypetr = Lang::tr( "statevent_$eventtype" )->out();
 $epochtypetr = Lang::tr( "epoch_" . $epochtype )->out();
 $ended = '';
@@ -34,10 +37,10 @@ if( $epochtype == "year" ) {
 }
 
 
-//
-// Query the database
-//
-if( $queryType == "incomplete" ) {
+/**
+ * Query the database
+ */
+if( $querytype == "incomplete" ) {
 
     $ended = $eventtype;
     $ended = preg_replace("/_started$/", "_ended", $eventtype);
@@ -77,7 +80,11 @@ $result = $statement->fetchAll();
 //
 $maxValue = 0;
 foreach($result as $row) {
-    $maxValue = max($maxValue,$row['sizemean']);
+    if( $querytype == "size_mean" ) {
+        $maxValue = max($maxValue,$row['sizemean']);
+    } else {
+        $maxValue = max($maxValue,$row['sizesum']);
+    }
 }
 $x_per_second = 'size_tb';
 if( $maxValue < 1024*1024*1024*1024 ) {
@@ -93,12 +100,15 @@ if( $maxValue < 1024*1024 ) {
     $valdiv = 1024;
 }
 
-if( $queryType == "size" ) {
+if( $querytype == "size_mean" || $querytype == "size_total" ) {
     $ylabel = Lang::tr($x_per_second)->out();
 } else {
     $ylabel = Lang::tr("count")->out();
 }
 
+/**
+ * The metadata for the chart itself.
+ */
 $data = array(
     'type' => 'line',
     'data' => array(
@@ -114,6 +124,11 @@ $data = array(
     'options' => array (
 	'responsive' => true,
 	'maintainAspectRatio' => false,
+        'elements' => array(
+            'line' => array(
+                'tension' => 0,
+            )
+        ),
 	'title' => array(
 	    'display' => true,
 	    'text' => Lang::tr('aggregate_stats_graph_title_per_time_interval')
@@ -141,24 +156,56 @@ $data = array(
     )
 );
 
-//
-// Convert the selected data over to the right format for the graph
-//
+/**
+ * Convert the selected data over to the right format for the graph
+ *
+ * This mostly consists of using $querytype to work out which column to get
+ * the data from in the $result rows and putting that into data/datasets/idx
+ */
 foreach($result as $row) {
 
     $data['data']['labels'][]=$row['epoch'];
     $idx = 0;
-    if( $queryType == "incomplete" ) {
+    if( $querytype == "incomplete" ) {
         $data['data']['datasets'][$idx++]['data'][]=max(0,$row['eventcount']-$row['endcount']);
-    } else if( $queryType == "count" ) {
+    } else if( $querytype == "count" ) {
         $data['data']['datasets'][$idx++]['data'][]=$row['eventcount'];
-    } else {
+    } else if( $querytype == "size_mean" ) {
         $data['data']['datasets'][$idx++]['data'][]=$row['sizemean']/$valdiv;
+    } else {
+        $data['data']['datasets'][$idx++]['data'][]=$row['sizesum']/$valdiv;
     }
             
 }
 
-echo json_encode($data/*,JSON_PRETTY_PRINT*/);
-//echo json_encode($data,JSON_PRETTY_PRINT);
+if( !$idx ) {
+$data = array(
+    'type' => 'line',
+    'data' => array(
+	'labels' => array(),
+	'datasets' => array(
+	    array(
+		'data' => array(),
+		'backgroundColor' => 'rgba(10,220,10,0.6)',
+		'spanGaps' => false
+	    ),
+	)
+    ),
+    'options' => array (
+	'title' => array(
+	    'display' => true,
+	    'text' => Lang::tr('aggregate_stats_graph_no_data')
+                          ->r('eventtype',$eventtypetr)->r('epochtype',$epochtypetr)->out()
+	),
+    ),
+);
+    
+}
+
+if( $prettyPrint ) {
+    echo json_encode($data,JSON_PRETTY_PRINT);
+} else { 
+    echo json_encode($data);
+}
 
 ?>

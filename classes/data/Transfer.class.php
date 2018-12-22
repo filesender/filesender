@@ -738,6 +738,10 @@ class Transfer extends DBObject
             return $this->collectionsCache;
         }
 
+        if ($property == 'is_encrypted') {
+            return $this->options['encryption'];
+        }
+        
         if ($property == 'size') {
             return array_sum(array_map(function ($file) {
                 return $file->size;
