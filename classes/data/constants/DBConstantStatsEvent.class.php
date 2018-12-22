@@ -55,6 +55,35 @@ class DBConstantStatsEvent extends DBConstant
     const DOWNLOAD_STARTED = LogEventTypes::DOWNLOAD_STARTED;
     const DOWNLOAD_RESUMED = LogEventTypes::DOWNLOAD_RESUMED;
     const DOWNLOAD_ENDED = LogEventTypes::DOWNLOAD_ENDED;
+    const UPLOAD_MAXSIZE_ENDED = 'upload_maxsize_ended';
+    const DOWNLOAD_MAXSIZE_ENDED = 'upload_maxsize_ended';
+
+    const UPLOAD_NOCRYPT_STARTED   = 'upload_nocrypt_started';
+    const UPLOAD_NOCRYPT_RESUMED   = 'upload_nocrypt_resumed';
+    const UPLOAD_NOCRYPT_ENDED     = 'upload_nocrypt_ended';
+    const DOWNLOAD_NOCRYPT_STARTED = 'download_nocrypt_started';
+    const DOWNLOAD_NOCRYPT_RESUMED = 'download_nocrypt_resumed';
+    const DOWNLOAD_NOCRYPT_ENDED   = 'download_nocrypt_ended';
+    const UPLOAD_NOCRYPT_MAXSIZE_ENDED = 'upload_nocrypt_maxsize_ended';
+    const DOWNLOAD_NOCRYPT_MAXSIZE_ENDED = 'upload_nocrypt_maxsize_ended';
+
+    const UPLOAD_ENCRYPTED_STARTED   = 'upload_encrypted_started';
+    const UPLOAD_ENCRYPTED_RESUMED   = 'upload_encrypted_resumed';
+    const UPLOAD_ENCRYPTED_ENDED     = 'upload_encrypted_ended';
+    const DOWNLOAD_ENCRYPTED_STARTED = 'download_encrypted_started';
+    const DOWNLOAD_ENCRYPTED_RESUMED = 'download_encrypted_resumed';
+    const DOWNLOAD_ENCRYPTED_ENDED   = 'download_encrypted_ended';
+    const UPLOAD_ENCRYPTED_MAXSIZE_ENDED = 'upload_encrypted_maxsize_ended';
+    const DOWNLOAD_ENCRYPTED_MAXSIZE_ENDED = 'upload_encrypted_maxsize_ended';
+
+    const OFFSET_NOCRYPT   = 100;
+    const OFFSET_ENCRYPTED = 200;
+
+    const STORAGE_EXPIRED_TRANSFERS_SIZE = 'storage-expired-transfers-size';
+    const STORAGE_USED_SIZE = 'storage-used-size';
+    const STORAGE_FREE_SIZE = 'storage-free-size';
+    const OFFSET_STORAGE = 500;
+    const OFFSET_STORAGE_END = 510;
     
     protected function getEnum()
     {
@@ -68,6 +97,33 @@ class DBConstantStatsEvent extends DBConstant
             self::DOWNLOAD_STARTED  => 7,
             self::DOWNLOAD_RESUMED  => 8,
             self::DOWNLOAD_ENDED    => 9,
+            self::UPLOAD_MAXSIZE_ENDED    => 10,
+            self::DOWNLOAD_MAXSIZE_ENDED  => 11,
+ 
+            // It is important that these are the same as the above upload and download
+            // started, resumed, and ended but with an offset.
+            self::UPLOAD_NOCRYPT_STARTED    => self::OFFSET_NOCRYPT + 1,
+            self::UPLOAD_NOCRYPT_RESUMED    => self::OFFSET_NOCRYPT + 2,
+            self::UPLOAD_NOCRYPT_ENDED      => self::OFFSET_NOCRYPT + 3,
+            self::DOWNLOAD_NOCRYPT_STARTED  => self::OFFSET_NOCRYPT + 7,
+            self::DOWNLOAD_NOCRYPT_RESUMED  => self::OFFSET_NOCRYPT + 8,
+            self::DOWNLOAD_NOCRYPT_ENDED    => self::OFFSET_NOCRYPT + 9,
+            self::UPLOAD_NOCRYPT_MAXSIZE_ENDED    => self::OFFSET_NOCRYPT + 10,
+            self::DOWNLOAD_NOCRYPT_MAXSIZE_ENDED  => self::OFFSET_NOCRYPT + 11,
+
+            self::UPLOAD_ENCRYPTED_STARTED    => self::OFFSET_ENCRYPTED + 1,
+            self::UPLOAD_ENCRYPTED_RESUMED    => self::OFFSET_ENCRYPTED + 2,
+            self::UPLOAD_ENCRYPTED_ENDED      => self::OFFSET_ENCRYPTED + 3,
+            self::DOWNLOAD_ENCRYPTED_STARTED  => self::OFFSET_ENCRYPTED + 7,
+            self::DOWNLOAD_ENCRYPTED_RESUMED  => self::OFFSET_ENCRYPTED + 8,
+            self::DOWNLOAD_ENCRYPTED_ENDED    => self::OFFSET_ENCRYPTED + 9,
+            self::UPLOAD_ENCRYPTED_MAXSIZE_ENDED    => self::OFFSET_ENCRYPTED + 10,
+            self::DOWNLOAD_ENCRYPTED_MAXSIZE_ENDED  => self::OFFSET_ENCRYPTED + 11,
+
+            self::STORAGE_EXPIRED_TRANSFERS_SIZE => self::OFFSET_STORAGE + 1,
+            self::STORAGE_USED_SIZE => self::OFFSET_STORAGE + 2,
+            self::STORAGE_FREE_SIZE => self::OFFSET_STORAGE + 3,
+            
         );
     }
 
@@ -110,5 +166,33 @@ class DBConstantStatsEvent extends DBConstant
             return self::lookup(self::DOWNLOAD_ENDED);
         }
         return null;
+    }
+    static function augmentToEventConsideringEncryption( $ev, DBObject $target )
+    {
+        Logger::debug("augmentToEventConsideringEncryption() testing ev " . $ev . " class: " . get_class($target) );
+        if( $ev >= self::lookup(self::UPLOAD_STARTED) && $ev <= self::lookup(self::DOWNLOAD_ENDED) )
+        {
+            if( $ev >= self::lookup(self::USER_CREATED) && $ev <= self::lookup(self::USER_INACTIVED) ) {
+                return $ev;
+            }
+
+            $transfer = NULL;
+            switch (get_class($target)) {
+                case Transfer::getClassName():
+                    $transfer = $target;
+                    break;
+                case File::getClassName():
+                    $transfer = $target->transfer;
+                    break;
+            }
+
+            if( $transfer ) {
+                if( $transfer->is_encrypted ) {
+                    return $ev + self::OFFSET_ENCRYPTED;
+                }
+                return $ev + self::OFFSET_NOCRYPT;
+            }
+        }
+        return $ev;
     }
 }

@@ -36,7 +36,18 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 /**
- * Represents an user in database
+ * Represents the collection of aggregate statistics.
+ * These have running sums for time and size and are used
+ * to produce charts in a timely fashion for series data.
+ * 
+ * create() is called by logger to capture events as they occur 
+ * and this information is upserted into the statistics table
+ * at many epoch levels. So a single event is tracked at 15 minutes
+ * hourly, weekly etc levels.
+ * 
+ * sum and time fields use numeric types as they are expected to be
+ * able to become truely huge. For example, the number of bytes uploaded
+ * to a filesender instance over an entire year.
  */
 class AggregateStatistic extends DBObject
 {
@@ -153,6 +164,72 @@ class AggregateStatistic extends DBObject
         } 
         return true;
     }
+
+    /**
+     * Some events might want to upsert two (or more) event types depending on other
+     * aspects of the data. For example, if a transfer was encrypted or not.
+     */
+    public static function upsertEvent($event, $eventtype, $epoch, $sizeadd, $timeadd )
+    {
+        if( $eventtype ) {
+            // upsert each epochType as they broaden.
+            $e = new EpochType( DBConstantEpochType::NARROWEST_TYPE, $epoch );
+            for( ; $e; $e = $e->broaden() ) {
+                
+                $epochVal = "'".date('Y-m-d H:i:s', $e->tt) . "'";
+                Logger::debug('event ' . $event . ' looking up ' . $e->epochType );
+                $et = DBConstantEpochType::lookup($e->epochType);
+                
+                DatabaseUpsert::upsert( 
+                    "insert into AggregateStatistics "
+                  . " (epoch,epochtype,eventtype,eventcount,timesum,sizesum) "
+                  . " values ( $epochVal,$et,$eventtype,1,$timeadd,$sizeadd ) "
+                  , "epoch,epochtype,eventtype"
+                  , " eventcount=AggregateStatistics.eventcount+1"
+                  . "  , sizesum = AggregateStatistics.sizesum+$sizeadd "
+                  . "  , timesum = AggregateStatistics.timesum+$timeadd "
+                );
+                
+            }
+        }
+    }
+
+    /**
+     * This is like upsertEvent() but the largest value is retained instead
+     * of the sum.
+     */
+    public static function upsertLargestEvent($event, $eventtype, $epoch, $sizeadd, $timeadd )
+    {
+        // eventtype is the base event such as UPLOAD_ENDED
+        if( $eventtype == DBConstantStatsEvent::lookup(DBConstantStatsEvent::UPLOAD_ENDED)) {
+            $eventtype = DBConstantStatsEvent::lookup(DBConstantStatsEvent::UPLOAD_MAXSIZE_ENDED);
+        } else {
+            return;
+        }
+        
+        if( $eventtype ) {
+            // upsert each epochType as they broaden.
+            $e = new EpochType( DBConstantEpochType::NARROWEST_TYPE, $epoch );
+            for( ; $e; $e = $e->broaden() ) {
+                
+                $epochVal = "'".date('Y-m-d H:i:s', $e->tt) . "'";
+                Logger::debug('event ' . $event . ' looking up ' . $e->epochType );
+                $et = DBConstantEpochType::lookup($e->epochType);
+                
+                DatabaseUpsert::upsert( 
+                    "insert into AggregateStatistics "
+                  . " (epoch,epochtype,eventtype,eventcount,timesum,sizesum) "
+                  . " values ( $epochVal,$et,$eventtype,1,$timeadd,$sizeadd ) "
+                  , "epoch,epochtype,eventtype"
+                  , " eventcount=AggregateStatistics.eventcount+1"
+                  . "  , sizesum = GREATEST(AggregateStatistics.sizesum,$sizeadd) "
+                  . "  , timesum = GREATEST(AggregateStatistics.timesum,$timeadd) "
+                );
+                
+            }
+        }
+    }
+
     
     /**
      * Create a new stat log
@@ -201,30 +278,69 @@ class AggregateStatistic extends DBObject
         $epoch = time();
         $eventtype = DBConstantStatsEvent::fromLogEventType($event);
 
-        if( $eventtype ) {
-            // upsert each epochType as they broaden.
-            $e = new EpochType( DBConstantEpochType::NARROWEST_TYPE, $epoch );
-            for( ; $e; $e = $e->broaden() ) {
-                
-                $epochVal = "'".date('Y-m-d H:i:s', $e->tt) . "'";
-                Logger::error('event ' . $event . ' looking up ' . $e->epochType );
-                $et = DBConstantEpochType::lookup($e->epochType);
-                
-                DatabaseUpsert::upsert( 
-                    "insert into AggregateStatistics "
-                  . " (epoch,epochtype,eventtype,eventcount,timesum,sizesum) "
-                  . " values ( $epochVal,$et,$eventtype,1,$timeadd,$sizeadd ) "
-                  , "epoch,epochtype,eventtype"
-                  , " eventcount=AggregateStatistics.eventcount+1"
-                  . "  , sizesum = AggregateStatistics.sizesum+$sizeadd "
-                  . "  , timesum = AggregateStatistics.timesum+$timeadd "
-                );
-                
-            }
+        self::upsertEvent( $event, $eventtype, $epoch, $sizeadd, $timeadd );
+        self::upsertLargestEvent( $event, $eventtype, $epoch, $sizeadd, $timeadd );
+        
+        // Some times a single event is split into two upserts using
+        // different eventtypes for aggregate stats. We record as well
+        // as overall bytes and count the totals
+        // for encrypted and nocrypt transfers.
+        $derivedET = DBConstantStatsEvent::augmentToEventConsideringEncryption( $eventtype, $target );
+        if( $derivedET != $eventtype ) {
+            self::upsertEvent( $event, $derivedET, $epoch, $sizeadd, $timeadd );
+            self::upsertLargestEvent( $event, $derivedET, $epoch, $sizeadd, $timeadd );
         }
     }
     
-    
+    /**
+     * Check how much storage is used and update the aggregate statistics
+     * to include information about how much of the storage is used at the moment.
+     *
+     * transfers which are expired are also considered so this call should be done
+     * in the cron script before storage is reclaimed from expired transfers.
+     */
+    public static function cronAnalyseStorage()
+    {
+        $expiredSize = 0;
+        $epoch = time();
+        $timeadd = 0;
+        
+        foreach(Transfer::allExpired() as $transfer) {
+            if($transfer->status == TransferStatuses::CLOSED) {
+                continue;
+            }
+            $sz = $transfer->size;
+            Logger::info($transfer.' adding to count size ' . $sz);
+            $expiredSize += $sz;
+        }
+
+        Logger::info('total expired size is ' . $expiredSize);
+        $eventtype = DBConstantStatsEvent::lookup(
+            DBConstantStatsEvent::STORAGE_EXPIRED_TRANSFERS_SIZE);
+        self::upsertEvent('unknown', $eventtype, $epoch, $expiredSize, $timeadd );
+
+
+        $storage_usage = Storage::getUsage();
+        if(!is_null($storage_usage)) {
+            $total_space = 0;
+            $free_space = 0;
+            foreach($storage_usage as $info) {
+                $total_space += $info['total_space'];
+                $free_space += $info['free_space'];
+            }
+            $used_space = $total_space - $free_space;
+
+            self::upsertEvent('unknown',
+                              DBConstantStatsEvent::lookup(
+                                  DBConstantStatsEvent::STORAGE_USED_SIZE),
+                              $epoch, $used_space, $timeadd );
+            self::upsertEvent('unknown',
+                              DBConstantStatsEvent::lookup(
+                                  DBConstantStatsEvent::STORAGE_FREE_SIZE),
+                              $epoch, $free_space, $timeadd );
+        }
+        
+    }
     
     /**
      * Getter
@@ -243,7 +359,12 @@ class AggregateStatistic extends DBObject
         throw new PropertyAccessException($this, $property);
     }
 
-
+    /**
+     * If aggregate stats are enabled and emailing stats is enabled then:
+     * 
+     * If enough time has passed since we last sent a report then we create
+     * a new ones and email it to the nominated email address for such reports.
+     */
     public static function maybeSendReport()
     {
         // if they have not enabled this feature then do nothing.
