@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 /**
- * Represents an user in database
+ * Represents metadata about the aggregate statistics
  */
 class AggregateStatisticMetadata extends DBObject
 {

@@ -1,91 +1,124 @@
 <h2>{tr:aggregate_statistics_page}</h2>
-
+<?php
+/**
+ * This page creates a selection menu with many options that store
+ * a querytype and eventtype to pass down to create a collection
+ * of charts for a specific data set.
+ * 
+ * The aggregate_statistics_page_of_graphs_for_type.php is used to create one
+ * or more charts and the graphs div is updated when the user makes a new selection
+ * to show these new charts.
+ */
+?>
 
 <?php if (!AggregateStatistic::enabled()) { ?>
     <p>{tr:feature_not_enabled}</p>
 <?php } else { ?>
 
+    <form>
+        <select id="select" name="graphtype">
+        <option >--- Please select a graph type ---</option>
+            
     <?php
 
-    $qtypes = array('size','count','incomplete');
+    $qtypes = AggregateStatisticsQueryType::all();
     foreach( $qtypes as $querytype ) {
-        $events = array("upload_started","download_started");
+
+        //
+        // This is a subset of DBConstantStatsEvent::all()
+        //
+        $events = array( DBConstantStatsEvent::UPLOAD_STARTED
+                       , DBConstantStatsEvent::DOWNLOAD_STARTED
+                       , DBConstantStatsEvent::UPLOAD_NOCRYPT_STARTED
+                       , DBConstantStatsEvent::DOWNLOAD_NOCRYPT_STARTED
+                       , DBConstantStatsEvent::UPLOAD_ENCRYPTED_STARTED
+                       , DBConstantStatsEvent::DOWNLOAD_ENCRYPTED_STARTED
+                       , DBConstantStatsEvent::UPLOAD_MAXSIZE_ENDED
+        );
         foreach( $events as $k => $eventtype ) {
-    
+
             $eventtypetr = Lang::tr( "statevent_$eventtype" )->out();
             $querytypetr = Lang::tr( "$querytype" )->out();
 
-            $canvasprefix = "aggregateStatistics".$eventtype.$querytype;
-    ?>
-    
-        <h3><?php echo Lang::tr('aggregate_stats_graph_title_operation')
-                           ->r('eventtype',$eventtypetr)->r('querytype',$querytypetr)->out() ?></h3>
+            $desc = Lang::tr('aggregate_stats_graph_title_operation')
+                        ->r('eventtype',$eventtypetr)
+                        ->r('querytype',$querytypetr)
+                        ->out();
 
-        <?php
-        if( $querytype == 'incomplete' ) {
-            echo '<p>'.Lang::tr('aggregate_stats_graph_explain_incomplete').'</p>';
+            //
+            // we only show size_total for max size graphs.
+            //
+            if( $eventtype == DBConstantStatsEvent::UPLOAD_MAXSIZE_ENDED ) {
+                if( $querytype != "size_total" ) {
+                    continue;
+                }
+                $desc = Lang::tr('aggregate_stats_'.$eventtype)->out();
+            }
+            
+            $v = $querytype . ',' . $eventtype;
+            
+            echo '<option value="' . $v 
+              .  '" data-eventtype="'.$eventtype
+              .  '" data-querytype="'.$querytype
+              .  '" >' . $desc . '</option>';
         }
-        ?>
-        <table class="aggregatestatisticsgraph">
-            <tr><td>
+        
+        //
+        // This is a subset of DBConstantStatsEvent::all()
+        //
+        // the storage graphs are presented slightly differently to
+        // the above more general graphs and are restricted to only
+        // size_total queries
+        //
+        $events = array( DBConstantStatsEvent::STORAGE_EXPIRED_TRANSFERS_SIZE
+                       , DBConstantStatsEvent::STORAGE_FREE_SIZE
+        );
+        foreach( $events as $k => $eventtype ) {
 
-                <div id="graph" class="uploadbulkgraph">
-                    <div id="graphDiv" style="width:350px; height:200px; margin:0 auto">
-                        <canvas id="<?php echo $canvasprefix ?>15mChart"></canvas>
-                    </div>
-                </div>
-            </td><td>
+            if( $querytype == "size_total" ) {
+                $eventtypetr = Lang::tr( "statevent_$eventtype" )->out();
+                $querytypetr = Lang::tr( "$querytype" )->out();
 
-                <div id="graph" class="uploadbulkgraph">
-                    <div id="graphDiv" style="width:350px; height:200px; margin:0 auto">
-                        <canvas id="<?php echo $canvasprefix ?>HourChart"></canvas>
-                    </div>
-                </div>
-            </td></tr><tr><td>
+                $desc = Lang::tr('aggregate_stats_'.$eventtype)->out();
+                $v = $querytype . ',' . $eventtype;
+                
+                echo '<option value="' . $v 
+                  .  '" data-eventtype="'.$eventtype
+                  .  '" data-querytype="'.$querytype
+                  .  '" >' . $desc . '</option>';
+            }
+        }
+    }
+    ?>
+    </select></form>
 
-                <div id="graph" class="uploadbulkgraph">
-                    <div id="graphDiv" style="width:350px; height:200px; margin:0 auto">
-                        <canvas id="<?php echo $canvasprefix ?>WeekChart"></canvas>
-                    </div>
-                </div>
-            </td><td>
+    <div id="graph"></div>
 
-                <div id="graph" class="uploadbulkgraph">
-                    <div id="graphDiv" style="width:350px; height:200px; margin:0 auto">
-                        <canvas id="<?php echo $canvasprefix ?>MonthChart"></canvas>
-                    </div>
-                </div>
-            </td></tr><tr><td>
-
-                <div id="graph" class="uploadbulkgraph">
-                    <div id="graphDiv" style="width:350px; height:200px; margin:0 auto">
-                        <canvas id="<?php echo $canvasprefix ?>YearChart"></canvas>
-                    </div>
-                </div>
-            </td></tr></table>
-
-        <script type="text/javascript" src="{path:lib/chartjs/Chart.bundle.min.js}"></script>
-        <script type="text/javascript" src="{path:js/graph/aggregate-statistics.js}"></script>
-        <script>
-         $( document ).ready(function() {
-             <?php
-             $a = array("15mChart"   => "fifteen_minutes"
-                       ,"HourChart"  => "hour"
-                       ,"WeekChart"  => "week"
-                       ,"MonthChart" => "month"
-                       ,"YearChart"  => "year");
-             foreach( $a as $idtag => $epoch ) {
-                 echo '   aggregateStatisticsSetup( "'.$canvasprefix.$idtag
-                     .'","'.$epoch
-                     .'","'.$eventtype
-                     .'","'.$querytype
-                     .'" );';
+    <!--
+         When the select form is changed we update the core of the
+         page to show the graph the user has selected. The event
+         and query type are passed to us through data fields.
+       -->
+    <script>
+     $( document ).ready(function() {
+         // Change the graph div to show what the user has selected
+         $('select').change(function(){
+             var selected = $(this).find('option:selected');
+             var eventtype = selected.data('eventtype'); 
+             var querytype = selected.data('querytype');
+             if( !querytype || !eventtype ) {
+                 $('#graph').text('');
+                 return;
              }
-             ?>
-         }); 
-        </script>
-    <?php } ?>
-<?php } ?>
+             $('#graph').load('lib/graph/aggregate_statistics_page_of_graphs_for_type.php?'
+                            + 'eventtype='  + eventtype
+                            + '&querytype=' + querytype
+             );
+         });
+     });
+    </script>
+
+    
 <?php } ?>
 
 
