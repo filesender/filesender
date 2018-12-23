@@ -21,7 +21,7 @@ Best regards,
 </p>
 
 <p>
-    The following guest ended to to upload files from your voucher :
+    The following guest ended to upload files from your voucher :
 </p>
 
 <table rules="rows">
