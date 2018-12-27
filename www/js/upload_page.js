@@ -1015,6 +1015,8 @@ $(function() {
         filesender.ui.files.checkEncryptionPassword($(this));
     });
 
+    // Disable readonly (some browsers ignore the autocomplete...)
+    filesender.ui.nodes.encryption.password.attr('readonly', false);
     
     // Bind file list select button
     filesender.ui.nodes.files.input.on('change', function() {
