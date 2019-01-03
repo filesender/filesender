@@ -109,6 +109,9 @@
     }
     
     ?>
+    
+  <h2>Python CLI Client</h2>
+  <a href="clidownload.php" target="_blank">Download Python CLI Client</a>    
 </div>
 
 <script type="text/javascript" src="{path:js/user_page.js}"></script>
