@@ -47,6 +47,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("files", help="path to file(s) to send", nargs='+')
 parser.add_argument("-v", "--verbose", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
+parser.add_argument("-s", "--subject")
+parser.add_argument("-m", "--message")
 requiredNamed = parser.add_argument_group('required named arguments')
 requiredNamed.add_argument("-u", "--username", required=True)
 requiredNamed.add_argument("-a", "--apikey", required=True)
@@ -225,7 +227,7 @@ for f in args.files:
   }
   filesTransfer.append({'name':fn,'size':size})
 
-transfer = postTransfer(args.username, filesTransfer, args.recipients, subject='API TEST', message='API message, this is a test', expires=None, options=[])['created']
+transfer = postTransfer(args.username, filesTransfer, args.recipients, subject=args.subject, message=args.message, expires=None, options=[])['created']
 #print(transfer)
 
 try:
