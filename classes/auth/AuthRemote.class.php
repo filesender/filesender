@@ -137,7 +137,9 @@ class AuthRemote
             } else {
                 // Get user, fail if unknown or no user secret
                 try {
-                    $user = User::fromId($uid);
+                    $authid = Authentication::ensureAuthIDFromSAMLUID($uid);
+                    $user = User::fromAuthID($authid);
+                    
                 } catch (UserNotFoundException $e) {
                     throw new AuthRemoteUserRejectedException($uid, 'user not found');
                 }

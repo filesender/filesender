@@ -73,6 +73,7 @@ class RestServer
     public static function process()
     {
         try {
+            
             // Get authentication state (fills auth data in relevant classes)
             // Will also start a session using the authentication handler.
             // This prevents problems caused by duplicate sessions.
@@ -97,7 +98,7 @@ class RestServer
                 }
                 $method = strtolower($_SERVER[$k]);
             }
-            
+
             // Record called method (for log), fail if unknown
             RestException::setContext('method', $method);
             if (!in_array($method, array('get', 'post', 'put', 'delete'))) {
