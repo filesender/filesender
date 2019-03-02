@@ -1181,7 +1181,7 @@ $(function() {
         $(this).focus(); // Get out of email field / datepicker so inputs are updated
         $(this).blur();
         
-        if(filesender.ui.transfer.status == 'new' && $(this).is('[aria-disabled="false"]')) {
+        if(filesender.ui.transfer.status == 'new' && $(this).filter('[aria-disabled="false"]')) {
 
             filesender.ui.switchToUloadingPageConfiguration();
             filesender.ui.startUpload();
