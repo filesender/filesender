@@ -220,7 +220,7 @@ filesender.ui.send = function() {
     for(var c in filesender.ui.nodes.options) {
         for(var o in filesender.ui.nodes.options[c]) {
             var i = filesender.ui.nodes.options[c][o];
-            var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
+            var v = i.filter('[type="checkbox"]') ? i.is(':checked') : i.val();
             options[c][o] = v;
         }
     }
@@ -353,7 +353,7 @@ $(function() {
     filesender.ui.nodes.sendbutton.on('click', function() {
         $(this).focus(); // Get out of email field / datepicker so inputs are updated
         $(this).blur();
-        if($(this).is('[aria-disabled="false"]')) {
+        if($(this).filter('[aria-disabled="false"]')) {
             filesender.ui.send();
             filesender.ui.nodes.sendbutton.button('disable');
         }
