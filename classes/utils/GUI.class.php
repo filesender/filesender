@@ -64,7 +64,6 @@ class GUI
     {
         return self::filterSources(array(
             'lib/reset/reset.css',
-            //'lib/jquery/smoothness/jquery-ui-1.10.2.custom.min.css',
             'lib/jquery-ui-1.12.1.custom/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'css/default.css',
