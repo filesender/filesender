@@ -146,7 +146,11 @@
                 $items = array();
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
                     $name = $file->path;
-                    if(strlen($name) > 28) $name = substr($name, 0, 25).'...';
+                    $name_shorten_by = (int) (strlen((string) count($transfer->downloads))+strlen(Lang::tr('see_all'))+3)/2;
+                    if(strlen($name) > 28-$name_shorten_by) {
+                        if(count($transfer->downloads)) $name = substr($name, 0, 23-$name_shorten_by).'...';
+                        else $name = substr($name, 0, 23).'...';
+                    }
                     $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::sanitizeOutput($name).'</span>';
                 }
                 
@@ -166,22 +170,30 @@
             </td>
             
             <td class="actions">
-                <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
-                <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
-                <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
-                <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                <div style="margin:3px">
+                    <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                    <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
+                    <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
+                </div>
+                <div style="margin:3px">
+                    <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                    <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                </div>
             </td>
         </tr>
         
         <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
             <td colspan="8">
                 <div class="actions">
-                    <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
-                    <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
-                    <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
-                    <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                    <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                    <div style="margin:3px">
+                        <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                        <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
+                        <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
+                    </div>
+                    <div style="margin:3px">
+                        <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                        <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                    </div>
                 </div>
                 
                 <div class="collapse">
