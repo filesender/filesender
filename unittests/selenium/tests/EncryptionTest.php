@@ -94,7 +94,7 @@ class EncryptionTest extends SeleniumTest {
         $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("1231223");
         
         // click ok
-        $this->byCss(".ui-dialog .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only")->click();
+        $this->byCss(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button")->click();
         sleep(20);
         //
         try{
@@ -113,7 +113,7 @@ class EncryptionTest extends SeleniumTest {
         $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("123123");
         
         // click ok
-        $this->byCss(".ui-dialog .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only")->click();
+        $this->byCss(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button")->click();
         sleep(20);
         //
         try{
