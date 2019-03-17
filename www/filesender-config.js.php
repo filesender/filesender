@@ -47,6 +47,12 @@ function value_to_TF( $v )
     return json_encode( ($v ? true : false) );
 }
 
+$to = Config::get('transfer_options');
+$to_getalink = $to['get_a_link'];
+if ($to_getalink['available'] === false && $to_getalink['default'] === true) {
+  $get_a_link = true;
+}
+
 
 ?>
 if (typeof window === 'undefined') {
@@ -142,6 +148,10 @@ window.filesender.config = {
 
     automatic_resume_number_of_retries: <?php echo Config::get('automatic_resume_number_of_retries') ?>,
     automatic_resume_delay_to_resume:   <?php echo Config::get('automatic_resume_delay_to_resume') ?>,
+
+    transfer_options: {
+        get_a_link: <?php echo value_to_TF($get_a_link); ?>
+    },
 
 
 };
