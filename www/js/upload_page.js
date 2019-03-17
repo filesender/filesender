@@ -30,6 +30,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+function delayAndCallOnlyOnce(callback, ms) {
+    var timer = 0;
+    return function() {
+        var context = this, args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            callback.apply(context, args);
+        }, ms || 0);
+    };
+}
+
+/**
+ * Because the checkEncryptionPassword() uses toggle and also wants to read
+ * the state of the message to see if it should call toggle there is a potential
+ * issue of stale data. We must make slideToggleDelay less than checkEncryptionPassword_delay
+ * to allow any toggle to have completed so that the next call to checkEncryptionPassword()
+ * can read the state of the toggled element and not get confused.
+ */
+var checkEncryptionPassword_slideToggleDelay = 200;
+var checkEncryptionPassword_delay = 300;
+
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
@@ -394,16 +415,15 @@ filesender.ui.files = {
         }
         
         var msg = $('#encryption_password_container_too_short_message');
-        
         if(invalid) {
             input.addClass('invalid');
             if( msg.css('display')=='none') {
-                msg.slideToggle();
+                msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
             }
         }else{
             input.removeClass('invalid');
             if( msg.css('display')!='none') {
-                msg.slideToggle();
+                msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
             }
         }
     },
@@ -1011,9 +1031,13 @@ $(function() {
 
 
     // Bind encryption password events
-    filesender.ui.nodes.encryption.password.on('keyup', function(e) {
-        filesender.ui.files.checkEncryptionPassword($(this));
-    });
+    filesender.ui.nodes.encryption.password.on(
+        'keyup',
+        delayAndCallOnlyOnce(function(e) {
+            filesender.ui.files.checkEncryptionPassword($(this));
+        }, checkEncryptionPassword_delay )
+    );
+    
 
     // Disable readonly (some browsers ignore the autocomplete...)
     filesender.ui.nodes.encryption.password.attr('readonly', false);
