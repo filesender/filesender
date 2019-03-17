@@ -605,8 +605,7 @@ class DBObject
      */
     public static function insertRecord($data)
     {
-        $table = static::getDBTable();
-        
+        $table = self::getDBTable();
         // Remove autoinc keys
         foreach (static::$dataMap as $field_name => $dfn) {
             if (array_key_exists('autoinc', $dfn) && $dfn['autoinc']) {

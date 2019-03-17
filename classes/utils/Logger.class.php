@@ -497,6 +497,7 @@ class Logger
     {
         AuditLog::create($logEvent, $target, $author);
         StatLog::create($logEvent, $target);
+        AggregateStatistic::create($logEvent, $target,$author);
         
         self::info('Event#'.$logEvent.' on '.(string)$target.($author ? ' by '.(string)$author : ''));
     }

@@ -45,6 +45,8 @@ if(Config::get('show_storage_statistics_in_admin')) {
         }
     }
 ?>
+
+
 <h3>{tr:storage_usage}</h3>
 
 <table class="storage_usage <?php echo $global_warning ? 'warning' : '' ?>">

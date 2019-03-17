@@ -67,3 +67,5 @@ class StatLogUnknownEventException extends DetailedException
         );
     }
 }
+
+

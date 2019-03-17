@@ -155,11 +155,12 @@ class Authentication extends DBObject
     /**
      * Create or read the record for this authenticated user
      *
-     * @param Auth $auth the auth information or the current user will be used
+     * @param Auth $auth the auth information or the current user will be used. 
+     *                   This matches the saml_user_identification_uid column.
      *
      * @return self
      */
-    public static function ensureAuthIDFromAuthUID($saml_auth_uid)
+    public static function ensureAuthIDFromSAMLUID($saml_auth_uid)
     {
         return self::ensure($saml_auth_uid)->id;
     }

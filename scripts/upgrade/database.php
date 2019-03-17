@@ -84,6 +84,19 @@ function getClasses() {
     }
     return $classes;
 }
+// Get data constant classes
+function getConstantClasses() {
+    $classes = array();
+    // This must be before Authentication so users can be setup too    
+    foreach(scandir(FILESENDER_BASE.'/classes/data/constants') as $i) {
+        if(substr($i, -10) != '.class.php') continue;
+        $class = substr($i, 0, -10);
+        if($class == 'DBConstant') continue;
+        $classes[] = $class;
+    }
+    return $classes;
+}
+
 
 $classes = getClasses();
 
@@ -144,52 +157,65 @@ function ensureAuthenticationsTableHasReservedIDs( $addUser = false )
     
 }
 
+function ensureTable( $class )
+{
+    echo 'Checking class '.$class."\n";
+    
+    $datamap = call_user_func($class.'::getDataMap');
+    $viewmap = call_user_func($class.'::getViewMap');
+    $secindexmap = call_user_func($class.'::getSecondaryIndexMap');
+    $table = call_user_func($class.'::getDBTable');
+    
+    // Check if table exists
+    echo 'Working on table '.$table."\n";
+    updateTable( $table, $datamap );
+
+    // reserve some IDs if we might have just made the auths table
+    if( $class == 'Authentication' ) {
+        // We are ok to make new recrods in the UserPreferences table as it should be handled
+        // before the Authentication table and will have the right schema.
+        $createUserPreferencesRecordToo = true;
+        ensureAuthenticationsTableHasReservedIDs( $createUserPreferencesRecordToo );
+    }
+    echo 'Done for table '.$table."\n";
+
+    echo 'Checkindex secondary indexes for table '.$table."\n";
+    foreach($secindexmap as $index => $definition) {
+        $index = $table . '_' . $index;
+        echo 'checking ' . $index . "\n";
+        $problems = Database::checkTableSecondaryIndexFormat( $table, $index, $definition, function($message) {
+            echo "\t".$message."\n";
+        });
+        if( $problems ) {
+            echo "update index " . $index . " on table " . $table . "\n";
+            if( $problems != DatabaseSecondaryIndexStatuses::NOTFOUND ) {
+                echo "drop index " . $index . " on table " . $table . "\n";
+                Database::dropTableSecondaryIndex(   $table, $index );
+            }
+            echo "create index " . $index . " on table " . $table . "\n";
+            Database::createTableSecondaryIndex( $table, $index, $definition );
+        }
+    } 
+    echo 'Done for secondary indexes for table '.$table."\n";
+}
+
 //
 // Main updates
 //
 function ensureAllTables()
 {
-    $classes = getClasses();
-    
+    $classes = getConstantClasses();
     foreach($classes as $class) {
-        echo 'Checking class '.$class."\n";
-        
-        $datamap = call_user_func($class.'::getDataMap');
-        $viewmap = call_user_func($class.'::getViewMap');
-        $secindexmap = call_user_func($class.'::getSecondaryIndexMap');
-        $table = call_user_func($class.'::getDBTable');
-        
-        // Check if table exists
-        echo 'Working on table '.$table."\n";
-        updateTable( $table, $datamap );
+        ensureTable( $class );
+        call_user_func($class.'::ensure');
+    }
 
-        // reserve some IDs if we might have just made the auths table
-        if( $class == 'Authentication' ) {
-            // We are ok to make new recrods in the UserPreferences table as it should be handled
-            // before the Authentication table and will have the right schema.
-            $createUserPreferencesRecordToo = true;
-            ensureAuthenticationsTableHasReservedIDs( $createUserPreferencesRecordToo );
+    $classes = getClasses();
+    foreach($classes as $class) {
+        ensureTable( $class );
+        if( $class == 'AggregateStatisticMetadata' ) {
+            call_user_func($class.'::ensure');
         }
-        echo 'Done for table '.$table."\n";
-
-        echo 'Checkindex secondary indexes for table '.$table."\n";
-        foreach($secindexmap as $index => $definition) {
-            $index = $table . '_' . $index;
-            echo 'checking ' . $index . "\n";
-            $problems = Database::checkTableSecondaryIndexFormat( $table, $index, $definition, function($message) {
-                echo "\t".$message."\n";
-            });
-            if( $problems ) {
-                echo "update index " . $index . " on table " . $table . "\n";
-                if( $problems != DatabaseSecondaryIndexStatuses::NOTFOUND ) {
-                    echo "drop index " . $index . " on table " . $table . "\n";
-                    Database::dropTableSecondaryIndex(   $table, $index );
-                }
-                echo "create index " . $index . " on table " . $table . "\n";
-                Database::createTableSecondaryIndex( $table, $index, $definition );
-            }
-        } 
-        echo 'Done for secondary indexes for table '.$table."\n";
     }
 }
 
@@ -254,6 +280,18 @@ function ensureFK()
                     'clientlogs.userid refers to users.id',
 	            call_user_func('ClientLog::getDBTable'), 'ClientLog_userid', 'userid',
 	            call_user_func('User::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'aggregatestatistics.epochtype refers to dbconstantepochtypes.id',
+	            call_user_func('AggregateStatistic::getDBTable'), 'AggregateStatistic_epochtype', 'epochtype',
+	            call_user_func('DBConstantEpochType::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'aggregatestatistics.eventtype refers to dbconstanteventtypes.id',
+	            call_user_func('AggregateStatistic::getDBTable'), 'AggregateStatistic_eventtype', 'eventtype',
+	            call_user_func('DBConstantStatsEvent::getDBTable'), 'id' ));
+
     
     foreach ( $fks as $fk ) {
         $fk->ensure();
