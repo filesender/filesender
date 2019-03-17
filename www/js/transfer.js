@@ -1119,7 +1119,7 @@ window.filesender.transfer = function() {
                     return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
             
-            if(('get_a_link' in transfer.options && transfer.options.get_a_link)) || filesender.config.transfer_options.get_a_link)
+            if(('get_a_link' in transfer.options && transfer.options.get_a_link) || filesender.config.transfer_options.get_a_link)
                 transfer.download_link = data.recipients[0].download_url;
             
             transfer.createRestartTracker();
