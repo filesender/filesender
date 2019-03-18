@@ -969,6 +969,10 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+    form.find('.basic_options [data-option] input, .hidden_options [data-option] input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options[i.attr('name')] = i;
+    });
 
     
 
@@ -1109,6 +1113,10 @@ $(function() {
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {
         $('.advanced_options').slideToggle();
+        return false;
+    });
+    form.find('.toggle_hidden_options').on('click', function() {
+        $('.hidden_options').slideToggle();
         return false;
     });
     

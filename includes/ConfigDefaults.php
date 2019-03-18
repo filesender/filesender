@@ -201,6 +201,7 @@ $default = array(
     'aggregate_statlog_send_report_days' => 0,
     'aggregate_statlog_send_report_email_address' => '',
 
+    'transfer_options_not_available_to_export_to_client' => 'get_a_link',
     
     'transfer_options' => array(
         'email_me_copies' => array(

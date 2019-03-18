@@ -108,6 +108,8 @@ A note about colours;
 * [encryption_generated_password_length](#encryption_generated_password_length)
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
+* [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
+
 
 ## Graphs
 
@@ -1012,6 +1014,18 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.1
 * __comment:__ 
 
+
+### transfer_options_not_available_to_export_to_client
+* __description:__ Options that can be exposed to the client when available=false. For example, if you want to force the get_a_link option it will be default=true and available=false (available to be changed, not unavailable as a used option). You might like to leave this option unset so that it can change as filesender evolves to allow mandatory options to be exposed to the browser.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ comma sep list of strings
+* __default:__ get_a_link
+* __available:__ since version 2.6
+* __comment:__ 
+
+
+* [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
 
 
 ---

@@ -779,6 +779,10 @@ table.list .date {
     display: none;
 }
 
+#upload_form .hidden_options {
+    display: none;
+}
+
 #upload_form .aup {
     padding: 1em;
 }

@@ -190,13 +190,15 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                 </td>
                 <td class="box">
                     <?php
-                        $displayoption = function($name, $cfg, $disable = false) {
+                        $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) {
                             $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
                             
                             $default = $cfg['default'];
-                            if(Auth::isSP() && !$text)
-                                $default = Auth::user()->defaultTransferOptionState($name);
-
+                            if( !$forcedOption ) {
+                                if(Auth::isSP() && !$text)
+                                    $default = Auth::user()->defaultTransferOptionState($name);
+                            }
+                            
                             $checked = $default ? 'checked="checked"' : '';
                             $disabled = $disable ? 'disabled="disabled"' : '';
                             $extraDivAttrs = '';
@@ -247,6 +249,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg, Auth::isGuest()) ?>
                     </div>
+
                     
                     <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                     <div class="fieldcontainer">
@@ -265,8 +268,20 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         </div>
                         <?php } ?>
                         <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) $displayoption('disable_terasender', array('default'=>false), false); ?>
+
+
                     </div>
                     <?php } /* End of advanced settings div. */ ?>
+
+                    <div class="hidden_options">
+                        <?php foreach(Transfer::forcedOptions() as $name => $cfg) {
+                            $allowed = explode(',', Config::get("transfer_options_not_available_to_export_to_client"));
+                            if( in_array($name,$allowed)) {
+                                $displayoption($name, $cfg, Auth::isGuest(),true);
+                            }
+                        } ?>
+                    </div>
+                    
                 </td>
             </tr>
         </table>
