@@ -78,7 +78,7 @@ window.filesender.ui = {
             }
         }
         
-        var d = $('<div />').appendTo('body').attr({title: title});
+        var d = $("<div  />").appendTo('body').attr({title: title});
         
         var handle = function(lid) {
             return function() {
@@ -220,7 +220,7 @@ window.filesender.ui = {
         return this.popup(
             title,
             {close: onclose},
-            {width: $('#wrap').width(), minHeight: 'auto', onclose: onclose}
+            {width: $('#wrap').width(), minHeight: 'auto', onclose: onclose }
         ).addClass('wide_info');
     },
     
