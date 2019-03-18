@@ -386,6 +386,7 @@ $(function() {
     var auditlogs = function(transfer_id, filter) {
         filesender.client.getTransferAuditlog(transfer_id, function(log) {
             var popup = filesender.ui.wideInfoPopup(lang.tr('auditlog'));
+            popup.css('overflow','hidden');
             
             if(!log || !log.length) {
                 $('<p />').text(lang.tr('no_auditlog')).appendTo(popup);
