@@ -47,6 +47,7 @@ function value_to_TF( $v )
     return json_encode( ($v ? true : false) );
 }
 
+$get_a_link = false;
 $to = Config::get('transfer_options');
 $to_getalink = $to['get_a_link'];
 if ($to_getalink['available'] === false && $to_getalink['default'] === true) {
