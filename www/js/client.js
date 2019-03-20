@@ -92,7 +92,6 @@ window.filesender.client = {
         
         var args = {};
         if(options.args) for(var k in options.args) args[k] = options.args[k];
-        args._ = (new Date()).getTime(); // Defeat cache
         var urlargs = [];
         for(var k in args) urlargs.push(k + '=' + args[k]);
         
