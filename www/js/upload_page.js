@@ -737,7 +737,7 @@ filesender.ui.startUpload = function() {
     this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
     var crypto = window.filesender.crypto_app();
-    this.transfer.encryption_key_version = crypto.crypto_key_version;
+    this.transfer.encryption_key_version = filesender.config.encryption_key_version_new_files;
     this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
     
     this.transfer.onprogress = filesender.ui.files.progress;
