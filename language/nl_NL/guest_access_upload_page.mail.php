@@ -1,6 +1,6 @@
-onderwerp: Gastgebruiker op upload-pagina {alternative:plain}
+subject: Gastgebruiker op upload-pagina {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Gastgebruiker {guest.email} heeft uw voucher gebruikt om de upload-pagina te benaderen.
 
@@ -11,7 +11,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
