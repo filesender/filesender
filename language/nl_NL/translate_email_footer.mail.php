@@ -1,4 +1,4 @@
-onderwerp: vertaal e-mail voettekst, gedeeld door alle talen
+subject: vertaal e-mail voettekst, gedeeld door alle talen
 
 {alternative:plain}
 
