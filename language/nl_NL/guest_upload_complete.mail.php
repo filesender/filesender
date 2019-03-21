@@ -1,8 +1,8 @@
-Onderwerp: Gast heeft bestanden geüpload
+subject: Gast heeft bestanden geüpload
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 De volgende gast heeft fileThe following guest ended to upload files from your voucher :
 
@@ -17,7 +17,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
