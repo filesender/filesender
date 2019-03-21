@@ -1,8 +1,8 @@
-onderwerp: Bestand(en) niet langer beschikbaar om te downloaden
+subject: Bestand(en) niet langer beschikbaar om te downloaden
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 De transfer n°{transfer.id} is verwijderd van {cfg:site_name} door de verzender ({transfer.user_email}) en is niet langer beschikbaar om te downloaden.
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
