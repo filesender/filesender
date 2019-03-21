@@ -1,8 +1,8 @@
-onderwerp: Gasten voucher verlopen
+subject: Gasten voucher verlopen
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Een gast voucher van {guest.user_email} is verlopen.
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
