@@ -1,8 +1,8 @@
-onderwerp: Waarschuwing opslaggebruik
+subject: Waarschuwing opslaggebruik
 
 {alternative:plain}
 
-Geachte mevrouw, heer, 
+Geachte heer, mevrouw, 
 
 Het opslaggebruik van {cfg: site_name} waarschuwt:
 
@@ -18,7 +18,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer, 
+    Geachte heer, mevrouw, 
 </p>
 
 <p>
