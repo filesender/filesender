@@ -1,8 +1,8 @@
-onderwerp: Bestand niet langer beschikbaar om te downloaden
+subject: Bestand niet langer beschikbaar om te downloaden
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Het bestand {file.path} ({size:file.size}) is verwijderd uit de transfer n°{transfer.id} en kan niet langer meer worden gedownload.
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
