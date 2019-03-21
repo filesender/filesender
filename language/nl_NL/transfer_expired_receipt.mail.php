@@ -1,8 +1,8 @@
-onderwerp: Bestand(en) verlopen
+subject: Bestand(en) verlopen
 
 {alternative:plain}
 
-Geachte mevrouw, heer, 
+Geachte heer, mevrouw, 
 
 Uw transfer n°{transfer.id} is verlopen en kan niet meer worden gedownload ({transfer.link}).
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer, 
+    Geachte heer, mevrouw,
 </p>
 
 <p>
