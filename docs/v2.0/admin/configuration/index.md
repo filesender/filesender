@@ -106,6 +106,7 @@ A note about colours;
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_generated_password_length](#encryption_generated_password_length)
+* [encryption_key_version_new_files](#encryption_key_version_new_files)
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
@@ -988,14 +989,25 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.1
 * __comment:__ either base64 or ascii85 
 
-
 ### encryption_generated_password_length
 * __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
 * __mandatory:__ no 
 * __type:__ int
 * __default:__ encryption_min_password_length
 * __available:__ since version 2.0
-* __comment:__ 
+* __comment:__
+
+
+### encryption_key_version_new_files
+* __description:__ The way encryption keys are derived from the supplied or generated password may change over time. Generally this is done to improve security, though it may also exclude certain older web browsers due to some features being missing in the older browser. This setting is the default key version to use for new files. The key version used to encrypt a file is stored in the database for each transfer and sent to allow anybody downloading the file to use the correct key version to properly decrypt the file. This way, new improved code can be issued and existing files which use older key versions can still be downloaded and decrypted. This allows migration to newer code as new FileSender releeases are made while allowing users to still download older encyrpted content. It is expected that this configuration option may be ignored by a system administrator unless you wish to support older web browsers and thus force a specific older key version to be used for all files. You will want version 0 if you wish to support IE11 clients. As of late 2018 the default is version 1.
+* __recommend_leaving_at_default:__ true
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ latest version that the code supports.
+* __available:__ since version 2.6
+* __comment:__
+
+
 
 ### automatic_resume_number_of_retries
 * __description:__ Number of times to automatically resume an upload if a major error has happened. Set this to 0 to disable automatic resume.

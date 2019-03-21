@@ -202,6 +202,10 @@ $default = array(
     'aggregate_statlog_send_report_email_address' => '',
 
     'transfer_options_not_available_to_export_to_client' => 'get_a_link',
+
+    // see crypto_app.js for constants in the range crypto_key_version_constants
+    // Generally higher is newer + better.
+    'encryption_key_version_new_files' => 1,
     
     'transfer_options' => array(
         'email_me_copies' => array(
