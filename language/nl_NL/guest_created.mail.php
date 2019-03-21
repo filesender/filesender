@@ -1,9 +1,9 @@
-onderwerp: Gast voucher ontvangen
-onderwerp: {guest.subject}
+subject: Gast voucher ontvangen
+subject: {guest.subject}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Hieronder vindt u een voucher die toegang verleent tot {cfg: site_name}. U kunt deze voucher gebruiken om één set bestanden te uploaden en beschikbaar te maken als download voor een groep mensen.
 
@@ -20,7 +20,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
