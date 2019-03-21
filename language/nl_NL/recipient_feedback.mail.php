@@ -1,8 +1,8 @@
-onderwerp: Feedback van uw {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gast{endif} {target.email}
+subject: Feedback van uw {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gast{endif} {target.email}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 We hebben een e-mailfeedback ontvangen van uw {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gast{endif} {target.email}, vind het als bijlage.
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
