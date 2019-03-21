@@ -1,9 +1,9 @@
-onderwerp: Bestand{if:transfer.files>1}en{endif} beschikbaar voor download
-onderwerp: {transfer.subject}
+subject: Bestand{if:transfer.files>1}en{endif} beschikbaar voor download
+subjectnsfer.subject}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar {cfg:site_name} door {transfer.user_email} en je hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 
@@ -29,7 +29,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
