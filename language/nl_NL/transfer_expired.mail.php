@@ -1,8 +1,8 @@
-onderwerp: Bestand(en) niet langer beschikbaar voor download
+subject: Bestand(en) niet langer beschikbaar voor download
 
 {alternative:plain}
 
-Geachte mevrouw, heer, 
+Geachte heer, mevrouw, 
 
 De bestandszending n°{transfer.id} is verlopen en kan niet meer worden gedownload.
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer, 
+    Geachte heer, mevrouw,
 </p>
 
 <p>
