@@ -1,9 +1,9 @@
 
-onderwerp: Rapport over {target.type} #{target.id}
+subject: Rapport over {target.type} #{target.id}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Hier is het rapport over {target.type}:
 
@@ -33,7 +33,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
