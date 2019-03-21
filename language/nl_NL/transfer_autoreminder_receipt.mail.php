@@ -1,8 +1,8 @@
-onderwerp: automatische herinneringen verzonden voor bestandsverzending n° {transfer.id}
+subject: automatische herinneringen verzonden voor bestandsverzending n° {transfer.id}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Er is een automatische herinnering verzonden naar ontvangers die geen bestanden hebben gedownload van uw transfer n° {transfer.id} op {cfg:site_name} ({transfer.link}) :
 
@@ -16,7 +16,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
