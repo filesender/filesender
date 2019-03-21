@@ -1,8 +1,8 @@
-onderwerp: fout bij afleveren berichten
+subject: fout bij afleveren berichten
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Het is niet gelukt uw bericht(en) af te leveren bij een of meer van uw ontvangers :
 
@@ -23,7 +23,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
