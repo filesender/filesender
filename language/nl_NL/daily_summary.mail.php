@@ -1,8 +1,8 @@
-onderwerp: dagstaat van uw transfers
+subject: dagstaat van uw transfers
 
 {alternative:plain}
 
-Geachte Mevrouw, Heer,
+Geachte heer, mevrouw,
 
 Onderstaand gelieve aan te treffen een dagstaat van de downloads van uw transfer {transfer.id} (ge-upload op {date:transfer.created}) :
 
@@ -19,7 +19,7 @@ Hoogachtend,{cfg:site_name}
 {alternative:html}
 
 <p>
-    DGeachte Mevrouw, Heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
