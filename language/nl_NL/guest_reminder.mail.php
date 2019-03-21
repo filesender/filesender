@@ -1,9 +1,9 @@
-onderwerp: (herinnering) gast voucher ontvangen
-onderwerp: (herinnering) {guest.subject}
+subject: (herinnering) gast voucher ontvangen
+subject: (herinnering) {guest.subject}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Dit is een herinnering. Hieronder vindt u een voucher die toegang verleent tot {cfg: site_name}. U kunt deze voucher gebruiken om één set bestanden te uploaden en beschikbaar te maken als download voor een groep mensen.
 
@@ -20,7 +20,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
