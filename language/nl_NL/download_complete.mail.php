@@ -1,8 +1,8 @@
-onderwerp: Download voltooid
+subject: Download voltooid
 
 {alternative:plain}
 
-Geachte mevouw, heer,,
+Geachte heer, mevrouw,
 
 Uw download van onderstaande {if:files>1}bestanden{else}bestand{endif} is voltooid : 
 
@@ -18,7 +18,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-   Gecachte mevrouw, heer,
+   Geachte heer, mevrouw,
 </p>
 
 <p>
