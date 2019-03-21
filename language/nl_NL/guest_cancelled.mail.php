@@ -1,8 +1,8 @@
-onderwerp: Gast voucher geannuleerd
+subject: Gast voucher geannuleerd
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Een voucher van {guest.user_email} is geannuleerd.
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
