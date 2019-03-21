@@ -1,9 +1,9 @@
 
-onderwerp: Rapportage over {target.type} #{target.id}
+subject: Rapportage over {target.type} #{target.id}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Gelieve aan deze email aangehecht aan te treffen de rapportage over transfer #{target.id}.
 
@@ -13,7 +13,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
