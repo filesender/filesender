@@ -1,8 +1,8 @@
-onderwerp: Gast voucher verstuurd
+subject: Gast voucher verstuurd
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Een voucher die toegang verleent tot {cfg:site_name} is verzonden naar {guest.email}.
 
@@ -12,7 +12,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
