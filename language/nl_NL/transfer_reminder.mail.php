@@ -1,9 +1,9 @@
-onderwerp: (herinnering) Bestand{if:transfer.files>1}en{endif} beschikbaar voor download
-onderwerp: (herinnering) {transfer.subject}
+subject: (herinnering) Bestand{if:transfer.files>1}en{endif} beschikbaar voor download
+subject: (herinnering) {transfer.subject}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Dit is een herinnering, de volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en je hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 
@@ -29,7 +29,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
