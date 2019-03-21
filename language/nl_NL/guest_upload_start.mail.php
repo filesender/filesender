@@ -1,8 +1,8 @@
-onderwerp: Gast begint met het uploaden van bestanden
+subject: Gast begint met het uploaden van bestanden
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 De volgende gast is begonnen met het uploaden van bestanden via uw voucher :
 
@@ -17,7 +17,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
