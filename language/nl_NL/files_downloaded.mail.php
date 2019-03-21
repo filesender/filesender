@@ -1,10 +1,10 @@
-onderwerp: Ontvangstbevestiging
+subject: Ontvangstbevestiging
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
-{if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geupload{if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email} :
+{if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geupload {if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email} :
 
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
@@ -20,11 +20,11 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
-    {if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geupload{if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email}
+    {if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geupload {if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email}
 </p>
 
 <p>
