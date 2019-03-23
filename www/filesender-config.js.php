@@ -86,6 +86,7 @@ window.filesender.config = {
     encryption_min_password_length: '<?php echo Config::get('encryption_min_password_length') ?>',
     encryption_generated_password_length: '<?php echo Config::get('encryption_generated_password_length') ?>',
     encryption_generated_password_encoding: '<?php echo Config::get('encryption_generated_password_encoding') ?>',
+    encryption_key_version_new_files: '<?php echo Config::get('encryption_key_version_new_files') ?>',
     
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',

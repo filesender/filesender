@@ -17,13 +17,14 @@ window.filesender.crypto_app = function () {
         crypto_iv_len:       window.filesender.config.crypto_iv_len,
         crypto_crypt_name:   window.filesender.config.crypto_crypt_name,
         crypto_hash_name:    window.filesender.config.crypto_hash_name,
-        crypto_key_version:  1,
-        // constant values for crypto_key_version
-        // newest version first, some metadata about the process
-        // taken. The year (and maybe month) should give indication
-        // that the later years are also the most desired version.
-        crypto_key_version_const_2018_importKey_deriveKey: 1,
-        crypto_key_version_const_2017_digest_importKey:    0,
+        crypto_key_version_constants: {
+            // constant values for crypto_key_version
+            // newest version first, some metadata about the process
+            // taken. The year (and maybe month) should give indication
+            // that the later years are also the most desired version.
+            v2018_importKey_deriveKey: 1,
+            v2017_digest_importKey:    0
+        },
         
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
@@ -35,7 +36,7 @@ window.filesender.crypto_app = function () {
             var key_version = encryption_details.key_version;
             var salt        = encryption_details.salt;
 
-            if( key_version == $this.crypto_key_version_const_2018_importKey_deriveKey ) {
+            if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey ) {
 
                 var efunc = function (e) {
                     // error making a hash
@@ -72,7 +73,7 @@ window.filesender.crypto_app = function () {
                 }, efunc );
             }
 
-            if( key_version == $this.crypto_key_version_const_2017_digest_importKey ) {
+            if( key_version == $this.crypto_key_version_constants.v2017_digest_importKey ) {
                 // yes, the formatting is jumbled, this is on purpose to show it is not changed from previous
                 // it will be reformatted in a subsequent PR
             crypto.subtle.digest({name: this.crypto_hash_name}, window.filesender.crypto_common().convertStringToArrayBufferView(password)).then(function (key) {
