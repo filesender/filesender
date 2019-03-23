@@ -68,6 +68,11 @@
             if(array_key_exists($id, $page)) {
                 if(!$page[$id]) continue;
                 $value = Auth::user()->$id;
+                if( $id == 'lang' ) {
+                    if( !$value ) {
+                        $value = Lang::getBaseCode();
+                    }
+                }
                 if($value) $displayed[] = array(
                     'id' => $id,
                     'mode' => $page[$id],
