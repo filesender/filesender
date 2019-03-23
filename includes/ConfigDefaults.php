@@ -157,7 +157,7 @@ $default = array(
 
 
     //'user_page' => false,
-    'user_page' => array('auth_secret'=>true,'id'=>true,'created'=>true),
+    'user_page' => array('lang'=>true,'auth_secret'=>true,'id'=>true,'created'=>true),
 
     // Logging
     'log_facilities' => array(
