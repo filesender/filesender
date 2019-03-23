@@ -1,15 +1,5 @@
 <div class="box">
 
-    <h2>Actions</h2>
-
-        {tr:user_profile_delete_about_description_text}
-    
-    <div class="delete_my_account">
-        <a href="#">
-            <span class="fa fa-lg fa-times"></span>
-            {tr:delete_my_account}
-        </a>
-    </div>
     
     <?php
     
@@ -111,7 +101,19 @@
     ?>
     
   <h2>Python CLI Client</h2>
-  <a href="clidownload.php" target="_blank">Download Python CLI Client</a>    
+  <a href="clidownload.php" target="_blank">Download Python CLI Client</a>
+
+    <h2>Actions</h2>
+
+        {tr:user_profile_delete_about_description_text}
+    
+    <div class="delete_my_account">
+        <a href="#">
+            <span class="fa fa-lg fa-times"></span>
+            {tr:delete_my_account}
+        </a>
+    </div>
+  
 </div>
 
 <script type="text/javascript" src="{path:js/user_page.js}"></script>
