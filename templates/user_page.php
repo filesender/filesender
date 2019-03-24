@@ -1,6 +1,7 @@
 <div class="box">
 
     
+    
     <?php
     
     $readonly = function($info) {
@@ -57,12 +58,14 @@
         foreach($set as $id => $generator) {
             if(array_key_exists($id, $page)) {
                 if(!$page[$id]) continue;
+
                 $value = Auth::user()->$id;
                 if( $id == 'lang' ) {
                     if( !$value ) {
                         $value = Lang::getBaseCode();
                     }
                 }
+                
                 if($value) $displayed[] = array(
                     'id' => $id,
                     'mode' => $page[$id],
@@ -85,6 +88,14 @@
             echo '  <h3>'.Lang::tr('user_'.$tag).'</h3>'."\n";
             $info['generator']($info);
             echo '</div>';
+
+            // We want the privacy to appear near the top, and we want
+            // the language selector to be very high to assist folks
+            // who do not speak the default language.
+            if( $info['id'] == 'lang' ) {
+                echo "<h2>".Lang::tr('privacy_page')."</h2>\n";
+                echo " <p>".Lang::tr('profile_page_text_linking_to_privacy_page')."</p>\n";
+            }
         }
     }
     

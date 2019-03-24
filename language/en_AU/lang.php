@@ -506,3 +506,4 @@ $lang['aggregate_stats_storage-free-size'] = 'Free storage';
 $lang['aggregate_stats_upload_maxsize_ended'] = 'Largest single file uploaded during interval';
 $lang['aggregate_stats_graph_no_data'] = 'No data for this chart as yet';
 
+$lang['profile_page_text_linking_to_privacy_page'] = 'FileSender values your privacy. Please <a href="{cfg:site_url}/?s=privacy">click to see</a> how long information is retained by this installation';
