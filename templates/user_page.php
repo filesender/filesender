@@ -3,6 +3,12 @@
     
     
     <?php
+
+    if(GUI::isUserAllowedToAccessPage('admin'))
+    {
+        echo "<h2>".Lang::tr('admin_page')."</h2>\n";
+        echo " <p>".Lang::tr('profile_page_text_linking_to_admin_page')."</p>\n";
+    }
     
     $readonly = function($info) {
         echo '<div class="readonly">'.Utilities::sanitizeOutput($info['value']).'</div>';

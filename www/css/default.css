@@ -79,6 +79,33 @@ abbr {
     margin-bottom: 1em;
 }
 
+#langmenu {
+    border-radius: 0 0 0.5em 0.5em;
+    -moz-border-radius: 0 0 0.5em 0.5em;
+    margin: 0 2em 0.5em 2em;
+    overflow: hidden;
+}
+
+#langmenu .rightlangmenu {
+    float: right;
+}
+
+#langmenu li {
+    position: relative;
+    display: inline-block;
+    float: right;
+    border-left: 1px solid rgba(255, 255, 255, 0.098);
+    border-right: 1px solid rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+    font: bold 13px/17px "Helvetica Neue",Helvetica,Arial,Geneva,sans-serif;
+}
+
+#langmenu ul {
+    display: inline;
+    float: right;
+    list-style: none outside none;
+}
+
 #notifications {
     position: fixed;
     left: 50%;

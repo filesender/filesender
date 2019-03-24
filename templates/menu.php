@@ -10,6 +10,9 @@ $pagemenuitem = function($page) {
 
 ?>
 
+
+
+
 <div id="menu">
     <div class="leftmenu">
         <ul>
@@ -42,17 +45,6 @@ $pagemenuitem = function($page) {
     <div class="rightmenu">
         <ul>
         <?php
-            if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
-                $opts = array();
-                $code = Lang::getCode();
-                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                    $selected = ($id == $code) ? 'selected="selected"' : '';
-                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
-                }
-                
-                echo '<li><select id="language_selector">'.implode('', $opts).'</select></li>';
-            }
-
             $pagemenuitem('help');
             $pagemenuitem('about');
             $pagemenuitem('privacy');
@@ -70,5 +62,9 @@ $pagemenuitem = function($page) {
             }
         ?>
         </ul>
+            
     </div>
+
+    
 </div>
+
