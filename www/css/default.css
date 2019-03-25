@@ -67,14 +67,14 @@ abbr {
 
 #wrap {
     background: #fff;
-    width: 800px;
+    width: 900px;
     padding-bottom: 2em;
     margin: 0 auto;
     height: 100%;
 }
 
 #header {
-    background: #666 url(../images/banner.png) no-repeat top left;
+    background: #666 url(../images/banner900.png) no-repeat top left;
     height: 60px;
     margin-bottom: 1em;
 }
