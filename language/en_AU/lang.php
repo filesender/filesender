@@ -507,3 +507,4 @@ $lang['aggregate_stats_upload_maxsize_ended'] = 'Largest single file uploaded du
 $lang['aggregate_stats_graph_no_data'] = 'No data for this chart as yet';
 
 $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender values your privacy. Please <a href="{cfg:site_url}/?s=privacy">click to see</a> how long information is retained by this installation';
+$lang['profile_page_text_linking_to_admin_page'] = 'You are allowed to visit the <a href="{cfg:site_url}/?s=admin">admin page</a>.';

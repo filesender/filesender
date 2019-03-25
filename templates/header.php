@@ -22,6 +22,7 @@
     
     <body data-security-token="<?php echo Utilities::getSecurityToken() ?>" data-auth-type="<?php echo Auth::type() ?>">
         <div id="wrap">
+            
             <div id="header">
                 <a href="<?php echo GUI::path() ?>">
                     <?php GUI::includeLogo() ?>
@@ -32,3 +33,21 @@
                     <?php } ?>
                 </a>
             </div>
+
+                        <?php
+                        if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
+                            echo '<div id="langmenu">';
+                            echo '   <div class="rightlangmenu">';
+                            echo '       <ul>';
+                            $opts = array();
+                            $code = Lang::getCode();
+                            foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                $selected = ($id == $code) ? 'selected="selected"' : '';
+                                $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                            }
+                        
+                            echo '<li><label>'.Lang::tr('user_lang').'</label><select id="language_selector">'.implode('', $opts).'</select></li>';
+                            echo '</ul></div></div>';
+                        }
+                        ?>
+            
