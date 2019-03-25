@@ -47,7 +47,8 @@ class ReportTest extends CommonUnitTestCase {
      * 
      */
 
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "ReportTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $this->transferSubject = "Subject test";

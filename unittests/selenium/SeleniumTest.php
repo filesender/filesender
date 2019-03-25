@@ -43,7 +43,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         //)
     );
 
-    public function setUp()
+    public function setUp(): void
     {
         $caps = $this->getDesiredCapabilities();
         $this->setBrowserUrl('');
@@ -143,7 +143,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         return $key_bindings;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if($this->use_mails)
         {

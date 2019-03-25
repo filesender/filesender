@@ -51,7 +51,8 @@ class AuditlogTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
 
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "AuditlogTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $configs = Config::get('auditlog_*');

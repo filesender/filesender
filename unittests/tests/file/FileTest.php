@@ -51,7 +51,8 @@ class FileTest extends CommonDatabaseTestCase {
      * Init variables, first function called
      */
 
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "FileTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $this->transferSubject = "Subject test";

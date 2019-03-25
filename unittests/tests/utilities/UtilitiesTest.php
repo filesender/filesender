@@ -42,7 +42,8 @@ class UtilitiesTest extends CommonUnitTestCase {
     /**
      * Init variables, first function called
      */
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "UtilitiesTest@ " . date("Y-m-d H:i:s") . "\n\n";
     }
 

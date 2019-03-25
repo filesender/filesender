@@ -60,7 +60,7 @@ class TemplatingTest extends SeleniumTest
         $this->teardown_function = array($this, 'moveBackOldSkinJavascript');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if($this->teardown_function !== null)
         {

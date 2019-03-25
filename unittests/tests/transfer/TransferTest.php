@@ -50,7 +50,8 @@ class TransferTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
 
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "TransferTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $this->transferSubject = "Subject test FOR CRON";
