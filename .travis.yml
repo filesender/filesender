@@ -77,6 +77,8 @@ after_failure:
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
+- phpunit --version
+- ./vendor/bin/phpunit --version
 - phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
 notifications:
   email: false
