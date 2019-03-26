@@ -139,7 +139,7 @@ https://github.com/filesender/filesender/issues/100
 
 ### Travis CI
 
-For FileSender 2.0 we should consider PHP 5.6 to be the minimum
+For FileSender 2.0 we should consider PHP 7.2 to be the minimum
 version. This will mean the CI can be moved to that version and use
 the more recent Ubuntu operating system to run the CI. This is
 starting to become a problem as travis CI has moved to more recent

@@ -24,15 +24,15 @@ about the project [please visit our homepage](http://filesender.org).
 
 ### Which version should you choose
 
-Version 2.2 has been released in August 2018 and is the recommended
+Version 2.5 has been released in December 2018 and is the recommended
 choice.
 
 Following the 2.0 release there will be subsequent releases in the
 pattern 2.1, 2.2, 2.30 etc. Each of these releases will build on
-version 2.0 adding bugfixes and features. It is planend that you can
+version 2.0 adding bugfixes and features. It is planned that you can
 migrate from 2.0 upwards in the 2.x series.
 
-The previos production release is [1.6.1, released on December 30th
+The previous production release is [1.6.1, released on December 30th
 2015](https://downloads.filesender.org/filesender-1.6.1.tar.gz). 
 
 ### Documentation
@@ -84,6 +84,8 @@ A snapshot of features for the latest 1.6(.x) release is located at [Features](v
 ### Requirements
 
 Some storage, either MariaDB or PostgreSQL for database, either Apache
-or nginx for web server and SimpleSamlPhp.
+or nginx for web server, PHP and SimpleSamlPhp. Please see the
+[installation](v2.0/install/) page for minimum version requirements
+and advice.
 
 
