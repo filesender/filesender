@@ -2,7 +2,7 @@ dist: trusty
 sudo: required
 language: php
 php:
-  - 7.0
+  - 7.2
 services:
   - postgresql
   - mariadb
@@ -77,7 +77,7 @@ after_failure:
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
-- phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+- ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
 notifications:
   email: false
 ##
