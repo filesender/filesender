@@ -164,6 +164,14 @@ We ship the FileSender tarball with `config_sample.php` file rather
 than directly providing a `config.php` to make life easier when
 packaging the software.
 
+Note that if you wish to support old browsers there are some options you
+might like to add to your configuration.
+
+* If you would like to support IE11 and use encryption then you will
+  need to enable a legacy encryption key version using the
+  [encryption_key_version_new_files](https://docs.filesender.org/v2.0/admin/configuration/#encryption_key_version_new_files)
+  directive.
+
 Initialise config file and set permissions right. Make the files, tmp
 and log directories writable by the web daemon user (`apache` on
 RedHat/CentOS, `www-data` on Debian), copy the config file in place
