@@ -1,10 +1,11 @@
 #!/bin/bash
 set -ev
 
-wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz --no-check-certificate
+VER=1.17.1
+wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v$VER/simplesamlphp-$VER.tar.gz --no-check-certificate
 
-SHA_DOWNLOAD_HASH=$(sha256sum simplesamlphp-1.14.2.tar.gz)
-SHA_CHECK_HASH='19b849065cdc8b96d74570b2ef91a08e72d0a4c0d9c30fa9526163ff6684c83e  simplesamlphp-1.14.2.tar.gz'
+SHA_DOWNLOAD_HASH=$(sha256sum simplesamlphp-$VER.tar.gz | cut -d ' ' -f 1)
+SHA_CHECK_HASH='d1a6e415828e8c257f9808a5b70d5f738f95af2633cdbae5cf8629571d33a803'
 
 
 if [ "$SHA_DOWNLOAD_HASH" != "$SHA_CHECK_HASH" ]; then
@@ -16,8 +17,8 @@ else
     echo "Hashes matched"
 fi
 
-tar xvzf simplesamlphp-1.14.2.tar.gz
-ln -s simplesamlphp-1.14.2/ simplesaml
+tar xvzf simplesamlphp-$VER.tar.gz
+ln -s simplesamlphp-$VER/ simplesaml
 # Copy standard configuration files to the right places:
 cd simplesaml
 cp -r config-templates/*.php config/
