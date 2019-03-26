@@ -31,8 +31,8 @@ you can report issues with and update the documentation.
 
 ### Dependencies
 
-* Apache (or nginx) and PHP from your distribution.
-* A PostgreSQL or MySQL database.
+* Apache (or nginx) and PHP (version 7.2 or 7.0).
+* A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
 * [SimpleSamlPhp](https://simplesamlphp.org/download) 1.15.4 or newer.
 
