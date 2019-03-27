@@ -156,7 +156,8 @@ $default = array(
     'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
 
 
-    //'user_page' => false,
+    'support_email' => '',
+
     'user_page' => array('lang'=>true,'auth_secret'=>true,'id'=>true,'created'=>true),
 
     // Logging
