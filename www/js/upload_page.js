@@ -742,6 +742,13 @@ filesender.ui.startUpload = function() {
     
     this.transfer.onprogress = filesender.ui.files.progress;
 
+    // if the server wants the aup to be checked then we pass that information
+    // back to the server. If the user has disabled this part of the form then
+    // the server can throw an error.
+    this.transfer.aup_checked = false;
+    if(filesender.ui.nodes.aup.length)
+        this.transfer.aup_checked = filesender.ui.nodes.aup.is(':checked');
+    
     if( filesender.config.upload_display_per_file_stats ) {
         window.setInterval(function() {
             for (var i = 0; i < filesender.ui.transfer.files.length; i++) {

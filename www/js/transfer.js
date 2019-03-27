@@ -179,7 +179,8 @@ window.filesender.transfer = function() {
     this.guest_token = null;
     this.failed_transfer_restart = false;
     this.uploader = null;
-
+    this.aup_checked = false;
+    
     this.watchdog_processes = {};
     
     // Load and analyse stalling detection config

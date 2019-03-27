@@ -285,6 +285,7 @@ window.filesender.client = {
             message: transfer.message,
             lang: transfer.lang,
             expires: transfer.expires,
+            aup_checked: transfer.aup_checked,
             options: transfer.options
         }, callback, opts);
     },
