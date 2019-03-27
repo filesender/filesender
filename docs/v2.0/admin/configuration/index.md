@@ -16,6 +16,7 @@ A note about colours;
 ## General settings
 
 * [admin_email](#admin_email)
+* [support_email](#support_email)
 * [admin](#admin)
 * [site_name](#site_name)
 * [force_ssl](#force_ssl)
@@ -24,8 +25,6 @@ A note about colours;
 * [default_language](#default_language)
 * [site_url](#site_url)
 * [site_logouturl](#site_logouturl)
-* [about_url](#about_url)
-* [help_url](#help_url)
 * [reports_show_ip_addr](#reports_show_ip_addr)
 
 ## Backend storage
@@ -218,6 +217,14 @@ A note about colours;
 * __available:__ since version 1.0
 * __1.x name:__ adminEmail
 
+### support_email
+
+* __description:__ email address of somebody handling support requests for the FileSender installation. This address may receive traffice from the relay_unknown_feedbacks option.
+* __mandatory:__ no.
+* __type:__ string.
+* __default:__ 
+* __available:__ 2.6
+
 ### admin
 
 * __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender administrators. Accounts with these UIDs can access the Admin page through the web UI.  <span style="background-color:orange">Separate multiple entries with a comma (',').</span>
@@ -290,24 +297,6 @@ A note about colours;
 * __default:__ $config['site_url'].'?s=logout'
 * __available:__ since version 1.6
 
-### about_url
-
-* __description:__ if set to "", a modal inline popup dialogue is shown with the contents of _ABOUT_TEXT from the relevant language file. Alternatively a URL can be used to point to a specific (local or external) HTML page. <span style="background-color:orange">check if this is a modal inline popup</span>
-* __mandatory:__ no
-* __type:__ string
-* __default:__ not set = empty string = popup
-* __available:__ since version 1.0
-* __1.x name:__ aboutURL
-
-### help_url
-
-* __description:__ if set to "", a modal inline popup dialogue is shown with the contents of _HELP_TEXT from the relevant language file. If set to an URL it will open the referenced (local or external) HTML page in a new tab. <span style="background-color:orange">check if this is a modal inline popup</span>
-* __mandatory:__ no <span style="background-color:orange">doublecheck</span>
-* __type:__ string
-* __default:__ not set = empty string = popup
-* __available:__ since version 1.0
-* __1.x name:__ helpURL
-* __comment:__ when configured with a mailto: address that points to e.g. support@yourdomain.dom the email bounce handler will use this address to send unprocessable email bounces to. <span style="background-color:orange">include link to email bounce handling config directives/help</span>
 
 
 
@@ -668,10 +657,10 @@ User language detection is done in the following order:
 
 ### relay_unknown_feedbacks
 
-* __description:__ tells the bounce handler where to forward those messages it can not identify as email bounces but can be related to a specific target (recipient, guest). The received message is forwarded as message/rfc822 attachment.
+* __description:__ tells the bounce handler where to forward those messages it can not identify as email bounces but can be related to a specific target (recipient, guest). The received message is forwarded as message/rfc822 attachment. Updated in 2.6.
 * __mandatory:__ no
 * __type:__ string or keyword
-* __permissible values:__ "sender": relay to recipient's transfer owner or guest owner. "admin": relay to admin email address. "support": relay to help_url if the latter is in the form of a mailto: URL ("mailto:someaddress@domain.tld"), "someaddress@domain.tld": an explicit email address to forward these types of mails to.
+* __permissible values:__ "sender": relay to recipient's transfer owner or guest owner. "admin": relay to admin email address. "support": relay to support_email (setting to this means that support_email must also be set), or "someaddress@domain.tld": an explicit email address to forward these types of mails to.
 * __default:__ "sender"
 * __available:__ since version 2.0
 * __1.x name:__

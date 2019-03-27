@@ -276,6 +276,18 @@ class Config
             throw new ConfigBadParameterException('Generated password length must be equal or greater than encryption_min_password_length');
         }
 
+
+        $relay_to = Config::get('relay_unknown_feedbacks');
+        switch($relay_to) {
+            case 'support':
+                $support = Config::get('support_email');
+                if(!strlen($support)) {
+                    throw new ConfigBadParameterException('Setting relay_unknown_feedbacks to support means that support_email MUST also be set');
+                }
+                break;
+        }
+        
+        
         // verify classes are happy
         Guest::validateConfig();
         ClientLog::validateConfig();

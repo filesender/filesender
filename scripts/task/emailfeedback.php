@@ -206,15 +206,14 @@ while($inputs) {
                         break;
                         
                     case 'support':
-                        $support = Config::get('help_url');
-                        if(substr($support, 0, 7) == 'mailto:') {
-                            $support = substr($support, 7);
+                        $support = Config::get('support_email');
+                        if(strlen($support)) {
                             if(!Utilities::validateEmail($support)) throw new BadEmailException($support);
                             
                             $mail = new ApplicationMail(Lang::translateEmail('email_feedback')->r($args));
                             $mail->setDebugTemplate('email_feedback');
                             $mail->to($support);
-                        } else throw new ConfigBadParameterException('help_url');
+                        } else throw new ConfigBadParameterException('support_email');
                         
                     default:
                         if(Utilities::validateEmail($relay_to)) {
