@@ -336,6 +336,17 @@ class RestEndpointTransfer extends RestEndpoint
         }
         
         $user = Auth::user();
+
+        // Did they try to be a wise guy with the aup checkbox?
+        if(Config::get('aup_enabled')) {
+            // Raw data
+            $data = $this->request->input;
+            if( $data->aup_checked != true ) {
+                Logger::warn("nefarious activity suspected: A user with id " . $user->id
+                           . " has sent a request without AUP data checked and is likely doing something bad.");
+                throw new RestBadParameterException('aup_checked');
+            }
+        }
         
         // Check parameters
         if ($id) {
