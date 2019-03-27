@@ -161,7 +161,7 @@ Related config parameter is "relay_unknown_feedbacks" (string, defaults to "send
 
 - "admin" : relay to admin emails
 
-- "support" : relay to help_url if it is in the form of "mailto:someaddress@domain.tld"
+- "support" : relay to support_email (which itself must then be set to a valid email address)
 
 - "someaddress@domain.tld" : choosen email address
 
