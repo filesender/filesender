@@ -64,6 +64,17 @@ $(function() {
             filesender.ui.notify('success', lang.tr('preferences_updated'));
         });
     });
+
+    var user_lang = page.find('select[name="user_lang"]');
+    if( user_lang.length ) {
+        user_lang.on('change', function() {
+            var i = $(this);
+            var menu_language_selector = $('#language_selector');
+            if( menu_language_selector ) {
+                menu_language_selector.val( i.val() );
+            }
+        });
+    }
     
     var rc = page.find('span[data-info="remote_config"]');
     if(rc.length) $('<button />').text(lang.tr('get_full_user_remote_config')).button().on('click', function() {
