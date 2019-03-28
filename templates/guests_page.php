@@ -1,3 +1,21 @@
+<?php
+
+$new_guests_can_only_send_to_creator = false;
+
+
+Guest::forcedOptions();
+foreach (Guest::allOptions() as $name => $dfn) {
+    if( $name == 'can_only_send_to_me' ) {
+        if (in_array('available', $dfn) && !$dfn['available']) {
+            if (in_array('default', $dfn)) {
+                $new_guests_can_only_send_to_creator = $dfn['default'];
+            }
+        }
+    }
+}
+ 
+
+?>
 <div class="box">
     <div id="send_voucher" class="box">
         <div class="disclamer">
@@ -53,7 +71,13 @@
                     </div>
                     
                     <?php
-                        $displayoption = function($name, $cfg, $transfer = false) {
+                        $displayoption = function($name, $cfg, $transfer = false) use ($new_guests_can_only_send_to_creator)
+                        {
+                            // don't show the option for get_a_link if they can't use it.
+                            if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
+                                return;
+                            }
+                        
                             $default = $cfg['default'];
                             if(Auth::isSP()) {
                                 if($transfer) {

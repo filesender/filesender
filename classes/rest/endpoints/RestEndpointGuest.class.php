@@ -201,6 +201,16 @@ class RestEndpointGuest extends RestEndpoint
                 }
             }
         }
+
+        // options that are available => false and default => value should be forced
+        // to being the default rather than anything the user has tried to send
+        // as they are not available for users to change.
+        foreach (Guest::forcedOptions() as $name => $dfn) {
+            if (in_array('default', $dfn)) {
+                $guest_options[$name] = $dfn['default'];
+            }
+        }
+        
         $guest->options = $guest_options;
         
         // Set to-be-created transfers options based on provided ones and defaults
