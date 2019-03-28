@@ -824,6 +824,10 @@ class Transfer extends DBObject
         
         if ($property == 'link') {
             $tr_url = Utilities::http_build_query(array('s' => 'transfers#transfer_'.$this->id));
+            // Utilities::http_build_query() has URL encoded $tr_url 
+            // AuthSP::logonURL() will URL encode what is given to it,
+            // so we must decode the string first to avoid a double encoding.
+            $tr_url = urldecode( $tr_url );
             $auth_url = AuthSP::logonURL($tr_url);
             
             if (!preg_match('`^https?://[^/]+`', $auth_url)) {
