@@ -173,6 +173,11 @@ When translating an email (file like `some_id.mail.php` or just `some_id.mail`, 
 
 Anything before the first double line break is considered as headers. Headers a expressed like in a `key: value` format.
 
+It is very important to note that the key in the headers should not be translated. For example, you should have
+        "***subject***: Bestand{if:transfer.files>1}en{endif} beschikbaar voor download"
+but the following will not be translated correctly into an email subject:
+        "***onderwerp***: Bestand{if:transfer.files>1}en{endif} beschikbaar voor download"
+
 As of now only `subject` header is supported, if several subject lines are provided the last non-empty (after variables replacement) subject is used.
 
 	subject: Foo
