@@ -534,6 +534,22 @@ class Guest extends DBObject
             return true;
         });
     }
+
+    /**
+     * Get options that are not available for user setting
+     *
+     * @return array
+     */
+    public static function forcedOptions()
+    {
+        return array_filter(self::allOptions(), function ($o) {
+            if (!$o['available']) {
+                return true;
+            }
+        });
+    }
+
+    
     
     /**
      * Get option value

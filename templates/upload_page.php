@@ -1,9 +1,13 @@
 <?php
 
+$guest_can_only_send_to_creator = false;
+
+
 $formClasses = "upload_form_regular";
 if (Config::get('upload_display_per_file_stats')) {
    $formClasses = "upload_form_stats";
 }
+
 
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
@@ -16,7 +20,7 @@ if(Auth::isGuest()) {
             $guest->last_activity = time();
             $guest->save();
         }
-    }
+    }      
 }
 
 $need_recipients = true;
@@ -30,6 +34,12 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
     
     if($name == TransferOptions::GET_A_LINK)
         $allow_recipients = false;
+}
+
+if(Auth::isGuest()) {
+    if($guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+        $guest_can_only_send_to_creator = true;
+    }
 }
 
 ?>
@@ -190,8 +200,10 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                 </td>
                 <td class="box">
                     <?php
-                        $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) {
+                        $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) use ($guest_can_only_send_to_creator) {
                             $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
+
+                            
                             
                             $default = $cfg['default'];
                             if( !$forcedOption ) {
@@ -207,6 +219,16 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                                     $extraDivAttrs .= ' hidden="true" ';
                                 }
                             }
+
+                            // if they are a guest and can only send to the user
+                            // who sent the guest voucher to them then don't even
+                            // show the get a link option.
+                            if(Auth::isGuest() && $name == 'get_a_link') {
+                                if($name == 'get_a_link' && $guest_can_only_send_to_creator ) {
+                                    return;
+                                }
+                            }
+                            
                             echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                             if($text) {
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
