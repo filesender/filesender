@@ -297,7 +297,7 @@ if(Auth::isGuest()) {
 
                     <div class="hidden_options">
                         <?php foreach(Transfer::forcedOptions() as $name => $cfg) {
-                            $allowed = explode(',', Config::get("transfer_options_not_available_to_export_to_client"));
+                            $allowed = (array)Config::get("transfer_options_not_available_to_export_to_client");
                             if( in_array($name,$allowed)) {
                                 $displayoption($name, $cfg, Auth::isGuest(),true);
                             }

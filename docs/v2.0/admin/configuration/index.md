@@ -1020,8 +1020,8 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __description:__ Options that can be exposed to the client when available=false. For example, if you want to force the get_a_link option it will be default=true and available=false (available to be changed, not unavailable as a used option). You might like to leave this option unset so that it can change as filesender evolves to allow mandatory options to be exposed to the browser.
 * __mandatory:__ no 
 * __recommend_leaving_at_default:__ true
-* __type:__ comma sep list of strings
-* __default:__ get_a_link
+* __type:__ array of strings
+* __default:__ see ConfigDefaults.php
 * __available:__ since version 2.6
 * __comment:__ 
 
