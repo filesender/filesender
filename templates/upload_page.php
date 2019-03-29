@@ -161,32 +161,33 @@ if(Auth::isGuest()) {
                         <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>                        
                         <textarea id="message" name="message" rows="4"></textarea>
                     </div>
-                        <?php if(Config::get('encryption_enabled')) { ?>
-                            <div class="fieldcontainer" id="encrypt_checkbox" data-related-to="encryption">
-                                <input id="encryption" name="encryption" type="checkbox">
-                                <label for="encryption" style="cursor: pointer;">{tr:file_encryption}</label>
-                            </div>
-                            <div class="fieldcontainer" id="encryption_password_container">  
-                                <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
-                                <input id="encryption_password" name="encryption_password" type="password" autocomplete="new-password" readonly />
-                            </div>
-                            <div class="fieldcontainer" id="encryption_password_container_too_short_message">
-                                {tr:file_encryption_password_too_short}
-                            </div>
-                            <div class="fieldcontainer" id="encryption_password_container_generate">
-                                <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
-                            </div>
-                            <div class="fieldcontainer" id="encryption_password_show_container">  
-                                <input id="encryption_show_password" name="encryption_show_password" type="checkbox">  
-                                <label for="encryption_show_password" style="cursor: pointer;">{tr:file_encryption_show_password}</label>
-                            </div>
-                            <div class="fieldcontainer" id="encryption_description_container">
-                                {tr:file_encryption_description}
-                            </div>
-                            <div class="fieldcontainer" id="encryption_description_disabled_container">
-                                {tr:file_encryption_description_disabled}
-                            </div>
-                        <?php } ?>
+                    <?php } ?> <!-- closing if($allow_recipients) -->
+                    
+                    <?php if(Config::get('encryption_enabled')) {  ?>
+                        <div class="fieldcontainer" id="encrypt_checkbox" data-related-to="encryption">
+                            <input id="encryption" name="encryption" type="checkbox">
+                            <label for="encryption" style="cursor: pointer;">{tr:file_encryption}</label>
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container">  
+                            <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
+                            <input id="encryption_password" name="encryption_password" type="password" autocomplete="new-password" readonly />
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container_too_short_message">
+                            {tr:file_encryption_password_too_short}
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container_generate">
+                            <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_show_container">  
+                            <input id="encryption_show_password" name="encryption_show_password" type="checkbox">  
+                            <label for="encryption_show_password" style="cursor: pointer;">{tr:file_encryption_show_password}</label>
+                        </div>
+                        <div class="fieldcontainer" id="encryption_description_container">
+                            {tr:file_encryption_description}
+                        </div>
+                        <div class="fieldcontainer" id="encryption_description_disabled_container">
+                            {tr:file_encryption_description_disabled}
+                        </div>
                     <?php } ?>
                     
                     <div>
@@ -297,7 +298,7 @@ if(Auth::isGuest()) {
 
                     <div class="hidden_options">
                         <?php foreach(Transfer::forcedOptions() as $name => $cfg) {
-                            $allowed = explode(',', Config::get("transfer_options_not_available_to_export_to_client"));
+                            $allowed = (array)Config::get("transfer_options_not_available_to_export_to_client");
                             if( in_array($name,$allowed)) {
                                 $displayoption($name, $cfg, Auth::isGuest(),true);
                             }
