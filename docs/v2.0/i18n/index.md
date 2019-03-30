@@ -165,6 +165,33 @@ It is possible to use automatic formatting as well :
 
 	{size:cfg:max_transfer_size}
 
+### Date format
+
+Dates can be formatted for display and parsed back into a machine
+stored format on both the client and server. On the server side
+date_format is used, or maybe datetime_format if the time is also to
+be included. For calendar things it will be date_format since the time
+of day is not included.
+
+The default values shown here were accurate as of March 2019. The
+exact format used is less of an issue, the main objective is to make
+sure that where there are two formats then both of these formats are
+compatible with each other.
+
+The default for date_format in english is d/m/Y. This format follows
+the information given on the 
+[https://www.php.net/manual/en/function.date.php](php date page).
+
+For the datepicker jquery item the dp_date_format is used. The default for dp_date_format for english is
+dd/mm/yy. The format follows the information for the [http://api.jqueryui.com/datepicker/#utility-formatDate](jquery datepicker widget).
+
+To make the experience nice for the user these two formats need to
+present dates in a manner that each can understand. For complete
+niceness the dates should present to the user exact identical
+information.
+
+
+
 ### Email parts
 
 When translating an email (file like `some_id.mail.php` or just `some_id.mail`, same effect) the translation file can contain several parts.
