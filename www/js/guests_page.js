@@ -320,6 +320,8 @@ $(function() {
         minDate: 1,
         maxDate: filesender.config.max_guest_days_valid
     });
+    // set value from epoch time
+    filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
     filesender.ui.nodes.expires.on('change', function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });

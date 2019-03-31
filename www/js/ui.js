@@ -540,6 +540,14 @@ window.filesender.ui = {
         }
     
     },
+
+    /**
+     * Set a jQuery widget date to the unix epoch time (in seconds) 
+     * value contained in the data-epoch attribute
+     */
+    setDateFromEpochData: function( w ) {
+        w.datepicker('setDate', new Date(w.attr('data-epoch') * 1000 ));
+    },
     
 };
 

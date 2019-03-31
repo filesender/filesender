@@ -246,12 +246,15 @@ if(Auth::isGuest()) {
                             echo '</div>';
                         };
                     ?>
-                    
+
                     <div class="basic_options">
                         <div class="fieldcontainer">
                             <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                             
-                            <input id="expires" name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
+                            <input id="expires" name="expires" type="text" autocomplete="off"
+                                   title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
+                                   data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
+                            />
                         </div>
                         
                         <?php

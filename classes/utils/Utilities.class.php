@@ -165,7 +165,7 @@ class Utilities
      * @param integer $timestamp php timestamp to format to date or null to use current date
      * @param bool $with_time
      *
-     * @return string formatted date
+     * @return string utf8 encoded formatted date
      */
     public static function formatDate($timestamp = null, $with_time = false)
     {
@@ -176,17 +176,19 @@ class Utilities
         if (!$timestamp) {
             return '';
         }
-        
+
+        Lang::setlocale_fromUserLang( LC_TIME );
+
         $lid = $with_time ? 'datetime_format' : 'date_format';
         $dateFormat = Lang::tr($lid);
         if ($dateFormat == '{date_format}') {
-            $dateFormat = 'Y-m-d';
+            $dateFormat = '%d/%m/%Y';
         }
         if ($dateFormat == '{datetime_format}') {
-            $dateFormat = 'Y-m-d H:i:s';
+            $dateFormat = '%d/%m/%Y %T';
         }
         
-        return date($dateFormat, $timestamp);
+        return utf8_encode(strftime($dateFormat, $timestamp));
     }
     
     /**

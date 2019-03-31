@@ -8,7 +8,6 @@ $lang['download'] = 'Download';
 $lang['downloads'] = 'File caricati';
 $lang['dp_close_text'] = 'Fatto';
 $lang['dp_current_text'] = 'Oggi';
-$lang['dp_date_format'] = 'dd/mm/yy';
 $lang['dp_day_names'] = 'domenica,lunedì,martedì,mercoledì,giovedì,venerdì,sabato';
 $lang['dp_day_names_min'] = 'do,lu,ma,me,gi,ve,sa';
 $lang['dp_day_names_short'] = 'dom,lun,mar,mer,gio,ven,sab';
@@ -41,3 +40,12 @@ $lang['size'] = 'Dimensione';
 $lang['subject'] = 'Oggetto';
 $lang['to'] = 'A';
 $lang['yes'] = 'Sì';
+
+
+$lang['date_format'] = '%A %d/%m/%G';
+$lang['datetime_format'] = '%A %d/%m/%G %H:%m:%s';
+$lang['dp_date_format'] = 'DD d/mm/yy';
+
+
+
+    

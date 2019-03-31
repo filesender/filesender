@@ -557,7 +557,10 @@ class RestEndpointTransfer extends RestEndpoint
                 // reading the salt will ensure it is made
                 $dummy1 = $transfer->salt;
             }
-            $transfer->save(); // Mandatory to add recipients and files
+
+            // Mandatory to add recipients and files
+            $transfer->save(); 
+
             
             // Get banned extensions
             $banned_exts = Config::get('ban_extension');
