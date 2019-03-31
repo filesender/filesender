@@ -1,10 +1,19 @@
-onderwerp: Gasten voucher verlopen
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Gastgebruiker voucher verlopen
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
-Een gast voucher van {guest.user_email} is verlopen.
+Een gastgebruiker voucher van {guest.user_email} is verlopen.
 
 Hoogachtend,
 {cfg:site_name}
@@ -12,11 +21,11 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
-    Een gast voucher van <a href="mailto:{guest.user_email}">{guest.user_email}</a> is verlopen.
+    Een gastgebruiker voucher van <a href="mailto:{guest.user_email}">{guest.user_email}</a> is verlopen.
 </p>
 
 <p>

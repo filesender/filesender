@@ -1,20 +1,28 @@
-
-onderwerp: Rapport over {target.type} #{target.id}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Rapport over {target.type} #{target.id}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
-Hier is het rapport over {target.type}:
+Hier is het rapport over uw {target.type}:
 
 {target.type} nummer : {target.id}
 
 {if:target.type == "Transfer"}
-Deze transfer heeft {transfer.files} bestanden met een totale grootte van {size:transfer.size}.
+Deze transfer had {transfer.files} bestanden met een totale grootte van {size:transfer.size}.
 
 Deze transfer is/was beschikbaar tot {date:transfer.expires}.
 
-Deze transfer was verstuurd naar {transfer.recipients} ontvangers.
+Deze transfer werd verstuurd naar {transfer.recipients} ontvangers.
 {endif}
 {if:target.type == "File"}
 Dit bestand heeft de naam {file.path}, heeft een grootte van {size:file.size} en is/was beschikbaar tot {date:file.transfer.expires}.
@@ -23,7 +31,7 @@ Dit bestand heeft de naam {file.path}, heeft een grootte van {size:file.size} en
 Deze ontvanger met e-mailadres {recipient.email} en is/was geldig tot {date:recipient.expires}.
 {endif}
 
-Hier is de volledige log van wat er met de transfer gebeurt is :
+Hier is de volledige log van wat er met de transfer gebeurd is :
 
 {raw:content.plain}
 
@@ -33,7 +41,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
@@ -57,7 +65,7 @@ Hoogachtend,
 </p>
 
 <p>
-    Hier is de volledige log van wat er met de transfer gebeurt is :
+    Hier is de volledige log van wat er met de transfer gebeurd is :
     <table class="auditlog" rules="rows">
         <thead>
             <th>Date</th>

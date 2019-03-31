@@ -1,8 +1,17 @@
-onderwerp: Gastgebruiker op upload-pagina {alternative:plain}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Gastgebruiker op upload-pagina {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
-Gastgebruiker {guest.email} heeft uw voucher gebruikt om de upload-pagina te benaderen.
+Gastgebruiker {guest.email} heeft uw voucher gebruikt om de upload-pagina te bezoeken.
 
 Hoogachtend,
 
@@ -15,7 +24,7 @@ Hoogachtend,
 </p>
 
 <p>
-    Gastgebruiker  <a href="mailto:{guest.email}">{guest.email}</a> heeft uw voucher gebruikt om de upload-pagina te benaderen.
+    Gastgebruiker  <a href="mailto:{guest.email}">{guest.email}</a> heeft uw voucher gebruikt om de upload-pagina te bezoeken.
 </p>
 
 <p>

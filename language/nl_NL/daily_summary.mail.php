@@ -1,8 +1,17 @@
-onderwerp: dagstaat van uw transfers
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: dagstaat van uw transfers
 
 {alternative:plain}
 
-Geachte Mevrouw, Heer,
+Geachte heer, mevrouw,
 
 Onderstaand gelieve aan te treffen een dagstaat van de downloads van uw transfer {transfer.id} (ge-upload op {date:transfer.created}) :
 
@@ -19,7 +28,7 @@ Hoogachtend,{cfg:site_name}
 {alternative:html}
 
 <p>
-    DGeachte Mevrouw, Heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>

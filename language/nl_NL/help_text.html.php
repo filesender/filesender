@@ -1,3 +1,12 @@
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
 <div>
 <div style="padding: 5px; text-align: left;">
 <h4>Aanmelden</h4> 
@@ -36,13 +45,13 @@ Als u tussentijds het bestand <b><i>gewijzigd</i></b> hebt, hernoem het dan eers
     <li><strong>Maximum aantal bestanden per upload:</strong> &eacute;&eacute;n - om meerdere bestanden ineens te versturen, kunt u ze eerst samenpakken in een archiefbestand zoals zip</li>
     <li><strong>Maximum bestandsgrootte per upload, alleen gebruikmakend van Adobe Flash:</strong> {size:cfg:max_legacy_file_size}</li>
     <li><strong>Maximum bestandsgrootte per upload, via HTML5:</strong> {size:cfg:max_html5_upload_size}</li>
-    <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> {cfg:default_transfer_days_valid} dagen</li>
+    <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> {cfg:default_days_valid} dagen</li>
 </ul>
 
 <h4>Technische details</h4>
 <ul>
 	<li><i>{cfg:site_name}</i> maakt gebruik van de <a href="http://www.filesender.org/" target="_blank">FileSender software</a>. FileSender geeft aan of de HTML5 upload-methode ondersteund wordt voor de op dat moment gebruikte browser. Deze ondersteuning is voornamelijk afhankelijk van de beschiklbaarheid van geavanceerde browserfunctionaliteit, met name de HTML5 FileAPI. De website <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> geeft bruikbare informatie om de voortgang van de implementatie van HTML5 FileAPI in 
-de belangrijkste browsers te volgen. Met name ondersteuning voor de <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> en voor <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> moet groen licht (=ondersteund) krijgen, wil een browser uploads groter dan 2GB kunnen doen.  Belangrijk: alhoewel Opera 12 wordt weergegeven als zou het de HTML5 FileAPI volledig ondersteunen is gebleken dat Opera 12 desondanks niet voldoende elementen van de FileAPI ondersteunt om al gebruik te kunnen maken van de HTML5 upload-methode.</li>
+de belangrijkste browsers te volgen. Met name ondersteuning voor de <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> en voor <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> moet groen licht (=ondersteund) krijgen, wil een browser uploads groter dan {size:cfg:max_legacy_file_size} kunnen doen.  Belangrijk: alhoewel Opera 12 wordt weergegeven als zou het de HTML5 FileAPI volledig ondersteunen is gebleken dat Opera 12 desondanks niet voldoende elementen van de FileAPI ondersteunt om al gebruik te kunnen maken van de HTML5 upload-methode.</li>
 </ul>
 <p>Voor meer informatie, bezoek <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a>.</p>
 </div>

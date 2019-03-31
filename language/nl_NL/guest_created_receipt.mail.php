@@ -1,8 +1,17 @@
-onderwerp: Gast voucher verstuurd
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Gast voucher verstuurd
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
 Een voucher die toegang verleent tot {cfg:site_name} is verzonden naar {guest.email}.
 

@@ -1,11 +1,20 @@
-onderwerp: Bestand{if:transfer.files>1}en{endif} beschikbaar voor download
-onderwerp: {transfer.subject}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Bestand{if:transfer.files>1}en{endif} beschikbaar voor download
+subject: {transfer.subject}
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
-De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar {cfg:site_name} door {transfer.user_email} en je hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar {cfg:site_name} door {transfer.user_email} en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -29,11 +38,11 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
-    De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en je hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+    De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 </p>
 
 <table rules="rows">
