@@ -1,8 +1,17 @@
-onderwerp: Waarschuwing opslaggebruik
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Waarschuwing opslaggebruik
 
 {alternative:plain}
 
-Geachte mevrouw, heer, 
+Geachte heer, mevrouw,
 
 Het opslaggebruik van {cfg: site_name} waarschuwt:
 
@@ -18,7 +27,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer, 
+    Geachte heer, mevrouw,
 </p>
 
 <p>

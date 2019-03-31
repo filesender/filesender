@@ -7,18 +7,18 @@
 // 
 // 
 ?>
-subject: Gastgebruiker begint met het uploaden van bestanden
+subject: Gastgebruik om bestanden te versturen is beëindigd
 
 {alternative:plain}
 
 Geachte heer, mevrouw,
 
-De volgende gastgebruiker is begonnen met het uploaden van bestanden via uw voucher :
+De volgende gastgebruiker kan geen bestanden meer versturen :
 
 Gastgebruiker: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
 
-De voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch verwijdert wordt.
+Het voucher is geldig tot {date:guest.expires} waarna deze automatisch wordt verwijderd.
 
 Hoogachtend,
 {cfg:site_name}
@@ -30,7 +30,7 @@ Hoogachtend,
 </p>
 
 <p>
-  De volgende gastgebruiker is begonnen met het uploaden van bestanden via uw voucher :
+De volgende gastgebruiker kan geen bestanden meer versturen :
 </p>
 
 <table rules="rows">
@@ -41,7 +41,7 @@ Hoogachtend,
     </thead>
     <tbody>
         <tr>
-            <td>Gast</td>
+            <td>Gastgebruiker</td>
             <td><a href="mailto:{guest.email}">{guest.email}</a></td>
         </tr>
         <tr>
@@ -59,3 +59,4 @@ Hoogachtend,
     Hoogachtend,<br />
     {cfg:site_name}
 </p>
+',

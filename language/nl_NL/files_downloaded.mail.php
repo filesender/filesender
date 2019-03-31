@@ -1,10 +1,19 @@
-onderwerp: Ontvangstbevestiging
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Ontvangstbevestiging
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
-{if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geupload{if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email} :
+{if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geüpload{if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email} :
 
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
@@ -12,7 +21,7 @@ Geachte mevrouw, heer,
 {files.first().path} ({size:files.first().size})
 {endif}
 
-U kunt uw bestanden benaderen en meer details over downloadstatistieken voor deze transfers bekijken op de transfers-pagina op {files.first().transfer.link}.
+U kunt toegang krijgen tot uw bestanden en meer details over downloadstatistieken voor deze transfers bekijken op de transfers-pagina op {files.first().transfer.link}.
 
 Hoogachtend,
 {cfg:site_name}
@@ -20,11 +29,11 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
-    {if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geupload{if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email}
+    {if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geüpload{if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email}
 </p>
 
 <p>
@@ -40,7 +49,7 @@ Hoogachtend,
 </p>
 
 <p>
-    U kunt uw bestanden benaderen en meer details over downloadstatistieken voor deze transfers bekijken op de transfers-pagina op <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
+    U kunt toegang krijgen tot uw bestanden en meer details over downloadstatistieken voor deze transfers bekijken op de transfers-pagina op <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
 </p>
 
 <p>

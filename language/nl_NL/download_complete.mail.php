@@ -1,8 +1,17 @@
-onderwerp: Download voltooid
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Download voltooid
 
 {alternative:plain}
 
-Geachte mevouw, heer,,
+Geachte heer, mevrouw,
 
 Uw download van onderstaande {if:files>1}bestanden{else}bestand{endif} is voltooid : 
 
@@ -18,7 +27,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-   Gecachte mevrouw, heer,
+   Gecachte heer, mevrouw,
 </p>
 
 <p>

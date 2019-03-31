@@ -1,8 +1,17 @@
-Ondewerp: Bestand{if:transfer.files>1}en{endif} succesvol geüpload
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Bestand{if:transfer.files>1}en{endif} succesvol geüpload
 
 {alternative:plain}
 
-Geachte mevrouw, heer, 
+Geachte heer, mevrouw,
 
 De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} succesvol geüpload naar {cfg:site_name}.
 
@@ -20,7 +29,7 @@ Hoogachtend,
 {alternative:html}
 
 <p>
-    Geachte mevrouw, heer, 
+    Geachte heer, mevrouw,
 </p>
 
 <p>

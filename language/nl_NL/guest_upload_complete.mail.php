@@ -1,27 +1,36 @@
-Onderwerp: Gast heeft bestanden geüpload
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Gastgebruiker beëindigd het uploaden van bestanden
 
 {alternative:plain}
 
-Geachte mevrouw, heer,
+Geachte heer, mevrouw,
 
-De volgende gast heeft fileThe following guest ended to upload files from your voucher :
+De volgende gastgebruiker heeft het uploaden van bestanden via uw voucher beëindigd :
 
-Guest: {guest.email}
+Gastgebruiker: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
 
-The voucher is available until {date:guest.expires} after which time it will be automatically deleted.
+Het voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch verwijdert wordt.
 
-Best regards,
+Hoogachtend,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Geachte heer, mevrouw,
 </p>
 
 <p>
-    The following guest ended to upload files from your voucher :
+    De volgende gastgebruiker heeft het uploaden van bestanden via uw voucher beëindigd :
 </p>
 
 <table rules="rows">
@@ -32,7 +41,7 @@ Best regards,
     </thead>
     <tbody>
         <tr>
-            <td>Guest</td>
+            <td>Gastgebruiker</td>
             <td><a href="mailto:{guest.email}">{guest.email}</a></td>
         </tr>
         <tr>
@@ -40,13 +49,13 @@ Best regards,
             <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
         </tr>
         <tr>
-            <td>Valid until</td>
+            <td>Geldig tot</td>
             <td>{date:guest.expires}</td>
         </tr>
     </tbody>
 </table>
 
 <p>
-    Best regards,<br />
+    Hoogachtend,<br />
     {cfg:site_name}
 </p>
