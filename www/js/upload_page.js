@@ -1084,6 +1084,7 @@ $(function() {
         filesender.ui.nodes.message,
         $('#message_can_not_contain_urls'),
         filesender.config.message_can_not_contain_urls_regex );
+
     
     // Setup date picker
     $.datepicker.setDefaults({
@@ -1107,15 +1108,17 @@ $(function() {
         
         yearSuffix: lang.tr('dp_year_suffix').out()
     });
-    
     // Bind picker
     filesender.ui.nodes.expires.datepicker({
         minDate: 1,
         maxDate: filesender.config.max_transfer_days_valid
     });
+    // set value from epoch time
+    filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
     filesender.ui.nodes.expires.on('change', function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
+
     
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {

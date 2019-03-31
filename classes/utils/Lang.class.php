@@ -252,6 +252,35 @@ class Lang
         
         return self::$code_stack;
     }
+
+    /**
+     * This is like the PHP setlocale but it respects the language the 
+     * user has selected and tries to work with that selection into 
+     * something that the php setlocale() can handle.
+     *
+     * @param category is the same as for setlocale().
+     */
+    public static function setlocale_fromUserLang( int $category = LC_ALL )
+    {
+        $userlang = Auth::user()->lang;
+
+        // this is the array of lang to try
+        $a = array($userlang);
+
+        // append a version that goes from it-it to it_IT so PHP will be happy
+        $t = explode('-',$userlang);
+        if( count($t) == 2 ) {
+            array_push($a, $t[0] . "_" . strtoupper($t[1]));
+        }
+
+        // try each language in the array until something sticks
+        foreach($a as $lang) {
+            if( strlen($lang) ) {
+                if(setlocale($category, $lang))
+                    break;
+            }
+        }
+    }
     
     /**
      * Get base code, without any user related getters

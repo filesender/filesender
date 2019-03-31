@@ -165,6 +165,48 @@ It is possible to use automatic formatting as well :
 
 	{size:cfg:max_transfer_size}
 
+### Date format
+
+Dates can be formatted for display and parsed back into a machine
+stored format on both the client and server. On the server side
+date_format is used, or maybe datetime_format if the time is also to
+be included. For calendar things it will be date_format since the time
+of day is not included.
+
+In March 2019 the format of date_format and datetime_format was
+changed from using the old
+[https://www.php.net/manual/en/function.date.php](php date format) to
+using the [https://www.php.net/manual/en/function.strftime.php](php
+strftime format). You can know which format your configuration is
+using because the newer format uses the % sign to select items to
+format. This move was done to allow improved formatting in non English
+languages as recommended by the
+[https://www.php.net/manual/en/function.date.php](php date page).
+One advantage as an example is being able to use '%A' to display
+the day of week in the current language. 
+
+The default values shown here were accurate as of March 2019. User
+experience will be improved if the date_format and dp_date_format
+both present dates in the same way for a locale. 
+For the datepicker jquery item the dp_date_format is used. The format
+for dp_date_format follows the information for the
+[http://api.jqueryui.com/datepicker/#utility-formatDate](jquery
+datepicker widget).
+
+```
+$lang['date_format'] = '%d/%m/%Y';
+$lang['datetime_format'] = '%d/%m/%Y %T';
+$lang['dp_date_format'] = 'dd/mm/yy';
+```
+
+As of FileSender 2.6 dates are sent from the server to the client in a
+binary format and reparsed in the web browser for use in a datepicker.
+This allows the format of date_format and dp_date_format to be
+slightly different or not match exactly.
+
+
+
+
 ### Email parts
 
 When translating an email (file like `some_id.mail.php` or just `some_id.mail`, same effect) the translation file can contain several parts.
