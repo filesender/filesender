@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-␣
+Ich akzeptiere die Bedingungen dieses Dienstes
