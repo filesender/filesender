@@ -260,7 +260,7 @@ class Lang
      *
      * @param category is the same as for setlocale().
      */
-    public static function setlocale_fromUserLang( int $category = LC_ALL )
+    public static function setlocale_fromUserLang( $category )
     {
         $userlang = Auth::user()->lang;
 
