@@ -1,3 +1,12 @@
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
 <h3>Přihlášení</h3> 
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>Přihlásíte se pomocí zveřejněných poskytovatelů identity pomocí svého běžného účtu ve vybrané organizaci. Pokud není Vaše organizace uvedena v seznamu nebo se nemůžete přihlásit, kontaktujte svou místní správu IT. </li>

@@ -9,13 +9,12 @@
 ?>
 <h1>Bienvenue sur {cfg:site_name}</h1>
 <p>
-    In order for this service to operate it must retain some
-    information about files, who can access them, and what has
-    happened. Files will be automatically removed from the system when
-    they expire and other retained information will be removed from
-    the system and database after some amount of time has passed. This
-    page allows you to see how long various pieces of information are
-    retained by this installation.
+    Afin que ce service puisse fonctionner, celui-ci doit stocker des informations
+    sur les fichiers, qui peut y accéder, et les actions effectuées.
+    Les fichiers sont automatiquement supprimés du système et de la base de 
+    données après un certain temps.
+    Cette page vous permet de voir pendant combien de temps ces informations 
+    sont stockées sur cette installation.
 </p>
 <p>
     Veuillez noter que lorsqu'un dépôt est supprimé, tous les fichiers liés ainsi que les copies des emails envoyés seront aussi supprimés.

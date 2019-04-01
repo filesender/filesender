@@ -1,3 +1,12 @@
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
 <?php
 $lang['about'] = 'О проекте';
 $lang['about_page'] = 'Авторы';
@@ -80,8 +89,8 @@ $lang['created'] = 'Создано';
 $lang['created_transfers'] = 'Созданные трансферы';
 $lang['database_access_failure'] = 'Не удалось получить доступ к базе данных';
 $lang['date'] = 'Дата';
-$lang['date_format'] = 'd/m/Y';
-$lang['datetime_format'] = 'd/m/Y H:i:s ';
+$lang['date_format'] = '%d/%m/%Y';
+$lang['datetime_format'] = '%d/%m/%Y %T';
 $lang['dbi_missing_parameter'] = 'Отсутствует параметр конфигурации DBI';
 $lang['decrypting'] = 'Дешифрование';
 $lang['delete'] = 'Удалить';
@@ -356,7 +365,7 @@ $lang['subject'] = 'Тема';
 $lang['success_dialog'] = 'Выполнено';
 $lang['template_not_found'] = 'Шаблон не найден';
 $lang['terasender_worker_count'] = 'Количество процессов TeraSender';
-$lang['time_format'] = '{h:H\\h} {i:i\\m\\i\\n} {s:s\\s} ';
+$lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s} ';
 $lang['to'] = 'Кому';
 $lang['tracking_event_not_found'] = 'Событие отслеживания не найдено';
 $lang['tracking_unknown_event'] = 'Неизвестное событие отслеживания';
