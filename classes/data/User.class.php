@@ -299,9 +299,21 @@ class User extends DBObject
      */
     public static function search($match)
     {
-        $match = str_replace('\\', '', $match); // Remove to-be-used escape char
-        $match = str_replace(array('%', '_'), array('\\%', '\\_'), $match); // Escape special chars
-        return self::all("id LIKE :match ESCAPE '\\\\'", array(':match' => '%'.$match.'%'));
+        // Remove to-be-used escape char
+        $match = str_replace('\\', '', $match);
+        
+        // Escape special chars
+        $match = str_replace(array('%', '_'), array('\\%', '\\_'), $match);
+
+        $sql = "select u.* from "
+             . User::getDBTable() . " u,"
+             . " " . Authentication::getDBTable()
+             . " a where a.id = u.authid and a.saml_user_identification_uid like :match ESCAPE '\\' ";
+        $statement = DBI::prepare($sql);
+        $placeholders =  array(':match' => '%'.$match.'%');
+        $statement->execute($placeholders);
+        $records = $statement->fetchAll();
+        return self::convertTableResultsToObjects($records);
     }
     
     /**

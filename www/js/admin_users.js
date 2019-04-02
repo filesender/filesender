@@ -72,7 +72,8 @@ $(function() {
     var add_user = function(user) {
         var u = results.find('.tpl').clone().removeClass('tpl').addClass('user');
         u.attr({'data-id': user.id});
-        u.find('.uid').text(user.id);
+        u.find('.id').text(user.id);
+        u.find('.saml_id').text(user.saml_id);
         u.find('.last_activity').text(user.last_activity.formatted);
         u.appendTo(results);
 
