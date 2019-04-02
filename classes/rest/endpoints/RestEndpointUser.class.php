@@ -52,6 +52,7 @@ class RestEndpointUser extends RestEndpoint
     {
         return array(
             'id' => $user->id,
+            'saml_id' => $user->saml_user_identification_uid,
             'additional_attributes' => $user->additional_attributes,
             'aup_ticked' => $user->aup_ticked,
             'transfer_preferences' => $user->transfer_preferences,
