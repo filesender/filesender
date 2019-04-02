@@ -284,7 +284,7 @@ $(function() {
         dayNamesMin: lang.tr('dp_day_names_min').values(),
         
         weekHeader: lang.tr('dp_week_header').out(),
-        dateFormat: lang.tr('dp_date_format').out(),
+        dateFormat: lang.trWithConfigOverride('dp_date_format').out(),
         
         firstDay: parseInt(lang.tr('dp_first_day').out()),
         isRTL: lang.tr('dp_is_rtl').out().match(/true/),

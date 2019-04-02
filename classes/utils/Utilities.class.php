@@ -180,14 +180,14 @@ class Utilities
         Lang::setlocale_fromUserLang( LC_TIME );
 
         $lid = $with_time ? 'datetime_format' : 'date_format';
-        $dateFormat = Lang::tr($lid);
+        $dateFormat = Lang::trWithConfigOverride($lid);
         if ($dateFormat == '{date_format}') {
             $dateFormat = '%d/%m/%Y';
         }
         if ($dateFormat == '{datetime_format}') {
             $dateFormat = '%d/%m/%Y %T';
         }
-        
+
         return utf8_encode(strftime($dateFormat, $timestamp));
     }
     
