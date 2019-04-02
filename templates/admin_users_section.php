@@ -8,20 +8,22 @@
 
 <table class="results">
     <tr>
+        <th>ID</th>
         <th>{tr:user_id}</th>
         <th>{tr:last_activity}</th>
         <th>&nbsp;</th>
     </tr>
     
     <tr class="searching">
-        <td colspan="3">{tr:searching}</td>
+        <td colspan="4">{tr:searching}</td>
     </tr>
     <tr class="no_results">
-        <td colspan="3">{tr:no_results}</td>
+        <td colspan="4">{tr:no_results}</td>
     </tr>
     
     <tr class="tpl">
-        <td class="uid"></td>
+        <td class="id"></td>
+        <td class="saml_id"></td>
         <td class="last_activity"></td>
         
         <td>
