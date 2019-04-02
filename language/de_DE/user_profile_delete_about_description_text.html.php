@@ -7,7 +7,7 @@
 // 
 // 
 ?>
- ␣␣␣␣<p>
+     <p>
       Ihr Benutzername und das Passwort werden außerhalb von FileSender verwaltet. Sie können Ihr Benutzerkonto zusammen mit allen Dateien, Einladungen und Debug-Informationen (fehlgeschlagene Übertragungen, etc) von dieser FileSender-Installation löschen. Dadurch werden all diese Informationen gelöscht und werden nicht mehr verfügbar sein. Da FileSender selbst nicht Ihren Benutzername und das Passwort speichert, bleiben diese erhalten, bis diese von Ihrer Institution gelöscht wurden.
     </p>
     <p>

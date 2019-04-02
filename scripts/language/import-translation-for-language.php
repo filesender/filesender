@@ -46,6 +46,13 @@ foreach($LANG as $ti => $t) {
     if( $data == NULL ) {
        unset($LANG[$ti]);
     }
+    
+    // filter open box characters back to spaces.
+    $data = str_replace( '␣', ' ', $data);
+    if( $data ) {
+        $LANG[$ti]['definition'] = $data;
+    }
+    
 }
 echo "LANG size2 ", count($LANG), "\n";
 
