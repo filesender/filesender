@@ -516,6 +516,15 @@ class Lang
     {
         return self::translate($id);
     }
+
+    public static function trWithConfigOverride($id)
+    {
+        $v = Config::get('tr_' . $id);
+        if( strlen($v)) {
+            return new Translation($v);
+        }
+        return self::tr($id);
+    }
     
     /**
      * Translate email
