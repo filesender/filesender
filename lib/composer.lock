@@ -1,0 +1,58 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "778893c0a5f60960cb6f75dbd5d0bb3f",
+    "packages": [
+        {
+            "name": "barracudanetworks/archivestream-php",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barracudanetworks/ArchiveStream-php.git",
+                "reference": "87540ce2b53257e2fd6505f4b261dc22b82d77c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barracudanetworks/ArchiveStream-php/zipball/87540ce2b53257e2fd6505f4b261dc22b82d77c6",
+                "reference": "87540ce2b53257e2fd6505f4b261dc22b82d77c6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gmp": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Barracuda\\ArchiveStream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A library for dynamically streaming dynamic tar or zip files without the need to have the complete file stored on the server.",
+            "homepage": "https://github.com/barracudanetworks/ArchiveStream-php",
+            "keywords": [
+                "archive",
+                "php",
+                "stream",
+                "tar",
+                "zip"
+            ],
+            "time": "2018-08-10T13:58:33+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

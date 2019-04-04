@@ -40,7 +40,7 @@ try {
     // List of files to be downloaded
     if(!array_key_exists('files_ids', $_REQUEST))
         throw new DownloadMissingFilesIDsException();
-    
+
     $files_ids = array_filter(array_map('trim', explode(',', $_REQUEST['files_ids'])));
     
     if(!count($files_ids))
@@ -101,10 +101,20 @@ try {
     
     // Check if file set has already been downloaded over the last hour
     $recently_downloaded = $recipient ? AuditLog::clientRecentlyDownloaded($recipient, $files_ids) : false;
+
+    $archive_format_selected = false;
+    $archive_format = "zip";
+    if( $_REQUEST["archive_format"] == "zip" ) {
+        $archive_format_selected = true;
+    }
+    if( $_REQUEST["archive_format"] == "tar" ) {
+        $archive_format_selected = true;
+        $archive_format = "tar";
+    }
     
-    if(count($files_ids) > 1) { 
+    if(count($files_ids) > 1 || $archive_format_selected) { 
         // Archive download
-        $ret = downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded);
+        $ret = downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded,$archive_format);
     } else {
         // Single file download
         $ret = downloadSingleFile($transfer, $recipient, $files_ids[0], $recently_downloaded);
@@ -129,9 +139,11 @@ try {
  * 
  * @return boolean: true if succes, false otherwise
  */
-function downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded) {
+function downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded, $archive_format) {
+
+    
     // Creating the zipper
-    $zipper = new Zipper();
+    $zipper = new Archiver($archive_format);
     
     // Adding all files
     $files = array();
@@ -140,8 +152,8 @@ function downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded
         $files[] = $file;
         $zipper->addFile($file);
     }
-    
-    $size = $zipper->calculateTotalFileSize();
+
+    $size = -1;
     $time = time();
     
     Logger::info('User started archive download ('.count($files).' files, '.$size.' bytes)');
@@ -150,7 +162,7 @@ function downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded
     if(!$recently_downloaded)
         Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
     
-    $result = $zipper->sendZip($recipient);
+    $result = $zipper->streamArchive($recipient);
     
     if(!$recently_downloaded)
         Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);

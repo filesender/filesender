@@ -1,0 +1,44 @@
+[
+    {
+        "name": "barracudanetworks/archivestream-php",
+        "version": "1.0.7",
+        "version_normalized": "1.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/barracudanetworks/ArchiveStream-php.git",
+            "reference": "87540ce2b53257e2fd6505f4b261dc22b82d77c6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/barracudanetworks/ArchiveStream-php/zipball/87540ce2b53257e2fd6505f4b261dc22b82d77c6",
+            "reference": "87540ce2b53257e2fd6505f4b261dc22b82d77c6",
+            "shasum": ""
+        },
+        "require": {
+            "ext-gmp": "*",
+            "ext-mbstring": "*",
+            "php": ">=5.1.2"
+        },
+        "time": "2018-08-10T13:58:33+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Barracuda\\ArchiveStream\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "A library for dynamically streaming dynamic tar or zip files without the need to have the complete file stored on the server.",
+        "homepage": "https://github.com/barracudanetworks/ArchiveStream-php",
+        "keywords": [
+            "archive",
+            "php",
+            "stream",
+            "tar",
+            "zip"
+        ]
+    }
+]

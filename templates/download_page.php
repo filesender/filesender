@@ -85,7 +85,7 @@
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
             <span class="select clickable">
-                <span class="fa fa-2x fa-square-o" title="{tr:select_all_for_archive_download}"></span>
+                <span class="fa fa-2x fa-square-o toggle-select-all" title="{tr:select_all_for_archive_download}"></span>
                 <span>{tr:select_all_for_archive_download}</span>
             </span>
         </div>
@@ -117,10 +117,18 @@
                 {tr:mac_archive_message}
             </div>
             
+            <div class="archive_download_frame">
             <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_download" title="{tr:archive_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_download}
             </a>
+            </div>
+            <div class="archive_tar_download_frame">
+            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_tar_download" title="{tr:archive_tar_download}">
+                <span class="fa fa-2x fa-download"></span>
+                {tr:archive_tar_download}
+            </a>
+            </div>
             <span class="downloadprogress"></span>
         </div>
     <?php } ?>    

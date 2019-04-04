@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ruleset name="Barracuda">
+
+	<description>PSR2 with Barracuda exceptions</description>
+
+	<rule ref="PSR2">
+		<!-- Exclude camel caps class name checking -->
+		<exclude name="Squiz.ControlStructures.ControlSignature"/>
+		<!-- Exclude camel caps function name checking -->
+		<exclude name="Generic.NamingConventions.CamelCapsFunctionName"/>
+		<!-- Exclude camel caps class method name checking -->
+		<exclude name="PSR1.Methods.CamelCapsMethodName"/>
+		<!-- Exclude camel caps class name checking -->
+		<exclude name="Squiz.Classes.ValidClassName"/>
+		<!-- Exclude class namespace check -->
+		<exclude name="PSR1.Classes.ClassDeclaration"/>
+		<!-- Exclude multi line function -->
+		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration"/>
+		<!-- Exclude default function sniff -->
+		<exclude name="Squiz.Functions.FunctionDeclaration"/>
+		<!-- Exclude spaces instead of tabs -->
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+		<!-- Exclude spacing around parenthesis checks -->
+		<exclude name="PSR2.ControlStructures.ControlStructureSpacing"/>
+	</rule>
+
+	<!-- Configure for concatenation operator spacing -->
+	<rule ref="Squiz.Strings.ConcatenationSpacing">
+		<properties>
+			<property name="spacing" value="1" />
+			<property name="ignoreNewlines" value="true" />
+		</properties>
+	</rule>
+
+	<!-- Configure for commenting -->
+	<rule ref="Squiz.Commenting.FunctionCommentThrowTag" />
+	<rule ref="Squiz.Commenting.ClassComment" />
+
+	<!-- Configure for tabs -->
+	<!-- <arg name="tab-width" value="4"/>
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+	<rule ref="Generic.WhiteSpace.ScopeIndent">
+		<properties>
+			<property name="indent" value="4"/>
+			<property name="tabIndent" value="true"/>
+		</properties>
+	</rule> -->
+</ruleset>

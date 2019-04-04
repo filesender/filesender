@@ -1,0 +1,29 @@
+# Change Log
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [Unreleased]
+
+## [1.0.4] - 2016-09-01
+### Fixed
+- Adding a directory to ZIP file created a file instead
+
+## [1.0.3] - 2016-05-18
+### Fixed
+- GMP detection in PHP 5.6+ (#24)
+
+## [1.0.2] - 2016-01-07
+### Changed
+- Switched `ob_end_clean()` to `ob_end_flush()` to prevent errors if data was
+  previously added to the buffer.
+
+## [1.0.1] - 2016-01-06
+### Fixed
+- Added `php-mbstring` requirement to `composer.json`
+
+## [1.0.0] - 2015-12-04
+### Changed
+- Namespaced classes under `Barracuda\ArchiveStream`
+- Added support for composer autoloading
