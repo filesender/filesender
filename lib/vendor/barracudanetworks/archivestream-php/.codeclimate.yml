@@ -1,0 +1,21 @@
+exclude_paths:
+ - ".phpcs/**/*"
+ - "test/**/*"
+ - "extras/**/*"
+engines:
+  phpmd:
+    enabled: false
+    config:
+      file_extensions: "php"
+      rulesets: "unusedcode"
+  phpcodesniffer:
+    enabled: true
+    config:
+      file_extensions: "php"
+      standard: "/code/.phpcs/Barracuda/ruleset.xml"
+      ignore_warnings: true
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "**/*.php"

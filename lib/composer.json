@@ -1,0 +1,5 @@
+{
+    "require": {
+        "barracudanetworks/archivestream-php": "^1.0"
+    }
+}
