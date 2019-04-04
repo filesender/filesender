@@ -318,6 +318,27 @@ class DBObject
         
         // Fetch records, register them with id build from primary key(s) value(s)
         $records = $statement->fetchAll();
+        return self::convertTableResultsToObjects( $records, $run );
+    }
+
+    /**
+     * convert the result of an sql query on this table to a set objects
+     *
+     * @param string $records contain full information for tuples in this table
+     * @param callable $run will be applied to all objects, return values will replace objects and result will be filtered to remove nulls
+     *
+     * @return array of objects or page object
+     */
+    public function convertTableResultsToObjects( $records, $run = null )
+    {
+        // Look for primary key(s) name(s)
+        $pk = array();
+        foreach (static::getDataMap() as $k => $d) {
+            if (array_key_exists('primary', $d) && $d['primary']) {
+                $pk[] = $k;
+            }
+        }
+        
         $objects = array();
         
         foreach ($records as $r) {
