@@ -1175,10 +1175,22 @@ table.guests .guest .to .errors .details {
     text-align: center;
 }
 
+.download_page .archive_tar_download_frame,
+.download_page .archive_download_frame {
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+    -moz-border-radius: 0.5em 0.5em 0.5em 0.5em;
+    display: inline-block;
+}
+
 .download_page .archive .archive_message,
-.download_page .archive .mac_archive_message,
-.download_page .archive .archive_download {
+.download_page .archive .mac_archive_message {
     margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.recommended {
+    border: 0.5em solid #55aa55;
+    background-color: #55aa55;
 }
 
 .download_page .files[data-count="1"] .select_all,

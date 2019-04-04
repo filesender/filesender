@@ -236,7 +236,7 @@
                     
                     <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
                     <div class="download_link">
-                        {tr:download_link} : <input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" />
+                        <a href="<?php echo $transfer->first_recipient->download_link ?>">{tr:download_link}</a> : <input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" />
                     </div>
                     <?php } ?>
                 </div>

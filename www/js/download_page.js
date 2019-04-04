@@ -47,11 +47,12 @@ $(function() {
     });
     
     // Bind global selector
-    page.find('.select_all .select').on('click', function() {
+    page.find('.toggle-select-all').on('click', function() {
         var el = $(this);
         
-        var selected = el.find('.fa').hasClass('fa-check-square-o');
+        var selected = el.hasClass('fa-check-square-o');
         selected = !selected;
+        el.toggleClass('fa-square-o', !selected).toggleClass('fa-check-square-o', selected);
         
         var files = page.find('.file');
         files.attr('data-selected', selected ? '1' : '0');
@@ -66,13 +67,15 @@ $(function() {
     var m = window.location.search.match(/token=([0-9a-f-]+)/);
     var token = m[1];
     var $this = this;
-    var dl = function(ids, confirm, encrypted, progress) {
+    var dl = function(ids, confirm, encrypted, progress, archive_format ) {
         if(typeof ids == 'string') ids = [ids];
-        
         var dlcb = function(notify) {
             notify = notify ? '&notify_upon_completion=1' : '';
             return function() {
-                filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(',') + notify);
+                filesender.ui.redirect( filesender.config.base_path
+                                        + 'download.php?token=' + token
+                                        + '&archive_format=' + archive_format
+                                        + '&files_ids=' + ids.join(',') + notify);
             };
         };
         if (!encrypted && confirm){
@@ -89,9 +92,14 @@ $(function() {
                 var key_version = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-version');
                 var salt = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-salt');
 
-                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename, key_version, salt, progress);
+                window.filesender.crypto_app().decryptDownload( filesender.config.base_path
+                                                                + 'download.php?token=' + token
+                                                                + '&files_ids=' + ids.join(','),
+                                                                mime, filename, key_version, salt, progress);
             }else{
-                filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','));
+                filesender.ui.redirect( filesender.config.base_path
+                                        + 'download.php?token=' + token
+                                        + '&files_ids=' + ids.join(','));
             }
         }
     };
@@ -109,9 +117,8 @@ $(function() {
         
         return false;
     });
-    
-    // Bind archive download button
-    page.find('.archive .archive_download').button().on('click', function() {
+
+    var dlArchive = function( archive_format ) {
         var ids = [];
         page.find('.file[data-selected="1"]').each(function() {
             ids.push($(this).attr('data-id'));
@@ -127,14 +134,23 @@ $(function() {
         var transferid = $('.transfer').attr('data-id');
         
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
-            dl(ids, dl_complete_enabled, null);
+            dl(ids, dl_complete_enabled, null, null, archive_format );
         });
         
         return false;
+    };
+    
+    // Bind archive download button
+    page.find('.archive .archive_download').button().on('click', function() {
+        return dlArchive( 'zip' );
+    });
+    page.find('.archive .archive_tar_download').button().on('click', function() {
+        return dlArchive( 'tar' );
     });
     
     var needszip64extractor = parseInt($('[data-transfer-size]').attr('data-transfer-size')) > 2 * 1024 * 1024 * 1024;
     var macos = navigator.platform.match(/Mac/);
+    var linuxos = navigator.platform.match(/Linux/);
     if( !needszip64extractor || !macos )
         $('.mac_archive_message').hide();
 
@@ -143,4 +159,15 @@ $(function() {
     var transfer_is_encrypted = $('.transfer_is_encrypted').text()==1;
     if( transfer_is_encrypted && !filesender.supports.crypto ) 
         $('.crypto_not_supported_message').show();
+
+    page.find('.toggle-select-all').trigger('click');
+
+    button_zipdl = page.find('.archive_download_frame');
+    button_tardl = page.find('.archive_tar_download_frame');
+    if( macos || linuxos ) {
+        button_tardl.addClass('recommended');
+    } else {
+        button_zipdl.addClass('recommended');
+    }
+    
 });

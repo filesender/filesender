@@ -30,8 +30,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// generating zip64
 require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/ZipStreamer.php');
 require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/lib/Count64.php');
+
+// generating tar
+require_once(FILESENDER_BASE.'/lib/vendor//barracudanetworks/archivestream-php/src/Archive.php');
+require_once(FILESENDER_BASE.'/lib/vendor//barracudanetworks/archivestream-php/src/TarArchive.php');
+require_once(FILESENDER_BASE.'/lib/vendor//barracudanetworks/archivestream-php/src/ZipArchive.php');
 
 
 /**
@@ -41,7 +47,7 @@ require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/lib/Count64.php');
  * See http://www.pkware.com/documents/casestudies/APPNOTE.TXT for a full specification of the .ZIP file format.
  * Code inspired by Paul Duncan's (@link http://pablotron.org/software/zipstream-php/ ZipStream-PHP).
  */
-class Zipper
+class Archiver
 {
     
     /*
@@ -55,14 +61,15 @@ class Zipper
      *      )
      */
     private $files;
-    
+    private $archive_format;
     
     /**
-     * Constuctor of Zipper class
+     * Constuctor
      */
-    public function __construct()
+    public function __construct( $archive_format = 'zip' )
     {
         $this->files = array();
+        $this->archive_format = $archive_format;
     }
 
     
@@ -82,44 +89,81 @@ class Zipper
         $this->files[$file->id]['data'] = $file;
     }
 
+
+    
     /**
-     * Creates a ZIP archive on-the-fly and streams it to the client.
+     * Creates an archive in the format set in the constructor 
+     * The archive is created on-the-fly and streamed it to the client.
+     *
      * <b>The files in the archive are not compressed.</b>
      */
-    public function sendZip($recipient = null, $withHeaders = true)
+    public function streamArchive($recipient = null, $withHeaders = true )
     {
-        $zip = new ZipStreamer\ZipStreamer();
-
-        // set headers
         $fuid = substr(hash('sha1', implode('+', array_keys($this->files))), -8);
         $file = reset($this->files);
         $tid = $file['data']->transfer_id;
-        $filename = 'transfer_' . $tid . '_files_' . $fuid . '.zip';
-        if ($withHeaders) {
-            $zip->sendHeaders($filename, "application/octet-stream");
-        }
-        
-        // send each file
-        foreach ($this->files as $k => $data) {
-            $file = $data['data'];
-            $transfer = $file->transfer;
+        $filename = 'transfer_' . $tid . '_files_' . $fuid;
 
-            if ($recipient) {
-                Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+        //
+        // This is a little less than optimal having two codepaths.
+        //
+        // There were some problems with the zip files produced by
+        // Barracuda\ArchiveStream on osx (mojave at the time) so that
+        // library is only used to generate tar files.
+        //
+        if( $this->archive_format == 'tar' ) {
+            
+            if (!$withHeaders) {
+                $filename = null;
+            }
+
+            $outstream = fopen('php://output','w');
+            $opts = array();
+            $opts['send_http_headers'] = $withHeaders;
+            $opts['content_type'] = 'application/tar';
+            $archive = new \Barracuda\ArchiveStream\TarArchive($filename . '.tar',$opts,$filename,$outstream);
+
+            // send each file
+            foreach ($this->files as $k => $data) {
+                $file = $data['data'];
+                $transfer = $file->transfer;
+
+                if ($recipient) {
+                    Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+                }
+                
+                $this->addFileToArchive( $archive, $file );
+            }
+
+            $archive->finish();        
+
+        } else {
+
+            $zip = new ZipStreamer\ZipStreamer();
+            $filename .= '.zip';
+            
+            if ($withHeaders) {
+                $zip->sendHeaders($filename, "application/octet-stream");
             }
             
-            // Set up metadata and send the local header.
-            $name = preg_replace('/^\\/+/', '', $file->path); // Strip leading slashes from filename.
-            $name = preg_replace('/\\.\\.\\//', '', $name);   // strip ../
-            $name = preg_replace('/\\/\\.\\./', '', $name);   // strip /..
-            
-            $stream = $file->getStream();
-            $zip->addFileFromStream($stream, $name);
-            fclose($stream);
+            // send each file
+            foreach ($this->files as $k => $data) {
+                $file = $data['data'];
+                $transfer = $file->transfer;
+                if ($recipient) {
+                    Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+                }
+
+                $archivedName = $this->getArchivedFileName( $file );
+                
+                $stream = $file->getStream();
+                $zip->addFileFromStream($stream, $archivedName);
+                fclose($stream);
+            }
+
+            $zip->finalize();
         }
 
-        // finish up and log everything
-        $zip->finalize();
         if ($recipient) {
             foreach ($this->files as $data) {
                 $file = $data['data'];
@@ -135,28 +179,37 @@ class Zipper
     // Utilities functions
     // ------------------------------------------------------------------------
     
-    
-    /**
-     * Returns the an extimate of the total file size of the ZIP archive.
-     *  depending on the number and sizes of the files and whether
-     * or not the ZIP64 format is being used.
-     *
-     * @return int: the total filesize of the archive
-     */
-    public function calculateTotalFileSize()
+
+    // ------------------------------------------------------------------------
+    // private functions
+    // ------------------------------------------------------------------------
+
+    protected function getArchivedFileName( $file )
     {
-        $fileSize = 22; // Size of the end-of-file TOC record.
-
-        foreach ($this->files as $data) {
-            $file = $data['data'];
-            $fileSize += 92 + strlen($file->path) * 2; // Size of the local file header, descriptor and per-file CDR entry.
-            $fileSize += $file->size; // File contents size.
-
-            $fileSize += 48; // Extra file data for ZIP64 format.
-        }
-
-        $fileSize += 76; // Extra end-of-file ZIP64 information.
-
-        return $fileSize;
+        $name = preg_replace('/^\\/+/', '', $file->path); // Strip leading slashes from filename.
+        $name = preg_replace('/\\.\\.\\//', '', $name);   // strip ../
+        $name = preg_replace('/\\/\\.\\./', '', $name);   // strip /..
+        return $name;
     }
+    
+    protected function addFileToArchive( $archive, $file, $archivedName = null )
+    {
+        $fileopts = array();
+        $transfer = $file->transfer;
+        if( !$archivedName ) {
+            $archivedName = $this->getArchivedFileName( $file );
+        }
+        
+	$archive->init_file_stream_transfer($archivedName, $file->size, $fileopts);
+
+        $block_size = 1048576;
+        $stream = $file->getStream();
+	while ($data = fread($stream, $block_size))
+	{
+	    $archive->stream_file_part($data);
+	}
+        fclose($stream);
+	$archive->complete_file_stream();        
+    }
+    
 }
