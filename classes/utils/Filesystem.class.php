@@ -117,4 +117,9 @@ class Filesystem
             throw new StorageFilesystemCannotDeleteException($file_path, $file);
         }
     }
+
+    public static function getTempDirectory()
+    {
+        return Config::get('tmp_path');
+    }
 }

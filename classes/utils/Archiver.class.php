@@ -90,6 +90,47 @@ class Archiver
     }
 
 
+    /**
+     * This is a bit sneaky, we create a temporary tarball to include
+     * all the byte offsets and padding but do not actually read/write
+     * the real storage contents, only record the metadata in the archive.
+     *
+     * Then we know the size will be metadata only archive size + number of bytes
+     * in the content for all the files.
+     */
+    public function getTarSize($filename,$opts) {
+
+        // work out the content length
+        $tfn = tempnam( Filesystem::getTempDirectory(), 'szf');
+        $outstream = fopen($tfn,'w');
+        $opt['send_http_headers'] = false;
+        $contentsz = 0;
+        $archive = new \Barracuda\ArchiveStream\TarArchive(null,$opts,$filename,$outstream);
+        
+        // collect info for each file
+        foreach ($this->files as $k => $data) {
+            $file = $data['data'];
+            $fileopts = array();
+            $transfer = $file->transfer;
+            if( !$archivedName ) {
+                $archivedName = $this->getArchivedFileName( $file );
+            }
+
+            $contentsz += $file->size;
+	    $archive->init_file_stream_transfer($archivedName, $file->size, $fileopts);
+	    $archive->complete_file_stream();        
+            
+        }
+
+        $archive->finish();        
+
+        fflush($tfn);
+        $ret = $contentsz + filesize($tfn);
+        fclose($tfn);
+        unlink($tfn);
+        
+        return $ret;
+    }
     
     /**
      * Creates an archive in the format set in the constructor 
@@ -117,11 +158,18 @@ class Archiver
                 $filename = null;
             }
 
-            $outstream = fopen('php://output','w');
             $opts = array();
             $opts['send_http_headers'] = $withHeaders;
-            $opts['content_type'] = 'application/tar';
-            $archive = new \Barracuda\ArchiveStream\TarArchive($filename . '.tar',$opts,$filename,$outstream);
+            $opts['content_type'] = 'application/x-tar';
+            
+            // work out the content length
+            $sz = $this->getTarSize($filename,$opts);
+            header("Content-Length: $sz");
+            $opt['send_http_headers'] = true;
+
+            // do the work for real now and stream things over to the client
+            $outstream = fopen('php://output','w');
+            $archive = new \Barracuda\ArchiveStream\TarArchive($filename . ".tar",$opts,$filename,$outstream);
 
             // send each file
             foreach ($this->files as $k => $data) {
