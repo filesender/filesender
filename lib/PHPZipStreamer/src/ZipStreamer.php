@@ -232,6 +232,41 @@ class ZipStreamer {
 
     return true;
   }
+    
+  public function addFileFromStreamWithoutData($stream, $streamDataSize, $filePath, $options = NULL) {
+    if ($this->isFinalized) {
+      return false;
+    }
+    $defaultOptions = array(
+        'timestamp' => NULL,
+        'comment' => NULL,
+        'compress' => $this->compress,
+        'level' => $this->level,
+    );
+    if (is_null($options)) {
+    	$options = array();
+    }
+    $options = array_merge($defaultOptions, $options);
+    $this->validateCompressionOptions($options['compress'], $options['level']);
+
+    $filePath = self::normalizeFilePath($filePath);
+
+    $gpFlags = GPFLAGS::ADD;
+
+    list($gpFlags, $lfhLength) = $this->beginFile($filePath, False, $options['comment'], $options['timestamp'], $gpFlags, $options['compress']);
+    list($dataLength, $gzLength, $dataCRC32) = $this->streamFileDataWithoutData($stream, $streamDataSize, $options['compress'], $options['level']);
+
+    $ddLength = $this->addDataDescriptor($dataLength, $gzLength, $dataCRC32);
+
+    // build cdRec
+    $this->cdRec[] = $this->buildCentralDirectoryHeader($filePath, $options['timestamp'], $gpFlags, $options['compress'],
+        $dataLength, $gzLength, $dataCRC32, $this->extFileAttrFile, False);
+
+    // calc offset
+    $this->offset->add($ddLength)->add($lfhLength)->add($gzLength);
+
+    return true;
+  }
 
   /**
    * Add an empty directory entry to the zip archive.
@@ -385,6 +420,20 @@ class ZipStreamer {
     }
     $crc = unpack('N', hash_final($hashCtx, true));
     return array($dataLength, $gzLength, $crc[1]);
+  }
+
+    
+  private function streamFileDataWithoutData($stream, $streamDataSize, $compress, $level) {
+      $dataLength = Count64::construct(0, !$this->zip64);
+      $gzLength = Count64::construct(0, !$this->zip64);
+      $hashCtx = hash_init('crc32b');
+
+      $dataLength->add($streamDataSize);
+      hash_update($hashCtx, 'nothing');
+      $gzLength->add($streamDataSize);
+      
+      $crc = unpack('N', hash_final($hashCtx, true));
+      return array($dataLength, $gzLength, $crc[1]);
   }
 
   private function buildZip64ExtendedInformationField($dataLength = 0, $gzLength = 0) {

@@ -90,6 +90,37 @@ class Archiver
     }
 
 
+    public function getZipSize($filename) {
+
+//        $tfn = tempnam( Filesystem::getTempDirectory(), 'szf');
+        $tfn = tempnam( "/opt/filesender/tmp", 'szf');
+        $outstream = fopen($tfn,'w');
+
+        $contentsz = 0;
+        $zip = new ZipStreamer\ZipStreamer( array( 'outstream' => $outstream ));
+        $filename .= '.zip';
+        $stream = null;
+        
+        // send each file
+        foreach ($this->files as $k => $data) {
+            $file = $data['data'];
+            $transfer = $file->transfer;
+            $archivedName = $this->getArchivedFileName( $file );
+            $contentsz += $file->size;
+            
+            $zip->addFileFromStreamWithoutData($stream, $file->size, $archivedName);
+        }
+
+        $zip->finalize();
+
+
+        fflush($tfn);
+        $ret = $contentsz + filesize($tfn);
+        fclose($tfn);
+//        unlink($tfn);
+
+        return $ret;
+    }
     
     /**
      * Creates an archive in the format set in the constructor 
@@ -139,6 +170,10 @@ class Archiver
 
         } else {
 
+            $contentLength = $this->getZipSize( $filename );
+            Logger::warn('GGHHJJ cl ' . $contentLength);
+            header("Content-Length: $contentLength");
+            
             $zip = new ZipStreamer\ZipStreamer();
             $filename .= '.zip';
             
