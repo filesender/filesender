@@ -217,7 +217,6 @@ class Archiver
         } else {
 
             $contentLength = $this->getZipSize( $filename );
-            Logger::warn('GGHHJJ cl ' . $contentLength);
             header("Content-Length: $contentLength");
             
             $zip = new ZipStreamer\ZipStreamer();
