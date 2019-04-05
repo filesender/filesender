@@ -90,6 +90,35 @@ class Archiver
     }
 
 
+    public function getZipSize($filename) {
+
+        $tfn = tempnam( Filesystem::getTempDirectory(), 'szf');
+        $outstream = fopen($tfn,'w');
+
+        $contentsz = 0;
+        $zip = new ZipStreamer\ZipStreamer( array( 'outstream' => $outstream ));
+        $filename .= '.zip';
+        $stream = null;
+        
+        // send each file
+        foreach ($this->files as $k => $data) {
+            $file = $data['data'];
+            $transfer = $file->transfer;
+            $archivedName = $this->getArchivedFileName( $file );
+            $contentsz += $file->size;
+            
+            $zip->addFileFromStreamWithoutData($stream, $file->size, $archivedName);
+        }
+
+        $zip->finalize();
+
+        fflush($outstream);
+        $ret = $contentsz + filesize($tfn);
+        fclose($tfn);
+
+        return $ret;
+    }
+        
     /**
      * This is a bit sneaky, we create a temporary tarball to include
      * all the byte offsets and padding but do not actually read/write
@@ -124,7 +153,7 @@ class Archiver
 
         $archive->finish();        
 
-        fflush($tfn);
+        fflush($outstream);
         $ret = $contentsz + filesize($tfn);
         fclose($tfn);
         unlink($tfn);
@@ -187,6 +216,9 @@ class Archiver
 
         } else {
 
+            $contentLength = $this->getZipSize( $filename );
+            header("Content-Length: $contentLength");
+            
             $zip = new ZipStreamer\ZipStreamer();
             $filename .= '.zip';
             
