@@ -110,7 +110,9 @@ $default = array(
 
     'testing_terasender_worker_uploadRequestChange_function_name' => '',
 
+    'tmp_path' => FILESENDER_BASE.'/tmp/',
 
+    
     // There are not so many options here, so they are listed
     // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',
