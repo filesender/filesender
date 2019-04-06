@@ -796,7 +796,12 @@ class Translation
             // Follow path if any
             while (!is_null($entry = array_shift($path))) {
                 if (is_object($value)) {
-                    $value = $value->$entry;
+                    try {
+                       $value = $value->$entry;
+                    } catch( DetailedException $e ) {
+                         Logger::error( 'AAAA Translation substitution failed. ' . $e->getDetails());
+                         $value = '';
+                    }
                 } elseif (is_array($value)) {
                     if (is_numeric($entry) && !is_float($entry)) {
                         $entry = (int)$entry;
