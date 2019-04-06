@@ -56,9 +56,22 @@ class ApplicationMail extends Mail
         }
         
         if (is_array($subject)) {
-            $subject = array_filter($subject, function ($s) { // Drop subjects with remaining placeholders
+
+            $c = count($subject);
+            // filter blank translations.
+            $subject = array_filter($subject, function ($s) {
+                return strlen($s);
+            });
+            // if we filtered everything then add a blank back again
+            if( !count($subject) && $c ) {
+                $subject[] = '';
+            }
+            
+            // Drop subjects with remaining placeholders
+            $subject = array_filter($subject, function ($s) { 
                 return !preg_match('`\{([a-z_]+:)?[a-z][a-z0-9_\.\(\)]\}`i', $s);
             });
+            
             $subject = $subject['prefix'].' '.array_pop($subject);
         }
         
