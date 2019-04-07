@@ -90,6 +90,14 @@ class Logger
                                 ProcessTypes::UPGRADE )
         );
     }
+
+    public static function isUpgradeProcess()
+    {
+        return in_array(
+            self::$process,
+                         array( ProcessTypes::UPGRADE )
+        );
+    }
     
     /**
      * Setup logging facilities
