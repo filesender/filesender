@@ -75,6 +75,16 @@ class StatLog extends DBObject
         ),
         'created' => array(
             'type' => 'datetime'
+        ),
+        'browser' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => true
+        ),
+        'os' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => true
         )
     );
 
@@ -95,7 +105,14 @@ class StatLog extends DBObject
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . DBView::columnDefinition_is_encrypted()
-                        . '  from ' . self::getDBTable();
+                        . DBView::columnDefinition_dbconstant( DBConstantBrowserType::getDBTable(),
+                                                               'browser',
+                                                               'browser_name' )
+                        . DBView::columnDefinition_dbconstant( DBConstantOperatingSystem::getDBTable(),
+                                                               'os',
+                                                               'os_name' )
+                        . '  from ' . self::getDBTable() . ' base';
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
@@ -172,6 +189,8 @@ class StatLog extends DBObject
         $log->event = $event;
         $log->created = time();
         $log->target_type = get_class($target);
+        $log->browser = DBConstantBrowserType::currentBrowserToEnum();
+        $log->os = DBConstantOperatingSystem::currentUserOperatingSystemEnum();
         
         // Add metadata depending on target
         switch ($log->target_type) {
