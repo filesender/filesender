@@ -149,14 +149,26 @@ class DBI
         if (is_null(self::$config)) {
             self::load();
         }
+
+        $username = self::$config['username'];
+        $password = self::$config['password'];
+
+        if( Logger::isUpgradeProcess()) {
+            if ($config['username_admin']) {
+                $username = self::$config['username_admin'];
+            }
+            if ($config['password_admin']) {
+                $password = self::$config['password_admin'];
+            }
+        }
         
         // Try to connect, cast any thrown exception
         try {
             // Connect
             self::$instance = new PDO(
                 self::$config['dsn'],
-                self::$config['username'],
-                self::$config['password'],
+                $username,
+                $password,
                 self::$config['driver_options']
             );
             
