@@ -135,10 +135,6 @@ class DBConstantOperatingSystem extends DBConstant
             } elseif ( preg_match( '/NT 6.1)/', $b )) {
                 $v = self::T_WIN70;
             }
-        } elseif ( preg_match( '/Safari/', $b )) {
-            $v = self::T_SAFARI;
-        } elseif ( preg_match( '/Outlook/', $b )) {
-            $v = self::T_OUTLOOK;
         } else {
             $v = self::T_UNKNOWN;
         }
