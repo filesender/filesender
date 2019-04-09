@@ -292,6 +292,16 @@ function ensureFK()
                     'aggregatestatistics.eventtype refers to dbconstanteventtypes.id',
 	            call_user_func('AggregateStatistic::getDBTable'), 'AggregateStatistic_eventtype', 'eventtype',
 	            call_user_func('DBConstantStatsEvent::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'statlogs.browser refers to dbconstantbrowsertype.id',
+	            call_user_func('StatLog::getDBTable'), 'statlogs_browsertype', 'browser',
+	            call_user_func('DBConstantBrowserType::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'statlogs.os refers to dbconstantoperatingsystem.id',
+	            call_user_func('StatLog::getDBTable'), 'statlogs_operatingsystem', 'os',
+	            call_user_func('DBConstantOperatingSystem::getDBTable'), 'id' ));
 
     
     foreach ( $fks as $fk ) {
