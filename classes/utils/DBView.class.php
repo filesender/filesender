@@ -76,4 +76,14 @@ class DBView
             return ', cast( '. $basecolname . ' as unsigned) as ' . $viewcolname;
         }
     }
+
+    public static function columnDefinition_dbconstant( $dbconstantTableName,
+                                                        $baseTableColumn,
+                                                        $baseTableGeneratedColumn,
+                                                        $baseTableName = 'base'
+    ) {
+        return ', (select description from '.$dbconstantTableName
+              .' where '.$dbconstantTableName.'.id = '.$baseTableName.'.'.$baseTableColumn.' limit 1) as ' . $baseTableGeneratedColumn.' ';
+    }
+    
 };

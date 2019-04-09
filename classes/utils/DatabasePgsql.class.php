@@ -86,8 +86,8 @@ class DatabasePgsql
 
     public static function createView($table, $viewname, $definitionsql)
     {
-        DBI::exec('DROP VIEW IF EXISTS CASCADE'.$viewname);
-        $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname.' CASCADE');
+        $query = 'CREATE VIEW '.$viewname.' as '.$definitionsql;
         DBI::exec($query);
     }
     public static function dropView($table, $viewname)
@@ -636,7 +636,7 @@ class DatabasePgsql
             if (is_null($default)) {
                 $sql .= 'NULL';
             } elseif (is_bool($default)) {
-                $sql .= $default ? '1' : '0';
+                $sql .= $default ? 'true' : 'false';
             } elseif (is_numeric($default) && in_array($definition['type'], array('int', 'uint'))) {
                 $sql .= $default;
             } else {
