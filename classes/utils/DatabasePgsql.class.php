@@ -636,7 +636,7 @@ class DatabasePgsql
             if (is_null($default)) {
                 $sql .= 'NULL';
             } elseif (is_bool($default)) {
-                $sql .= $default ? '1' : '0';
+                $sql .= $default ? 'true' : 'false';
             } elseif (is_numeric($default) && in_array($definition['type'], array('int', 'uint'))) {
                 $sql .= $default;
             } else {
