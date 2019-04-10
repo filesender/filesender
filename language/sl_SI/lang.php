@@ -1,11 +1,11 @@
-<?php 
+<?php
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-// 
-// 
+//
+//
 ?>
 <?php
 $lang['about'] = 'O strani';
@@ -116,7 +116,7 @@ $lang['delete_transfer_roughly'] = 'Izbriši prenos brez obvestila';
 $lang['description'] = 'Opis';
 $lang['details'] = 'Podrobnosti';
 $lang['dialog_autoclose'] = 'Pogovorno okno se bo zaprlo čez {seconds} sekund';
-$lang['disable_terasender'] = 'Onemogoči vzporedno nalaganje (Izberite&#44; če imate počasno povezavo)';
+$lang['disable_terasender'] = 'Onemogoči vzporedno nalaganje (Izberite, če imate počasno povezavo)';
 $lang['does_not_expire'] = 'Brez roka veljavnosti';
 $lang['done'] = 'Končano';
 $lang['done_uploading'] = 'Končano z nalaganjem';
@@ -142,12 +142,12 @@ $lang['dp_current_text'] = 'Danes';
 $lang['dp_date_format'] = 'dd/mm/yy';
 $lang['dp_date_format_hint'] = 'Format dd/mm/yy, največ {max} dni';
 $lang['dp_day_names'] = 'Nedelja,Ponedeljek,Torek,Sreda,Četrtek,Petek,Sobota';
-$lang['dp_day_names_min'] = 'Ne&#44;Po&#44;To&#44;Sr&#44;Če&#44;Pe&#44;So';
-$lang['dp_day_names_short'] = 'Ned&#44;Pon&#44;Tor&#44;Sre&#44;Čet&#44;Pet&#44;Sob';
+$lang['dp_day_names_min'] = 'Ne,Po,To,Sr,Če,Pe,So';
+$lang['dp_day_names_short'] = 'Ned,Pon,Tor,Sre,Čet,Pet,Sob';
 $lang['dp_first_day'] = '1';
 $lang['dp_is_rtl'] = 'false';
-$lang['dp_month_names'] = 'Januar&#44;Februar&#44;Marec&#44;April&#44;Maj&#44;Junij&#44;Julij&#44;Avgust&#44;September&#44;Oktober&#44;November&#44;December';
-$lang['dp_month_names_short'] = 'Jan&#44;Feb&#44;Mar&#44;Apr&#44;Maj&#44;Jun&#44;Jul&#44;Aug&#44;Sep&#44;Okt&#44;Nov&#44;Dec';
+$lang['dp_month_names'] = 'Januar,Februar,Marec,April,Maj,Junij,Julij,Avgust,September,Oktober,November,December';
+$lang['dp_month_names_short'] = 'Jan,Feb,Mar,Apr,Maj,Jun,Jul,Aug,Sep,Okt,Nov,Dec';
 $lang['dp_next_text'] = 'Naprej';
 $lang['dp_prev_text'] = 'Nazaj';
 $lang['dp_show_month_after_year'] = 'false';
@@ -164,10 +164,10 @@ $lang['email_me_copies'] = 'Pošlji mi kopije vseh obvestil';
 $lang['email_me_on_expire'] = 'Obvesti me ob poteku veljavnosti';
 $lang['email_report_on_closing'] = 'Pošlji mi poročilo ob poteku veljavnosti';
 $lang['email_sent'] = 'Sporočilo je poslano';
-$lang['email_separator_msg'] = 'Ob navedbi več naslovnikov&#44; elektronske naslove ločite z &#44; ali ;';
-$lang['email_upload_complete'] = 'Obvesti me&#44; ko je nalaganje končano';
-$lang['email_upload_page_access'] = 'Obvesti me&#44; ko gosti dostopajo do strani nalaganja';
-$lang['email_upload_started'] = 'Obvesti me&#44; ko se nalaganje začne';
+$lang['email_separator_msg'] = 'Ob navedbi več naslovnikov, elektronske naslove ločite z , ali ;';
+$lang['email_upload_complete'] = 'Obvesti me, ko je nalaganje končano';
+$lang['email_upload_page_access'] = 'Obvesti me, ko gosti dostopajo do strani nalaganja';
+$lang['email_upload_started'] = 'Obvesti me, ko se nalaganje začne';
 $lang['empty_file'] = 'Prazna datoteka';
 $lang['enable_recipient_email_download_complete'] = 'Dovoli pošiljanje sporočila o končanem prenosu prejemnikom';
 $lang['enable_recipient_email_download_complete_warning'] = 'Ne uporabljajte te možnosti, kadar pošiljate na seznam prejemnikov, sicer bo vsak prenos povzročil pošiljanje sporočila vsem prejemnikom.';
@@ -191,7 +191,7 @@ $lang['extend'] = 'Razširi';
 $lang['extend_and_remind'] = 'Podaljšaj in pošlji opomnik';
 $lang['extend_expiry_date'] = 'Podaljšaj datum poteka za {days} dni';
 $lang['failed_to_connect_to_database'] = 'Napaka pri povezovanju s podatkovno bazo.';
-$lang['failed_transfer_found'] = 'Izgleda&#44; da enega izmed Vaših prenosov ni bilo mogoče naložiti. Ali želite ponovno poskusiti od točke&#44; kjer se je zataknilo (datoteko morate ponovno dodati)?';
+$lang['failed_transfer_found'] = 'Izgleda, da enega izmed Vaših prenosov ni bilo mogoče naložiti. Ali želite ponovno poskusiti od točke, kjer se je zataknilo (datoteko morate ponovno dodati)?';
 $lang['failures'] = 'Spodleteli poskusi';
 $lang['feature_not_enabled'] = 'Žal, ta funkcionalnost ni omogočena.';
 $lang['file_bad_hash'] = 'Neveljaven izvleček datoteke';
@@ -279,7 +279,7 @@ $lang['nothing_happened_as_of_late_you_can_send_client_logs'] = 'Izgleda, da že
 $lang['number_of_files'] = 'Število datotek';
 $lang['ok'] = 'V redu';
 $lang['open_auditlog'] = 'Pregled dnevniških zapisov prenosa';
-$lang['open_file_auditlog'] = 'Poglej&#44; kaj se je dogajalo s to datoteko';
+$lang['open_file_auditlog'] = 'Poglej, kaj se je dogajalo s to datoteko';
 $lang['open_recipient_auditlog'] = 'Poglej, kaj je prejemnik storil';
 $lang['optional'] = 'izbirno';
 $lang['options'] = 'Možnosti';
@@ -290,11 +290,11 @@ $lang['paused'] = 'V premoru';
 $lang['preferences_updated'] = 'Uporabniške nastavitve posodobljene';
 $lang['privacy_page'] = 'Zasebnost';
 $lang['privacy_page_auditlog_lifetime'] = 'Število dni hrambe dnevniških podatkov';
-$lang['privacy_page_clientlogs_lifetime'] = 'Vkolikor nalaganje spodleti&#44; se Vam lahko ponudi možnost prijave napake neposredno preko spletnega vmesnika. Izpisano število predstavlja koliko časa se bo to poročilo hranilo na strežniku.';
+$lang['privacy_page_clientlogs_lifetime'] = 'Vkolikor nalaganje spodleti, se Vam lahko ponudi možnost prijave napake neposredno preko spletnega vmesnika. Izpisano število predstavlja koliko časa se bo to poročilo hranilo na strežniku.';
 $lang['privacy_page_days_old_table_text'] = 'Število dni, kolikor se hranijo informacije';
-$lang['privacy_page_guests_expired_lifetime'] = 'Število dni&#44; preden se izbriše gost&#44; ki mu je potekel dostop';
+$lang['privacy_page_guests_expired_lifetime'] = 'Število dni, preden se izbriše gost, ki mu je potekel dostop';
 $lang['privacy_page_max_transfer_days_valid'] = 'Največje število dni pred iztekom roka veljavnosti';
-$lang['privacy_page_translatable_emails_lifetime'] = 'Število dni hrambe sporočil&#44; poslanih uporabnikom';
+$lang['privacy_page_translatable_emails_lifetime'] = 'Število dni hrambe sporočil, poslanih uporabnikom';
 $lang['profile_page_text_linking_to_admin_page'] = 'Dovoljeno Vam je obiskati <a href="{cfg:site_url}/?s=admin">administratorsko stran</a>.';
 $lang['profile_page_text_linking_to_privacy_page'] = 'Filesender ceni Vašo zasebnost. Prosimo, <a href="{cfg:site_url}/?s=privacy">kliknite za pregled</a>, koliko časa se Vaši podatki hranijo znotraj te aplikacije';
 $lang['quota_usage'] = '{size:used} od {size:total} porabljeno, {size:available} še ostaja';
@@ -460,7 +460,7 @@ $lang['upload_stalled_and_resumed'] = 'Nalaganje se je zavleklo in se sedaj nada
 $lang['upload_stalled_due_to_testing'] = 'Nalaganje se je zavleklo zaradi primera testiranja...';
 $lang['upload_started'] = 'Nalaganje se je začelo...';
 $lang['uploaded'] = 'Naloženo';
-$lang['uploading_transfers'] = 'Prenosi&#44; ki se trenutno nalagajo';
+$lang['uploading_transfers'] = 'Prenosi, ki se trenutno nalagajo';
 $lang['user_additional'] = 'Dodatne informacije';
 $lang['user_additional_body'] = 'Tukaj se nahajajo informacije o Vašem računu.';
 $lang['user_additionnal'] = 'Dodatne informacije';
