@@ -100,7 +100,10 @@ window.filesender.config = {
     terasender_worker_file: 'lib/terasender/terasender_worker.js',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
     terasender_worker_max_chunk_retries: <?php echo Config::get('terasender_worker_max_chunk_retries')  ?>,
-    
+    terasender_worker_xhr_timeout: <?php  echo Config::get('terasender_worker_xhr_timeout') ?>,
+    terasender_worker_start_must_complete_within_ms: <?php  echo Config::get('terasender_worker_start_must_complete_within_ms') ?>,
+
+
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
