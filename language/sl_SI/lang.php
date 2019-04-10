@@ -30,9 +30,15 @@ $lang['aggregate_stats_graph_no_data'] = 'Podatkov za ta graf še ni';
 $lang['aggregate_stats_graph_title_operation'] = 'Agregati za {eventtype}, ki prikazujejo podatke o {querytype} ';
 $lang['aggregate_stats_graph_title_operation_per_time_interval'] = 'Agregati za {eventtype} čez obdobje {epochtype} ';
 $lang['aggregate_stats_graph_title_per_time_interval'] = 'Čez obdobje {epochtype}';
+<<<<<<< HEAD
 $lang['aggregate_stats_storage-expired-transfers-size'] = 'Velikost pretečenih prenosov';
 $lang['aggregate_stats_storage-free-size'] = 'Nezasedeni prostor';
 $lang['aggregate_stats_upload_maxsize_ended'] = 'Največja posamezna naložena datoteka med intervalom';
+=======
+$lang['aggregate_stats_storage-expired-transfers-size'] = 'Velikost poteklih prenosov';
+$lang['aggregate_stats_storage-free-size'] = 'Nezasedeni prostor';
+$lang['aggregate_stats_upload_maxsize_ended'] = 'Največja posamezna naložena datoteka mad intervalom';
+>>>>>>> sl_SI translations
 $lang['anonymous'] = 'Anonimno';
 $lang['anonymous_details'] = 'Neposredna povezava podana';
 $lang['archive_download'] = 'Prenesi kot eno (.zip) datoteko';
@@ -53,7 +59,11 @@ $lang['auth_sp_missing_delegation_class'] = 'Manjkajoči razred delegacije pri a
 $lang['auth_user_not_allowed'] = 'Nimate dovoljenja za uporabo te aplikacije';
 $lang['authentication_required'] = 'Potrebna je prijava';
 $lang['authentication_required_explanation'] = 'Za to morate biti prijavljeni. Ali Vam je potekla seja? Prosimo, pritisnite OK in se ponovno prijavite.';
+<<<<<<< HEAD
 $lang['auto_resume_timer_seconds'] = 'Avtomatsko nadaljevanje čez {seconds} sekund';
+=======
+$lang['auto_resume_timer_seconds'] = 'Avtomatsko nadaljevanje čez {cfg:automatic_resume_timer_seconds} sekund';
+>>>>>>> sl_SI translations
 $lang['available_transfers'] = 'Prenosi trenutno na voljo';
 $lang['average_speed'] = 'Povprečna hitrost';
 $lang['bad_email'] = 'Neveljaven email format';
@@ -83,7 +93,11 @@ $lang['config_override_disabled'] = 'Povozitev nastavitev je onemogočena';
 $lang['config_override_not_allowed'] = 'Povozitev nastavitev ni dovoljena';
 $lang['config_override_validation_failed'] = 'Overjanje povozitev nastavitev je spodletelo';
 $lang['config_overriden'] = 'Povozitev nastavitev shranjena';
+<<<<<<< HEAD
 $lang['confirm_close_transfer'] = 'Ali res želite zapreti ta prenos? Po zaprtju datotek ne morete več prenesti. Zaprtega prenosa ne morete več odpreti.';
+=======
+$lang['confirm_close_transfer'] = 'Ali res želite zapreti ta prenos? Datotek ne morete več prenesti po zaprtju prenosa. Zaprtega prenosa ne morete več odpreti.';
+>>>>>>> sl_SI translations
 $lang['confirm_delete_file'] = 'Ali res želite izbrisati to datoteko? Prenos se bo zaprl, če so vse datoteke v njem izbrisane.';
 $lang['confirm_delete_guest'] = 'Ali res želite izbrisati tega gosta (prejemnik ne bo več mogel nalagati datotek)?';
 $lang['confirm_delete_my_account'] = 'Vse Vaše datoteke, gosti in drugi podatki bodo izbrisani iz FileSender aplikacije. Ali želite nadaljevati?';
@@ -97,7 +111,11 @@ $lang['confirm_remind_recipient'] = 'Ali res želite poslati opomnik temu prejem
 $lang['confirm_remind_transfer'] = 'Ali res želite poslati opomnik prejemnikom tega prenosa?';
 $lang['confirm_stop_upload'] = 'Ali res želite prekiniti prenos in odstraniti prenešene podatke?';
 $lang['copy_text'] = 'Kopiraj besedilo spodaj';
+<<<<<<< HEAD
 $lang['core_class_not_found'] = 'Jedrni razred ni bil najden';
+=======
+$lang['core_class_not_found'] = 'Jedni razred ni bil najden';
+>>>>>>> sl_SI translations
 $lang['core_file_not_found'] = 'Jedrna datoteka ni bila najdena';
 $lang['count'] = 'Število';
 $lang['count_from_date_to_date'] = '{count} od {date:start} do {date:end}';
@@ -116,16 +134,28 @@ $lang['delete_transfer_roughly'] = 'Izbriši prenos brez obvestila';
 $lang['description'] = 'Opis';
 $lang['details'] = 'Podrobnosti';
 $lang['dialog_autoclose'] = 'Pogovorno okno se bo zaprlo čez {seconds} sekund';
+<<<<<<< HEAD
 $lang['disable_terasender'] = 'Onemogoči vzporedno nalaganje (Izberite, če imate počasno povezavo)';
 $lang['does_not_expire'] = 'Brez roka veljavnosti';
 $lang['done'] = 'Končano';
 $lang['done_uploading'] = 'Nalaganje končano';
 $lang['done_uploading_guest'] = 'Hvala, ker uporabljate {cfg:site_name}. Če ima Vaš gost omogočenih več nalaganj, lahko povezavo za nalaganje spet uporabite za pošiljanje drugih datotek.';
+=======
+$lang['disable_terasender'] = 'Onemogoči vzporedno nalaganje (Izberite&#44; če imate počasno povezavo)';
+$lang['does_not_expire'] = 'Brez roka veljavnosti';
+$lang['done'] = 'Končano';
+$lang['done_uploading'] = 'Končano z nalaganjem';
+$lang['done_uploading_guest'] = 'Hvala, ker uporabljate {cfg:site_name}. Če je ima Vaš gost omogočenih več nalaganj, lahko povezavo za nalaganje spet uporabite za pošiljanje drugih datotek.';
+>>>>>>> sl_SI translations
 $lang['done_uploading_redirect'] = 'Vaše nalaganje je končano, preusmerjeni boste na <a href="{url}">{url}</a>. Preusmeritev traja dlje, kot je bilo pričakovano.';
 $lang['download'] = 'Prenos';
 $lang['download_bad_files_ids'] = 'Neveljaven ID datoteke za prenos';
 $lang['download_bad_token_format'] = 'Neveljaven format žetona';
+<<<<<<< HEAD
 $lang['download_disclamer'] = 'Izberite katere datoteke želite prenesti';
+=======
+$lang['download_disclamer'] = 'Izberite, katere datoteke želite prenesti';
+>>>>>>> sl_SI translations
 $lang['download_disclamer_archive'] = 'Prenesete lahko vse datoteke naenkrat kot stisnjen (zip) arhiv. Kliknite na prenešeno datoteko, da jo razširite in dostopate do posameznih vsebovanih datotek prenosa.';
 $lang['download_disclamer_crypto_message'] = 'Kliknite na datoteko, da prenesete podatke in jo dešifrirate na Vašem računalniku.';
 $lang['download_disclamer_nocrypto_message'] = 'Na gumb za prenos lahko kliknete z desnim miškinim gumbom in izberete "Copy link location", da prenesete datoteko z uporabo drugega orodja.';
@@ -141,13 +171,19 @@ $lang['dp_close_text'] = 'Dokončano';
 $lang['dp_current_text'] = 'Danes';
 $lang['dp_date_format'] = 'dd/mm/yy';
 $lang['dp_date_format_hint'] = 'Format dd/mm/yy, največ {max} dni';
+<<<<<<< HEAD
 $lang['dp_day_names'] = 'Nedelja,Ponedeljek,Torek,Sreda,Četrtek,Petek,Sobota';
 $lang['dp_day_names_min'] = 'Ne,Po,To,Sr,Če,Pe,So';
 $lang['dp_day_names_short'] = 'Ned,Pon,Tor,Sre,Čet,Pet,Sob';
+=======
+$lang['dp_day_names'] = 'Nedelja&#44;Ponedeljek&#44;Torek&#44;Sreda&#44;Četrtek&#44;Petek&#44;Sobota';
+$lang['dp_day_names_min'] = 'Ne&#44;Po&#44;To&#44;Sr&#44;Če&#44;Pe&#44;So';
+$lang['dp_day_names_short'] = 'Ned&#44;Pon&#44;Tor&#44;Sre&#44;Čet&#44;Pet&#44;Sob';
+>>>>>>> sl_SI translations
 $lang['dp_first_day'] = '1';
 $lang['dp_is_rtl'] = 'false';
-$lang['dp_month_names'] = 'Januar,Februar,Marec,April,Maj,Junij,Julij,Avgust,September,Oktober,November,December';
-$lang['dp_month_names_short'] = 'Jan,Feb,Mar,Apr,Maj,Jun,Jul,Aug,Sep,Okt,Nov,Dec';
+$lang['dp_month_names'] = 'Januar&#44;Februar&#44;Marec&#44;April&#44;Maj&#44;Junij&#44;Julij&#44;Avgust&#44;September&#44;Oktober&#44;November&#44;December';
+$lang['dp_month_names_short'] = 'Jan&#44;Feb&#44;Mar&#44;Apr&#44;Maj&#44;Jun&#44;Jul&#44;Aug&#44;Sep&#44;Okt&#44;Nov&#44;Dec';
 $lang['dp_next_text'] = 'Naprej';
 $lang['dp_prev_text'] = 'Nazaj';
 $lang['dp_show_month_after_year'] = 'false';
@@ -164,10 +200,17 @@ $lang['email_me_copies'] = 'Pošlji mi kopije vseh obvestil';
 $lang['email_me_on_expire'] = 'Obvesti me ob poteku veljavnosti';
 $lang['email_report_on_closing'] = 'Pošlji mi poročilo ob poteku veljavnosti';
 $lang['email_sent'] = 'Sporočilo je poslano';
+<<<<<<< HEAD
 $lang['email_separator_msg'] = 'Ob navedbi več naslovnikov, elektronske naslove ločite z , ali ;';
 $lang['email_upload_complete'] = 'Obvesti me. ko je nalaganje končano';
 $lang['email_upload_page_access'] = 'Obvesti me, ko gosti dostopajo do strani nalaganja';
 $lang['email_upload_started'] = 'Obvesti me, ko se nalaganje začne';
+=======
+$lang['email_separator_msg'] = 'Ob navedbi več naslovnikov&#44; elektronske naslove ločite z &#44; ali ;';
+$lang['email_upload_complete'] = 'Obvesti me&#44; ko je nalaganje končano';
+$lang['email_upload_page_access'] = 'Obvesti me&#44; ko gosti dostopajo do strani nalaganja';
+$lang['email_upload_started'] = 'Obvesti me&#44; ko se nalaganje začne';
+>>>>>>> sl_SI translations
 $lang['empty_file'] = 'Prazna datoteka';
 $lang['enable_recipient_email_download_complete'] = 'Dovoli pošiljanje sporočila o končanem prenosu prejemnikom';
 $lang['enable_recipient_email_download_complete_warning'] = 'Ne uporabljajte te možnosti, kadar pošiljate na seznam prejemnikov, sicer bo vsak prenos povzročil pošiljanje sporočila vsem prejemnikom.';
@@ -191,6 +234,7 @@ $lang['extend'] = 'Razširi';
 $lang['extend_and_remind'] = 'Podaljšaj in pošlji opomnik';
 $lang['extend_expiry_date'] = 'Podaljšaj datum poteka za {days} dni';
 $lang['failed_to_connect_to_database'] = 'Napaka pri povezovanju s podatkovno bazo.';
+<<<<<<< HEAD
 $lang['failed_transfer_found'] = 'Izgleda, da enega izmed Vaših prenosov ni bilo mogoče naložiti. Ali želite ponovno poskusiti od točke, kjer se je zataknilo (datoteko morate ponovno dodati)?';
 $lang['failures'] = 'Spodleteli poskusi';
 $lang['feature_not_enabled'] = 'Ta funkcionalnost žal ni omogočena.';
@@ -198,13 +242,26 @@ $lang['file_bad_hash'] = 'Neveljaven izvleček datoteke';
 $lang['file_chunk_out_of_bounds'] = 'Del datoteke izven meja';
 $lang['file_encryption'] = 'Šifriranje datotek (beta)';
 $lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Šifriranje datotek deluje po celotni poti. Vaše datoteke so šifrirane v Vašem brskalniku. Ker FileSender ne hrani gesel, je na Vas, da jih posredujete prejemnikom.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Šifriranje datotek bo opazno upočasnilo delovanje pošiljateljevega in prejemnikovega brskalnika in/ali naprave.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Šifrirane datoteke, večje od 4GB, morda ne bodo prenosljive zaradi omejitev brskalnika.';
+=======
+$lang['failed_transfer_found'] = 'Izgleda&#44; da enega izmed Vaših prenosov ni bilo mogoče naložiti. Ali želite ponovno poskusiti od točke&#44; kjer se je zataknilo (datoteko morate ponovno dodati)?';
+$lang['failures'] = 'Spodleteli poskusi';
+$lang['feature_not_enabled'] = 'Žal, ta funkcionalnost ni omogočena.';
+$lang['file_bad_hash'] = 'Neveljaven izvleček datoteke';
+$lang['file_chunk_out_of_bounds'] = 'Kos datoteke izven meja';
+$lang['file_encryption'] = 'Šifriranje datotek (beta)';
+$lang['file_encryption_description'] = '<i class=fa fa-exclamation-tri';
+>>>>>>> sl_SI translations
 $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Ni podprto v Vašem brskalniku. Prosimo, poskusite ponovno z najnovejšim brskalnikom Firefox, Internet Explorer, Safari ali Chrome';
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Dešifriranje datotek ni podprto v Vašem brskalniku. Prosimo, poskusite ponovno z najnovejšim brskalnikom Firefox, Internet Explorer, Safari ali Chrome';
 $lang['file_encryption_enter_password'] = 'Vnesite geslo';
 $lang['file_encryption_generate_password'] = 'Ustvari geslo';
 $lang['file_encryption_need_password'] = 'Za prenos morate vnesti geslo';
 $lang['file_encryption_password'] = 'Geslo';
+<<<<<<< HEAD
 $lang['file_encryption_password_too_short'] = 'Vaše geslo je žal prekratko';
+=======
+$lang['file_encryption_password_too_short'] = 'Žal, Vaše geslo je prekratko';
+>>>>>>> sl_SI translations
 $lang['file_encryption_show_password'] = 'Pokaži / Skrij geslo';
 $lang['file_encryption_wrong_password'] = 'Nepravilno geslo';
 $lang['file_extension_not_allowed'] = 'Datoteka s to končnico ni dovoljena';
@@ -212,7 +269,11 @@ $lang['file_integrity_check_failed'] = 'Poskus preverjanja integritete datoteke 
 $lang['file_not_found'] = 'Datoteke ni mogoče najti';
 $lang['file_size_does_not_match'] = 'Velikost datoteke se ne ujema';
 $lang['files'] = 'Dokumenti';
+<<<<<<< HEAD
 $lang['filtered_transfer_log'] = 'To je prečiščen pregled dnevniških zapisov prenosov';
+=======
+$lang['filtered_transfer_log'] = 'To je prečiščen pogled dnevniških zapisov prenosov';
+>>>>>>> sl_SI translations
 $lang['forget'] = 'Pozabi';
 $lang['forward'] = 'Posreduj';
 $lang['forward_guest_voucher'] = 'Posreduj vavčer za gosta';
@@ -229,7 +290,11 @@ $lang['guest_reminded'] = 'Gost opomnjen';
 $lang['guest_too_many_recipients'] = 'Največje dovoljeno število prejemnikov prekoračeno';
 $lang['guest_transfer_options'] = 'Možnosti ustvarjenih prenosov';
 $lang['guest_vouchers_sent'] = 'Vavčer poslan gostu';
+<<<<<<< HEAD
 $lang['guests'] = 'Gosti';
+=======
+$lang['guests'] = 'gosti';
+>>>>>>> sl_SI translations
 $lang['guests_page'] = 'Gosti';
 $lang['guests_transfers'] = 'Prenosi gostov';
 $lang['gui_unknown_admin_section'] = 'Neznana administratorska stran';
@@ -275,11 +340,19 @@ $lang['no_such_property'] = 'Lastnost ni bila najdena';
 $lang['no_transfers'] = 'Ni prenosov';
 $lang['none'] = 'nič';
 $lang['noscript'] = 'Ta aplikacija se zanaša na Javascript; za njeno uporabo ga morate omogočiti.';
+<<<<<<< HEAD
 $lang['nothing_happened_as_of_late_you_can_send_client_logs'] = 'Izgleda, da že nekaj časa ni bilo napredka pri trenutnem nalaganju. Če mislite, da se je nekje zataknilo vas prosimo, da pred prijavo napake pošljete zadnje dnevniške vnose iz Vašega uporabniškega vmesnika s klikom na gumb:';
 $lang['number_of_files'] = 'Število datotek';
 $lang['ok'] = 'V redu';
 $lang['open_auditlog'] = 'Pregled dnevniških zapisov prenosa';
 $lang['open_file_auditlog'] = 'Poglej, kaj se je dogajalo z datoteko';
+=======
+$lang['nothing_happened_as_of_late_you_can_send_client_logs'] = 'Izgleda, da že nekaj časa ni bilo napredka pri trenutnem nalaganju. Če mislite, da se je nekje zataknilo, prosimo, da pred prijavo napake pošljete zadnje dnevniške vnose iz Vašega uporabniškega vmesnika s klikom na gumb:';
+$lang['number_of_files'] = 'Število datotek';
+$lang['ok'] = 'V redu';
+$lang['open_auditlog'] = 'Pregled dnevniških zapisov prenosa';
+$lang['open_file_auditlog'] = 'Poglej&#44; kaj se je dogajalo s to datoteko';
+>>>>>>> sl_SI translations
 $lang['open_recipient_auditlog'] = 'Poglej, kaj je prejemnik storil';
 $lang['optional'] = 'izbirno';
 $lang['options'] = 'Možnosti';
@@ -290,12 +363,21 @@ $lang['paused'] = 'V premoru';
 $lang['preferences_updated'] = 'Uporabniške nastavitve posodobljene';
 $lang['privacy_page'] = 'Zasebnost';
 $lang['privacy_page_auditlog_lifetime'] = 'Število dni hrambe dnevniških podatkov';
+<<<<<<< HEAD
 $lang['privacy_page_clientlogs_lifetime'] = 'Vkolikor nalaganje spodleti, se Vam lahko ponudi možnost prijave napake neposredno preko spletnega vmesnika. Izpisano število predstavlja koliko časa se bo to poročilo hranilo na strežniku.';
 $lang['privacy_page_days_old_table_text'] = 'Število dni, kolikor se hranijo informacije';
 $lang['privacy_page_guests_expired_lifetime'] = 'Število dni preden se izbriše gost, ki mu je potekel dostop';
 $lang['privacy_page_max_transfer_days_valid'] = 'Največje število dni pred iztekom roka veljavnosti';
 $lang['privacy_page_translatable_emails_lifetime'] = 'Število dni hrambe sporočil, poslanih uporabnikom';
 $lang['profile_page_text_linking_to_admin_page'] = 'Lahko obiščete <a href="{cfg:site_url}/?s=admin">administratorsko stran</a>.';
+=======
+$lang['privacy_page_clientlogs_lifetime'] = 'Vkolikor nalaganje spodleti&#44; se Vam lahko ponudi možnost prijave napake neposredno preko spletnega vmesnika. Izpisano število predstavlja koliko časa se bo to poročilo hranilo na strežniku.';
+$lang['privacy_page_days_old_table_text'] = 'Število dni, kolikor se hranijo informacije';
+$lang['privacy_page_guests_expired_lifetime'] = 'Število dni&#44; preden se izbriše gost&#44; ki mu je potekel dostop';
+$lang['privacy_page_max_transfer_days_valid'] = 'Največje število dni pred iztekom roka veljavnosti';
+$lang['privacy_page_translatable_emails_lifetime'] = 'Število dni hrambe sporočil&#44; poslanih uporabnikom';
+$lang['profile_page_text_linking_to_admin_page'] = 'Dovoljeno Vam je obiskati <a href="{cfg:site_url}/?s=admin">administratorsko stran</a>.';
+>>>>>>> sl_SI translations
 $lang['profile_page_text_linking_to_privacy_page'] = 'Filesender ceni Vašo zasebnost. Prosimo, <a href="{cfg:site_url}/?s=privacy">kliknite za pregled</a>, koliko časa se Vaši podatki hranijo znotraj te aplikacije';
 $lang['quota_usage'] = '{size:used} od {size:total} porabljeno, {size:available} še ostaja';
 $lang['reader_not_supported'] = 'Uporabljate starejši brskalnik brez podpore za HTML5.<br /><br />Povleci & spusti za izbiro datotek ni na voljo.<br /><br />Nalagate lahko datoteke do velikosti {size}.';
@@ -308,7 +390,11 @@ $lang['recipient_reminded'] = 'Prejemnik opomnjen glede prenosa';
 $lang['recipients'] = 'Prejemniki';
 $lang['recipients_notifications_language'] = 'Jezik prejemnikov';
 $lang['redirect_url_on_complete'] = 'Preusmeri po nalaganju';
+<<<<<<< HEAD
 $lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> je zahteval/a vaše podrobnosti za oddaljen dostop.</p><p>Za dostop posredujte naslednjo kodo osebi <strong>{remote}</strong> : <strong>{code}</strong> (koda je veljavna le naslednji 2 minuti).</p><p>Vkolikor ne veste o čem govori sporočilo, ga zanemarite.</p>';
+=======
+$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> je zahteval/a vaše podrobnosti za oddaljen dostop.</p><p>Da dovolite dostop, prosimo posredujte naslednjo kodo osebi <strong>{remote}</strong> : <strong>{code}</strong> (koda je veljavna le za naslednji 2 minuti).</p><p>Vkolikor ne veste, o čem govori sporočilo, ga zanemarite.</p>';
+>>>>>>> sl_SI translations
 $lang['report_cannot_write_file'] = 'Shranjevanje datoteke poročila ni mogoče';
 $lang['report_event_archive_download_ended'] = 'Prejemnik {author.identity} je končal s prenosom arhiva nalaganja';
 $lang['report_event_archive_download_started'] = 'Prejemnik {author.identity} je začel s prenosom arhiva nalaganja';
@@ -368,8 +454,13 @@ $lang['send_reminder'] = 'Pošlji opomnik';
 $lang['send_to_my_email'] = 'Pošlji na mojo spletno pošto';
 $lang['send_voucher'] = 'Pošlji vavčer';
 $lang['serverlog_auth_sp_attribute_not_found'] = 'Pojavila se je težava pri iskanju avtentikacijskega atributa ponudnika storitev. To so podatki, ki so dosegljivi ob avtentikaciji. Prosimo, preverite pravilnost črkovanja imena atributa. Morda konfiguracijska datoteka išče napačen atribut?';
+<<<<<<< HEAD
 $lang['serverlog_config_directive'] = 'Povezana konfiguracijska direktiva \'{key}\'';
 $lang['serverlog_wanted_key_in_array'] = 'Zahteval se je atribut s ključem \'{key}\'';
+=======
+$lang['serverlog_config_directive'] = 'Povezana konfiguracijska direktiva \\\\'{key}\\\\'';
+$lang['serverlog_wanted_key_in_array'] = 'Zahteval se je atribut s ključem \\\\'{key}\\\\'';
+>>>>>>> sl_SI translations
 $lang['show_client_logs'] = 'Pokaži dnevniške zapise';
 $lang['show_details'] = 'Pokaži podrobnosti';
 $lang['showhide'] = 'Prikaži/Skrij';
@@ -395,7 +486,11 @@ $lang['statevent_upload_started'] = 'nalaganje se je začelo';
 $lang['statlog_not_found'] = 'Dnevnik statistike ni bil najden';
 $lang['statlog_unknown_event'] = 'Neznan dogodek';
 $lang['stop'] = 'Ustavi';
+<<<<<<< HEAD
 $lang['stop_transfer_upload'] = 'Ustavi nalaganje prenosa (napaka se bo pojavila na strani uporabnika, ki datoteke na stran naloži)?';
+=======
+$lang['stop_transfer_upload'] = 'Ustavi nalaganje prenosa (napaka se bo pojavila na strani nalagalca)?';
+>>>>>>> sl_SI translations
 $lang['storage_available'] = 'Razpoložljiv prostor';
 $lang['storage_block'] = 'Blokiraj';
 $lang['storage_chunk_too_large'] = 'Kos shrambe prevelik';
@@ -420,8 +515,12 @@ $lang['tb_per_second'] = 'Tb/sek';
 $lang['template_not_found'] = 'Predloga ni bila najdena';
 $lang['terasender_worker_count'] = 'Število TeraSender delavcev';
 $lang['testterm'] = 'testna vrednost';
+<<<<<<< HEAD
 $lang['time_format'] = '{h:H\h} {i:i\m\i
 } {s:s\s}';
+=======
+$lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s}';
+>>>>>>> sl_SI translations
 $lang['to'] = 'Za';
 $lang['tracking_event_not_found'] = 'Sledilni dogodek ni bil najden';
 $lang['tracking_unknown_event'] = 'Neznan sledilni dogodek';
@@ -429,9 +528,15 @@ $lang['transfer_closed'] = 'Prenos zaprt';
 $lang['transfer_expiry_extension_count_exceeded'] = 'Dosežen maksimum podaljšanja časa veljavnosti prenosa';
 $lang['transfer_expiry_extension_not_allowed'] = 'Podaljšanje roka veljavnosti prenosa ni dovoljeno';
 $lang['transfer_extended'] = 'Rok veljavnosti prenosa podaljšan do {expires}';
+<<<<<<< HEAD
 $lang['transfer_extended_reminded'] = 'Rok veljavnosti prenosa podaljšan do {expires}, opomnik poslan prejemnikom';
 $lang['transfer_file_name_invalid'] = 'Ime datoteke vsebuje neveljavne znake';
 $lang['transfer_files_incomplete'] = 'Datoteke se še niso v celoti naložile';
+=======
+$lang['transfer_extended_reminded'] = 'Rok veljavnosti prenosa podaljšan do {expires}, opomnik poslan prejemnikom.';
+$lang['transfer_file_name_invalid'] = 'Ime datoteke vsebuje neveljavne znake';
+$lang['transfer_files_incomplete'] = 'Datoteke nalaganja se še niso v celoti naložile';
+>>>>>>> sl_SI translations
 $lang['transfer_host_quota_exceeded'] = 'Strežniška kvota presežena';
 $lang['transfer_id'] = 'ID prenosa';
 $lang['transfer_maximum_size_exceeded'] = 'Največja dovoljena velikost prenosa presežena';
@@ -461,7 +566,11 @@ $lang['upload_stalled_and_resumed'] = 'Nalaganje se je zavleklo in se sedaj nada
 $lang['upload_stalled_due_to_testing'] = 'Nalaganje se je zavleklo zaradi primera testiranja...';
 $lang['upload_started'] = 'Nalaganje se je začelo...';
 $lang['uploaded'] = 'Naloženo';
+<<<<<<< HEAD
 $lang['uploading_transfers'] = 'Prenosi, ki se trenutno nalagajo';
+=======
+$lang['uploading_transfers'] = 'Prenosi&#44; ki se trenutno nalagajo';
+>>>>>>> sl_SI translations
 $lang['user_additional'] = 'Dodatne informacije';
 $lang['user_additional_body'] = 'Tukaj se nahajajo informacije o Vašem računu.';
 $lang['user_additionnal'] = 'Dodatne informacije';
@@ -470,7 +579,11 @@ $lang['user_created'] = 'Prva prijava';
 $lang['user_deleted'] = 'Bili ste odstranjeni s strežnika. Želimo Vam lep dan!';
 $lang['user_id'] = 'Identifikant';
 $lang['user_lang'] = 'Izbran jezik';
+<<<<<<< HEAD
 $lang['user_missing_uid'] = 'Uporabniška UID ni bila najdena';
+=======
+$lang['user_missing_uid'] = 'Uporabniška UID';
+>>>>>>> sl_SI translations
 $lang['user_not_found'] = 'Uporabnik ni bil najden';
 $lang['user_page'] = 'Moj profil';
 $lang['user_preferences'] = 'Nastavitve';
@@ -489,4 +602,8 @@ $lang['with_identity'] = 'Naslov pošiljatelja';
 $lang['yes'] = 'Da';
 $lang['you_can_report_exception'] = 'Prosimo, podajte naslednjo kodo ob prijavi za pomoč podpori pri odpravljanju te napake.';
 $lang['you_can_report_exception_by_email'] = 'To napako lahko prijavite preko e-pošte';
+<<<<<<< HEAD
 $lang['you_can_send_client_logs'] = 'Da lahko ekipa za podporo ugotovi, kje se je zalomilo, prosim pošljite zadnje dnevniške zapise iz vašega uporabniškega vmesnika s klikom na gumb:';
+=======
+$lang['you_can_send_client_logs'] = 'Da lahko ekipa za podporo ugotovi, kje se je zalomilo, lahko pošljete zadnje dnevniške zapise iz vašega uporabniškega vmesnika s klikom na gumb:';
+>>>>>>> sl_SI translations

@@ -13,7 +13,11 @@ subject: Poročilo o {target.type} #{target.id}
 
 Spoštovani,
 
+<<<<<<< HEAD
 Poročilo o {target.type} se nahaja tu:
+=======
+Tukaj se nahaja poročilo o {target.type}:
+>>>>>>> sl_SI translations
 
 {target.type} število : {target.id}
 
@@ -45,7 +49,11 @@ Lep pozdrav,
 </p>
 
 <p>
+<<<<<<< HEAD
     Poročilo o {target.type} se nahaja tu:<br /><br />
+=======
+    Tukaj se nahaja poročilo o {target.type}:<br /><br />
+>>>>>>> sl_SI translations
     
     {target.type} število : {target.id}<br /><br />
     

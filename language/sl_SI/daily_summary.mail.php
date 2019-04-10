@@ -12,7 +12,11 @@ subject: Dnevni povzetek prenosov
 {alternative:plain}
 Spoštovani,
 
+<<<<<<< HEAD
 Povzetek prenosov Vašega nalaganja {transfer.id} (uploaded {date:transfer.created}) najdete spodaj:
+=======
+Spodaj lahko najdete povzetek prenosov Vašega nalaganja {transfer.id} (uploaded {date:transfer.created}) :
+>>>>>>> sl_SI translations
 
 {if:events}
 {each:events as event}
@@ -34,7 +38,11 @@ Best regards,
 </p>
 
 <p>
+<<<<<<< HEAD
     Povzetek prenosov Vašega nalaganja {transfer.id} (uploaded {date:transfer.created}) najdete spodaj:
+=======
+    Spodaj lahko najdete povzetek prenosov Vašega nalaganja {transfer.id} (uploaded {date:transfer.created}) :
+>>>>>>> sl_SI translations
 </p>
 
 {if:events}

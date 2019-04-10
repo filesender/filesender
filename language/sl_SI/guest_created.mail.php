@@ -14,7 +14,11 @@ subject: {guest.subject}
 
 Spoštovani,
 
+<<<<<<< HEAD
 Spodaj najdete vavčer, s katerim lahko dostopate do strani {cfg:site_name}. Uporabite ga lahko tako, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
+=======
+Spodaj lahko najdete vavčer, s katerim lahko dostopate do strani {cfg:site_name}. Ta vavčer lahko uporabite, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
+>>>>>>> sl_SI translations
 
 Izdajatelj: {guest.user_email}
 Povezava vavčerja: {guest.upload_link}
@@ -32,7 +36,11 @@ Lep pozdrav,
 </p>
 
 <p>
+<<<<<<< HEAD
     Spodaj lahko najdete vavčer, s katerim lahko dostopate do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Uporabite ga lahko tako, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
+=======
+    Spodaj lahko najdete vavčer, s katerim lahko dostopate do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Ta vavčer lahko uporabite, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
+>>>>>>> sl_SI translations
 
 </p>
 

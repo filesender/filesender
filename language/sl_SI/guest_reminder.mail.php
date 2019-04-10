@@ -14,7 +14,11 @@ subject: (opomnik) {guest.subject}
 
 Spoštovani,
 
+<<<<<<< HEAD
 to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani {cfg:site_name}. Uporabite ga za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
+=======
+to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani {cfg:site_name}. Uporabite ga lahko za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
+>>>>>>> sl_SI translations
 
 Izdajatelj: {guest.user_email}
 Povezava vavčerja: {guest.upload_link}
@@ -33,7 +37,11 @@ Lep pozdrav,
 </p>
 
 <p>
+<<<<<<< HEAD
     to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Uporabite ga za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
+=======
+    to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Uporabite ga lahko za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
+>>>>>>> sl_SI translations
 </p>
 
 <table rules="rows">
