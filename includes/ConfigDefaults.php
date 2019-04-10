@@ -107,6 +107,8 @@ $default = array(
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
     'terasender_worker_max_chunk_retries' => 20,    
+    'terasender_worker_xhr_timeout' => 20000, // in ms
+    'terasender_worker_start_must_complete_within_ms' => 20000, // in ms
     'stalling_detection' => false,
 
     'testing_terasender_worker_uploadRequestChange_function_name' => '',
@@ -190,7 +192,7 @@ $default = array(
     'clientlogs_stashsize' => 10,
     'clientlogs_lifetime' => 10,
 
-    'automatic_resume_number_of_retries' =>  10,
+    'automatic_resume_number_of_retries' =>  20,
     'automatic_resume_delay_to_resume'   => 360,
 
     'guests_expired_lifetime' => 0,

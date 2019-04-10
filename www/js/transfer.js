@@ -1211,6 +1211,7 @@ window.filesender.transfer = function() {
         
         filesender.ui.log('Data sending failed, retrying from last known offsets');
         
+        this.status = 'running';
         if (this.canUseTerasender()) {
             filesender.terasender.retry();
         } else {
