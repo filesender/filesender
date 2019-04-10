@@ -7,4 +7,6 @@
 // 
 // 
 ?>
- 
+<p>
+    Odjava uspešna. Hvala, ker uporabljate {cfg:site_name}.
+</p>

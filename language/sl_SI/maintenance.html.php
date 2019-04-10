@@ -7,4 +7,7 @@
 // 
 // 
 ?>
- 
+<h1>Trenutno potekajo vzdrževalna dela na aplikaciji</h1>
+<p>
+    Prosimo, poskusite kasneje.
+</p>
