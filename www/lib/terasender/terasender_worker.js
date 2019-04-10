@@ -117,6 +117,7 @@ var terasender_worker = {
         xhr.ontimeout = function() {
             worker.timeout();
         };
+        xhr.timeout = window.filesender.config.terasender_worker_xhr_timeout;
         
         var url = file.endpoint.replace('{offset}', this.job.chunk.start);
         xhr.open('PUT', url, true); // Open a request to the upload endpoint
