@@ -7,4 +7,4 @@
 // 
 // 
 ?>
- 
+Sprejemam pogoje in določila te storitve
