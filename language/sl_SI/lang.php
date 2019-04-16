@@ -197,7 +197,7 @@ $lang['feature_not_enabled'] = 'Žal, ta funkcionalnost ni omogočena.';
 $lang['file_bad_hash'] = 'Neveljaven izvleček datoteke';
 $lang['file_chunk_out_of_bounds'] = 'Kos datoteke izven meja';
 $lang['file_encryption'] = 'Šifriranje datotek (beta)';
-$lang['file_encryption_description'] = '<i class=fa fa-exclamation-tri';
+$lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Šifriranje datotek deluje po celotni poti. Vaše datoteke so šifrirane v Vašem brskalniku. Ker FileSender ne hrani gesel, je na Vas, da jih posredujete prejemnikom.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Šifriranje datotek bo opazno upočasnilo delovanje pošiljateljevega in prejemnikovega brskalnika in/ali naprave.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Šifrirane datoteke, večje od 4GB, morda ne bodo prenosljive zaradi omejitev brskalnika.';
 $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Ni podprto v Vašem brskalniku. Prosimo, poskusite ponovno z najnovejšim brskalnikom Firefox, Internet Explorer, Safari ali Chrome';
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Dešifriranje datotek ni podprto v Vašem brskalniku. Prosimo, poskusite ponovno z najnovejšim brskalnikom Firefox, Internet Explorer, Safari ali Chrome';
 $lang['file_encryption_enter_password'] = 'Vnesite geslo';
