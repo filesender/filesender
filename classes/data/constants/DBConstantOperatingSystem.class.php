@@ -126,13 +126,13 @@ class DBConstantOperatingSystem extends DBConstant
             $v = self::T_NOKIA;
         } elseif ( preg_match( '/(Win|win)/', $b )) {
             $v = self::T_WINOTHER;
-            if ( preg_match( '/NT 10.0)/', $b )) {
+            if ( preg_match( '/NT 10.0\)/', $b )) {
                 $v = self::T_WIN10;
-            } elseif ( preg_match( '/NT 6.3)/', $b )) {
+            } elseif ( preg_match( '/NT 6.3\)/', $b )) {
                 $v = self::T_WIN81;
-            } elseif ( preg_match( '/NT 6.2)/', $b )) {
+            } elseif ( preg_match( '/NT 6.2\)/', $b )) {
                 $v = self::T_WIN80;
-            } elseif ( preg_match( '/NT 6.1)/', $b )) {
+            } elseif ( preg_match( '/NT 6.1\)/', $b )) {
                 $v = self::T_WIN70;
             }
         } else {

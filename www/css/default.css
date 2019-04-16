@@ -733,7 +733,13 @@ table.list .date {
 
 #upload_form .files_actions div {
     display: table-cell;
+}
+
+.div3 {
     width: 33%;
+}
+.div4 {
+     width: 25%;
 }
 
 #upload_form .files_actions div a {
@@ -1507,4 +1513,13 @@ div.not_displayed {
     display: none;
 }
 
+
+.selectdir_hidden_input_element {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
 

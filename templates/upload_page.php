@@ -2,6 +2,15 @@
 
 $guest_can_only_send_to_creator = false;
 
+$files_actions_div_extra_class = "div3";
+$upload_directory_button_enabled = false;
+if( !Config::get('disable_directory_upload')
+    && Config::get('directory_upload_button_enabled')
+ && (Browser::instance()->isChrome || Browser::instance()->isFirefox))
+{
+    $upload_directory_button_enabled = true;
+    $files_actions_div_extra_class = "div4";
+}
 
 $formClasses = "upload_form_regular";
 if (Config::get('upload_display_per_file_stats')) {
@@ -83,20 +92,25 @@ if(Auth::isGuest()) {
 
             
             <div class="files_actions">
-                <div>
+                <div class="<?php echo $files_actions_div_extra_class ?>">
                     <a class="clear_all" href="#">
                         {tr:clear_all}
                     </a>
                 </div>
                 
-                <div>
+                <div class="<?php echo $files_actions_div_extra_class ?>">
                     <a class="select_files" href="#">
                         {tr:select_files}
                     </a>
                 </div>
-
+                <?php if ($upload_directory_button_enabled) { ?>
+                <div class="<?php echo $files_actions_div_extra_class ?>">
+                    <input type="file" name="selectdir" id="selectdir" class="selectdir_hidden_input_element" webkitdirectory directory multiple mozdirectory />
+                    <label for="selectdir" class="select_directory  ">{tr:select_directory}</label>                    
+                </div>
+                <?php } ?>
                 
-                <div class="stats">
+                <div class="stats <?php echo $files_actions_div_extra_class ?>">
                     <div class="number_of_files">{tr:number_of_files} : <span class="value"></span></div>
                     <div class="size">{tr:size} : <span class="value"></span></div>
                 </div>

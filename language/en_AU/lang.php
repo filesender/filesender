@@ -372,6 +372,7 @@ $lang['see_all'] = 'See all';
 $lang['select_all_for_archive_download'] = 'Select all files to download them as an archive';
 $lang['select_file'] = 'Select your file';
 $lang['select_files'] = 'Select files';
+$lang['select_directory'] = 'Select directory';
 $lang['select_for_archive_download'] = 'Select for archive download';
 $lang['send'] = 'Send';
 $lang['send_client_logs'] = 'Send logs';

@@ -963,6 +963,7 @@ $(function() {
             uploadlogtop: form.find('.files_uploadlogtop'),
             uploadlog: form.find('.uploadlog'),
             select: form.find('.files_actions .select_files'),
+            selectdir: form.find('.files_actions .select_directory'),
             clear: form.find('.files_actions .clear_all'),
         },
         recipients: {
@@ -1028,6 +1029,7 @@ $(function() {
         filesender.ui.nodes.files.input.click();
         return false;
     }).button();
+    filesender.ui.nodes.files.selectdir.button();
     
     // Bind file drag drop events
     if(filesender.supports.reader) $('html').on('dragover', function (e) {
@@ -1357,6 +1359,7 @@ $(function() {
         
         // Remove unavailable features
         filesender.ui.nodes.files.select.remove();
+        filesender.ui.nodes.files.selectdir.remove();
         filesender.ui.nodes.files.dragdrop.remove();
         filesender.ui.nodes.buttons.pause.remove();
         

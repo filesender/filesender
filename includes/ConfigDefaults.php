@@ -188,6 +188,7 @@ $default = array(
     'cloud_s3_secret' => 'verySecretKey1',
 
     'disable_directory_upload' => true,
+    'directory_upload_button_enabled' => true,
 
     'clientlogs_stashsize' => 10,
     'clientlogs_lifetime' => 10,
