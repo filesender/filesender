@@ -29,6 +29,7 @@ anonymous
 anonymous_details
 archive_download
 archive_message
+archive_tar_download
 auditlog
 auditlog_not_enabled
 auditlog_not_found
@@ -252,6 +253,7 @@ incomplete
 info_dialog
 invalid_address_format
 invalid_file
+invalid_file_name
 invalid_recipient
 ip
 is_default
@@ -385,6 +387,7 @@ search_user
 searching
 see_all
 select_all_for_archive_download
+select_directory
 select_file
 select_files
 select_for_archive_download

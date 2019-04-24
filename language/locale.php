@@ -52,6 +52,7 @@ $locales  =  array(
     'hr-hr' => 'hr_HR',
     'hu' => 'hu_HU',
     'hu-hu' => 'hu_HU',
+    'hy-am' => array('name' => 'Armenian (Armenia)', 'path' => 'hy_AM'),
     'it' => 'it_IT',
     'it-it' => 'it_IT',
     'it-ch' => 'it_IT',
