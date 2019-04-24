@@ -329,7 +329,7 @@ class DBObject
      *
      * @return array of objects or page object
      */
-    public function convertTableResultsToObjects( $records, $run = null )
+    public static function convertTableResultsToObjects( $records, $run = null )
     {
         // Look for primary key(s) name(s)
         $pk = array();
