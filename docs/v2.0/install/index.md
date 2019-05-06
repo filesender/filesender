@@ -266,6 +266,23 @@ information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-test
 if you would prefer to setup some username and passwords for local
 authentication for development and testing.
 
+# Step 5 - Web Server Security
+
+By default the configuration and setup for Apache and NGINX both use
+X-Frame-Options sameorigin and the configuration for FileSender itself
+will try to add that policy to pages if there is no existing policy in
+place. You can change the later by setting the header_x_frame_options
+config.php key to either sameorigin, deny, or none. Values that are not
+listed in the documentation for header_x_frame_options will cause a
+site halt until the configuration is restored to a valid value.
+
+If you are not running FileSender inside another web application you
+might like to set X-Frame-Options to deny in both your web server and
+the header_x_frame_options filesender config.php setting. This will
+inform the browser to fail to load any part of your site in a frame
+which will help strengthen your site against clickjacking.
+
+
 # Step 5-apache - Configure Apache
 
 A default configuration file for apache is shipped with FileSender in the
