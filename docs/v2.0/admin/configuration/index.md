@@ -26,6 +26,7 @@ A note about colours;
 * [site_url](#site_url)
 * [site_logouturl](#site_logouturl)
 * [reports_show_ip_addr](#reports_show_ip_addr)
+* [header_x_frame_options](#header_x_frame_options)
 
 ## Backend storage
 
@@ -309,6 +310,17 @@ A note about colours;
 * __default:__ true
 * __available:__ since version 2.0
 * __comment:__ If you want to hide IP addresses from reports set it to false
+
+
+### header_x_frame_options
+
+* __description:__ How to handle the X-Frame-Options HTTP header
+* __mandatory:__ no
+* __type:__ string
+* __default:__ sameorigin
+* __available:__ since version 2.7
+* __comment:__ Default should be ok. Can be 'deny' to disallow frames if you do not use them or 'none' to disable the feature (not recommended). Note that this setting will not override a setting that is already in place in your web server. This setting is mainly here as a second catch and for sites that can not configure their web server to install a site wide nominated value for X-Frame-Options.
+
 
 
 

@@ -301,10 +301,8 @@ class RestServer
             
             Logger::debug('Got data to send back');
 
-            //
-            // Security that applies to all REST requests
-            //
-            header('X-Frame-Options: sameorigin', false);
+            // Security that applies to all page requests
+            Security::addHTTPHeaders();
 
             //
             // Output data

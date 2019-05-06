@@ -207,7 +207,7 @@ $default = array(
     'aggregate_statlog_lifetime' => false,
     'aggregate_statlog_send_report_days' => 0,
     'aggregate_statlog_send_report_email_address' => '',
-
+    
     'transfer_options_not_available_to_export_to_client' => array('get_a_link'
                                                                 , 'email_me_copies','email_me_on_expire'
                                                                 , 'email_upload_complete', 'email_download_complete'
@@ -216,6 +216,8 @@ $default = array(
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
     ),
 
+    'header_x_frame_options' => 'sameorigin',
+    
     
     // see crypto_app.js for constants in the range crypto_key_version_constants
     // Generally higher is newer + better.
