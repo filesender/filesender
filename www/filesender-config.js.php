@@ -37,6 +37,10 @@
 require_once('../includes/init.php');
 
 header('Content-Type: text/javascript; charset=UTF-8');
+//
+// Security that applies to all page requests
+//
+header('X-Frame-Options: deny');
 
 $banned = Config::get('ban_extension');
 $extension_whitelist_regex = Config::get('extension_whitelist_regex');

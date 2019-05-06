@@ -37,6 +37,11 @@ try {
     
     try { // At that point we can render exceptions using nice html
         Auth::isAuthenticated(); // Preload auth state
+
+        //
+        // Security that applies to all page requests
+        //
+        header('X-Frame-Options: deny');
         
         Template::display('!!header');
         

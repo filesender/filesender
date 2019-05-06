@@ -327,6 +327,7 @@ would be in a file such as /etc/nginx/sites-enabled/filesender.example.com.
 
 ```
 server {
+        add_header X-Frame-Options none always;
         client_body_buffer_size 256k;
         client_max_body_size 32m;
         server_name filesender.domain.tld;
