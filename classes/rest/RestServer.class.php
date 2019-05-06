@@ -304,7 +304,7 @@ class RestServer
             //
             // Security that applies to all REST requests
             //
-            header('X-Frame-Options: deny');
+            header('X-Frame-Options: sameorigin', false);
 
             //
             // Output data

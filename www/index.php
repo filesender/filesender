@@ -41,7 +41,7 @@ try {
         //
         // Security that applies to all page requests
         //
-        header('X-Frame-Options: deny');
+        header('X-Frame-Options: sameorigin', false);
         
         Template::display('!!header');
         
