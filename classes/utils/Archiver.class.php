@@ -114,7 +114,8 @@ class Archiver
 
         fflush($outstream);
         $ret = $contentsz + filesize($tfn);
-        fclose($tfn);
+        fclose($outstream);
+        unlink($tfn);
 
         return $ret;
     }
@@ -155,7 +156,7 @@ class Archiver
 
         fflush($outstream);
         $ret = $contentsz + filesize($tfn);
-        fclose($tfn);
+        fclose($outstream);
         unlink($tfn);
         
         return $ret;
