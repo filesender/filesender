@@ -150,6 +150,8 @@ A note about colours;
 	* [auth_sp_saml_email_attribute](#auth_sp_saml_email_attribute)
 	* [auth_sp_saml_name_attribute](#auth_sp_saml_name_attribute)
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
+	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
+	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -1337,6 +1339,26 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ eduPersonTargetedId
 * __available:__ since version 1.0
 * __1.x name:__ saml_uid_attribute
+* __comment:__
+
+### auth_sp_saml_entitlement_attribute
+
+* __description:__ Name of a multivalued attribute that contains the entitlements of a user. Usually eduPersonEntitlement, or isMemberOf.
+* __mandatory:__ required if auth_sp_saml_admin_entitlement is set
+* __type:__ string
+* __default:__
+* __available:__ since version 2.7
+* __1.x name:__
+* __comment:__
+
+### auth_sp_saml_admin_entitlement
+
+* __description:__ The value to be searched for in auth_sp_saml_entitlement_attribute. If found, this yields admin privileges.
+* __mandatory:__ required if auth_sp_saml_entitlement_attribute is set
+* __type:__ string
+* __default:__
+* __available:__ since version 2.7
+* __1.x name:__
 * __comment:__
 
 ### auth_sp_saml_email_attribute
