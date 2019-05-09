@@ -110,7 +110,16 @@
 // 
 // // Get uid attribute from authentication service.  Usually eduPersonTargetedID or eduPersonPrincipalName
 // $config['auth_sp_saml_uid_attribute'] = 'eduPersonTargetedId';
-// 
+//
+// // Attribute to use for entitlement. Usually eduPersonEntitlement or isMemberOf
+// $config['auth_sp_saml_entitlement_attribute'] = 'eduPersonEntitlement';
+//
+// // Also make sure the above addtional attribute is actually retrieved
+// $config['auth_sp_additional_attributes'] = array('eduPersonEntitlement');
+//
+// // What entitlement value denotes the admin privilege
+// $config['auth_sp_saml_admin_entitlement'] = 'urn:x-geant:eduteams.org:filesender:admin';
+//
 // // Get path  attribute from authentication service
 // $config['auth_sp_saml_authentication_source'] = 'default-sp';
 
