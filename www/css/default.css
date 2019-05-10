@@ -75,7 +75,7 @@ abbr {
 
 #header {
     background: #666 url(../images/banner900.png) no-repeat top left;
-    height: 60px;
+    height: 65px;
     margin-bottom: 1em;
 }
 
@@ -262,6 +262,13 @@ div.exception .details {
 .box {
     padding: 0.5em;
     border: 1px solid #aaa;
+    border-radius:0.5em;
+    -moz-border-radius: 0.5em;
+    margin: 0 0.25em 0.5em 0.25em;
+}
+
+.box-trans {
+    padding: 0.5em;
     border-radius:0.5em;
     -moz-border-radius: 0.5em;
     margin: 0 0.25em 0.5em 0.25em;

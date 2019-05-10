@@ -30,11 +30,10 @@ Best regards,
 
 {alternative:html}
 
-<p>
-    Dear Sir or Madam,
-</p>
+<table style="width:800" align="left" border="4" padding="40">
+<tr><td><img src="{cfg:site_url}images/banner800.png" alt="SURFfilesender Logo" />
 
-<p>
+<p style="font-family:Arial, sans-serif; font-size:14px; text-decoration:none; font-style:normal">
     One or more of your recipients failed to receive your message(s) :
 </p>
 
@@ -54,7 +53,16 @@ Best regards,
     You may find additional details at <a href="{cfg:site_url}">{cfg:site_url}</a>
 </p>
 
-<p>
-    Best regards,<br />
-    {cfg:site_name}
-</p>
+</td></tr>
+
+ <tr style="border-style:none">
+    <td align="center">
+       <p style="font-size:12px; text-decoration:none">
+       More information about the SURFfilesender service can be found at
+       <a rel="nofollow" href="https://www.surffilesender.nl/en/" target="_blank">www.surffilesender.nl/en</a>
+       </p>
+       <p style="font-size:10px; text-decoration:none"> SURFfilesender is powered by <a rel="nofollow" href="https://www.surf.nl/en/" target="_blank">SURF</a>.
+       </p>
+    </td>
+</tr>
+</table>

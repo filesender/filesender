@@ -160,14 +160,14 @@ if(Auth::isGuest()) {
                         <?php } else { ?>
                         <div class="recipients"></div>
                         
-                        <input name="to" id="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
+                        <input name="to" id="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" size="58"/>
                         <?php } ?>
                     </div>
                     
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="subject">{tr:subject} ({tr:optional}) :</label>
                         
-                        <input id="subject" name="subject" type="text"/>
+                        <input id="subject" name="subject" type="text" size="58"/>
                     </div>
                     
                     <div class="fieldcontainer" data-related-to="message">

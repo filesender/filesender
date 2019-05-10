@@ -9,7 +9,7 @@
 ?>
 <h1>Welkom bij {cfg:site_name}</h1>
 <p>
-Voor deze service om te werken moet het enkele informatie opslaan betreffende bestanden, wie er bij mag en wat er mee gebeurd is. Bestanden worden automatisch verwijderd van het systeem wanneer ze verlopen en overige metadata nadat iets meer tijd gepasseerd is. Deze pagina laat je zien hoe lang dergelijke informatie opgeslagen wordt door deze installatie.
+Om deze service te laten werken moet het informatie kunnen opslaan betreffende bestanden; wie er bij mag en wat er mee gebeurd is. Bestanden worden automatisch verwijderd van het systeem wanneer ze verlopen zijn. Deze pagina laat je zien hoe lang dergelijke informatie opgeslagen wordt door deze installatie.
 </p>
 <p>
 Wanneer een transfer is verwijderd, worden alle gerelateerde bestanden en bijbehorende e-mails ook verwijderd.

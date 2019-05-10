@@ -14,7 +14,7 @@ subject: (herinnering) {transfer.subject}
 
 Geachte heer, mevrouw,
 
-Dit is een herinnering, de volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+Dit is een herinnering, {if:transfer.files>1}de volgende bestanden zijn{else}het volgende bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden:
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -37,18 +37,17 @@ Hoogachtend,
 
 {alternative:html}
 
-<p>
-    Geachte heer, mevrouw,
-</p>
+<table style="width:800" align="left" border="4" padding="40">
+<tr><td><img src="{cfg:site_url}images/banner800.png" alt="SURFfilesender Logo" />
 
-<p>
-   Dit is een herinnering, de volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="{cfg:site_url}">{cfg:site_name}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+<p style="font-family:Arial, sans-serif; font-size:14px; text-decoration:none; font-style:normal">
+   Dit is een herinnering, {if:transfer.files>1}de volgende bestanden zijn{else}het volgende bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="{cfg:site_url}">{cfg:site_name}</a> en u heeft toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden:
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Transaction details</th>
+            <th colspan="2">Transactie details</th>
         </tr>
     </thead>
     <tbody>
@@ -93,7 +92,15 @@ Hoogachtend,
 </p>
 {endif}
 
-<p>
-    Hoogachtend,<br />
-    {cfg:site_name}
-</p>
+</td></tr>
+ <tr style="border-style:none">
+    <td align="center">
+       <p style="font-size:12px; text-decoration:none">
+       Meer informatie over de SURFfilesender dienst is beschikbaar op
+       <a rel="nofollow" href="https://www.surffilesender.nl/" target="_blank">www.surffilesender.nl</a>
+       </p>
+       <p style="font-size:10px; text-decoration:none"> SURFfilesender is powered by <a rel="nofollow" href="https://www.surf.nl/" target="_blank">SURF</a>.
+       </p>
+    </td>
+</tr>
+</table>

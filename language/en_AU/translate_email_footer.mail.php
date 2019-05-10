@@ -15,6 +15,8 @@ Translate this email: {raw:translatableemail.link}
 
 {alternative:html}
 
+<table style="width:808"><tr><td>
 <p>
-    Translate this email: <a href="{translatableemail.link}">{translatableemail.link}</a>
+    Translate this email:</br> <a href="{translatableemail.link}">{translatableemail.link}</a>
 </p>
+</tr></td></table>

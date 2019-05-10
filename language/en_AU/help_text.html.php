@@ -105,7 +105,7 @@
 <h3>Technical details</h3>
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>
-        <strong>{cfg:site_name}</strong> uses the <a href="http://www.filesender.org/" target="_blank">FileSender software</a>.
+        <strong>{cfg:site_name}</strong> uses the <a href="http://filesender.org/" target="_blank">FileSender software</a>.
         FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.
         This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.
         Please use the <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.
@@ -114,4 +114,4 @@
     </li>
 </ul>
 
-<p>For more information please visit <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
+<p>For more information please visit <a href="http://filesender.org/" target="_blank">filesender.org</a></p>

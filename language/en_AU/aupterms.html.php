@@ -7,4 +7,6 @@
 // 
 // 
 ?>
-AuP Terms and conditions...
+<a href="https://www.surf.nl/en/code-of-conduct-surffilesender" target="_blank">
+I accept the following Code of Conduct when using this service. 
+</a>

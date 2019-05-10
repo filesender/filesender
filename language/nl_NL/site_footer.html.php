@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Problemen? Neem contact op met uw instellingshelpdesk.
+<p>Problemen? Neem contact op met uw instellingshelpdesk.</p>
