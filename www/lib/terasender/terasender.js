@@ -5,6 +5,12 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
+noWorkersHaveStarted = function( ts ) {
+    ts.error({message: 'no_workers_have_started'});
+    ts.stop();
+};
+
+
 window.filesender.terasender = {
     /**
      * Status
@@ -20,6 +26,11 @@ window.filesender.terasender = {
      * Workers stack
      */
     workers: [],
+
+    /**
+     * timer id to check if a worker has started up
+     */
+    workers_start_monitor_id: 0,
     
     /**
      * Current transfer
@@ -385,6 +396,10 @@ window.filesender.terasender = {
                 // No break here as we give new job asap
                 
             case 'requestJob' :
+                if( this.workers_start_monitor_id ) {
+                    window.clearTimeout( this.workers_start_monitor_id );
+                    this.workers_start_monitor_id = 0;
+                }
                 var gave = this.giveJob(worker_id, workerinterface);
                 if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id, gave.file);
                 break;
@@ -453,6 +468,7 @@ window.filesender.terasender = {
         this.workers.push(workerinterface);
     },
     
+    
     /**
      * Start upload
      * 
@@ -479,12 +495,17 @@ window.filesender.terasender = {
         var wcnt = parseInt(filesender.config.terasender_worker_count);
         if(isNaN(wcnt) || wcnt < 1 || wcnt > 30)
             wcnt = 3;
+
+        var ts = this;
+        this.workers_start_monitor_id = window.setTimeout( function() { noWorkersHaveStarted(ts) },
+                                                           filesender.config.terasender_worker_start_must_complete_within_ms );
         
         for(i=0; i<filesender.config.terasender_worker_count; i++)
             this.createWorker();
         
         return true;
     },
+
     
     /**
      * Retry upload
@@ -500,6 +521,10 @@ window.filesender.terasender = {
         }
         
         this.workers = [];
+
+        var ts = this;
+        this.workers_start_monitor_id = window.setTimeout( function() { noWorkersHaveStarted(ts) },
+                                                           filesender.config.terasender_worker_start_must_complete_within_ms );
         
         for(i=0; i<filesender.config.terasender_worker_count; i++)
             this.createWorker();
@@ -515,8 +540,10 @@ window.filesender.terasender = {
     stop: function() {
         this.log('Stopping workers');
         
-        for(var i=0; i<this.workers.length; i++)
+        for(var i=0; i<this.workers.length; i++) {
             this.workers[i].terminate();
+        }
+        
         
         this.workers = [];
         this.status = '';

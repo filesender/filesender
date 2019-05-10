@@ -312,17 +312,31 @@ class Auth
     {
         if (is_null(self::$isAdmin)) {
             self::$isAdmin = false;
-            
+
             if (self::user()) {
                 $admin = Config::get('admin');
-                if (!is_array($admin)) {
-                    $admin = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$admin)));
+                $entitlement_attribute = Config::get('auth_sp_saml_entitlement_attribute');
+                $admin_entitlement = Config::get('auth_sp_saml_admin_entitlement');
+                $additional_attributes = Config::get('auth_sp_additional_attributes');
+                // Admin privs through entitlement
+                if (self::isSP() && $entitlement_attribute && $admin_entitlement && $additional_attributes)  {
+                    if (self::$attributes['additional'] &&
+                        array_key_exists($entitlement_attribute, self::$attributes['additional']) &&
+                        in_array($entitlement_attribute, $additional_attributes)) {
+
+                        self::$isAdmin = in_array($admin_entitlement, self::$attributes['additional'][$entitlement_attribute]);
+                    }
+                } else {
+                    // Admin UID from config file
+                    if (!is_array($admin)) {
+                        $admin = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$admin)));
+                    }
+
+                    self::$isAdmin = in_array(self::user()->saml_user_identification_uid, $admin);
                 }
-                
-                self::$isAdmin = in_array(self::user()->saml_user_identification_uid, $admin);
             }
         }
-        
+
         return self::$isAdmin && !self::isGuest();
     }
 
@@ -336,11 +350,11 @@ class Auth
                 if (!is_array($keys)) {
                     $keys = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$keys)));
                 }
-                
+
                 self::$canViewAggregateStats = in_array(self::user()->saml_user_identification_uid, $keys);
             }
         }
-        
+
         return self::$canViewAggregateStats && !self::isGuest();
     }
     

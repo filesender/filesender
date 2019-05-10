@@ -34,6 +34,7 @@ require_once dirname(__FILE__).'/../../includes/init.php';
 
 Logger::setProcess(ProcessTypes::UPGRADE);
 
+$majorMigrationPerformed = false;
 
 /**
  * Create/upgrade Filesender's database
@@ -291,6 +292,16 @@ function ensureFK()
                     'aggregatestatistics.eventtype refers to dbconstanteventtypes.id',
 	            call_user_func('AggregateStatistic::getDBTable'), 'AggregateStatistic_eventtype', 'eventtype',
 	            call_user_func('DBConstantStatsEvent::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'statlogs.browser refers to dbconstantbrowsertype.id',
+	            call_user_func('StatLog::getDBTable'), 'statlogs_browsertype', 'browser',
+	            call_user_func('DBConstantBrowserType::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'statlogs.os refers to dbconstantoperatingsystem.id',
+	            call_user_func('StatLog::getDBTable'), 'statlogs_operatingsystem', 'os',
+	            call_user_func('DBConstantOperatingSystem::getDBTable'), 'id' ));
 
     
     foreach ( $fks as $fk ) {
@@ -394,7 +405,10 @@ try {
         if( $currentSchemaVersion != DatabaseSchemaVersions::VERSION_CURRENT ) {
             $schemaVersion = $currentSchemaVersion;
             $dbtype = Config::get('db_type');
-            echo "test2 $schemaVersion \n";
+            if( $schemaVersion < DatabaseSchemaVersions::VERSION_CURRENT ) {
+                $majorMigrationPerformed = true;
+            }
+            
             for( ; $schemaVersion <= DatabaseSchemaVersions::VERSION_CURRENT; $schemaVersion++ ) {
 
                 echo "checking for $schemaVersion \n";
@@ -594,6 +608,11 @@ try {
 } catch(Exception $e) {
     echo "Error, Rolling database changes back....\n";
     echo " This should leave the database state as it was before you started the script\n";
+    if( $majorMigrationPerformed ) {
+        echo "\n";
+        echo "NOTE: As this was a major database schema update you might like to compare with a backup\n";
+        echo "\n";
+    }        
     DBI::rollBack();
     $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
     die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');

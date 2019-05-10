@@ -75,6 +75,20 @@ class StatLog extends DBObject
         ),
         'created' => array(
             'type' => 'datetime'
+        ),
+        'browser' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => true
+        ),
+        'os' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => true
+        ),
+        'is_encrypted' => array(
+            'type' => 'bool',
+            'default' => false
         )
     );
 
@@ -94,8 +108,14 @@ class StatLog extends DBObject
         foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype, 'created')
-                        . DBView::columnDefinition_is_encrypted()
-                        . '  from ' . self::getDBTable();
+                        . DBView::columnDefinition_dbconstant( DBConstantBrowserType::getDBTable(),
+                                                               'browser',
+                                                               'browser_name' )
+                        . DBView::columnDefinition_dbconstant( DBConstantOperatingSystem::getDBTable(),
+                                                               'os',
+                                                               'os_name' )
+                        . '  from ' . self::getDBTable() . ' base';
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
@@ -172,7 +192,10 @@ class StatLog extends DBObject
         $log->event = $event;
         $log->created = time();
         $log->target_type = get_class($target);
-        
+        $log->browser = DBConstantBrowserType::currentBrowserToEnum();
+        $log->os = DBConstantOperatingSystem::currentUserOperatingSystemEnum();
+        $is_encrypted = false;
+
         // Add metadata depending on target
         switch ($log->target_type) {
             case File::getClassName():
@@ -180,7 +203,8 @@ class StatLog extends DBObject
                 
                 if ($event == LogEventTypes::FILE_UPLOADED) {
                     $log->time_taken = $target->upload_time;
-                    $log->additional_attributes = array('encryption'=>$target->transfer->options['encryption']);
+                    $is_encrypted = $target->transfer->options['encryption'];
+                    $log->additional_attributes = array('encryption'=>$is_encrypted);
                 }
                 break;
             
@@ -200,6 +224,8 @@ class StatLog extends DBObject
                 $log->size = 0;
                 break;
         }
+
+        $log->is_encrypted = $is_encrypted;
         
         // Add user aditionnal attributes if enabled
         if (Config::get('statlog_log_user_additional_attributes')) {

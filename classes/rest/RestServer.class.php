@@ -300,9 +300,13 @@ class RestServer
             $data = call_user_func_array(array($handler, $method), $path);
             
             Logger::debug('Got data to send back');
-            
+
+            // Security that applies to all page requests
+            Security::addHTTPHeaders();
+
+            //
             // Output data
-            
+            //
             if (array_key_exists('callback', $_GET)) {
                 header('Content-Type: text/javascript');
                 $callback = self::sanitizeCallback($_GET['callback']);

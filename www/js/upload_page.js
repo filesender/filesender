@@ -253,11 +253,13 @@ filesender.ui.files = {
                 crust_indicator.removeClass('good');
                 crust_indicator.removeClass('middle');
                 crust_indicator.removeClass('slow');
+                crust_indicator.removeClass('paused');
                 crust_indicator.addClass('bad');
             } else {
                 crust_indicator.removeClass('middle');
                 crust_indicator.removeClass('slow');
                 crust_indicator.removeClass('bad');
+                crust_indicator.removeClass('paused');
                 crust_indicator.addClass('good');
             }
             
@@ -311,18 +313,43 @@ filesender.ui.files = {
                 crust_indicator.removeClass('middle');
                 crust_indicator.removeClass('slow');
                 crust_indicator.removeClass('bad');
+                crust_indicator.removeClass('paused');
                 crust_indicator.addClass('good');
+            }
+        }
+    },
+
+    pause_crust_meter: function( file ) {
+        var imax = 1;
+        if( filesender.config.terasender_enabled ) {
+            imax = filesender.config.terasender_worker_count;
+        }
+
+        for( var i = 0; i < imax; i++ ) {
+            var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + i);
+            if( crust_indicator ) {
+                crust_indicator.find('.crustage').text( '' );
+                crust_indicator.find('.crustbytes').text( '' );
+                crust_indicator.removeClass('middle');
+                crust_indicator.removeClass('slow');
+                crust_indicator.removeClass('bad');
+                crust_indicator.removeClass('good');
+                crust_indicator.addClass('paused');
             }
         }
     },
     
     update_crust_meter: function( file ) {
+//        console.log("update_crust_meter(top) status " +  filesender.ui.transfer.status );
         if (!filesender.config.upload_display_per_file_stats) {
             return;
         }
         
         if (filesender.ui.transfer.status != 'running') {
             this.clear_crust_meter( file );
+            if (filesender.ui.transfer.status == 'paused') {
+                this.pause_crust_meter( file );
+            }
             return;
         }
 
@@ -657,6 +684,7 @@ filesender.ui.retryingErrorHandler = function(error,callback) {
 
     filesender.ui.automatic_resume_retries++;
     if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
+        console.log("The user has run out of automatic retries so we are going to report this as a fatal error");
         filesender.ui.errorOriginal( error, callback );
         return;
     }
@@ -807,7 +835,10 @@ filesender.ui.startUpload = function() {
             filesender.ui.reload();
         });
     };
-    
+
+    if( filesender.config.automatic_resume_number_of_retries ) {
+        errorHandler = filesender.ui.retryingErrorHandler;
+    }
     this.transfer.onerror = errorHandler;
 
     
@@ -932,6 +963,7 @@ $(function() {
             uploadlogtop: form.find('.files_uploadlogtop'),
             uploadlog: form.find('.uploadlog'),
             select: form.find('.files_actions .select_files'),
+            selectdir: form.find('.files_actions .select_directory'),
             clear: form.find('.files_actions .clear_all'),
         },
         recipients: {
@@ -997,6 +1029,7 @@ $(function() {
         filesender.ui.nodes.files.input.click();
         return false;
     }).button();
+    filesender.ui.nodes.files.selectdir.button();
     
     // Bind file drag drop events
     if(filesender.supports.reader) $('html').on('dragover', function (e) {
@@ -1326,6 +1359,7 @@ $(function() {
         
         // Remove unavailable features
         filesender.ui.nodes.files.select.remove();
+        filesender.ui.nodes.files.selectdir.remove();
         filesender.ui.nodes.files.dragdrop.remove();
         filesender.ui.nodes.buttons.pause.remove();
         

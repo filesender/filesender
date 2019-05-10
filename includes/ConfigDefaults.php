@@ -96,6 +96,7 @@ $default = array(
     'encryption_min_password_length' => 0,
     'encryption_generated_password_length' => 30,
     'encryption_generated_password_encoding' => 'base64',
+    'upload_crypted_chunk_padding_size' => 16 + 16, // CONST the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
     'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used
@@ -106,11 +107,15 @@ $default = array(
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
     'terasender_worker_max_chunk_retries' => 20,    
+    'terasender_worker_xhr_timeout' => 3600000, // in ms, 1 hour for a chunk to complete by default.
+    'terasender_worker_start_must_complete_within_ms' => 180000, // in ms, 3 minutes by default.
     'stalling_detection' => false,
 
     'testing_terasender_worker_uploadRequestChange_function_name' => '',
 
+    'tmp_path' => FILESENDER_BASE.'/tmp/',
 
+    
     // There are not so many options here, so they are listed
     // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',
@@ -183,11 +188,12 @@ $default = array(
     'cloud_s3_secret' => 'verySecretKey1',
 
     'disable_directory_upload' => true,
+    'directory_upload_button_enabled' => true,
 
     'clientlogs_stashsize' => 10,
     'clientlogs_lifetime' => 10,
 
-    'automatic_resume_number_of_retries' =>  10,
+    'automatic_resume_number_of_retries' =>  20,
     'automatic_resume_delay_to_resume'   => 360,
 
     'guests_expired_lifetime' => 0,
@@ -201,7 +207,7 @@ $default = array(
     'aggregate_statlog_lifetime' => false,
     'aggregate_statlog_send_report_days' => 0,
     'aggregate_statlog_send_report_email_address' => '',
-
+    
     'transfer_options_not_available_to_export_to_client' => array('get_a_link'
                                                                 , 'email_me_copies','email_me_on_expire'
                                                                 , 'email_upload_complete', 'email_download_complete'
@@ -210,6 +216,8 @@ $default = array(
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
     ),
 
+    'header_x_frame_options' => 'sameorigin',
+    
     
     // see crypto_app.js for constants in the range crypto_key_version_constants
     // Generally higher is newer + better.

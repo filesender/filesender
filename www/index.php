@@ -37,6 +37,9 @@ try {
     
     try { // At that point we can render exceptions using nice html
         Auth::isAuthenticated(); // Preload auth state
+
+        // Security that applies to all page requests
+        Security::addHTTPHeaders();
         
         Template::display('!!header');
         
