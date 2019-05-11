@@ -218,17 +218,24 @@ wants to authenticate a user. SimpleSAMLphp provides many different
 mechanisms to authenticate users and can handle large amounts of
 users.
 
-Following these instructions will set you up with a
-SimpleSAMLphp installation that uses Feide RnD's OpenIdP to
-authenticate users. When you move to a production service you probably
-want to change that to only support authentication sources of your
-choice.
+Following these instructions will set you up with a SimpleSAMLphp
+installation that uses Feide RnD's OpenIdP to authenticate users.
+There is also [some
+information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing)
+if you would prefer to setup some username and passwords for local
+authentication for development and testing. When you move to a
+production service you probably want to change that to only support
+authentication sources of your choice.
 
-[Download SimpleSAMLphp](https://simplesamlphp.org/download).
-Other [(later or older) versions](https://simplesamlphp.org/archive) will probably work.
-For the FileSender 2.0 release we tested with version 1.14.13.
-In the below I will assume you have downloaded SimpleSAMLphp
-to a file at /root/src/simplesamlphp-1.15.4.tar.gz.
+[Download SimpleSAMLphp](https://simplesamlphp.org/download). Other
+[(later or older) versions](https://simplesamlphp.org/archive) will
+probably work. The continuious integration in FileSender has an
+installation of SimpleSAMLphp the [setup
+script](https://github.com/filesender/filesender/blob/master/travis/scripts/simplesamlphp-setup.sh)
+shows the version currently used there. For the FileSender 2.0 release
+we tested with version 1.17.1. In the below I will assume you have
+downloaded SimpleSAMLphp to a file at
+/root/src/simplesamlphp-1.17.1.tar.gz.
 
 * **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://simplesamlphp.org/archive), right?
 
@@ -251,6 +258,24 @@ cp -r config-templates/*.php config/
 cp -r metadata-templates/*.php metadata/
 ```
 
+There are some recommended updates to help improve security. If you
+have a recommendations for things people might like to consider please
+create a pull request on this file with your recommendations. Note
+that session.cookie.secure can only be set if you only allow access to
+your FileSender instance over HTTPS, which is highly recommended.
+
+```
+cd /opt/filesender/simplesaml
+edit config/config.php
+
+  'showerrors' => false,
+  'errorreporting' => false,
+   ...
+  'session.cookie.secure' => true, // https site only!
+
+```
+
+
 To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation
 to match your local site's needs please check the SimpleSAMLphp [installation and
 configuration documentation](http://simplesamlphp.org/docs). When
@@ -261,10 +286,6 @@ Manual for details.
 
 * **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/ldap:ldap), [LDAP](https://simplesamlphp.org/docs/stable/ldap:ldap), [Radius](https://simplesamlphp.org/docs/stable/radius:radius) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
 
-There is also [some
-information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing)
-if you would prefer to setup some username and passwords for local
-authentication for development and testing.
 
 # Step 5 - Web Server Security
 
