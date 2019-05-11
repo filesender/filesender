@@ -31,10 +31,15 @@ you can report issues with and update the documentation.
 
 ### Dependencies
 
-* Apache (or nginx) and PHP (version 7.2 or 7.0).
+* Apache (or nginx) and PHP version 7.2 or later.
 * A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
-* [SimpleSamlPhp](https://simplesamlphp.org/download) 1.15.4 or newer.
+* [SimpleSamlPhp](https://simplesamlphp.org/download) 1.17.1 or newer.
+
+Note that older versions of PHP may work, but they are not supported
+by the PHP project so it is recommended to avoid them in production. Likewise,
+older SimpleSamlPhp versions are likely to work but may contain issues which
+have been resolved. Version 10.2 or later of MariaDB is highly recommended.
 
 # Step 0 - Choose your options
 
@@ -267,6 +272,10 @@ if you would prefer to setup some username and passwords for local
 authentication for development and testing.
 
 # Step 5 - Web Server Security
+
+It is highly recommended to only offer the FileSender service over
+HTTPS. This prevents information used in a secure session from
+accidentally being leaked by unintended unsure HTTP requests.
 
 By default the configuration and setup for Apache and NGINX both use
 X-Frame-Options sameorigin and the configuration for FileSender itself
