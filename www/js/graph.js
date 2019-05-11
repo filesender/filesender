@@ -1,5 +1,5 @@
 $.ajax({
-	url: "lib/graph/uploadGraph.php"
+	url: "js/graph/uploadGraph.php"
 }).done(function(json) {
 	var ctx = $("#speedChart");
 	var speedChart = new Chart(ctx,$.parseJSON(json));

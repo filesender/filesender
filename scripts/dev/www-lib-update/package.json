@@ -1,0 +1,17 @@
+{
+  "name": "filesender",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^2.8.0",
+    "font-awesome": "^4.7.0",
+    "jquery-ui": "^1.12.1",
+    "reset": "^0.1.0"
+  }
+}

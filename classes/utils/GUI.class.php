@@ -107,7 +107,7 @@ class GUI
         );
         
         if (Config::get('terasender_enabled')) {
-            $sources[] = 'lib/terasender/terasender.js';
+            $sources[] = 'js/terasender/terasender.js';
         }
         
         $sources[] = 'skin/script.js';
