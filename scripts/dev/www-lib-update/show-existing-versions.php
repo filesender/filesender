@@ -17,18 +17,18 @@ echo "\n";
 $packages = array(
     'chart.js' => array(
         'path' => 'chart.js/Chart.bundle.min.js',
-        'pattern' => '/Version: ([0-9.]+).*/m',
+        'pattern' => '/Chart.js v([0-9.]+).*/m',
     ),
     'font awesome' => array(
         'path' => 'font-awesome/css/font-awesome.css',
         'pattern' => '/Font Awesome ([0-9.]+) by/m',
     ),
-    'jquery' => array(
-        'path' => 'jquery/dist/jquery.js',
-        'pattern' => '/jQuery v([0-9.]+) | /m',
+    'jQuery' => array(
+        'path' => 'jquery/jquery.min.js',
+        'pattern' => '/jQuery v([0-9.]+) \| /m',
     ),
     'jQuery UI' => array(
-        'path' => 'jquery-ui/jquery-ui.js',
+        'path' => 'jquery-ui/jquery-ui.min.js',
         'pattern' => '/jQuery UI - v([0-9.]+) -/m',
     ),
     'reset' => array(
