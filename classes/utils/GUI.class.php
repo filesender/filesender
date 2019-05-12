@@ -64,7 +64,7 @@ class GUI
     {
         return self::filterSources(array(
             'lib/reset/reset.css',
-            'lib/jquery-ui-1.12.1.custom/jquery-ui.min.css',
+            'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'css/default.css',
             'skin/styles.css'
@@ -89,8 +89,8 @@ class GUI
     public static function scripts()
     {
         $sources = array(
-            'lib/jquery-ui-1.12.1.custom/external/jquery/jquery-3.3.1.min.js',
-            'lib/jquery-ui-1.12.1.custom/jquery-ui.min.js',
+            'lib/jquery/jquery.min.js',
+            'lib/jquery-ui/jquery-ui.min.js',
             'vendor/node_modules/promise-polyfill/promise.js',
             'vendor/node_modules/webcrypto-shim/webcrypto-shim.js',
             'js/filesender.js',
