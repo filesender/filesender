@@ -364,7 +364,7 @@ if(Auth::isGuest()) {
     <?php if (Config::get('upload_graph_bulk_display')) { ?>
         <div id="graph" class="uploadbulkgraph"><div id="graphDiv" style="width:400px; height:200px; margin:0 auto"><canvas id="speedChart"></canvas></div></div>
 
-        <script type="text/javascript" src="{path:lib/chartjs/Chart.bundle.min.js}"></script>
+        <script type="text/javascript" src="{path:lib/chart.js/Chart.bundle.min.js}"></script>
         <script type="text/javascript" src="{path:js/graph.js}"></script>
     <?php } ?>
     

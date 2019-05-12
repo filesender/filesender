@@ -16,15 +16,19 @@ echo "\n";
 //
 $packages = array(
     'chart.js' => array(
-        'path' => 'chartjs/Chart.bundle.min.js',
+        'path' => 'chart.js/Chart.bundle.min.js',
         'pattern' => '/Version: ([0-9.]+).*/m',
     ),
     'font awesome' => array(
         'path' => 'font-awesome/css/font-awesome.css',
         'pattern' => '/Font Awesome ([0-9.]+) by/m',
     ),
+    'jquery' => array(
+        'path' => 'jquery/dist/jquery.js',
+        'pattern' => '/jQuery v([0-9.]+) | /m',
+    ),
     'jQuery UI' => array(
-        'path' => 'jquery-ui-1.12.1.custom/jquery-ui.js',
+        'path' => 'jquery-ui/jquery-ui.js',
         'pattern' => '/jQuery UI - v([0-9.]+) -/m',
     ),
     'reset' => array(
