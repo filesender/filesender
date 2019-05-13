@@ -35,6 +35,19 @@ $packages = array(
         'path' => 'reset/reset.css',
         'pattern' => '/v([0-9.]+) | 20/m',
     ),
+    'promise-polyfill' => array(
+        'path' => 'promise-polyfill/polyfill.min.js',
+        'pattern' => '/v([0-9.]+)/m',
+    ),
+    'webcrypto-shim' => array(
+        'path' => 'webcrypto-shim/webcrypto-shim.min.js',
+        'pattern' => '/ WebCrypto API shim v([0-9.]+)/m',
+    ),
+    'xregexp' => array(
+        'path' => 'xregexp/xregexp-all.js',
+        'pattern' => "/XRegExp.version = '([0-9.]+)'/m",
+    ),
+    
 );
 
 foreach( $packages as $pkg => $d ) {
