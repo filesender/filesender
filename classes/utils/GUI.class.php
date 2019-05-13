@@ -64,7 +64,7 @@ class GUI
     {
         return self::filterSources(array(
             'lib/reset/reset.css',
-            'lib/jquery-ui-1.12.1.custom/jquery-ui.min.css',
+            'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'css/default.css',
             'skin/styles.css'
@@ -89,10 +89,10 @@ class GUI
     public static function scripts()
     {
         $sources = array(
-            'lib/jquery-ui-1.12.1.custom/external/jquery/jquery-3.3.1.min.js',
-            'lib/jquery-ui-1.12.1.custom/jquery-ui.min.js',
-            'vendor/node_modules/promise-polyfill/promise.js',
-            'vendor/node_modules/webcrypto-shim/webcrypto-shim.js',
+            'lib/jquery/jquery.min.js',
+            'lib/jquery-ui/jquery-ui.min.js',
+            'lib/promise-polyfill/polyfill.min.js',
+            'lib/webcrypto-shim/webcrypto-shim.min.js',
             'js/filesender.js',
             'js/lang.js',
             'js/client.js',
@@ -103,11 +103,11 @@ class GUI
             'js/crypter/crypto_common.js',
             'js/crypter/crypto_blob_reader.js',
             'js/crypter/crypto_app.js',
-            'vendor/node_modules/xregexp/xregexp-all.js'
+            'lib/xregexp/xregexp-all.js'
         );
         
         if (Config::get('terasender_enabled')) {
-            $sources[] = 'lib/terasender/terasender.js';
+            $sources[] = 'js/terasender/terasender.js';
         }
         
         $sources[] = 'skin/script.js';

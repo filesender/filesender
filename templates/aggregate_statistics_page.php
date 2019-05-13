@@ -110,7 +110,7 @@
                  $('#graph').text('');
                  return;
              }
-             $('#graph').load('lib/graph/aggregate_statistics_page_of_graphs_for_type.php?'
+             $('#graph').load('js/graph/aggregate_statistics_page_of_graphs_for_type.php?'
                             + 'eventtype='  + eventtype
                             + '&querytype=' + querytype
              );

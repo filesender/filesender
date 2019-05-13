@@ -1,0 +1,21 @@
+{
+  "name": "filesender",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^2.8.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.4.1",
+    "jquery-ui-dist": "^1.12.1",
+    "promise-polyfill": "^8.1.0",
+    "reset": "^0.1.0",
+    "webcrypto-shim": "^0.1.4",
+    "xregexp": "^4.2.4"
+  }
+}
