@@ -958,6 +958,7 @@ $(function() {
         form: form,
         files: {
             input: form.find(':file'),
+            files_input: form.find('#files:file'),
             list: form.find('.files'),
             dragdrop: form.find('.files_dragdrop'),
             uploadlogtop: form.find('.files_uploadlogtop'),
@@ -1026,7 +1027,7 @@ $(function() {
     
     // Bind file list select button
     filesender.ui.nodes.files.select.on('click', function() {
-        filesender.ui.nodes.files.input.click();
+        filesender.ui.nodes.files.files_input.click();
         return false;
     }).button();
     filesender.ui.nodes.files.selectdir.button();
