@@ -263,11 +263,12 @@ cp -r config-templates/*.php config/
 cp -r metadata-templates/*.php metadata/
 ```
 
-There are some recommended updates to help improve security. If you
-have a recommendations for things people might like to consider please
-create a pull request on this file with your recommendations. Note
-that session.cookie.secure can only be set if you only allow access to
-your FileSender instance over HTTPS, which is highly recommended.
+There are some thoughts on updates to your SimpleSAMLphp configuration
+which may improve security. If you have a recommendations for things
+people might like to consider please create a pull request on this
+file with your recommendations. Note that session.cookie.secure can
+only be set if you only allow access to your FileSender instance over
+HTTPS, which is highly recommended.
 
 ```
 cd /opt/filesender/simplesaml
@@ -277,9 +278,59 @@ edit config/config.php
   'errorreporting' => false,
    ...
   'session.cookie.secure' => true, // https site only!
+   ...
+  'admin.protectindexpage' => true,
+  'admin.protectmetadata' => true,
+  ...
+  'module.enable' => [
+      'sanitycheck' => false,
+      'admin' => false,
+  ],
+  ...
+```
+
+Set the default salt and admin password to something other than the defaults.
+Note that the command used in setting the SALT and password are taken from the
+config file itself.
+
+* **NOTE**: Replace the PASSWORD line with a choice of your own!
+
+```
+PASSWORD=something-really-long-and-wonderful-written-near-the-keyboard
+
+cd config
+SALT=$(LC_CTYPE=C tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo);
+sed -i -e "s@'secretsalt' => 'defaultsecretsalt'@'secretsalt' => '$SALT'@g" config.php
+
+HASH=$(echo $PASS | ../bin/pwgen.php | tail -2 | head -1 | cut -c3-200);
+sed -i -e "s@'auth.adminpassword' => '123'@'auth.adminpassword' => '$HASH'@g" config.php
 
 ```
 
+The below commands will remove some possible functionality such as the
+admin interface and some pages in the core module from being
+available. Note that the authenticate.php page is there to help verify
+authentication and does not seem to be used in the normal flow of
+login and logout. The above admin.protect config settings should also
+remove these pages from regular user access.
+
+```
+cd www
+rm -f resources/jquery-1.8.js
+rm -f resources/jquery-ui-1.8.js
+rm -rf admin
+cd ..
+
+cd modules/core/www
+rm -f frontpage_auth.php
+rm -f frontpage_config.php
+rm -f frontpage_federation.php
+rm -f frontpage_welcome.php
+rm -f authenticate.php
+rm -f show_metadata.php
+rm -f login-admin.php
+
+```
 
 To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation
 to match your local site's needs please check the SimpleSAMLphp [installation and
@@ -290,6 +341,23 @@ attributes](../admin/reference/#idp_attributes) in the Reference
 Manual for details.
 
 * **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/ldap:ldap), [LDAP](https://simplesamlphp.org/docs/stable/ldap:ldap), [Radius](https://simplesamlphp.org/docs/stable/radius:radius) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
+
+The below are some URLs that will be disabled by the above configuration.
+You might like to load them and see that you are happy with the results.
+
+```
+https://.../simplesaml/module.php/sanitycheck/index.php
+https://.../simplesaml/admin/phpinfo.php
+https://.../simplesaml/module.php/core/frontpage_config.php
+https://.../simplesaml/module.php/core/authenticate.php
+https://.../simplesaml/module.php/saml/sp/metadata.php/default-sp?output=xhtml
+```
+
+The default redirect for https://.../simplesaml/ will be to
+https://.../simplesaml/module.php/core/frontpage_welcome.php so you might like to
+HTTP redirect that to your filesender instance. A user should not load
+that raw URL so you might also like to consider it suspicious activity
+and log the event for investigation.
 
 
 # Step 5 - Web Server Security
