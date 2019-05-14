@@ -196,10 +196,15 @@ class FileCollection extends DBObject
      */
     public static function fromCollectionIds($collectionIds)
     {
+        $set = array();
+
+        if( empty($collectionIds)) {
+            return $set;
+        }
+        
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN ('.implode(", ", $collectionIds).') ORDER BY :order1, :order2');
         $s->execute(array(':order1' => 'collection_id',
                           ':order2' => 'file_id'));
-        $set = array();
         $current = null;
         $current_id = -1;
         foreach ($s->fetchAll() as $data) {
