@@ -44,8 +44,8 @@
     ?>
     
     <div class="disclamer">
-        {tr:download_disclamer}
         <?php if(!$isEncrypted) { ?>
+            {tr:download_disclamer}
             {tr:download_disclamer_nocrypto_message}
         <?php } ?>
         <?php if($isEncrypted) { ?>
