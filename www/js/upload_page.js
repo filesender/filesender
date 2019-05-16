@@ -1522,6 +1522,6 @@ $(function() {
 });
 
 $('.instructions').on('click', function(){
-    filesender.ui.nodes.files.input.click();
+    filesender.ui.nodes.files.files_input.click();
     return false;
 });
