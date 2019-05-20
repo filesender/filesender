@@ -61,4 +61,25 @@ class Security
         }
         
     }
+
+    /**
+     * Validate against CSRF using the current configured methods
+     */
+    public static function validateAgainstCSRF()
+    {
+        if( Config::get('csrf_detection_enabled') ) {
+            include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
+            csrfProtector::init();
+        }
+    }
+
+    /**
+     * Get the CSRF token to send to the server
+     */
+    public static function getCSRFToken() {
+        if( Config::get('csrf_detection_enabled')) {
+            return CSRFP._getAuthKey();
+        }
+        return '';
+    }
 }

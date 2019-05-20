@@ -27,6 +27,9 @@ var terasender_worker = {
      * Security token (XSRF protection)
      */
     security_token: null,
+
+    // csrf token
+    csrfptoken: null,
     
     /**
      * Maintenance flag / timer
@@ -66,6 +69,9 @@ var terasender_worker = {
             
             if('security_token' in job) {
                 this.security_token = job.security_token;
+            }
+            if('csrfptoken' in job) {
+                this.csrfptoken = job.csrfptoken;
             }
             
             this.job.chunk = job.chunk;
@@ -129,6 +135,7 @@ var terasender_worker = {
         xhr.setRequestHeader('X-Filesender-Chunk-Offset', this.job.chunk.start);
         xhr.setRequestHeader('X-Filesender-Chunk-Size', blob.size);
         xhr.setRequestHeader('X-Filesender-Security-Token', this.security_token);
+        xhr.setRequestHeader('csrfptoken', this.csrfptoken);
         
         try {
             

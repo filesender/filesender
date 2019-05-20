@@ -128,6 +128,8 @@ window.filesender.config = {
     logon_url: '<?php echo AuthSP::logonURL() ?>',
     logoff_url: '<?php echo AuthSP::logoffURL() ?>',
 
+    csrf_detection_enabled: '<?php echo Config::get('csrf_detection_enabled')  ?>',
+
     upload_display_per_file_stats: '<?php echo Config::get('upload_display_per_file_stats') ?>',
     upload_force_transfer_resume_forget_if_encrypted: '<?php echo Config::get('upload_force_transfer_resume_forget_if_encrypted') ?>',
     upload_considered_too_slow_if_no_progress_for_seconds: '<?php echo Config::get('upload_considered_too_slow_if_no_progress_for_seconds') ?>',

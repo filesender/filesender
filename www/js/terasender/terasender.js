@@ -128,7 +128,8 @@ window.filesender.terasender = {
                 blob: file.blob,
                 endpoint: file.endpoint
             },
-            security_token: this.security_token
+            security_token: this.security_token,
+            csrfptoken: filesender.client.getCSRFToken()
         };
         
         file.fine_progress = 0;
