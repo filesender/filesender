@@ -84,6 +84,14 @@ if (!defined('__CSRF_PROTECTOR__')) {
          */
         public static $config = array();
 
+        /**
+         */
+        private static $errorHandler = null;
+
+        public static function setErrorHandler( $f ) {
+            self::$errorHandler = $f;
+        }
+        
         /*
          * Variable: $requiredConfigurations
          * Contains list of those parameters that are required to be there
@@ -330,6 +338,10 @@ if (!defined('__CSRF_PROTECTOR__')) {
         {
             //call the logging function
             static::logCSRFattack();
+
+            if( self::$errorHandler ) {
+                self::$errorHandler->failedValidationAction(self::$requestType);
+            }
 
             //#todo: ask mentors if $failedAuthAction is better as an int or string
             //default case is case 0

@@ -62,14 +62,27 @@ class Security
         
     }
 
+    private static $filesender_csrf_protector_logger = null;
+    
     /**
      * Validate against CSRF using the current configured methods
      */
-    public static function validateAgainstCSRF()
+    public static function validateAgainstCSRF( $canReturnJSON = false )
     {
+        Logger::error("validateAgainstCSRF canjson " . $canReturnJSON );
         if( Config::get('csrf_detection_enabled') ) {
             include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
-            csrfProtector::init();
+            if( !self::$filesender_csrf_protector_logger ) {
+                self::$filesender_csrf_protector_logger = new FileSendercsrfProtectorLogger();
+            }
+            $length = null; // no change
+            $action = null; // no change
+            $logger = self::$filesender_csrf_protector_logger;
+
+            if( $canReturnJSON ) {
+                csrfProtector::setErrorHandler( new FileSendercsrfProtectorErrorHandler($canReturnJSON));
+            }
+            csrfProtector::init($length,$action,$logger);
         }
     }
 
