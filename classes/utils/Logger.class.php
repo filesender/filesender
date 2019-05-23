@@ -244,6 +244,16 @@ class Logger
     }
 
     /**
+     * Log security issue
+     *
+     * @param string $message
+     */
+    public static function securityIssue($message)
+    {
+        self::log(LogLevels::ERROR, 'SECURITY ' . $message);
+    }
+    
+    /**
      * Log warn
      *
      * @param string $message
