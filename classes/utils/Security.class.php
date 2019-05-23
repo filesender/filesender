@@ -61,4 +61,37 @@ class Security
         }
         
     }
+
+    private static $filesender_csrf_protector_logger = null;
+    
+    /**
+     * Validate against CSRF using the current configured methods
+     */
+    public static function validateAgainstCSRF( $canReturnJSON = false )
+    {
+        if( Config::get('owasp_csrf_protector_enabled') ) {
+            include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
+            if( !self::$filesender_csrf_protector_logger ) {
+                self::$filesender_csrf_protector_logger = new FileSendercsrfProtectorLogger();
+            }
+            $length = null; // no change
+            $action = null; // no change
+            $logger = self::$filesender_csrf_protector_logger;
+
+            if( $canReturnJSON ) {
+                csrfProtector::setErrorHandler( new FileSendercsrfProtectorErrorHandler($canReturnJSON));
+            }
+            csrfProtector::init($length,$action,$logger);
+        }
+    }
+
+    /**
+     * Get the CSRF token to send to the server
+     */
+    public static function getCSRFToken() {
+        if( Config::get('owasp_csrf_protector_enabled')) {
+            return CSRFP._getAuthKey();
+        }
+        return '';
+    }
 }

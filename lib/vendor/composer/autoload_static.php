@@ -20,11 +20,27 @@ class ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3
         ),
     );
 
+    public static $classMap = array (
+        'LoggerInterface' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/LoggerInterface.php',
+        'alreadyInitializedException' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
+        'baseJSFileNotFoundExceptio' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
+        'configFileNotFoundException' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
+        'csrfProtector' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
+        'csrfpAction' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfpAction.php',
+        'csrfpCookieConfig' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfpCookieConfig.php',
+        'csrfpDefaultLogger' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfpDefaultLogger.php',
+        'incompleteConfigurationException' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
+        'jsFileNotFoundException' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
+        'logDirectoryNotFoundException' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfpDefaultLogger.php',
+        'logFileWriteError' => __DIR__ . '/..' . '/owasp/csrf-protector-php/libs/csrf/csrfpDefaultLogger.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3::$classMap;
 
         }, null, ClassLoader::class);
     }

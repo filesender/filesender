@@ -55,6 +55,13 @@ window.filesender.client = {
     
     // Handling authentication required
     authentication_required: false,
+
+    getCSRFToken: function() {
+        if( filesender.config.owasp_csrf_protector_enabled ) {
+            return CSRFP._getAuthKey();
+        }
+        return "";
+    },
     
     updateSecurityToken: function(source) {
         if(typeof source !== 'string') {
@@ -115,6 +122,11 @@ window.filesender.client = {
         if(options.headers) headers = options.headers;
         
         if(this.security_token /*&& (method != 'get')**/) headers['X-Filesender-Security-Token'] = this.security_token;
+
+	if (method.toLowerCase() === 'delete' || method.toLowerCase() === 'put') {
+	    // attach the token in request header
+   	    headers['csrfptoken'] = filesender.client.getCSRFToken();
+	}
         
         var settings = {
             cache: false,
@@ -265,7 +277,7 @@ window.filesender.client = {
     postTransfer: function(transfer, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-        
+            
         var files = [];
         for (var i = 0; i < transfer.files.length; i++) {
             files.push({
@@ -345,7 +357,8 @@ window.filesender.client = {
                 'X-Filesender-File-Size': file.size,
                 'X-Filesender-Chunk-Offset': offset,
                 'X-Filesender-Chunk-Size': blob.size,
-                'X-Filesender-Encrypted': '1'
+                'X-Filesender-Encrypted': '1',
+   	        'csrfptoken': filesender.client.getCSRFToken()
             },
             xhr: function() {
                 uxhr = $.ajaxSettings.xhr();

@@ -26,7 +26,11 @@ A note about colours;
 * [site_url](#site_url)
 * [site_logouturl](#site_logouturl)
 * [reports_show_ip_addr](#reports_show_ip_addr)
+
+
+## Security settings
 * [header_x_frame_options](#header_x_frame_options)
+* [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
 
 ## Backend storage
 
@@ -323,6 +327,17 @@ A note about colours;
 * __available:__ since version 2.7
 * __comment:__ Default should be ok. Can be 'deny' to disallow frames if you do not use them or 'none' to disable the feature (not recommended). Note that this setting will not override a setting that is already in place in your web server. This setting is mainly here as a second catch and for sites that can not configure their web server to install a site wide nominated value for X-Frame-Options.
 
+
+* [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
+* __description:__ Use the OWASP csrf protector as well as internal CSRF tokens
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __cookies:__ true
+* __available:__ since version 2.7
+* __comment:__ There is internal CSRF protection in FileSender. Turning this on by setting it to true enables usage of the
+  [CSRF Protector php library](https://github.com/mebjas/CSRF-Protector-PHP/wiki) to also protect interactions from CSRF attack.
+  Note that this option will definitely use cookies.
 
 
 
@@ -1273,6 +1288,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __type:__ string, keyword
 * __permissible values:__ "saml", "shibboleth", "fake"
 * __default:__ saml
+* __cookies:__ saml uses them by default
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">to use type "fake" you need ...</span>

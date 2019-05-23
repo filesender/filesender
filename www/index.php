@@ -40,6 +40,10 @@ try {
 
         // Security that applies to all page requests
         Security::addHTTPHeaders();
+
+        // if configured, ensure no nasty CSRF is going on
+        Security::validateAgainstCSRF();
+        
         
         Template::display('!!header');
         

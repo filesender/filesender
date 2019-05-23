@@ -185,6 +185,9 @@ class RestServer
                 // Do not fail now since some endpoints may not require it
                 $security_token_matches = $security_token && Utilities::checkSecurityToken($security_token);
             }
+
+            // if configured, ensure no nasty CSRF is going on
+            Security::validateAgainstCSRF( true );
             
             // JSONP specifics
             if (array_key_exists('callback', $_GET)) {
