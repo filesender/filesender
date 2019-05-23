@@ -69,8 +69,7 @@ class Security
      */
     public static function validateAgainstCSRF( $canReturnJSON = false )
     {
-        Logger::error("validateAgainstCSRF canjson " . $canReturnJSON );
-        if( Config::get('csrf_detection_enabled') ) {
+        if( Config::get('owasp_csrf_protector_enabled') ) {
             include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
             if( !self::$filesender_csrf_protector_logger ) {
                 self::$filesender_csrf_protector_logger = new FileSendercsrfProtectorLogger();
@@ -90,7 +89,7 @@ class Security
      * Get the CSRF token to send to the server
      */
     public static function getCSRFToken() {
-        if( Config::get('csrf_detection_enabled')) {
+        if( Config::get('owasp_csrf_protector_enabled')) {
             return CSRFP._getAuthKey();
         }
         return '';

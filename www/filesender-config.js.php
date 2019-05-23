@@ -128,7 +128,7 @@ window.filesender.config = {
     logon_url: '<?php echo AuthSP::logonURL() ?>',
     logoff_url: '<?php echo AuthSP::logoffURL() ?>',
 
-    csrf_detection_enabled: '<?php echo Config::get('csrf_detection_enabled')  ?>',
+    owasp_csrf_protector_enabled: '<?php echo Config::get('owasp_csrf_protector_enabled')  ?>',
 
     upload_display_per_file_stats: '<?php echo Config::get('upload_display_per_file_stats') ?>',
     upload_force_transfer_resume_forget_if_encrypted: '<?php echo Config::get('upload_force_transfer_resume_forget_if_encrypted') ?>',

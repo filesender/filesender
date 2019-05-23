@@ -57,7 +57,7 @@ window.filesender.client = {
     authentication_required: false,
 
     getCSRFToken: function() {
-        if( filesender.config.csrf_detection_enabled ) {
+        if( filesender.config.owasp_csrf_protector_enabled ) {
             return CSRFP._getAuthKey();
         }
         return "";
@@ -277,7 +277,6 @@ window.filesender.client = {
     postTransfer: function(transfer, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-        filesender.ui.log('postTransfer(top)');
             
         var files = [];
         for (var i = 0; i < transfer.files.length; i++) {

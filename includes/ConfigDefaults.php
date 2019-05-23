@@ -217,7 +217,7 @@ $default = array(
     ),
 
     'header_x_frame_options' => 'sameorigin',
-    'csrf_detection_enabled' => true,
+    'owasp_csrf_protector_enabled' => false,
     
     
     // see crypto_app.js for constants in the range crypto_key_version_constants
