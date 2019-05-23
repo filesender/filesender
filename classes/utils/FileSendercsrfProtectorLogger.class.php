@@ -46,7 +46,7 @@ class FileSendercsrfProtectorLogger implements LoggerInterface {
             $context['message'] = $message;
             $context = json_encode($context) .PHP_EOL;
 
-            Logger::warn( 'OWASP CSRF protector log message: ' . $context );
+            Logger::securityIssue( 'OWASP CSRF protector log message: ' . $context );
         }
 }
 
