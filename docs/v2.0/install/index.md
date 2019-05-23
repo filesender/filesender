@@ -380,6 +380,14 @@ the header_x_frame_options filesender config.php setting. This will
 inform the browser to fail to load any part of your site in a frame
 which will help strengthen your site against clickjacking.
 
+You may also like to edit cookies at the web server level to set
+"SameSite=Strict" as part of each cookie. Setting the
+[SameSite](https://www.owasp.org/index.php/SameSite) parameter has
+been added to the apache template shown below. This will prevent the
+SimpleSAML authentication cookies being sent to the site from cross
+site requests.
+
+
 
 # Step 5-apache - Configure Apache
 
