@@ -383,8 +383,9 @@ class DatabasePgsql
                     $non_respected[] = 'default';
                 }
             } elseif (is_bool($definition['default'])) {
-                if ((bool)$column_dfn['column_default'] != $definition['default']) {
-                    $logger($column.' default is not '.($definition['default'] ? '1' : '0'));
+                $expected = $definition['default'] ? 'true' : 'false';
+                if ((bool)$column_dfn['column_default'] != $expected) {
+                    $logger($column.' default is not '.$expected);
                     $non_respected[] = 'default';
                 }
             } elseif ($column_dfn['column_default'] != $definition['default']
@@ -531,7 +532,7 @@ class DatabasePgsql
                 if (is_null($definition['default'])) {
                     DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT NULL');
                 } elseif (is_bool($definition['default'])) {
-                    DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT '.($definition['default'] ? '1' : '0'));
+                    DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT '.($definition['default'] ? 'true' : 'false'));
                 } else {
                     $s = DBI::prepare('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT :default');
                     $s->execute(array(':default' => $definition['default']));
