@@ -10,6 +10,19 @@ importScripts(
 	'../../js/crypter/crypto_app.js'
 );
 
+function isIE11()
+{
+    if(navigator.userAgent.indexOf('MSIE')!==-1
+       || navigator.appVersion.indexOf('Trident/') > -1)
+    {
+        return true;
+    }
+    return false;
+}
+function notIE11()
+{
+    return !isIE11();
+}
 
 var terasender_worker = {
     /**
@@ -123,7 +136,9 @@ var terasender_worker = {
         xhr.ontimeout = function() {
             worker.timeout();
         };
-        xhr.timeout = window.filesender.config.terasender_worker_xhr_timeout;
+        if( notIE11()) {
+            xhr.timeout = window.filesender.config.terasender_worker_xhr_timeout;
+        }
         
         var url = file.endpoint.replace('{offset}', this.job.chunk.start);
         xhr.open('PUT', url, true); // Open a request to the upload endpoint
