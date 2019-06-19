@@ -68,7 +68,7 @@ Mit freundlichen Grüßen,
         </tr>
         {if:transfer.files>1}
         <tr>
-            <td>Transfergröße</td>
+            <td>Dateiübertragungsgröße</td>
             <td>{size:transfer.size}</td>
         </tr>
         {endif}
