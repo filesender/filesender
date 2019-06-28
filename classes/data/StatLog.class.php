@@ -358,6 +358,9 @@ class StatLog extends DBObject
             'size',
             'time_taken',
             'additional_attributes',
+            'browser',
+            'os',
+            'is_encrypted',
         ))) {
             return $this->$property;
         }
