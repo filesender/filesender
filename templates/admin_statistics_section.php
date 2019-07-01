@@ -159,14 +159,18 @@ echo '<table class="list storage_usage_blocks">';
 echo '<thead><tr><th>Browser</th><th>OS</th><th>Encrypted</th><th>Average Speed</th><th>Average Speed of &gt;1GB</th><th>Min Size</th><th>Average Size</th><th>Max Size</th><th>Transfered</th><th>File Transfers</th><th>Average Transfers per Day</th></tr></thead>';
 foreach($result as $row) {
     echo '<tr>';
-    if ($row['browser_name'] != 'Unknown' && $row['os_name'] != 'Unknown') {
-	echo '<td>'.browser_name_to_html($row['browser_name']).'</td>';
-	echo '<td>'.os_name_to_html($row['os_name']).'</td>';
+    if (empty($row['browser_name'])) {
+        echo '<td colspan="2">';
+        if ((empty($row['browser'])) && (empty($row['os'])))  {
+            echo 'Unknown<br>Unknown<br>';
+        } else {
+            echo $row['browser'].'<br>'.$row['os'].'<br>';
+        }
+        echo $row['additional_attributes'];
+        echo '</td>';
     } else {
-	echo '<td colspan="2">';
-	echo $row['browser'].'<br>'.$row['os'].'<br>';
-	echo $row['additional_attributes'];
-	echo '</td>';
+        echo '<td>'.browser_name_to_html($row['browser_name']).'</td>';
+        echo '<td>'.os_name_to_html($row['os_name']).'</td>';
     }
     echo '<td>'.is_encrypted_to_html($row['is_encrypted']).'</td>';
     echo '<td>'.($row['speed']>0?(Utilities::formatBytes($row['speed']).'/s'):'&nbsp;').'</td>';
