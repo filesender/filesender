@@ -325,13 +325,21 @@
         <?php } ?>
         
         <?php if(!count($transfers)) { ?>
-        <tr>
-            <td colspan="7">{tr:no_transfers}</td>
+	<tr>
+            <?php if($show_guest) { ?>
+                <td colspan="9">{tr:no_transfers}</td>
+            <?php } else { ?>
+                <td colspan="8">{tr:no_transfers}</td>
+            <?php } ?>
         </tr>
         <?php } ?>
 
-        <tr class="pager_bottom_nav">
-            <td colspan="8" class="nextColumn">
+	<tr class="pager_bottom_nav">
+            <?php if($show_guest) { ?>
+                <td colspan="9" class="nextColumn">
+            <?php } else { ?>
+                <td colspan="8" class="nextColumn">
+            <?php } ?>
                 <?php if($haveNext) { ?>
                     <?php echo "<a href='$nextLink'>"; ?>
                     {tr:pager_more}
