@@ -89,7 +89,7 @@ $config['autocomplete'] = 10;					// show previously used email addresses in To:
 $config['autocomplete_max_pool'] = 1;				// how many values are stored in database.  Default is 5.
 $config['autocomplete_min_characters'] = 2;		// Optional.  Default 3.  How many characters to type before autocomplete list is triggered 
 $config['upload_display_bits_per_sec'] = false;		
-
+# $config['theme'] = 'bootstrap';                        // set a theme name that corresponds to the folder name you'll have to create in the templates/ folder and the www/ folder.
 
 
 // --------------------------------------------------

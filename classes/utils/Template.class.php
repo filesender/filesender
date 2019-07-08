@@ -51,21 +51,26 @@ class Template
     {
         // Look in possible locations
         foreach (array('config/templates', 'templates') as $location) {
-            $location = FILESENDER_BASE.'/'.$location;
+            #$location = FILESENDER_BASE.'/'.$location;
+            $defaultlocation = FILESENDER_BASE.'/'.$location;
+            $location = FILESENDER_BASE.'/'.$location.'/'.Config::get('theme');
             if (!is_dir($location)) {
                 continue;
             }
-            
+
             // Return if found
             if (file_exists($location.'/'.$id.'.php')) {
                 return $location.'/'.$id.'.php';
             }
+            elseif(file_exists($defaultlocation.'/'.$id.'.php')) {
+                return $defaultlocation.'/'.$id.'.php';
+            }
         }
-        
+
         // Fail if not found
         throw new TemplateNotFoundException($id);
     }
-    
+
     /**
      * Process a template (catch displayed content)
      *
@@ -82,16 +87,16 @@ class Template
             $addctx = false;
             $id = substr($id, 1);
         }
-        
+
         $important = false;
         if (substr($id, 0, 1) == '!') {
             $important = true;
             $id = substr($id, 1);
         }
-        
+
         // Resolve template file path
         $path = self::resolve($id);
-        
+
         // Lambda renderer to isolate context
         $renderer = function ($path, $vars) {
             foreach ($vars as $k => $v) {
@@ -101,7 +106,7 @@ class Template
             }
             include $path;
         };
-        
+
         // Render
         $exception = null;
         ob_start();
@@ -111,44 +116,44 @@ class Template
             $exception = $e;
         }
         $content = ob_get_clean();
-        
+
         // Translation syntax
         $content = preg_replace_callback('`\{(loc|tr|translate):([^}]+)\}`', function ($m) {
             return (string)Lang::translate($m[2]);
         }, $content);
-        
+
         // Config syntax
         $content = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function ($m) {
             return Utilities::sanitizeOutput(Config::get($m[2]));
         }, $content);
-        
+
         // Image syntax
         $content = preg_replace_callback('`\{(img|image):([^}]+)\}`', function ($m) {
             return Utilities::sanitizeOutput(GUI::path('res/images/'.$m[2]));
         }, $content);
-        
+
         // Path syntax
         $content = preg_replace_callback('`\{(path):([^}]*)\}`', function ($m) {
             return Utilities::sanitizeOutput(GUI::path($m[2]));
         }, $content);
-        
+
         // Add context as a html comment if required
         if ($addctx) {
             $content = "\n".'<!-- template:'.$id.' start -->'."\n".$content."\n".'<!-- template:'.$id.' end -->'."\n";
         }
-        
+
         if ($important && $exception) {
             return (object)array('content' => $content, 'exception' => $exception);
         }
-        
+
         // If rendering threw rethrow
         if ($exception) {
             throw $exception;
         }
-        
+
         return $content;
     }
-    
+
     /**
      * Sanitize data to avoid tag replacement
      *
@@ -161,7 +166,7 @@ class Template
     {
         return str_replace(array('{', '}'), array('&#123;', '&#125;'), $data);
     }
-    
+
     /**
      * Sanitize data to avoid tag replacement.
      *
@@ -190,7 +195,7 @@ class Template
     {
         return self::sanitize(Utilities::sanitizeOutput($data));
     }
-    
+
 
     /**
      * Display a template (catch displayed content)
@@ -203,12 +208,12 @@ class Template
     public static function display($id, $vars = array())
     {
         $content = self::process($id, $vars);
-        
+
         if (is_object($content)) {
             echo $content->content;
             throw $content->exception;
         }
-        
+
         echo $content;
     }
 }
