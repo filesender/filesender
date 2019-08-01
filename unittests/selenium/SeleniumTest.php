@@ -119,7 +119,14 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
                 define('SAUCE_VERIFY_CERTS', true);
             }
         }
-
+        $sauce_host = 'saucelabs.com';
+        if(getenv('SAUCE_HOST')){
+            $sauce_host = getenv('SAUCE_HOST');
+        }        
+        if(!defined('SAUCE_HOST')) {
+            define('SAUCE_HOST', $sauce_host);
+        }
+        
         $this->start_url = Config::get('site_url');
 
         if($this->start_url_path != '') {
