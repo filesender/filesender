@@ -86,10 +86,6 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     {
         require_once('includes/init.php');
 
-        echo "SeleniumTest::__construct(1)\n";
-        echo "SeleniumTest::__construct(1) un  len " . strlen(getenv('SAUCE_USERNAME')) . "\n";
-        echo "SeleniumTest::__construct(1) aka len " . strlen(getenv('SAUCE_ACCESS_KEY')) . "\n";
-        echo "SeleniumTest::__construct(1) akb len " . strlen(Config::get('sauce_access_key')) . "\n";
 
         if(getenv('SAUCE_USERNAME') === false)
         {
@@ -97,13 +93,12 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             if (Config::get('sauce_username') == null || Config::get('sauce_access_key') == null) {
                 die('Sauce credentials not set!');
             }
-            echo "SeleniumTest::__construct() setting uname\n";
-            echo "SeleniumTest::__construct() ak len " . strlen(Config::get('sauce_access_key')) . "\n";
             putenv('SAUCE_USERNAME='.Config::get('sauce_username'));
             putenv('SAUCE_ACCESS_KEY='.Config::get('sauce_access_key'));
 
         }
-        
+
+        // This block allows us to run against sauce 0.18
         if (!defined('SAUCE_USERNAME')) {
             define('SAUCE_USERNAME', getenv('SAUCE_USERNAME'));
         }
@@ -126,6 +121,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         if(!defined('SAUCE_HOST')) {
             define('SAUCE_HOST', $sauce_host);
         }
+
         
         $this->start_url = Config::get('site_url');
 
