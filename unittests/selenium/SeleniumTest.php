@@ -103,6 +103,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             putenv('SAUCE_ACCESS_KEY='.Config::get('sauce_access_key'));
 
         }
+        define('SAUCE_USERNAME', getenv('SAUCE_USERNAME'));
+        define('SAUCE_ACCESS_KEY', getenv('SAUCE_ACCESS_KEY'));
 
         $this->start_url = Config::get('site_url');
 
