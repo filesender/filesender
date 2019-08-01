@@ -85,7 +85,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         require_once('includes/init.php');
-        
+
+        echo "SeleniumTest::__construct()\n";
 
         if(getenv('SAUCE_USERNAME') === false)
         {
@@ -93,6 +94,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             if (Config::get('sauce_username') == null || Config::get('sauce_access_key') == null) {
                 die('Sauce credentials not set!');
             }
+            echo "SeleniumTest::__construct() setting uname\n";
+            echo "SeleniumTest::__construct() ak len " . strlen(Config::get('sauce_access_key')) . "\n";
             putenv('SAUCE_USERNAME='.Config::get('sauce_username'));
             putenv('SAUCE_ACCESS_KEY='.Config::get('sauce_access_key'));
 
