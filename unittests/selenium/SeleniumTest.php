@@ -85,7 +85,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         require_once('includes/init.php');
-        
+
 
         if(getenv('SAUCE_USERNAME') === false)
         {
@@ -98,6 +98,31 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         }
 
+        // This block allows us to run against sauce 0.18
+        if (!defined('SAUCE_USERNAME')) {
+            define('SAUCE_USERNAME', getenv('SAUCE_USERNAME'));
+        }
+        if (!defined('SAUCE_ACCESS_KEY')) {
+            define('SAUCE_ACCESS_KEY', getenv('SAUCE_ACCESS_KEY'));
+        }
+
+        if (!defined('SAUCE_VERIFY_CERTS')) {
+            if(getenv('SAUCE_DONT_VERIFY_CERTS')) {
+                $env_sauce_dont_verify_certify = getenv('SAUCE_DONT_VERIFY_CERTS');
+                define('SAUCE_VERIFY_CERTS', empty($env_sauce_dont_verify_certify));
+            } else {
+                define('SAUCE_VERIFY_CERTS', true);
+            }
+        }
+        $sauce_host = 'saucelabs.com';
+        if(getenv('SAUCE_HOST')){
+            $sauce_host = getenv('SAUCE_HOST');
+        }        
+        if(!defined('SAUCE_HOST')) {
+            define('SAUCE_HOST', $sauce_host);
+        }
+
+        
         $this->start_url = Config::get('site_url');
 
         if($this->start_url_path != '') {
