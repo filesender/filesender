@@ -66,6 +66,8 @@ before_script:
 #- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
+- echo "... TestCase.php ..."
+- sudo cat /home/travis/build/filesender/filesender/vendor/sauce/sausage/src/Sauce/Sausage/TestCase.php
 - sudo service apache2 restart
 #- curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/*.log
 # stop the database we are not planning to use
