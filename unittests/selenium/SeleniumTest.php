@@ -103,8 +103,20 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             putenv('SAUCE_ACCESS_KEY='.Config::get('sauce_access_key'));
 
         }
-        define('SAUCE_USERNAME', getenv('SAUCE_USERNAME'));
-        define('SAUCE_ACCESS_KEY', getenv('SAUCE_ACCESS_KEY'));
+        
+        if (!defined('SAUCE_USERNAME')) {
+            define('SAUCE_USERNAME', getenv('SAUCE_USERNAME'));
+        }
+        if (!defined('SAUCE_ACCESS_KEY')) {
+            define('SAUCE_ACCESS_KEY', getenv('SAUCE_ACCESS_KEY'));
+        }
+                
+        if(getenv('SAUCE_DONT_VERIFY_CERTS')) {
+            $env_sauce_dont_verify_certify = getenv('SAUCE_DONT_VERIFY_CERTS');
+            define('SAUCE_VERIFY_CERTS', empty($env_sauce_dont_verify_certify));
+        } else {
+            define('SAUCE_VERIFY_CERTS', true);
+        }
 
         $this->start_url = Config::get('site_url');
 
