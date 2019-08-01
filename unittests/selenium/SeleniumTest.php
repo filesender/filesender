@@ -86,7 +86,10 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     {
         require_once('includes/init.php');
 
-        echo "SeleniumTest::__construct()\n";
+        echo "SeleniumTest::__construct(1)\n";
+        echo "SeleniumTest::__construct(1) un  len " . strlen(getenv('SAUCE_USERNAME')) . "\n";
+        echo "SeleniumTest::__construct(1) aka len " . strlen(getenv('SAUCE_ACCESS_KEY')) . "\n";
+        echo "SeleniumTest::__construct(1) akb len " . strlen(Config::get('sauce_access_key')) . "\n";
 
         if(getenv('SAUCE_USERNAME') === false)
         {
