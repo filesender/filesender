@@ -135,7 +135,7 @@ class Archiver
         $outstream = fopen($tfn,'w');
         $opt['send_http_headers'] = false;
         $contentsz = 0;
-        $archive = new \Barracuda\ArchiveStream\TarArchive(null,$opts,$filename,$outstream);
+        $archive = new \Barracuda\ArchiveStream\TarArchive($filename . ".tar",$opts,$filename,$outstream);
         
         // collect info for each file
         foreach ($this->files as $k => $data) {

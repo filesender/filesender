@@ -308,7 +308,7 @@ class User extends DBObject
         $sql = "select u.* from "
              . User::getDBTable() . " u,"
              . " " . Authentication::getDBTable()
-             . " a where a.id = u.authid and a.saml_user_identification_uid like :match ESCAPE '\\' ";
+             . " a where a.id = u.authid and a.saml_user_identification_uid like :match ESCAPE '\\\\' ";
         $statement = DBI::prepare($sql);
         $placeholders =  array(':match' => '%'.$match.'%');
         $statement->execute($placeholders);
