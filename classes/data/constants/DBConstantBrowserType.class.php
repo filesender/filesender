@@ -84,27 +84,27 @@ class DBConstantBrowserType extends DBConstant
     static function currentBrowserToEnum()
     {
         $b = $_SERVER['HTTP_USER_AGENT'];
-        if( preg_match( '/Firefox/', $b )) {
+        if( preg_match( '/Firefox/i', $b )) {
             $v = self::T_FIREFOX;
-        } elseif ( preg_match( '/edge/', $b )) {
+        } elseif ( preg_match( '/edge/i', $b )) {
             $v = self::T_EDGE;
-        } elseif ( preg_match( '/MSIE/', $b )) {
+        } elseif ( preg_match( '/MSIE/i', $b )) {
             $v = self::T_IE;
-        } elseif ( preg_match( '/Trident/', $b )) {
+        } elseif ( preg_match( '/Trident/i', $b )) {
             $v = self::T_IE;
-        } elseif ( preg_match( '/Vivaldi/', $b )) {
+        } elseif ( preg_match( '/Vivaldi/i', $b )) {
             $v = self::T_VIVALDI;
-        } elseif ( preg_match( '/Opera/', $b )) {
+        } elseif ( preg_match( '/Opera/i', $b )) {
             $v = self::T_OPERA;
-        } elseif ( preg_match( '/OPR/', $b )) {
+        } elseif ( preg_match( '/OPR/i', $b )) {
             $v = self::T_OPERA;
-        } elseif ( preg_match( '/Chrome/', $b )) {
+        } elseif ( preg_match( '/Chrome/i', $b )) {
             $v = self::T_CHROME;
-        } elseif ( preg_match( '/CriOS/', $b )) {
+        } elseif ( preg_match( '/CriOS/i', $b )) {
             $v = self::T_CHROME;
-        } elseif ( preg_match( '/Safari/', $b )) {
+        } elseif ( preg_match( '/Safari/i', $b )) {
             $v = self::T_SAFARI;
-        } elseif ( preg_match( '/Outlook/', $b )) {
+        } elseif ( preg_match( '/Outlook/i', $b )) {
             $v = self::T_OUTLOOK;
         } else {
             $v = self::T_UNKNOWN;
