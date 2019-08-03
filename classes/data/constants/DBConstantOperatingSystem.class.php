@@ -108,31 +108,31 @@ class DBConstantOperatingSystem extends DBConstant
     static function currentUserOperatingSystemEnum()
     {
         $b = $_SERVER['HTTP_USER_AGENT'];
-        if( preg_match( '/iPad/', $b )) {
+        if( preg_match( '/iPad/i', $b )) {
             $v = self::T_IPAD;
-        } elseif ( preg_match( '/iPod/', $b )) {
+        } elseif ( preg_match( '/iPod/i', $b )) {
             $v = self::T_IPOD;
-        } elseif ( preg_match( '/iPhone/', $b )) {
+        } elseif ( preg_match( '/iPhone/i', $b )) {
             $v = self::T_IPHONE;
-        } elseif ( preg_match( '/imac/', $b )) {
+        } elseif ( preg_match( '/imac/i', $b )) {
             $v = self::T_MAC;
-        } elseif ( preg_match( '/Mac.*OS/', $b )) {
+        } elseif ( preg_match( '/Mac.*OS/i', $b )) {
             $v = self::T_OSX;
-        } elseif ( preg_match( '/android/', $b )) {
+        } elseif ( preg_match( '/android/i', $b )) {
             $v = self::T_ANDROID;
-        } elseif ( preg_match( '/linux/', $b )) {
+        } elseif ( preg_match( '/linux/i', $b )) {
             $v = self::T_LINUX;
-        } elseif ( preg_match( '/Nokia/', $b )) {
+        } elseif ( preg_match( '/Nokia/i', $b )) {
             $v = self::T_NOKIA;
-        } elseif ( preg_match( '/(Win|win)/', $b )) {
+        } elseif ( preg_match( '/Win/i', $b )) {
             $v = self::T_WINOTHER;
-            if ( preg_match( '/NT 10.0\)/', $b )) {
+            if ( preg_match( '/NT 10.0/i', $b )) {
                 $v = self::T_WIN10;
-            } elseif ( preg_match( '/NT 6.3\)/', $b )) {
+            } elseif ( preg_match( '/NT 6.3/i', $b )) {
                 $v = self::T_WIN81;
-            } elseif ( preg_match( '/NT 6.2\)/', $b )) {
+            } elseif ( preg_match( '/NT 6.2/i', $b )) {
                 $v = self::T_WIN80;
-            } elseif ( preg_match( '/NT 6.1\)/', $b )) {
+            } elseif ( preg_match( '/NT 6.1/i', $b )) {
                 $v = self::T_WIN70;
             }
         } else {
