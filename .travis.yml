@@ -66,6 +66,9 @@ before_script:
 #- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
+- echo "... making sure sauce connect doesn't redefine ..."
+- sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" /home/travis/build/filesender/filesender/vendor/sauce/sausage/src/Sauce/Sausage/SauceAPI.php
+- sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" /home/travis/build/filesender/filesender/vendor/sauce/sausage/src/Sauce/Sausage/SauceConfig.php
 - sudo service apache2 restart
 #- curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/*.log
 # stop the database we are not planning to use
