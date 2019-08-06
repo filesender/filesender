@@ -80,6 +80,7 @@ A note about colours;
 
 ## General UI
 
+* [theme](#theme)
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
@@ -696,6 +697,17 @@ User language detection is done in the following order:
 * __comment:__ <span style="background-color:orange">this parameter will get a different name</span>
 
 ## General UI
+
+### theme
+
+* __description:__ This allows you to select a custom theme by creating a subdirectory inside the normal template directory and naming it here.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.8
+* __comment:__ You can not select absolute or relative paths using this parameter. Your theme directory must exist inside the existing template directory.
+
+
 
 ### autocomplete
 

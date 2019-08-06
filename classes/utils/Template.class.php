@@ -40,6 +40,15 @@ if (!defined('FILESENDER_BASE')) {
  */
 class Template
 {
+    private static function resolve_addPossibleLocation(&$possibleLocations,$rpath)
+    {
+        $base = FILESENDER_BASE;
+        $themeName = Config::get('theme');
+        if(strlen($themeName)) {
+            array_push( $possibleLocations, $base.$rpath.'/'.$themeName );
+        }
+        array_push( $possibleLocations, $base.$rpath );
+    }
     /**
      * Resolve template id to path
      *
@@ -49,16 +58,22 @@ class Template
      */
     private static function resolve($id)
     {
+        // Create a list of possible locations
+        $possibleLocations = array();
+        self::resolve_addPossibleLocation( $possibleLocations, '/'.'config/templates' );
+        self::resolve_addPossibleLocation( $possibleLocations, '/'.'templates' );
+
         // Look in possible locations
-        foreach (array('config/templates', 'templates') as $location) {
-            $location = FILESENDER_BASE.'/'.$location;
+        foreach ($possibleLocations as $location) {
+
             if (!is_dir($location)) {
                 continue;
             }
             
             // Return if found
-            if (file_exists($location.'/'.$id.'.php')) {
-                return $location.'/'.$id.'.php';
+            $fullPath = $location.'/'.$id.'.php';
+            if (file_exists($fullPath)) {
+                return $fullPath;
             }
         }
         
