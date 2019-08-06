@@ -291,7 +291,12 @@ class Config
         if ((self::get('upload_chunk_size')+$crypt_padding_size) != self::get('upload_crypted_chunk_size')) {
             throw new ConfigBadParameterException('You must set upload_crypted_chunk_size to upload_chunk_size + '.$crypt_padding_size.'.');
         }
-        
+
+        $themeName = self::get('theme');
+        if( strlen($themeName) && preg_match('@[./]@',$themeName)) {
+            throw new ConfigBadParameterException('the theme config can not contain / or . characters');
+        }
+            
         // verify classes are happy
         Guest::validateConfig();
         ClientLog::validateConfig();
