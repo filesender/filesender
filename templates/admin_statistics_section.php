@@ -159,16 +159,36 @@ echo '<table class="list storage_usage_blocks">';
 echo '<thead><tr><th>Browser</th><th>OS</th><th>Encrypted</th><th>Average Speed</th><th>Average Speed of &gt;1GB</th><th>Min Size</th><th>Average Size</th><th>Max Size</th><th>Transfered</th><th>File Transfers</th><th>Average Transfers per Day</th></tr></thead>';
 foreach($result as $row) {
     echo '<tr>';
-    if ($row['browser_name'] != 'Unknown' && $row['os_name'] != 'Unknown') {
-	echo '<td>'.browser_name_to_html($row['browser_name']).'</td>';
-	echo '<td>'.os_name_to_html($row['os_name']).'</td>';
+    if (empty($row['browser_name'])) {
+        echo '<td>';
+        if ((empty($row['browser'])))  {
+            echo 'Unknown';
+        } else {
+            echo $row['browser'];
+        }
+        echo '</td>';
+        echo '<td>';
+        if (empty($row['os']))  {
+            echo 'Unknown';
+        } else {
+            echo $row['os'];
+        }
+        echo '</td>';
+        echo '<td>';
+        if ($row['additional_attributes'] === '{"encryption":true}')  {
+            echo is_encrypted_to_html(1);
+        } 
+        elseif ($row['additional_attributes'] === '{"encryption":false}') {
+            echo is_encrypted_to_html(0);
+        } else {
+            echo $row['additional_attributes'];
+        }
+        echo '</td>';
     } else {
-	echo '<td colspan="2">';
-	echo $row['browser'].'<br>'.$row['os'].'<br>';
-	echo $row['additional_attributes'];
-	echo '</td>';
+        echo '<td>'.browser_name_to_html($row['browser_name']).'</td>';
+        echo '<td>'.os_name_to_html($row['os_name']).'</td>';
+        echo '<td>'.is_encrypted_to_html($row['is_encrypted']).'</td>';
     }
-    echo '<td>'.is_encrypted_to_html($row['is_encrypted']).'</td>';
     echo '<td>'.($row['speed']>0?(Utilities::formatBytes($row['speed']).'/s'):'&nbsp;').'</td>';
     echo '<td>'.($row['gspeed']>0?(Utilities::formatBytes($row['gspeed']).'/s'):'&nbsp;').'</td>';
     echo '<td>'.($row['minsize']>0?Utilities::formatBytes($row['minsize']):'&nbsp;').'</td>';

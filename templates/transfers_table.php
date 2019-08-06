@@ -11,6 +11,13 @@
     $haveNext = 0;
     $havePrev = 0;
 
+    // This allows us to key informational displays to a large
+    // part of the row.
+    $maxColSpan = 8;
+    if($show_guest) {
+        $maxColSpan = 9;
+    }
+
     if( count($transfers) > $limit ) {
         $haveNext = 1;
         $transfers = array_slice($transfers,0,$limit);
@@ -326,12 +333,12 @@
         
         <?php if(!count($transfers)) { ?>
         <tr>
-            <td colspan="7">{tr:no_transfers}</td>
+            <td colspan="<?php echo $maxColSpan ?>">{tr:no_transfers}</td>
         </tr>
         <?php } ?>
 
         <tr class="pager_bottom_nav">
-            <td colspan="8" class="nextColumn">
+            <td colspan="<?php echo $maxColSpan ?>" class="nextColumn">
                 <?php if($haveNext) { ?>
                     <?php echo "<a href='$nextLink'>"; ?>
                     {tr:pager_more}

@@ -130,6 +130,9 @@ class StatLog extends DBObject
     protected $size = null;
     protected $time_taken = 0;
     protected $additional_attributes = null;
+    protected $browser = 0;
+    protected $os = 0;
+    protected $is_encrypted = 0;
     
     
     /**
@@ -358,6 +361,9 @@ class StatLog extends DBObject
             'size',
             'time_taken',
             'additional_attributes',
+            'browser',
+            'os',
+            'is_encrypted',
         ))) {
             return $this->$property;
         }
