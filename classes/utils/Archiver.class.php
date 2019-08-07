@@ -133,7 +133,9 @@ class Archiver
         // work out the content length
         $tfn = tempnam( Filesystem::getTempDirectory(), 'szf');
         $outstream = fopen($tfn,'w');
-        $opt['send_http_headers'] = false;
+        // we send the headers with the main TarArchive not the
+        // one that just calculates the content length.
+        $opts['send_http_headers'] = false;
         $contentsz = 0;
         $archive = new \Barracuda\ArchiveStream\TarArchive($filename . ".tar",$opts,$filename,$outstream);
         
@@ -168,7 +170,7 @@ class Archiver
      *
      * <b>The files in the archive are not compressed.</b>
      */
-    public function streamArchive($recipient = null, $withHeaders = true )
+    public function streamArchive( $recipient = null )
     {
         $fuid = substr(hash('sha1', implode('+', array_keys($this->files))), -8);
         $file = reset($this->files);
@@ -184,18 +186,16 @@ class Archiver
         //
         if( $this->archive_format == 'tar' ) {
             
-            if (!$withHeaders) {
-                $filename = null;
-            }
-
             $opts = array();
-            $opts['send_http_headers'] = $withHeaders;
+            // we send the headers with the main TarArchive not the
+            // one that just calculates the content length.
+            $opts['send_http_headers'] = false; 
             $opts['content_type'] = 'application/x-tar';
             
             // work out the content length
             $sz = $this->getTarSize($filename,$opts);
             header("Content-Length: $sz");
-            $opt['send_http_headers'] = true;
+            $opts['send_http_headers'] = true;
 
             // do the work for real now and stream things over to the client
             $outstream = fopen('php://output','w');
@@ -223,9 +223,7 @@ class Archiver
             $zip = new ZipStreamer\ZipStreamer();
             $filename .= '.zip';
             
-            if ($withHeaders) {
-                $zip->sendHeaders($filename, "application/octet-stream");
-            }
+            $zip->sendHeaders($filename, "application/octet-stream");
             
             // send each file
             foreach ($this->files as $k => $data) {
