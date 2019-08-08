@@ -337,16 +337,6 @@ class RestEndpointTransfer extends RestEndpoint
         
         $user = Auth::user();
 
-        // Did they try to be a wise guy with the aup checkbox?
-        if(Config::get('aup_enabled')) {
-            // Raw data
-            $data = $this->request->input;
-            if( $data->aup_checked != true ) {
-                Logger::warn("nefarious activity suspected: A user with id " . $user->id
-                           . " has sent a request without AUP data checked and is likely doing something bad.");
-                throw new RestBadParameterException('aup_checked');
-            }
-        }
         
         // Check parameters
         if ($id) {
@@ -357,8 +347,30 @@ class RestEndpointTransfer extends RestEndpoint
                 throw new RestBadParameterException('add');
             }
         }
-        
+
+        $creating_transfer = true;
         if (is_numeric($id)) {
+            $creating_transfer = false;
+        }
+
+        // Did they try to be a wise guy with the aup checkbox?
+        if(Config::get('aup_enabled')) {
+            // Raw data
+            $data = $this->request->input;
+
+            // We only care about AUP when creating a new transfer
+            // modifications can happen later because the user has
+            // had to consent in order for the transfer to exist.
+            if ($creating_transfer) {
+                if( $data->aup_checked != true ) {
+                    Logger::warn("nefarious activity suspected: A user with id " . $user->id
+                               . " has sent a request without AUP data checked and is likely doing something bad.");
+                    throw new RestBadParameterException('aup_checked');
+                }
+            }
+        }
+        
+        if (!$creating_transfer) {
             // Add data to a specific transfer
             $transfer = Transfer::fromId($id);
             
