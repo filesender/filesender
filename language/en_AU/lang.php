@@ -505,3 +505,5 @@ $lang['you_can_report_exception_by_email'] = 'You can report this error by email
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['archive_tar_download'] = 'Download as single (.tar) file';
 $lang['invalid_file_name'] = 'Invalid file name';
+$lang['turning_on_guests_get_a_link_disables_can_only_send_to_me'] = 'Allowing guests to get a link means that can only send to me has been disabled';
+

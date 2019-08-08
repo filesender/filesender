@@ -1523,3 +1523,6 @@ div.not_displayed {
 	z-index: -1;
 }
 
+.get_a_link_lock {
+    background: #eeeeff;
+}

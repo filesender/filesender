@@ -336,6 +336,7 @@ $(function() {
         if( checked ) {
             onlyToMe.prop('checked', false );
             onlyToMe.prop('disabled', true);
+            filesender.ui.notify('info',lang.tr('turning_on_guests_get_a_link_disables_can_only_send_to_me'));
         } else {
             onlyToMe.prop('disabled', false);
         }
@@ -344,6 +345,9 @@ $(function() {
         get_a_link_updates();
     });
     get_a_link_updates();
+
+    
+    
     
     // Bind advanced options display toggle
     send_voucher.find('.toggle_advanced_options').on('click', function() {

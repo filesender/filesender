@@ -6,6 +6,7 @@ $new_guests_can_only_send_to_creator = false;
 Guest::forcedOptions();
 foreach (Guest::allOptions() as $name => $dfn) {
     if( $name == 'can_only_send_to_me' ) {
+        $new_guests_can_only_send_to_creator_default = $dfn['default'];
         if (in_array('available', $dfn) && !$dfn['available']) {
             if (in_array('default', $dfn)) {
                 $new_guests_can_only_send_to_creator = $dfn['default'];
@@ -65,16 +66,20 @@ foreach (Guest::allOptions() as $name => $dfn) {
 
                 <td class="box">
                     <div class="fieldcontainer">
+
                         <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                         
                         <input id="expires" name="expires" type="text" autocomplete="off"
                                title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_guest_days_valid'))) ?>"
                                data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
                         />
+
                     </div>
                     
                     <?php
-                        $displayoption = function($name, $cfg, $transfer = false) use ($new_guests_can_only_send_to_creator)
+                    $displayoption = function($name, $cfg, $transfer = false)
+                    use ( $new_guests_can_only_send_to_creator,
+                          $new_guests_can_only_send_to_creator_default )
                         {
                             // don't show the option for get_a_link if they can't use it.
                             if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
@@ -89,6 +94,9 @@ foreach (Guest::allOptions() as $name => $dfn) {
                                     $default = Auth::user()->defaultGuestOptionState($name);
                                 }
                             }
+                            if( $name == 'get_a_link' && $new_guests_can_only_send_to_creator_default ) {
+                                $default = false;
+                            }
                             $checked = $default ? 'checked="checked"' : '';
                             $extraDivAttrs = '';
                             $hidden = '';
@@ -100,14 +108,19 @@ foreach (Guest::allOptions() as $name => $dfn) {
                                 echo '</div>';
                                 
                             } else {
-                                echo '<div class="fieldcontainer" '. $extraDivAttrs .'>';
+                                $lockClassLabel = '';
+                                $lockClass = '';
+                                if($name == 'get_a_link' || $name == 'can_only_send_to_me') {
+                                    $lockClass = 'get_a_link_lock';
+                                }
+                                echo '<div class="fieldcontainer '.$lockClass.'" '. $extraDivAttrs .'>';
                                 echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' />';
-                                echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
+                                echo '  <label for="'.$name.'" class="'.$lockClassLabel.'">'.Lang::tr($name).'</label>';
                                 echo '</div>';
                             }
                         };
                     ?>
-                    
+
                     <div class="guest_options options_box">
                         <h3>{tr:guest_options}</h3>
                         
