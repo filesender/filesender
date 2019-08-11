@@ -768,10 +768,10 @@ User language detection is done in the following order:
 
 
 ### upload_considered_too_slow_if_no_progress_for_seconds
-* __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover. Note that this relies on the browser to report progress messages for ongoing uploads which might only happen every few seconds if a single request is active and maybe for terasender_worker_count=5 you might like to set this to 20 or 30 to avoid thinking a chunk is stalled when it is not.
+* __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover. Note that this relies on the browser to report progress messages for ongoing uploads which might only happen every few seconds if a single request is active and maybe for terasender_worker_count=5 you might like to set this to 20 or 30 to avoid thinking a chunk is stalled when it is not. The implementation currently relies on the [XMLHttpRequest onprogress event](https://xhr.spec.whatwg.org/#event-xhr-progress).
 * __mandatory:__ no
 * __type:__ int
-* __default:__ 0
+* __default:__ 30
 * __available:__ since version 2.0
 
 
@@ -1043,7 +1043,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __description:__ Number of times to automatically resume an upload if a major error has happened. Set this to 0 to disable automatic resume.
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ 10
+* __default:__ 50
 * __available:__ since version 2.1
 * __comment:__ 
 
@@ -1052,9 +1052,10 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __description:__ Delay in seconds to wait after a major failure before an automatic resume is performed.
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ 360
+* __default:__ 10
 * __available:__ since version 2.1
 * __comment:__ 
+
 
 
 ### transfer_options_not_available_to_export_to_client

@@ -118,12 +118,21 @@ if(Auth::isGuest()) {
 
             <div class="uploading_actions" hidden="true">
                 <div class="msg">
-                    <div class="auto_resume_timer_top">
-                        <div class="auto_resume_timer">
-                        </div>
-                    </div>
+                    <table class="resumetable">
+                        <tr><td>
+                            <div class="auto_resume_timer_top">
+                                <div class="auto_resume_timer">
+                                </div>
+                            </div>
+                        </td></tr>
+                        <tr><td>
+                            <div class="seconds_since_data_sent" id="seconds_since_data_sent"></div>
+                        </td></tr>
+                        <tr><td>
+                            <div class="seconds_since_data_sent_info" id="seconds_since_data_sent_info"></div>
+                        </td></tr>
+                    </table>
                 </div>
-                
                 <div class="stats">
                     <div class="uploaded">{tr:uploaded} : <span class="value"></span></div>
                     <div class="average_speed">{tr:average_speed} : <span class="value"></span></div>
@@ -132,7 +141,7 @@ if(Auth::isGuest()) {
             
         </div>
         
-        <table class="two_columns">
+        <table class="two_columns" id="upload_options_table">
             <tr>
                 <td class="box">
                     <div class="fieldcontainer">
@@ -357,6 +366,9 @@ if(Auth::isGuest()) {
             </a>
             <a href="#" class="stop not_displayed">
                 <span class="fa fa-stop fa-lg"></span> {tr:stop}
+            </a>
+            <a href="#" class="reconnect not_displayed">
+                <span class="fa fa-cloud-upload fa-lg"></span> {tr:reconnect_and_continue}
             </a>
         </div>
     </form>

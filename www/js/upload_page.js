@@ -30,6 +30,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// This is a duplicate, it should be moved to a common.js file
+function isIE11()
+{
+    if(navigator.userAgent.indexOf('MSIE')!==-1
+       || navigator.appVersion.indexOf('Trident/') > -1)
+    {
+        return true;
+    }
+    return false;
+}
+
+
 function delayAndCallOnlyOnce(callback, ms) {
     var timer = 0;
     return function() {
@@ -39,6 +51,32 @@ function delayAndCallOnlyOnce(callback, ms) {
             callback.apply(context, args);
         }, ms || 0);
     };
+}
+
+/**
+ * apply a 'bad' class to the obj if b==true
+ * the useExplicitGoodClass can be set to true and a 'good' css class 
+ * will be added to explicitly indicate success. Otherwise all good/bad
+ * etc classes are removed when b==false.
+ */
+function applyBadClass( obj, b, useExplicitGoodClass ) {
+    if( b ) {
+        obj.removeClass('good');
+        obj.removeClass('middle');
+        obj.removeClass('slow');
+        obj.removeClass('paused');
+        obj.addClass('bad');
+    } else {
+        obj.removeClass('middle');
+        obj.removeClass('slow');
+        obj.removeClass('bad');
+        obj.removeClass('paused');
+        if( useExplicitGoodClass ) {
+            obj.addClass('good');
+        } else {
+            obj.removeClass('good');
+        }
+    }
 }
 
 /**
@@ -239,9 +277,11 @@ filesender.ui.files = {
     
     update_crust_meter_for_worker: function(file,idx,v,b) {
 
+        var vd = -1;
+        
         var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + idx);
         if( crust_indicator ) {
-            var vd = v / 1000;
+            vd = v / 1000;
             if( v == -1 ) {
                 crust_indicator.find('.crustage').text( "" );
             } else {
@@ -249,46 +289,9 @@ filesender.ui.files = {
             }
 
             crust_indicator.find('.crustbytes').text( '' );
-            if( b ) {
-                crust_indicator.removeClass('good');
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('slow');
-                crust_indicator.removeClass('paused');
-                crust_indicator.addClass('bad');
-            } else {
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('slow');
-                crust_indicator.removeClass('bad');
-                crust_indicator.removeClass('paused');
-                crust_indicator.addClass('good');
-            }
-            
-            // filesender.config.upload_chunk_size [ def = 5 * 1024 * 1024 ]
-/*            
-            var baseline_upload_bps = 20 * 1024 * 1024;
-            var cutoff = filesender.config.upload_chunk_size / baseline_upload_bps * 1000;
-            if( v < cutoff ) {
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('slow');
-                crust_indicator.removeClass('bad');
-                crust_indicator.addClass('good');
-            } else if( v < (cutoff*1.1) ) {
-                crust_indicator.removeClass('good');
-                crust_indicator.removeClass('slow');
-                crust_indicator.removeClass('bad');
-                crust_indicator.addClass('middle');
-            } else if( v < (cutoff*1.2) ) {
-                crust_indicator.removeClass('good');
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('bad');
-                crust_indicator.addClass('slow');
-            } else {
-                crust_indicator.removeClass('good');
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('slow');
-                crust_indicator.addClass('bad');
-            }
-*/
+            applyBadClass( crust_indicator, b, true );
+
+            return vd;
         }
     },
 
@@ -369,7 +372,9 @@ filesender.ui.files = {
             filesender.ui.log('WARNING ts worker tracking stats are too few' );
             return;
         }
-        
+
+        var anyOffending = false;
+        var maxV = 0;
         for( i=0; i < imax; i++ ) {
             v = -1;
             if( i < durations.length ) {
@@ -380,7 +385,15 @@ filesender.ui.files = {
                 b = offending[i];
             }
             filesender.ui.files.update_crust_meter_for_worker( file, i, v, b );
+
+            // calculate stats across all workers
+            if( v > -1 ) {
+                maxV = Math.max( v, maxV );
+            }
+            anyOffending = anyOffending || b;
         }
+        
+        filesender.ui.setMilliSecondsSinceDataWasLastSent( maxV, anyOffending );
     },
     
     // Update progress bar, run in transfer context
@@ -667,27 +680,36 @@ filesender.ui.evalUploadEnabled = function() {
 filesender.ui.automatic_resume_retries = 0;
 filesender.ui.automatic_resume_timer = 0;
 
+// the timet that an upload was restarted or 0
+filesender.ui.uploading_again_started_at_time = 0;
+// touch uploading_again_started_at_time
+filesender.ui.uploading_again_started_at_time_touch = function() {
+    var t = (new Date()).getTime();
+    filesender.ui.uploading_again_started_at_time = t;
+}
+
 /**
- * Report and possibly resume the upload
+ * Handy for functions this returns the number of seconds since 
+ * filesender.ui.uploading_again_started_at_time
+ * to allow functions to only timeout after some grace time.
  */
-filesender.ui.retryingErrorHandler = function(error,callback) {
-
-    var msg = lang.tr(error.message);
-    msg += " retry attempt " + filesender.ui.automatic_resume_retries;
-    if(error.details) {
-        msg += ' details: ';
-        $.each(error.details, function(k, v) {
-            if(isNaN(k)) v = lang.tr(k) + ': ' + v;
-            msg += " " + v;
-        });
-    }
-
-    filesender.ui.automatic_resume_retries++;
-    if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
-        console.log("The user has run out of automatic retries so we are going to report this as a fatal error");
-        filesender.ui.errorOriginal( error, callback );
-        return;
-    }
+filesender.ui.uploading_again_started_at_time_diff_to_now = function() {
+    var t = (new Date()).getTime();
+    return (t - filesender.ui.uploading_again_started_at_time)/1000;
+}
+/**
+ * Call here if you are resuming an upload so that the auto resume timeouts
+ * can be reset so a slow start of an upload does not trigger an auto
+ * resume too.
+ */
+filesender.ui.resumingUpload = function() {
+    filesender.ui.cancelAutomaticResume();
+    filesender.ui.uploading_again_started_at_time_touch();
+}
+filesender.ui.resumeScheduled = false;
+filesender.ui.scheduleAutomaticResume = function(msg) {
+    
+    filesender.ui.resumeScheduled = true;
     filesender.ui.uploadLogPrepend(msg);
     filesender.ui.transfer.pause();
 
@@ -705,25 +727,59 @@ filesender.ui.retryingErrorHandler = function(error,callback) {
     filesender.ui.automatic_resume_timer =
         window.setTimeout(
             function() {
+                window.clearTimeout(filesender.ui.automatic_resume_timer_countdown);
+                filesender.ui.automatic_resume_timer_countdown = 0;
+                
                 filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
                 filesender.ui.nodes.buttons.resume.addClass('not_displayed');
                 filesender.ui.automatic_resume_timer = 0;
                 filesender.ui.cancelAutomaticResume();
+                filesender.ui.uploading_again_started_at_time_touch();
+                console.log('scheduleAutomaticResume(calling retry) ' + msg );
                 filesender.ui.transfer.retry(true);
-                
+                filesender.ui.resumeScheduled = false;
             },
             filesender.config.automatic_resume_delay_to_resume * 1000
         );
     filesender.ui.automatic_resume_timer_seconds = filesender.config.automatic_resume_delay_to_resume+1;
     var countDownFunc = function() {
         filesender.ui.automatic_resume_timer_seconds--;
-        filesender.config.automatic_resume_timer_seconds = filesender.ui.automatic_resume_timer_seconds;
-        filesender.ui.nodes.auto_resume_timer.text(lang.tr('auto_resume_timer_seconds'));
+        filesender.ui.nodes.auto_resume_timer.text(
+            lang.tr('auto_resume_timer_seconds')
+                .r({seconds: filesender.ui.automatic_resume_timer_seconds}).out());
+        
     }
     countDownFunc();
     filesender.ui.automatic_resume_timer_countdown = window.setInterval( countDownFunc, 1000 );
     filesender.ui.nodes.auto_resume_timer_top.show();
     
+}
+
+/**
+ * Report and possibly resume the upload
+ */
+filesender.ui.retryingErrorHandler = function(error,callback) {
+
+    var msg = lang.tr(error.message).out().trim();
+    msg += '. ';
+    msg += lang.tr('retry_attempt_x')
+                .r({x: filesender.ui.automatic_resume_retries}).out();
+    if(error.details) {
+        msg += ' details: ';
+        $.each(error.details, function(k, v) {
+            if(isNaN(k)) v = lang.tr(k) + ': ' + v;
+            msg += " " + v;
+        });
+    }
+
+    filesender.ui.automatic_resume_retries++;
+    if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
+        console.log("The user has run out of automatic retries so we are going to report this as a fatal error");
+        filesender.ui.errorOriginal( error, callback );
+        return;
+    }
+
+    filesender.ui.scheduleAutomaticResume( msg );
 }
 
 filesender.ui.cancelAutomaticResume = function() {
@@ -906,7 +962,13 @@ filesender.ui.startUpload = function() {
 
     filesender.ui.nodes.files_actions.hide();
     filesender.ui.nodes.uploading_actions.show();
+    filesender.ui.nodes.uploading_actions_msg.show();
+    filesender.ui.nodes.auto_resume_timer.text(
+        lang.tr('auto_resume_timer_seconds')
+            .r({seconds: 0}).out());
     
+    filesender.ui.nodes.upload_options_table.hide();
+
     filesender.ui.nodes.stats.number_of_files.hide();
     filesender.ui.nodes.stats.size.hide();
     filesender.ui.nodes.stats.uploaded.show();
@@ -922,13 +984,27 @@ filesender.ui.startUpload = function() {
     return this.transfer.start(errorHandler);
 };
 
-filesender.ui.uploadLogPrepend = function( msg, dt ) {
-//    msg = lang.tr(msg);
+filesender.ui.uploadLogPrependLastMessageWasOK = true;
+filesender.ui.uploadLogPrependRAW = function( msg, dt ) {
     var l = filesender.ui.nodes.files.uploadlog.find('.tpl').clone().removeClass('tpl').addClass('log');
     var d = new Date();
     l.find('.date').text( d.toLocaleString() );
     l.find('.message').text(msg);
     l.prependTo(filesender.ui.nodes.files.uploadlog.find('tbody'));
+}
+filesender.ui.uploadLogPrepend = function( msg, dt ) {
+    filesender.ui.uploadLogPrependLastMessageWasOK = false;
+    filesender.ui.uploadLogPrependRAW( msg, dt );
+}
+filesender.ui.uploadLogAddOKIfNotLast = function() {
+    if( !filesender.ui.uploadLogPrependLastMessageWasOK ) {
+        filesender.ui.uploadLogPrependLastMessageWasOK = true;
+        filesender.ui.uploadLogPrependRAW( lang.tr('upload_progressing_again'), 0 );
+    }
+}
+filesender.ui.uploadLogStarting = function() {
+    filesender.ui.uploadLogPrependLastMessageWasOK = true;
+    filesender.ui.uploadLogPrependRAW( lang.tr('upload_started'), 0 );
 }
 
 
@@ -940,8 +1016,55 @@ filesender.ui.switchToUloadingPageConfiguration = function() {
 
     if( filesender.config.automatic_resume_number_of_retries ) {
         filesender.ui.nodes.files.uploadlogtop.show();
-        filesender.ui.uploadLogPrepend(lang.tr("upload_started"));
+        filesender.ui.uploadLogStarting();
     }    
+}
+
+// v is ms since last update
+filesender.ui.setMilliSecondsSinceDataWasLastSent = function(v,anyOffending) {
+
+    var automatic_resume_timeout = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
+    
+    // we probably shouldn't get here if IE11 anyway
+    if( isIE11() ) {
+        return;
+    }
+    // if the option is disabled then there is nothing to do
+    if( 0==automatic_resume_timeout ) {
+        return;
+    }
+
+    // if we are here then we show the info text again
+    filesender.ui.nodes.seconds_since_data_sent_info.text(
+        lang.tr('automatic_resume_will_happen_if_delay_reaches_x_seconds').r({seconds: automatic_resume_timeout}).out());
+    
+    if( anyOffending &&
+        ( filesender.ui.resumeScheduled ||
+          filesender.ui.uploading_again_started_at_time_diff_to_now() < automatic_resume_timeout ))
+    {
+        filesender.ui.nodes.seconds_since_data_sent.text(lang.tr('waiting_for_upload_to_stabilize'));
+    }
+    else
+    {
+        var labelv = (v / 1000).toFixed(1);
+        if( !anyOffending ) {
+            // this needs more work to avoid false positives
+            // filesender.ui.uploadLogAddOKIfNotLast();
+        }
+        
+        filesender.ui.nodes.seconds_since_data_sent.text(
+            lang.tr('seconds_since_data_was_last_sent').r({seconds: labelv}).out());
+        
+        applyBadClass( filesender.ui.nodes.seconds_since_data_sent, anyOffending, false );
+        if( anyOffending ) {
+            filesender.ui.scheduleAutomaticResume(lang.tr('too_long_since_any_data_was_last_sent'));
+        }
+    }
+}
+filesender.ui.setTimeSinceDataWasLastSentMessage = function(msg) {
+
+    filesender.ui.nodes.seconds_since_data_sent.text(msg);
+    
 }
 
 $(function() {
@@ -979,8 +1102,11 @@ $(function() {
                 show_hide: form.find('#encryption_show_password'),
                 generate: form.find('#encryption_generate_password')
         },
+        uploading_actions_msg:form.find('.uploading_actions .msg'),
         auto_resume_timer:form.find('.uploading_actions .auto_resume_timer'),
         auto_resume_timer_top:form.find('.uploading_actions .auto_resume_timer_top'),
+        seconds_since_data_sent:form.find('#seconds_since_data_sent'),
+        seconds_since_data_sent_info:form.find('#seconds_since_data_sent_info'),
         disable_terasender: form.find('input[name="disable_terasender"]'),
         message: form.find('textarea[name="message"]'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
@@ -993,8 +1119,10 @@ $(function() {
             restart: form.find('.buttons .restart'),
             pause: form.find('.buttons .pause'),
             resume: form.find('.buttons .resume'),
-            stop: form.find('.buttons .stop')
+            stop: form.find('.buttons .stop'),
+            reconnect_and_continue: form.find('.buttons .reconnect')
         },
+        upload_options_table: form.find('#upload_options_table'),
         files_actions: form.find('.files_actions'),
         uploading_actions: form.find('.uploading_actions'),
         stats: {
@@ -1013,8 +1141,6 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
-
-    
 
     
     // Bind file list clear button
@@ -1262,7 +1388,10 @@ $(function() {
             filesender.ui.switchToUloadingPageConfiguration();
             filesender.ui.startUpload();
             filesender.ui.nodes.buttons.start.addClass('not_displayed');
-            if(filesender.supports.reader) filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+            if(filesender.supports.reader) {
+                filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                filesender.ui.nodes.buttons.reconnect_and_continue.removeClass('not_displayed');
+            }
             filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
         }
         return false;
@@ -1272,10 +1401,12 @@ $(function() {
         filesender.ui.nodes.buttons.pause.on('click', function() {
             filesender.ui.cancelAutomaticResume();
             
+            filesender.ui.nodes.seconds_since_data_sent_info.text('');
             filesender.ui.transfer.pause();
             filesender.ui.nodes.buttons.pause.addClass('not_displayed');
             filesender.ui.nodes.buttons.resume.removeClass('not_displayed');
             filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+            filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
             return false;
         }).button();
         
@@ -1285,13 +1416,21 @@ $(function() {
             // and restarting too on top of us
             //
             filesender.ui.cancelAutomaticResume();
+            filesender.ui.resumingUpload();
 
+            if( filesender.ui.automatic_resume_retries ) {
+                filesender.ui.automatic_resume_retries = 0;
+            }
+            filesender.ui.uploading_again_started_at_time_touch();
+            
+            
             if( filesender.ui.automatic_resume_retries ) {
                 filesender.ui.automatic_resume_retries = 0;
                 filesender.ui.transfer.retry(true);
             } else {
                 filesender.ui.transfer.resume();
             }
+
             filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
             filesender.ui.nodes.buttons.resume.addClass('not_displayed');
             return false;
@@ -1332,6 +1471,28 @@ $(function() {
         return false;
     }).button();
     
+
+    filesender.ui.nodes.buttons.reconnect_and_continue.on('click', function() {
+        //
+        // We don't want to have the auto resume coming
+        // and restarting too on top of us
+        //
+        filesender.ui.cancelAutomaticResume();
+        filesender.ui.resumingUpload();
+
+        // explicit action resets the automatic resume counters
+        if( filesender.ui.automatic_resume_retries ) {
+            filesender.ui.automatic_resume_retries = 0;
+        }
+        filesender.ui.uploadLogPrepend(lang.tr('user_requested_reconnect_and_continue_upload'));
+        filesender.ui.transfer.retry(true);
+        filesender.ui.uploading_again_started_at_time_touch();
+            
+        filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+        return false;
+        
+    }).button();
+        
     
     // MUST BE AFTER BUTTONS SETUP otherwise event propagation ends up
     // trying to change button state but button is still not initialized ...
@@ -1348,6 +1509,8 @@ $(function() {
         if(!filesender.ui.transfer.status.match(/^(new|done|stopped)$/))
             return lang.tr('confirm_leave_upload_page'); // Ask for leaving confirmation
     };
+
+    filesender.ui.nodes.auto_resume_timer_top.hide();
     
     if(!filesender.supports.reader) {
         // Legacy uploader

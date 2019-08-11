@@ -3,12 +3,28 @@
  * See http://filesender.org
  */
 
-importScripts(
+/**
+ * We have to use a try/catch here so we can report failure
+ * back to the master of this worker. Otherwise they will not
+ * be notified that we have failed to start if there is a network
+ * outage at startup.
+ */
+try {
+    importScripts(
 	'../../filesender-config.js.php',
 	'../../js/crypter/crypto_common.js',
 	'../../js/crypter/crypto_blob_reader.js',
 	'../../js/crypter/crypto_app.js'
-);
+    );
+}
+catch( e ) {
+    postMessage({
+        command: 'error',
+        worker_id: -1,
+        data: {message: 'worker_failed_to_start'}
+    });
+}
+
 
 function isIE11()
 {

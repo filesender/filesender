@@ -1199,6 +1199,10 @@ window.filesender.transfer = function() {
      */
     this.retries = 0;
     this.retry = function(manual) {
+
+        // ensure in paused state
+        this.pause();
+        
         if(manual) {
             this.retries = 0;
             

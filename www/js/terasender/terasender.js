@@ -414,7 +414,9 @@ window.filesender.terasender = {
 
                 this.setMinUploadedOffsetFromActiveWorkers( job );
                 
-                this.error({message: 'failed_after_many_retries offset ' + data.chunk.start + ' fileid ' + data.file.id });
+                console.log('terasender_failed_after_many_retries'
+                            + ' offset ' + data.chunk.start + ' fileid ' + data.file.id );
+                this.error({message: 'failed_after_many_retries' });
                 this.stop();
                 
             } break;
@@ -524,6 +526,10 @@ window.filesender.terasender = {
         this.workers = [];
 
         var ts = this;
+        if( this.workers_start_monitor_id ) {
+            window.clearTimeout( this.workers_start_monitor_id );
+            this.workers_start_monitor_id = 0;
+        }
         this.workers_start_monitor_id = window.setTimeout( function() { noWorkersHaveStarted(ts) },
                                                            filesender.config.terasender_worker_start_must_complete_within_ms );
         
