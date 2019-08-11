@@ -48,7 +48,7 @@ $default = array(
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
     'upload_display_per_file_stats' => false, //
     'upload_force_transfer_resume_forget_if_encrypted' => false, //
-    'upload_considered_too_slow_if_no_progress_for_seconds' => 0, // seconds
+    'upload_considered_too_slow_if_no_progress_for_seconds' => 30, // seconds
     'force_ssl' => true,
     'client_ip_key' => 'REMOTE_ADDR',
     
@@ -193,8 +193,8 @@ $default = array(
     'clientlogs_stashsize' => 10,
     'clientlogs_lifetime' => 10,
 
-    'automatic_resume_number_of_retries' =>  20,
-    'automatic_resume_delay_to_resume'   => 360,
+    'automatic_resume_number_of_retries' => 50,
+    'automatic_resume_delay_to_resume'   => 10,
 
     'guests_expired_lifetime' => 0,
     'translatable_emails_lifetime' => 30,

@@ -153,6 +153,7 @@ window.filesender.config = {
     automatic_resume_delay_to_resume:   <?php echo Config::get('automatic_resume_delay_to_resume') ?>,
 
 
+
     tr_dp_date_format:   "<?php echo Config::get('tr_dp_date_format') ?>",
     tr_dp_date_format_hint:   "<?php echo Config::get('tr_dp_date_format_hint') ?>",
 };

@@ -703,21 +703,51 @@ table.list .date {
 
 #upload_form .uploading_actions div {
     display: table-cell;
-    width: 33%;
+    width: 100%;
 }
 
 #upload_form .uploading_actions .msg {
     display: table-cell;
-    width: 66%;
+    width: 100%;
 }
 
 .uploading_actions .auto_resume_timer_top {
     background-color: #fcc;
+    display: none;
 }
 
 .uploading_actions .auto_resume_timer_top .auto_resume_timer {
     font-size: 1.0em;
     font-weight: bold;
+    display: none;
+}
+
+.uploading_actions .resumetable {
+    display: table;
+    width: 100%;
+    margin: 0.25em 1em 0 0;
+}
+
+.uploading_actions .resumetable tr {
+    padding: 0.0em;
+    width: 100%;
+    font-size: 1em;
+}
+
+.uploading_actions .resumetable td {
+    padding: 0.0em;
+    width: 100%;
+}
+
+#upload_form .uploading_actions .msg {
+    display: table-cell;
+    width: 100%;
+}
+
+
+.seconds_since_data_sent
+{
+    font-size: 1.0em;
 }
 
 #upload_form .uploading_actions .stats {
@@ -774,6 +804,7 @@ table.list .date {
     width: 100%;
 }
 
+#upload_form .uploading_actions .msg,
 #upload_form .uploading_actions .stats .uploaded,
 #upload_form .uploading_actions .stats .average_speed
 {
