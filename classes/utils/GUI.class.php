@@ -332,6 +332,10 @@ class GUI
                     if (Auth::canViewAggregateStatistics()) {
                         self::$allowed_pages[] = 'aggregate_statistics';
                     }
+
+                    if (Auth::canViewStatistics()) {
+                        self::$allowed_pages[] = 'statistics';
+                    }
                     
                     // Is user page enabled ?
                     if (Config::get('user_page')) {

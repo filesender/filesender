@@ -1,12 +1,8 @@
 <?php
 
-$maybe_display_aggregate_statistics_menu = false;
+include_once "pagemenuitem.php";
 
-$pagemenuitem = function($page) {
-    if(!GUI::isUserAllowedToAccessPage($page)) return;
-    $class = ($page == GUI::currentPage()) ? 'current' : '';
-    echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.Lang::tr($page.'_page').'</a></li>';
-};
+$maybe_display_aggregate_statistics_menu = false;
 
 ?>
 
@@ -19,20 +15,22 @@ $pagemenuitem = function($page) {
             <?php
             
             if(!Auth::isGuest()) {
-                $pagemenuitem('upload');
+                pagemenuitem('upload');
                 
-                $pagemenuitem('guests');
+                pagemenuitem('guests');
                 
-                $pagemenuitem('transfers');
+                pagemenuitem('transfers');
                 
                 if(Config::get('user_page'))
-                    $pagemenuitem('user');
+                    pagemenuitem('user');
                 
-                $pagemenuitem('admin');
+                pagemenuitem('statistics');
+                
+                pagemenuitem('admin');
 
                 if( $maybe_display_aggregate_statistics_menu ) {
                     if (AggregateStatistic::enabled()) {
-                        $pagemenuitem('aggregate_statistics');
+                        pagemenuitem('aggregate_statistics');
                     }
                 }
                     
@@ -45,9 +43,9 @@ $pagemenuitem = function($page) {
     <div class="rightmenu">
         <ul>
         <?php
-            $pagemenuitem('help');
-            $pagemenuitem('about');
-            $pagemenuitem('privacy');
+            pagemenuitem('help');
+            pagemenuitem('about');
+            pagemenuitem('privacy');
 
             if (Auth::isAuthenticated() && Auth::isSP()) {
                 $url = AuthSP::logoffURL();
@@ -55,7 +53,7 @@ $pagemenuitem = function($page) {
                     echo '<li><a href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
             }else if (!Auth::isGuest()){
                 if(Config::get('auth_sp_embedded')) {
-                    $pagemenuitem('logon');
+                    pagemenuitem('logon');
                 }else{
                     echo '<li><a href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.Lang::tr('logon').'</a></li>';
                 }

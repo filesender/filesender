@@ -73,6 +73,9 @@ class Auth
      * If current user is authorized to view aggregate statistics.
      */
     private static $canViewAggregateStats = null;
+
+    // cache
+    private static $canViewStats = null;
     
     /**
      * Auth provider if any auth found
@@ -302,6 +305,64 @@ class Auth
     {
         return self::$attributes;
     }
+
+    /**
+     * Tells if the current user has a given privilege. 
+     * 
+     * If there is a setting in config.php for auth_sp_saml_$configName_entitlement
+     * then SAML will determine if the user has this access. Otherwise the
+     * array in config.php for $configName will show an explicit list of users who
+     * have this access.
+     *
+     * @retrun bool
+     */
+    public static function isPrivilegeAllowed( $configName )
+    {
+        $ret = false;
+
+        if (is_null($configName))
+            return false;
+
+        
+        if (self::user()) {
+            // constants
+            $entitlement_attribute = Config::get('auth_sp_saml_entitlement_attribute');
+            $additional_attributes = Config::get('auth_sp_additional_attributes');
+
+            // settings for this configName
+            $cfg = Config::get($configName);
+            $cfg_entitlement = Config::get('auth_sp_saml_' .$configName. '_entitlement');
+            
+            // Admin privs through entitlement
+            if (self::isSP()
+                && $entitlement_attribute
+                && $cfg_entitlement
+                && $additional_attributes)
+            {
+                if (self::$attributes['additional'] 
+                    && array_key_exists($entitlement_attribute, self::$attributes['additional']) 
+                    && in_array($entitlement_attribute, $additional_attributes))
+                {
+
+                    $ret = in_array($cfg_entitlement,
+                                    self::$attributes['additional'][$entitlement_attribute]);
+                }
+            }
+            else
+            {
+                Logger::error('cfg  ' . print_r($cfg,true ));
+                // Admin UID from config file
+                if (!is_array($cfg)) {
+                    $cfg = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$cfg)));
+                }
+
+                $ret = in_array(self::user()->saml_user_identification_uid, $cfg);
+                Logger::error('cfg2 ret ' . $ret );
+            }
+        }
+
+        return $ret;
+    }
     
     /**
      * Tells if the current user is an admin.
@@ -343,19 +404,21 @@ class Auth
     public static function canViewAggregateStatistics()
     {
         if (is_null(self::$canViewAggregateStats)) {
-            self::$canViewAggregateStats = false;
-            
-            if (self::user()) {
-                $keys = Config::get('can_view_aggregate_statistics');
-                if (!is_array($keys)) {
-                    $keys = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$keys)));
-                }
-
-                self::$canViewAggregateStats = in_array(self::user()->saml_user_identification_uid, $keys);
-            }
+            self::$canViewAggregateStats = self::isPrivilegeAllowed( 'can_view_aggregate_statistics' )
+                                        && !self::isGuest();
         }
 
-        return self::$canViewAggregateStats && !self::isGuest();
+        return self::$canViewAggregateStats;
+    }
+
+    public static function canViewStatistics()
+    {
+        if (is_null(self::$canViewStats)) {
+            self::$canViewStats = self::isPrivilegeAllowed( 'can_view_statistics' )
+                               && !self::isGuest();
+        }
+
+        return self::$canViewStats;
     }
     
     /**

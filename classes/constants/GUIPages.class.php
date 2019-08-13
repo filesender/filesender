@@ -40,6 +40,7 @@ class GUIPages extends Enum
     const UPLOAD          = 'upload';
     const TRANSFERS       = 'transfers';
     const GUESTS          = 'guests';
+    const STATISTICS      = 'statistics';
     const ADMIN           = 'admin';
     const LOGON           = 'logon';
     const USER            = 'user';

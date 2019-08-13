@@ -518,4 +518,5 @@ $lang['upload_progressing_again'] = 'Upload progressing again';
 $lang['reconnect_and_continue'] = 'Reconnect and Continue';
 $lang['retry_attempt_x'] = 'Retry attempt {x}';
 $lang['terasender_no_workers_have_started'] = 'Uploading a chunk of the file failed because workers could not be started. Are you still connected to the Internet?';
+$lang['statistics_page'] = 'Statistics';
 

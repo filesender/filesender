@@ -1,5 +1,17 @@
+<?php
+      include_once "pagemenuitem.php"
+?>
+
+<div class="box">
 <h2>{tr:admin_statistics_section}</h2>
 
+<?php
+if (AggregateStatistic::enabled()) {
+    echo "<h3>{tr:aggregate_statistics}</h3>";
+    pagelink('aggregate_statistics');
+}
+?>
+    
 <h3>{tr:global_statistics}</h3>
 
 <table class="global_statistics">
@@ -217,3 +229,4 @@ echo '</table>';
 
 
 <script type="text/javascript" src="{path:js/admin_statistics.js}"></script>
+</div>
