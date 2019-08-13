@@ -1,12 +1,12 @@
 <div class="box">
     <?php
     
-    $sections = array('statistics', 'transfers', 'guests', 'users' );
+    $sections = array('transfers', 'guests', 'users' );
     
     if(Config::get('config_overrides'))
         $sections[] = 'config';
     
-    $section = 'statistics';
+    $section = 'transfers';
     if(array_key_exists('as', $_REQUEST))
         $section = $_REQUEST['as'];
     

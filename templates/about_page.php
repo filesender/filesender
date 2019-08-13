@@ -1,10 +1,5 @@
 <?php
-
-$pagemenuitem = function($page) {
-    if(!GUI::isUserAllowedToAccessPage($page)) return;
-    $class = ($page == GUI::currentPage()) ? 'current' : '';
-    echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
-};
+      include_once "pagemenuitem.php"
 ?>
 
 <div class="box">
@@ -15,7 +10,7 @@ $pagemenuitem = function($page) {
 
     <?php 
     if (AggregateStatistic::enabled()) {
-        $pagemenuitem('aggregate_statistics');
+        pagelink('aggregate_statistics');
     }
     ?>
 </div>
