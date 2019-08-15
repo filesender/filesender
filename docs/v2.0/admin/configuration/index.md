@@ -144,6 +144,7 @@ A note about colours;
 * [max_guest_days_valid](#max_guest_days_valid)
 * [max_guest_recipients](#max_guest_recipients)
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
+* [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
 
 ## Authentication
 
@@ -1287,6 +1288,21 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+
+### user_can_only_view_guest_transfers_shared_with_them
+
+* __description:__ determine if a user can see all of the uploads of their guests
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.8
+* __comment:__ if set to true a user will only see uploads for their guests where the can_only_send_to_me was set
+  when the guest was invited or when the guest uploads the file and explicitly includes the user in the recipients.
+  This may be updated in the future if we wish to force a 'must also send to me' option when inviting some guests.
+
+
+
 
 ---
 
