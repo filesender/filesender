@@ -48,6 +48,7 @@ auth_user_not_allowed
 authentication_required
 authentication_required_explanation
 auto_resume_timer_seconds
+automatic_resume_will_happen_if_delay_reaches_x_seconds
 available_transfers
 average_speed
 bad_email
@@ -323,6 +324,7 @@ recipient_not_found
 recipient_reminded
 recipients
 recipients_notifications_language
+reconnect_and_continue
 redirect_url_on_complete
 remote_auth_sync_request
 report_attached
@@ -380,11 +382,13 @@ restart
 restart_failed_transfer
 resume
 retry
+retry_attempt_x
 retry_later
 save
 search
 search_user
 searching
+seconds_since_data_was_last_sent
 see_all
 select_all_for_archive_download
 select_directory
@@ -424,6 +428,7 @@ statevent_download_started
 statevent_upload_encrypted_started
 statevent_upload_nocrypt_started
 statevent_upload_started
+statistics_page
 statlog_not_found
 statlog_unknown_event
 stop
@@ -451,10 +456,14 @@ subject
 success_dialog
 tb_per_second
 template_not_found
+terasender_failed_after_many_retries
+terasender_no_workers_have_started
 terasender_worker_count
+terasender_worker_failed_to_start
 testterm
 time_format
 to
+too_long_since_any_data_was_last_sent
 tracking_event_not_found
 tracking_unknown_event
 transfer_autoreminder_receipt
@@ -488,6 +497,7 @@ transfer_user_quota_exceeded
 transfers_page
 translate_email_footer
 translate_to
+turning_on_guests_get_a_link_disables_can_only_send_to_me
 undergoing_maintenance
 unexpected_file
 unknown_page
@@ -498,6 +508,7 @@ upload_page_graph_encryption_in_transit
 upload_page_graph_encryption_in_transit_and_rest
 upload_page_graph_mb_per_second
 upload_page_graph_title_upload_speed_of_files_over
+upload_progressing_again
 upload_stalled_and_resumed
 upload_stalled_due_to_testing
 upload_started
@@ -520,12 +531,14 @@ user_profile_delete_about_description_text
 user_quota
 user_remote_authentication
 user_remote_authentication_body
+user_requested_reconnect_and_continue_upload
 users
 utilities_uid_generator_bad_unicity_checker
 utilities_uid_generator_tried_too_much
 valid_only_one_time
 value
 view_full_log
+waiting_for_upload_to_stabilize
 what_to_do
 with_identity
 yes
