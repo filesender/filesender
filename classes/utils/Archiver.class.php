@@ -177,6 +177,8 @@ class Archiver
         $tid = $file['data']->transfer_id;
         $filename = 'transfer_' . $tid . '_files_' . $fuid;
 
+        Logger::info('streamArchive() format '.$this->archive_format.' filename '.$filename );
+        
         //
         // This is a little less than optimal having two codepaths.
         //

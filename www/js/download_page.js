@@ -68,6 +68,7 @@ $(function() {
     var token = m[1];
     var $this = this;
     var dl = function(ids, confirm, encrypted, progress, archive_format ) {
+        console.log("downloading archive in format: " + archive_format );
         if(typeof ids == 'string') ids = [ids];
         var dlcb = function(notify) {
             notify = notify ? '&notify_upon_completion=1' : '';
