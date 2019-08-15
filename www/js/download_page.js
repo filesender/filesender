@@ -69,6 +69,9 @@ $(function() {
     var $this = this;
     var dl = function(ids, confirm, encrypted, progress, archive_format ) {
         if(typeof ids == 'string') ids = [ids];
+        
+        // the dlcb handles starting the download for
+        // all non encrypted downloads
         var dlcb = function(notify) {
             notify = notify ? '&notify_upon_completion=1' : '';
             return function() {
@@ -97,9 +100,8 @@ $(function() {
                                                                 + '&files_ids=' + ids.join(','),
                                                                 mime, filename, key_version, salt, progress);
             }else{
-                filesender.ui.redirect( filesender.config.base_path
-                                        + 'download.php?token=' + token
-                                        + '&files_ids=' + ids.join(','));
+                var notify = false;
+                dlcb( notify ).call();
             }
         }
     };
