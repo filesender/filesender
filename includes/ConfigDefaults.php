@@ -220,7 +220,8 @@ $default = array(
     'owasp_csrf_protector_enabled' => false,
 
     'theme' => '',
-    
+
+    'user_can_only_view_guest_transfers_shared_with_them' => false,
     
     // see crypto_app.js for constants in the range crypto_key_version_constants
     // Generally higher is newer + better.

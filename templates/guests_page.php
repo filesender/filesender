@@ -171,13 +171,23 @@ foreach (Guest::allOptions() as $name => $dfn) {
 <div class="box">
     <h1>{tr:guests}</h1>
     
-    <?php Template::display('guests_table', array('guests' => Guest::fromUserAvailable(Auth::user()))) ?>
+    <?php
+    Template::display('guests_table',
+                      array('guests' => Guest::fromUserAvailable(Auth::user())));
+    ?>
 </div>
 
 <div class="box">
     <h1>{tr:guests_transfers}</h1>
     
-    <?php Template::display('transfers_table', array('transfers' => Transfer::fromGuestsOf(Auth::user()), 'show_guest' => true)) ?>
+    <?php
+
+    $user_can_only_view_guest_transfers_shared_with_them = Config::get('user_can_only_view_guest_transfers_shared_with_them');
+    $transfers = Transfer::fromGuestsOf(Auth::user(), $user_can_only_view_guest_transfers_shared_with_them);
+    Template::display('transfers_table',
+                      array('transfers' => $transfers,
+                            'show_guest' => true));
+    ?>
 </div>
     
 <script type="text/javascript" src="{path:js/guests_page.js}"></script>
