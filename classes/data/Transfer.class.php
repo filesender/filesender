@@ -288,30 +288,48 @@ class Transfer extends DBObject
         return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
     }
     
+
     /**
      * Get transfers from guests of user
      *
      * @param mixed $user User or user id
+     * @param $user_can... when true results only contain transfers that the guest has shared with the user.
+     *   for example, by having the GuestOptions::CAN_ONLY_SEND_TO_ME option set.
      *
      * @return array of Transfer
      */
-    public static function fromGuestsOf($user)
+    public static function fromGuestsOf($user,$user_can_only_view_guest_transfers_shared_with_them)
     {
         if ($user instanceof User) {
             $user = $user->id;
         }
-        
-        // Gather user's guests transfers
-        $transfers = array();
-        foreach (Guest::fromUser($user) as $gv) {
-            $transfers = array_merge($transfers, $gv->transfers);
+
+
+        // find the transfers for all the user's guests
+        $sql = "select t.id as tid from "
+             . Transfer::getDBTable() . " t, "
+             . Guest::getDBTable()    . " g "
+             . " where "
+             . " g.userid   = :userid AND g.expires > :date AND "
+             . " t.guest_id = g.id    AND t.status  = 'available' ";
+        if( $user_can_only_view_guest_transfers_shared_with_them ) {
+            // filter back to only transfers that are can_only_send_to_me for the user
+            // or that the guest explicitly included the email of the user in the recipients
+            $sql .= " AND ( ";
+            $sql .= " g.options like '%". '"can_only_send_to_me":true' . "%'  ";
+            $sql .= "    or t.id in ( select transfer_id from recipients ";
+            $sql .= "                 where transfer_id = t.id and email = g.user_email ) ";
+            $sql .= " ) ";
         }
-        
-        // Sort by date
-        uasort($transfers, function ($a, $b) {
-            return $b->created - $a->created;
-        });
-        
+        $sql .= " order by t.created desc ";
+        $statement = DBI::prepare($sql);
+        $placeholders =  array(':userid' => $user, ':date' => date('Y-m-d'));
+        $statement->execute($placeholders);
+        $records = $statement->fetchAll();
+        $transfers = array();
+        foreach ($records as $r) {
+            array_push( $transfers, Transfer::fromID($r['tid']));
+        }
         return $transfers;
     }
     
