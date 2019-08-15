@@ -507,7 +507,7 @@ $lang['archive_tar_download'] = 'Download as single (.tar) file';
 $lang['invalid_file_name'] = 'Invalid file name';
 $lang['turning_on_guests_get_a_link_disables_can_only_send_to_me'] = 'Allowing guests to get a link means that can only send to me has been disabled';
 
-$lang['waiting_for_upload_to_stabilize'] = 'Waiting for upload to start';
+$lang['waiting_for_upload_to_stabilize'] = 'Waiting for upload to stabilize';
 $lang['seconds_since_data_was_last_sent'] = '{seconds} seconds since data was last sent';
 $lang['too_long_since_any_data_was_last_sent'] = 'Too long since any data was last sent';
 $lang['terasender_worker_failed_to_start'] = 'Unable to initialize one or more of the upload tasks';
