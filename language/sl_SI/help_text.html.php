@@ -22,7 +22,7 @@
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>To metodo lahko uporabljate, če se Vam zgoraj prikaže znak <img src="images/html5_installed.png" alt="HTML5 upload enabled" />.</li>
     <li><i class="fa-li fa fa-caret-right"></i>Da omogočite to funkcionalnost, preprosto uporabljajte kateri koli sodobni brskalnik, ki podpira HTML5; zadnjo verzijo "jezika svetovnega spleta".</li>
-    <li><i class="fa-li fa fa-caret-right"></i>Posodobljene različice brskalnikov Firefox in Chrome na sistemih Windows, Mac OS X in Linux, preverjeno delujejo.</li>
+    <li><i class="fa-li fa fa-caret-right"></i>Posodobljene različice brskalnikov Firefox in Chrome na sistemih Windows, Mac OS X in Linux preverjeno delujejo.</li>
     <li><i class="fa-li fa fa-caret-right"></i>
         Z začasno ustavljenimi ali prekinjenimi prenosi lahko <strong>nadaljujete</strong>. Za nadaljevanje nalaganja, preprosto <strong>pošljite iste datoteke</strong> še enkrat.
         Poskrbite, da imajo datoteke <strong>enaka imena in velikosti</strong> kot prej.

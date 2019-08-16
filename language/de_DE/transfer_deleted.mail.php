@@ -13,7 +13,7 @@ subject: Datei(en) steht(en) nicht mehr zum Download bereit
 
 Sehr geehrte Damen und Herren,
 
-der Dateitransfer Nr. {transfer.id} wurde von {cfg:site_name} vom Absender ({transfer.user_email}) gelöscht und steht nicht mehr zum Download bereit.
+die Dateiübertragung Nr. {transfer.id} wurde von {cfg:site_name} vom Absender ({transfer.user_email}) gelöscht und steht nicht mehr zum Download bereit.
 
 Mit freundlichen Grüßen,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    der Dateitransfer Nr. {transfer.id} wurde von <a href="{cfg:site_url}">{cfg:site_name}</a> vom Absender (<a href="mailto:{transfer.user_email}">{transfer.user_email}</a>) gelöscht und steht nicht mehr zum Download bereit.
+    die Dateiübertragung Nr. {transfer.id} wurde von <a href="{cfg:site_url}">{cfg:site_name}</a> vom Absender (<a href="mailto:{transfer.user_email}">{transfer.user_email}</a>) gelöscht und steht nicht mehr zum Download bereit.
 </p>
 
 <p>

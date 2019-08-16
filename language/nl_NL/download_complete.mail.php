@@ -13,7 +13,7 @@ subject: Download voltooid
 
 Geachte heer, mevrouw,
 
-Uw download van onderstaande {if:files>1}bestanden{else}bestand{endif} is voltooid : 
+Uw download van {if:files>1}onderstaande bestanden{else}onderstaand bestand{endif} is voltooid : 
 
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
@@ -31,7 +31,7 @@ Hoogachtend,
 </p>
 
 <p>
-    Uw download van onderstaande {if:files>1}bestanden{else}bestand{endif} is voltooid : </p>
+    Uw download van {if:files>1}onderstaande bestanden{else}onderstaand bestand{endif} is voltooid : </p>
 
 <p>
     {if:files>1}

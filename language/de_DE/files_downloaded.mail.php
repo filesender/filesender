@@ -21,7 +21,7 @@ Sehr geehrte Damen und Herren,
 {files.first().path} ({size:files.first().size})
 {endif}
 
-Sie können auf Ihre Dateien zugreifen und sich eine detaillierte Download-Statistik auf der Dateitransferseite anzeigen lassen {files.first().transfer.link}.
+Sie können auf Ihre Dateien zugreifen und sich eine detaillierte Download-Statistik auf der Dateiübertragungsseite anzeigen lassen {files.first().transfer.link}.
 
 Mit freundlichen Grüßen,
 {cfg:site_name}
@@ -49,7 +49,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Sie können auf Ihre Dateien zugreifen und sich eine detaillierte Download-Statistik auf der Dateitransferseite anzeigen lassen <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
+    Sie können auf Ihre Dateien zugreifen und sich eine detaillierte Download-Statistik auf der Dateiübertragungsseite anzeigen lassen <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
 </p>
 
 <p>

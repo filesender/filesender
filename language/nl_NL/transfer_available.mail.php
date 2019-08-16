@@ -14,7 +14,7 @@ subject: {transfer.subject}
 
 Geachte heer, mevrouw,
 
-De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar {cfg:site_name} door {transfer.user_email} en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+{if:transfer.files>1}De volgende bestanden zijn{else}Het volgende bestand is{endif} geüpload naar {cfg:site_name} door {transfer.user_email} en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -42,13 +42,13 @@ Hoogachtend,
 </p>
 
 <p>
-    De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+ {if:transfer.files>1}De volgende bestanden zijn{else}Het volgende bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Transaction details</th>
+            <th colspan="2">Transactie details</th>
         </tr>
     </thead>
     <tbody>

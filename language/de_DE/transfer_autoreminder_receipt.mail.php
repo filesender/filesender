@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Automatische Erinnerung zu einem Dateitransfer (Nr. {transfer.id})
+subject: Automatische Erinnerung zu einer Dateiübertragung (Nr. {transfer.id})
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-es wurde eine automatische Erinnerung zu einem Dateitransfer (Nr. {transfer.id}) an den Empfänger gesendet, da diese noch nicht von {cfg:site_name} heruntergeladen wurde.
+es wurde eine automatische Erinnerung zu einer Dateiübertragung (Nr. {transfer.id}) an den Empfänger gesendet, da diese noch nicht von {cfg:site_name} heruntergeladen wurde.
 ({transfer.link}):
 
 {each:recipients as recipient}
@@ -30,7 +30,7 @@ Mit freundliche Grüßen,
 </p>
 
 <p>
-    es wurde eine automatische Erinnerung an den Empfänger gesendet, für die nicht heruntergeladenen Dateien, von Ihrem <a href="{transfer.link}">Dateitransfer Nr. {transfer.id}</a> auf <a href="{cfg:site_url}">{cfg:site_name}</a> :
+    es wurde eine automatische Erinnerung an den Empfänger gesendet, für die nicht heruntergeladenen Dateien, von Ihrer <a href="{transfer.link}">Dateiübertragung Nr. {transfer.id}</a> auf <a href="{cfg:site_url}">{cfg:site_name}</a> :
 </p>
 
 <p>

@@ -14,7 +14,7 @@ subject: (opomnik) {guest.subject}
 
 Spoštovani,
 
-to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani {cfg:site_name}. Uporabite ga lahko za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
+to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani {cfg:site_name}. Uporabite ga za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
 
 Izdajatelj: {guest.user_email}
 Povezava vavčerja: {guest.upload_link}
@@ -33,7 +33,7 @@ Lep pozdrav,
 </p>
 
 <p>
-    to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Uporabite ga lahko za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
+    to je opomnik o prejetju vavčerja, ki dodeljuje dostop do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Uporabite ga za nalaganje enega niza datotek, ki ga lahko date na razpolago skupini ljudi.
 </p>
 
 <table rules="rows">

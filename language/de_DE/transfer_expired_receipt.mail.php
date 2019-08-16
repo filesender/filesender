@@ -13,7 +13,7 @@ subject: Datei(en) abgelaufen
 
 Sehr geehrte Damen und Herren,
 
-ihr Dateitransfer Nr. {transfer.id} ist abgelaufen und steht nicht mehr zum Download bereit ({transfer.link}).
+Ihre Dateiübertragung Nr. {transfer.id} ist abgelaufen und steht nicht mehr zum Download bereit ({transfer.link}).
 
 Mit freundlichen Grüßen,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    ihr <a href="{transfer.link}">Dateitransfer Nr. {transfer.id}</a> ist abgelaufen und steht nicht mehr zum Download bereit.
+    Ihre <a href="{transfer.link}">Dateiübertragung Nr. {transfer.id}</a> ist abgelaufen und steht nicht mehr zum Download bereit.
 </p>
 
 <p>

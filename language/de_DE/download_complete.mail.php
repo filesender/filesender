@@ -13,7 +13,7 @@ subject: Download abgeschlossen
 
 Sehr geehrte Damen und Herren,
 
-ihr Download von {if:files>1}files{else}file{endif} ist beendet:
+Ihr Download von {if:files>1}files{else}file{endif} ist beendet:
 
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
@@ -31,7 +31,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    ihr Download von {if:files>1}files{else}file{endif} ist beendet :
+    Ihr Download von {if:files>1}files{else}file{endif} ist beendet :
 </p>
 
 <p>

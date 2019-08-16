@@ -14,7 +14,7 @@ subject: (herinnering) {transfer.subject}
 
 Geachte heer, mevrouw,
 
-Dit is een herinnering, de volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+Dit is een herinnering, {if:transfer.files>1}de volgende bestanden zijn{else}het volgende bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -42,13 +42,13 @@ Hoogachtend,
 </p>
 
 <p>
-   Dit is een herinnering, de volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="{cfg:site_url}">{cfg:site_name}</a> en u hebt toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
+   Dit is een herinnering, {if:transfer.files>1}de volgende bestanden zijn{else}het volgende bestand is{endif} geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a> door <a href="{cfg:site_url}">{cfg:site_name}</a> en u heeft toestemming gekregen om {if:transfer.files>1}ze{else}het{endif} te downloaden :
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Transaction details</th>
+            <th colspan="2">Transactie details</th>
         </tr>
     </thead>
     <tbody>

@@ -11,8 +11,8 @@
 <p>
   Za delovanje storitve se morajo hraniti določeni podatki o datotekah,
   kdo lahko do njih dostopa in kaj se je z njimi zgodilo. Datoteke se ob
-  preteku roka veljavnosti avtomatsko odstranijo s sistema, ravno tako tudi
-  podatki, ki jih zadevajo. Na tej strani lahko vidite, koliko časa se hranijo
+  preteku roka veljavnosti avtomatsko odstranijo s sistema. Ravno tako tudi
+  podatki, ki jih zadevajo. Na tej strani lahko vidite koliko časa se hranijo
   različni drobci informacij.
 </p>
 <p>

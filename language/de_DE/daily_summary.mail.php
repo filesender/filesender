@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Zusammenfassung der täglichen Dateitransfers
+subject: Zusammenfassung der täglichen Dateiübertragungen
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-hier finden Sie eine Zusammenfassung der Downloads Ihres Dateitransfers Nr. {transfer.id} (uploaded {date:transfer.created}) :
+hier finden Sie eine Zusammenfassung der Downloads Ihrer Dateiübertragung Nr. {transfer.id} (uploaded {date:transfer.created}) :
 
 {if:events}
 {each:events as event}
@@ -35,7 +35,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    hier finden Sie eine Zusammenfassung der Downloads Ihres Dateitransfers Nr. {transfer.id} (uploaded {date:transfer.created}) :
+    hier finden Sie eine Zusammenfassung der Downloads Ihrer Dateiübertragung Nr. {transfer.id} (uploaded {date:transfer.created}) :
 </p>
 
 {if:events}
