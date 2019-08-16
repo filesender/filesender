@@ -32,4 +32,3 @@ Hoogachtend,
     Hoogachtend,<br />
     {cfg:site_name}
 </p>
- 

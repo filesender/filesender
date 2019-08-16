@@ -59,4 +59,3 @@ De volgende gastgebruiker kan geen bestanden meer versturen :
     Hoogachtend,<br />
     {cfg:site_name}
 </p>
-',

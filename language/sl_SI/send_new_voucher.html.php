@@ -9,4 +9,4 @@
 ?>
 Vavčer dovoljuje nekomu, da Vam pošlje datoteko.<br />
 Da ustvarite vavčer, vnesite e-poštni naslov in izberite Pošlji Vavčer.<br />
-E-poštno sporočilo bo poslano prejemniku s povezavo za uporabo vavčerja.
+Prejemniku bo poslano e-poštno sporočilo s povezavo za uporabo vavčerja.

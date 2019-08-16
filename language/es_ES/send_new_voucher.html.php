@@ -1,3 +1,12 @@
-Con las \"Invitaciones de env&iacute;o\", cualquiera puede enviale un archivo.<br />
-Para generar una \"Invitaci&oacute;n de env&iacute;o\", escriba una direcci&oacute;n de correo y pulse en \"Enviar la Invitaci&oacute;n\".<br />
-El destinatario recibir&aacute; un correo con un enlace a la Invitaci&oacute;n.
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+Vautšer võimaldab teistel osapooltel faile jagada Sinuga.<br />
+Vautšeri loomiseks sisesta adressaadi e-posti aadress ja vajuta "Saada Vautšer".<br />
+Seejärel saadetakse adressaadile link vautšeri kasutamiseks.

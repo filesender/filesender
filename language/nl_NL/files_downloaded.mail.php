@@ -13,7 +13,7 @@ subject: Ontvangstbevestiging
 
 Geachte heer, mevrouw,
 
-{if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geüpload{if:files>1}werd{else}werd{endif} gedownload van {cfg:site_name} door {recipient.email} :
+{if:files>1}Een aantal bestanden{else}Een bestand{endif} dat u heeft geüpload{if:files>1} is{else}is{endif} gedownload van {cfg:site_name} door {recipient.email} :
 
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})

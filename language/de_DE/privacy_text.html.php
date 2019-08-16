@@ -18,6 +18,6 @@ if( ShredFile::shouldUseShredFile()) {
     echo "<p>Diese Webseite ist so konfiguriert, dass hochgeladene Dateien beim Löschen geschreddert werden.";
     echo "Beim Schreddern einer Datei werden nach dem Löschen Daten an die Position der ursprünglichen Dateien auf der Festplatte geschrieben. ";
     echo "Dies geschieht mehrfach, sodass wirklich keine Daten mehr wiederherstellbar sind.";
-    echo "Dadurch wird die Geheimhaltung zusätzliche verbessert.</p>";
+    echo "Dadurch wird der Datenschutz zusätzliche verbessert.</p>";
 }
 ?>

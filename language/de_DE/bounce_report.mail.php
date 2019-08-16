@@ -17,7 +17,7 @@ eine oder mehrere Ihrer Empfänger haben Ihre Nachricht(en) nicht erhalten:
 
 {each:bounces as bounce}
 {if:bounce.target_type=="Recipient"}
-  - Dateitransfer Nr. {bounce.target.transfer.id} an Empfänger {bounce.target.email} am {datetime:bounce.date} ({bounce.target.transfer.link})
+  - Dateiübertragung Nr. {bounce.target.transfer.id} an Empfänger {bounce.target.email} am {datetime:bounce.date} ({bounce.target.transfer.link})
 {endif}{if:bounce.target_type=="Guest"}
   - Gast {bounce.target.email} am {datetime:bounce.date}
 {endif}
@@ -42,7 +42,7 @@ Mit freundlichen Grüßen,
 {each:bounces as bounce}
     <li>
     {if:bounce.target_type=="Recipient"}
-        <a href="{bounce.target.transfer.link}">Dateitransfer Nr. {bounce.target.transfer.id}</a> an Empfänger {bounce.target.email} am {datetime:bounce.date}
+        <a href="{bounce.target.transfer.link}">Dateiübertragung Nr. {bounce.target.transfer.id}</a> an Empfänger {bounce.target.email} am {datetime:bounce.date}
     {endif}{if:bounce.target_type=="Guest"}
         Gast {bounce.target.email} am {datetime:bounce.date}
     {endif}

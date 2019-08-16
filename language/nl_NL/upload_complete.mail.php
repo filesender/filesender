@@ -13,7 +13,7 @@ subject: Bestand{if:transfer.files>1}en{endif} succesvol geüpload
 
 Geachte heer, mevrouw,
 
-De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} succesvol geüpload naar {cfg:site_name}.
+{if:transfer.files>1}De volgende bestanden zijn{else}Het volgende bestand is{endif} succesvol geüpload naar {cfg:site_name}.
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -33,13 +33,13 @@ Hoogachtend,
 </p>
 
 <p>
-    De volgende {if:transfer.files>1}bestanden zijn{else}bestand is{endif} succesvol geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a>.
+ {if:transfer.files>1}De volgende bestanden zijn{else}Het volgende bestand is{endif} succesvol geüpload naar <a href="{cfg:site_url}">{cfg:site_name}</a>.
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Transaction details</th>
+            <th colspan="2">Transactie details</th>
         </tr>
     </thead>
     <tbody>

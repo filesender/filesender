@@ -7,20 +7,20 @@
 // 
 // 
 ?>
-subject: Bericht über {if:target.type=="transfer"}Dateitransfer{endif}{if:target.type=="recipient"}Empfänger{endif}{if:target.type=="guest"}Einladung{endif}{if:target.type=="file"}Datei{endif} Nr. {target.id}
+subject: Bericht über {if:target.type=="transfer"}Dateiübertragung{endif}{if:target.type=="recipient"}Empfänger{endif}{if:target.type=="guest"}Einladung{endif}{if:target.type=="file"}Datei{endif} Nr. {target.id}
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-hier ist der Bericht über {if:target.type=="recipient"}Ihren Dateitransfer{endif}{if:target.type=="guest"}Ihre Einladung{endif}{if:target.type=="file"}Ihre Datei{endif}:
+hier ist der Bericht über {if:target.type=="recipient"}Ihre Dateiübertragung{endif}{if:target.type=="guest"}Ihre Einladung{endif}{if:target.type=="file"}Ihre Datei{endif}:
 
 {target.type} Nummer: {target.id}
 
 {if:target.type == "Transfer"}
-Dieser Dateitransfer hat {transfer.files} {if:transfer.files>1}Dateien{else}Datei{endif} mit einer Gesamtgröße von {size:transfer.size}.
+Diese Dateiübertragung hat {transfer.files} {if:transfer.files>1}Dateien{else}Datei{endif} mit einer Gesamtgröße von {size:transfer.size}.
 
-Dieser Dateitransfer ist/war verfügbar, bis {date:transfer.expires}.
+Diese Dateiübertragung ist/war verfügbar, bis {date:transfer.expires}.
 
 Sie wurde an {transfer.recipients} Empfänger verschickt.
 {endif}
@@ -31,7 +31,7 @@ Diese Datei heißt {file.path}. Sie hat eine Größe von {size:file.size} und is
 Dieser E-Mail-Adresse des Empfängers lautet {recipient.email} und ist/war gültig bis zum {date:recipient.expires}.
 {endif}
 
-Hier ist das vollständige Protokoll zu diesem Dateitransfer:
+Hier ist das vollständige Protokoll zu dieser Dateiübertragung:
 
 {raw:content.plain}
 
@@ -45,15 +45,15 @@ Mit freundlichen Grüßen,
 </ P>
 
 <p>
-hier ist der Bericht über {if:target.type=="recipient"}Ihren Dateitransfer{endif}{if:target.type=="guest"}Ihre Einladung{endif}{if:target.type=="file"}Ihre Datei{endif}:<br /><br />
+hier ist der Bericht über {if:target.type=="recipient"}Ihre Dateiübertragung{endif}{if:target.type=="guest"}Ihre Einladung{endif}{if:target.type=="file"}Ihre Datei{endif}:<br /><br />
 
 {target.type} Nr.: {target.id}<br /><br />
 
 {if:target.type == "Transfer"}
-Dieser Dateitransfer hat {transfer.files} {if:transfer.files>1}Dateien{else}Datei{endif} mit einer Gesamtgröße von {size:transfer.size}.
+Diese Dateiübertragung hat {transfer.files} {if:transfer.files>1}Dateien{else}Datei{endif} mit einer Gesamtgröße von {size:transfer.size}.
 <br /><br />
 
-Dieser Dateitransfer ist/war verfügbar, bis {date:transfer.expires}.<br /><br />
+Diese Dateiübertragung ist/war verfügbar, bis {date:transfer.expires}.<br /><br />
 
 Sie wurde an {transfer.recipients} Empfänger verschickt.
 {endif}
@@ -66,7 +66,7 @@ Dieser E-Mail-Adresse des Empfängers lautet {recipient.email} und ist/war gült
 </p>
 
 <p>
-    Hier ist das vollständige Protokoll zu diesem Dateitransfer:
+    Hier ist das vollständige Protokoll zu dieser Dateiübertragung:
     <table class = "auditlog" rules="rows">
         <thead>
             <th>Datum</th>

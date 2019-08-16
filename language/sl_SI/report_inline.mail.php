@@ -13,7 +13,7 @@ subject: Poročilo o {target.type} #{target.id}
 
 Spoštovani,
 
-Tukaj se nahaja poročilo o {target.type}:
+Poročilo o {target.type} se nahaja tu:
 
 {target.type} število : {target.id}
 
@@ -45,7 +45,7 @@ Lep pozdrav,
 </p>
 
 <p>
-    Tukaj se nahaja poročilo o {target.type}:<br /><br />
+    Poročilo o {target.type} se nahaja tu:<br /><br />
     
     {target.type} število : {target.id}<br /><br />
     

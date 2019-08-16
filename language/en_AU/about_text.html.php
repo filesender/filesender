@@ -10,7 +10,7 @@
 <h1>Welcome to {cfg:site_name}</h1>
 <p>
     {cfg:site_name} is an installation of 
-    the FileSender project (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>)
+    the FileSender project (<a rel="nofollow" href="http://filesender.org/" target="_blank">filesender.org</a>)
     which is a web based application that allows authenticated users to
     securely and easily send arbitrarily large files to other users.
 </p>

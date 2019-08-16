@@ -13,7 +13,7 @@ subject: Datei steht nicht mehr zum Download zur Verfügung
 
 Sehr geehrte Damen und Herren,
 
-die Datei {file.path} ({size:file.size}) wurde von dem Dateitransfer Nr. {transfer.id} gelöscht und steht nicht mehr zum Download zur Verfügung.
+die Datei {file.path} ({size:file.size}) wurde von der Dateiübertragung Nr. {transfer.id} gelöscht und steht nicht mehr zum Download zur Verfügung.
 
 Mit freundliche Grüßen,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Mit freundliche Grüßen,
 </p>
 
 <p>
-    die Datei {file.path} ({size:file.size}) wurde von dem Dateitransfer Nr. {transfer.id}  gelöscht und steht nicht mehr zum Download zur Verfügung.
+    die Datei {file.path} ({size:file.size}) wurde von der Dateiübertragung Nr. {transfer.id}  gelöscht und steht nicht mehr zum Download zur Verfügung.
 </p>
 
 <p>

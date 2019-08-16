@@ -48,7 +48,7 @@ Mit freundlichen Grüßen,
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Details zum Dateitransfer</th>
+            <th colspan="2">Details zur Dateiübertragung</th>
         </tr>
     </thead>
     <tbody>
@@ -68,7 +68,7 @@ Mit freundlichen Grüßen,
         </tr>
         {if:transfer.files>1}
         <tr>
-            <td>Transfergröße</td>
+            <td>Dateiübertragungsgröße</td>
             <td>{size:transfer.size}</td>
         </tr>
         {endif}

@@ -74,7 +74,7 @@
 
 <h3>Was unterstützt Ihr Browser?</h3>
 <ul class="fa-ul">
-    <li data-feature="html5"><img src="images/html5_installed.png" alt="hochladen mittels HTML5 ist aktiviert" />Sie können Dateien jeder Größe bis zu einer Gesamtgröße von {size:cfg:max_transfer_size} pro Dateitransfer hochladen.</li
+    <li data-feature="html5"><img src="images/html5_installed.png" alt="hochladen mittels HTML5 ist aktiviert" />Sie können Dateien jeder Größe bis zu einer Gesamtgröße von {size:cfg:max_transfer_size} pro Dateiübertragung hochladen.</li
     <li data-feature="nohtml5"><img src="images/html5_none.png" alt="hochladen mittels HTML5 ist inaktiv" />Sie können Dateien bis zu einer Größe von {size:cfg:max_legacy_file_size} bis zu einer Gesamtgröße von  {size:cfg:max_transfer
 </ul>
 
@@ -87,7 +87,7 @@ Um diese Methode zu aktivieren vewwenden Sie einfach einen aktuellen Browser, de
     <li><i class="fa-li fa fa-caret-right"></i>
 Aktuelle Versionen von Firefox und Chrome unter Windows, Mac OS X und Linux sollten funktionieren.</li>
     <li><i class="fa-li fa fa-caret-right"></i>
-        Sie können einen unterbrochenen oder abgebrochenen Dateitransfer  <strong>fortsetzen</strong>. Um dies zu tun, schicken Sie einfach <strong>exakt die selben Dateien</strong> noch einmal!
+        Sie können einen unterbrochenen oder abgebrochenen Dateiübertragung  <strong>fortsetzen</strong>. Um dies zu tun, schicken Sie einfach <strong>exakt die selben Dateien</strong> noch einmal!
         Stellen Sie sicher, dass die Dateien exakt <strong>die gleichen Namen und Dateigrößen</strong> wie vorher haben.
         Wenn der Upload beginnt, sollten Sie bemerken, dass der Fortschirittsbalken einen Sprung zur letzten Position macht und dann weitergeführt wird.
     </li>
@@ -97,7 +97,7 @@ Aktuelle Versionen von Firefox und Chrome unter Windows, Mac OS X und Linux soll
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>
 FileSender wird Sie warnen, falls Sie versuchen, Dateien die größer sind zu übertragen.</li>
-    <li><i class="fa-li fa fa-caret-right"></i>Ein fortsetzen von abgebrochenen Dateitransfer ist mit dieser Methode nicht möglich.</li>
+    <li><i class="fa-li fa fa-caret-right"></i>Ein fortsetzen von abgebrochenen Dateiübertragungen  ist mit dieser Methode nicht möglich.</li>
 </ul>
 
 
@@ -108,11 +108,11 @@ Maximale Anzahl an Empfängern: </strong>{cfg:max_transfer_recipients} E-Mail-Ad
     <li><i class="fa-li fa fa-caret-right"></i><strong>
 Maximale Anzahl an Dateien: </strong>{cfg:max_transfer_files}</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>
-Maximale Gesamtgröße eines Dateitransfers: </strong>{size:cfg:max_transfer_size}</li>
+Maximale Gesamtgröße einer Dateiübertragung: </strong>{size:cfg:max_transfer_size}</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>
 Maximale Dateigröße bei Browsern ohne HTML5-Unterstützung: </strong>{size:cfg:max_legacy_file_size}</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>
-Gültigkeit eines Dateitransfers: </strong>{cfg:default_transfer_days_valid} (max. {cfg:max_transfer_days_valid}) Tage</li>
+Gültigkeit einer Dateiübertragung: </strong>{cfg:default_transfer_days_valid} (max. {cfg:max_transfer_days_valid}) Tage</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>
 Gültigkeit einer Einladung: </strong>{cfg:default_guest_days_valid} (max. {cfg:max_guest_days_valid}) Tage</li>
 </ul>
