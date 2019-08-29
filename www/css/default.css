@@ -534,6 +534,9 @@ table.list .date {
     margin-bottom: 0.75em;
 }
 
+.buttons a.ui-button:active, .buttons a.ui-button:hover, .buttons a.ui-button:focus {
+    font-weight: bold;
+}
 
 
 /* Upload page */
