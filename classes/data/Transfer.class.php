@@ -115,6 +115,24 @@ class Transfer extends DBObject
             'size'    => '32',
             'null'    => true,
         ),
+        'password_version' => array(
+            'type'    => 'uint',
+            'size'    => 'small',
+            'null'    => false,
+            'default' => 1
+        ),
+        'password_encoding' => array(
+            'type'    => 'uint',
+            'size'    => 'medium',
+            'null'    => false,
+            'default' => 0
+        ),
+        'password_hash_iterations' => array(
+            'type'    => 'uint',
+            'size'    => 'medium',
+            'null'    => false,
+            'default' => 150000
+        ),
         
     );
 
@@ -187,6 +205,10 @@ class Transfer extends DBObject
     protected $options = array();
     protected $key_version = 0;
     protected $salt = '';
+    protected $password_version = 1;
+    protected $password_encoding = 0;
+    protected $password_encoding_string = 'none';
+    protected $password_hash_iterations = 150000;
     
     /**
      * Related objects cache
@@ -247,6 +269,9 @@ class Transfer extends DBObject
         if (is_object($this->options)) {
             $this->options = (array)$this->options;
         }
+
+        $this->password_encoding_string = DBConstantPasswordEncoding::reverseLookup($this->password_encoding);
+        
     }
     
     /**
@@ -745,7 +770,8 @@ class Transfer extends DBObject
         if (in_array($property, array(
             'id','status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'made_available',
-            'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid'
+            'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
+            'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
         ))) {
             return $this->$property;
         }
@@ -931,6 +957,14 @@ class Transfer extends DBObject
             $this->options = self::validateOptions($value);
         } elseif ($property == 'key_version') {
             $this->key_version = $value;
+        } elseif ($property == 'password_version') {
+            $this->password_version = $value;
+        } elseif ($property == 'password_encoding') {
+            DBConstantPasswordEncoding::validateCGIParamOrDIE($value);
+            $this->password_encoding = DBConstantPasswordEncoding::lookup($value);
+            $this->password_encoding_string = $value;
+        } elseif ($property == 'password_hash_iterations') {
+            $this->password_hash_iterations = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

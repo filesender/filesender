@@ -209,5 +209,19 @@ class DBConstant extends DBObject
         }
         Logger::haltWithErorr("unknown database constant was passed to lookup() $desc");
     }
+    public static function reverseLookup( $id )
+    {
+        $class = get_called_class();
+        $obj = call_user_func($class.'::createObject');
+        $d = $obj->getEnum();
+        foreach ($d as $k=>$v) {
+            if($v == $id) {
+                return $k;
+            }
+        }
+        
+        Logger::haltWithErorr("unknown database constant was passed to reverseLookup() $id");
+    }
+    
 }
 
