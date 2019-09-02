@@ -99,16 +99,18 @@ $(function() {
             var dataencab = window.filesender.crypto_common().convertStringToArrayBufferView( dataenc);
             dataencab = window.filesender.crypto_blob_reader().sliceForDownloadBuffers(dataencab);
             t0 = performance.now();
-            console.log(dataencab);
-            crypto.decryptBlob( dataencab, encryption_details, function(roundtrip) {
 
-                alert('decr!');
-                var t1 = performance.now();
-                var l = cryptoperftable.find('.tpl').clone().removeClass('tpl').addClass('benchmark');
-                l.find('.action').text('decrypt');
-                l.find('.milliseconds').text(Number(t1-t0).toLocaleString());
-                l.appendTo(cryptoperftable);
-            }, function (progress,len) {}, function(err) {alert('err ' + err );} );
+            // getting the right combination of slice/splits above is still a TODO
+//            console.log(dataencab);
+            // crypto.decryptBlob( dataencab, encryption_details, function(roundtrip) {
+
+            //     alert('decr!');
+            //     var t1 = performance.now();
+            //     var l = cryptoperftable.find('.tpl').clone().removeClass('tpl').addClass('benchmark');
+            //     l.find('.action').text('decrypt');
+            //     l.find('.milliseconds').text(Number(t1-t0).toLocaleString());
+            //     l.appendTo(cryptoperftable);
+            // }, function (progress,len) {}, function(err) {alert('err ' + err );} );
         });
     });
         

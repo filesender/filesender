@@ -483,7 +483,6 @@ filesender.ui.files = {
         input = $(input);
         var crypto = window.filesender.crypto_app();
 
-        console.log('enc pass ver ' + filesender.ui.transfer.encryption_password_version );
         
         var invalid = false;
         if( filesender.ui.transfer.encryption_password_version == 
@@ -854,7 +853,6 @@ filesender.ui.startUpload = function() {
     var crypto = window.filesender.crypto_app();
     this.transfer.encryption_key_version = filesender.config.encryption_key_version_new_files;
     this.transfer.encryption_password_hash_iterations = filesender.config.encryption_password_hash_iterations_new_files;
-    console.log('filesender.ui.transfer.encryption_password_version ' + filesender.ui.transfer.encryption_password_version );
     if( filesender.ui.transfer.encryption_password_version
         == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit )
     {
