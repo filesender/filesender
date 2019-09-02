@@ -90,15 +90,21 @@ $(function() {
                     return;
                 }
                 
-                var filename = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
-                var mime = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
+                var filename    = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
+                var mime        = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
                 var key_version = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-version');
-                var salt = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-salt');
+                var salt        = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-salt');
+                var password_version  = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-version');
+                var password_encoding = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-encoding');
+                var password_hash_iterations = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-hash-iterations');
 
                 window.filesender.crypto_app().decryptDownload( filesender.config.base_path
                                                                 + 'download.php?token=' + token
                                                                 + '&files_ids=' + ids.join(','),
-                                                                mime, filename, key_version, salt, progress);
+                                                                mime, filename, key_version, salt,
+                                                                password_version, password_encoding,
+                                                                password_hash_iterations,
+                                                                progress);
             }else{
                 var notify = false;
                 dlcb( notify ).call();

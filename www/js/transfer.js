@@ -165,8 +165,12 @@ window.filesender.transfer = function() {
     this.time = 0;
     this.encryption = 0;
     this.encryption_password = '';
+    this.encryption_password_encoding = 'none';
+    this.encryption_password_version  = 1;
+
     this.encryption_key_version = 0;
     this.encryption_salt = '';
+    this.encryption_password_hash_iterations = filesender.config.encryption_password_hash_iterations_new_files;
     this.disable_terasender = 0;
     this.pause_time = 0;
     this.pause_length = 0;
@@ -234,9 +238,12 @@ window.filesender.transfer = function() {
 
     this.getEncryptionMetadata = function() {
 	return {
-            password:    this.encryption_password,
-            key_version: this.encryption_key_version,
-            salt:        this.encryption_salt
+            password:          this.encryption_password,
+            password_encoding: this.encryption_password_encoding,
+            password_version:  this.encryption_password_version,
+            key_version:       this.encryption_key_version,
+            salt:              this.encryption_salt,
+            password_hash_iterations: this.encryption_password_hash_iterations
         };
     };
 

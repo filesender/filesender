@@ -226,6 +226,12 @@ $default = array(
     // see crypto_app.js for constants in the range crypto_key_version_constants
     // Generally higher is newer + better.
     'encryption_key_version_new_files' => 1,
+
+    // for details of possible values see crypto_password_version_constants
+    // in the file js/crypter/crypto_app.js
+    'encryption_random_password_version_new_files' => 2,
+    
+    'encryption_password_hash_iterations_new_files' => 150000,
     
     'transfer_options' => array(
         'email_me_copies' => array(
