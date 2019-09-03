@@ -84,6 +84,9 @@ class DBConstantBrowserType extends DBConstant
     static function currentBrowserToEnum()
     {
         $b = $_SERVER['HTTP_USER_AGENT'];
+        if(!defined($_SERVER['HTTP_USER_AGENT'])) {
+            return self::lookup(self::T_UNKNOWN);
+        }
         if( preg_match( '/Firefox/i', $b )) {
             $v = self::T_FIREFOX;
         } elseif ( preg_match( '/edge/i', $b )) {
