@@ -53,6 +53,7 @@ function delayAndCallOnlyOnce(callback, ms) {
     };
 }
 
+
 /**
  * apply a 'bad' class to the obj if b==true
  * the useExplicitGoodClass can be set to true and a 'good' css class 
@@ -480,13 +481,20 @@ filesender.ui.files = {
 
     checkEncryptionPassword: function(input) {
         input = $(input);
+        var crypto = window.filesender.crypto_app();
 
+        
         var invalid = false;
-        var pass = input.val();
-        var minLength = filesender.config.encryption_min_password_length;
-        if( minLength > 0 ) {
-            if( !pass || pass.length < minLength ) {
-                invalid = true;
+        if( filesender.ui.transfer.encryption_password_version == 
+            crypto.crypto_password_version_constants.v2018_text_password )
+        {
+        
+            var pass = input.val();
+            var minLength = filesender.config.encryption_min_password_length;
+            if( minLength > 0 ) {
+                if( !pass || pass.length < minLength ) {
+                    invalid = true;
+                }
             }
         }
         
@@ -841,9 +849,16 @@ filesender.ui.startUpload = function() {
     }
     this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
+    this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
     var crypto = window.filesender.crypto_app();
     this.transfer.encryption_key_version = filesender.config.encryption_key_version_new_files;
-    this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
+    this.transfer.encryption_password_hash_iterations = filesender.config.encryption_password_hash_iterations_new_files;
+    if( filesender.ui.transfer.encryption_password_version
+        == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit )
+    {
+        // as the password is 256 bits of entropy hashing is not needed
+        this.transfer.encryption_password_hash_iterations = 1;
+    }
     
     this.transfer.onprogress = filesender.ui.files.progress;
 
@@ -1094,9 +1109,14 @@ $(function() {
     if(!form.length) return;
 
     filesender.ui.errorOriginal = filesender.ui.error;
+
+    var crypto = window.filesender.crypto_app();
     
     // Transfer
     filesender.ui.transfer = new filesender.transfer();
+
+    // start out asking user for a password
+    filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
     
     // Register frequently used nodes
     filesender.ui.nodes = {
@@ -1230,6 +1250,14 @@ $(function() {
             filesender.ui.files.checkEncryptionPassword($(this));
         }, checkEncryptionPassword_delay )
     );
+    filesender.ui.nodes.encryption.password.on('click', function() {
+        var crypto = window.filesender.crypto_app();
+        if( filesender.ui.transfer.encryption_password_version
+            == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit )
+        {
+            $(this).select();
+        }
+    });
     
 
     // Disable readonly (some browsers ignore the autocomplete...)
@@ -1376,19 +1404,22 @@ $(function() {
         
         return false;
     });
+    
     filesender.ui.nodes.encryption.generate.on('click', function() {
-        var encoding = filesender.config.encryption_generated_password_encoding;
-        var desiredPassLen = filesender.config.encryption_generated_password_length;
-        var crypto = window.filesender.crypto_app();
 
-        var entropybuf = crypto.generateSecureRandomBytes( desiredPassLen );
-        password = crypto.encodeToString( entropybuf, encoding );
-        password = password.substr(0,desiredPassLen);
+        var crypto = window.filesender.crypto_app();
+        var encoded = crypto.generateRandomPassword();
+        password = encoded.value;
+        filesender.ui.nodes.encryption.password.attr('readonly', true);
         filesender.ui.nodes.encryption.password.val(password);
+        filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
+        filesender.ui.transfer.encryption_password_version  = encoded.version;
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
+        $('#encryption_password_show_container').hide();
         filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
     });
+
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if (filesender.ui.nodes.encryption.show_hide.is(':checked')) {
             filesender.ui.nodes.encryption.password.attr('type','text');
@@ -1495,6 +1526,7 @@ $(function() {
     };
 
     filesender.ui.nodes.auto_resume_timer_top.hide();
+
     
     if(!filesender.supports.reader) {
         // Legacy uploader

@@ -109,6 +109,9 @@
             data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
             data-key-version="<?php echo $transfer->key_version; ?>"
             data-key-salt="<?php echo $transfer->salt; ?>"
+            data-password-version="<?php echo $transfer->password_version; ?>"
+            data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
+            data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
         >
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
@@ -297,6 +300,9 @@
                         <div class="file" data-id="<?php echo $file->id ?>"
                              data-key-version="<?php echo $transfer->key_version; ?>"
                              data-key-salt="<?php echo $transfer->salt; ?>"
+                             data-password-version="<?php echo $transfer->password_version; ?>"
+                             data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
+                             data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
                         >
                             <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
@@ -309,6 +315,10 @@
                                         data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
                                         data-key-version="<?php echo $transfer->key_version; ?>"
                                         data-key-salt="<?php echo $transfer->salt; ?>"
+                                        data-password-version="<?php echo $transfer->password_version; ?>"
+                                        data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
+                                        data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
+                                      
                                 ></span>
                                         
                                 <?php } else {?>

@@ -1460,6 +1460,10 @@ table.guests .guest .to .errors .details {
     font-weight: bold;
 }
 
+#encryption_password {
+    width: 48ch;
+}
+
 /* Encryption */
 #encryption_password_container,
 #encryption_password_container_too_short_message,
@@ -1559,4 +1563,11 @@ div.not_displayed {
 
 .get_a_link_lock {
     background: #eeeeff;
+}
+
+.number {
+    text-align: right;
+}
+.active {
+    font-weight: bold;
 }

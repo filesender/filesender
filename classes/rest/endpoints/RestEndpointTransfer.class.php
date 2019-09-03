@@ -565,6 +565,15 @@ class RestEndpointTransfer extends RestEndpoint
             if ($data->encryption_key_version) {
                 $transfer->key_version = $data->encryption_key_version;
             }
+            if ($data->encryption_password_encoding) {
+                $transfer->password_encoding = $data->encryption_password_encoding;
+            }
+            if ($data->encryption_password_version) {
+                $transfer->password_version = $data->encryption_password_version;
+            }
+            if ($data->encryption_password_hash_iterations) {
+                $transfer->password_hash_iterations = $data->encryption_password_hash_iterations;
+            }
             if (Utilities::isTrue($data->encryption)) {
                 // reading the salt will ensure it is made
                 $dummy1 = $transfer->salt;

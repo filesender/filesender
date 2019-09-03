@@ -302,6 +302,11 @@ function ensureFK()
                     'statlogs.os refers to dbconstantoperatingsystem.id',
 	            call_user_func('StatLog::getDBTable'), 'statlogs_operatingsystem', 'os',
 	            call_user_func('DBConstantOperatingSystem::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'transfers.password_encoding refers to dbconstantpasswordencoding.id',
+	            call_user_func('Transfer::getDBTable'), 'transfer_passwordencoding', 'password_encoding',
+	            call_user_func('DBConstantPasswordEncoding::getDBTable'), 'id' ));
 
     
     foreach ( $fks as $fk ) {

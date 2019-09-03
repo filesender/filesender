@@ -112,10 +112,11 @@ A note about colours;
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_generated_password_length](#encryption_generated_password_length)
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
+* [encryption_random_password_version_new_files](#encryption_random_password_version_new_files)
+* [encryption_password_hash_iterations_new_files](#encryption_password_hash_iterations_new_files)
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
-
 
 ## Graphs
 
@@ -1037,6 +1038,28 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ latest version that the code supports.
 * __available:__ since version 2.6
 * __comment:__
+
+
+### encryption_random_password_version_new_files
+* __description:__ It is highly recommended that this value should be able to be left as the default (ie not set in your config.php). As new random passwords are created the version of code used for that transfer is stored in the database to allow this configuration setting to change and existing files to continue to be downloadable and decrypted. The config setting has been brought out in order to allow older code to still be used for a limited amount of time if desired. As of filesender 2.9 the default value of (2) means that when a random password is generated it will be 256 bits of random information which is then encoded to base64. Encoding to base64 allows the user to easily communicate the password. Note that while the user sees the base64 encoded password, the decoded binary data is used internally during encryption and decryption. This value sets which version of random password to use when making new passwords. It is highly recommended to leave the default value, ie. do not set anything in your config.php for this setting unless you need to force an older version for some reason.
+* __recommend_leaving_at_default:__ true
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ latest version that the code supports.
+* __available:__ since version 2.9
+* __comment:__
+
+
+
+### encryption_password_hash_iterations_new_files
+* __description:__ This setting only has an effect when encryption_key_version_new_files is 1 or above (the default for that setting). What follows is an abstract overview of how hash iterations may be used. When a text password that the user has entered is used for encryption a number of hashing rounds is applied to that password. The hashing uses both the user password and a random salt value combined. The salt is used so that the same password does not lead to the same key each time. It also means vast tables of precomputed keys can not be used for all transfers as the salt changes per transfer. The number of hashing rounds might be set for example so that deriving a key might take a second to perform. While that is not a huge delay for the user of the system, a potential attacker would have to spend some time to hash each guessed password. The attacker might have better or much newer hardware or use a GPU so that the time to has might be less than the second a user has spent. See https://en.wikipedia.org/wiki/PBKDF2#Key_derivation_process. To get an idea of how this setting will impact system performance see the admin/testing page on filesender. 
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 150000
+* __available:__ since version 2.9
+* __comment:__
+
+
 
 
 
