@@ -310,26 +310,13 @@ window.filesender.crypto_app = function () {
             var entropybuf;
             var encoding = filesender.config.encryption_generated_password_encoding;
 
-            var desired_version = filesender.config.encryption_random_password_version_new_files;
-            if( $this.crypto_password_version_constants.v2018_text_password == desired_version ) {
+            var desired_version = $this.crypto_password_version_constants.v2018_text_password;
                 // This is the password generation in place through 
                 // the first half of 2019.
                 var desiredPassLen = filesender.config.encryption_generated_password_length;
                 entropybuf = $this.generateSecureRandomBytes( desiredPassLen );
                 password = $this.encodeToString( entropybuf, encoding );
                 password = password.substr(0,desiredPassLen);
-            }
-            else if( $this.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit == desired_version ) {
-
-                // A 32 byte (256 bit) random password
-                // encoded using the administrators desired encoding
-                encoding = 'base64';
-                var entropybuf = $this.generateSecureRandomBytes( $this.crypto_random_password_octets );
-                password = $this.encodeToString( entropybuf, encoding );
-            }
-            else {
-                filesender.ui.rawError('{bad password encoding set, you should never see this error}')
-            }
             
             ret.version      = desired_version;
             ret.raw          = entropybuf;
@@ -360,27 +347,7 @@ window.filesender.crypto_app = function () {
             var ret = new Object();
             var raw = new Uint8Array(0);
             
-            if( $this.crypto_password_version_constants.v2018_text_password == version ) {
                 raw = window.filesender.crypto_common().convertStringToArrayBufferView(value);
-            }
-            else if( $this.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit == version ) {
-                if( encoding == 'base64' ) {
-                    try {
-                        var decoded = atob( value );
-                        raw = new Uint8Array( $this.crypto_random_password_octets );
-                        raw.forEach((_, i) => {
-                            raw[i] = decoded.charCodeAt(i);
-                        });
-                    } catch(e) {
-                        // we know the password is invalid bad if we can not base64 decode it
-                        // after all, we base64 encoded it in generateRandomPassword().
-                        throw(window.filesender.config.language.file_encryption_wrong_password);
-                    }
-                }
-            }
-            else {
-                filesender.ui.rawError('{bad password encoding set, you should never see this error}')
-            }
             
             ret.version      = version;
             ret.raw          = raw;
