@@ -382,7 +382,7 @@ $(function() {
             filesender.config.base_path + 'download.php?files_ids=' + id.join(','),
             mime, filename, key_version, salt,
             password_version, password_encoding,
-            password_hash_iterations,
+            password_hash_iterations
         );
 
         return false;
