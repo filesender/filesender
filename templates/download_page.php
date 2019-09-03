@@ -96,6 +96,9 @@
              data-name="<?php echo $file->path; ?>"
              data-key-version="<?php echo $transfer->key_version; ?>"
              data-key-salt="<?php echo $transfer->salt; ?>"
+             data-password-version="<?php echo $transfer->password_version; ?>"
+             data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
+             data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
         >
             
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
