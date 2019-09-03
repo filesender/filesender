@@ -17,6 +17,8 @@ window.filesender.crypto_app = function () {
         crypto_iv_len:       window.filesender.config.crypto_iv_len,
         crypto_crypt_name:   window.filesender.config.crypto_crypt_name,
         crypto_hash_name:    window.filesender.config.crypto_hash_name,
+        // random passwords should be 32 octects (256 bits) of entropy.
+        crypto_random_password_octets: 32,
         crypto_key_version_constants: {
             // constant values for crypto_key_version
             // newest version first, some metadata about the process
@@ -25,6 +27,30 @@ window.filesender.crypto_app = function () {
             v2018_importKey_deriveKey: 1,
             v2017_digest_importKey:    0
         },
+        crypto_password_version_constants: {
+            // constant values for crypto_password_version_constants
+            // newest version last, some metadata about the process
+            // taken. The year (and maybe month) should give indication
+            // that the later years are also the most desired version.
+            //
+            //
+            // This uses the password text as it is given. This is the right
+            // choice for a password that is entered by the user for example.
+            // It is assumed that encoding to base64 or whatnot is not needed.
+            //
+            v2018_text_password: 1,
+            //
+            //
+            // This version is for random generated passwords of 256 bits (32 octets)
+            // in length. Encoding from this full octet range is performed to base64
+            // and decoding will be done in decodePassword() to the original octet array.
+            // This version also allows for the use of less password hashing rounds
+            // because it is assumed that the password is already a good length random value.
+            // As such, more or less hashing will not impact security.
+            //
+            v2019_generated_password_that_is_full_256bit: 2
+        },
+
         
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
@@ -35,19 +61,27 @@ window.filesender.crypto_app = function () {
             var password    = encryption_details.password;
             var key_version = encryption_details.key_version;
             var salt        = encryption_details.salt;
+            var password_encoding = encryption_details.password_encoding;
+            var password_version  = encryption_details.password_version;
 
-            if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey ) {
-
+            var decoded        = $this.decodePassword( password, password_version, password_encoding );
+            var passwordBuffer = decoded.raw;
+            var hashRounds     = window.filesender.config.encryption_password_hash_iterations_new_files;
+            if( encryption_details.password_hash_iterations ) {
+                hashRounds = encryption_details.password_hash_iterations;
+            }
+            var saltBuffer     = window.filesender.crypto_common().convertStringToArrayBufferView(salt);
+            
+            if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
+            {
                 var efunc = function (e) {
                     // error making a hash
                     filesender.ui.log(e);
                 };
 
-                var saltBuffer = window.filesender.crypto_common().convertStringToArrayBufferView(salt);
-                
                 crypto.subtle.importKey(
                     'raw', 
-                    window.filesender.crypto_common().convertStringToArrayBufferView(password), 
+                    passwordBuffer,
                     {name: 'PBKDF2'}, 
                     false, 
                     ['deriveBits', 'deriveKey']
@@ -56,7 +90,7 @@ window.filesender.crypto_app = function () {
                     crypto.subtle.deriveKey(
                         { "name": 'PBKDF2',
                           "hash": 'SHA-256',
-                          "iterations": 150000,
+                          "iterations": hashRounds,
                           "salt":       saltBuffer,
                         },
                         dkey,
@@ -73,20 +107,27 @@ window.filesender.crypto_app = function () {
                 }, efunc );
             }
 
-            if( key_version == $this.crypto_key_version_constants.v2017_digest_importKey ) {
-                // yes, the formatting is jumbled, this is on purpose to show it is not changed from previous
-                // it will be reformatted in a subsequent PR
-            crypto.subtle.digest({name: this.crypto_hash_name}, window.filesender.crypto_common().convertStringToArrayBufferView(password)).then(function (key) {
-                crypto.subtle.importKey("raw", key, {name: $this.crypto_crypt_name, iv: iv}, false, ["encrypt", "decrypt"]).then(function (key) {
-                    callback(key, iv);
-                }, function (e) {
-                    // error making a key
+            if( key_version == $this.crypto_key_version_constants.v2017_digest_importKey )
+            {
+                crypto.subtle.digest(
+                    {name: this.crypto_hash_name},
+                    passwordBuffer
+                ).then( function (key) {
+                    crypto.subtle.importKey("raw", key,
+                                            {name: $this.crypto_crypt_name, iv: iv},
+                                            false,
+                                            ["encrypt", "decrypt"]
+                                           ).then( function (key) {
+                                               callback(key, iv);
+                                           }, function (e) {
+                                               // error making a key
+                                               filesender.ui.log(e);
+                                           });
+                }),
+                function (e) {
+                    // error making a hash
                     filesender.ui.log(e);
-                });
-            }), function (e) {
-                // error making a hash
-                filesender.ui.log(e);
-            };
+                };
             }
         },
         encryptBlob: function (value, encryption_details, callback) {
@@ -123,36 +164,43 @@ window.filesender.crypto_app = function () {
             var encryptedData = value; // array buffers array
             var blobArray = [];
 
-            this.generateKey(encryption_details, function (key) {
-		var wrongPassword = false;
-		var decryptLoop = function(i) {
-		    callbackProgress(i,encryptedData.length); //once per chunk
-                    var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
-                    crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
-                        function (result) {
-                            var blobArrayBuffer = new Uint8Array(result);
-                            blobArray.push(blobArrayBuffer);
-                            // done
-                            if (blobArray.length === encryptedData.length) {
-                                callbackDone(blobArray);
-                            } else {
-                                if (i<encryptedData.length){
-                                    setTimeout(decryptLoop(i+1),300);
+            try {
+                this.generateKey(encryption_details, function (key) {
+		    var wrongPassword = false;
+		    var decryptLoop = function(i) {
+		        callbackProgress(i,encryptedData.length); //once per chunk
+                        var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
+                        crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
+                            function (result) {
+                                var blobArrayBuffer = new Uint8Array(result);
+                                blobArray.push(blobArrayBuffer);
+                                // done
+                                if (blobArray.length === encryptedData.length) {
+                                    callbackDone(blobArray);
+                                } else {
+                                    if (i<encryptedData.length){
+                                        setTimeout(decryptLoop(i+1),300);
+                                    }
                                 }
-                            }
-                        },
-                        function (e) {
-                            if (!wrongPassword) {
+                            },
+                            function (e) {
+                                if (!wrongPassword) {
                                     wrongPassword=true;
                                     callbackError(e);
+                                }
                             }
-                        }
-		    );
-                };
-		decryptLoop(0);
-            });
+		        );
+                    };
+		    decryptLoop(0);
+                });
+            }
+            catch(e) {
+                callbackError(e);                
+            }
         },
-        decryptDownload: function (link, mime, name, key_version, salt, progress) {
+        decryptDownload: function (link, mime, name, key_version, salt,
+                                   password_version, password_encoding, password_hash_iterations,
+                                   progress) {
             var $this = this;
             
             var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
@@ -181,7 +229,12 @@ window.filesender.crypto_app = function () {
                         setTimeout(function(){
                             $this.decryptBlob(
                                 window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
-                                { password: pass, key_version: key_version, salt: salt },
+                                { password: pass,
+                                  key_version: key_version, salt: salt,
+                                  password_version:  password_version,
+                                  password_encoding: password_encoding,
+                                  password_hash_iterations: password_hash_iterations
+                                },
                                 function (decrypted) {
                                     var blob = new Blob(decrypted, {type: mime});
                                     saveAs(blob, name);
@@ -225,6 +278,120 @@ window.filesender.crypto_app = function () {
             window.crypto.getRandomValues(entropybuf);
             return entropybuf;
         },
+
+        /**
+         * Genereate a random password that is of a good length
+         * for the encryption being used and encode it. 
+         * @return an object with the length, password encoding version,
+         * and encoded and raw password. 
+         *
+         * Note that you will need to pass the following back to decodePassword()
+         * in order to recalculate the ret.raw values.
+         * List of items to store/restore.
+         *    ret.value, 
+         *    ret.encoding, 
+         *    ret.version to 
+         * 
+         * Example return value.
+         * {
+         *    version:      1,
+         *    encoding:     'base64',
+         *    raw:          Buffer <88, 39,...>,
+         *    raw_length:   32,
+         *    value:        'string encoded version of raw',
+         *    value_length: 64
+         * }
+         */
+        generateRandomPassword: function()
+        {
+            var $this = this;
+            var ret = new Object();
+            var password = 'error';
+            var entropybuf;
+            var encoding = filesender.config.encryption_generated_password_encoding;
+
+            var desired_version = filesender.config.encryption_random_password_version_new_files;
+            if( $this.crypto_password_version_constants.v2018_text_password == desired_version ) {
+                // This is the password generation in place through 
+                // the first half of 2019.
+                var desiredPassLen = filesender.config.encryption_generated_password_length;
+                entropybuf = $this.generateSecureRandomBytes( desiredPassLen );
+                password = $this.encodeToString( entropybuf, encoding );
+                password = password.substr(0,desiredPassLen);
+            }
+            else if( $this.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit == desired_version ) {
+
+                // A 32 byte (256 bit) random password
+                // encoded using the administrators desired encoding
+                encoding = 'base64';
+                var entropybuf = $this.generateSecureRandomBytes( $this.crypto_random_password_octets );
+                password = $this.encodeToString( entropybuf, encoding );
+            }
+            else {
+                filesender.ui.rawError('{bad password encoding set, you should never see this error}')
+            }
+            
+            ret.version      = desired_version;
+            ret.raw          = entropybuf;
+            ret.raw_length   = entropybuf.length;
+            ret.encoding     = encoding;
+            ret.value        = password;
+            ret.value_length = ret.value.length;
+            
+            return ret;
+        },
+
+        /**
+         * Decode an object that was generated with generateRandomPassword
+         * or a raw string as it is presented by using version == 1
+         *
+         * Example passed input object.
+         * {
+         *    version:      2,
+         *    encoding:     'base64',
+         *    value:        'string encoded version of raw',
+         * }
+         *
+         * The output will have raw and raw_length set from input.
+         */
+        decodePassword: function( value, version, encoding )
+        {
+            var $this = this;
+            var ret = new Object();
+            var raw = new Uint8Array(0);
+            
+            if( $this.crypto_password_version_constants.v2018_text_password == version ) {
+                raw = window.filesender.crypto_common().convertStringToArrayBufferView(value);
+            }
+            else if( $this.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit == version ) {
+                if( encoding == 'base64' ) {
+                    try {
+                        var decoded = atob( value );
+                        raw = new Uint8Array( $this.crypto_random_password_octets );
+                        raw.forEach((_, i) => {
+                            raw[i] = decoded.charCodeAt(i);
+                        });
+                    } catch(e) {
+                        // we know the password is invalid bad if we can not base64 decode it
+                        // after all, we base64 encoded it in generateRandomPassword().
+                        throw(window.filesender.config.language.file_encryption_wrong_password);
+                    }
+                }
+            }
+            else {
+                filesender.ui.rawError('{bad password encoding set, you should never see this error}')
+            }
+            
+            ret.version      = version;
+            ret.raw          = raw;
+            ret.raw_length   = raw.length;
+            ret.encoding     = encoding;
+            ret.value        = value;
+            ret.value_length = ret.value.length;
+                
+            return ret;
+        },
+        
         /**
          * This should encode to 'HelloWorld'
          */
