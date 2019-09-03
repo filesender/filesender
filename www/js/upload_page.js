@@ -1250,14 +1250,6 @@ $(function() {
             filesender.ui.files.checkEncryptionPassword($(this));
         }, checkEncryptionPassword_delay )
     );
-    filesender.ui.nodes.encryption.password.on('click', function() {
-        var crypto = window.filesender.crypto_app();
-        if( filesender.ui.transfer.encryption_password_version
-            == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit )
-        {
-            $(this).select();
-        }
-    });
     
 
     // Disable readonly (some browsers ignore the autocomplete...)
