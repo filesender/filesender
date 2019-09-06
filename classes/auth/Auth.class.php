@@ -350,14 +350,12 @@ class Auth
             }
             else
             {
-                Logger::error('cfg  ' . print_r($cfg,true ));
                 // Admin UID from config file
                 if (!is_array($cfg)) {
                     $cfg = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$cfg)));
                 }
 
                 $ret = in_array(self::user()->saml_user_identification_uid, $cfg);
-                Logger::error('cfg2 ret ' . $ret );
             }
         }
 
