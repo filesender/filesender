@@ -107,10 +107,10 @@ class DBConstantOperatingSystem extends DBConstant
 
     static function currentUserOperatingSystemEnum()
     {
-        $b = $_SERVER['HTTP_USER_AGENT'];
-        if(!defined($_SERVER['HTTP_USER_AGENT'])) {
+        if(!isset($_SERVER['HTTP_USER_AGENT'])) {
             return self::lookup(self::T_UNKNOWN);
         }
+        $b = $_SERVER['HTTP_USER_AGENT'];
         if( preg_match( '/iPad/i', $b )) {
             $v = self::T_IPAD;
         } elseif ( preg_match( '/iPod/i', $b )) {
