@@ -36,9 +36,11 @@
 
 
 $locales  =  array(
-    'cs' => 'cs_CZ',
+    'cs'    => 'cs_CZ',
     'cs-cz' => 'cs_CZ',
-    'de' => 'de_DE',
+    'da'    => 'da_DK',
+    'da_DK' => 'da_DK',
+    'de'    => 'de_DE',
     'de-de' => 'de_DE',
     'en-au' => array('name' => 'English (AU)', 'path' => 'en_AU'),
     'en-us' => array('name' => 'English (US)', 'path' => 'en_AU'),
