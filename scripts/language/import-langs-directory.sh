@@ -25,6 +25,8 @@ function importfile {
 
 }
 
+# note that you need to update languages/locale.php to have 
+# the new entries in it when you update the below
 importfile cs_CZ FileSender_2.0_Czech.php
 importfile da_DK FileSender_2.0_Danish.php
 importfile nl_NL FileSender_2.0_Dutch.php
