@@ -223,13 +223,18 @@ class RestEndpointTransfer extends RestEndpoint
                 // ... to be returned, aggregate it
                 return array_values(array_map(function ($log) {
                     $author = $log->author;
+
+                    $ip = '';
+                    if( Config::get('reports_show_ip_addr')) {
+                        $ip = $log->ip;
+                    }
                     
                     // Build action author data
                     $author_data = array(
                         'type' => $log->author_type,
                         'id' => $log->author_id,
                         'identity' => $author ? (string)$author->identity : null,
-                        'ip' => $log->ip
+                        'ip' => $ip
                     );
                     if ($log->author_type == 'Recipient') {
                         $author_data['email'] = $log->author->email;
