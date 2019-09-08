@@ -125,6 +125,7 @@ class EncryptionTest extends SeleniumTest {
     
     /**
      * Method testEncryptionTest 
+     * upload a file using key_version = 0
      * @test 
      */
     public function testEncryptionKeyVerZeroTest() {
@@ -148,6 +149,27 @@ class EncryptionTest extends SeleniumTest {
         $this->downloadEncrypted();
     }
 
+
+    /**
+     * Method testEncryptionTest 
+     * upload a file using key_version = 1
+     * @test 
+     */
+    public function testEncryptionKeyVerOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 1 );        
+        $this->uploadEncrypted();
+    }
+    public function testDecryptionKeyVerOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 0 );        
+        $this->downloadEncrypted();
+    }
+    public function testDecryptionKeyVerOneOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 1 );        
+        $this->downloadEncrypted();
+    }
     
 
 }
