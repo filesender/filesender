@@ -326,5 +326,8 @@ $config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce L
 $config['ban_extension'] = 'exe,bat';
 $config['user_page'] = array();
 
+$config['encryption_key_version_new_files'] = 0;
+
+
 $config['PUT_PERFORM_TESTSUITE'] = '';
 
