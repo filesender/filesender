@@ -4,14 +4,11 @@ require_once 'unittests/selenium/SeleniumTest.php';
 
 class EncryptionTest extends SeleniumTest {
 
-    /**
-     * Method testEncryptionTest 
-     * @test 
-     */
-    public function testEncryptionTest() {
+    private function uploadEncrypted() {
         extract($this->getKeyBindings());
 
         $this->setupAuthenticated();
+
 
         if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
             $this->clickCheckbox('[name="get_a_link"]');
@@ -69,12 +66,10 @@ class EncryptionTest extends SeleniumTest {
 
         return array($test1_file_data);
     }
-    
+
     /**
-     * Method testEncryptionTest 
-     * @test 
      */
-    public function testDecryptionTest() {
+    private function downloadEncrypted() {
         extract($this->getKeyBindings());
 
         $this->setupAuthenticated();
@@ -127,5 +122,54 @@ class EncryptionTest extends SeleniumTest {
         
         
     }
+    
+    /**
+     * Method testEncryptionTest 
+     * upload a file using key_version = 0
+     * @test 
+     */
+    public function testEncryptionKeyVerZeroTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 0 );        
+        $this->uploadEncrypted();
+    }
+
+    /**
+     * Method testDecryptionTest 
+     * @test 
+     */
+    public function testDecryptionKeyVerZeroTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 0 );        
+        $this->downloadEncrypted();
+    }
+    public function testDecryptionKeyVerZeroOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 1 );        
+        $this->downloadEncrypted();
+    }
+
+
+    /**
+     * Method testEncryptionTest 
+     * upload a file using key_version = 1
+     * @test 
+     */
+    public function testEncryptionKeyVerOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 1 );        
+        $this->uploadEncrypted();
+    }
+    public function testDecryptionKeyVerOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 0 );        
+        $this->downloadEncrypted();
+    }
+    public function testDecryptionKeyVerOneOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 1 );        
+        $this->downloadEncrypted();
+    }
+    
 
 }
