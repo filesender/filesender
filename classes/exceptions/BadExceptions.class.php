@@ -189,3 +189,22 @@ class BadAuthIDException extends DetailedException
         );
     }
 }
+
+/**
+ * Bad crypto key version
+ */
+class BadCryptoKeyVersionException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $url
+     */
+    public function __construct($v)
+    {
+        parent::__construct(
+            'bad_crypto_key_version_code', // Message to give to the user
+            array('version' => $v)         // Details to log
+        );
+    }
+}

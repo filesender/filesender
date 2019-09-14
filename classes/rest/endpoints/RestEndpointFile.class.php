@@ -356,15 +356,26 @@ class RestEndpointFile extends RestEndpoint
                 $data = base64_decode($data);
                 // Calculate the correct length
                 $chunkLength = strlen($data);
-                // The encryption adds padding and a checksum
-                $paddedLength = 16 - $client['X-Filesender-Chunk-Size'] % 16;
-                if ($paddedLength == 0) {
-                    $paddedLength = 16;
+
+                switch( $file->transfer->key_version ) {
+                    case CryptoAppConstants::v2018_importKey_deriveKey:
+                    case CryptoAppConstants::v2017_digest_importKey:
+                        // The encryption adds padding and a checksum
+                        $paddedLength = 16 - $client['X-Filesender-Chunk-Size'] % 16;
+                        if ($paddedLength == 0) {
+                            $paddedLength = 16;
+                        }
+                        // The initialization vector
+                        $ivLength = 16;
+                        // Content length
+                        $data_length = ($chunkLength - $paddedLength - $ivLength);
+                        break;
+                    case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
+                    case CryptoAppConstants::v2019_gcm_digest_importKey:
+                        $data_length = $chunkLength - 32;
+                        break;
                 }
-                // The initialization vector
-                $ivLength = 16;
-                // Content length
-                $data_length = ($chunkLength - $paddedLength - $ivLength);
+                
             } else {
                 $data_length = strlen($data);
             }
@@ -399,11 +410,11 @@ class RestEndpointFile extends RestEndpoint
             if (!is_null($client['X-Filesender-Chunk-Size'])) {
                 if ($data_length != $client['X-Filesender-Chunk-Size']) {
                     throw new RestSanityCheckFailedException(
-                        'chunk_size',
-                        $data_length,
-                                                             $client['X-Filesender-Chunk-Size'],
-                                                             $file,
-                        $client
+                         'chunk_size',
+                         $data_length,
+                                                              $client['X-Filesender-Chunk-Size'],
+                                                              $file,
+                         $client
                     );
                 }
             }

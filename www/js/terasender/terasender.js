@@ -112,10 +112,13 @@ window.filesender.terasender = {
         if(!file) return null; // Nothing to do
         
         if(!file.endpoint) file.endpoint = this.transfer.authenticatedEndpoint(filesender.config.terasender_upload_endpoint.replace('{file_id}', file.id), file);
+
+        var chunkid = Math.floor(file.uploaded / filesender.config.upload_chunk_size);
         
 	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=file.uploaded; //missing from file
         var job = {
             chunk: {
+                id: chunkid,
                 start: file.uploaded,
                 end: Math.min(file.uploaded + filesender.config.upload_chunk_size, file.size) //MD last chunk was too big
             },

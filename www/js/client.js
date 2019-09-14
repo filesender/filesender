@@ -374,7 +374,8 @@ window.filesender.client = {
                 return uxhr;
             }
         };
-        
+
+        var chunkid = Math.floor(offset / window.filesender.config.upload_chunk_size);
         var $this = this;
         if(encrypted){
             var cryptedBlob = null;
@@ -386,6 +387,7 @@ window.filesender.client = {
             blobReader.readArrayBuffer(function(arrayBuffer){
                 window.filesender.crypto_app().encryptBlob(
                     arrayBuffer,
+                    chunkid,
                     encryption_details,
                     function(encrypted_blob) {
                         var result = $this.put(
