@@ -262,6 +262,9 @@ class Lang
      */
     public static function setlocale_fromUserLang( int $category = LC_ALL )
     {
+        if (Auth::user() == null)
+            return;
+        
         $userlang = Auth::user()->lang;
 
         // this is the array of lang to try
@@ -269,14 +272,14 @@ class Lang
 
         // append a version that goes from it-it to it_IT so PHP will be happy
         $t = explode('-',$userlang);
-        if( count($t) == 2 ) {
+        if (count($t) == 2 ) {
             array_push($a, $t[0] . "_" . strtoupper($t[1]));
         }
 
         // try each language in the array until something sticks
         foreach($a as $lang) {
-            if( strlen($lang) ) {
-                if(setlocale($category, $lang))
+            if (strlen($lang) ) {
+                if (setlocale($category, $lang))
                     break;
             }
         }
