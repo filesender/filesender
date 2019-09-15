@@ -172,4 +172,35 @@ class EncryptionTest extends SeleniumTest {
     }
     
 
+    /**
+     * Method testEncryptionTest 
+     * upload a file using key_version = 3
+     * @test 
+     */
+    public function testEncryptionKeyVerThreeTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 3 );        
+        $this->uploadEncrypted();
+    }
+    public function testDecryptionKeyVerThreeTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 0 );        
+        $this->downloadEncrypted();
+    }
+    public function testDecryptionKeyVerThreeOneTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 1 );        
+        $this->downloadEncrypted();
+    }
+    public function testDecryptionKeyVerThreeTwoTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 2 );        
+        $this->downloadEncrypted();
+    }
+    public function testDecryptionKeyVerThreeThreeTest() {
+        extract($this->getKeyBindings());
+        $this->setKeyVersionNewFiles( 3 );        
+        $this->downloadEncrypted();
+    }
+    
 }
