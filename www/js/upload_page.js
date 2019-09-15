@@ -859,7 +859,8 @@ filesender.ui.startUpload = function() {
         // as the password is 256 bits of entropy hashing is not needed
         this.transfer.encryption_password_hash_iterations = 1;
     }
-    
+
+
     this.transfer.onprogress = filesender.ui.files.progress;
 
     // if the server wants the aup to be checked then we pass that information

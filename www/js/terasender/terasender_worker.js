@@ -178,6 +178,7 @@ var terasender_worker = {
 			blobReader.readArrayBuffer(function(arrayBuffer){
 			    window.filesender.crypto_app().encryptBlob(
                                 arrayBuffer,
+                                job.chunk.id,
                                 job.encryption_details,
                                 function (encrypted_blob) {
 				    xhr.setRequestHeader('X-Filesender-Encrypted', '1');

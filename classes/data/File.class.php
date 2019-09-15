@@ -241,8 +241,18 @@ class File extends DBObject
         if ($lastChunkPadding == 0) {
             $lastChunkPadding = 16;
         }
-            
-        return $this->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+
+        switch( $this->transfer->key_version ) {
+            case CryptoAppConstants::v2018_importKey_deriveKey:
+            case CryptoAppConstants::v2017_digest_importKey:
+                return $this->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+            case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
+            case CryptoAppConstants::v2019_gcm_digest_importKey:
+                return $this->size + (($chunksMinusOne+1) * $echunkdiff);
+            default:
+        }
+        // fall through is an error
+        throw new BadCryptoKeyVersionException( $this->transfer->key_version );
     }
 
     /**

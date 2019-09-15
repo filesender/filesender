@@ -24,8 +24,10 @@ window.filesender.crypto_app = function () {
             // newest version first, some metadata about the process
             // taken. The year (and maybe month) should give indication
             // that the later years are also the most desired version.
-            v2018_importKey_deriveKey: 1,
-            v2017_digest_importKey:    0
+            v2019_gcm_importKey_deriveKey: 3, // AES-GCM otherwise same as v2018_importKey_deriveKey
+            v2019_gcm_digest_importKey:    2, // AES-GCM otherwise same as v2017_digest_importKey
+            v2018_importKey_deriveKey:     1, // AES-CBC
+            v2017_digest_importKey:        0  // AES-CBC
         },
         crypto_password_version_constants: {
             // constant values for crypto_password_version_constants
@@ -51,11 +53,45 @@ window.filesender.crypto_app = function () {
             v2019_generated_password_that_is_full_256bit: 2
         },
 
+        createChunkIDArray: function( chunkid ) {
+            var ret = new Uint8Array(4);
+            ret[0] = chunkid>>0  & 0xFF;
+            ret[1] = chunkid>>8  & 0xFF;
+            ret[2] = chunkid>>16 & 0xFF;
+            ret[3] = chunkid>>24 & 0xFF;
+            return ret;
+        },
+
+        /**
+         * Create and return an IV of 16 octets (128 bits) constructed as follows:
+         *    12 octets of entropy
+         *     4 octets containing the chunkid
+         *
+         * This is based on Page 19 of OpenFortress 2018 document:
+         *   "The suggested procedure for the case of FileSender is to combine 96 bits
+         *    of random material with a 32-bit chunk counter to form a 128-bit IV."
+         */
+        createIVGCM: function( chunkid ) {
+            var $this = this;
+
+            // 96 bits of entropy
+            ivrandom  = crypto.getRandomValues(new Uint8Array(12));
+
+            // 32 bits of counter from chunkid
+            ivcounter = $this.createChunkIDArray(chunkid);
+
+            // merge these into return value
+            iv = new Uint8Array(16);
+            iv.set(ivrandom);
+            iv.set(ivcounter, ivrandom.length );
+            
+            return iv;
+        },
         
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
         },
-        generateKey: function (encryption_details, callback) {
+        generateKey: function (chunkid, encryption_details, callback) {
             var iv = this.generateVector();
             var $this = this;
             var password    = encryption_details.password;
@@ -71,13 +107,14 @@ window.filesender.crypto_app = function () {
                 hashRounds = encryption_details.password_hash_iterations;
             }
             var saltBuffer     = window.filesender.crypto_common().convertStringToArrayBufferView(salt);
+            var efunc = function (e) {
+                // error making a hash
+                filesender.ui.log(e);
+            };
+
             
             if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
             {
-                var efunc = function (e) {
-                    // error making a hash
-                    filesender.ui.log(e);
-                };
 
                 crypto.subtle.importKey(
                     'raw', 
@@ -107,6 +144,45 @@ window.filesender.crypto_app = function () {
                 }, efunc );
             }
 
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                window.filesender.config.crypto_crypt_name = "AES-GCM";
+                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
+
+                // IV has a predefined mix of entropy and chunk counter
+                iv = $this.createIVGCM(chunkid);
+
+                crypto.subtle.importKey(
+                    'raw', 
+                    passwordBuffer,
+                    {name: 'PBKDF2'}, 
+                    false, 
+                    ['deriveBits', 'deriveKey']
+                ).then(function(dkey) {
+
+                    crypto.subtle.deriveKey(
+                        { "name": 'PBKDF2',
+                          "hash": 'SHA-256',
+                          "iterations": hashRounds,
+                          "salt":       saltBuffer,
+                        },
+                        dkey,
+                        { "name":   'AES-GCM',
+                          "length": 256
+                          // Note that passing the IV here does nothing as we are not encrypting anything
+                          // tested by passing a random value here that is not the same during a call from
+                          // decryptBlob()
+                        },
+                        false,                   // key is not extractable
+                        [ "encrypt", "decrypt" ] // features desired
+                    ).then(function (key) {
+                    
+                        callback(key, iv);
+                    }, efunc );
+                }, efunc );
+
+            }
+            
             if( key_version == $this.crypto_key_version_constants.v2017_digest_importKey )
             {
                 crypto.subtle.digest(
@@ -129,11 +205,44 @@ window.filesender.crypto_app = function () {
                     filesender.ui.log(e);
                 };
             }
-        },
-        encryptBlob: function (value, encryption_details, callback) {
-            var $this = this;
+
+
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey )
+            {
+                window.filesender.config.crypto_crypt_name = "AES-GCM";
+                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
+
+                // IV has a predefined mix of entropy and chunk counter
+                iv = $this.createIVGCM(chunkid);
+                
+                crypto.subtle.digest(
+                    {name: this.crypto_hash_name},
+                    passwordBuffer
+                ).then( function (key) {
+                    crypto.subtle.importKey("raw", key,
+                                            { "name":   'AES-GCM', "length": 256 },
+                                            false,
+                                            ["encrypt", "decrypt"]
+                                           ).then( function (key) {
+                                               callback(key, iv);
+                                           }, function (e) {
+                                               // error making a key
+                                               filesender.ui.log(e);
+                                           });
+                }),
+                function (e) {
+                    // error making a hash
+                    filesender.ui.log(e);
+                };
+            }
             
-            this.generateKey(encryption_details, function (key, iv) {
+            
+        },
+        encryptBlob: function (value, chunkid, encryption_details, callback) {
+            var $this = this;
+
+            
+            this.generateKey(chunkid, encryption_details, function (key, iv) {
                 crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
                         function (result) {
 
@@ -165,9 +274,11 @@ window.filesender.crypto_app = function () {
             var blobArray = [];
 
             try {
-                this.generateKey(encryption_details, function (key) {
+                var chunkid = 0;
+                this.generateKey(chunkid, encryption_details, function (key) {
 		    var wrongPassword = false;
 		    var decryptLoop = function(i) {
+                        
 		        callbackProgress(i,encryptedData.length); //once per chunk
                         var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
                         crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
@@ -359,7 +470,7 @@ window.filesender.crypto_app = function () {
             var $this = this;
             var ret = new Object();
             var raw = new Uint8Array(0);
-            
+
             if( $this.crypto_password_version_constants.v2018_text_password == version ) {
                 raw = window.filesender.crypto_common().convertStringToArrayBufferView(value);
             }

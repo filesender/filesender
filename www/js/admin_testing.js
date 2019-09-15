@@ -86,9 +86,10 @@ $(function() {
             salt:              '123456789',
             password_hash_iterations: cfg.encryption_password_hash_iterations_new_files
         };
-        
+
+        var chunkid = 0;
         var t0 = performance.now();            
-        crypto.encryptBlob( data, encryption_details, function(dataenc) {
+        crypto.encryptBlob( data, chunkid, encryption_details, function(dataenc) {
             var t1 = performance.now();
 
             var l = cryptoperftable.find('.tpl').clone().removeClass('tpl').addClass('benchmark');
