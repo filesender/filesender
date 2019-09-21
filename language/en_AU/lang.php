@@ -526,3 +526,6 @@ $lang['calculate'] = 'Calculate';
 $lang['iterations'] = 'Iterations';
 $lang['time_to_complete_ms'] = 'Time to complete (ms)';
 $lang['system_active_setting'] = 'This setting is active on your system';
+
+$lang['decryption_verification_failed_unexpected_ivchunkid'] = 'Decryption of data failed';
+$lang['decryption_verification_failed_bad_ivchunkid'] = 'Decryption of data failed';

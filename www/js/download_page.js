@@ -97,6 +97,8 @@ $(function() {
                 var password_version  = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-version');
                 var password_encoding = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-encoding');
                 var password_hash_iterations = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-hash-iterations');
+                var client_entropy = $($this).find("[data-id='" + ids[0] + "']").attr('data-client-entropy');
+                var fileiv = $($this).find("[data-id='" + ids[0] + "']").attr('data-fileiv');
 
                 window.filesender.crypto_app().decryptDownload( filesender.config.base_path
                                                                 + 'download.php?token=' + token
@@ -104,6 +106,8 @@ $(function() {
                                                                 mime, filename, key_version, salt,
                                                                 password_version, password_encoding,
                                                                 password_hash_iterations,
+                                                                client_entropy,
+                                                                window.filesender.crypto_app().decodeCryptoFileIV(fileiv),
                                                                 progress);
             }else{
                 var notify = false;

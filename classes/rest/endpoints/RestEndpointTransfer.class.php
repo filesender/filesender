@@ -511,6 +511,19 @@ class RestEndpointTransfer extends RestEndpoint
                     if ($v && $sz > $v) {
                         throw new TransferMaximumEncryptedFileSizeExceededException($sz, $v);
                     }
+
+                    $key_version = Config::get('encryption_key_version_new_files');
+        
+                    if( $key_version == CryptoAppConstants::v2019_gcm_importKey_deriveKey ||
+                        $key_version == CryptoAppConstants::v2019_gcm_digest_importKey )
+                    {
+                        $v = Config::get('crypto_gcm_max_file_size');
+                        if( $sz > $v ) {
+                            throw new TransferMaximumEncryptedFileSizeExceededException($sz, $v);
+                        }
+                    }
+                    
+                    
                 }
             }
 
@@ -579,6 +592,9 @@ class RestEndpointTransfer extends RestEndpoint
             if ($data->encryption_password_hash_iterations) {
                 $transfer->password_hash_iterations = $data->encryption_password_hash_iterations;
             }
+            if ($data->encryption_client_entropy) {
+                $transfer->client_entropy = $data->encryption_client_entropy;
+            }
             if (Utilities::isTrue($data->encryption)) {
                 // reading the salt will ensure it is made
                 $dummy1 = $transfer->salt;
@@ -608,8 +624,8 @@ class RestEndpointTransfer extends RestEndpoint
                 if (!is_null($banned_exts) && in_array($ext, $banned_exts)) {
                     throw new FileExtensionNotAllowedException($ext);
                 }
-                
-                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
+
+                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type, $filedata->iv );
                 $files_cids[$file->id] = $filedata->cid;
             }
             

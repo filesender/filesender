@@ -10,6 +10,10 @@ if (!('ui' in window.filesender)) {
     }
 }
 
+Uint8Array.prototype.equals = function (a) {
+    return this.length === a.length && this.every(function(value, index) { return value === a[index]});
+}
+
 window.filesender.crypto_app = function () {
     return {
         crypto_is_supported: true,
@@ -18,7 +22,10 @@ window.filesender.crypto_app = function () {
         crypto_crypt_name:   window.filesender.config.crypto_crypt_name,
         crypto_hash_name:    window.filesender.config.crypto_hash_name,
         // random passwords should be 32 octects (256 bits) of entropy.
+        crypto_client_entropy_octets: 32,
         crypto_random_password_octets: 32,
+        crypto_gcm_per_file_iv_octet_size: 12, // used in v2019_gcm_* key_versions
+        crypto_cbc_per_file_iv_octet_size: 16, // 128bits for CBC
         crypto_key_version_constants: {
             // constant values for crypto_key_version
             // newest version first, some metadata about the process
@@ -53,8 +60,33 @@ window.filesender.crypto_app = function () {
             v2019_generated_password_that_is_full_256bit: 2
         },
 
+        /**
+         * This turns a filesender chunkid into a 4 byte array
+         * that can be used in GCM encryption. Note that the chunkid
+         * is turned into a larger number in line with desirable cryto
+         * properties. 
+         * 
+         * This translation is undone by extractChunkIDFromIV()
+         * so the calling code can always think of chunkid=0 as the first
+         * chunk and chunkid=1 as the second and so on even if they
+         * are encoded as by this function as:
+         *
+         * encodedchunkid = chunkid*ceil(chunk-size-in-bytes / 16)
+         *
+         * for 4mb chunks this would become:
+         *  chunkid   encodedchunkid
+         *  0         0
+         *  1         262144 
+         *  2         262144*2
+         *  3         262144*3
+         */
         createChunkIDArray: function( chunkid ) {
             var ret = new Uint8Array(4);
+
+            // encode the filesender chunkid for GCM
+            chunkid = chunkid * Math.ceil(window.filesender.config.upload_chunk_size/16);
+
+            // convert the encoded chunkid into 4 array octets.
             ret[0] = chunkid>>0  & 0xFF;
             ret[1] = chunkid>>8  & 0xFF;
             ret[2] = chunkid>>16 & 0xFF;
@@ -62,6 +94,25 @@ window.filesender.crypto_app = function () {
             return ret;
         },
 
+        extractChunkIDFromIV: function( iv ) {
+
+            if( iv.length != 16 ) {
+                return -1;
+            }
+
+            // convert 4 array octets back into an encoded chunkid
+            var id = 0;
+            id |= (iv[12] <<  0);
+            id |= (iv[13] <<  8);
+            id |= (iv[14] << 16);
+            id |= (iv[15] << 24);
+
+            // convert that encoded chunkid back into a filesender chunkid.
+            id = id / Math.ceil(window.filesender.config.upload_chunk_size/16);
+            
+            return id;
+        },
+        
         /**
          * Create and return an IV of 16 octets (128 bits) constructed as follows:
          *    12 octets of entropy
@@ -71,29 +122,86 @@ window.filesender.crypto_app = function () {
          *   "The suggested procedure for the case of FileSender is to combine 96 bits
          *    of random material with a 32-bit chunk counter to form a 128-bit IV."
          */
-        createIVGCM: function( chunkid ) {
+        createIVGCM: function( chunkid, encryption_details ) {
             var $this = this;
 
+            if( !encryption_details.fileiv ||
+                encryption_details.fileiv.length != $this.crypto_gcm_per_file_iv_octet_size ) {
+                throw ({message: 'gcm_encryption_found_invalid_iv_length',
+                        details: {}});
+            }
             // 96 bits of entropy
-            ivrandom  = crypto.getRandomValues(new Uint8Array(12));
+            var ivrandom = encryption_details.fileiv;
 
             // 32 bits of counter from chunkid
-            ivcounter = $this.createChunkIDArray(chunkid);
+            var ivcounter = $this.createChunkIDArray(chunkid);
 
             // merge these into return value
-            iv = new Uint8Array(16);
+            var iv = new Uint8Array(16);
             iv.set(ivrandom);
             iv.set(ivcounter, ivrandom.length );
-            
+
             return iv;
         },
+
+        
+        // generate numOctets 8bit bytes of of entropy, encoded as base64 for storage/transmission
+        generateBase64EncodedEntropy: function( numOctets ) {
+            var $this = this;
+            var entropy = crypto.getRandomValues(new Uint8Array(numOctets));
+            var encoding = 'base64';
+            var ret = $this.encodeToString( entropy, encoding );
+            return ret;
+        },
+        // decode the base64 encoded entropy string into an array for local use
+        decodeBase64EncodedEntropy: function( b64data, numOctets ) {
+            var $this = this;
+            var decoded = atob( b64data );
+            var raw = new Uint8Array( numOctets );
+            raw.forEach((_, i) => {
+                raw[i] = decoded.charCodeAt(i);
+            });
+            return raw;
+        },
+        generateClientEntropy: function() {
+            var $this = this;
+            return $this.generateBase64EncodedEntropy($this.crypto_client_entropy_octets);
+        },
+        decodeClientEntropy: function( b64data ) {
+            var $this = this;
+            return $this.decodeBase64EncodedEntropy(b64data,$this.crypto_client_entropy_octets);
+        },
+        getNumberOctetsForIV: function( key_version ) {
+            var $this = this;
+            var numOctets = $this.crypto_gcm_per_file_iv_octet_size;
+            if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey ||
+                key_version == $this.crypto_key_version_constants.v2017_digest_importKey )
+            {
+                numOctets = $this.crypto_cbc_per_file_iv_octet_size;
+            }
+            return numOctets;
+        },        
+        generateCryptoFileIV: function() {
+            var $this = this;
+            var numOctets = $this.getNumberOctetsForIV(
+                window.filesender.config.encryption_key_version_new_files);
+            return $this.generateBase64EncodedEntropy(numOctets);
+        },
+        decodeCryptoFileIV: function( b64data ) {
+            var $this = this;
+            var numOctets = $this.getNumberOctetsForIV(
+                window.filesender.config.encryption_key_version_new_files);
+            return $this.decodeBase64EncodedEntropy(b64data,numOctets);
+        },
+        
+        
         
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
         },
-        generateKey: function (chunkid, encryption_details, callback) {
-            var iv = this.generateVector();
+        generateKey: function (chunkid, encryption_details, callback, callbackError) {
             var $this = this;
+            var iv = this.generateVector();
             var password    = encryption_details.password;
             var key_version = encryption_details.key_version;
             var salt        = encryption_details.salt;
@@ -109,7 +217,7 @@ window.filesender.crypto_app = function () {
             var saltBuffer     = window.filesender.crypto_common().convertStringToArrayBufferView(salt);
             var efunc = function (e) {
                 // error making a hash
-                filesender.ui.log(e);
+                callbackError(e);
             };
 
             
@@ -150,7 +258,7 @@ window.filesender.crypto_app = function () {
                 this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
 
                 // IV has a predefined mix of entropy and chunk counter
-                iv = $this.createIVGCM(chunkid);
+                iv = $this.createIVGCM( chunkid, encryption_details );
 
                 crypto.subtle.importKey(
                     'raw', 
@@ -213,7 +321,7 @@ window.filesender.crypto_app = function () {
                 this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
 
                 // IV has a predefined mix of entropy and chunk counter
-                iv = $this.createIVGCM(chunkid);
+                iv = $this.createIVGCM( chunkid, encryption_details );
                 
                 crypto.subtle.digest(
                     {name: this.crypto_hash_name},
@@ -238,14 +346,31 @@ window.filesender.crypto_app = function () {
             
             
         },
-        encryptBlob: function (value, chunkid, encryption_details, callback) {
+        encryptBlob: function (value, chunkid, encryption_details, callback, callbackError ) {
             var $this = this;
+            var key_version = encryption_details.key_version;
 
+            // GCM checks
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                // If the user tries to upload too many bytes
+                // than we should for this encryption technique
+                // then do not allow it to happen.
+                // Other checks should stop the code before this code can
+                // run, but more checks are always better
+                if( value.byteLength + chunkid*$this.crypto_chunk_size
+                    > window.filesender.config.crypto_gcm_max_file_size )
+                {
+                    return callbackError({message: 'maximum_encrypted_file_size_exceeded',
+                                          details: {}});
+                }
+            }
             
             this.generateKey(chunkid, encryption_details, function (key, iv) {
                 crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
-                        function (result) {
-
+                    function (result) {
+                        
                             var joinedData = window.filesender.crypto_common().joinIvAndData(iv, new Uint8Array(result));
 
                             // this is the base64 variant. this will result in a larger string to send
@@ -263,12 +388,35 @@ window.filesender.crypto_app = function () {
                             filesender.ui.log(e);
                         }
                 );
-
-
+            },
+            function (e) {
+                // error occured during generatekey
+                filesender.ui.log(e);
             });
         },
         decryptBlob: function (value, encryption_details, callbackDone, callbackProgress, callbackError) {
             var $this = this;
+            var key_version = encryption_details.key_version;
+            var client_entropy = new Uint8Array(16);
+            var expected_fixed_chunk_iv = new Uint8Array(16);
+
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                if( encryption_details.fileiv.length != $this.crypto_gcm_per_file_iv_octet_size )
+                {
+                    return callbackError({message: 'decryption_verification_failed_bad_fixed_iv',
+                                          details: {}});
+                }
+                expected_fixed_chunk_iv = encryption_details.fileiv;
+            }
+
+            // decode client entropy if we have it
+            if( encryption_details.client_entropy &&
+                encryption_details.client_entropy.length )
+            {
+                client_entropy = $this.decodeClientEntropy( encryption_details.client_entropy );
+            }
 
             var encryptedData = value; // array buffers array
             var blobArray = [];
@@ -281,6 +429,31 @@ window.filesender.crypto_app = function () {
                         
 		        callbackProgress(i,encryptedData.length); //once per chunk
                         var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
+
+                        // GCM checks
+                        if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                            key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+                        {
+                            
+                            // Check IV random 96 bits are the same
+                            if( !expected_fixed_chunk_iv.equals(value.iv.slice(0,$this.crypto_gcm_per_file_iv_octet_size))  ) {
+                                return callbackError({message: 'decryption_verification_failed_invalid_iv',
+                                                      details: {}});
+                            }
+                            
+                            // Check that chunkid from IV matches expected chunkid
+                            var ivchunkid = $this.extractChunkIDFromIV( value.iv );
+                            if( ivchunkid == -1 ) {
+                                return callbackError({message: 'decryption_verification_failed_bad_ivchunkid',
+                                                      details: {}});
+                            }
+                            if( i != ivchunkid ) {
+                                return callbackError({message: 'decryption_verification_failed_unexpected_ivchunkid',
+                                                      details: {}});
+                            }
+                        }
+                        
+                        
                         crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
                             function (result) {
                                 var blobArrayBuffer = new Uint8Array(result);
@@ -303,17 +476,25 @@ window.filesender.crypto_app = function () {
 		        );
                     };
 		    decryptLoop(0);
+                },
+                function (e) {
+                    // error occured during generatekey
+                    filesender.ui.log(e);
                 });
             }
             catch(e) {
                 callbackError(e);                
-            }
+            }            
         },
+        /**
+         *
+         * @param fileiv is the decoded fileiv. Decoding can be done with decodeCryptoFileIV()
+         */
         decryptDownload: function (link, mime, name, key_version, salt,
                                    password_version, password_encoding, password_hash_iterations,
+                                   client_entropy, fileiv,
                                    progress) {
             var $this = this;
-            
             var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
 
@@ -344,7 +525,9 @@ window.filesender.crypto_app = function () {
                                   key_version: key_version, salt: salt,
                                   password_version:  password_version,
                                   password_encoding: password_encoding,
-                                  password_hash_iterations: password_hash_iterations
+                                  password_hash_iterations: password_hash_iterations,
+                                  client_entropy: client_entropy,
+                                  fileiv: fileiv
                                 },
                                 function (decrypted) {
                                     var blob = new Blob(decrypted, {type: mime});
@@ -582,6 +765,27 @@ window.filesender.crypto_app = function () {
                 return $this.encodeToAscii85( bindata );
             }
             return $this.encodeToBase64( bindata );
+        },
+
+        /**
+         * Check file size for encryption limits
+         *
+         * @return true if things are ok
+         */
+        isFileSizeValidForEncryption: function( size ) {
+            var $this = this;
+
+            var key_version = window.filesender.config.encryption_key_version_new_files;
+        
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                if( size > window.filesender.config.crypto_gcm_max_file_size ) {
+                    return false;
+                }
+            }
+            
+            return true;
         }
     };
 };

@@ -183,7 +183,8 @@ var terasender_worker = {
                                 function (encrypted_blob) {
 				    xhr.setRequestHeader('X-Filesender-Encrypted', '1');
 				    xhr.send(encrypted_blob);
-				});
+				},
+                                function (e) { $this.error(e); } );
 			});
 		} else {
 			xhr.send(blob);

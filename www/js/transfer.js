@@ -171,6 +171,7 @@ window.filesender.transfer = function() {
     this.encryption_key_version = 0;
     this.encryption_salt = '';
     this.encryption_password_hash_iterations = filesender.config.encryption_password_hash_iterations_new_files;
+    this.encryption_client_entropy = '';
     this.disable_terasender = 0;
     this.pause_time = 0;
     this.pause_length = 0;
@@ -243,7 +244,8 @@ window.filesender.transfer = function() {
             password_version:  this.encryption_password_version,
             key_version:       this.encryption_key_version,
             salt:              this.encryption_salt,
-            password_hash_iterations: this.encryption_password_hash_iterations
+            password_hash_iterations: this.encryption_password_hash_iterations,
+            client_entropy:    this.encryption_client_entropy
         };
     };
 
@@ -273,8 +275,31 @@ window.filesender.transfer = function() {
                 errorhandler({message: 'maximum_encrypted_file_size_exceeded', details: {size: file.size, max: v  }});
                 return false;
             }
+            if( !this.checkIsValidFileSize( file, errorhandler )) {
+                return false;
+            }
+            
         }
         okHandler(true);
+        return true;
+    };
+
+    /**
+     * Check file size for encryption limits
+     *
+     * @return true if things are ok
+     */
+    this.checkIsValidFileSize = function( file, errorhandler ) {
+
+        if( this.encryption )
+        {
+            if( !window.filesender.crypto_app().isFileSizeValidForEncryption( file.size ))
+            {
+                errorhandler({message: 'maximum_encrypted_file_size_exceeded',
+                              details: {filename: file.name, size: file.size}});
+                return false;
+            }
+        }
         return true;
     };
     
@@ -342,6 +367,9 @@ window.filesender.transfer = function() {
             errorhandler({message: 'empty_file'});
             return false;
         }
+        if( !this.checkIsValidFileSize( file, errorhandler )) {
+            return false;
+        }
         
         if (typeof filesender.config.ban_extension == 'string') {
             var banned = filesender.config.ban_extension.replace(/\s+/g, '');
@@ -383,6 +411,7 @@ window.filesender.transfer = function() {
             return false;
         }
 
+        
         var t = this.checkFileAsStillValid(file, function() {}, errorhandler);
         if( t === false )
             return t;
@@ -1083,11 +1112,23 @@ window.filesender.transfer = function() {
         if (this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
+        for (var i = 0; i < this.files.length; i++) {
+            if( !this.checkIsValidFileSize( this.files[i], errorhandler )) {
+                return false;
+            }
+        }
+
+        // Generate IV for each crypted file.
+        if( this.encryption ) {
+            for (var i = 0; i < this.files.length; i++) {
+                this.files[i].iv = window.filesender.crypto_app().generateCryptoFileIV();
+            }
+        }
         
         if (this.size > filesender.config.max_transfer_size) {
             return errorhandler({message: 'transfer_maximum_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
         }
-        
+         
         var today = Math.floor((new Date()).getTime() / (24 * 3600 * 1000));
         var minexpires = today - 1;
         var maxexpires = today + filesender.config.max_transfer_days_valid + 1;
@@ -1100,6 +1141,10 @@ window.filesender.transfer = function() {
         filesender.ui.log('Creating transfer');
         
         this.time = (new Date()).getTime();
+
+        if( this.encryption ) {
+            this.encryption_client_entropy = window.filesender.crypto_app().generateClientEntropy();
+        }
         
         var transfer = this;
         filesender.client.postTransfer(this, function(path, data) {
