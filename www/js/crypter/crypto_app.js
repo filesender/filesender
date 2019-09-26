@@ -62,29 +62,10 @@ window.filesender.crypto_app = function () {
 
         /**
          * This turns a filesender chunkid into a 4 byte array
-         * that can be used in GCM encryption. Note that the chunkid
-         * is turned into a larger number in line with desirable cryto
-         * properties. 
-         * 
-         * This translation is undone by extractChunkIDFromIV()
-         * so the calling code can always think of chunkid=0 as the first
-         * chunk and chunkid=1 as the second and so on even if they
-         * are encoded as by this function as:
-         *
-         * encodedchunkid = chunkid*ceil(chunk-size-in-bytes / 16)
-         *
-         * for 4mb chunks this would become:
-         *  chunkid   encodedchunkid
-         *  0         0
-         *  1         262144 
-         *  2         262144*2
-         *  3         262144*3
+         * that can be used in GCM encryption. 
          */
         createChunkIDArray: function( chunkid ) {
             var ret = new Uint8Array(4);
-
-            // encode the filesender chunkid for GCM
-            chunkid = chunkid * Math.ceil(window.filesender.config.upload_chunk_size/16);
 
             // convert the encoded chunkid into 4 array octets.
             ret[0] = chunkid>>0  & 0xFF;
@@ -107,9 +88,6 @@ window.filesender.crypto_app = function () {
             id |= (iv[14] << 16);
             id |= (iv[15] << 24);
 
-            // convert that encoded chunkid back into a filesender chunkid.
-            id = id / Math.ceil(window.filesender.config.upload_chunk_size/16);
-            
             return id;
         },
         
@@ -402,6 +380,15 @@ window.filesender.crypto_app = function () {
                     return callbackError({message: 'maximum_encrypted_file_size_exceeded',
                                           details: {}});
                 }
+
+                //
+                // Chunks have an effective max size too
+                //
+                if( value.byteLength > window.filesender.config.crypto_gcm_max_chunk_size ) {
+                    return callbackError({message: 'maximum_encrypted_file_size_exceeded',
+                                          details: {}});
+                }
+                
             }
 
             

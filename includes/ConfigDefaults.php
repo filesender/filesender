@@ -102,7 +102,8 @@ $default = array(
     'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used
     'crypto_hash_name' => "SHA-256", // The hash used to convert password to hashencryption_enabled
 
-    'crypto_gcm_max_file_size' => 68719476720, // 16 * (2^32 - 1)   or roughly a little under 64gb.
+    'crypto_gcm_max_file_size'  => 4294967296 * 5 * 1024 * 1024, // 4294967296 times 5 MB or roughly 16384 tb.
+    'crypto_gcm_max_chunk_size' => 4294967295 * 16,              // 2^32-1 AES blocks of 16 bytes.
 
     'terasender_enabled' => true,
     'terasender_disableable' => true,
