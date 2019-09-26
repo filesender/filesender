@@ -116,7 +116,8 @@ window.filesender.terasender = {
         var chunkid = Math.floor(file.uploaded / filesender.config.upload_chunk_size);
         var encryption_details = this.transfer.getEncryptionMetadata();
         if( this.transfer.encryption ) {
-            encryption_details['fileiv'] = window.filesender.crypto_app().decodeCryptoFileIV(file.iv);
+            encryption_details['fileiv']   = window.filesender.crypto_app().decodeCryptoFileIV(file.iv);
+            encryption_details['fileaead'] = file.aead;
         }
         
 	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=file.uploaded; //missing from file
@@ -134,7 +135,8 @@ window.filesender.terasender = {
                 size: file.size,
                 blob: file.blob,
                 endpoint: file.endpoint,
-                iv: file.iv
+                iv: file.iv,
+                aead: file.aead
             },
             security_token: this.security_token,
             csrfptoken: filesender.client.getCSRFToken()

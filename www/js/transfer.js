@@ -1118,11 +1118,25 @@ window.filesender.transfer = function() {
             }
         }
 
-        // Generate IV for each crypted file.
+        // No AEAD unless we explicitly set some below for encrypted files.
+        for (var i = 0; i < this.files.length; i++) {
+            this.files[i].aead = '';
+        }
+        
         if( this.encryption ) {
+            var crypter = window.filesender.crypto_app();
+            
+            // Generate IV for each crypted file.
             for (var i = 0; i < this.files.length; i++) {
-                this.files[i].iv = window.filesender.crypto_app().generateCryptoFileIV();
+                this.files[i].iv = crypter.generateCryptoFileIV();
             }
+
+            // Setup AEAD if we can use it
+            for (var i = 0; i < this.files.length; i++) {
+                this.files[i].aead = crypter.encodeAEAD(
+                    crypter.generateAEAD( this.files[i] ));
+            }
+            
         }
         
         if (this.size > filesender.config.max_transfer_size) {

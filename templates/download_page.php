@@ -101,6 +101,7 @@
              data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
              data-client-entropy="<?php echo $transfer->client_entropy; ?>"
              data-fileiv="<?php echo $file->iv; ?>"
+             data-fileaead="<?php echo $file->aead; ?>"
         >
             
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>

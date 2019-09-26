@@ -306,6 +306,7 @@
                              data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
                              data-client-entropy="<?php echo $transfer->client_entropy; ?>"
                              data-fileiv="<?php echo $file->iv; ?>"
+                             data-fileaead="<?php echo $file->aead; ?>"
                         >
                             <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
@@ -323,6 +324,7 @@
                                         data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
                                         data-client-entropy="<?php echo $transfer->client_entropy; ?>"
                                         data-fileiv="<?php echo $file->iv; ?>"
+                                        data-fileaead="<?php echo $file->aead; ?>"
                                       
                                 ></span>
                                         

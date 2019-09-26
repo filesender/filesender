@@ -625,7 +625,8 @@ class RestEndpointTransfer extends RestEndpoint
                     throw new FileExtensionNotAllowedException($ext);
                 }
 
-                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type, $filedata->iv );
+                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
+                                           $filedata->iv, $filedata->aead );
                 $files_cids[$file->id] = $filedata->cid;
             }
             

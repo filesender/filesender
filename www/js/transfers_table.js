@@ -376,6 +376,10 @@ $(function() {
         var password_hash_iterations = $(this).attr('data-password-hash-iterations');
         var client_entropy = $(this).attr('data-client-entropy');
         var fileiv = $(this).attr('data-fileiv');
+        var fileaead = $(this).attr('data-fileaead');
+        if( fileaead.length ) {
+            fileaead = atob(fileaead);
+        }
         
         if (typeof id == 'string'){
             id = [id];
@@ -386,7 +390,8 @@ $(function() {
             password_version, password_encoding,
             password_hash_iterations,
             client_entropy,
-            window.filesender.crypto_app().decodeCryptoFileIV(fileiv)
+            window.filesender.crypto_app().decodeCryptoFileIV(fileiv),
+            fileaead
         );
 
         return false;

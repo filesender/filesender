@@ -98,8 +98,11 @@ $(function() {
                 var password_encoding = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-encoding');
                 var password_hash_iterations = $($this).find("[data-id='" + ids[0] + "']").attr('data-password-hash-iterations');
                 var client_entropy = $($this).find("[data-id='" + ids[0] + "']").attr('data-client-entropy');
-                var fileiv = $($this).find("[data-id='" + ids[0] + "']").attr('data-fileiv');
-
+                var fileiv   = $($this).find("[data-id='" + ids[0] + "']").attr('data-fileiv');
+                var fileaead = $($this).find("[data-id='" + ids[0] + "']").attr('data-fileaead');
+                if( fileaead.length ) {
+                    fileaead = atob(fileaead);
+                }
                 window.filesender.crypto_app().decryptDownload( filesender.config.base_path
                                                                 + 'download.php?token=' + token
                                                                 + '&files_ids=' + ids.join(','),
@@ -108,6 +111,7 @@ $(function() {
                                                                 password_hash_iterations,
                                                                 client_entropy,
                                                                 window.filesender.crypto_app().decodeCryptoFileIV(fileiv),
+                                                                fileaead,
                                                                 progress);
             }else{
                 var notify = false;

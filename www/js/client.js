@@ -280,12 +280,21 @@ window.filesender.client = {
             
         var files = [];
         for (var i = 0; i < transfer.files.length; i++) {
+            //
+            // Do not btoa an empty string, if there is nothing to send
+            // then just send nothing.
+            //
+            var aead = '';
+            if( transfer.files[i].aead ) {
+                aead = btoa(transfer.files[i].aead);
+            }
             files.push({
                 name: transfer.files[i].name,
                 size: transfer.files[i].size,
                 mime_type: transfer.files[i].mime_type,
                 cid: transfer.files[i].cid,
-                iv: transfer.files[i].iv
+                iv: transfer.files[i].iv,
+                aead: aead 
             });
         }
 
