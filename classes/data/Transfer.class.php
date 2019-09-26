@@ -996,7 +996,7 @@ class Transfer extends DBObject
      *
      * @return File
      */
-    public function addFile($path, $size, $mime_type = null, $iv = null )
+    public function addFile($path, $size, $mime_type = null, $iv = null, $aead = null )
     {
         if (is_null($this->filesCache)) {
             $this->filesCache = File::fromTransfer($this);
@@ -1018,6 +1018,7 @@ class Transfer extends DBObject
         // Create and save new file
         $file = File::create($this, $path, $size, $mime_type);
         $file->iv = $iv;
+        $file->aead = $aead;
         $file->save();
  
         // Update local cache

@@ -102,6 +102,20 @@ class File extends DBObject
             'type' => 'string',
             'size' => 24,
             'null' => true
+        ),
+        // For encrypted files and encryption algorithms that
+        // support AEAD this is the string that the client sent
+        // and is needed during decryption.
+        //
+        // This is base64 encoded by the client because we, as the server,
+        // can not really use it for much. After a base64 decoude it should
+        // be a JSON object which uses the aeadversion field to version itself.
+        // Note that it is encoded manually into JSON on the client side
+        // so that it is a canonical representation
+        'aead' => array(
+            'type' => 'string',
+            'size' => 512,
+            'null' => true
         )
     );
 
@@ -155,6 +169,7 @@ class File extends DBObject
     protected $upload_end = 0;
     protected $sha1 = null;
     protected $iv = '';
+    protected $aead = null;
    
     /**
      * Related objects cache
@@ -472,7 +487,7 @@ class File extends DBObject
     {
         if (in_array($property, array(
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
-          , 'storage_class_name', 'iv'
+          , 'storage_class_name', 'iv', 'aead'
         ))) {
             return $this->$property;
         }
@@ -564,6 +579,8 @@ class File extends DBObject
             $this->storage_class_name = (string)$value;
         } elseif ($property == 'iv') {
             $this->iv = $value;
+        } elseif ($property == 'aead') {
+            $this->aead = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
