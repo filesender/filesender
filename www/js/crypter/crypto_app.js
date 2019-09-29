@@ -388,7 +388,14 @@ window.filesender.crypto_app = function () {
                     return callbackError({message: 'maximum_encrypted_file_size_exceeded',
                                           details: {}});
                 }
-                
+
+                //
+                // Not too many chunks.
+                //
+                if( chunkid > window.filesender.config.crypto_gcm_max_chunk_count ) {
+                    return callbackError({message: 'maximum_encrypted_file_size_exceeded',
+                                          details: {}});
+                }
             }
 
             
