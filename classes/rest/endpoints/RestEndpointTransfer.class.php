@@ -521,6 +521,11 @@ class RestEndpointTransfer extends RestEndpoint
                         if( $sz > $v ) {
                             throw new TransferMaximumEncryptedFileSizeExceededException($sz, $v);
                         }
+                        $numchunks = ceil($sz / Config::get('upload_chunk_size'));
+                        $v = Config::get('crypto_gcm_max_chunk_count');
+                        if( $numchunks > $v ) {
+                            throw new TransferMaximumEncryptedFileSizeExceededException($sz, $v);
+                        }
                     }
                     
                     

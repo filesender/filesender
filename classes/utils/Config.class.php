@@ -276,6 +276,11 @@ class Config
             throw new ConfigBadParameterException('Generated password length must be equal or greater than encryption_min_password_length');
         }
 
+        // If the admin has very small chunks then they will have a smaller max file size.
+        self::$parameters['crypto_gcm_max_file_size'] = 4294967296 * self::$parameters['upload_chunk_size'];
+        self::$parameters['crypto_gcm_max_chunk_size']  = 4294967295 * 16;
+        self::$parameters['crypto_gcm_max_chunk_count'] = 4294967295;
+        
 
         $relay_to = Config::get('relay_unknown_feedbacks');
         switch($relay_to) {
