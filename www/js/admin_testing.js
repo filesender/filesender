@@ -43,7 +43,9 @@ $(function() {
     section.find('[data-action="show-password-hashing-performance"]').on('click', function() {
 
         var currentSetting  = filesender.config.encryption_password_hash_iterations_new_files;
-        var hash_iterations = [currentSetting,10000,100000,500000,1000000,5000000];
+        var hash_iterations = [currentSetting,10000,100000,500000,1000000,5000000,16384000];
+        var iv = crypto.decodeCryptoFileIV(crypto.generateCryptoFileIV());
+        var file = { size: 100, iv: iv };
         hash_iterations.map( function( n ) {
             var encryption_details = {
                 password: 'abcdef',
@@ -52,10 +54,13 @@ $(function() {
                 password_version: crypto.crypto_password_version_constants.v2018_text_password,
                 password_encoding: 'none',
                 password_hash_iterations: n,
+                fileiv: iv,
+                aead: crypto.encodeAEAD( crypto.generateAEAD( file ))
             };
-            
-            var t0 = performance.now();            
-            crypto.generateKey(encryption_details, function (key, iv) {
+
+            var chunkid = 0;
+            var t0 = performance.now();
+            crypto.generateKey(chunkid,encryption_details, function (key, iv) {
                 var t1 = performance.now();
                 var l = hashperftable.find('.tpl').clone().removeClass('tpl').addClass('benchmark');
                 l.find('.rounds').text(Number(n).toLocaleString());
