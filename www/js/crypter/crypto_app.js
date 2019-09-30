@@ -177,11 +177,20 @@ window.filesender.crypto_app = function () {
          */
         generateAEAD: function( file ) {
             var $this = this;
-            return {
-                chunkcount: Math.ceil( file.size / window.filesender.config.upload_chunk_size ),
-                chunksize: window.filesender.config.upload_chunk_size,
-                iv: file.iv
-            };
+
+            var key_version = window.filesender.config.encryption_key_version_new_files;
+            
+            // AES-GCM modes can make use of AEAD
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                return {
+                    chunkcount: Math.ceil( file.size / window.filesender.config.upload_chunk_size ),
+                    chunksize: window.filesender.config.upload_chunk_size,
+                    iv: file.iv
+                };
+            }
+            return null;
         },
         /**
          * This uses direct printing to produce a canonical string representation
@@ -196,6 +205,10 @@ window.filesender.crypto_app = function () {
          * as new fields are added in the future.
          */
         encodeAEAD: function( aead ) {
+            if( !aead ) {
+                return '';
+            }
+            
             var $this = this;
 
             var ret = "{";
