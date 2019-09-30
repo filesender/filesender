@@ -237,8 +237,8 @@ window.filesender.transfer = function() {
         return '';
     };
 
-    this.getEncryptionMetadata = function() {
-	return {
+    this.getEncryptionMetadata = function( file ) {
+	var ret = {
             password:          this.encryption_password,
             password_encoding: this.encryption_password_encoding,
             password_version:  this.encryption_password_version,
@@ -247,6 +247,13 @@ window.filesender.transfer = function() {
             password_hash_iterations: this.encryption_password_hash_iterations,
             client_entropy:    this.encryption_client_entropy
         };
+        
+        if( this.encryption ) {
+            ret['fileiv']   = window.filesender.crypto_app().decodeCryptoFileIV(file.iv);
+            ret['fileaead'] = file.aead;
+        }
+        
+        return ret;
     };
 
     /**
@@ -1199,11 +1206,13 @@ window.filesender.transfer = function() {
                     filesender.terasender.start(transfer);
                 } else {
                     // Chunk by chunk upload
+                    console.log('*** Not using terasender ***');
                     transfer.registerProcessInWatchdog('main');
                     transfer.uploadChunk();
                 }
             } else {
                 // Legacy upload
+                console.log('*** Warning: using legacy upload ***');
                 transfer.uploadWhole();
             }
         }, function(error) {
@@ -1355,6 +1364,8 @@ window.filesender.transfer = function() {
         var worker_id = 'main';
         this.recordUploadStartedInWatchdog(worker_id,file);
 
+        var encryption_details = transfer.getEncryptionMetadata( file );
+        
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress
@@ -1385,8 +1396,7 @@ window.filesender.transfer = function() {
             function(error) {
                 transfer.reportError(error);
             },
-            transfer.encryption,
-            transfer.getEncryptionMetadata()
+            transfer.encryption, encryption_details
         );
     };
 

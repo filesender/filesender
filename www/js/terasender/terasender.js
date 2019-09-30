@@ -114,11 +114,7 @@ window.filesender.terasender = {
         if(!file.endpoint) file.endpoint = this.transfer.authenticatedEndpoint(filesender.config.terasender_upload_endpoint.replace('{file_id}', file.id), file);
 
         var chunkid = Math.floor(file.uploaded / filesender.config.upload_chunk_size);
-        var encryption_details = this.transfer.getEncryptionMetadata();
-        if( this.transfer.encryption ) {
-            encryption_details['fileiv']   = window.filesender.crypto_app().decodeCryptoFileIV(file.iv);
-            encryption_details['fileaead'] = file.aead;
-        }
+        var encryption_details = this.transfer.getEncryptionMetadata( file );
         
 	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=file.uploaded; //missing from file
         var job = {
