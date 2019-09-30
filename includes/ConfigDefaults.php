@@ -234,7 +234,10 @@ $default = array(
     // for details of possible values see crypto_password_version_constants
     // in the file js/crypter/crypto_app.js
     'encryption_random_password_version_new_files' => 2,
-    
+
+    // Please see the documentation at
+    // https://docs.filesender.org/v2.0/admin/configuration/#encryption_password_hash_iterations_new_files
+    //
     'encryption_password_hash_iterations_new_files' => 150000,
     
     'transfer_options' => array(

@@ -1052,7 +1052,33 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 
 ### encryption_password_hash_iterations_new_files
-* __description:__ This setting only has an effect when encryption_key_version_new_files is 1 or above (the default for that setting). What follows is an abstract overview of how hash iterations may be used. When a text password that the user has entered is used for encryption a number of hashing rounds is applied to that password. The hashing uses both the user password and a random salt value combined. The salt is used so that the same password does not lead to the same key each time. It also means vast tables of precomputed keys can not be used for all transfers as the salt changes per transfer. The number of hashing rounds might be set for example so that deriving a key might take a second to perform. While that is not a huge delay for the user of the system, a potential attacker would have to spend some time to hash each guessed password. The attacker might have better or much newer hardware or use a GPU so that the time to has might be less than the second a user has spent. See https://en.wikipedia.org/wiki/PBKDF2#Key_derivation_process. To get an idea of how this setting will impact system performance see the admin/testing page on filesender. 
+* __description:__ This setting only has an effect when encryption_key_version_new_files is 1 or above (the default for that setting). What follows is an abstract overview of how hash iterations may be used. When a text password that the user has entered is used for encryption a number of hashing rounds is applied to that password. The hashing uses both the user password and a random salt value combined. The salt is used so that the same password does not lead to the same key each time. It also means vast tables of precomputed keys can not be used for all transfers as the salt changes per transfer. The number of hashing rounds might be set for example so that deriving a key might take a second to perform. While that is not a huge delay for the user of the system, a potential attacker would have to spend some time to hash each guessed password. The attacker might have better or much newer hardware or use a GPU so that the time to has might be less than the second a user has spent. See https://en.wikipedia.org/wiki/PBKDF2#Key_derivation_process. To get an idea of how this setting will impact system performance see the admin/testing page on filesender.
+
+The realistic thing to do is consider the predictive increase in computing power,
+which Moore's law states to double every 18 months. That is a factor of 1.6
+every year (to be precise, it is 2.0^(12/18)). Our task is to increase the effort for
+bulk attacks by that factor, which means adding one bit to the iteration count
+every 18 months, starting with an acceptable iteration count for the year 2010
+(and setting it at 2009).
+
+So, to protect until the year Y and with 2010-level security from N(2009)
+iterations, the computation would be
+N(Y) = N(2009) * 2.0^((Y-2009)*2/3)
+which is an exponential series! A few outcomes when N(2009) = 1000 are:
+
+N(2010) = 1587
+N(2015) = 16000
+N(2020) = 161270
+N(2025) = 1625499
+N(2030) = 16384000
+
+The one logic here is that the length of the numbers consistently grows for these
+5-year intervals. As can be seen, the algorithm leans towards being somewhat
+painful in order to protect the intended use of running it only once.
+
+Visiting admin/testing on your filesender install will allow you to see how long
+these iteration counts take to perform on your local machine.
+
 * __mandatory:__ no 
 * __type:__ int
 * __default:__ 150000
