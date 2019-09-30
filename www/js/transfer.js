@@ -1133,8 +1133,10 @@ window.filesender.transfer = function() {
 
             // Setup AEAD if we can use it
             for (var i = 0; i < this.files.length; i++) {
-                this.files[i].aead = crypter.encodeAEAD(
-                    crypter.generateAEAD( this.files[i] ));
+                var aead = crypter.generateAEAD( this.files[i] );
+                if( aead ) {
+                    this.files[i].aead = crypter.encodeAEAD( aead );
+                }
             }
             
         }
