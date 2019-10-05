@@ -11,6 +11,7 @@ admin_config_section
 admin_guests_section
 admin_page
 admin_statistics_section
+admin_testing_section
 admin_transfers_section
 admin_users_section
 advanced_settings
@@ -61,6 +62,7 @@ bad_lang_code
 bad_size_format
 bad_transfer_status
 bounce_report
+calculate
 can_only_send_to_me
 cancel
 cannot_alter_closed_transfer
@@ -106,6 +108,10 @@ date_format
 datetime_format
 dbi_missing_parameter
 decrypting
+decryption_verification_failed_bad_aead
+decryption_verification_failed_bad_fixed_iv
+decryption_verification_failed_bad_ivchunkid
+decryption_verification_failed_unexpected_ivchunkid
 delete
 delete_my_account
 delete_transfer_nicely
@@ -258,6 +264,7 @@ invalid_file_name
 invalid_recipient
 ip
 is_default
+iterations
 kb_per_second
 last_activity
 later
@@ -299,6 +306,7 @@ optional
 options
 pager_has_no_more
 pager_more
+password_hashing_performance
 pause
 paused
 preferences_updated
@@ -454,6 +462,7 @@ storage_usage_warning
 storage_used
 subject
 success_dialog
+system_active_setting
 tb_per_second
 template_not_found
 terasender_failed_after_many_retries
@@ -462,6 +471,7 @@ terasender_worker_count
 terasender_worker_failed_to_start
 testterm
 time_format
+time_to_complete_ms
 to
 too_long_since_any_data_was_last_sent
 tracking_event_not_found
