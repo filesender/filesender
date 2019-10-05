@@ -160,6 +160,7 @@ class Transfer extends DBObject
              . DBView::columnDefinition_age($dbtype, 'expires')
              . DBView::columnDefinition_age($dbtype, 'made_available')
              . DBView::columnDefinition_is_encrypted('options', 'is_encrypted')
+             . " , (CASE WHEN password_version=1 THEN 'user' ELSE 'generated' END) as password_origin "
              . '  from ' . self::getDBTable();
     }
     public static function getViewMap()
@@ -170,7 +171,8 @@ class Transfer extends DBObject
             $a[$dbtype] = self::getPrimaryViewDefinition($dbtype);
             
             $authviewdef[$dbtype] = 'select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
-                                      . 't.made_available,t.expires,t.created FROM '
+                                  . 't.made_available,t.expires,t.created '
+                                  . ' FROM '
                                       . self::getDBTable().' t, '
                                             . call_user_func('User::getDBTable').' u, '
                                             . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
