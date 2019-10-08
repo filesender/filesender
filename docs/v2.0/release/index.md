@@ -25,6 +25,11 @@ schedule.
   to "edit" the page for the previous release and copy that markdown to the new release
   page as a template.
 
+* If there are changes to the database give some indication of what has changed and that
+  the database update script must be run
+
+* If there are changes in the templates directory give an indication and some information about that.
+
 * The configuration directives differences can be found by doing a git diff to the previous
   release.
   
