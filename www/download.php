@@ -104,12 +104,14 @@ try {
 
     $archive_format_selected = false;
     $archive_format = "zip";
-    if( $_REQUEST["archive_format"] == "zip" ) {
-        $archive_format_selected = true;
-    }
-    if( $_REQUEST["archive_format"] == "tar" ) {
-        $archive_format_selected = true;
-        $archive_format = "tar";
+    if( isset($_REQUEST["archive_format"])) {
+        if( $_REQUEST["archive_format"] == "zip" ) {
+            $archive_format_selected = true;
+        }
+        if( $_REQUEST["archive_format"] == "tar" ) {
+            $archive_format_selected = true;
+            $archive_format = "tar";
+        }
     }
     
     if(count($files_ids) > 1 || $archive_format_selected) { 
