@@ -107,6 +107,7 @@ $default = array(
     'crypto_gcm_max_chunk_count' => 4294967295,                   // 2^32-1
 
     'terasender_enabled' => true,
+    'terasender_advanced' => false,
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
