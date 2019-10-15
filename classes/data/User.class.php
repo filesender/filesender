@@ -668,7 +668,7 @@ class User extends DBObject
     public function beforeDelete()
     {
         $user = $this;
-        $transfers = Transfer::fromGuestsOf($user);
+        $transfers = Transfer::fromGuestsOf($user,false);
         foreach ($transfers as $t) {
             $t->delete();
         }
