@@ -405,6 +405,7 @@ class Logger
             
             // Build final message ...
             if ($facility['output'] == 'json') {
+                $messageArray['time'] = time();
                 $message = json_encode($messageArray);
             } else { //text
                 $message = (array_key_exists('user', $messageArray)?'[user '.$messageArray['user'].'] ':'').'['.$messageArray['process'].':'.$messageArray['level'].'] '.$message;
@@ -468,7 +469,7 @@ class Logger
         // Write to file, log with PHP internal logger if any problem to avoid loops
         if ($fh = fopen($file, 'a')) {
             if (flock($fh, LOCK_EX)) { // Try to lock for writing
-                fwrite($fh, '['.date('Y-m-d H:i:s').'] '.trim($message)."\n");
+                fwrite($fh, ($facility['output'] == 'json' ? '' : '['.date('Y-m-d H:i:s').'] ').trim($message)."\n");
                 
                 flock($fh, LOCK_UN); // Unlock file
             } else {
