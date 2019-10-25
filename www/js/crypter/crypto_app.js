@@ -332,12 +332,12 @@ window.filesender.crypto_app = function () {
                                                callback(key, iv);
                                            }, function (e) {
                                                // error making a key
-                                               filesender.ui.log(e);
+                                               window.filesender.ui.log(e);
                                            });
                 }),
                 function (e) {
                     // error making a hash
-                    filesender.ui.log(e);
+                    window.filesender.ui.log(e);
                 };
             }
 
@@ -362,12 +362,12 @@ window.filesender.crypto_app = function () {
                                                callback(key, iv);
                                            }, function (e) {
                                                // error making a key
-                                               filesender.ui.log(e);
+                                               window.filesender.ui.log(e);
                                            });
                 }),
                 function (e) {
                     // error making a hash
-                    filesender.ui.log(e);
+                    window.filesender.ui.log(e);
                 };
             }
             
@@ -456,13 +456,13 @@ window.filesender.crypto_app = function () {
                         },
                     function (e) {
                             // error occured during crypt
-                            filesender.ui.log(e);
+                            window.filesender.ui.log(e);
                         }
                 );
             },
             function (e) {
                 // error occured during generatekey
-                filesender.ui.log(e);
+                window.filesender.ui.log(e);
             });
         },
         decryptBlob: function (value, encryption_details, callbackDone, callbackProgress, callbackError) {
@@ -615,7 +615,7 @@ window.filesender.crypto_app = function () {
                 },
                 function (e) {
                     // error occured during generatekey
-                    filesender.ui.log(e);
+                    window.filesender.ui.log(e);
                 });
             }
             catch(e) {
@@ -631,7 +631,7 @@ window.filesender.crypto_app = function () {
                                    client_entropy, fileiv, fileaead,
                                    progress) {
             var $this = this;
-            var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
+            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
 
                 // Decrypt the contents of the file
@@ -692,7 +692,7 @@ window.filesender.crypto_app = function () {
                 oReq.send();
 
             }, function(){
-                filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
+                window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
             });
 
             // Add a field to the prompt
@@ -739,13 +739,13 @@ window.filesender.crypto_app = function () {
             var ret = new Object();
             var password = 'error';
             var entropybuf;
-            var encoding = filesender.config.encryption_generated_password_encoding;
+            var encoding = window.filesender.config.encryption_generated_password_encoding;
 
-            var desired_version = filesender.config.encryption_random_password_version_new_files;
+            var desired_version = window.filesender.config.encryption_random_password_version_new_files;
             if( $this.crypto_password_version_constants.v2018_text_password == desired_version ) {
                 // This is the password generation in place through 
                 // the first half of 2019.
-                var desiredPassLen = filesender.config.encryption_generated_password_length;
+                var desiredPassLen = window.filesender.config.encryption_generated_password_length;
                 entropybuf = $this.generateSecureRandomBytes( desiredPassLen );
                 password = $this.encodeToString( entropybuf, encoding );
                 password = password.substr(0,desiredPassLen);
@@ -759,7 +759,7 @@ window.filesender.crypto_app = function () {
                 password = $this.encodeToString( entropybuf, encoding );
             }
             else {
-                filesender.ui.rawError('{bad password encoding set, you should never see this error}')
+                window.filesender.ui.rawError('{bad password encoding set, you should never see this error}')
             }
             
             ret.version      = desired_version;
@@ -810,7 +810,7 @@ window.filesender.crypto_app = function () {
                 }
             }
             else {
-                filesender.ui.rawError('{bad password encoding set, you should never see this error}')
+                window.filesender.ui.rawError('{bad password encoding set, you should never see this error}')
             }
             
             ret.version      = version;
