@@ -135,20 +135,11 @@ class DatabaseMysql
 
     public static function dropTableSecondaryIndex($table, $index)
     {
-        if (!$logger || !is_callable($logger)) {
-            $logger = function () {
-            };
-        }
         $query = 'DROP INDEX '.$index.' on '.$table.'';
         DBI::exec($query);
     }
     public static function createTableSecondaryIndex($table, $index, $definition)
     {
-        if (!$logger || !is_callable($logger)) {
-            $logger = function () {
-            };
-        }
-
         $preamble = '';
         $coldefs = '';
         foreach ($definition as $dk => $dm) {
