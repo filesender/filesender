@@ -99,7 +99,7 @@ class DatabaseForeignKey
             $statement = DBI::prepare($sql);
         }
 
-        $statement->execute();
+        $statement->execute(array());
         $data = $statement->fetch();
         if ($data) {
             $this->fkExists = $data['c'];
