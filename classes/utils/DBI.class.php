@@ -154,10 +154,10 @@ class DBI
         $password = self::$config['password'];
 
         if( Logger::isUpgradeProcess()) {
-            if ($config['username_admin']) {
+            if (array_key_exists('username_admin',self::$config) && self::$config['username_admin']) {
                 $username = self::$config['username_admin'];
             }
-            if ($config['password_admin']) {
+            if (array_key_exists('password_admin',self::$config) && self::$config['password_admin']) {
                 $password = self::$config['password_admin'];
             }
         }
