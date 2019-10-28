@@ -668,7 +668,8 @@ class User extends DBObject
     public function beforeDelete()
     {
         $user = $this;
-        $transfers = Transfer::fromGuestsOf($user);
+        $user_can_only_view_guest_transfers_shared_with_them = Config::get('user_can_only_view_guest_transfers_shared_with_them');
+        $transfers = Transfer::fromGuestsOf($user, $user_can_only_view_guest_transfers_shared_with_them);
         foreach ($transfers as $t) {
             $t->delete();
         }
