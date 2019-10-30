@@ -62,11 +62,11 @@ class DBConstantPasswordEncoding extends DBConstant
 
     static function validateCGIParamOrDIE( $v )
     {
-//        if (!preg_match('`^[a-z_]{1,40}$`', $v)) {
+	if (!preg_match('`^[a-z_0-9]{1,40}$`', $v)) {
             Logger::error('xxx invalid data given to validateCGIParamOrDIE v ' . $v );
-//            exit(1);
-//        }
-        self::lookup($v);
+            exit(1);
+	} 
+	self::lookup($v);
         return $v;
     }
 
