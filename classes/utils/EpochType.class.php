@@ -57,7 +57,6 @@ class EpochType
         $et = $epochType;
         $d = getdate($tt);
         $d['seconds'] = 0;
-        Logger::error('epoch type conversion given ' . date('Y-m-d H:i:s',$tt));
         
         if( $et == DBConstantEpochType::FIFTEEN_MINUTES ) {
             $m = $d['minutes'];
@@ -87,7 +86,6 @@ class EpochType
         
         $this->tt = mktime( $d['hours'],$d['minutes'],$d['seconds'],
                             $d['mon'],$d['mday'],$d['year']);
-        Logger::error('epoch type conversion result ' . date('Y-m-d H:i:s',$this->tt));
     }
 
 
