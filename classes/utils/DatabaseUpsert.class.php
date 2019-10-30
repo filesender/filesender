@@ -83,7 +83,7 @@ class DatabaseUpsert
         }
         $sql .= $updateSetOnlySQL;
 
-        Logger::info($sql);
+//        Logger::info($sql);
         $statement = DBI::prepare($sql);
         $statement->execute(Array());
     }
