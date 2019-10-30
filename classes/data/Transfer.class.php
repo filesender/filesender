@@ -357,7 +357,7 @@ class Transfer extends DBObject
             // or that the guest explicitly included the email of the user in the recipients
             $sql .= " AND ( ";
             $sql .= " g.options like '%". '"can_only_send_to_me":true' . "%'  ";
-            $sql .= "    or t.id in ( select transfer_id from recipients ";
+            $sql .= "    or t.id in ( select transfer_id from " . Recipient::getDBTable() . " ";
             $sql .= "                 where transfer_id = t.id and email = g.user_email ) ";
             $sql .= " ) ";
         }
