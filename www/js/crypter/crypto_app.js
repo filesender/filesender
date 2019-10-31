@@ -623,6 +623,41 @@ window.filesender.crypto_app = function () {
             }            
         },
         /**
+         * @return true if there was an error and code should halt.
+         */
+        handleXHRError: function( xhr, link, defaultMsg )
+        {
+            if(xhr.responseURL.includes("/?s=exception&"))
+            {
+                console.log("handleXHRError() XHR ERROR DETECTED");
+                console.log("link " + link );
+                console.log("got  " + xhr.responseURL );
+
+                var message = defaultMsg;
+                var url = new URL(xhr.responseURL);
+                var c = url.searchParams.get("exception");
+                if( c ) {
+                    try {
+                        var jc = JSON.parse(atob(c));
+                        if( jc ) {
+                            message = jc.message;
+                            console.log("have untranslated message: " + message );
+                        }
+                    } catch( e ) {
+                        // use default message if base64 decode failed.
+                    }
+                }
+                
+                if( window.filesender.config.language[message] ) {
+                    alert( window.filesender.config.language[message] );
+                } else {
+                    alert( window.filesender.config.language[defaultMsg] );
+                }                            
+                return true;
+            }
+            return false;
+        },
+        /**
          *
          * @param fileiv is the decoded fileiv. Decoding can be done with decodeCryptoFileIV()
          */
@@ -649,9 +684,14 @@ window.filesender.crypto_app = function () {
 
                 //on file arrived
                 oReq.onload = function (oEvent) {
+                        // check for a redirect containing and error and halt if so
+                        if( $this.handleXHRError( oReq, link, 'file_encryption_wrong_password' )) {
+                            return;
+                        }
                         if (progress){
                             progress.html(window.filesender.config.language.decrypting+"...");
                         }
+                    
                         // hands over to the decrypter
                         var arrayBuffer = new Uint8Array(oReq.response);
                         setTimeout(function(){
