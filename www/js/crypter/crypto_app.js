@@ -264,23 +264,7 @@ window.filesender.crypto_app = function () {
                 callbackError(e);
             };
 
-            //
-            // Force the GCM/CBC crypt_name at the top to make this change explicit before
-            // the code that does the key generation is executed. Doing this here makes the
-            // crypto code less cuttered below.
-            //
-            if( key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey 
-                || key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey )
-            {
-                window.filesender.config.crypto_crypt_name = "AES-GCM";
-                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
-            }
-            else
-            {
-                window.filesender.config.crypto_crypt_name = "AES-CBC";
-                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
-            }
-            
+            $this.setCipherAlgorithm( key_version );
             
             if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
             {
@@ -392,6 +376,26 @@ window.filesender.crypto_app = function () {
             
         },
 
+        setCipherAlgorithm(key_version) {
+            var $this = this;
+
+            //
+            // Force the GCM/CBC crypt_name at the top to make this change explicit before
+            // the code that does the key generation is executed. Doing this here makes the
+            // crypto code less cuttered below.
+            //
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey 
+                || key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey )
+            {
+                window.filesender.config.crypto_crypt_name = "AES-GCM";
+                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
+            }
+            else
+            {
+                window.filesender.config.crypto_crypt_name = "AES-CBC";
+                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
+            }
+        },
 
         /**
          * This puts a cache between the call to generateKey() only
@@ -399,6 +403,10 @@ window.filesender.crypto_app = function () {
          */
         obtainKey: function (chunkid, encryption_details, callback, callbackError) {
             var $this = this;
+
+            var key_version = encryption_details.key_version;
+            $this.setCipherAlgorithm( key_version );
+            
 
             var keydesc = JSON.stringify(encryption_details);
             console.log("keygen: keydesc cache size " + window.filesender.key_cache.size );
