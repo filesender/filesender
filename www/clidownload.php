@@ -36,10 +36,10 @@ $one=1;
 $script=file_get_contents('../scripts/client/filesender.py');
 
 $apipath=Config::get('site_url').'rest.php';
-$daysvalid='default_transfer_days_valid = '.Config::get('default_transfer_days_valid');
+$daysvalid=Config::get('default_transfer_days_valid');
 
 $script=str_replace('[base_url]',$apipath,$script,$one);
-$script=str_replace('default_transfer_days_valid = 10',$daysvalid,$script,$one);
+$script=preg_replace('/(default_transfer_days_valid).*/', '$1 = '.$daysvalid,$script);
 
 header('Content-Description: File Transfer');
 header('Content-Type: application/octet-stream');
