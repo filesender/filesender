@@ -12,7 +12,7 @@
         Vous êtes libre de supprimer votre compte sur cette installation FileSender 
         qui conduira à la suppression de tous vos fichiers, invitations et autres 
         informations de débogage envoyées au serveur (téléversement échoué, 
-        etc...).Supprimer votre compte FileSender supprime toutes ces informations.
+        etc...). Supprimer votre compte FileSender supprime toutes ces informations.
         Étant donné que FileSender n'a pas autorité sur vos identifiants de 
         connexion, ceux-ci resteront actifs jusqu'à ce que vous les supprimiez de 
         votre institution.
