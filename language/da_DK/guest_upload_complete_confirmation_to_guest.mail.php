@@ -59,4 +59,3 @@ Gæsten herunder afsluttede en filupload på grundlag af en gæstevoucher:
     Med venlig hilsen<br />
     {cfg:site_name}
 </p>
-',
