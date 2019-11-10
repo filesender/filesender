@@ -13,7 +13,7 @@ Asunto: Invitación enviada
 
 Hola,
 
-una invitación que proporciona acceso al servicio FileSender de RedIRIS ha sido enviado a {guest.email}.
+una invitación que proporciona acceso al {cfg:site_name} ha sido enviado a {guest.email}.
 
 Saludos,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Saludos,
 </p>
 
 <p>
-    una invitaci&oacute;n que proporciona acceso al servicio FileSender de RedIRIS ha sido enviado a <a href="mailto:{guest.email}">{guest.email}</a>.
+    una invitaci&oacute;n que proporciona acceso al {cfg:site_name} ha sido enviado a <a href="mailto:{guest.email}">{guest.email}</a>.
 </p>
 
 <p>

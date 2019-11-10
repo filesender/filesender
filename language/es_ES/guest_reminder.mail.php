@@ -14,7 +14,7 @@ Asunto: (recordatorio) {guest.subject}
 
 Hola,
 
-Esto es un recordatorio. Bajo este mensaje encontrarás una invitación que te proporciona permisos de acceso al servicio FileSender de RedIRIS. Puedes usar esta invitación para subir un grupo de ficheros y que otras personas se los puedan descargar.
+Esto es un recordatorio. Bajo este mensaje encontrarás una invitación que te proporciona permisos de acceso al {cfg:site_name}. Puedes usar esta invitación para subir un grupo de ficheros y que otras personas se los puedan descargar.
 
 Emisor: {guest.user_email}
 Enlace: {guest.upload_link}
@@ -33,7 +33,7 @@ Saludos,
 </p>
 
 <p>
-    Esto es un recordatorio. En este mensaje encontrarás una invitación que te proporciona permisos de acceso al servicio FileSender de RedIRIS. Puedes usar esta invitación para subir un grupo de ficheros y que otras personas se los puedan descargar.
+    Esto es un recordatorio. En este mensaje encontrarás una invitación que te proporciona permisos de acceso al {cfg:site_name}. Puedes usar esta invitación para subir un grupo de ficheros y que otras personas se los puedan descargar.
 </p>
 
 <table rules="rows">

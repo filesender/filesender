@@ -14,7 +14,7 @@ Asunto: (recordatorio) {transfer.subject}
 
 Hola,
 
-este mensaje es un recordatorio. {if:transfer.files>1}Los siguientes ficheros tienen{else}El siguiente fichero{endif} ha sido subido al servicio FileSender de RedIRIS por {transfer.user_email} y tienes permisos de descarga sobre su contenido:
+este mensaje es un recordatorio. {if:transfer.files>1}Los siguientes ficheros tienen{else}El siguiente fichero{endif} ha sido subido al {cfg:site_name} por {transfer.user_email} y tienes permisos de descarga sobre su contenido:
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.name} ({size:file.size})
@@ -42,7 +42,7 @@ Saludos,
 </p>
 
 <p>
-    este mensaje es un recordatorio. {if:transfer.files>1}Los siguientes ficheros tienen{else}El siguiente fichero{endif} ha sido subido al servicio FileSender de RedIRIS por {transfer.user_email} y tienes permisos de descarga sobre su contenido:
+    este mensaje es un recordatorio. {if:transfer.files>1}Los siguientes ficheros tienen{else}El siguiente fichero{endif} ha sido subido al {cfg:site_name} por {transfer.user_email} y tienes permisos de descarga sobre su contenido:
 </p>
 
 <table rules="rows">

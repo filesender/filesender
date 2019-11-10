@@ -16,7 +16,7 @@ Hola,
 Se ha recibido un mensaje de opinión del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif}#{target_id} {target.email}. Puedes encontrarlo adjunto.
 
 Saludos,
-RedIRIS
+{cfg:site_name}
 
 {alternative:html}
 
