@@ -7,46 +7,52 @@
 // 
 // 
 ?>
-subject: Allalaadimise aruanne
+Asunto: Descargar resumen 
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-{if:files>1}Failid{else}Fail{endif} on allalaetud keskkonnast {cfg:site_name} {recipient.email} poolt:
+{if:files>1}Varios ficheros{else}Un fichero{endif} que subiste {if:files>1}han{else}ha{endif} sido {if:files>1}descargados{else}descargado{endif} desde el servicio FileSender de {cfg:site_name} por {recipient.email} :
 
 {if:files>1}{each:files as file}
-  - {file.path} ({size:file.size})
+  - {file.name} ({size:file.size})
 {endeach}{else}
-{files.first().path} ({size:files.first().size})
+{files.first().name} ({size:files.first().size})
 {endif}
 
-Lugupidamisega,
+Puedes acceder a tus ficheros y visualizar detalladamente las estadísticas de descarga en la página de transferencias, en {files.first().transfer.link}.
+
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    {if:files>1}Failid{else}Fail{endif} on allalaetud keskkonnast {cfg:site_name} {recipient.email} poolt.
+    {if:files>1}Varios ficheros{else}Un fichero{endif} que subiste {if:files>1}han{else}ha{endif} sido {if:files>1}descargados{else}descargado{endif} desde el servicio FileSender de {cfg:site_name} por {recipient.email}.
 </p>
 
 <p>
     {if:files>1}
     <ul>
         {each:files as file}
-            <li>{file.path} ({size:file.size})</li>
+            <li>{file.name} ({size:file.size})</li>
         {endeach}
     </ul>
     {else}
-    {files.first().path} ({size:files.first().size})
+    {files.first().name} ({size:files.first().size})
     {endif}
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Puedes acceder a tus ficheros y visualizar detalladamente las estad&iacute;sticas de descarga en la p&aacute;gina de transferencias, en <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
+</p>
+
+<p>
+    Saludos,<br />
     {cfg:site_name}
 </p>

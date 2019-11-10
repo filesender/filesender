@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Fallo en la entrega de mensajes
+Asunto: Fallo en la entrega de mensajes
 
 {alternative:plain}
 

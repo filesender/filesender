@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Ma nõustun selle teenuse tingimustega.
+Acepto los términos y condiciones de este servicio

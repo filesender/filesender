@@ -7,18 +7,23 @@
 // 
 // 
 ?>
+<h1>Bienvenido a {cfg:site_name}</h1>
 <p>
-    Failijagamise aegumisel eemaldatakse süsteemist kõik vastava failijagamisega seotud failid ning e-posti aadressid.
-    Samuti kustutatakse logid andmebaasist mõne aja möödudes. Allpool on kirjas kui kaua erinevaid andmeid säilitatakse.
+    Para que este servicio funcione, debe retener
+    información sobre archivos, quién puede acceder a ellos y qué sucedió 
+    Luego de que haya transcurrido cierto tiempo, los archivos se eliminarán automáticamente del sistema y la base de datos cuando expiren junto con toda información retenida. 
+    Esta página le permite ver cuánto tiempo la información es retenida por la instalación.
 </p>
 <p>
-    Failijagamise kustutamisel eemaldatakse süsteemist kõik vastava failijagamisega seotud failid ning e-posti aadressid.
+    Tenga en cuenta que cuando se elimina una transferencia, todos los archivos relacionados son
+    también eliminados junto con las copias de cualquier correo electrónico que se haya enviado
+    y que se relacionan con la transferencia.
 </p>
 <?php
 if( ShredFile::shouldUseShredFile()) {
-    echo "<p>This site is configured to shred uploaded files when they are deleted. ";
-    echo "Shredding a file involves writing data into the same location on the disk";
-    echo " many times in order to truely remove the user data from the system. ";
-    echo "This provides additional privacy for users of this service.</p>";
+    echo "<p>Este sitio está configurado para destruir los archivos cargados cuando se eliminen. ";
+    echo "Destruir un archivo implica escribir datos en la misma ubicación en el disco";
+    echo " muchas veces para  realmente eliminar los datos del usuario del sistema. ";
+    echo "Esto proporciona privacidad adicional para los usuarios de este servicio.</p>";
 }
 ?>

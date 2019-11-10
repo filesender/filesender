@@ -7,28 +7,28 @@
 // 
 // 
 ?>
-subject: Külaline kasutas üleslaadimise veebilehte
+Asunto: Acceso a la página de carga de fichero
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Külaline {guest.email} kasutas vautšerit.
+El invitado {guest.email} ha accedido a la página de carga de fichero a través de tu invitación.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Külaline <a href="mailto:{guest.email}">{guest.email}</a> kasutas vaušerit.
+    El invitado <a href="mailto:{guest.email}">{guest.email}</a> ha accedido a la página de carga de fichero a trav&eacute;s de su invitación.
 </p>
 
 <p>
-    Lugupidamisega,<br />
-    {cfg:site_name}
+    Saludos,<br />
+   {cfg:site_name}
 </p>

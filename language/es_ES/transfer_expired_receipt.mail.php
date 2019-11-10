@@ -7,29 +7,63 @@
 // 
 // 
 ?>
-subject: Failid(s) on aegunud
-subject: (failid on aegunud) {transfer.subject}
+Asunto: Fichero(s) caducado(s)
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Failijagamine ID-ga {transfer.id} on aegunud ning failid ei ole enam saadaval.
+{if:transfer.files>1}
+los ficheros asociados al identificador n°{transfer.id} han caducado y ya no están disponibles para descargar ({transfer.link}).
+{else}
+el fichero con identificador n°{transfer.id} ha caducado y ya no está disponible para descargar ({transfer.link}).
+{endif}
 
-Lugupidamisega,
+Información adicional:
+{if:transfer.files>1}{each:transfer.files as file}
+  - {file.name} ({size:file.size})
+{endeach}{else}
+{transfer.files.first().name} ({size:transfer.files.first().size})
+{endif}
+
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Failijagamine ID-ga {transfer.id} on aegunud ning failid ei ole enam saadaval.
+    tu <a href="{transfer.link}">transferencia con identificador n°{transfer.id}</a> ha caducado y ya no está disponible para descargar.
 </p>
 
+<table rules="rows">
+    <thead>
+        <tr>
+            <th colspan="2">Información adicional</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Fichero{if:transfer.files>1}s{endif}</td>
+            <td>
+                {if:transfer.files>1}
+                <ul>
+                    {each:transfer.files as file}
+                        <li>{file.name} ({size:file.size})</li>
+                    {endeach}
+                </ul>
+                {else}
+                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {endif}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

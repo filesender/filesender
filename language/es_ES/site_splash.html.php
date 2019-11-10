@@ -7,13 +7,9 @@
 // 
 // 
 ?>
-<h1>Tere tulemast veebilehele {cfg:site_name}</h1>
+<h1> Bienvenido a {cfg: site_name} </h1>
 
 <p>
- {cfg:site_name} on turvaline viis jagada mahukaid faile teiste osapooltega!
-</p>
-<p>
-  Logi sisse, et oma fail üleslaadida ning teistele edastada.
-</p>
-<p>
+     ¡{cfg: site_name} es una forma segura de compartir archivos grandes con cualquier persona!
+     Inicie sesión para cargar sus archivos o invite a personas a enviarle un archivo.
 </p>

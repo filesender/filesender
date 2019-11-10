@@ -7,70 +7,70 @@
 // 
 // 
 ?>
-subject: {target.type} #{target.id} aruanne
+Asunto: Informe sobre {target.type} #{target.id}
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-{target.type} aruanne on järgmine:
+aquí se encuentra el informe sobre tu {target.type}:
 
-{target.type} number : {target.id}
+{target.type} número: {target.id}
 
 {if:target.type == "Transfer"}
-Antud failijagamine sisaldab {transfer.files} faili kogumahuga {size:transfer.size}.
+Esta transferencia tiene {transfer.files} ficheros con un tamaño total de {size:transfer.size}.
 
-Antud failijagamine on/oli saadaval kuni {date:transfer.expires}.
+Esta transferencia está/estuvo disponible hasta el {date:transfer.expires}.
 
-Antud failijagamisega on seotud e-posti aadressid: {transfer.recipients}.
+Esta transferencia fue enviada a los destinatarios {transfer.recipients}.
 {endif}
 {if:target.type == "File"}
-Antud fail nimega {file.path} ning mahuga {size:file.size} ja on/oli saadaval kuni {date:file.transfer.expires}.
+Este fichero se denomina {file.name}, tiene un tamaño de {size:file.size} y está/estuvo disponible hasta el {date:file.transfer.expires}.
 {endif}
 {if:target.type == "Recipient"}
-Antud saaja e-postiaadress on {recipient.email} ja on/oli kehtiv kuni {date:recipient.expires}.
+El destinatario tiene dirección de correo electrónico {recipient.email} y está/estuvo disponible hasta el {date:recipient.expires}.
 {endif}
 
-Failijagamise logi on järgmine :
+Aquí se encuentran los logs completos de la transferencia:
 
 {raw:content.plain}
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    {target.type} aruanne on järgmine:<br /><br />
+    aquí se encuentra el informe sobre tu {target.type}:<br /><br />
     
-    {target.type} number : {target.id}<br /><br />
+    {target.type} número: {target.id}<br /><br />
     
     {if:target.type == "Transfer"}
-    Antud failijagamine sisaldab {transfer.files} faili kogumahuga {size:transfer.size}.<br /><br />
+    Esta transferencia tiene {transfer.files} ficheros con un tamañoo total de {size:transfer.size}.<br /><br />
     
-    Antud failijagamine on/oli saadaval kuni {date:transfer.expires}.<br /><br />
+    Esta transferencia está/estuvo disponible hasta el {date:transfer.expires}.<br /><br />
     
-    Antud failijagamisega on seotud e-posti aadressid: {transfer.recipients}.
+    Esta transferencia fue enviada a los destinatarios {transfer.recipients}.
     {endif}
     {if:target.type == "File"}
-    Antud fail nimega {file.path} ning mahuga {size:file.size} ja on/oli saadaval kuni {date:file.transfer.expires}.
+    Este fichero se denomina {file.name}, tiene un tamaño de {size:file.size} y está/estuvo disponible hasta el {date:file.transfer.expires}.
     {endif}
     {if:target.type == "Recipient"}
-    Antud saaja e-postiaadress on {recipient.email} ja on/oli kehtiv kuni {date:recipient.expires}.
+    El destinatario tiene dirección de correo electrónico {recipient.email} y está/estuvo disponible hasta el {date:recipient.expires}.
     {endif}
 </p>
 
 <p>
-    Failijagamise logi on järgmine :
+    Aquí se encuentran los logs completos de la transferencia:
     <table class="auditlog" rules="rows">
         <thead>
-            <th>Kuupäev</th>
-            <th>Sündmus</th>
-            <th>IP aadress</th>
+            <th>Fecha</th>
+            <th>Evento</th>
+            <th>Dirección IP</th>
         </thead>
         <tbody>
             {raw:content.html}
@@ -78,5 +78,5 @@ Lugupidamisega,
     </table>
 </p>
 
-<p>Lugupidamisega,<br/>
+<p>Saludos,<br/>
 {cfg:site_name}</p>

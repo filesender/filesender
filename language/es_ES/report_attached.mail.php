@@ -7,26 +7,26 @@
 // 
 // 
 ?>
-subject: Failijagamise aruanne {target.type} #{target.id}
+Asunto: Informe sobre {target.type} #{target.id}
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Failijagamise ID-ga #{target.id} aruanne on lisatud antud e-kirja manusesse.
+puedes encontrar el informe relacionado con la transferencia con identificador #{target.id} adjunto a este correo electrónico.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Failijagamise ID-ga #{target.id} aruanne on lisatud antud e-kirja manusesse.
+    puedes encontrar el informe relacionado con la transferencia con identificador #{target.id} adjunto a este correo electrónico.
 </p>
 
-<p>Lugupidamisega,<br/>
+<p>Saludos,<br/>
 {cfg:site_name}</p>

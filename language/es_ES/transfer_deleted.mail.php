@@ -7,29 +7,28 @@
 // 
 // 
 ?>
-subject: Fail(id) ei ole enam saadaval
-subject: (failid ei ole enam saadaval) {transfer.subject}
+Asunto: El/los archivo(s) ya no están disponibles para su descarga
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Failijagamine ID-ga {transfer.id} on kustutatud {cfg:site_name} veebisaidist kasutaja ({transfer.user_email}) poolt.
+La transferencia n°{transfer.id} ha sido eliminada del servicio FileSender de {cfg:site_name} por el emisor ({transfer.user_email}). Ya no está disponible para la descarga.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Failijagamine ID-ga {transfer.id} on kustutatud <a href="{cfg:site_url}">{cfg:site_name}</a> veebsaidist kasutaja (<a href="mailto:{transfer.user_email}">{transfer.user_email}</a>) poolt.
+    La transferencia n°{transfer.id} ha sido eliminada del servicio FileSender de {cfg:site_name} por el emisor ({transfer.user_email}). Ya no está disponible para la descarga.
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

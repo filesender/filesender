@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Kasutamisreeglid ja tingimused
+Términos y condiciones de AuP...
