@@ -40,7 +40,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 #settings
 base_url = '[base_url]'
-default_transfer_days_valid = 20
+default_transfer_days_valid = 10
 
 #argv
 parser = argparse.ArgumentParser()
