@@ -39,7 +39,7 @@ $apipath=Config::get('site_url').'rest.php';
 $daysvalid=Config::get('default_transfer_days_valid');
 
 $script=str_replace('[base_url]',$apipath,$script,$one);
-$script=preg_replace("/\ndefault_transfer_days_valid[ =]*[0-9]+\n/",
+$script=preg_replace("/\ndefault_transfer_days_valid[ ]*=[ ]*[0-9]+\n/",
                      "\ndefault_transfer_days_valid = $daysvalid\n",
                      $script);
 
