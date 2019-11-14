@@ -1,5 +1,9 @@
 <?php
 
+// allow a part of the page to handle a guest option
+// and avoid it being handled a second time by other code
+$guest_options_handled = array();
+
 $new_guests_can_only_send_to_creator = false;
 
 
@@ -14,8 +18,63 @@ foreach (Guest::allOptions() as $name => $dfn) {
         }
     }
 }
- 
 
+
+//
+// Note that this needs to be called inside a div with guest_options or transfer_options
+//
+$displayoption = function($name, $cfg, $transfer = false)
+use ( $new_guests_can_only_send_to_creator,
+      $new_guests_can_only_send_to_creator_default )
+{
+    // don't show the option for get_a_link if they can't use it.
+    if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
+        return;
+    }
+    
+    $default = $cfg['default'];
+    if(Auth::isSP()) {
+        if($transfer) {
+            $default = Auth::user()->defaultTransferOptionState($name);
+        } else {
+            $default = Auth::user()->defaultGuestOptionState($name);
+        }
+    }
+    if( $name == 'get_a_link' && $new_guests_can_only_send_to_creator_default ) {
+        $default = false;
+    }
+    $checked = $default ? 'checked="checked"' : '';
+    $extraDivAttrs = '';
+    $hidden = '';
+    if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
+        echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
+        echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
+        echo '    <input id="'.$name.'" name="'.$name.'" type="text">';
+        echo '    <br/>';
+        echo '</div>';
+        
+    } else {
+        $lockClassLabel = '';
+        $lockClass = '';
+        if($name == 'get_a_link' || $name == 'can_only_send_to_me') {
+            $lockClass = 'get_a_link_lock';
+        }
+        echo '<div class="fieldcontainer '.$lockClass.'" '. $extraDivAttrs .'>';
+        echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' />';
+        echo '  <label for="'.$name.'" class="'.$lockClassLabel.'">'.Lang::tr($name).'</label>';
+        echo '</div>';
+    }
+};
+
+
+?>
+
+
+
+<?php 
+////////////////////////
+// begin html part
+////////////////////////
 ?>
 <div class="box">
     <div id="send_voucher" class="box">
@@ -67,6 +126,17 @@ foreach (Guest::allOptions() as $name => $dfn) {
                 <td class="box">
                     <div class="fieldcontainer">
 
+                        <div class="guest_options options_box">
+                        <?php
+                        foreach(Guest::availableOptions(true) as $name => $cfg) {
+                            if( $name == 'does_not_expire' ) {
+                                $guest_options_handled[$name] = 1;
+                                $displayoption($name, $cfg, false);
+                            }
+                        }
+                        ?>
+                        </div>
+                        
                         <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                         
                         <input id="expires" name="expires" type="text" autocomplete="off"
@@ -74,52 +144,9 @@ foreach (Guest::allOptions() as $name => $dfn) {
                                data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
                         />
 
+                        
                     </div>
                     
-                    <?php
-                    $displayoption = function($name, $cfg, $transfer = false)
-                    use ( $new_guests_can_only_send_to_creator,
-                          $new_guests_can_only_send_to_creator_default )
-                        {
-                            // don't show the option for get_a_link if they can't use it.
-                            if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
-                                return;
-                            }
-                        
-                            $default = $cfg['default'];
-                            if(Auth::isSP()) {
-                                if($transfer) {
-                                    $default = Auth::user()->defaultTransferOptionState($name);
-                                } else {
-                                    $default = Auth::user()->defaultGuestOptionState($name);
-                                }
-                            }
-                            if( $name == 'get_a_link' && $new_guests_can_only_send_to_creator_default ) {
-                                $default = false;
-                            }
-                            $checked = $default ? 'checked="checked"' : '';
-                            $extraDivAttrs = '';
-                            $hidden = '';
-                            if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
-                                echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
-                                echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
-                                echo '    <input id="'.$name.'" name="'.$name.'" type="text">';
-                                echo '    <br/>';
-                                echo '</div>';
-                                
-                            } else {
-                                $lockClassLabel = '';
-                                $lockClass = '';
-                                if($name == 'get_a_link' || $name == 'can_only_send_to_me') {
-                                    $lockClass = 'get_a_link_lock';
-                                }
-                                echo '<div class="fieldcontainer '.$lockClass.'" '. $extraDivAttrs .'>';
-                                echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' />';
-                                echo '  <label for="'.$name.'" class="'.$lockClassLabel.'">'.Lang::tr($name).'</label>';
-                                echo '</div>';
-                            }
-                        };
-                    ?>
 
                     <div class="guest_options options_box">
                         <h3>{tr:guest_options}</h3>
@@ -134,7 +161,13 @@ foreach (Guest::allOptions() as $name => $dfn) {
                         </div>
                         
                          <div class="advanced_options">
-                            <?php foreach(Guest::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, false) ?>
+                             <?php
+                             foreach(Guest::availableOptions(true) as $name => $cfg) {
+                                 if( !array_key_exists($name,$guest_options_handled)) {
+                                     $displayoption($name, $cfg, false);
+                                 }
+                             }
+                             ?>
                          </div>     
                         <?php } ?>
                     </div>

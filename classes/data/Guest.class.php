@@ -96,7 +96,8 @@ class Guest extends DBObject
             'type' => 'datetime'
         ),
         'expires' => array(
-            'type' => 'datetime'
+            'type' => 'datetime',
+            'null' => true
         ),
         'last_activity' => array(
             'type' => 'datetime'
@@ -132,9 +133,13 @@ class Guest extends DBObject
      * Set selectors
      */
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
+    // Note that if the guest does not expire then expires is null 
+    // so that tuple will not be returned by the below fragment.
     const EXPIRED = "expires < :date ORDER BY expires ASC";
-    const FROM_USER = "userid = :userid AND expires > :date ORDER BY created DESC";
-    const FROM_USER_AVAILABLE = "userid = :userid AND expires > :date AND status = 'available' ORDER BY created DESC";
+    // For these fragments we want to find the guests that have
+    // expires is null because they are still considered active
+    const FROM_USER = "userid = :userid AND (expires is null or expires > :date) ORDER BY created DESC";
+    const FROM_USER_AVAILABLE = "userid = :userid AND (expires is null or expires > :date) AND status = 'available' ORDER BY created DESC";
     
     /**
      * Properties
@@ -383,6 +388,9 @@ class Guest extends DBObject
      */
     public function isExpired()
     {
+        if( is_null($this->expires)) {
+            return false;
+        }
         $today = (24 * 3600) * floor(time() / (24 * 3600));
         return $this->expires < $today;
     }
@@ -395,6 +403,9 @@ class Guest extends DBObject
      */
     public function isExpiredDaysAgo($days)
     {
+        if( is_null($this->expires)) {
+            return false;
+        }
         $d = (24 * 3600) * floor(time() / (24 * 3600) - ($days * (24*3600)));
         return $this->expires < $d;
     }
@@ -678,6 +689,37 @@ class Guest extends DBObject
             $identity = explode('@', $this->email);
             return $identity[0];
         }
+
+        //
+        // Simple access to $this->options 
+        //
+        if ($property == 'does_not_expire') {
+            return $this->getOption(GuestOptions::DOES_NOT_EXPIRE);
+        }
+        if ($property == 'email_upload_started') {
+            return $this->getOption(GuestOptions::EMAIL_UPLOAD_STARTED);
+        }
+        if ($property == 'email_upload_page_access') {
+            return $this->getOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS);
+        }
+        if ($property == 'valid_only_one_time') {
+            return $this->getOption(GuestOptions::VALID_ONLY_ONE_TIME);
+        }
+        if ($property == 'can_only_send_to_me') {
+            return $this->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME);
+        }
+        if ($property == 'email_guest_created') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_CREATED);
+        }
+        if ($property == 'email_guest_created') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_CREATED);
+        }
+        if ($property == 'email_guest_created_receipt') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_CREATED_RECEIPT);
+        }
+        if ($property == 'email_guest_created_expired') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED);
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -722,19 +764,27 @@ class Guest extends DBObject
             }
             $this->email = (string)$value;
         } elseif ($property == 'expires' || $property == 'last_activity') {
-            if (preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
-                $value = strtotime($value);
+
+            if($property == 'expires' && $this->does_not_expire && is_null($value))
+            {
+                $this->$property = $value;
             }
-            
-            if (!preg_match('`^[0-9]+$`', $value)) {
-                throw new BadExpireException($value);
+            else
+            {
+                if (preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
+                    $value = strtotime($value);
+                }
+                
+                if (!preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadExpireException($value);
+                }
+                
+                $value = (int)$value;
+                if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
+                    throw new BadExpireException($value);
+                }
+                $this->$property = (string)$value;
             }
-            
-            $value = (int)$value;
-            if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
-                throw new BadExpireException($value);
-            }
-            $this->$property = (string)$value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
