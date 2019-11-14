@@ -388,6 +388,9 @@ class Guest extends DBObject
      */
     public function isExpired()
     {
+        if( is_null($this->expires)) {
+            return false;
+        }
         $today = (24 * 3600) * floor(time() / (24 * 3600));
         return $this->expires < $today;
     }
@@ -400,6 +403,9 @@ class Guest extends DBObject
      */
     public function isExpiredDaysAgo($days)
     {
+        if( is_null($this->expires)) {
+            return false;
+        }
         $d = (24 * 3600) * floor(time() / (24 * 3600) - ($days * (24*3600)));
         return $this->expires < $d;
     }
