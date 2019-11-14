@@ -224,7 +224,7 @@ filesender.ui.send = function() {
             options[c][o] = v;
         }
     }
-    
+
     var emails = filesender.ui.recipients.list;
     var sent = 0;
     for(var i=0; i<emails.length; i++) {

@@ -528,3 +528,22 @@ $lang['yes'] = 'Yes';
 $lang['you_can_report_exception'] = 'When reporting this error please give the following code to help the support finding out details';
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
+
+
+
+$lang['admin_testing_section'] = 'Testing';
+$lang['password_hashing_performance'] = 'Password hashing performance';
+$lang['calculate'] = 'Calculate';
+$lang['iterations'] = 'Iterations';
+$lang['time_to_complete_ms'] = 'Time to complete (ms)';
+$lang['system_active_setting'] = 'This setting is active on your system';
+
+$lang['decryption_verification_failed_unexpected_ivchunkid'] = 'Decryption of data failed';
+$lang['decryption_verification_failed_bad_ivchunkid'] = 'Decryption of data failed';
+$lang['decryption_verification_failed_bad_fixed_iv'] = 'Part of the IV for the encrypted file does not match what it should be. This is unlikely and suggests that something may have changed from the data that was being sent to the server.';
+$lang['decryption_verification_failed_bad_aead'] = 'Some encrypted files are protected with AEAD which allows FileSender to check the integrity of the file. It was found that the AEAD data does not match the expected value for this file so decryption was halted for your protection.';
+
+
+$lang['user_hit_guest_limit'] = 'You have reached the maximum number of guests that you can have.';
+
+
