@@ -7,6 +7,4 @@
 // 
 // 
 ?>
-Vautšer võimaldab teistel osapooltel faile jagada Sinuga.<br />
-Vautšeri loomiseks sisesta adressaadi e-posti aadress ja vajuta "Saada Vautšer".<br />
-Seejärel saadetakse adressaadile link vautšeri kasutamiseks.
+Un cupón permite que alguien le envíe un archivo. <br />Para crear un cupón, ingrese una dirección de correo electrónico y luego seleccione Enviar comprobante. <br />Se enviará un correo electrónico al destinatario con un enlace para usar el Cupón.

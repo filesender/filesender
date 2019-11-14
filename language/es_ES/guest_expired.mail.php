@@ -7,28 +7,28 @@
 // 
 // 
 ?>
-subject: Vautšer on aegunud
+Asunto: Invitación caducada 
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-{guest.user_email} aadressile saadetud vatšer on aegunud.
+la invitación de {guest.user_email} ha caducado.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    <a href="mailto:{guest.user_email}">{guest.user_email}</a> aadressile saadetud vautšer on aegunud.
+    la invitaci&oacute;n de <a href="mailto:{guest.user_email}">{guest.user_email}</a> ha caducado.
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

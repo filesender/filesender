@@ -11,24 +11,24 @@ subject: Fil(er) slettet
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Kære afsender!
 
-Your transfer n°{transfer.id} has been deleted from {cfg:site_name} and is no longer available for download ({transfer.link}).
+Din overførsel nr. {transfer.id} er blevet slettet fra {cfg:site_name}, og filerne i den kan derfor ikke længere hentes ({transfer.link}).
 
-Best regards,
+Med venlig hilsen
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Kære afsender!
 </p>
 
 <p>
-    Your <a href="{transfer.link}">transfer n°{transfer.id}</a> has been deleted from <a href="{cfg:site_url}">{cfg:site_name}</a> and is no longer available for download.
+    Din <a href="{transfer.link}">overføsel nr. {transfer.id}</a> er blevet slettet fra <a href="{cfg:site_url}">{cfg:site_name}</a>, og filerne i den kan derfor ikke længere hentes.
 </p>
 
 <p>
-    Best regards,<br />
+    Med venlig hilsen<br />
     {cfg:site_name}
 </p>

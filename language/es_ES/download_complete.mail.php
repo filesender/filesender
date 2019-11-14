@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Descarga completada
+Asunto: Descarga completada
 
 {alternative:plain}
 

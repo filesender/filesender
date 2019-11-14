@@ -51,7 +51,7 @@
     <li><i class="fa-li fa fa-caret-right"></i><strong>Gæsterettigheder udløber efter: </strong>{cfg:default_guest_days_valid} (højst {cfg:max_guest_days_valid}) dage</li>
 </ul>
 
-<h3>Tekniske detalher</h3>
+<h3>Tekniske detaljer</h3>
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>
         <strong>{cfg:site_name}</strong> bruger <a href="http://www.filesender.org/" target="_blank">FileSender-software</a>.
@@ -59,7 +59,7 @@
         Dét afhænger først og fremmest af om avanceret browserfunktionalitet er til rådighed, især HTML5-FileAPI'et.
         På websitet <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> kan man følge udbredelsen af understøttelsen af HTML5-FileAPI'et i alle større browsere.
         Især understøttelse for <a href="http://caniuse.com/filereader" target="_blank">FileReader-API'et</a> og <a href="http://caniuse.com/bloburls" target="_blank">Blob-URL'er</a> skal stå med grøn lampe (=understøttet) for at browseren kan uploade filer større end {size:cfg:max_legacy_file_size} hver.
-        Vær opmærksom på at Opera 12 lige nu faktisk ikke understøtter alt hvad der kræves til FileSenders HTLM5-uploadfunktionalitet, selvom den står på listen over browseren som understøtter HTLM5-FileAPI'et.
+        Vær opmærksom på at Opera 12 lige nu faktisk ikke understøtter alt hvad der kræves til FileSenders HTLM5-uploadfunktionalitet, selvom den står på listen over browsere som understøtter HTLM5-FileAPI'et.
     </li>
 </ul>
 

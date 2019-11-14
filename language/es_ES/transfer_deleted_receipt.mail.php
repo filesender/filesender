@@ -7,29 +7,28 @@
 // 
 // 
 ?>
-subject: Fail(id) on kustutatud
-subject: (failid on kustutatud) {transfer.subject}
+Asunto: Fichero(s) eliminado(s)
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Failijagamine ID-ga {transfer.id} on kustutatud {cfg:site_name} veebisaidist.
+Su transferencia n°{transfer.id} ha sido eliminada del servicio FileSender de {cfg:site_name} y ya no está disponible para su descarga ({transfer.link}).
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Failijagamine ID-ga {transfer.id} on kustutatud <a href="{cfg:site_url}">{cfg:site_name}</a> veebisaidist.
+    Su <a href="{transfer.link}">transferencia n°{transfer.id}</a> ha sido eliminada del servicio FileSender de {cfg:site_name} y ya no está disponible para su descarga.
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

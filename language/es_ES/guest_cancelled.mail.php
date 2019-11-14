@@ -7,28 +7,28 @@
 // 
 // 
 ?>
-subject: Vautšer on tühistatud
+Asunto: Invitación cancelada 
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-{guest.user_email} aadressile loodud vautšer on tühistatud.
+la invitación a {guest.user_email} ha sido cancelada.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    <a href="mailto:{guest.user_email}">{guest.user_email}</a> aadressile loodud vautšer on tühistatud.
+    la invitaci&oacute;n a <a href="mailto:{guest.user_email}">{guest.user_email}</a> ha sido cancelada.
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

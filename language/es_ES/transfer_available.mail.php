@@ -7,77 +7,77 @@
 // 
 // 
 ?>
-subject: Fail{if:transfer.files>1}id{endif} on allalaadimiseks valmis
-subject: {transfer.subject}
+Asunto: Fichero/s disponible/s para descargar 
+Asunto: {transfer.subject}
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-{if:transfer.files>1}Failid{else}Fail {endif} on üleslaetud {cfg:site_name} keskkonda {transfer.user_email} poolt ning Teile on antud allalaadimise õigus:
+{if:transfer.files>1}Los siguientes ficheros han sido subidos{else}el siguiente fichero ha sido subido{endif} al servicio FileSender de {cfg:site_name} por {transfer.user_email} y tienes permisos de descarga sobre su contenido:
 
 {if:transfer.files>1}{each:transfer.files as file}
-  - {file.path} ({size:file.size})
+  - {file.name} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().path} ({size:transfer.files.first().size})
+{transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Allalaadimise link: {recipient.download_link}
+Enlace de descarga: {recipient.download_link}
 
-Aegumise kuupäev {date:transfer.expires}.
+La transacción estará disponible hasta el {date:transfer.expires}. Después de esta fecha será automáticamente eliminada.
 
 {if:transfer.message || transfer.subject}
-Personaalne teade aadressilt {transfer.user_email}: {transfer.subject}
+Mensaje personal de {transfer.user_email}: {transfer.subject}
 
 {transfer.message}
 {endif}
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    {if:transfer.files>1}Failid{else}Fail{endif} on üleslaetud <a href="{cfg:site_url}">{cfg:site_name}</a> keskkonda <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> poolt ning Teile on antud allalaadimise õigus.
+    {if:transfer.files>1}los siguientes ficheros han sido subidos{else}el siguiente fichero ha sido subido{endif} al servicio FileSender de {cfg:site_name} por {transfer.user_email} y tienes permisos de descarga sobre su contenido.
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Täpsemalt</th>
+            <th colspan="2">Detalles de la transacción</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Fail{if:transfer.files>1}id{endif}</td>
+            <td>Fichero{if:transfer.files>1}s{endif}</td>
             <td>
                 {if:transfer.files>1}
                 <ul>
                     {each:transfer.files as file}
-                        <li>{file.path} ({size:file.size})</li>
+                        <li>{file.name} ({size:file.size})</li>
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().path} ({size:transfer.files.first().size})
+                {transfer.files.first().name} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>
         {if:transfer.files>1}
         <tr>
-            <td>Suurus</td>
+            <td>Tamaño</td>
             <td>{size:transfer.size}</td>
         </tr>
         {endif}
         <tr>
-            <td>Aegumise kuupäev</td>
+            <td>Fecha de expiración</td>
             <td>{date:transfer.expires}</td>
         </tr>
         <tr>
-            <td>Allalaadimise link</td>
+            <td>Enlace de descarga</td>
             <td><a href="{recipient.download_link}">{recipient.download_link}</a></td>
         </tr>
     </tbody>
@@ -85,7 +85,7 @@ Lugupidamisega,
 
 {if:transfer.message}
 <p>
-    Personaalne sõnum aadressilt {transfer.user_email}:
+    Mensaje personal de {transfer.user_email}:
 </p>
 <p class="message">
     {transfer.message}
@@ -93,6 +93,6 @@ Lugupidamisega,
 {endif}
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

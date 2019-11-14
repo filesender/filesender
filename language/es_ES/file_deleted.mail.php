@@ -7,28 +7,27 @@
 // 
 // 
 ?>
-subject: Fail ei ole enam allalaetav
-
+Asunto: El archivo ya no está disponible para descargar
 {alternative:plain}
 
-Tere,
+Estimado señor o señora,
 
-Fail {file.path} ({size:file.size}) on kustutatud ja ei ole enam allalaetav.
+El archivo {file.path} ({size: file.size}) se ha eliminado de la transferencia n ° {transfer.id} y ya no está disponible para su descarga.
 
-Lugupidamisega,
+Atentamente,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Estimado señor o señora,
 </p>
 
 <p>
-    Fail {file.path} ({size:file.size}) on kustutatud ja ei ole enam allalaetav.
+	El archivo {file.path} ({size: file.size}) se ha eliminado de la transferencia n ° {transfer.id} y ya no está disponible para su descarga.
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Atentamente,<br />
     {cfg:site_name}
 </p>

@@ -7,28 +7,29 @@
 // 
 // 
 ?>
-subject: Tagasiside aadressilt {target.email}
+Asunto: Feedback del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif}#{target_id} {target.email}
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Meile laekus e-postiga sõnum aadressilt {target.email}. Leiad selle manusest.
+Se ha recibido un mensaje de opinión del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif}#{target_id} {target.email}. Puedes encontrarlo adjunto.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Meile laekus e-postiga sõnum aadressilt {target.email}. Leiad selle manusest.
+ Se ha recibido un mensaje de opini&oacute;n del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif}#{target_id} {target.email}. Puedes encontrarlo adjunto.
 </p>
 
 <p>
-    Lugupidamisega,<br />
-    {cfg:site_name}
+    Saludos,<br />
+     {cfg:site_name}
 </p>
+~

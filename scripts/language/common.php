@@ -57,7 +57,7 @@ function loadLangDirectory( $code ) {
 
 function squote( $s ) {
 
-    $s = preg_replace("#(?<!\\\\\\\\)((?:\\\\\\\\{2})*)'#", "$1\\'", $s);
+    $s = preg_replace("~(?<!\\\)'~", "\\'", $s);
     return $s;
 }
 

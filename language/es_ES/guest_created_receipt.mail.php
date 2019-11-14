@@ -7,28 +7,28 @@
 // 
 // 
 ?>
-subject: Vautšer on saadetud
+Asunto: Invitación enviada 
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Vautšer on saadetud aadressile {guest.email}.
+una invitación que proporciona acceso al {cfg:site_name} ha sido enviado a {guest.email}.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Vautšer on saadetud aadressile <a href="mailto:{guest.email}">{guest.email}</a>.
+    una invitaci&oacute;n que proporciona acceso al {cfg:site_name} ha sido enviado a <a href="mailto:{guest.email}">{guest.email}</a>.
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

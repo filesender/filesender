@@ -7,38 +7,44 @@
 // 
 // 
 ?>
-subject: Salvestusruumi probleem
+Asunto: Alerta uso de almacenamiento
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Salvestusruumi probleem veebisaidis {cfg:site_name} :
+El uso del almacenamiento del servicio FileSender de {cfg:site_name} tiene una alerta:
 
 {each:warnings as warning}
-  - {warning.filesystem} ({size:warning.total_space}) only has {size:warning.free_space} left ({warning.free_space_pct}%)
+  - {warning.filesystem} ({size:warning.total_space}) solo tiene libre {size:warning.free_space} ({warning.free_space_pct}%)
 {endeach}
 
-Lugupidamisega,
+Puedes encontrar más información en {cfg:site_url}
+
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Salvestusruumi probleem veebisaidis {cfg:site_name} :
+    El uso del almacenamiento del servicio FileSender de {cfg:site_name} tiene una alerta:
 </p>
 
 <ul>
 {each:warnings as warning}
-    <li>{warning.filesystem} ({size:warning.total_space}) only has {size:warning.free_space} left ({warning.free_space_pct}%)</li>
+    <li>{warning.filesystem} ({size:warning.total_space}) solo tiene libre {size:warning.free_space} ({warning.free_space_pct}%)</li>
 {endeach}
 </ul>
 
 <p>
-    Lugupidamisega,<br />
+    Puedes encontrar más información en <a href="{cfg:site_url}">{cfg:site_url}</a>
+</p>
+
+<p>
+    Saludos,<br />
     {cfg:site_name}
 </p>

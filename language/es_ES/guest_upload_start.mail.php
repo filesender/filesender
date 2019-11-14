@@ -7,55 +7,55 @@
 // 
 // 
 ?>
-subject: Külaline alustas failide üleslaadimist
+Asunto: Un invitado comienza a subir archivos
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Külaline alsutas failide üleslaadimist:
+la siguiente persona comenzó a cargar ficheros desde tu invitación:
 
-Külaline: {guest.email}
-Vautšeri link: {cfg:site_url}?s=upload&vid={guest.token}
+Invitado: {guest.email}
+Enlace: {cfg:site_url}?s=upload&vid={guest.token}
 
-Vautšer kehtib kuni {date:guest.expires} peale mida see kustutatakse automaatselt.
+La invitación está disponible hasta el {date:guest.expires}. Después de esta fecha será automáticamente eliminada.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Külaline alustas failide üleslaadimist:
+    la siguiente persona comenzó a cargar ficheros desde tu invitación:
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Vautšeri üksikasjad</th>
+            <th colspan="2">Detalles</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Külaline</td>
+            <td>Invitado</td>
             <td><a href="mailto:{guest.email}">{guest.email}</a></td>
         </tr>
         <tr>
-            <td>Vautšeri link</td>
+            <td>Enlace</td>
             <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
         </tr>
         <tr>
-            <td>Vautšer kehtib kuni</td>
+            <td>Váido hasta el</td>
             <td>{date:guest.expires}</td>
         </tr>
     </tbody>
 </table>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

@@ -7,55 +7,56 @@
 // 
 // 
 ?>
-subject: Külaline lõpetas failide üleslaadimise
+asunto: El invitado ha terminado de subir archivos
 
 {alternative:plain}
 
-Tere,
+Estimado señor o señora,
 
-Külaline lõpetas failide üleslaadimise :
+El siguiente invitado finalizó la carga de archivos mediante un voucher de invitado:
 
-Külaline: {guest.email}
-Vautšeri link: {cfg:site_url}?s=upload&vid={guest.token}
+Invitado: {guest.email}
+Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
 
-Vautšer kehtib kuni {date:guest.expires} peale mida see kustutatakse automaatselt.
+El voucher está disponible hasta {date:guest.expires} Luego de este tiempo, será borrado.
 
-Lugupidamisega,
+Un saludo,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Estimado señor o señora,
 </p>
 
 <p>
-    Külaline lõpetas failide üleslaadimise :
+El siguiente invitado finalizó la carga de archivos mediante un voucher de invitado:
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Vautšeri üksikasjad</th>
+            <th colspan="2">detalles del Voucher</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Külaline</td>
+            <td>Guest</td>
             <td><a href="mailto:{guest.email}">{guest.email}</a></td>
         </tr>
         <tr>
-            <td>Vautšeri link</td>
+            <td>Enlace al Voucher</td>
             <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
         </tr>
         <tr>
-            <td>Vautšer kehtib kuni</td>
+            <td>Valido hasta</td>
             <td>{date:guest.expires}</td>
         </tr>
     </tbody>
 </table>
 
 <p>
-    Lugupidamisega,<br />
+    Un saludos,<br />
     {cfg:site_name}
 </p>
+',
