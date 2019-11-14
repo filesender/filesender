@@ -224,6 +224,16 @@ filesender.ui.send = function() {
             options[c][o] = v;
         }
     }
+
+    filesender.client.specificErrorHandler = function(error) {
+        if(error.message == 'user_hit_guest_limit') {
+            filesender.ui.alert('error',
+                                filesender.config.language.user_hit_guest_limit,
+                                function() {} );
+            return true;
+        }
+        return false;
+    }
     
     var emails = filesender.ui.recipients.list;
     var sent = 0;
