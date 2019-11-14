@@ -582,10 +582,6 @@ class Guest extends DBObject
         }
         return false;
     }
-    public function does_not_expire()
-    {
-        return $this->getOption(GuestOptions::DOES_NOT_EXPIRE);
-    }
     
     /**
      * Delete the guest related objects
@@ -693,6 +689,37 @@ class Guest extends DBObject
             $identity = explode('@', $this->email);
             return $identity[0];
         }
+
+        //
+        // Simple access to $this->options 
+        //
+        if ($property == 'does_not_expire') {
+            return $this->getOption(GuestOptions::DOES_NOT_EXPIRE);
+        }
+        if ($property == 'email_upload_started') {
+            return $this->getOption(GuestOptions::EMAIL_UPLOAD_STARTED);
+        }
+        if ($property == 'email_upload_page_access') {
+            return $this->getOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS);
+        }
+        if ($property == 'valid_only_one_time') {
+            return $this->getOption(GuestOptions::VALID_ONLY_ONE_TIME);
+        }
+        if ($property == 'can_only_send_to_me') {
+            return $this->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME);
+        }
+        if ($property == 'email_guest_created') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_CREATED);
+        }
+        if ($property == 'email_guest_created') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_CREATED);
+        }
+        if ($property == 'email_guest_created_receipt') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_CREATED_RECEIPT);
+        }
+        if ($property == 'email_guest_created_expired') {
+            return $this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED);
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -738,7 +765,7 @@ class Guest extends DBObject
             $this->email = (string)$value;
         } elseif ($property == 'expires' || $property == 'last_activity') {
 
-            if($property == 'expires' && $this->does_not_expire() && is_null($value))
+            if($property == 'expires' && $this->does_not_expire && is_null($value))
             {
                 $this->$property = $value;
             }

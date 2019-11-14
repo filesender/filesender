@@ -234,7 +234,7 @@ class RestEndpointGuest extends RestEndpoint
         $expires = $data->expires ? $data->expires : Guest::getDefaultExpire();
         $guest->expires = $expires;
         
-        if($guest->does_not_expire()) {
+        if($guest->does_not_expire) {
             $guest->expires = null;
         }
         
