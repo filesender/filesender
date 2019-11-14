@@ -350,7 +350,7 @@ class Transfer extends DBObject
              . Transfer::getDBTable() . " t, "
              . Guest::getDBTable()    . " g "
              . " where "
-             . " g.userid   = :userid AND g.expires > :date AND "
+             . " g.userid   = :userid AND (g.expires is null or g.expires > :date) AND "
              . " t.guest_id = g.id    AND t.status  = 'available' ";
         if( $user_can_only_view_guest_transfers_shared_with_them ) {
             // filter back to only transfers that are can_only_send_to_me for the user
