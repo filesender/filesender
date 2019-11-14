@@ -224,7 +224,7 @@ filesender.ui.send = function() {
             options[c][o] = v;
         }
     }
-    
+
     var emails = filesender.ui.recipients.list;
     var sent = 0;
     for(var i=0; i<emails.length; i++) {
@@ -253,6 +253,7 @@ $(function() {
         subject: send_voucher.find('input[name="subject"]'),
         message: send_voucher.find('textarea[name="message"]'),
         expires: send_voucher.find('input[name="expires"]'),
+        does_not_expire: send_voucher.find('input[name="does_not_expire"]'),
         get_a_link: send_voucher.find('input[name="get_a_link"]'),
         can_only_send_to_me: send_voucher.find('input[name="can_only_send_to_me"]'),
         options: {guest: {}, transfer: {}},
@@ -346,7 +347,13 @@ $(function() {
     });
     get_a_link_updates();
 
-    
+
+    if( filesender.ui.nodes.does_not_expire ) {
+        filesender.ui.nodes.does_not_expire.on('click', function() {
+            var checked = filesender.ui.nodes.does_not_expire.is(':checked');
+            filesender.ui.nodes.expires.prop('disabled', checked);
+        });
+    }
     
     
     // Bind advanced options display toggle

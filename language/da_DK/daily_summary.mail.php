@@ -13,7 +13,7 @@ subject: Dagens overførsler
 
 Kære afsender!
 
-Herunder har du en oversigt over hentninger af {transfer.id} (uploadet {date:transfer.created}):
+Her har du en oversigt over hentninger af {transfer.id} (uploadet {date:transfer.created}):
 
 {if:events}
 {each:events as event}
@@ -35,7 +35,7 @@ Kære afsender
 </p>
 
 <p>
-Herunder har du en oversigt over hentninger af {transfer.id} (uploadet {date:transfer.created}):
+Her har du en oversigt over hentninger af {transfer.id} (uploadet {date:transfer.created}):
 </p>
 
 {if:events}

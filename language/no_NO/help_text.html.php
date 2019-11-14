@@ -1,3 +1,12 @@
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
 <div>
 <div style="padding: 5px; text-align: left;">
 <h4>Pålogging</h4>
@@ -34,7 +43,7 @@
       <li><b>Maks. antall filer per sending: </b> 1 - for å sende flere filer samtidig kan du pakke dem i f.eks. en zip-fil først.</li>
       <li>Største mulige filstørrelse per sending <b>uten</b> HTML 5: {size:cfg:max_legacy_file_size}</li>
       <li>Største mulige filstørrelse per sending <b>med</b> HTML 5: {size:cfg:max_html5_upload_size}</li>
-      <li>Maksimum antall dager før utløp av sending: {cfg:default_transfer_days_valid}</li>
+      <li>Maksimum antall dager før utløp av sending: {cfg:default_days_valid}</li>
 </ul>
 
 <h4>Tekniske detaljer</h4>

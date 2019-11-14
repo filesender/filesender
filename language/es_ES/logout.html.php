@@ -7,6 +7,6 @@
 // 
 // 
 ?>
-<p>
-    Väljalogimine õnnestus.
+<p> 
+   Cierre sesión completado, gracias por usar {cfg: site_name}.
 </p>

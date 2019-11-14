@@ -7,15 +7,15 @@
 // 
 // 
 ?>
-subject: Rapport for {target.type} #{target.id}
+subject: Rapport for {if:target.type == "Transfer"}overførsel{endif}{if:target.type == "File"}fil{endif}{if:target.type == "Recipient"}modtager{endif} #{target.id}
 
 {alternative:plain}
 
 Kære afsender!
 
-Her er rapporten om din {target.type}:
+Her er rapporten om din {if:target.type == "Transfer"}overførsel{endif}{if:target.type == "File"}fil{endif}{if:target.type == "Recipient"}modtager{endif}:
 
-{target.type}-nr.: {target.id}
+{if:target.type == "Transfer"}Overførsel{endif}{if:target.type == "File"}Fil{endif}{if:target.type == "Recipient"}Modtager{endif} nr. {target.id}
 
 {if:target.type == "Transfer"}
 Overførslen her omfatter {transfer.files} fil(er) med en samlet størrelse på {size:transfer.size}.
@@ -45,9 +45,9 @@ Kære afsender!
 </p>
 
 <p>
-Her er rapporten om din {target.type}:<br /><br />
+Her er rapporten om din {if:target.type == "Transfer"}overførsel{endif}{if:target.type == "File"}fil{endif}{if:target.type == "Recipient"}modtager{endif}:<br /><br />
     
-    {target.type}-nr.: {target.id}<br /><br />
+    {if:target.type == "Transfer"}Overførsel{endif}{if:target.type == "File"}Fil{endif}{if:target.type == "Recipient"}Modtager{endif} nr.: {target.id}<br /><br />
     
     {if:target.type == "Transfer"}
     Overførslen her omfatter {transfer.files} fil(er) med en samlet størrelse på {size:transfer.size}.<br /><br />

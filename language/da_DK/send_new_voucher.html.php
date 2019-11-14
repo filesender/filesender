@@ -8,5 +8,5 @@
 // 
 ?>
 En voucher sætter nogen i stand til at sende dig en fil.<br />
-Skriv modtagerens e-mailadresse og vælg <i>Afsend voucher</i> for at oprette en voucher til ham.<br />
+Skriv modtagerens e-mailadresse og vælg <i>Afsend voucher</i> for at oprette en voucher til vedkommende.<br />
 Så vil der blive sendt en mail til modtageren med et link til voucheren.

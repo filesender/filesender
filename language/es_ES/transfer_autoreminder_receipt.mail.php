@@ -7,30 +7,29 @@
 // 
 // 
 ?>
-subject: Failijagamise n°{transfer.id} automaatne meeldetuletus saadetud
-subject: (automaatne meeldetuletus saadetud) {transfer.subject}
+Asunto: Recordatorios automáticos enviados para envío de archivos n°{transfer.id}
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Failijagamise n°{transfer.id} (link: {transfer.link}) automaatne meeldetuletus on edastatud e-posti aadressidele kes ei ole veel faili allalaadinud saidilt {cfg:site_name}:
+Se envió un recordatorio automático a los destinatarios que no descargaron los archivos de tu transferencia n°{transfer.id} en el servicio FileSender de {cfg:site_name} ({transfer.link}): 
 
 {each:recipients as recipient}
   - {recipient.email}
 {endeach}
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Failijagamise <a href="{transfer.link}">transfer n°{transfer.id}</a> automaatne meeldetuletus on edastatud e-posti aadressidele kes ei ole veel faili alla laadinud saidilt <a href="{cfg:site_url}">{cfg:site_name}</a> :
+    Se envió un recordatorio automático a los destinatarios que no descargaron los archivos de tu transferencia n°{transfer.id} en el servicio FileSender de {cfg:site_name} ({transfer.link}):
 </p>
 
 <p>
@@ -42,6 +41,6 @@ Lugupidamisega,
 </p>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

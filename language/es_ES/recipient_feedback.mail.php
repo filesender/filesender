@@ -7,27 +7,28 @@
 // 
 // 
 ?>
-subject: Tagasiside {if:target_type=="recipient"}saajalt{endif}{if:target_type=="guest"}külaliselt{endif} {target.email}
+Asunto: Opinión del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif} {target.email}
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Meile saabus e-postiga tagasiside {if:target_type=="recipient"}saajalt{endif}{if:target_type=="guest"}külaliselt{endif} {target.email}, mis on antud e-kirja lisatud.
+Hemos recibido un comentario del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif} {target.email}. Lo puedes encontrar adjunto.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Meile saabus e-postiga tagasiside {if:target_type=="recipient"}saajalt{endif}{if:target_type=="guest"}külaliselt{endif} {target.email}, mis on antud e-kirja lisatud.</p>
+    hemos recibido un comentario del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif} {target.email}. Lo puedes encontrar adjunto.
+</p>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

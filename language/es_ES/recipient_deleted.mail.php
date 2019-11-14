@@ -7,28 +7,27 @@
 // 
 // 
 ?>
-subject: Allalaadimise õigused eemaldati
+Asunto: Permiso de descarga revocado
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-{transfer.id} failijagamise õigused eemaldati.
+tu permiso para descargar ficheros con el número de transferencia {transfer.id} ha sido eliminado.
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    {transfer.id} failijagamise õigused eemaldati.
+    tu permiso para descargar ficheros con el número de transferencia {transfer.id} ha sido eliminado.
 </p>
-
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

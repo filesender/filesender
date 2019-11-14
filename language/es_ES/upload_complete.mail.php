@@ -7,68 +7,68 @@
 // 
 // 
 ?>
-subject: Fail{if:transfer.files>1}id{endif} on üleslaetud
+Asunto: Fichero{if:transfer.files>1}s{endif} subido satisfactoriamente
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-{if:transfer.files>1}Failid{else}Fail{endif} on üleslaetud {cfg:site_name} veebisaiti.
+{if:transfer.files>1}los siguientes ficheros han sido subidos{else}el siguiente fichero ha sido subido{endif} satisfactoriamente al servicio FileSender de {cfg:site_name}.
 
 {if:transfer.files>1}{each:transfer.files as file}
-  - {file.path} ({size:file.size})
+  - {file.name} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().path} ({size:transfer.files.first().size})
+{transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Lisateave: {transfer.link}
+Más información: {transfer.link}
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    {if:transfer.files>1}Failid{else}Fail{endif} on üleslaetud <a href="{cfg:site_url}">{cfg:site_name}</a> veebisaiti.
+    {if:transfer.files>1}los siguientes ficheros han sido subidos{else}el siguiente fichero ha sido subido{endif} satisfactoriamente al servicio FileSender de {cfg:site_name}.
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Täpsemalt</th>
+            <th colspan="2">Detalles de la transacción</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Fail{if:transfer.files>1}id{endif}</td>
+            <td>Fichero{if:transfer.files>1}s{endif}</td>
             <td>
                 {if:transfer.files>1}
                 <ul>
                     {each:transfer.files as file}
-                        <li>{file.path} ({size:file.size})</li>
+                        <li>{file.name} ({size:file.size})</li>
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().path} ({size:transfer.files.first().size})
+                {transfer.files.first().name} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>
         <tr>
-            <td>Suurus</td>
+            <td>Tamaño</td>
             <td>{size:transfer.size}</td>
         </tr>
         <tr>
-            <td>Allalaadimise link</td>
+            <td>Más información</td>
             <td><a href="{transfer.link}">{transfer.link}</a></td>
         </tr>
     </tbody>
 </table>
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

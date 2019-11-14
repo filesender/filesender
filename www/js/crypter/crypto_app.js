@@ -14,6 +14,10 @@ Uint8Array.prototype.equals = function (a) {
     return this.length === a.length && this.every(function(value, index) { return value === a[index]});
 }
 
+if (!('key_cache' in window.filesender)) {
+    window.filesender.key_cache = new Map();
+}
+
 window.filesender.crypto_app = function () {
     return {
         crypto_is_supported: true,
@@ -59,6 +63,7 @@ window.filesender.crypto_app = function () {
             //
             v2019_generated_password_that_is_full_256bit: 2
         },
+        
 
         /**
          * This turns a filesender chunkid into a 4 byte array
@@ -226,9 +231,21 @@ window.filesender.crypto_app = function () {
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
         },
+        generateIV: function( chunkid, encryption_details )
+        {
+            var $this = this;
+            var key_version = encryption_details.key_version;
+            
+            var iv = this.generateVector();
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                // IV has a predefined mix of entropy and chunk counter
+                iv = $this.createIVGCM( chunkid, encryption_details );
+            }
+            return iv;
+        },
         generateKey: function (chunkid, encryption_details, callback, callbackError) {
             var $this = this;
-            var iv = this.generateVector();
             var password    = encryption_details.password;
             var key_version = encryption_details.key_version;
             var salt        = encryption_details.salt;
@@ -247,6 +264,7 @@ window.filesender.crypto_app = function () {
                 callbackError(e);
             };
 
+            $this.setCipherAlgorithm( key_version );
             
             if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
             {
@@ -267,26 +285,19 @@ window.filesender.crypto_app = function () {
                         },
                         dkey,
                         { "name":   'AES-CBC',
-                          "length": 256,
-                          iv:       iv
+                          "length": 256
                         },
                         false,                   // key is not extractable
                         [ "encrypt", "decrypt" ] // features desired
                     ).then(function (key) {
                     
-                        callback(key, iv);
+                        callback(key);
                     }, efunc );
                 }, efunc );
             }
 
             if( key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
             {
-                window.filesender.config.crypto_crypt_name = "AES-GCM";
-                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
-
-                // IV has a predefined mix of entropy and chunk counter
-                iv = $this.createIVGCM( chunkid, encryption_details );
-
                 crypto.subtle.importKey(
                     'raw', 
                     passwordBuffer,
@@ -304,15 +315,12 @@ window.filesender.crypto_app = function () {
                         dkey,
                         { "name":   'AES-GCM',
                           "length": 256
-                          // Note that passing the IV here does nothing as we are not encrypting anything
-                          // tested by passing a random value here that is not the same during a call from
-                          // decryptBlob()
                         },
                         false,                   // key is not extractable
                         [ "encrypt", "decrypt" ] // features desired
                     ).then(function (key) {
                     
-                        callback(key, iv);
+                        callback(key);
                     }, efunc );
                 }, efunc );
 
@@ -325,11 +333,11 @@ window.filesender.crypto_app = function () {
                     passwordBuffer
                 ).then( function (key) {
                     crypto.subtle.importKey("raw", key,
-                                            {name: $this.crypto_crypt_name, iv: iv},
+                                            {name: $this.crypto_crypt_name},
                                             false,
                                             ["encrypt", "decrypt"]
                                            ).then( function (key) {
-                                               callback(key, iv);
+                                               callback(key);
                                            }, function (e) {
                                                // error making a key
                                                window.filesender.ui.log(e);
@@ -344,12 +352,6 @@ window.filesender.crypto_app = function () {
 
             if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey )
             {
-                window.filesender.config.crypto_crypt_name = "AES-GCM";
-                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
-
-                // IV has a predefined mix of entropy and chunk counter
-                iv = $this.createIVGCM( chunkid, encryption_details );
-                
                 crypto.subtle.digest(
                     {name: this.crypto_hash_name},
                     passwordBuffer
@@ -359,7 +361,7 @@ window.filesender.crypto_app = function () {
                                             false,
                                             ["encrypt", "decrypt"]
                                            ).then( function (key) {
-                                               callback(key, iv);
+                                               callback(key);
                                            }, function (e) {
                                                // error making a key
                                                window.filesender.ui.log(e);
@@ -373,6 +375,64 @@ window.filesender.crypto_app = function () {
             
             
         },
+
+        setCipherAlgorithm(key_version) {
+            var $this = this;
+
+            //
+            // Force the GCM/CBC crypt_name at the top to make this change explicit before
+            // the code that does the key generation is executed. Doing this here makes the
+            // crypto code less cuttered below.
+            //
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey 
+                || key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey )
+            {
+                window.filesender.config.crypto_crypt_name = "AES-GCM";
+                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
+            }
+            else
+            {
+                window.filesender.config.crypto_crypt_name = "AES-CBC";
+                this.crypto_crypt_name = window.filesender.config.crypto_crypt_name;
+            }
+        },
+
+        /**
+         * This puts a cache between the call to generateKey() only
+         * doing the work if the key has not already been generated.
+         */
+        obtainKey: function (chunkid, encryption_details, callback, callbackError) {
+            var $this = this;
+
+            var key_version = encryption_details.key_version;
+            $this.setCipherAlgorithm( key_version );
+            
+
+            var keydesc = JSON.stringify(encryption_details);
+            console.log("keygen: keydesc cache size " + window.filesender.key_cache.size );
+            
+            var k = window.filesender.key_cache.get( keydesc );
+            if( k ) {
+                console.log("keygen: reusing existing key");
+                callback( k );
+                return;
+            }
+
+            // there was no key, really generate one and set it in the
+            // cache before calling the passed 'ok' callback.
+            console.log("keygen: generating key for this thread/worker");
+            this.generateKey(chunkid, encryption_details,
+                             function (key) {
+                                 window.filesender.key_cache.set(keydesc, key );
+                                 callback( key );
+                             },
+                             function (e) {
+                                 callbackError(e);
+                             });
+                                     
+        },
+
+        
         encryptBlob: function (value, chunkid, encryption_details, callback, callbackError ) {
             var $this = this;
             var key_version = encryption_details.key_version;
@@ -412,7 +472,9 @@ window.filesender.crypto_app = function () {
             }
 
             
-            this.generateKey(chunkid, encryption_details, function (key, iv) {
+            this.obtainKey(chunkid, encryption_details, function (key) {
+
+                var iv = $this.generateIV( chunkid, encryption_details );
 
                 /*
                  * The algorithm parameters include the algorithm name to use
@@ -461,7 +523,7 @@ window.filesender.crypto_app = function () {
                 );
             },
             function (e) {
-                // error occured during generatekey
+                // error occured during obtainkey
                 window.filesender.ui.log(e);
             });
         },
@@ -530,7 +592,7 @@ window.filesender.crypto_app = function () {
 
             try {
                 var chunkid = 0;
-                this.generateKey(chunkid, encryption_details, function (key) {
+                this.obtainKey(chunkid, encryption_details, function (key) {
 		    var wrongPassword = false;
 		    var decryptLoop = function(i) {
                         
@@ -614,7 +676,7 @@ window.filesender.crypto_app = function () {
 		    decryptLoop(0);
                 },
                 function (e) {
-                    // error occured during generatekey
+                    // error occured during obtainkey
                     window.filesender.ui.log(e);
                 });
             }

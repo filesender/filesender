@@ -56,6 +56,10 @@ window.filesender.client = {
     // Handling authentication required
     authentication_required: false,
 
+    // Handling specific exceptions thrown from server
+    // should return true if it has handled the error
+    specificErrorHandler: function(error) { return false; },
+
     getCSRFToken: function() {
         if( filesender.config.owasp_csrf_protector_enabled ) {
             return CSRFP._getAuthKey();
@@ -218,6 +222,18 @@ window.filesender.client = {
                     if(!$('#page.maintenance_page').length)
                         filesender.ui.maintenance(true);
                     
+                    return;
+                }
+
+                if( filesender.client.specificErrorHandler &&
+                    filesender.client.specificErrorHandler(error)) {
+                    return;
+                }
+
+                if(error.message == 'user_hit_guest_limit') {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.user_hit_guest_limit,
+                                        function() {} );
                     return;
                 }
                 

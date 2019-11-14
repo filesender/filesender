@@ -164,7 +164,7 @@ class RestEndpointGuest extends RestEndpoint
         
         // User who is creating the new guest
         $user = Auth::user();
-        
+
         // Raw guest data
         $data = $this->request->input;
 
@@ -233,6 +233,10 @@ class RestEndpointGuest extends RestEndpoint
         // Set expiry date
         $expires = $data->expires ? $data->expires : Guest::getDefaultExpire();
         $guest->expires = $expires;
+        
+        if($guest->does_not_expire) {
+            $guest->expires = null;
+        }
         
         // Make guest available, this saves the object and send email to the guest
         $guest->makeAvailable();

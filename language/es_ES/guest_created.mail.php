@@ -7,52 +7,53 @@
 // 
 // 
 ?>
-subject: Teile on loodud vautšer
-subject: {guest.subject}
+Asunto: Invitación recibida
+Asunto: {guest.subject}
 
 {alternative:plain}
 
-Tere,
+Hola,
 
-Teile on loodud vautšer veebisaidis {cfg:site_name}. Saate seda kasutada failide jagamiseks.
+En este mensaje encontrarás una invitación que te proporciona permisos de acceso al servicio FileSender de {cfg:site_name}. Puedes usar esta invitación para subir un conjunto
+ de ficheros y que otras personas se los puedan descargar.
 
-Vautšeri looja: {guest.user_email}
-Vautšeri link: {guest.upload_link}
+Emisor: {guest.user_email}
+Enlace: {guest.upload_link}
 
-Vautšer kehtib kuni {date:guest.expires} peale mida see kustutatakse automaatselt.
+Esta invitación estará disponible hasta el {date:guest.expires}. Pasada esta fecha será automáticamente eliminada.
 
-{if:guest.message}Personaalne sõnum aadressilt {guest.user_email}: {guest.message}{endif}
+{if:guest.message}Mensaje personal de {guest.user_email}: {guest.message}{endif}
 
-Lugupidamisega,
+Saludos,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+    Hola,
 </p>
 
 <p>
-    Teile on loodud vautšer veebisaidis <a href="{cfg:site_url}">{cfg:site_name}</a>. Saate seda kasutada failide jagamiseks.
+    En este mensaje encontrar&aacute;s una invitaci&oacute;n que te proporciona permisos de acceso al servicio FileSender de {cfg:site_name}. Puedes usar esta invitación para subir un conjunto de ficheros y que otras personas se los puedan descargar.
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Vautšeri üksikasjad</th>
+            <th colspan="2">Detalles de la invitación</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Vautšeri looja</td>
+            <td>Emisor</td>
             <td><a href="mailto:{guest.user_email}">{guest.user_email}</a></td>
         </tr>
         <tr>
-            <td>Vautšeri link</td>
+            <td>Enlace</td>
             <td><a href="{guest.upload_link}">{guest.upload_link}</a></td>
         </tr>
         <tr>
-            <td>Vautšer kehtib kuni</td>
+            <td>Fecha de expiración</td>
             <td>{date:guest.expires}</td>
         </tr>
     </tbody>
@@ -60,7 +61,7 @@ Lugupidamisega,
 
 {if:guest.message}
 <p>
-    Personaalne teade aadressilt {guest.user_email}:
+    Mensaje personal de {guest.user_email}:
 </p>
 <p class="message">
     {guest.message}
@@ -68,6 +69,6 @@ Lugupidamisega,
 {endif}
 
 <p>
-    Lugupidamisega,<br />
+    Saludos,<br />
     {cfg:site_name}
 </p>

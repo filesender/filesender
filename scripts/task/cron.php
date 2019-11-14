@@ -74,7 +74,7 @@ foreach(Transfer::allFailed() as $transfer) {
 // Close expired guests
 $days = Config::get('guests_expired_lifetime');
 foreach(Guest::allExpired() as $guest) {
-    if($guest->getOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
+    if($guest->does_not_expire) continue;
 
     if( $days != -1 && $guest->isExpiredDaysAgo($days)) {
         Logger::info($guest.' expired and before guests_expired_lifetime so deleting it');

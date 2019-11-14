@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-<h1>Teenust hetkel hooldatakse</h1>
+<h1> Este servicio está en mantenimiento </h1>
 <p>
-    Palun tule hiljem tagasi.
+     Por favor regrese más tarde.
 </p>

@@ -14,7 +14,7 @@ subject: {transfer.subject}
 
 Kære modtager!
 
-Følgende {if:transfer.files>1}filer{else}fil{endif} er blevet uploadet til {cfg:site_name} af {transfer.user_email}, og du har fået lov til at hente indholdet i {if:transfer.files>1}m{else}e{endif}:
+Følgende {if:transfer.files>1}filer{else}fil{endif} er blevet uploadet til {cfg:site_name} af {transfer.user_email}, og du har fået lov til at hente indholdet i de{if:transfer.files>1}m{else}e{endif}:
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -42,7 +42,7 @@ Kære modtager!
 </p>
 
 <p>
-Følgende {if:transfer.files>1}filer{else}fil{endif} er blevet uploadet til <a href="{cfg:site_url}">{cfg:site_name}</a> af <a href="mailto:{transfer.user_email}">{transfer.user_email}</a>, og du har fået lov til at hente indholdet i {if:transfer.files>1}m{else}n{endif}:
+Følgende {if:transfer.files>1}filer{else}fil{endif} er blevet uploadet til <a href="{cfg:site_url}">{cfg:site_name}</a> af <a href="mailto:{transfer.user_email}">{transfer.user_email}</a>, og du har fået lov til at hente indholdet i de{if:transfer.files>1}m{else}n{endif}:
 </p>
 
 <table rules="rows">

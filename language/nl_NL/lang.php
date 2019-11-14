@@ -98,12 +98,10 @@ $lang['confirm_remind_recipient'] = 'Wilt u een herinnering aan deze ontvanger s
 $lang['confirm_remind_transfer'] = 'Wilt u een herinnering sturen naar de ontvangers van deze transfer?';
 $lang['confirm_stop_upload'] = 'Wil u inderdaad de upload beëindigen en reeds ge-uploade data verwijderen?';
 $lang['copy_text'] = 'Kopieer de onderstaande tekst';
-$lang['core_class_not_found'] = 'Core class niet gevonden
-';
+$lang['core_class_not_found'] = 'Core class niet gevonden';
 $lang['core_file_not_found'] = 'Core bestand niet gevonden';
 $lang['count'] = 'Optelling';
-$lang['count_from_date_to_date'] = '{count} van {date:start} tot {date:end} 
-';
+$lang['count_from_date_to_date'] = '{count} van {date:start} tot {date:end}';
 $lang['created'] = 'Aangemaakt';
 $lang['created_transfers'] = 'Aangemaakte transfers';
 $lang['database_access_failure'] = 'Fout opgetreden bij benaderen database';
@@ -124,8 +122,7 @@ $lang['does_not_expire'] = 'Verloopt nooit';
 $lang['done'] = 'Klaar';
 $lang['done_uploading'] = 'Klaar met de upload';
 $lang['done_uploading_guest'] = 'Bedankt voor het gebruik van {cfg:site_name}. Als uw voucher was ingesteld om meer dan één upload uit te voeren, dan kunt u dezelfde link hergebruiken om nog andere bestanden op te sturen.';
-$lang['done_uploading_redirect'] = 'Uw upload is voltooid en u wordt doorgestuurd naar <a href="{url}">{url}</a>. Het doorsturen duurt langer dan verwacht.
-';
+$lang['done_uploading_redirect'] = 'Uw upload is voltooid en u wordt doorgestuurd naar <a href="{url}">{url}</a>. Het doorsturen duurt langer dan verwacht.';
 $lang['download'] = 'Download';
 $lang['download_bad_files_ids'] = 'Ongeldige download bestands IDs';
 $lang['download_bad_token_format'] = 'Ongeldig token-formaat';
@@ -201,11 +198,9 @@ $lang['feature_not_enabled'] = 'Sorry, deze functie is niet ingeschakeld';
 $lang['file_bad_hash'] = 'Ongeldige bestands-hash';
 $lang['file_chunk_out_of_bounds'] = 'Bestands-brokstuk valt buiten de limiet';
 $lang['file_encryption'] = 'Bestandsencryptie';
-$lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Bestandsencryptie is end to end. Uw bestanden worden gecodeerd in uw webbrowser. U moet het encryptie wachtwoord naar de ontvanger(s) sturen, aangezien we geen wachtwoorden opslaan.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Bestandsencryptie zal de prestaties van uw browser en / of apparaat voor de zender en ontvanger (s) aanzienlijk beïnvloeden.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Gecodeerde bestanden gelijk aan of groter dan 4 GB kunnen mogelijk niet worden gedownload vanwege de beperkingen van de webbrowser.
-';
+$lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Bestandsencryptie is end to end. Uw bestanden worden gecodeerd in uw webbrowser. U moet het encryptie wachtwoord naar de ontvanger(s) sturen, aangezien we geen wachtwoorden opslaan.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Bestandsencryptie zal de prestaties van uw browser en / of apparaat voor de zender en ontvanger (s) aanzienlijk beïnvloeden.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Gecodeerde bestanden gelijk aan of groter dan 4 GB kunnen mogelijk niet worden gedownload vanwege de beperkingen van de webbrowser.';
 $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Bestanden decoderen wordt niet ondersteund door uw browser. Probeer het opnieuw met de nieuwste Firefox, Internet Explorer, Safari of Chrome';
-$lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Bestanden decoderen wordt niet ondersteund door deze browser. Probeer het opnieuw met een recente versie van Firefox, Internet Explorer, Edge, Safari of Chrome
-';
+$lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Bestanden decoderen wordt niet ondersteund door deze browser. Probeer het opnieuw met een recente versie van Firefox, Internet Explorer, Edge, Safari of Chrome';
 $lang['file_encryption_enter_password'] = 'Geef een wachtwoord';
 $lang['file_encryption_generate_password'] = 'Genereer wachtwoord';
 $lang['file_encryption_need_password'] = 'U moet een wachtwoord ingeven om te downloaden';
@@ -353,8 +348,7 @@ $lang['report_unknown_target_type'] = 'Onbekend rapportdoeltype';
 $lang['rest_access_forbidden'] = 'REST server heeft toegang geweigerd';
 $lang['rest_admin_required'] = 'Adminrechten nodig';
 $lang['rest_authentication_required'] = 'REST authenticatie verplicht';
-$lang['rest_bad_parameter'] = 'Ongeldige REST parameter
-';
+$lang['rest_bad_parameter'] = 'Ongeldige REST parameter';
 $lang['rest_endpoint_missing'] = 'REST server kan endpoint in URL niet vinden';
 $lang['rest_endpoint_not_implemented'] = 'REST endpoint niet geïmplementeerd';
 $lang['rest_jsonp_get_only'] = 'REST server accepteert alleen GET verzoeken voor JSONP output';
