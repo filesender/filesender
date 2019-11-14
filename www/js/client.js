@@ -220,6 +220,10 @@ window.filesender.client = {
                     
                     return;
                 }
+                if(error.message == 'user_hit_guest_limit') {
+                    filesender.ui.alert('error',filesender.config.language.user_hit_guest_limit,function() {} );
+                    return;
+                }
                 
                 errorhandler(error);
             } catch(e) {
