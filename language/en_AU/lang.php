@@ -532,3 +532,6 @@ $lang['decryption_verification_failed_bad_ivchunkid'] = 'Decryption of data fail
 $lang['decryption_verification_failed_bad_fixed_iv'] = 'Part of the IV for the encrypted file does not match what it should be. This is unlikely and suggests that something may have changed from the data that was being sent to the server.';
 $lang['decryption_verification_failed_bad_aead'] = 'Some encrypted files are protected with AEAD which allows FileSender to check the integrity of the file. It was found that the AEAD data does not match the expected value for this file so decryption was halted for your protection.';
 
+
+$lang['user_hit_guest_limit'] = 'You have reached the maximum number of guests that you can have.';
+
