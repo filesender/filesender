@@ -530,6 +530,7 @@ user_additionnal
 user_auth_secret
 user_created
 user_deleted
+user_hit_guest_limit
 user_id
 user_lang
 user_missing_uid
