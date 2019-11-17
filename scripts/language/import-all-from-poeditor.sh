@@ -65,7 +65,7 @@ echo ""
 echo "running import-langs-directory.sh $dirname"
 echo ""
 
-"SCRIPTDIR/import-langs-directory.sh" "$dirname"
+"$SCRIPTDIR/import-langs-directory.sh" "$dirname"
 
 
 
