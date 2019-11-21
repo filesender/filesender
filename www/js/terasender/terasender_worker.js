@@ -26,6 +26,8 @@ catch( e ) {
 }
 
 
+
+
 function isIE11()
 {
     if(navigator.userAgent.indexOf('MSIE')!==-1
@@ -189,6 +191,7 @@ var terasender_worker = {
 		} else {
 			xhr.send(blob);
 		}
+            
         } catch(err) {
             this.error({message: 'source_file_not_available', details: {job: this.job}});
         }
@@ -438,6 +441,15 @@ var terasender_worker = {
                 break;
         }
     },
+};
+
+window.filesender.onPBKDF2Starting = function() {
+    terasender_worker.log("onPBKDF2Starting");
+    terasender_worker.sendCommand("onPBKDF2Starting");
+};
+window.filesender.onPBKDF2Ended = function() {
+    terasender_worker.log("onPBKDF2Ended");
+    terasender_worker.sendCommand("onPBKDF2Ended");
 };
 
 /**

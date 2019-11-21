@@ -301,6 +301,12 @@ class Config
         if( strlen($themeName) && preg_match('@[./]@',$themeName)) {
             throw new ConfigBadParameterException('the theme config can not contain / or . characters');
         }
+
+        if( self::get('terasender_enabled')) {
+            if( self::get('terasender_worker_count') < 1 || self::get('terasender_worker_count') > 30 ) {
+                throw new ConfigBadParameterException('terasender_worker_count must be between 1 and 30 inclusive.');
+            }
+        }
             
         // verify classes are happy
         Guest::validateConfig();
