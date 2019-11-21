@@ -118,7 +118,7 @@ $default = array(
 
     'crypto_pbkdf2_dialog_enabled' => false,     // display a dialog after delay_to_show_dialog ms
     'crypto_pbkdf2_delay_to_show_dialog' => 300, // in ms. 0 to disable the dialog
-    
+
 
     'testing_terasender_worker_uploadRequestChange_function_name' => '',
 

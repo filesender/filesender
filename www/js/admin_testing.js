@@ -30,6 +30,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+var getPBKDF2IterationCountForYear = function( wantedyear )
+{
+    var baseyear=2009;
+    var nbase=1000;
+    return Math.ceil(nbase * Math.pow(2.0, ( (wantedyear - baseyear)*2.0/3)));
+}
+
+
 $(function() {
     var section = $('#page.admin_page .testing_section');
     if(!section.length) return;
@@ -39,6 +47,7 @@ $(function() {
     
     var hashperftable   = section.find('.password-hashing-performance');
     var cryptoperftable = section.find('.crypto-performance');
+    var pbkdf2table     = section.find('.pbkdf2-performance');
     
     section.find('[data-action="show-password-hashing-performance"]').on('click', function() {
 
@@ -119,6 +128,74 @@ $(function() {
             // }, function (progress,len) {}, function(err) {alert('err ' + err );} );
         });
     });
+
+
+
+    section.find('[data-action="show-pbkdf2-crypto-performance"]').on('click', function() {
+        var cfg  = window.filesender.config;
+        var datastr = 'a'.repeat(2);
+        var salt = 'rwefedfsdfdsfsdfsd';
+        var saltBuffer     = window.filesender.crypto_common().convertStringToArrayBufferView(salt);
+        var password       = 'aa';
+        var password_version = 1;
+        var password_encoding = '';
+        var decoded        = crypto.decodePassword( password, password_version, password_encoding );
+        var passwordBuffer = decoded.raw;
+
+        var currentSetting  = 2009;
+        var hash_years = [ 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,
+                           2020,2022,2023,2024,2025,2026,2027,2028,2029,2030 ];
+
+        var efunc = function (e) {
+            alert(e);
+        };
+
         
+        hash_years.map( function( n ) {
+
+            var hashRounds = getPBKDF2IterationCountForYear( n );
+            var t0 = performance.now();
+                window.crypto.subtle.importKey(
+                    'raw', 
+                    passwordBuffer,
+                    {name: 'PBKDF2'}, 
+                    false, 
+                    ['deriveBits', 'deriveKey']
+                ).then(function(dkey) {
+
+                    window.crypto.subtle.deriveKey(
+                        { "name": 'PBKDF2',
+                          "hash": 'SHA-256',
+                          "iterations": hashRounds,
+                          "salt":       saltBuffer,
+                        },
+                        dkey,
+                        { "name":   'AES-CBC',
+                          "length": 256
+                        },
+                        false,                   // key is not extractable
+                        [ "encrypt", "decrypt" ] // features desired
+                    ).then(function (key) {
+                        
+                        var t1 = performance.now();
+
+                        var l = pbkdf2table.find('.tpl').clone().removeClass('tpl').addClass('benchmark');
+                        l.find('.year').text( n );
+                        l.find('.iterations').text( hashRounds );
+                        l.find('.seconds').text(Number(Math.ceil((t1-t0)/1000)).toLocaleString());
+                        if( n==currentSetting ) {
+                            l.find('.year').addClass('active');
+                            l.find('.iterations').addClass('active');
+                            l.find('.seconds').addClass('active');
+                        }
+                        
+                        l.appendTo(pbkdf2table);
+                        
+                    }, efunc );
+                }, efunc );
+
+        });
+    });
     
+
 });

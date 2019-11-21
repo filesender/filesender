@@ -61,4 +61,21 @@ class Crypto
         $v = base64_encode($v);
         return substr($v, 0, $len);
     }
+
+    /**
+     * This uses the formula from page 7 of the OpenFortress security analysis
+     * to get a PBKDF2 iteration count for an expected number of years of security
+     * from brute force attack.
+     */
+    public static function getPBKDF2IterationCountForYear( $wantedyear )
+    {
+        if( $wantedyear < 2010 ) {
+            throw new ConfigBadParameterException('getPBKDF2IterationCountForYear() called with invalid year: ' . $wantedyear );
+        }
+        $baseyear=2009;
+        $nbase=1000;
+        return ceil($nbase * pow(2.0, ( ($wantedyear - $baseyear)*2/3)));
+    }
+
+    
 }
