@@ -129,7 +129,7 @@ class Transfer extends DBObject
         ),
         'password_hash_iterations' => array(
             'type'    => 'uint',
-            'size'    => 'medium',
+            'size'    => 'big',
             'null'    => false,
             'default' => 150000
         ),

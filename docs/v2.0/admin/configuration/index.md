@@ -88,6 +88,8 @@ A note about colours;
 * [upload_display_per_file_stats](#upload_display_per_file_stats)
 * [upload_force_transfer_resume_forget_if_encrypted](#upload_force_transfer_resume_forget_if_encrypted)
 * [upload_considered_too_slow_if_no_progress_for_seconds](#upload_considered_too_slow_if_no_progress_for_seconds)
+* [crypto_pbkdf2_dialog_enabled](#crypto_pbkdf2_dialog_enabled)
+* [crypto_pbkdf2_delay_to_show_dialog](#crypto_pbkdf2_delay_to_show_dialog)
 
 ## Transfers
 
@@ -775,6 +777,25 @@ User language detection is done in the following order:
 * __type:__ int
 * __default:__ 30
 * __available:__ since version 2.0
+
+
+
+### crypto_pbkdf2_dialog_enabled
+* __description:__ If set to true then a dialog is displayed with a key is being generated from a user supplied password. Such an action can be quite computationally expensive and may take half a minute to many minutes depending on your expectation of security for password based keys. See encryption_password_hash_iterations_new_files for an explanation of the delay expectation.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.12
+
+
+### crypto_pbkdf2_delay_to_show_dialog
+* __description:__ If crypto_pbkdf2_dialog_enabled is true then this is a delay that must pass before the dialog is shown. If PBKDF2 completes before this delay then no dialog is shown. Note that you should be seeing the dialog for password hashing iteration counts that offer a reasonable expectation of security.
+* __mandatory:__ no
+* __type:__ integer
+* __default:__ 300
+* __available:__ since version 2.12
+
+
 
 
 

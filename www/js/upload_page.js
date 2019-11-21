@@ -30,6 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 // This is a duplicate, it should be moved to a common.js file
 function isIE11()
 {
@@ -108,6 +109,7 @@ function resume( force, resetResumeCount )
         }
     }
     if( force ) {
+        window.filesender.pbkdf2dialog.reset();
         filesender.ui.transfer.retry( force );
     } else {
         filesender.ui.transfer.resume();
@@ -826,6 +828,8 @@ filesender.ui.cancelAutomaticResume = function() {
 
 filesender.ui.startUpload = function() {
 
+    window.filesender.pbkdf2dialog.reset();
+    
     if(!filesender.ui.nodes.required_files) {
         this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
         
@@ -860,6 +864,9 @@ filesender.ui.startUpload = function() {
         this.transfer.encryption_password_hash_iterations = 1;
     }
 
+    // tell the PBKDF2 dialog handler about his setting
+    window.filesender.pbkdf2dialog.encryption_password_hash_iterations = this.transfer.encryption_password_hash_iterations;
+
 
     this.transfer.onprogress = filesender.ui.files.progress;
 
@@ -872,9 +879,16 @@ filesender.ui.startUpload = function() {
     
     if( filesender.config.upload_display_per_file_stats ) {
         window.setInterval(function() {
-            for (var i = 0; i < filesender.ui.transfer.files.length; i++) {
-                file = filesender.ui.transfer.files[i];
-                filesender.ui.files.update_crust_meter( file );
+            if( !window.filesender.pbkdf2dialog.already_complete ) {
+                filesender.ui.uploading_again_started_at_time_touch();
+                transfer.touchAllUploadStartedInWatchdog();
+            }
+            else
+            {
+                for (var i = 0; i < filesender.ui.transfer.files.length; i++) {
+                    file = filesender.ui.transfer.files[i];
+                    filesender.ui.files.update_crust_meter( file );
+                }
             }
         }, 1000);
     }
@@ -940,45 +954,54 @@ filesender.ui.startUpload = function() {
         var transfer = this.transfer;
         transfer.resetWatchdog();
         window.setInterval(function() { // Check for stalled every minute
-            var stalled = transfer.getStalledProcesses();
-            if(!stalled || filesender.ui.reporting_stall) return;
-            
-            if(transfer.retry()) {// Automatic retry
-                filesender.ui.log('upload seems stalled, automatic retry');
-                return;
-            }
-            
-            filesender.ui.reporting_stall = true;
-            filesender.ui.log('upload seems stalled and max number of automatic retries exceeded, asking user about what to do');
-            
-            var retry = function() {
+
+            // wait for pbkdf2 to be complete before we start tracking.
+            if( !window.filesender.pbkdf2dialog.already_complete ) {
                 transfer.resetWatchdog();
-                filesender.ui.reporting_stall = false;
-                transfer.retry(true); // Manual retry
-            };
+            }
+            else
+            {
             
-            var stop = function() {
-                transfer.stop(function() {
+                var stalled = transfer.getStalledProcesses();
+                if(!stalled || filesender.ui.reporting_stall) return;
+                
+                if(transfer.retry()) {// Automatic retry
+                    filesender.ui.log('upload seems stalled, automatic retry');
+                    return;
+                }
+                
+                filesender.ui.reporting_stall = true;
+                filesender.ui.log('upload seems stalled and max number of automatic retries exceeded, asking user about what to do');
+                
+                var retry = function() {
+                    transfer.resetWatchdog();
+                    filesender.ui.reporting_stall = false;
+                    transfer.retry(true); // Manual retry
+                };
+                
+                var stop = function() {
+                    transfer.stop(function() {
+                        filesender.ui.goToPage('upload');
+                        filesender.ui.reporting_stall = false;
+                    });
+                };
+                
+                var later = function() {
                     filesender.ui.goToPage('upload');
                     filesender.ui.reporting_stall = false;
-                });
-            };
-            
-            var later = function() {
-                filesender.ui.goToPage('upload');
-                filesender.ui.reporting_stall = false;
-            };
-            
-            var ignore = function() {
-                transfer.resetWatchdog(); // Forget watchdog data
-                filesender.ui.reporting_stall = false;
-            };
-            
-            var buttons = {'retry': retry, 'stop': stop, 'ignore': ignore};
-            if(transfer.isRestartSupported()) buttons['retry_later'] = later;
-            
-            var prompt = filesender.ui.popup(lang.tr('stalled_transfer'), buttons, {onclose: ignore});
-            $('<p />').text(lang.tr('transfer_seems_to_be_stalled')).appendTo(prompt);
+                };
+                
+                var ignore = function() {
+                    transfer.resetWatchdog(); // Forget watchdog data
+                    filesender.ui.reporting_stall = false;
+                };
+                
+                var buttons = {'retry': retry, 'stop': stop, 'ignore': ignore};
+                if(transfer.isRestartSupported()) buttons['retry_later'] = later;
+                
+                var prompt = filesender.ui.popup(lang.tr('stalled_transfer'), buttons, {onclose: ignore});
+                $('<p />').text(lang.tr('transfer_seems_to_be_stalled')).appendTo(prompt);
+            }
         }, 60 * 1000);
     }
     
@@ -1112,6 +1135,7 @@ $(function() {
     filesender.ui.errorOriginal = filesender.ui.error;
 
     var crypto = window.filesender.crypto_app();
+
     
     // Transfer
     filesender.ui.transfer = new filesender.transfer();
@@ -1559,6 +1583,13 @@ $(function() {
             sel.val('');
         });
     }
+
+    // This has to be set before setup() is called
+    // as pbkdf2dialog will chain to the active function
+    window.filesender.onPBKDF2AllEnded = function() {
+        filesender.ui.uploadLogPrepend(lang.tr('upload_all_terasender_workers_completed_pbkdf2'));
+    }
+    window.filesender.pbkdf2dialog.setup();
     
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();

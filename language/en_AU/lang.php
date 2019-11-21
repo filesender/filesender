@@ -529,3 +529,7 @@ $lang['yes'] = 'Yes';
 $lang['you_can_report_exception'] = 'When reporting this error please give the following code to help the support finding out details';
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
+
+$lang['crypto_pbkdf2_dialog'] = 'FileSender is generating a key from your password, this dialog will close automatically when the key is made. Generating a key is a computationally expensive operation to deter poeple from trying to guess passwords. <br/>This may take a few minutes depending on the speed of this computer.';
+$lang['crypto_pbkdf2_dialog_with_expected'] = 'FileSender is generating a key from your password, this dialog will close automatically when the key is made. Generating a key is a computationally expensive operation to deter people from trying to guess passwords. <br/>The expected delay is {seconds} seconds';
+$lang['upload_all_terasender_workers_completed_pbkdf2'] = 'All upload workers are now ready to start transferring encrypted data';

@@ -18,6 +18,25 @@ if (!('key_cache' in window.filesender)) {
     window.filesender.key_cache = new Map();
 }
 
+if (!('onPBKDF2Starting' in window.filesender)) {
+    window.filesender.onPBKDF2Starting = function() {
+        console.log("crypto_app onPBKDF2Starting()");
+    };
+}
+if (!('onPBKDF2Ended' in window.filesender)) {
+    window.filesender.onPBKDF2Ended = function() {
+        console.log("crypto_app onPBKDF2Ended()");
+    };
+}
+if (!('onPBKDF2AllEnded' in window.filesender)) {
+    window.filesender.onPBKDF2AllEnded = function() {
+        console.log("crypto_app onPBKDF2AllEnded()");
+    };
+}
+
+
+
+
 window.filesender.crypto_app = function () {
     return {
         crypto_is_supported: true,
@@ -268,7 +287,8 @@ window.filesender.crypto_app = function () {
             
             if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
             {
-
+                window.filesender.onPBKDF2Starting();
+                
                 crypto.subtle.importKey(
                     'raw', 
                     passwordBuffer,
@@ -290,6 +310,7 @@ window.filesender.crypto_app = function () {
                         false,                   // key is not extractable
                         [ "encrypt", "decrypt" ] // features desired
                     ).then(function (key) {
+                        window.filesender.onPBKDF2Ended();
                     
                         callback(key);
                     }, efunc );
@@ -298,6 +319,8 @@ window.filesender.crypto_app = function () {
 
             if( key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
             {
+                window.filesender.onPBKDF2Starting();
+                
                 crypto.subtle.importKey(
                     'raw', 
                     passwordBuffer,
@@ -319,7 +342,9 @@ window.filesender.crypto_app = function () {
                         false,                   // key is not extractable
                         [ "encrypt", "decrypt" ] // features desired
                     ).then(function (key) {
-                    
+
+                        window.filesender.onPBKDF2Ended();
+                        
                         callback(key);
                     }, efunc );
                 }, efunc );

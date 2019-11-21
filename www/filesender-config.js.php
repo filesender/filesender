@@ -141,6 +141,8 @@ window.filesender.config = {
 
     testing_terasender_worker_uploadRequestChange_function_name: '<?php echo Config::get('testing_terasender_worker_uploadRequestChange_function_name') ?>',
 
+    crypto_pbkdf2_dialog_enabled: '<?php echo Config::get('crypto_pbkdf2_dialog_enabled') ?>',
+    crypto_pbkdf2_delay_to_show_dialog: '<?php echo Config::get('crypto_pbkdf2_delay_to_show_dialog') ?>',
 
 	language: {
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",

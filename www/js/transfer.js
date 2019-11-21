@@ -770,6 +770,13 @@ window.filesender.transfer = function() {
         this.watchdog_processes[id].progressTracker.clear();
         
     };
+    this.touchAllUploadStartedInWatchdog = function() {
+        
+        for(var id in this.watchdog_processes) {
+            this.watchdog_processes[id].started = (new Date()).getTime();
+            this.watchdog_processes[id].progressTracker.clear();
+        }
+    };
 
     /**
      * Record chunk upload progress for worker

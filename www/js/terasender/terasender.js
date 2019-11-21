@@ -16,6 +16,22 @@ window.filesender.terasender = {
      * Status
      */
     status: '',
+
+    /**
+     * For PBKDF2 key derivation we want to track a state machine
+     * that starts with nokey, moves to generating, and ends with generated.
+     * This allows the firing of only one onPBKDF2Ended event and a single
+     * onPBKDF2AllEnded event.
+     */
+    crypto_pbkdf2_states: {
+        pbkdf2_nokey: 0,
+        pbkdf2_generating: 1,
+        pbkdf2_generated: 2,
+        pbkdf2_all_generated: 3
+    },
+    crypto_pbkdf2_status: 0,
+    crypto_pbkdf2_workers_that_have_generated: 0,
+    
     
     /**
      * Job allocation lock
@@ -448,6 +464,30 @@ window.filesender.terasender = {
                 // Worker can't continue, upload is broken, stop everyone
                 this.stop();
                 break;
+            
+            case 'onPBKDF2Starting':
+                if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_nokey )
+                {
+                    this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_generating;
+                    window.filesender.onPBKDF2Starting();
+                }             
+                break;
+            case 'onPBKDF2Ended':
+                if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_generating )
+                {
+                    this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_generated;
+                    this.crypto_pbkdf2_workers_that_have_generated++;
+                    window.filesender.onPBKDF2Ended();
+                }
+                if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_generated )
+                {
+                    this.crypto_pbkdf2_workers_that_have_generated++;
+                    if( this.crypto_pbkdf2_workers_that_have_generated == filesender.config.terasender_worker_count )
+                    {
+                        window.filesender.onPBKDF2AllEnded();
+                    }
+                }
+                break;
         }
     },
     
@@ -497,6 +537,8 @@ window.filesender.terasender = {
         
         this.status = 'running';
         this.workers = [];
+        this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_nokey;
+        this.crypto_pbkdf2_workers_that_have_generated = 0;
         
         this.transfer = transfer;
 
@@ -530,6 +572,8 @@ window.filesender.terasender = {
         }
         
         this.workers = [];
+        this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_nokey;
+        this.crypto_pbkdf2_workers_that_have_generated = 0;
 
         var ts = this;
         if( this.workers_start_monitor_id ) {
@@ -560,19 +604,27 @@ window.filesender.terasender = {
         
         this.workers = [];
         this.status = '';
+        this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_nokey;
+        this.crypto_pbkdf2_workers_that_have_generated = 0;
     },
     
     /**
      * Pause upload
      */
     pause: function() {
-        if(this.status == 'running') this.status = 'paused';
+        if(this.status == 'running') {
+            this.status = 'paused';
+        }
     },
     
     /**
      * Restart upload
      */
     restart: function() {
-        if(this.status == 'paused') this.status = 'running';
+        if(this.status == 'paused') {
+            this.status = 'running';
+            this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_nokey;
+            this.crypto_pbkdf2_workers_that_have_generated = 0;
+        }
     }
 };
