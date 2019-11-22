@@ -533,3 +533,4 @@ $lang['you_can_send_client_logs'] = 'In order to help your support team to find 
 $lang['crypto_pbkdf2_dialog'] = 'FileSender is generating a key from your password, this dialog will close automatically when the key is made. Generating a key is a computationally expensive operation to deter poeple from trying to guess passwords. <br/>This may take a few minutes depending on the speed of this computer.';
 $lang['crypto_pbkdf2_dialog_with_expected'] = 'FileSender is generating a key from your password, this dialog will close automatically when the key is made. Generating a key is a computationally expensive operation to deter people from trying to guess passwords. <br/>The expected delay is {seconds} seconds';
 $lang['upload_all_terasender_workers_completed_pbkdf2'] = 'All upload workers are now ready to start transferring encrypted data';
+$lang['time_to_complete_s'] = 'Time to complete (seconds)';
