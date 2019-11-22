@@ -1,11 +1,11 @@
-<?php 
+<?php
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-// 
-// 
+//
+//
 ?>
 subject: Vavčer gosta prejet
 subject: {guest.subject}
@@ -14,7 +14,7 @@ subject: {guest.subject}
 
 Spoštovani,
 
-Spodaj najdete vavčer, s katerim lahko dostopate do strani {cfg:site_name}. Uporabite ga lahko tako, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
+Spodaj lahko najdete vavčer, s katerim lahko dostopate do strani {cfg:site_name}. Ta vavčer lahko uporabite, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
 
 Izdajatelj: {guest.user_email}
 Povezava vavčerja: {guest.upload_link}
@@ -32,7 +32,7 @@ Lep pozdrav,
 </p>
 
 <p>
-    Spodaj lahko najdete vavčer, s katerim lahko dostopate do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Uporabite ga lahko tako, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
+    Spodaj lahko najdete vavčer, s katerim lahko dostopate do strani <a href="{cfg:site_url}">{cfg:site_name}</a>. Ta vavčer lahko uporabite, da naložite skupek datotek in ga podate na razpolago skupini ljudi.
 
 </p>
 
@@ -44,7 +44,7 @@ Lep pozdrav,
     </thead>
     <tbody>
         <tr>
-            <td>Izdajalec</td>
+            <td>Izdajatelj</td>
             <td><a href="mailto:{guest.user_email}">{guest.user_email}</a></td>
         </tr>
         <tr>
