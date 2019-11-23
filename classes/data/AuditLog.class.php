@@ -423,7 +423,7 @@ class AuditLog extends DBObject
         // already been removed from the system
         DBI::exec(
             ""
-           ."delete a from ".self::getDBTable()." a where a.id in ("
+           ."delete from ".self::getDBTable()." where id in ("
            ."   select id from ( "
            ."   select al.id from ".self::getViewName()." al "
            ."   left outer join ".Guest::getDBTable()." g"
