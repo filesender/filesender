@@ -46,6 +46,7 @@ downloadAndConvert "fi" "Finnish"   $dirname
 downloadAndConvert "de" "German"    $dirname
 downloadAndConvert "it" "Italian"   $dirname
 downloadAndConvert "fa" "Persian"   $dirname
+downloadAndConvert "pl" "Polish"    $dirname
 downloadAndConvert "ru" "Russian"   $dirname
 downloadAndConvert "sl" "Slovenian" $dirname
 downloadAndConvert "es" "Spanish"   $dirname
