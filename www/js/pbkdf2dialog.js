@@ -98,8 +98,14 @@ window.filesender.pbkdf2dialog = {
         };
         
         window.filesender.onPBKDF2Ended = function() {
+        };
+
+        // Chain this out so the UI can still get it.
+        var allEnded = window.filesender.onPBKDF2AllEnded;
+        window.filesender.onPBKDF2AllEnded = function() {
+
             $this.time_end = Date.now();
-            console.log("pbkdf2dialog onPBKDF2Ended()");
+            console.log("pbkdf2dialog onPBKDF2AllEnded(top)");
             $this.already_complete = true;
             if( $this.dialog ) {
                 $this.dialog.dialog('close');
@@ -114,11 +120,7 @@ window.filesender.pbkdf2dialog = {
                                                 Math.ceil(($this.time_end - $this.time_start) / 1000 ));
                 }
             }
-        };
-
-        // Chain this out so the UI can still get it.
-        var allEnded = window.filesender.onPBKDF2AllEnded;
-        window.filesender.onPBKDF2AllEnded = function() {
+            
             console.log("pbkdf2dialog onPBKDF2AllEnded()");
             allEnded();
         };
