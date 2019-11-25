@@ -34,7 +34,7 @@ $(function() {
     if(window.transfers_table) return;
     window.transfers_table = true;
 
-    window.filesender.pbkdf2dialog.setup();
+    window.filesender.pbkdf2dialog.setup( true );
     
     // Expand each transfer's details
     $('.transfer .expand span, .transfer span.expand').on('click', function() {
