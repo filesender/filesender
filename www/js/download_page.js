@@ -34,7 +34,7 @@ $(function() {
     var page = $('.download_page');
     if(!page.length) return;
 
-    window.filesender.pbkdf2dialog.setup();
+    window.filesender.pbkdf2dialog.setup( true );
     
     // Bind file selectors
     page.find('.file .select').on('click', function() {

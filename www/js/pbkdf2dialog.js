@@ -55,6 +55,9 @@ window.filesender.pbkdf2dialog = {
     time_start: 0,
     time_end: 0,
 
+    only_one_pbkdf2_process: true,
+
+
     // set in setup() from config.
     encryption_password_hash_iterations: 0,
 
@@ -66,11 +69,13 @@ window.filesender.pbkdf2dialog = {
         $this = this
         return $this.encryption_password_hash_iterations < 10;
     },
-    setup: function() {
+    setup: function( only_one_pbkdf2_process_v ) {
         $this = this;
+        $this.only_one_pbkdf2_process = only_one_pbkdf2_process_v;
 
         $this.delay_to_show_dialog = window.filesender.config.crypto_pbkdf2_delay_to_show_dialog;
         $this.encryption_password_hash_iterations = filesender.config.encryption_password_hash_iterations_new_files;
+
 
         window.filesender.onPBKDF2Starting = function() {
             console.log("pbkdf2dialog onPBKDF2Starting()");
@@ -97,31 +102,47 @@ window.filesender.pbkdf2dialog = {
                               
         };
         
+
         window.filesender.onPBKDF2Ended = function() {
-            $this.time_end = Date.now();
-            console.log("pbkdf2dialog onPBKDF2Ended()");
-            $this.already_complete = true;
-            if( $this.dialog ) {
-                $this.dialog.dialog('close');
-                $this.dialog.remove();
-                $this.dialog = null;
-            }
-            if( window.filesender.supports.localStorage ) {
-                // dont record time for a generated key as it is different
-                // than user supplied key.
-                if( !($this.usingGeneratedKey())) {
-                    window.localStorage.setItem('crypto_pbkdf2_delay_seconds',
-                                                Math.ceil(($this.time_end - $this.time_start) / 1000 ));
-                }
+            
+            console.log("ended() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            if( $this.only_one_pbkdf2_process ) {
+                $this.onPBKDF2Over();
             }
         };
 
         // Chain this out so the UI can still get it.
         var allEnded = window.filesender.onPBKDF2AllEnded;
         window.filesender.onPBKDF2AllEnded = function() {
+            console.log("ending() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            if( !($this.only_one_pbkdf2_process)) {
+                $this.onPBKDF2Over();
+            }
+            
             console.log("pbkdf2dialog onPBKDF2AllEnded()");
             allEnded();
         };
     },
-       
+
+
+    onPBKDF2Over: function() {
+        $this = this;
+        $this.time_end = Date.now();
+        console.log("pbkdf2dialog onPBKDF2Over()");
+        $this.already_complete = true;
+        if( $this.dialog ) {
+            $this.dialog.dialog('close');
+            $this.dialog.remove();
+            $this.dialog = null;
+        }
+        if( window.filesender.supports.localStorage ) {
+            // dont record time for a generated key as it is different
+            // than user supplied key.
+            if( !($this.usingGeneratedKey())) {
+                window.localStorage.setItem('crypto_pbkdf2_delay_seconds',
+                                            Math.ceil(($this.time_end - $this.time_start) / 1000 ));
+            }
+        }
+    },
+    
 };

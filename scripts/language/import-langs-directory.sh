@@ -36,6 +36,7 @@ importfile fi_FI FileSender_2.0_Finnish.php
 importfile de_DE FileSender_2.0_German.php
 importfile it_IT FileSender_2.0_Italian.php
 importfile fa_IR FileSender_2.0_Persian.php
+importfile pl_PL FileSender_2.0_Polish.php
 importfile ru_RU FileSender_2.0_Russian.php
 importfile sl_SI FileSender_2.0_Slovenian.php
 importfile es_ES FileSender_2.0_Spanish.php
