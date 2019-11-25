@@ -1589,7 +1589,7 @@ $(function() {
     window.filesender.onPBKDF2AllEnded = function() {
         filesender.ui.uploadLogPrepend(lang.tr('upload_all_terasender_workers_completed_pbkdf2'));
     }
-    window.filesender.pbkdf2dialog.setup();
+    window.filesender.pbkdf2dialog.setup(!filesender.config.terasender_enabled)
     
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
