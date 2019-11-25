@@ -418,19 +418,29 @@ class AuditLog extends DBObject
 
     public static function cleanup()
     {
+        $dbtype = Config::get('db_type');
         
-        // delete auditlogs entries for guests who have
-        // already been removed from the system
+        // update all AuditLogs Guest targets that point to guests
+        // that have already been deleted from the guests table
+        // to have a 'null' target_id perparing them for deletion
         DBI::exec(
             ""
-           ."delete from ".self::getDBTable()." where id in ("
-           ."   select id from ( "
-           ."   select al.id from ".self::getViewName()." al "
-           ."   left outer join ".Guest::getDBTable()." g"
-           ."   on g.id = al.target_id_as_number "
-           ."   where al.target_type = 'Guest' and g.id is null )"
-           ." b )"
+          . "update ".self::getDBTable()." a "
+                          . " set target_id = 'null' "
+                          . " where a.target_type = 'Guest' "
+                          . " and 0=(select count(*) as c from Guests g "
+                          . "        where g.id = ".DBView::cast_as_number("a.target_id")
+                          . "        limit 1"
+                          ."        ) "
         );
+
+        // delete AuditLogs entries for a guest target where they
+        // have a null target_id
+        DBI::exec(
+            ""
+          . "delete from ".self::getDBTable()." where target_id = 'null' and target_type = 'Guest' "
+        );
+        
         
         // if there is a sunset lifetime for the auditlog
         // then cleanup records that are too old.

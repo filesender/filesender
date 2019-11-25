@@ -310,6 +310,7 @@ class Config
 
         if( self::get('crypto_pbkdf2_expected_secure_to_year')) {
             $y = self::get('crypto_pbkdf2_expected_secure_to_year');
+            Logger::error('ZZZZZ ' . $y );
             if( $y < 2021 ) {
                 throw new ConfigBadParameterException('crypto_pbkdf2_expected_secure_to_year must be above 2021.');
             }
