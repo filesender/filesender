@@ -108,7 +108,7 @@ $lang['count_from_date_to_date'] = '{count} from {date:start} to {date:end}';
 $lang['created'] = 'Created';
 $lang['created_transfers'] = 'Created transfers';
 $lang['crypto_pbkdf2_dialog'] = 'FileSender is generating a key from your password, this dialog will close automatically when the key is made. Generating a key is a computationally expensive operation to deter people from trying to guess passwords. <br/>This may take a few minutes depending on the speed of this computer.';
-$lang['crypto_pbkdf2_dialog_with_expected'] = 'crypto_pbkdf2_dialog_with_expected\'] = \'FileSender is generating a key from your password, this dialog will close automatically when the key is made. Generating a key is a computationally expensive operation to deter people from trying to guess passwords. <br/>The expected delay is {seconds} seconds';
+$lang['crypto_pbkdf2_dialog_with_expected'] = 'FileSender is generating a key from your password, this dialog will close automatically when the key is made. Generating a key is a computationally expensive operation to deter people from trying to guess passwords. <br/>The expected delay is {seconds} seconds';
 $lang['database_access_failure'] = 'Failed to access database';
 $lang['date'] = 'Date';
 $lang['date_format'] = '%d/%m/%Y';
