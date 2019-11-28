@@ -116,8 +116,8 @@ $default = array(
     'terasender_worker_start_must_complete_within_ms' => 180000, // in ms, 3 minutes by default.
     'stalling_detection' => false,
 
-    'crypto_pbkdf2_dialog_enabled' => false,     // display a dialog after delay_to_show_dialog ms
-    'crypto_pbkdf2_delay_to_show_dialog' => 300, // in ms. 0 to disable the dialog
+    'crypto_pbkdf2_dialog_enabled' => true,          // display a dialog after delay_to_show_dialog ms
+    'crypto_pbkdf2_delay_to_show_dialog' => 300,     // in ms. 0 to disable the dialog
     'crypto_pbkdf2_expected_secure_to_year' => 2027, // expected year for pbkdf2 to be secure through to under brute force.
 
 
