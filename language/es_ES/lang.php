@@ -107,6 +107,9 @@ $lang['count'] = 'Contador';
 $lang['count_from_date_to_date'] = '{count} desde {date:start} hasta {date:end}';
 $lang['created'] = 'Creado';
 $lang['created_transfers'] = 'Transferencias creadas';
+$lang['crypto_pbkdf2_dialog'] = 'FileSender está generando una clave a partir de su password, este cuadro de diálogo se cerrará automáticamente cuando la clave esté generada. Generar un password seguro es costoso computacionalmente. <br/>Este proceso podría durar varios minutos dependiendo de su ordenador.
+';
+$lang['crypto_pbkdf2_dialog_with_expected'] = 'FileSender está generando una clave a partir de su password, este cuadro de diálogo se cerrará automáticamente cuando la clave esté generada. Generar un password seguro es costoso computacionalmente. <br/>. El proceso durará {seconds} segundos.';
 $lang['database_access_failure'] = 'Fallo al acceder a la base de datos';
 $lang['date'] = 'Fecha';
 $lang['date_format'] = '%d/%m/%Y';
@@ -454,6 +457,7 @@ $lang['testterm'] = 'Valor de pruebas';
 $lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s}
 ';
 $lang['time_to_complete_ms'] = 'Tiempo para completar';
+$lang['time_to_complete_s'] = 'Tiempo para finalizar';
 $lang['to'] = 'Para';
 $lang['too_long_since_any_data_was_last_sent'] = 'Demasiado tiempo desde el último envío de información';
 $lang['tracking_event_not_found'] = 'Evento de seguimiento no encontrado';
@@ -485,6 +489,7 @@ $lang['turning_on_guests_get_a_link_disables_can_only_send_to_me'] = 'Permitiend
 $lang['undergoing_maintenance'] = 'Esta aplicación está en mantenimiento.';
 $lang['unexpected_file'] = 'Este archivo no es parte de la transferencia de reinicio';
 $lang['unknown_page'] = 'Página desconocida';
+$lang['upload_all_terasender_workers_completed_pbkdf2'] = 'Todas las cargas están listas y deberían transferir los datos encriptados';
 $lang['upload_log_header'] = 'Principales mensajes de carga';
 $lang['upload_page'] = 'Subir';
 $lang['upload_page_graph_encryption_in_transit'] = 'Encripción en transito.';
