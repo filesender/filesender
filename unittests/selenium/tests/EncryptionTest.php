@@ -36,7 +36,7 @@ class EncryptionTest extends SeleniumTest {
             {
                 return true;
             }
-        }, 60000);
+        }, 30000);
         // the popup is not instant.. sleep a bit
         sleep(2);
         
