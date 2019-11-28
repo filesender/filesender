@@ -331,3 +331,7 @@ $config['encryption_key_version_new_files'] = 0;
 
 $config['PUT_PERFORM_TESTSUITE'] = '';
 
+
+$config['crypto_pbkdf2_dialog_enabled'] = false;
+
+
