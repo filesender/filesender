@@ -76,6 +76,20 @@ class DBView
             return ', cast( '. $basecolname . ' as unsigned) as ' . $viewcolname;
         }
     }
+   public static function cast_as_number(
+        $dbtype,
+        $basecolname
+    ) {
+        if (!strlen($viewcolname)) {
+            $viewcolname = $basecolname . "_as_number";
+        }
+        if ($dbtype == 'pgsql') {
+            return ' cast( '. $basecolname . ' as bigint) ';
+        }
+        if ($dbtype == 'mysql') {
+            return ' cast( '. $basecolname . ' as unsigned) ';
+        }
+    }    
 
     public static function columnDefinition_dbconstant( $dbconstantTableName,
                                                         $baseTableColumn,
