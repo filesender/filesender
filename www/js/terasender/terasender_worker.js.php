@@ -186,8 +186,6 @@ var terasender_worker = {
         try {
             
 	    if (job.encryption) { //MD
-                console.log('CCC1 ');
-//console.log('CCC '  + window.filesender.asmcryptoR() );
 			var cryptedBlob = null;
 			var $this = this;
 			blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});

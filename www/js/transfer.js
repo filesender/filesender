@@ -223,11 +223,6 @@ window.filesender.transfer = function() {
     this.stalling_detection = cfg;
     
     this.canUseTerasender = function() {
-    console.log("AAAAAAAAAAAAAABBB 1: " + filesender.config.terasender_enabled && filesender.supports.workers );
-    console.log("AAAAAAAAAAAAAABBB 21: " + !this.encryption );
-    console.log("AAAAAAAAAAAAAABBB 22: " + filesender.supports.workerCrypto );
-    console.log("AAAAAAAAAAAAAABBB 3: " + !this.disable_terasender );
-        
         var enable = filesender.config.terasender_enabled && filesender.supports.workers;
         enable &= !this.encryption || filesender.supports.workerCrypto;
         enable &= !this.disable_terasender;

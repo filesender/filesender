@@ -1,10 +1,6 @@
 
 
 
-console.log("es5");
-
-//var asmCrypto = (function (exports) {
-
 var asmCrypto = (function (exports) {
     'use strict';
 

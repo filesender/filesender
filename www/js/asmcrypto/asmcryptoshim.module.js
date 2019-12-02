@@ -28,15 +28,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//import * as asmCrypto from './asmcrypto.all.es8.js';
 import * as asmCrypto from './asmcrypto.all.es5.js';
-//importScripts('./asmcrypto.nomodule.all.js');
-//import('./asmcrypto.nomodule.all.js');
-//import('./asmcrypto.all.es5.js');
 
 if(!('filesender' in window)) window.filesender = {};
-
-//console.log('BBB '  + window.filesender.asmcryptoR() );
 
 /**
  * AJAX webservice client
@@ -68,42 +62,25 @@ window.filesender.asmcrypto = function() { return {
         console.log('calling key derivation function.');
         console.log(asmCrypto);
 
-        // all.es8.js
-        // window.filesender.asmcryptoR = {};
-        // window.filesender.asmcryptoR.Pbkdf2HmacSha256 = asmCrypto.Pbkdf2HmacSha256;
         var t0 = performance.now();            
         var k = window.filesender.asmcryptoR.Pbkdf2HmacSha256( password, salt, iterations, dklen );
         var t1 = performance.now();            
         console.log('DONE calling key derivation function.');
         console.log('that took ' + Number(t1-t0).toLocaleString() + ' ms');
         
-        console.log(k);
-//        console.log(k.buffer);
-
         crypto.subtle.importKey("raw", k.buffer,
                                 { "name": "AES-CBC", "length": 256},
                                 true,
                                 ["encrypt", "decrypt"]
-                               ).then( function (key) {
-
-                                   console.log( 'key1 ' + key );
-                                   console.log( 'key1 ' + JSON.stringify(key) );
-                                   crypto.subtle.exportKey('jwk', key).then(
-                                       function( exported ) {
-                                           console.log( 'key1 asmcrypt/import export ' + exported );
-                                           console.log( 'key1 asmcrypt/import export ' + JSON.stringify(exported) );
+                               ).then( function (key)
+                                       {
+                                           successcb(key,iv);
                                        },
-                                       function(e) {
-                                           console.log('eee' + e );
+                                       function (e) {
+                                           console.log('ERROR   -----   ERROR -----   e1 ' + e );
+                                           failcb(e);
                                        }
-                                   );
-
-                                   successcb(key,iv);
-                           
-                       }, function (e) {
-                           console.log('ERROR   -----   ERROR -----   e1 ' + e );
-                           failcb(e);
-                       });
+                                     );
     
     },
     

@@ -145,6 +145,7 @@ window.filesender.config = {
 
     crypto_pbkdf2_dialog_enabled: '<?php echo Config::get('crypto_pbkdf2_dialog_enabled') ?>',
     crypto_pbkdf2_delay_to_show_dialog: '<?php echo Config::get('crypto_pbkdf2_delay_to_show_dialog') ?>',
+    crypto_pbkdf2_dialog_custom_webasm_delay:'<?php echo Config::get('crypto_pbkdf2_dialog_custom_webasm_delay') ?>',
 
 	language: {
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",

@@ -288,25 +288,17 @@ window.filesender.crypto_app = function () {
             
             if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
             {
-                // var d = $("<div id=\"dialog\"  />").appendTo('body').attr({title: 'title123'});
-                // d.dialog();
-                // d.each(function(){
-                //     var redraw = this.offsetHeight;
-                // });                
-                //                filesender.ui.alert( "info", "testAA" );
-                
                 window.filesender.onPBKDF2Starting();
 
-                                    
+                //
+                // The is set in filesender-config.js.php based on the browser
+                //
                 if( window.filesender.config.crypto_use_custom_password_code ) 
                 {
                     setTimeout(
                         function(){
                     
                             console.log("***** USING CUSTOM CODE ON PASSWORD ****");
-                            console.log("window.filesender.asmcrypto0  ");
-//                            console.log(window.filesender );
-//                            console.log("window.filesender.asmcrypto1  " + window.filesender.asmcrypto );
                             
                             window.filesender.asmcrypto().importKeyFromPasswordUsingPBKDF2(
                                 passwordBuffer,
@@ -322,16 +314,13 @@ window.filesender.crypto_app = function () {
                                 }
                             );
                         },
-                        300 );
+                        window.filesender.config.crypto_pbkdf2_dialog_custom_webasm_delay
+                    );
                     
                     return;
                 }
  
 
-                console.log("***** USING NORMAL CODE ON PASSWORD ****");
-                
-                
-                
                 crypto.subtle.importKey(
                     'raw', 
                     passwordBuffer,

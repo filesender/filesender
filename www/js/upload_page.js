@@ -851,11 +851,6 @@ filesender.ui.startUpload = function() {
         filesender.config.terasender_enabled = can_use_terasender;
     }
     window.filesender.pbkdf2dialog.setup(!can_use_terasender);
-    console.log("AAAAAAAAAAAAAA canUseTS: " + filesender.ui.transfer.canUseTerasender() );
-    console.log("AAAAAAAAAAAAAA 1: " + filesender.config.terasender_enabled && filesender.supports.workers );
-    console.log("AAAAAAAAAAAAAA 2: " + !this.encryption || filesender.supports.workerCrypto );
-    console.log("AAAAAAAAAAAAAA 3: " + !this.disable_terasender );
-    
     window.filesender.pbkdf2dialog.reset();
     
     if(!filesender.ui.nodes.required_files) {

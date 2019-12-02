@@ -466,7 +466,6 @@ window.filesender.terasender = {
                 break;
             
             case 'onPBKDF2Starting':
-            console.log("onPBKDF2Starting: " );
                 if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_nokey )
                 {
                     this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_generating;
@@ -474,7 +473,6 @@ window.filesender.terasender = {
                 }             
                 break;
             case 'onPBKDF2Ended':
-            console.log("onPBKDF2Ended: " );
                 if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_generating )
                 {
                     this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_generated;
@@ -484,7 +482,6 @@ window.filesender.terasender = {
                 if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_generated )
                 {
                     this.crypto_pbkdf2_workers_that_have_generated++;
-                    alert("w: " + this.crypto_pbkdf2_workers_that_have_generated );
                     if( this.crypto_pbkdf2_workers_that_have_generated == filesender.config.terasender_worker_count )
                     {
                         window.filesender.onPBKDF2AllEnded();
