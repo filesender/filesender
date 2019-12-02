@@ -160,9 +160,10 @@ window.filesender.crypto_app = function () {
             var $this = this;
             var decoded = atob( b64data );
             var raw = new Uint8Array( numOctets );
-            raw.forEach((_, i) => {
+            var i = 0;
+            for( ; i < raw.length; i++ ) {
                 raw[i] = decoded.charCodeAt(i);
-            });
+            };
             return raw;
         },
         generateClientEntropy: function() {
@@ -401,7 +402,7 @@ window.filesender.crypto_app = function () {
             
         },
 
-        setCipherAlgorithm(key_version) {
+        setCipherAlgorithm: function(key_version) {
             var $this = this;
 
             //
@@ -714,7 +715,7 @@ window.filesender.crypto_app = function () {
          */
         handleXHRError: function( xhr, link, defaultMsg )
         {
-            if(xhr.responseURL.includes("/?s=exception&"))
+            if(xhr.responseURL && xhr.responseURL.includes("/?s=exception&"))
             {
                 console.log("handleXHRError() XHR ERROR DETECTED");
                 console.log("link " + link );
@@ -926,7 +927,7 @@ window.filesender.crypto_app = function () {
                     try {
                         var decoded = atob( value );
                         raw = new Uint8Array( $this.crypto_random_password_octets );
-                        raw.forEach((_, i) => {
+                        raw.forEach(function(_, i) {
                             raw[i] = decoded.charCodeAt(i);
                         });
                     } catch(e) {
