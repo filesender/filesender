@@ -80,6 +80,22 @@ class GUI
             echo '<link type="text/css" rel="stylesheet" href="'.$path.'" />'."\n";
         }
     }
+
+    public static function browser_is_ie11()
+    {
+        return preg_match("@MSIE@i", $_SERVER['HTTP_USER_AGENT'] )
+          ||   preg_match("@Trident/@i", $_SERVER['HTTP_USER_AGENT'] );
+    }
+    
+    public static function browser_is_edge()
+    {
+        return preg_match("@ Edge/@i", $_SERVER['HTTP_USER_AGENT'] );
+    }
+
+    public static function use_webasm_pbkdf2_implementation()
+    {
+        return Utilities::isTrue(GUI::browser_is_ie11() || GUI::browser_is_edge());
+    }
     
     /**
      * Get script(s)
@@ -110,6 +126,15 @@ class GUI
         if (Config::get('terasender_enabled')) {
             $sources[] = 'js/terasender/terasender.js';
         }
+        Logger::info("browser agent " . $_SERVER['HTTP_USER_AGENT'] );
+        Logger::info("browser agent is edge " . GUI::browser_is_edge() );
+        Logger::info("browser agent is ie11 " . GUI::browser_is_ie11() );
+        Logger::info("browser agent wants webasm pbkdf2 " . GUI::use_webasm_pbkdf2_implementation() );
+
+        if( GUI::use_webasm_pbkdf2_implementation()) {
+            $sources[] = 'js/asmcrypto/asmcrypto.all.es5.js';
+            $sources[] = 'js/asmcrypto/asmcryptoshim.js';
+        }
         
         $sources[] = 'skin/script.js';
         
@@ -124,6 +149,9 @@ class GUI
         foreach (self::path(self::scripts()) as $path) {
             echo '<script type="text/javascript" src="'.$path.'"></script>'."\n";
         }
+//        $path = 'js/asmcrypto/asmcryptoshim.module.js';
+//        echo '<script type="module" src="'.$path.'"></script>'."\n";
+
     }
     
     /**

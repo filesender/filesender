@@ -101,11 +101,13 @@ window.filesender.config = {
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
     crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
 
+    crypto_use_custom_password_code: '<?php echo GUI::use_webasm_pbkdf2_implementation() ?>',
+
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
-    terasender_worker_file: 'js/terasender/terasender_worker.js',
+    terasender_worker_file: 'js/terasender/terasender_worker.js.php',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
     terasender_worker_max_chunk_retries: <?php echo Config::get('terasender_worker_max_chunk_retries')  ?>,
     terasender_worker_xhr_timeout: <?php  echo Config::get('terasender_worker_xhr_timeout') ?>,

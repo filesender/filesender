@@ -121,6 +121,8 @@ $default = array(
     'crypto_pbkdf2_expected_secure_to_year' => 2027, // expected year for pbkdf2 to be secure through to under brute force.
 
 
+    'crypto_use_custom_password_code' => true,
+
     'testing_terasender_worker_uploadRequestChange_function_name' => '',
 
     'tmp_path' => FILESENDER_BASE.'/tmp/',

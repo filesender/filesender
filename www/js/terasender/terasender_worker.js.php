@@ -1,7 +1,14 @@
 /**
  * Part of the Filesender software.
  * See http://filesender.org
- */
+*/
+
+<?php
+require_once('../../../includes/init.php');
+
+echo "// inline vars \n";
+echo "var use_webasm_pbkdf2_implementation = " . (GUI::use_webasm_pbkdf2_implementation()?1:0) . ";";
+?>
 
 /**
  * We have to use a try/catch here so we can report failure
@@ -16,12 +23,18 @@ try {
 	'../../js/crypter/crypto_blob_reader.js',
 	'../../js/crypter/crypto_app.js'
     );
+    if( use_webasm_pbkdf2_implementation ) {
+        importScripts(
+     	    '../../js/asmcrypto/asmcrypto.all.es5.js',
+            '../../js/asmcrypto/asmcryptoshim.js'
+        );
+    }
 }
 catch( e ) {
     postMessage({
         command: 'error',
         worker_id: -1,
-        data: {message: 'worker_failed_to_start'}
+        data: {message: 'worker_failed_to_start' + e }
     });
 }
 
@@ -172,7 +185,9 @@ var terasender_worker = {
         
         try {
             
-		if (job.encryption) { //MD
+	    if (job.encryption) { //MD
+                console.log('CCC1 ');
+//console.log('CCC '  + window.filesender.asmcryptoR() );
 			var cryptedBlob = null;
 			var $this = this;
 			blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});

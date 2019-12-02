@@ -160,9 +160,13 @@ window.filesender.crypto_app = function () {
             var $this = this;
             var decoded = atob( b64data );
             var raw = new Uint8Array( numOctets );
-            raw.forEach((_, i) => {
+            var i = 0;
+            for( ; i < raw.length; i++ ) {
                 raw[i] = decoded.charCodeAt(i);
-            });
+            }
+//            raw.forEach(function(curVal, i) {
+//                raw[i] = decoded.charCodeAt(i);
+//            });
             return raw;
         },
         generateClientEntropy: function() {
@@ -287,7 +291,49 @@ window.filesender.crypto_app = function () {
             
             if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
             {
+                // var d = $("<div id=\"dialog\"  />").appendTo('body').attr({title: 'title123'});
+                // d.dialog();
+                // d.each(function(){
+                //     var redraw = this.offsetHeight;
+                // });                
+                //                filesender.ui.alert( "info", "testAA" );
+                
                 window.filesender.onPBKDF2Starting();
+
+                                    
+                if( window.filesender.config.crypto_use_custom_password_code ) 
+                {
+                    setTimeout(
+                        function(){
+                    
+                            console.log("***** USING CUSTOM CODE ON PASSWORD ****");
+                            console.log("window.filesender.asmcrypto0  ");
+//                            console.log(window.filesender );
+//                            console.log("window.filesender.asmcrypto1  " + window.filesender.asmcrypto );
+                            
+                            window.filesender.asmcrypto().importKeyFromPasswordUsingPBKDF2(
+                                passwordBuffer,
+                                saltBuffer,
+                                hashRounds,                                
+                                function(key) {
+                                    window.filesender.onPBKDF2Ended();
+                                    callback(key);
+                                },
+                                function(e) {
+                                    window.filesender.onPBKDF2Ended();
+                                    efunc(e);
+                                }
+                            );
+                        },
+                        300 );
+                    
+                    return;
+                }
+ 
+
+                console.log("***** USING NORMAL CODE ON PASSWORD ****");
+                
+                
                 
                 crypto.subtle.importKey(
                     'raw', 
@@ -926,7 +972,7 @@ window.filesender.crypto_app = function () {
                     try {
                         var decoded = atob( value );
                         raw = new Uint8Array( $this.crypto_random_password_octets );
-                        raw.forEach((_, i) => {
+                        raw.forEach(function(curVal, i) {
                             raw[i] = decoded.charCodeAt(i);
                         });
                     } catch(e) {
