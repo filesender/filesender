@@ -3,12 +3,6 @@
  * See http://filesender.org
 */
 
-<?php
-require_once('../../../includes/init.php');
-
-echo "// inline vars \n";
-echo "var use_webasm_pbkdf2_implementation = " . (GUI::use_webasm_pbkdf2_implementation()?1:0) . ";";
-?>
 
 /**
  * We have to use a try/catch here so we can report failure
@@ -23,12 +17,6 @@ try {
 	'../../js/crypter/crypto_blob_reader.js',
 	'../../js/crypter/crypto_app.js'
     );
-    if( use_webasm_pbkdf2_implementation ) {
-        importScripts(
-     	    '../../js/asmcrypto/asmcrypto.all.es5.js',
-            '../../js/asmcrypto/asmcryptoshim.js'
-        );
-    }
 }
 catch( e ) {
     postMessage({

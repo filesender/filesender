@@ -129,8 +129,11 @@ class GUI
 
         // only include the webasm pbkdf2 if we need it
         if( GUI::use_webasm_pbkdf2_implementation()) {
-            $sources[] = 'js/asmcrypto/asmcrypto.all.es5.js';
-            $sources[] = 'js/asmcrypto/asmcryptoshim.js';
+            $key_version = Config::get('encryption_key_version_new_files');
+            if( $key_version == 1 ) {
+                $sources[] = 'js/asmcrypto/asmcrypto.all.es5.js';
+                $sources[] = 'js/asmcrypto/asmcryptoshim.js';
+            }
         }
         
         $sources[] = 'skin/script.js';
