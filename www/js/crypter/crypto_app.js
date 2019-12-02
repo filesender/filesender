@@ -447,7 +447,7 @@ window.filesender.crypto_app = function () {
             
         },
 
-        setCipherAlgorithm(key_version) {
+        setCipherAlgorithm: function(key_version) {
             var $this = this;
 
             //
