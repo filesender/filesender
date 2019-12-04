@@ -846,7 +846,9 @@ filesender.ui.startUpload = function() {
     if( this.transfer.disable_terasender ) {
         can_use_terasender = false;
     }
-    if(this.transfer.encryption && use_webasm_pbkdf2_implementation()) {
+    if(this.transfer.encryption
+       && filesender.config.encryption_key_version_new_files==1
+       && use_webasm_pbkdf2_implementation()) {
         can_use_terasender = false;
         filesender.config.terasender_enabled = can_use_terasender;
     }
