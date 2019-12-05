@@ -119,7 +119,9 @@ $default = array(
     'crypto_pbkdf2_dialog_enabled' => true,          // display a dialog after delay_to_show_dialog ms
     'crypto_pbkdf2_delay_to_show_dialog' => 300,     // in ms. 0 to disable the dialog
     'crypto_pbkdf2_expected_secure_to_year' => 2027, // expected year for pbkdf2 to be secure through to under brute force.
+    'crypto_pbkdf2_dialog_custom_webasm_delay' => 1000, // delay to allow PBKDF2 dialog to appear
 
+    'crypto_use_custom_password_code' => true,
 
     'testing_terasender_worker_uploadRequestChange_function_name' => '',
 

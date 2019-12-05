@@ -41,7 +41,17 @@ function isIE11()
     }
     return false;
 }
-
+function isEdge()
+{
+    if(navigator.userAgent.indexOf(' Edge/')!==-1) {
+        return true;
+    }
+    return false;
+}
+function use_webasm_pbkdf2_implementation()
+{
+    return isIE11() || isEdge();
+}
 
 function delayAndCallOnlyOnce(callback, ms) {
     var timer = 0;
@@ -828,6 +838,22 @@ filesender.ui.cancelAutomaticResume = function() {
 
 filesender.ui.startUpload = function() {
 
+    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
+    this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
+    this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
+    
+    var can_use_terasender = filesender.config.terasender_enabled;
+    if( this.transfer.disable_terasender ) {
+        can_use_terasender = false;
+    }
+    var v2018_importKey_deriveKey = window.filesender.crypto_app().crypto_key_version_constants.v2018_importKey_deriveKey;
+    if(this.transfer.encryption
+       && filesender.config.encryption_key_version_new_files == v2018_importKey_deriveKey
+       && use_webasm_pbkdf2_implementation()) {
+        can_use_terasender = false;
+        filesender.config.terasender_enabled = can_use_terasender;
+    }
+    window.filesender.pbkdf2dialog.setup(!can_use_terasender);
     window.filesender.pbkdf2dialog.reset();
     
     if(!filesender.ui.nodes.required_files) {
@@ -851,9 +877,6 @@ filesender.ui.startUpload = function() {
             this.transfer.options[o] = v;
         }
     }
-    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
-    this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
-    this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
     var crypto = window.filesender.crypto_app();
     this.transfer.encryption_key_version = filesender.config.encryption_key_version_new_files;
     this.transfer.encryption_password_hash_iterations = filesender.config.encryption_password_hash_iterations_new_files;
@@ -1589,7 +1612,7 @@ $(function() {
     window.filesender.onPBKDF2AllEnded = function() {
         filesender.ui.uploadLogPrepend(lang.tr('upload_all_terasender_workers_completed_pbkdf2'));
     }
-    window.filesender.pbkdf2dialog.setup(!filesender.config.terasender_enabled)
+    
     
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
