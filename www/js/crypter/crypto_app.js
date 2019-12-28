@@ -163,7 +163,7 @@ window.filesender.crypto_app = function () {
             var i = 0;
             for( ; i < raw.length; i++ ) {
                 raw[i] = decoded.charCodeAt(i);
-            };
+            }
             return raw;
         },
         generateClientEntropy: function() {
@@ -289,7 +289,38 @@ window.filesender.crypto_app = function () {
             if( key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey )
             {
                 window.filesender.onPBKDF2Starting();
-                
+
+                //
+                // The is set in filesender-config.js.php based on the browser
+                //
+                if( window.filesender.config.crypto_use_custom_password_code ) 
+                {
+                    setTimeout(
+                        function(){
+                    
+                            console.log("***** USING CUSTOM CODE ON PASSWORD ****");
+                            
+                            window.filesender.asmcrypto().importKeyFromPasswordUsingPBKDF2(
+                                passwordBuffer,
+                                saltBuffer,
+                                hashRounds,                                
+                                function(key) {
+                                    window.filesender.onPBKDF2Ended();
+                                    callback(key);
+                                },
+                                function(e) {
+                                    window.filesender.onPBKDF2Ended();
+                                    efunc(e);
+                                }
+                            );
+                        },
+                        window.filesender.config.crypto_pbkdf2_dialog_custom_webasm_delay
+                    );
+                    
+                    return;
+                }
+ 
+
                 crypto.subtle.importKey(
                     'raw', 
                     passwordBuffer,
@@ -927,10 +958,12 @@ window.filesender.crypto_app = function () {
                     try {
                         var decoded = atob( value );
                         raw = new Uint8Array( $this.crypto_random_password_octets );
-                        raw.forEach(function(_, i) {
+                        var i = 0;
+                        for( i=0; i < raw.length; i++ ) {                        
                             raw[i] = decoded.charCodeAt(i);
-                        });
+                        }
                     } catch(e) {
+                        console.log(e);
                         // we know the password is invalid bad if we can not base64 decode it
                         // after all, we base64 encoded it in generateRandomPassword().
                         throw(window.filesender.config.language.file_encryption_wrong_password);

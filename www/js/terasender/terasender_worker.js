@@ -1,7 +1,8 @@
 /**
  * Part of the Filesender software.
  * See http://filesender.org
- */
+*/
+
 
 /**
  * We have to use a try/catch here so we can report failure
@@ -21,7 +22,7 @@ catch( e ) {
     postMessage({
         command: 'error',
         worker_id: -1,
-        data: {message: 'worker_failed_to_start'}
+        data: {message: 'worker_failed_to_start' + e }
     });
 }
 
@@ -172,7 +173,7 @@ var terasender_worker = {
         
         try {
             
-		if (job.encryption) { //MD
+	    if (job.encryption) { //MD
 			var cryptedBlob = null;
 			var $this = this;
 			blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});

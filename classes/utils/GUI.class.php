@@ -80,6 +80,22 @@ class GUI
             echo '<link type="text/css" rel="stylesheet" href="'.$path.'" />'."\n";
         }
     }
+
+    public static function browser_is_ie11()
+    {
+        return preg_match("@MSIE@i", $_SERVER['HTTP_USER_AGENT'] )
+          ||   preg_match("@Trident/@i", $_SERVER['HTTP_USER_AGENT'] );
+    }
+    
+    public static function browser_is_edge()
+    {
+        return preg_match("@ Edge/@i", $_SERVER['HTTP_USER_AGENT'] );
+    }
+
+    public static function use_webasm_pbkdf2_implementation()
+    {
+        return Utilities::isTrue(GUI::browser_is_ie11() || GUI::browser_is_edge());
+    }
     
     /**
      * Get script(s)
@@ -109,6 +125,15 @@ class GUI
         
         if (Config::get('terasender_enabled')) {
             $sources[] = 'js/terasender/terasender.js';
+        }
+
+        // only include the webasm pbkdf2 if we need it
+        if( GUI::use_webasm_pbkdf2_implementation()) {
+            $key_version = Config::get('encryption_key_version_new_files');
+            if( $key_version == 1 ) {
+                $sources[] = 'js/asmcrypto/asmcrypto.all.es5.js';
+                $sources[] = 'js/asmcrypto/asmcryptoshim.js';
+            }
         }
         
         $sources[] = 'skin/script.js';
