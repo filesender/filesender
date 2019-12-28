@@ -958,10 +958,12 @@ window.filesender.crypto_app = function () {
                     try {
                         var decoded = atob( value );
                         raw = new Uint8Array( $this.crypto_random_password_octets );
-                        raw.forEach(function(_, i) {
+                        var i = 0;
+                        for( i=0; i < raw.length; i++ ) {                        
                             raw[i] = decoded.charCodeAt(i);
-                        });
+                        }
                     } catch(e) {
+                        console.log(e);
                         // we know the password is invalid bad if we can not base64 decode it
                         // after all, we base64 encoded it in generateRandomPassword().
                         throw(window.filesender.config.language.file_encryption_wrong_password);
