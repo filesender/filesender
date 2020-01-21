@@ -715,5 +715,6 @@ window.filesender.client = {
         
         return this.delete('/user/' + id, callback, opts);
     },
-    
+
+
 };

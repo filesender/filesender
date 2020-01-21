@@ -1314,6 +1314,14 @@ table.guests .guest .to .errors .details {
     white-space: nowrap;
 }
 
+.user_page .info .unknown {
+    border: 1px solid black;
+    background-color: #EABEBE;
+    padding: 0.25em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
 .user_page span[data-info="remote_config"] {
     display: none;
 }

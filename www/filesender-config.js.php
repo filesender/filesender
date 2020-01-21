@@ -165,6 +165,7 @@ window.filesender.config = {
     automatic_resume_delay_to_resume:   <?php echo Config::get('automatic_resume_delay_to_resume') ?>,
 
 
+    api_secret_aup_enabled: <?php echo value_to_TF(Config::get('api_secret_aup_enabled')) ?>,
 
     tr_dp_date_format:   "<?php echo Config::get('tr_dp_date_format') ?>",
     tr_dp_date_format_hint:   "<?php echo Config::get('tr_dp_date_format_hint') ?>",

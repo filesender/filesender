@@ -50,6 +50,48 @@ $(function() {
         
         return false;
     });
+
+    $('.api_secret_delete a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var p = {};
+        p['apisecretdelete'] = '1';
+        
+        filesender.client.updateUserPreferences(p, function() {
+            filesender.ui.notify('success', lang.tr('preferences_updated'));
+            filesender.ui.reload();
+        });
+        
+        return false;
+    });
+
+
+    $('.api_secret_create a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var secret_create = function() {
+            var p = {};
+            p['apisecretcreate'] = '1';
+            
+            filesender.client.updateUserPreferences(p, function() {
+                filesender.ui.notify('success', lang.tr('preferences_updated'));
+                filesender.ui.reload();
+            });
+        };
+
+        if( filesender.config.api_secret_aup_enabled ) {
+            filesender.ui.confirm(lang.tr('confirm_api_secret_create_aup'), function() {
+                secret_create();
+            });
+        } else {
+            secret_create();
+        }
+        
+        return false;
+    });
+    
     
     page.find(':input').on('change', function() {
         var i = $(this);

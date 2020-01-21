@@ -4,6 +4,7 @@
     
     <?php
 
+
     if(GUI::isUserAllowedToAccessPage('admin'))
     {
         echo "<h2>".Lang::tr('admin_page')."</h2>\n";
@@ -11,7 +12,16 @@
     }
     
     $readonly = function($info) {
-        echo '<div class="readonly">'.Utilities::sanitizeOutput($info['value']).'</div>';
+        $extraclass = 'readonly';
+        if( !$info['value'] ) {
+            $info['value'] = '';
+            $extraclass = 'unknown';
+            if( $info['key'] == 'auth_secret' ) {
+                $info['value'] = Lang::tr('api_secret_use_the_button_below_to_create');
+            }
+        }
+        
+        echo "<div class='$extraclass'>".Utilities::sanitizeOutput($info['value']).'</div>';
     };
     
     $infos = array(
@@ -38,9 +48,42 @@
         'remote_authentication' => array(
             'auth_secret' => function($info) use($readonly) {
                 if(!Config::get('auth_remote_user_enabled')) return;
-                
+
+                $v = Auth::user()->auth_secret_created_formatted;
+                if( $v == '' ) {
+                } else {
+                    $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
+                    echo "<p class='datetime'>$tt</p>";
+                }
+                $info['key'] = 'auth_secret';
                 $readonly($info);
-                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
+//                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
+
+                echo <<<EOT
+                <div>
+                   <div class="api_secret_delete">
+                      <a href="#">
+                         <span class="fa fa-lg fa-times"></span>
+                         {tr:api_secret_delete}
+                      </a>
+                   </div>
+                   <div class="api_secret_create">
+                      <a href="#">
+                         <span class="fa fa-lg fa-plus"></span>
+                         {tr:api_secret_recreate}
+                      </a>
+                   </div>
+                </div>
+EOT;
+                
+                echo <<<EOT
+                   <h2>Python CLI Client</h2>
+                   {tr:python_cli_client_setup_information}
+                   <br/>
+                   <a href="clidownload.php" target="_blank">{tr:download} Python CLI Client</a>
+                   <br/>
+                   <a href="clidownload.php?config=1" target="_blank">{tr:download} Python CLI Client {tr:configuration}</a>
+EOT;
             },
         ),
         'additional' => array(
@@ -72,7 +115,7 @@
                     }
                 }
                 
-                if($value) $displayed[] = array(
+                if($value || $id=='auth_secret') $displayed[] = array(
                     'id' => $id,
                     'mode' => $page[$id],
                     'generator' => $generator,
@@ -122,12 +165,6 @@
     
     ?>
     
-    <h2>Python CLI Client</h2>
-    {tr:python_cli_client_setup_information}
-    <br/>
-  <a href="clidownload.php" target="_blank">{tr:download} Python CLI Client</a>
-  <br/>
-  <a href="clidownload.php?config=1" target="_blank">{tr:download} Python CLI Client {tr:configuration}</a>
 
     <h2>{tr:actions}</h2>
 

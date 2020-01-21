@@ -54,4 +54,5 @@ class GUIPages extends Enum
     const ABOUT           = 'about';
     const PRIVACY         = 'privacy';
     const HELP            = 'help';
+    const APISECRETAUP    = 'apisecretaup';
 }

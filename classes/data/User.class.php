@@ -101,6 +101,10 @@ class User extends DBObject
             'size' => 64,
             'null' => true
         ),
+        'auth_secret_created' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
         'quota' => array(
             'type' => 'uint',
             'size' => 'big',
@@ -147,6 +151,7 @@ class User extends DBObject
     protected $created = 0;
     protected $last_activity = 0;
     protected $auth_secret = null;
+    protected $auth_secret_created = null;
     protected $quota = 0;
     
     /**
@@ -190,9 +195,19 @@ class User extends DBObject
         
         // Generate user remote auth secret
         if (Config::get('auth_remote_user_autogenerate_secret') && !$this->auth_secret) {
-            $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
-            $this->save();
+            $this->authSecretCreate();
         }
+    }
+
+    public function authSecretCreate() {
+        $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
+        $this->auth_secret_created = time();
+        $this->save();
+    }
+    public function authSecretDelete() {
+        $this->auth_secret = null;
+        $this->auth_secret_created = null;
+        $this->save();
     }
     
     /**
@@ -587,10 +602,15 @@ class User extends DBObject
     {
         if (in_array($property, array(
             'id','additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
+            'auth_secret_created',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
         ))) {
             return $this->$property;
+        }
+
+        if( $property == 'auth_secret_created_formatted' ) {
+            return $this->auth_secret_created ? Utilities::formatDate($this->auth_secret_created,true) : '';
         }
 
         if ($property == 'saml_user_identification_uid') {
