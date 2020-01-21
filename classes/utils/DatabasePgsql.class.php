@@ -92,7 +92,7 @@ class DatabasePgsql
     }
     public static function dropView($table, $viewname)
     {
-        DBI::exec('DROP VIEW IF EXISTS CASCADE'.$viewname);
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname.' CASCADE');
     }
     
     /**
