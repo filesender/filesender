@@ -195,7 +195,10 @@ class User extends DBObject
         
         // Generate user remote auth secret
         if (Config::get('auth_remote_user_autogenerate_secret') && !$this->auth_secret) {
-            $this->authSecretCreate();
+            // do not auto generate if the user must accept aup
+            if( !Config::get('api_secret_aup_enabled')) {
+                $this->authSecretCreate();
+            }
         }
     }
 

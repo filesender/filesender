@@ -97,6 +97,7 @@ A note about colours;
 
 * [aup_default](#aup_default)
 * [aup_enabled](#aup_enabled)
+* [api_secret_aup_enabled](#api_secret_aup_enabled)
 * [ban_extension](#ban_extension)
 * [chunk_upload_security](#chunk_upload_security)
 * [default_transfer_days_valid](#default_transfer_days_valid)
@@ -820,7 +821,6 @@ User language detection is done in the following order:
 
 
 
-
 ---
 
 ## Transfers
@@ -846,6 +846,16 @@ User language detection is done in the following order:
 * __available:__ since version 1.0
 * __1.x name:__ AuP_default
 * __comment:__
+
+### api_secret_aup_enabled
+
+* __description:__ If set to 'true' the AuP (terms of service) must be accepted before the api secret can be created.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.15
+* __comment:__
+
 
 ### ban_extension
 
