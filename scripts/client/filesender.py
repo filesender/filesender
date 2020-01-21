@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#
 # FileSender www.filesender.org
 #
 # Copyright (c) 2009-2019, AARNet, Belnet, HEAnet, SURFnet, UNINETT
@@ -29,18 +31,38 @@
 import argparse
 import requests
 import time
-import collections
+from collections.abc import Iterable
+from collections.abc import MutableMapping
 import hmac
 import hashlib
 import urllib3
 import os
 import json
+import configparser
+from os.path import expanduser
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 #settings
 base_url = '[base_url]'
 default_transfer_days_valid = 10
+username = None
+apikey = None
+homepath = expanduser("~")
+
+config = configparser.ConfigParser()
+config.read(homepath + '/.filesender/filesender.py.ini')
+if 'system' in config:
+  base_url = config['system'].get('base_url', '[base_url]')
+  default_transfer_days_valid = int(config['system'].get('default_transfer_days_valid', 10))
+if 'user' in config:
+  username = config['user'].get('username')
+  apikey = config['user'].get('apikey')
+
+
+
+  
+
 
 #argv
 parser = argparse.ArgumentParser()
@@ -50,21 +72,38 @@ parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 requiredNamed = parser.add_argument_group('required named arguments')
-requiredNamed.add_argument("-u", "--username", required=True)
-requiredNamed.add_argument("-a", "--apikey", required=True)
+
+# if we have found these in the config file they become optional arguments
+if username is None:
+  requiredNamed.add_argument("-u", "--username", required=True)
+else:
+  parser.add_argument("-u", "--username")
+  
+if apikey is None:
+  requiredNamed.add_argument("-a", "--apikey", required=True)
+else:
+  parser.add_argument("-a", "--apikey")
+  
 requiredNamed.add_argument("-r", "--recipients", required=True)
 args = parser.parse_args()
 debug = args.verbose
 progress = args.progress
 
+if args.username is not None:
+  username = args.username
+  
+if args.apikey is not None:
+  apikey = args.apikey
+
+  
 #configs
 response = requests.get(base_url+'/info', verify=False)
 upload_chunk_size = response.json()['upload_chunk_size']
 
 if debug:
   print('base_url          : '+base_url)
-  print('username          : '+args.username)
-  print('apikey            : '+args.apikey)
+  print('username          : '+username)
+  print('apikey            : '+apikey)
   print('upload_chunk_size : '+str(upload_chunk_size)+' bytes')
   print('recipients        : '+args.recipients)
   print('files             : '+','.join(args.files))
@@ -75,7 +114,7 @@ def flatten(d, parent_key=''):
   items = []
   for k, v in d.items():
     new_key = parent_key + '[' + k + ']' if parent_key else k
-    if isinstance(v, collections.MutableMapping):
+    if isinstance(v, MutableMapping):
       items.extend(flatten(v, new_key).items())
     else:
       items.append(new_key+'='+v)
@@ -83,7 +122,7 @@ def flatten(d, parent_key=''):
   return items
 
 def call(method, path, data, content=None, rawContent=None, options={}):
-  data['remote_user'] = args.username
+  data['remote_user'] = username
   data['timestamp'] = str(round(time.time()))
   flatdata=flatten(data)
   signed = bytes(method+'&'+base_url.replace('https://','',1).replace('http://','',1)+path+'?'+('&'.join(flatten(data))), 'ascii')
@@ -101,7 +140,7 @@ def call(method, path, data, content=None, rawContent=None, options={}):
 
   #print(signed)
   bkey = bytearray()
-  bkey.extend(map(ord, args.apikey))
+  bkey.extend(map(ord, apikey))
   data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
 
   url = base_url+path+'?'+('&'.join(flatten(data)))
@@ -149,7 +188,7 @@ def postTransfer(user_id, files, recipients, subject=None, message=None, expires
     expires = round(time.time()) + (default_transfer_days_valid*24*3600)
 
   to = [x.strip() for x in recipients.split(',')]
-
+  
   return call(
     'post',
     '/transfer',
@@ -227,7 +266,16 @@ for f in args.files:
   }
   filesTransfer.append({'name':fn,'size':size})
 
-transfer = postTransfer(args.username, filesTransfer, args.recipients, subject=args.subject, message=args.message, expires=None, options=[])['created']
+troptions = {'get_a_link':0}
+
+
+transfer = postTransfer( username,
+                         filesTransfer,
+                         args.recipients,
+                         subject=args.subject,
+                         message=args.message,
+                         expires=None,
+                         options=troptions)['created']
 #print(transfer)
 
 try:
