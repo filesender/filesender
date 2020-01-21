@@ -849,7 +849,7 @@ User language detection is done in the following order:
 
 ### api_secret_aup_enabled
 
-* __description:__ If set to 'true' the AuP (terms of service) must be accepted before the api secret can be created.
+* __description:__ If set to 'true' the AuP (terms of service) must be accepted before the api secret can be created. Note that if this setting is enabled then auth_remote_user_autogenerate_secret will be disabled.
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ false
