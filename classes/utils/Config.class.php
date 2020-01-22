@@ -316,6 +316,14 @@ class Config
             $iterations = Crypto::getPBKDF2IterationCountForYear($y);
             self::$parameters['encryption_password_hash_iterations_new_files'] = $iterations;
         }
+
+        //
+        // you can not autogenerate the secret and expect the user to accept aup
+        // at the same time.
+        if( self::get('api_secret_aup_enabled')) {
+            self::$parameters['auth_remote_user_autogenerate_secret'] = false;
+        }
+        
         
         // verify classes are happy
         Guest::validateConfig();

@@ -285,6 +285,12 @@ class RestEndpointUser extends RestEndpoint
                 unset($_SESSION['lang']);
             }
         }
+        if( $data->apisecretcreate ) {
+            $user->authSecretCreate();
+        }
+        if( $data->apisecretdelete ) {
+            $user->authSecretDelete();
+        }
         
         return true;
     }

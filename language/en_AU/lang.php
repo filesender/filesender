@@ -536,3 +536,9 @@ $lang['you_can_send_client_logs'] = 'In order to help your support team to find 
 
 $lang['configuration'] = 'configuration';
 $lang['python_cli_client_setup_information'] = 'To use the Python CLI Client configuration, create a directory ~/.filesender and copy the configuration file filesender.py.ini to the directory ~/.filesender. The configuration file is optional but is recommended as it means you do not always have to specify all parameters on the command line. The python CLI Client can be downloaded to any location and requires Python version 3 to execute.<p>With the configuration file in place you can upload a file using <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>';
+$lang['api_secret_delete'] = 'Delete API secret';
+$lang['api_secret_recreate'] = 'Create API secret';
+$lang['api_secret_use_the_button_below_to_create'] = 'Please use the button below to create';
+$lang['confirm_api_secret_create_aup'] = 'Please confirm that you and read and accept the use policy for remote authentication with this site. Please see the latest <a href="?s=apisecretaup">policy for remote authentication</a>.';
+$lang['api_secret_aup_text'] = '<h1>Welcome to {cfg:site_name}</h1><p>This site has no additional explicit policy for remote authentication</p>';
+$lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
