@@ -200,6 +200,7 @@ def postTransfer(user_id, files, recipients, subject=None, message=None, expires
       'subject': subject,
       'message': message,
       'expires': expires,
+      'aup_checked':1,
       'options': options
     },
     None,
