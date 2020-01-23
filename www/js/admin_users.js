@@ -81,8 +81,28 @@ $(function() {
             var id = $(this).closest('.user').attr('data-id');
             show_logs(id);
         });
+        u.find('[data-action="delete-api-secret"]').on('click', function() {
+            var id = $(this).closest('.user').attr('data-id');
+
+            var p = {};
+            p['apisecretdelete'] = '1';
+        
+            filesender.client.updateUserIDPreferences( id, p, function() {
+                filesender.ui.notify('success', lang.tr('preferences_updated'));
+            });
+        });
     };
 
+    section.find('[data-action="all-delete-api-secret"]').on('click', function() {
+        var p = {};
+        p['apisecretdelete'] = '1';
+        filesender.ui.confirm(lang.tr('confirm_api_secret_delete_all'), function() {
+            filesender.client.updateUserIDPreferences( '@all', p, function() {
+                filesender.ui.notify('success', lang.tr('preferences_updated'));
+            });
+        });
+    });
+    
     var search_user = function() {
         results.removeClass('no_results').addClass('searching');
         filesender.client.get('/user', function(matches) {

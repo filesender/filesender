@@ -248,9 +248,8 @@ class RestEndpointUser extends RestEndpoint
         if (!Auth::isAuthenticated()) {
             throw new RestAuthenticationRequiredException();
         }
-        
         // Check ownership if specific user id given
-        if ($id) {
+        if ($id && $id!='@all') {
             $user = User::fromId($id);
             
             if (!Auth::user()->is($user) && !Auth::isAdmin()) {
@@ -289,7 +288,17 @@ class RestEndpointUser extends RestEndpoint
             $user->authSecretCreate();
         }
         if( $data->apisecretdelete ) {
-            $user->authSecretDelete();
+            if ($id && $id=='@all')
+            {
+                if (!$user->is(Auth::user()) && !Auth::isAdmin()) {
+                    throw new RestAdminRequiredException();
+                }
+                User::authSecretDeleteAll();
+            }
+            else
+            {
+                $user->authSecretDelete();
+            }
         }
         
         return true;

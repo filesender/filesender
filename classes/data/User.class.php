@@ -212,6 +212,10 @@ class User extends DBObject
         $this->auth_secret_created = null;
         $this->save();
     }
+    public static function authSecretDeleteAll() {
+        $statement = DBI::prepare('update '.self::getDBTable().' set auth_secret_created=null, auth_secret=null ');
+        $statement->execute(array());
+    }
     
     /**
      * Loads user from Auth attributes, handling cache
@@ -323,10 +327,14 @@ class User extends DBObject
         // Escape special chars
         $match = str_replace(array('%', '_'), array('\\%', '\\_'), $match);
 
+        $escapeClause = '';
+        if( DBLayer::isMySQL() ) {
+            $escapeClause = " ESCAPE '\\\\' ";
+        }
         $sql = "select u.* from "
              . User::getDBTable() . " u,"
              . " " . Authentication::getDBTable()
-             . " a where a.id = u.authid and a.saml_user_identification_uid like :match ESCAPE '\\\\' ";
+             . " a where a.id = u.authid and a.saml_user_identification_uid like :match " . $escapeClause;
         $statement = DBI::prepare($sql);
         $placeholders =  array(':match' => '%'.$match.'%');
         $statement->execute($placeholders);
