@@ -693,6 +693,9 @@ window.filesender.client = {
     updateUserPreferences: function(preferences, callback) {
         return this.put('/user', preferences, callback);
     },
+    updateUserIDPreferences: function(id, preferences, callback) {
+        return this.put('/user/' + id + '/', preferences, callback);
+    },
     
     getUserQuota: function(callback, onerror) {
         this.get('/user/@me/quota', callback, {ignore_authentication_required: true});
