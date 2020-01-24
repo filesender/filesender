@@ -78,7 +78,8 @@ class DBView
     }
    public static function cast_as_number(
         $dbtype,
-        $basecolname
+        $basecolname,
+        $viewcolname = ''
     ) {
         if (!strlen($viewcolname)) {
             $viewcolname = $basecolname . "_as_number";
