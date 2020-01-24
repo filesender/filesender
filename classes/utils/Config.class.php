@@ -228,7 +228,7 @@ class Config
             }
         }
 
-        // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
+        // update max_system_upload_size if php.ini post_max_size and upload_max_filesize is set lower
         $max_system_upload_size = min(
             Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,
             Utilities::sizeToBytes(ini_get('upload_max_filesize'))

@@ -664,14 +664,6 @@ On **Debian**, run:
 
 ## Manual
 
-To allow for max. 2 GB Flash uploads change these settings to the values indicated:
-
-	max_input_time = 3600 ; in seconds
-	upload_max_filesize = 2047M ; in M, the default value is 2MB
-	post_max_size = 2146446312 ; in M, 2047M + 10K
-
-* **NOTE**: when you edit your FileSender config.php remember to change `$config['max_flash_upload_size']` to match your `upload_max_filesize`. If they are not the same FileSender will use the lowest value as the actual maximum upload size for Flash uploads.
-
 Ensure the php temporary upload directory points to a location with enough space:
 
 	upload_tmp_dir = /tmp

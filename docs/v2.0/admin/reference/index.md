@@ -76,7 +76,7 @@ The <...> is set in the SAML2 message received by
 
 ## fall-back for non-html5 browsers
 
-no longer flash: now normal html post.  User can still select multiple files, when uploading a hidden iframe takes care of the upload.  Progress event through polling the server.  How often polling is done is defined by legacy_upload_progress_refresh_period.
+This uses an html post.  User can still select multiple files, when uploading a hidden iframe takes care of the upload.  Progress event through polling the server.  How often polling is done is defined by legacy_upload_progress_refresh_period.
 
 ## TeraSender high speed upload module
 
