@@ -49,7 +49,7 @@
     </tr>
     
     <tr class="searching">
-        <td colspan="3">{tr:searching}</td>
+        <td colspan="2">{tr:searching}</td>
     </tr>
     <tr class="no_results">
         <td colspan="2">{tr:no_results}</td>
