@@ -420,6 +420,8 @@ $(function() {
                 filter = filter.split('/');
                 if(filter.length != 3) filter = null;
             }
+
+            var filterid = null;
             
             if(filter) {
                 var flt = $('<div class="filtered" />').text(lang.tr('filtered_transfer_log')).prependTo(popup);
@@ -428,10 +430,12 @@ $(function() {
                     e.preventDefault();
                     $(this).closest('.wide_info').find('table tr').show('fast');
                     $(this).closest('.filtered').hide('fast');
+                    filtered = false;
+                    filterid = null;
                     return false;
                 });
             }
-            
+
             var tb = $('<tbody />').appendTo(tbl);
             for(var i=0; i<log.length; i++) {
                 var tr = $('<tr />').appendTo(tb);
@@ -441,6 +445,7 @@ $(function() {
                     var v = log[i][filter[0]];
                     if(v && v.type) {
                         if(v.type.toLowerCase() == filter[1]) {
+                            filterid = filter[2];
                             if(v.id != filter[2]) filtered = true;
                         } else filtered = true;
                     }
@@ -472,7 +477,7 @@ $(function() {
                 e.stopPropagation();
                 e.preventDefault();
                 
-                filesender.client.getTransferAuditlogByEmail(transfer_id, function() {
+                filesender.client.getTransferAuditlogByEmail(transfer_id, filterid, function() {
                     filesender.ui.notify('success', lang.tr('email_sent'));
                 });
                 
@@ -485,22 +490,20 @@ $(function() {
     };
     
     $('[data-transfer] .auditlog a').button().on('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        auditlogs($(this).closest('tr').attr('data-id'));
-        return false;
-    });
-    
-    $('[data-action="auditlog"]').on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'));
     });
     
-    $('.transfer_details .recipient [data-action="auditlog"]').on('click', function() {
+    
+    $('.transfer_details .recipient [data-action="auditlog"]').on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'), 'author/recipient/' + $(this).closest('.recipient').attr('data-id'));
     });
-    
-    $('.transfer_details .file [data-action="auditlog"]').on('click', function() {
+
+    $('.transfer_details .file [data-action="auditlog"]').on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'), 'target/file/' + $(this).closest('.file').attr('data-id'));
+    });
+
+    $('[data-action="auditlog"]').not('.transfer_details .file [data-action="auditlog"]').on('click', function(e) {
+        auditlogs($(this).closest('tr').attr('data-id'));
     });
     
     // Downloadlinks auto-selection
