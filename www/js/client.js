@@ -682,8 +682,12 @@ window.filesender.client = {
         return this.get('/transfer/' + id + '/auditlog', callback);
     },
     
-    getTransferAuditlogByEmail: function(id, callback) {
-        return this.get('/transfer/' + id + '/auditlog/mail', callback);
+    getTransferAuditlogByEmail: function(id, filterid, callback) {
+        var tailer = '';
+        if( filterid ) {
+            tailer = '/file/' + filterid;
+        }
+        return this.get('/transfer/' + id + '/auditlog/mail' + tailer, callback);
     },
     
     getLegacyUploadProgress: function(key, callback, error) {
