@@ -452,7 +452,11 @@ $(function() {
                 var lid = 'report_event_' + log[i].event;
                 
                 var rpl = log[i];
-                rpl[log[i].target.type.toLowerCase()] = log[i].target;
+                var ttlc = log[i].target.type.toLowerCase();
+                rpl[ttlc] = log[i].target;
+                if( rpl[ttlc]['name'] && !rpl[ttlc]['path'] ) {
+                    rpl[ttlc]['path'] = rpl[ttlc]['name'];
+                }
                 
                 $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
                 
