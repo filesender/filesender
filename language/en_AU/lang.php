@@ -544,3 +544,7 @@ $lang['api_secret_aup_text'] = '<h1>Welcome to {cfg:site_name}</h1><p>This site 
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
 $lang['perform_these_actions_on_all_users'] = 'Perform these actions on all users';
 $lang['confirm_api_secret_delete_all'] = 'Are you sure you wish to delete the API secret for all users in the system?';
+$lang['user_profile_send_client_logs_description_text'] = 'Send the logs from your web browser to the server';
+$lang['client_logs_cleared'] = 'Client logs have been cleared';
+$lang['clear_client_logs'] = 'Clear client logs';
+

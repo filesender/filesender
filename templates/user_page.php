@@ -168,6 +168,23 @@ EOT;
 
     <h2>{tr:actions}</h2>
 
+        {tr:user_profile_send_client_logs_description_text}
+    
+    <div class="send_client_logs">
+        <a href="#">
+            <span class="fa fa-lg fa-send"></span>
+            {tr:send_client_logs}
+        </a>
+    </div>
+
+    <div class="clear_client_logs">
+        <a href="#">
+            <span class="fa fa-lg fa-times"></span>
+            {tr:clear_client_logs}
+        </a>
+    </div>
+    <br/>
+    
         {tr:user_profile_delete_about_description_text}
     
     <div class="delete_my_account">
@@ -176,7 +193,9 @@ EOT;
             {tr:delete_my_account}
         </a>
     </div>
-  
+
+
+    
 </div>
 
 <script type="text/javascript" src="{path:js/user_page.js}"></script>

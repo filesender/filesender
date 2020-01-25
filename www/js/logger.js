@@ -73,6 +73,13 @@ window.filesender.logger = {
         }
     },
 
+    clear: function() {
+        this.stash = [];
+        if(filesender.supports.localStorage) {
+            window.localStorage.setItem('client_logs', JSON.stringify(this.stash))
+        }
+    },
+
     /**
      * Send logs to server
      *
