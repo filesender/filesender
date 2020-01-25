@@ -261,6 +261,7 @@ class RestEndpointTransfer extends RestEndpoint
                             break;
                             
                         case 'File': // Actions on file gets file name, file size and upload time added
+                            $target_data['path'] = $target->path;
                             $target_data['name'] = $target->name;
                             $target_data['size'] = $target->size;
                             
