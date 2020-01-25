@@ -937,7 +937,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ 5.  Setting this to 0 is not a wise choice as it will make the timer refresh every millisecond (the min. value for a JavaScript timer)
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  Before version 2.0 a flash component was used for legacy uploads.  As of version 2.0 this is replaced by a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</span>
+* __comment:__ Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  This uses a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</span>
 
 ### max_legacy_file_size
 
@@ -946,7 +946,6 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __type:__ int
 * __default:__ 2147483648 (2GB)
 * __available:__ since version 1.0
-* __1.x name:__ max_flash_upload_size
 * __comment:__ Files are uploaded serially.  A hidden iframe and hidden form is created for each file, containing the required data (session key for upload etc.).  A single file element is cloned into each hidden form.  This form is submitted to the hidden iframe which then uploads the file.  At the end of the upload the server sends a bit of javascript which triggers the next upload in the queue.  Each file is an "entire file at once" upload rather then the chunked upload used to get over the 2GB limit of 32 bit browsers.
 
 ### max_transfer_size

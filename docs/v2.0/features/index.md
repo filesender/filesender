@@ -6,14 +6,6 @@ title: Detailed feature list
 
 This document lists most of the features currently implemented in the 2.0-beta1 code.  Please note that while most of the features are stable, some features may disappear or change.
 
-## Summarised changes compared to version 1.x
-
-* New feature: multi-file transfer of unlimited size files with drag & drop support
-* New feature: fine-grained email receipt control
-* New feature: user-accessible transfer audit log
-* Removed dependency on Flash for uploads with legacy browsers without HTML5 FileAPI support.  Note the per-file limit with legacy browsers is 2GB.
-* REST API
-
 # User visible features
 
 ## Multi-file transfer of any size
@@ -29,7 +21,7 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 	* Can detect whether a file was actually downloaded (but for the last download chunk).   This also means download completed emails are now sent once the file is actually downloaded, not when the download starts.
 	* Show a warning when downloading (to) a file > 2GB on Mac that you need a different unarchiver.
 * Automatic deletion of transfers
-* Flash-free legacy multi-file upload for older browsers lacking HTML5 FileAPI upload capability.  Not as pretty but it does work.
+
 
 ## Easy to use UI
 
