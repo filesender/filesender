@@ -548,3 +548,4 @@ $lang['user_profile_send_client_logs_description_text'] = 'Send the logs from yo
 $lang['client_logs_cleared'] = 'Client logs have been cleared';
 $lang['clear_client_logs'] = 'Clear client logs';
 
+$lang['transfer_information'] = 'Information about this transfer';

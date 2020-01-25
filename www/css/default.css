@@ -369,6 +369,16 @@ table.list thead tr {
     font-weight: bold;
 }
 
+table.list .subheader tr {
+    background-color: #edd;
+    font-weight: bold;
+}
+
+td .desc {
+    text-align: right;
+}
+
+
 .pager_bottom_nav {
     background-color: #eee;
     text-align: right;

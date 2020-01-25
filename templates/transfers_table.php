@@ -11,6 +11,7 @@
     $haveNext = 0;
     $havePrev = 0;
 
+
     // This allows us to key informational displays to a large
     // part of the row.
     $maxColSpan = 8;
@@ -179,7 +180,7 @@
             <td class="expires" data-rel="expires">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
-            
+
             <td class="actions">
                 <div style="margin:3px">
                     <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
@@ -210,46 +211,82 @@
                 <div class="collapse">
                     <span class="clickable fa fa-minus-circle fa-lg" title="{tr:hide_details}"></span>
                 </div>
-                
-                <div class="general">
-                    <div class="transfer_id">
-                        {tr:transfer_id} : <?php echo $transfer->id ?>
-                    </div>
-                    <div>
-                        {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?>
-                    </div>
-                    <div>
-                        {tr:expires} : <span data-rel="expires"><?php echo Utilities::formatDate($transfer->expires) ?></span>
-                    </div>
-                    <div>
-                        {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?>
-                    </div>
-                    <div>
-                        {tr:with_identity} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?>
-                    </div>
-                    <?php if($show_guest) { ?>
-                    <div>
-                        {tr:guest} : <?php if($transfer->guest) echo Template::sanitizeOutputEmail($transfer->guest->email) ?>
-                    </div>
-                    <?php } ?>
-                    <div class="options">
-                        {tr:options} :
-                        <?php if(count($transfer->options)) { ?>
-                        <ul class="options">
-                            <li>
-                            <?php echo implode('</li><li>', array_map(function($o) {
-                                return Lang::tr($o);
-                            }, array_keys(array_filter($transfer->options)))) ?>
-                            </li>
-                        </ul>
-                        <?php } else echo Lang::tr('none') ?>
-                    </div>
+
+
+                <div>
+                    {tr:transfer_information}
+                </div>
+                <table class="general">
+                    <thead class="subheader">
+                        <tr class="lightheader">
+                            <td class="desc">{tr:description}</td>
+                            <td>{tr:value}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="desc">{tr:transfer_id}</td>
+                            <td><?php echo $transfer->id ?></td>
+                        </tr>
+                        <tr>
+                            <td class="desc">{tr:created}</td>
+                            <td><?php echo Utilities::formatDate($transfer->created) ?></td>
+                        </tr><tr>
+                            <td class="desc">{tr:expires}</td>
+                            <td><span data-rel="expires"><?php echo Utilities::formatDate($transfer->expires) ?></span></td>
+                        </tr><tr>
+                            <td class="desc">{tr:transfer_expired}</td>
+                            <td><span data-rel="is_expired"><?php echo ($transfer->isExpired()?'{tr:yes}':'{tr:no}') ?></span></td>
+                        </tr><tr>
+                            <td class="desc">{tr:size}</td>
+                            <td><?php echo Utilities::formatBytes($transfer->size) ?></td>
+                        </tr><tr>
+                            <td class="desc">{tr:with_identity}</td>
+                            <td><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td>
+                        </tr>
+
+                        <?php if( !$transfer->get_a_link ) { ?>
+                            <tr>
+                                <td class="desc">{tr:subject}</td>
+                                <td><?php echo $transfer->subject ?></td>
+                            </tr><tr>
+                                <td class="desc">{tr:message}</td>
+                                <td><?php echo $transfer->message ?></td>
+                            </tr>
+                        <?php } ?>
+
                     
-                    <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
-                    <div class="download_link">
-                        <a href="<?php echo $transfer->first_recipient->download_link ?>">{tr:download_link}</a> : <input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" />
-                    </div>
-                    <?php } ?>
+                        <?php if($show_guest) { ?>
+                            <tr>
+                                <td class="desc">{tr:guest}</td>
+                                <td><?php if($transfer->guest) echo Template::sanitizeOutputEmail($transfer->guest->email) ?></td>
+                            </tr>
+                        <?php } ?>
+
+                        <tr>
+                            <td class="desc">{tr:options}</td>
+                            <td><div class="options">
+                                <?php if(count($transfer->options)) { ?>
+                                    <ul class="options">
+                                        <li>
+                                            <?php echo implode('</li><li>', array_map(function($o) {
+                                                return Lang::tr($o);
+                                            }, array_keys(array_filter($transfer->options)))) ?>
+                                        </li>
+                                    </ul>
+                                <?php } else echo Lang::tr('none') ?>
+                            </div>
+                            </td>
+                        </tr>
+                    
+                        <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+                            <tr class="download_link desc">
+                                <td><a href="<?php echo $transfer->first_recipient->download_link ?>">{tr:download_link}</a></td>
+                                <td><input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" /></td>
+                            </tr>
+                        <?php } ?>
+                       </tbody>
+                    </table>
                 </div>
                 
                 <?php if($audit) { ?>
