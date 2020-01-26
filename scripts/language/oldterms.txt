@@ -28,6 +28,10 @@ aggregate_stats_storage-free-size
 aggregate_stats_upload_maxsize_ended
 anonymous
 anonymous_details
+api_secret_aup_text
+api_secret_delete
+api_secret_recreate
+api_secret_use_the_button_below_to_create
 archive_download
 archive_message
 archive_tar_download
@@ -68,8 +72,10 @@ cancel
 cannot_alter_closed_transfer
 cannot_open_input_file
 clear_all
+clear_client_logs
 click_to_delete_file
 click_to_delete_recipient
+client_logs_cleared
 client_logs_sent
 close
 closed_transfers
@@ -81,6 +87,9 @@ config_override_disabled
 config_override_not_allowed
 config_override_validation_failed
 config_overriden
+configuration
+confirm_api_secret_create_aup
+confirm_api_secret_delete_all
 confirm_close_transfer
 confirm_delete_file
 confirm_delete_guest
@@ -101,6 +110,8 @@ count
 count_from_date_to_date
 created
 created_transfers
+crypto_pbkdf2_dialog
+crypto_pbkdf2_dialog_with_expected
 daily_summary
 database_access_failure
 date
@@ -309,6 +320,7 @@ pager_more
 password_hashing_performance
 pause
 paused
+perform_these_actions_on_all_users
 preferences_updated
 privacy_page
 privacy_page_auditlog_lifetime
@@ -320,6 +332,7 @@ privacy_page_translatable_emails_lifetime
 privacy_text
 profile_page_text_linking_to_admin_page
 profile_page_text_linking_to_privacy_page
+python_cli_client_setup_information
 quota_usage
 reader_not_supported
 reason
@@ -472,6 +485,7 @@ terasender_worker_failed_to_start
 testterm
 time_format
 time_to_complete_ms
+time_to_complete_s
 to
 too_long_since_any_data_was_last_sent
 tracking_event_not_found
@@ -491,6 +505,7 @@ transfer_file_name_invalid
 transfer_files_incomplete
 transfer_host_quota_exceeded
 transfer_id
+transfer_information
 transfer_maximum_size_exceeded
 transfer_no_files
 transfer_no_recipients
@@ -511,6 +526,7 @@ turning_on_guests_get_a_link_disables_can_only_send_to_me
 undergoing_maintenance
 unexpected_file
 unknown_page
+upload_all_terasender_workers_completed_pbkdf2
 upload_complete
 upload_log_header
 upload_page
@@ -539,6 +555,7 @@ user_page
 user_preferences
 user_preferences_body
 user_profile_delete_about_description_text
+user_profile_send_client_logs_description_text
 user_quota
 user_remote_authentication
 user_remote_authentication_body
@@ -556,3 +573,4 @@ yes
 you_can_report_exception
 you_can_report_exception_by_email
 you_can_send_client_logs
+you_generated_this_auth_secret_at
