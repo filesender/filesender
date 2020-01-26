@@ -816,6 +816,9 @@ class Transfer extends DBObject
         if ($property == 'is_encrypted') {
             return $this->options['encryption'];
         }
+        if ($property == "get_a_link") {
+            return $this->getOption(TransferOptions::GET_A_LINK);
+        }
         
         if ($property == 'size') {
             return array_sum(array_map(function ($file) {
