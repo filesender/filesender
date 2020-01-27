@@ -52,11 +52,10 @@ window.filesender.logger = {
         if(!(typeof msg).match(/^(number|string)$/))
             msg = JSON.stringify(msg);
 
-        var len = filesender.config ? filesender.config.clientlogs.stash_len : 10;
+        var len = filesender.config ? filesender.config.clientlogs.stashsize : 10;
 
         this.stash.push(msg);
         this.stash = this.stash.slice(-1 * len);
-
         if(filesender.supports.localStorage) {
             window.localStorage.setItem('client_logs', JSON.stringify(this.stash))
         }

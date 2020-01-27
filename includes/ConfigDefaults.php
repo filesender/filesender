@@ -203,7 +203,7 @@ $default = array(
     'disable_directory_upload' => true,
     'directory_upload_button_enabled' => true,
 
-    'clientlogs_stashsize' => 10,
+    'clientlogs_stashsize' => 100,
     'clientlogs_lifetime' => 10,
 
     'automatic_resume_number_of_retries' => 50,

@@ -158,7 +158,7 @@ window.filesender.config = {
 	},
     
     clientlogs: {
-        stash_len: <?php echo ClientLog::stashSize() ?>
+        stashsize: <?php echo ClientLog::stashSize() ?>
     },
 
     automatic_resume_number_of_retries: <?php echo Config::get('automatic_resume_number_of_retries') ?>,
