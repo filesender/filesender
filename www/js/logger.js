@@ -56,7 +56,6 @@ window.filesender.logger = {
 
         this.stash.push(msg);
         this.stash = this.stash.slice(-1 * len);
-
         if(filesender.supports.localStorage) {
             window.localStorage.setItem('client_logs', JSON.stringify(this.stash))
         }
