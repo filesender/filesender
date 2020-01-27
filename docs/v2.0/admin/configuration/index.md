@@ -1852,7 +1852,7 @@ $config['log_facilities'] =
 * __description:__ Client log backfeed stash size
 * __mandatory:__ no
 * __type:__ positive integer
-* __default:__ 10
+* __default:__ 100
 * __available:__ since version 2.0
 * __comment:__ Number of last client console entries that are to be back-fed to the server in case there is a client error.
 
