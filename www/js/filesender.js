@@ -25,11 +25,3 @@ if (window.filesender.supports.workers) {
     }
 }
 
-/**
- * This is a simple implementation to ensure something is available
- * before logger.js replaces things with a more in depth
- * implementation.
- */
-window.filesender.log = function( msg ) {
-    console.log( msg );
-}
