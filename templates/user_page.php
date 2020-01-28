@@ -177,6 +177,13 @@ EOT;
         </a>
     </div>
 
+    <div class="export_client_logs">
+        <a href="#">
+            <span class="fa fa-lg fa-save"></span>
+            {tr:export_client_logs}
+        </a>
+    </div>
+    
     <div class="clear_client_logs">
         <a href="#">
             <span class="fa fa-lg fa-times"></span>

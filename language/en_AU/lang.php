@@ -549,3 +549,5 @@ $lang['client_logs_cleared'] = 'Client logs have been cleared';
 $lang['clear_client_logs'] = 'Clear client logs';
 
 $lang['transfer_information'] = 'Information about this transfer';
+
+$lang['export_client_logs'] = 'Export client logs to a file...';
