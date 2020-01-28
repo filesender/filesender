@@ -287,6 +287,7 @@
                         <?php } ?>
                        </tbody>
                     </table>
+                </div>
                 
                 <?php if($audit) { ?>
                 <div class="auditlog">

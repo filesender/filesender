@@ -225,8 +225,8 @@ window.filesender.terasender = {
      */
     error: function(error, origin) {
         if(filesender.config.log) {
-            window.filesender.log('[terasender ' + (origin ? origin : 'driver') + ' error] ' + error.message + (error.details ? ', details follow :' : ''));
-            if(error.details) window.filesender.log(error.details); // Whatever type it is ...
+            console.log('[terasender ' + (origin ? origin : 'driver') + ' error] ' + error.message + (error.details ? ', details follow :' : ''));
+            if(error.details) console.log(error.details); // Whatever type it is ...
         }
         
         error.message = 'terasender_' + error.message;
@@ -436,8 +436,8 @@ window.filesender.terasender = {
 
                 this.setMinUploadedOffsetFromActiveWorkers( job );
                 
-                window.filesender.log('terasender_failed_after_many_retries'
-                                      + ' offset ' + data.chunk.start + ' fileid ' + data.file.id );
+                console.log('terasender_failed_after_many_retries'
+                            + ' offset ' + data.chunk.start + ' fileid ' + data.file.id );
                 this.error({message: 'failed_after_many_retries' });
                 this.stop();
                 
