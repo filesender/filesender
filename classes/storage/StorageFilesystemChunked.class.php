@@ -126,7 +126,7 @@ class StorageFilesystemChunked extends StorageFilesystem
         $pass=false;
         while (!$pass && $i<100) {
             $fh = fopen($chunkFile, 'wb');
-            if ($fs !== false) {
+            if ($fh !== false) {
                 $written = fwrite($fh, $data, $chunk_size);
                 fclose($fh);
                 $pass = $chunk_size == $written;
