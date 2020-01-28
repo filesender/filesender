@@ -39,15 +39,6 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
-function download(filename, text,contentType) {
-    if(!contentType) contentType = 'application/octet-stream';
-    var a = document.createElement('a');
-    var blob = new Blob([text], {'type':contentType});
-    a.href = window.URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-}
-
 window.filesender.logger = {
     // Log stash (memory)
     stash: [],
@@ -97,17 +88,7 @@ window.filesender.logger = {
         filesender.client.put('/clientlogs/@me', this.stash, function(data) {
             if(callback) callback(data);
         });
-    },
-
-    export: function() {
-        var d = new Date();
-        var obj = { type: "filesender-client-log",
-                    generated: d.toLocaleString(),
-                    log: this.stash
-                  };
-        download('test.txt', JSON.stringify(obj, null, '\t'));
     }
-    
 };
 
 filesender.logger.nopwatcher = {
@@ -191,17 +172,6 @@ jQuery.each( wrap, function(i,val) {
         f(msg);
     };
 });
-
-
-/**
- * Replace the filesender log function with a forward to logger.log
- * to collect logging information in the clientlogs
- */
-window.filesender.log = function( msg )
-{
-    filesender.logger.log(msg);
-    console.log(msg);
-}
 
 // Capture js errors
 window.addEventListener('error', function(e) {

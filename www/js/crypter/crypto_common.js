@@ -8,9 +8,6 @@ if (!('ui' in window.filesender)) {
         console.log(e);
     }
 }
-window.filesender.log = function( msg ) {
-    console.log( msg );
-}
 
 window.filesender.crypto_common = function () {
     return {
