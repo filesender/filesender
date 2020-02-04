@@ -108,47 +108,43 @@ class StorageFilesystemChunked extends StorageFilesystem
     public static function writeChunk(File $file, $data, $offset = null)
     {
         $chunk_size = strlen($data);
-        
+
         $path = self::buildPath($file);
-        
+
         $free_space = disk_free_space($path);
-        //Logger::info('MD Chunked: writeChunk free_space:'.$free_space);
         if ($free_space <= $chunk_size) {
             throw new StorageNotEnoughSpaceLeftException($chunk_size);
         }
-        
+
         $file_path = $path.$file->uid;
-        
 
         if (!file_exists($file_path)) {
-            //Logger::info('MD Chunked: Chunk folder missing for file. Creating');
             mkdir($file_path, 0770, true);
         }
         $chunkFile=self::getChunkFilename($file_path, $offset);
         $i=0;
-        $fh = fopen($chunkFile, 'wb');
-        while ($fh === false && $i<100) {
-            sleep(1);
+        $pass=false;
+        while (!$pass && $i<100) {
             $fh = fopen($chunkFile, 'wb');
-            $i++;
-        }
-        if ($fh !== false) {
-            $written = fwrite($fh, $data, $chunk_size);
-            fclose($fh);
-
-            if ($chunk_size != $written) {
-                Logger::info('writeChunk() Can not write to : '.$chunkFile);
-                throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
+            if ($fh !== false) {
+                $written = fwrite($fh, $data, $chunk_size);
+                fclose($fh);
+                $pass = $chunk_size == $written;
             }
-
-            return array(
-                'offset' => $offset,
-                'written' => $written
-            );
-        } else {
-            Logger::info('MD Chunked: writeChunk() Can not write to : '.$chunkFile);
-            throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file);
+            $i++;
+            if (!$pass) {
+                sleep(1);
+            }
         }
+        if (!$pass) {
+            Logger::info('writeChunk() Can not write to : '.$chunkFile);
+            throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
+        }
+
+        return array(
+            'offset' => $offset,
+            'written' => $written
+        );
     }
     
     /**

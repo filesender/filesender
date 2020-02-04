@@ -69,6 +69,7 @@ $default = array(
     
     'aup_default' => false,
     'aup_enabled' => false,
+    'api_secret_aup_enabled' => false,
     'mac_unzip_name' => 'The Unarchiver',
     'mac_unzip_link' => 'https://theunarchiver.com/',
     'ban_extension' => 'exe,bat',
@@ -202,7 +203,7 @@ $default = array(
     'disable_directory_upload' => true,
     'directory_upload_button_enabled' => true,
 
-    'clientlogs_stashsize' => 10,
+    'clientlogs_stashsize' => 100,
     'clientlogs_lifetime' => 10,
 
     'automatic_resume_number_of_retries' => 50,
@@ -247,6 +248,7 @@ $default = array(
     // https://docs.filesender.org/v2.0/admin/configuration/#encryption_password_hash_iterations_new_files
     //
     'encryption_password_hash_iterations_new_files' => 150000,
+
     
     'transfer_options' => array(
         'email_me_copies' => array(

@@ -228,7 +228,7 @@ class Config
             }
         }
 
-        // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
+        // update max_system_upload_size if php.ini post_max_size and upload_max_filesize is set lower
         $max_system_upload_size = min(
             Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,
             Utilities::sizeToBytes(ini_get('upload_max_filesize'))
@@ -316,6 +316,14 @@ class Config
             $iterations = Crypto::getPBKDF2IterationCountForYear($y);
             self::$parameters['encryption_password_hash_iterations_new_files'] = $iterations;
         }
+
+        //
+        // you can not autogenerate the secret and expect the user to accept aup
+        // at the same time.
+        if( self::get('api_secret_aup_enabled')) {
+            self::$parameters['auth_remote_user_autogenerate_secret'] = false;
+        }
+        
         
         // verify classes are happy
         Guest::validateConfig();

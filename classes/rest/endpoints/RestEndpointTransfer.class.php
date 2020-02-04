@@ -133,7 +133,7 @@ class RestEndpointTransfer extends RestEndpoint
      * @throws RestAuthenticationRequiredException
      * @throws RestOwnershipRequiredException
      */
-    public function get($id = null, $property = null, $property_id = null)
+    public function get($id = null, $property = null, $property_id = null, $filtertype = null, $filterid = null )
     {
 
         // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer
@@ -216,6 +216,18 @@ class RestEndpointTransfer extends RestEndpoint
                 if ($property_id == 'mail') {
                     // ... to be sent by email
                     $report = new Report($transfer);
+                    if( $filtertype && $filterid ) {
+                        $files = $transfer->files;
+                        $report = null;
+                        foreach ($files as $file) {
+                            if( $file->id == $filterid ) {
+                                $report = new Report($file);
+                            }
+                        }
+                        if( !$report ) {
+                            throw new RestBadParameterException('filterid');
+                        }
+                    }
                     $report->sendTo(Auth::user());
                     return true;
                 }
@@ -261,6 +273,7 @@ class RestEndpointTransfer extends RestEndpoint
                             break;
                             
                         case 'File': // Actions on file gets file name, file size and upload time added
+                            $target_data['path'] = $target->path;
                             $target_data['name'] = $target->name;
                             $target_data['size'] = $target->size;
                             

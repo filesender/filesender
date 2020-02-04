@@ -48,7 +48,7 @@ window.filesender.pbkdf2dialog = {
 
     // if the delay causes the show dialog method
     // to be run after the action is already complete don't
-    // flash the dialog at the user
+    // quickly flash the dialog at the user
     already_complete: false,
 
     // remember how long pbkdf2 took on this machine

@@ -34,6 +34,31 @@ $(function() {
     var page = $('.user_page');
     if(!page.length) return;
 
+    $('.send_client_logs a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        window.filesender.logger.log('user profile page / send client logs');
+        window.filesender.logger.send(
+            function(e) {
+                filesender.ui.notify('success', lang.tr('client_logs_sent'));
+            });
+        
+        return false;
+    });
+
+    $('.clear_client_logs a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        window.filesender.logger.clear();
+        window.filesender.logger.log('user profile page / clear client logs');
+        filesender.ui.notify('success', lang.tr('client_logs_cleared'));
+        
+        return false;
+    });
+    
+
     $('.delete_my_account a').button().on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -50,6 +75,48 @@ $(function() {
         
         return false;
     });
+
+    $('.api_secret_delete a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var p = {};
+        p['apisecretdelete'] = '1';
+        
+        filesender.client.updateUserPreferences(p, function() {
+            filesender.ui.notify('success', lang.tr('preferences_updated'));
+            filesender.ui.reload();
+        });
+        
+        return false;
+    });
+
+
+    $('.api_secret_create a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var secret_create = function() {
+            var p = {};
+            p['apisecretcreate'] = '1';
+            
+            filesender.client.updateUserPreferences(p, function() {
+                filesender.ui.notify('success', lang.tr('preferences_updated'));
+                filesender.ui.reload();
+            });
+        };
+
+        if( filesender.config.api_secret_aup_enabled ) {
+            filesender.ui.confirm(lang.tr('confirm_api_secret_create_aup'), function() {
+                secret_create();
+            });
+        } else {
+            secret_create();
+        }
+        
+        return false;
+    });
+    
     
     page.find(':input').on('change', function() {
         var i = $(this);

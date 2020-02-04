@@ -369,6 +369,16 @@ table.list thead tr {
     font-weight: bold;
 }
 
+table.list .subheader tr {
+    background-color: #edd;
+    font-weight: bold;
+}
+
+td .desc {
+    text-align: right;
+}
+
+
 .pager_bottom_nav {
     background-color: #eee;
     text-align: right;
@@ -1309,6 +1319,14 @@ table.guests .guest .to .errors .details {
 
 .user_page .info .readonly {
     border: 1px solid silver;
+    padding: 0.25em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.user_page .info .unknown {
+    border: 1px solid black;
+    background-color: #EABEBE;
     padding: 0.25em;
     overflow-x: auto;
     white-space: nowrap;

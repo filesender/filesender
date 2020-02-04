@@ -248,9 +248,8 @@ class RestEndpointUser extends RestEndpoint
         if (!Auth::isAuthenticated()) {
             throw new RestAuthenticationRequiredException();
         }
-        
         // Check ownership if specific user id given
-        if ($id) {
+        if ($id && $id!='@all') {
             $user = User::fromId($id);
             
             if (!Auth::user()->is($user) && !Auth::isAdmin()) {
@@ -283,6 +282,22 @@ class RestEndpointUser extends RestEndpoint
             // Remove lang from session if there was one, we don't need it anymore as it was saved in user profile
             if (isset($_SESSION) && array_key_exists('lang', $_SESSION)) {
                 unset($_SESSION['lang']);
+            }
+        }
+        if( $data->apisecretcreate ) {
+            $user->authSecretCreate();
+        }
+        if( $data->apisecretdelete ) {
+            if ($id && $id=='@all')
+            {
+                if (!$user->is(Auth::user()) && !Auth::isAdmin()) {
+                    throw new RestAdminRequiredException();
+                }
+                User::authSecretDeleteAll();
+            }
+            else
+            {
+                $user->authSecretDelete();
             }
         }
         

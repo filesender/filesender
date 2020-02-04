@@ -1,7 +1,16 @@
-<h2>{tr:users}</h2>
 
+<h2>{tr:perform_these_actions_on_all_users}</h2>
+    <table class="">
+        <tr>
+            <td>
+                <input type="button" data-action="all-delete-api-secret" value="{tr:api_secret_delete}" />
+            </td>
+        </tr>
+    </table>
+<br/>
+
+<h2>{tr:search_user}</h2>
 <fieldset class="search">
-    <legend>{tr:search_user}</legend>
     
     <input type="text" name="match" /> <input type="button" name="go" value="{tr:search}" />
 </fieldset>
@@ -28,6 +37,7 @@
         
         <td>
             <input type="button" data-action="show-client-logs" value="{tr:show_client_logs}" />
+            <input type="button" data-action="delete-api-secret" value="{tr:api_secret_delete}" />
         </td>
     </tr>
 </table>
@@ -39,7 +49,7 @@
     </tr>
     
     <tr class="searching">
-        <td colspan="3">{tr:searching}</td>
+        <td colspan="2">{tr:searching}</td>
     </tr>
     <tr class="no_results">
         <td colspan="2">{tr:no_results}</td>

@@ -429,7 +429,7 @@ class AuditLog extends DBObject
                           . " set target_id = 'null' "
                           . " where a.target_type = 'Guest' "
                           . " and 0=(select count(*) as c from Guests g "
-                          . "        where g.id = ".DBView::cast_as_number("a.target_id")
+                          . "        where g.id = ".DBView::cast_as_number($dbtype,"a.target_id")
                           . "        limit 1"
                           ."        ) "
         );

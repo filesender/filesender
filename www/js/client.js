@@ -682,8 +682,12 @@ window.filesender.client = {
         return this.get('/transfer/' + id + '/auditlog', callback);
     },
     
-    getTransferAuditlogByEmail: function(id, callback) {
-        return this.get('/transfer/' + id + '/auditlog/mail', callback);
+    getTransferAuditlogByEmail: function(id, filterid, callback) {
+        var tailer = '';
+        if( filterid ) {
+            tailer = '/file/' + filterid;
+        }
+        return this.get('/transfer/' + id + '/auditlog/mail' + tailer, callback);
     },
     
     getLegacyUploadProgress: function(key, callback, error) {
@@ -692,6 +696,9 @@ window.filesender.client = {
     
     updateUserPreferences: function(preferences, callback) {
         return this.put('/user', preferences, callback);
+    },
+    updateUserIDPreferences: function(id, preferences, callback) {
+        return this.put('/user/' + id + '/', preferences, callback);
     },
     
     getUserQuota: function(callback, onerror) {
@@ -715,5 +722,6 @@ window.filesender.client = {
         
         return this.delete('/user/' + id, callback, opts);
     },
-    
+
+
 };

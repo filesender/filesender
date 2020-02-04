@@ -117,4 +117,4 @@ releases.
 * filestorage_filesystem_temp_location (2.0 prototype?)
 * statlog_enable (prototype?): built-in in lifetime parameter
 * auditlog_enable (prototype?): built-in in lifetime parameter
-* max_flash_upload_size: the Flash upload component is now removed.  To present a reliable progress bar to a user, functionality that was first available in PHP 5.4 is required (which functionality?)
+* max_flash_upload_size: the Flash upload component is now removed.
