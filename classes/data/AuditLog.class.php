@@ -89,6 +89,9 @@ class AuditLog extends DBObject
         'Author_ID' => array(
             'author_type' => array(),
             'author_id'   => array()
+        ),
+        'Created' => array(
+            'created' => array()
         )
         
 //        'Type_ID_AType_AID_IP_Event_Created' => array(
