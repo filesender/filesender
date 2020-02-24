@@ -316,7 +316,25 @@ class Utilities
      */
     public static function getClientIP()
     {
-        return isset($_SERVER[Config::get('client_ip_key')]) ? $_SERVER[Config::get('client_ip_key')] : '';
+        $ips = array();
+        
+        $candidates = array_reverse((array)Config::get('client_ip_key'));
+        foreach($candidates as $candidate) {
+            if(!array_key_exists($candidate, $_SERVER)) continue;
+            
+            foreach(explode(',', $_SERVER[$candidate]) as $value) {
+                $ips[] = trim($value);
+            }
+        }
+        
+        $ips = array_filter($ips, function($ip) {
+            return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+        });
+        
+        if(!count($ips))
+            return $_SERVER['REMOTE_ADDR']; // fallback
+        
+        return array_pop($ips);
     }
     
     /**
