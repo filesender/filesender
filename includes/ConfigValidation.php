@@ -37,7 +37,7 @@ if(!file_exists(FILESENDER_BASE.'/config/config.php'))
     die('Configuration file not found');
 
 ConfigValidator::addCheck('site_url', 'string');
-ConfigValidator::addCheck('client_ip_key', 'string');
+ConfigValidator::addCheck('client_ip_key', 'string|array');
 
 ConfigValidator::addCheck('admin', 'string|array');
 ConfigValidator::addCheck('admin_email', 'string');
