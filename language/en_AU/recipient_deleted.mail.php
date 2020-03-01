@@ -11,9 +11,9 @@ subject: Download permission removed
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
-Your permission to download files from transfer n°{transfer.id} has been removed.
+Permission to download files from transfer n°{transfer.id} has been removed.
 
 Best regards,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Best regards,
 </p>
 
 <p>
-    Your permission to download files from transfer n°{transfer.id} has been removed.
+    Permission to download files from transfer n°{transfer.id} has been removed.
 </p>
 
 <p>

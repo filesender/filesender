@@ -11,7 +11,7 @@ subject: Feedback from your {if:target_type=="recipient"}recipient{endif}{if:tar
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 We received an email feedback from your {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif} {target.email}, please find it enclosed.
 
@@ -21,7 +21,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

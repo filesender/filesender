@@ -11,7 +11,7 @@ subject: File no longer available for download
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 The file {file.path} ({size:file.size}) has been deleted from transfer n°{transfer.id} and is no longer available for download.
 
@@ -21,7 +21,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>
