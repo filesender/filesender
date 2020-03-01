@@ -11,7 +11,7 @@ subject: File{if:transfer.files>1}s{endif} successfully uploaded
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 The following {if:transfer.files>1}files have{else}file has{endif} been successfully uploaded to {cfg:site_name}.
 
@@ -29,7 +29,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

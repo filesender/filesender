@@ -11,7 +11,7 @@ subject: Message delivery failure
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 One or more of your recipients failed to receive your message(s) :
 
@@ -31,7 +31,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

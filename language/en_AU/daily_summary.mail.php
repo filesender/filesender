@@ -11,7 +11,7 @@ subject: Transfer daily summary
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 Please find below a summary of downloads for your transfer {transfer.id} (uploaded {date:transfer.created}) :
 
@@ -31,7 +31,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

@@ -11,7 +11,7 @@ subject: Download complete
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 Your download of the {if:files>1}files{else}file{endif} below has ended :
 
@@ -27,7 +27,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

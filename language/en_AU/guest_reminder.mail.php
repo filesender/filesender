@@ -12,7 +12,7 @@ subject: (reminder) {guest.subject}
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 This is a reminder, please find below a voucher which grants access to {cfg:site_name}. You can use this voucher to upload one set of files and make it available for download to a group of people.
 
@@ -29,7 +29,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

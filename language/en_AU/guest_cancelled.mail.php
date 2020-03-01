@@ -11,7 +11,7 @@ subject: Guest voucher cancelled
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 A voucher from {guest.user_email} has been cancelled.
 
@@ -21,7 +21,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

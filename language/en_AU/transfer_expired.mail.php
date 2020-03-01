@@ -12,9 +12,9 @@ subject: (files no longer available) {transfer.subject}
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
-The file shipment n°{transfer.id} has expired and is no longer available for download.
+Transfer n°{transfer.id} has expired and is no longer available for download.
 
 Best regards,
 {cfg:site_name}
@@ -22,11 +22,11 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>
-    The file shipment n°{transfer.id} has expired and is no longer available for download.
+    Transfer n°{transfer.id} has expired and is no longer available for download.
 </p>
 
 <p>

@@ -11,7 +11,7 @@ subject: Guest voucher sent
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 A voucher granting access to {cfg:site_name} has been sent to {guest.email}.
 
@@ -21,7 +21,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

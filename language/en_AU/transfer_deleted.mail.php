@@ -12,9 +12,9 @@ subject: (files no longer available) {transfer.subject}
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
-The transfer n°{transfer.id} has been deleted from {cfg:site_name} by the sender ({transfer.user_email}) and is no longer available for download.
+The transfer n°{transfer.id} has been deleted from {cfg:site_name} by {transfer.user_email} and is no longer available for download.
 
 Best regards,
 {cfg:site_name}
@@ -22,11 +22,11 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>
-    The transfer n°{transfer.id} has been deleted from <a href="{cfg:site_url}">{cfg:site_name}</a> by the sender (<a href="mailto:{transfer.user_email}">{transfer.user_email}</a>) and is no longer available for download.
+    The transfer n°{transfer.id} has been deleted from <a href="{cfg:site_url}">{cfg:site_name}</a> by <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> and is no longer available for download.
 </p>
 
 <p>
