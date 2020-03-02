@@ -321,7 +321,7 @@ A note about colours;
 * __description:__ Show the IP addresses used in reports
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ true
+* __default:__ false
 * __available:__ since version 2.0
 * __comment:__ If you want to hide IP addresses from reports set it to false
 
