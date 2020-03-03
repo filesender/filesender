@@ -232,9 +232,13 @@ class AuditLog extends DBObject
             'author_type',
             'author_id',
             'created',
-            'ip',
-        ))) {
+         ))) {
             return $this->$property;
+        }
+ 
+        if ($property == 'ip') {
+            //Strip out ::ffff: from ipv4 addresses when in ipv6 mode
+            return preg_replace('/^::ffff:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$/', '$1', $this->ip);
         }
         
         if ($property == 'target') {
