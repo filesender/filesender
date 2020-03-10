@@ -1474,6 +1474,7 @@ $(function() {
         filesender.ui.nodes.encryption.show_hide.trigger('change');
         $('#encryption_password_show_container').hide();
         filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
+        filesender.ui.evalUploadEnabled();
     });
 
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
