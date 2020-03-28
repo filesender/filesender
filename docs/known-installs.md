@@ -55,7 +55,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Japan / Okinawa| Okinawa Institute of Science and Technology  | https://filesender.oist.jp  | Sep 2013|
 | Korea    | KREONET  | https://filesender.kreonet.net    | Mar 2014|
 | Malaysia  | MYREN    | https://filesender.myren.net.my    | Oct 2017|
-| Singapore  | SingAREN  | https://filesender.singaren.net.sg/filesender  | Jun 2016|
+| Singapore  | SingAREN  | https://filesender.singaren.net.sg/filesender/  | Jun 2016|
 
 ## HE&R Community installations - Americas
 
