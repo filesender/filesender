@@ -33,7 +33,6 @@ If you want to add your FileSender installation to this list, send an email to f
 | Luxembourg  | RESTENA  | https://fs.restena.lu        | Feb 2011|
 | Moldova  | RENAM    | https://filesender.renam.md      | Aug 2016|
 | Netherlands  | SURFnet  | https://filesender.surf.nl/      | Jun 2010|
-| Netherlands  | Tilburg University      | https://send.uvt.nl/    | May 2012|
 | Norway  | UNINETT  | https://filesender.uninett.no/    | 2009|
 | Poland  | PIONIER  | https://files.pionier.net.pl/      | Apr 2013|
 | Portugal  | FCCN    | https://filesender.fccn.pt      | Jan 2011|
