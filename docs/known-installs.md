@@ -22,7 +22,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Europe  | GEANT    | https://filesender.geant.org/      | Sep 2010|
 | Finland  | FUNET/CSC  | https://filesender.funet.fi/      | Sep 2012|
 | France  | RENATER  | https://filesender.renater.fr/    | Nov 2013|
-| Greece  | Athens University of Applied Science | https://filesender.teiath.gr/ | Mar 2018|
+| Greece  | University of West Attica | https://filesender.uniwa.gr/ | Mar 2018|
 | Hungary  | NIIF    | https://filesender.niif.hu      | Feb 2012|
 | Ireland  | HEAnet  | https://filesender.heanet.ie      | 2009 |
 | Iran    | IPM/IRANET  | https://filesender.ipm.ir      | Aug 2016|
