@@ -19,7 +19,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Cyprus  | CYNET    | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012|
 | Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012|
 | Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012|
-| Europe  | GEANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010|
+| Europe  | GÉANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010|
 | Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012|
 | France  | RENATER  | [https://filesender.renater.fr/](https://filesender.renater.fr/)    | Nov 2013|
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018|
