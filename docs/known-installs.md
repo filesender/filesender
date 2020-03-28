@@ -73,7 +73,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | --- | --- | --- |---|
 | East Africa | UBUNTUNET | https://filesender.ubuntunet.net/ | March 2018|
 | Morocco  | MARWAN  | https://filesender.marwan.ma/filesender  | Feb 2015|
-| South Africa  | SANReN  | https://filesender.sanren.ac.za/filesender  | Apr 2014|
+| South Africa  | SANReN  | https://filesender.sanren.ac.za/filesender/  | Apr 2014|
 | Uganda | RENU | https://filesender.renu.ac.ug/ | Mar 2018|
 
 
