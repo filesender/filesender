@@ -63,7 +63,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | --- | --- | --- |---|
 | Brazil  | RNP    | https://filesender.rnp.br      | Oct 2014|
 | Chili    | REUNA    | https://filesender.reuna.cl      | Sep 2013|
-| Equador   | CEDIA    | https://filesender.cedia.org.ec/filesender/  | Jun 2017|
+| Equador   | CEDIA    | https://filesender.cedia.org.ec  | Jun 2017|
 | Latin-America  | ELCIRA  | https://filesender.redclara.net/filesender/  | Oct 2013|
 | USA    | Internet2  | https://filesender.internet2.edu/    | Jul 2012|
 
