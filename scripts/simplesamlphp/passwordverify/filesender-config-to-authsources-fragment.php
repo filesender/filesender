@@ -32,11 +32,14 @@
 
 require_once dirname(__FILE__).'/../../../includes/init.php';
 
+Logger::setProcess(ProcessTypes::UPGRADE);
+
 $db_host     = Config::get('db_host');
 $db_port     = Config::get('db_port');
 $db_database = Config::get('db_database');
 $db_username = Config::get('db_username');
 $db_password = Config::get('db_password');
+$authsTable = call_user_func('Authentication::getDBTable');
 
 echo <<<EOF
 'filesender-dbauth' => [
@@ -44,7 +47,7 @@ echo <<<EOF
     'dsn' => 'pgsql:host=$db_host;port=$db_port;dbname=$db_database',
     'username' => '$db_username',
     'password' => '$db_password',
-    'query' => 'select saml_user_identification_uid as uid, saml_user_identification_uid as email, passwordhash, created, \'uid\' as eduPersonTargetedID from authentications where saml_user_identification_uid = :username ',
+    'query' => 'select saml_user_identification_uid as uid, saml_user_identification_uid as email, passwordhash, created, \'uid\' as eduPersonTargetedID from $authsTable where saml_user_identification_uid = :username ',
 ],
 
 EOF;
