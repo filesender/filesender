@@ -73,6 +73,11 @@ class Authentication extends DBObject
             'size' => 100,
             'null' => true
         ),
+        'passwordhash' => array(
+            'type' => 'string',
+            'size' => '255',
+            'null' => true
+        ),
     );
     protected static $secondaryIndexMap = array(
         'saml_user_identification_uid' => array(
