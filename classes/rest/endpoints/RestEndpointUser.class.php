@@ -339,4 +339,63 @@ class RestEndpointUser extends RestEndpoint
         // Delete the user (not recoverable)
         $user->delete();
     }
+
+    /**
+     * Create new user
+     *
+     * Call examples :
+     *  /user : create new user from request
+     *
+     * @param string username
+     * @param string password
+     *
+     * @return mixed
+     *
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
+     */
+    public function post($id = null, $add = null)
+    {
+        // Need to be authenticated
+        if (!Auth::isAuthenticated()) {
+            throw new RestAuthenticationRequiredException();
+        }
+        if(!Config::get('using_local_saml_dbauth')) {
+            throw new RestAuthenticationRequiredException();
+        }
+        
+        $user = Auth::user();
+        $userid = -1;
+        $data = $this->request->input;
+        // Raw data
+        $username = $data->username;
+        $password = $data->password;
+        
+        if ($username != "@me" && !Auth::isAdmin()) {
+            throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
+        }
+
+        if( $username == "@me" ) {
+            $username = $user->saml_user_identification_uid;
+        }
+
+        if( $data->remind ) {
+            if(!Auth::isAdmin()) {
+                throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
+            }
+            $user->remindLocalAuthDBPassword( $password );
+            return array(
+                'path' => '/user/'.$username
+            );
+        }
+        
+        $aa = Authentication::ensure( $username );
+        $aa->password = $password;
+        $aa->save();
+
+        return array(
+            'path' => '/user/'.$username
+        );
+        
+    }
 }

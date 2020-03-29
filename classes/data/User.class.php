@@ -716,4 +716,11 @@ class User extends DBObject
             $g->delete();
         }
     }
+
+    public function remindLocalAuthDBPassword( $password )
+    {
+        $user = $this;
+        TranslatableEmail::quickSend('local_authdb_password_reminder', $user, array('password' => $password));
+    }
+    
 }

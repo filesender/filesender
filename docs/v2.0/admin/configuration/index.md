@@ -164,6 +164,7 @@ A note about colours;
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
+        * [using_local_saml_dbauth](#using_local_saml_dbauth)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -1527,6 +1528,20 @@ these iteration counts take to perform on your local machine.
 * __available:__ since version 1.0
 * __1.x name:__ saml_name_attribute
 * __comment:__
+
+
+### using_local_saml_dbauth
+
+* __description:__ enable web interface elements for managing passwords in the filesender database. See scripts/simplesamlphp/passwordverify in the release for details of how to setup your SimpleSAMLphp to authenticate against this information.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ 0
+* __available:__ since version 2.16
+* __comment:__ 
+
+
+
+
 
 ## Authentication: Shibboleth
 

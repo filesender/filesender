@@ -23,6 +23,7 @@ are provided below
   ($config['auth_sp_saml_authentication_source'] ="filesender-dbauth";)
 * Enable the filesender Web interface for managing the user passwords in it's web interface. This will be
   an option to turn on in /opt/filesender/config/config.php.
+  ($config['using_local_saml_dbauth'] = 1;)
 
 
 # Apply a small (mainly two word) change to SQL.php
@@ -74,3 +75,13 @@ vi /opt/filesender/config/config.php
    $config['auth_sp_saml_authentication_source'] ="filesender-dbauth";
 
 ```
+
+# Enable the filesender Web interface for managing the user passwords
+```
+vi /opt/filesender/config/config.php
+   ...
+   // move to end of file
+  $config['using_local_saml_dbauth'] = 1;
+```
+
+
