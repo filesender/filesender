@@ -249,6 +249,11 @@ $default = array(
     //
     'encryption_password_hash_iterations_new_files' => 150000,
 
+
+    // This allows authentication against password hashes in the local filesender db
+    // with the right SAML setup.
+    'using_local_saml_dbauth' => 0,
+    
     
     'transfer_options' => array(
         'email_me_copies' => array(

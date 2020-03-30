@@ -263,6 +263,10 @@ class TranslatableEmail extends DBObject
                 if ($context) {
                     break;
                 }
+                if( $translation_id == 'local_authdb_password_reminder' ) {
+                    $context = $to;
+                    break;
+                } 
                 
                 // no break
             default:

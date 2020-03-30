@@ -677,6 +677,7 @@ window.filesender.client = {
     getTransferOption: function(id, option, token, callback) {
         return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
+
     
     getTransferAuditlog: function(id, callback) {
         return this.get('/transfer/' + id + '/auditlog', callback);
@@ -723,5 +724,34 @@ window.filesender.client = {
         return this.delete('/user/' + id, callback, opts);
     },
 
+    
+    createLocalDBAuthUser: function(username,password,callback,onerror) {
+        var opts = {};
+        if(onerror) opts.error = onerror;
+        
+        return this.post('/user/', {username:username, password:password}, callback, opts);
+    },
+
+    changeLocalAuthDBPassword: function(username,callback) {
+        
+        var prompt = window.filesender.ui.prompt('new password', function (password) {
+            var pass = $(this).find('input').val();
+            filesender.client.createLocalDBAuthUser( username, pass, function() {
+                filesender.ui.notify('success', lang.tr('password_updated'));
+                if( callback ) {
+                    callback(username);
+                }
+            });
+            
+        });
+        // Add a field to the prompt
+        var input = $('<input type="text" class="wide" />').appendTo(prompt);
+        input.focus();
+    },
+
+    remindLocalAuthDBPassword: function(id, password, callback ) {
+        return this.post('/user/' + id, {remind: true, username: id, password, password }, callback );
+    },
+    
 
 };
