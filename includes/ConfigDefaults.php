@@ -91,7 +91,7 @@ $default = array(
     'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 5 * 1024 * 1024,
     'chunk_upload_security' => 'key',
-    'chunk_upload_roundtriptoken_check_enabled' => true,
+    'chunk_upload_roundtriptoken_check_enabled' => false,
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,
