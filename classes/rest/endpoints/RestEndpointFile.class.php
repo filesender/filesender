@@ -192,6 +192,17 @@ class RestEndpointFile extends RestEndpoint
                 throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
             }
         }
+
+        if( Utilities::isTrue(Config::get('chunk_upload_roundtriptoken_check_enabled'))) {
+            $userrtt = Utilities::getGETparam('roundtriptoken');
+
+            // make sure the db token is something
+            // and that what the client has passed us is that exact token
+            if( strlen($file->transfer->roundtriptoken) < 5 ||
+                $file->transfer->roundtriptoken != $userrtt ) {
+                throw new RestRoundTripTokensInvalidException();
+            }
+        }
         
         // Get chunk data
         $data = $this->request->input;
