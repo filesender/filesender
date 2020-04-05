@@ -89,6 +89,20 @@ class RestAuthenticationRequiredException extends RestException
 }
 
 /**
+ * REST roundtrip tokens to not match expected value
+ */
+class RestRoundTripTokensInvalidException extends RestException
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_roundtrip_token_invalid', 403);
+    }
+}
+
+/**
  * REST admin required
  */
 class RestAdminRequiredException extends RestException

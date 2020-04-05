@@ -122,6 +122,7 @@ A note about colours;
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
+* [chunk_upload_roundtriptoken_check_enabled](#chunk_upload_roundtriptoken_check_enabled)
 
 ## Graphs
 
@@ -1170,6 +1171,19 @@ these iteration counts take to perform on your local machine.
 * __default:__ see ConfigDefaults.php
 * __available:__ since version 2.6
 * __comment:__ 
+
+
+### chunk_upload_roundtriptoken_check_enabled
+* __description:__ Check that a random token handed out during transfer creation is always passed back exactly as expected from the client. This parameter was created to disable the check in case some edge case is discovered and a site wishes to turn off this security feature temporarily.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.16
+* __comment:__ 
+
+
+
 
 
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)

@@ -313,7 +313,7 @@ class RestEndpointFile extends RestEndpoint
         
         // Get file we need to add data to or update
         $file = File::fromId($id);
-        
+
         // Check access rights depending on config
         if ($security == 'key') {
             if (!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid)) {
@@ -326,9 +326,23 @@ class RestEndpointFile extends RestEndpoint
                 throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
             }
         }
+
+        if( Utilities::isTrue(Config::get('chunk_upload_roundtriptoken_check_enabled'))) {
+            $userrtt = Utilities::getGETparam('roundtriptoken');
+
+            // make sure the db token is something
+            // and that what the client has passed us is that exact token
+            if( strlen($file->transfer->roundtriptoken) < 5 ||
+                $file->transfer->roundtriptoken != $userrtt ) {
+                throw new RestRoundTripTokensInvalidException();
+            }
+        }
+
         
         // Get request data
         $data = $this->request->input;
+
+        
 
         $this->put_perform_testsuite($data, $file, $id, $mode, $offset);
 

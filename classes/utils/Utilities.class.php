@@ -105,6 +105,22 @@ class Utilities
     }
 
     /**
+     * Generate a string contains numbytes of entropy and is then
+     * encoded as a hex string for storage in a database or transmission.
+     *
+     * @param $numbytes int number of bytes with forced min value of 16.
+     */
+    public static function generateEntropyString( $numbytes = 16 )
+    {
+        if( is_null($numbytes) || $numbytes < 16 ) {
+            $numbytes = 16;
+        }
+        $bytes = random_bytes($numbytes);
+        $ret = bin2hex($bytes);
+        return $ret;
+    }
+    
+    /**
      * Validates a personal message
      *
      */
@@ -643,5 +659,20 @@ class Utilities
             Logger::haltWithErorr('Failed to include file from path ' . $path
                                 . ' ' . $haltmsg);
         }
+    }
+
+    /**
+     * A central call to interact with the $_GET[] array
+     * 
+     * @param name name of CGI arg to get
+     * @param def default value to return if name is not set in query.
+     */
+    public static function getGETparam( $name, $def = null ) 
+    {
+        $ret = $def;
+        if(array_key_exists($name, $_GET)) {
+            $ret = $_GET[$name];
+        }
+        return $ret;
     }
 }

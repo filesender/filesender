@@ -45,10 +45,11 @@ class RestEndpointTransfer extends RestEndpoint
      *
      * @param Transfer $transfer
      * @param array $files_cids files client given id for strict matching
+     * @param bool $creatingTransfer if true then the roundtriptoken is also sent to the client
      *
      * @return array
      */
-    public static function cast(Transfer $transfer, $files_cids = null)
+    public static function cast(Transfer $transfer, $files_cids = null, $creatingTransfer = false )
     {
         return array(
             'id' => $transfer->id,
@@ -61,6 +62,7 @@ class RestEndpointTransfer extends RestEndpoint
             'expiry_date_extension' => $transfer->expiry_date_extension,
             'options' => $transfer->options,
             'salt' => $transfer->salt,
+            'roundtriptoken' => $creatingTransfer ? $transfer->roundtriptoken : '',
             
             'files' => array_map(function ($file) use ($files_cids) {
                 $file = RestEndpointFile::cast($file);
@@ -387,7 +389,7 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
         }
-        
+
         if (!$creating_transfer) {
             // Add data to a specific transfer
             $transfer = Transfer::fromId($id);
@@ -695,7 +697,7 @@ class RestEndpointTransfer extends RestEndpoint
             
             return array(
                 'path' => '/transfer/'.$transfer->id,
-                'data' => self::cast($transfer, $files_cids)
+                'data' => self::cast($transfer, $files_cids, $creating_transfer)
             );
         }
     }
