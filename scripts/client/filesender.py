@@ -207,21 +207,21 @@ def postTransfer(user_id, files, recipients, subject=None, message=None, expires
     {}
   )
 
-def putChunk(f, chunk, offset):
+def putChunk(t, f, chunk, offset):
   return call(
     'put',
     '/file/'+str(f['id'])+'/chunk/'+str(offset),
-    { 'key': f['uid'] },
+    { 'key': f['uid'], 'roundtriptoken': t['roundtriptoken'] },
     None,
     chunk,
     { 'Content-Type': 'application/octet-stream' }
   )
 
-def fileComplete(f):
+def fileComplete(t,f):
   return call(
     'put',
     '/file/'+str(f['id']),
-    { 'key': f['uid'] },
+    { 'key': f['uid'], 'roundtriptoken': t['roundtriptoken'] },
     { 'complete': True },
     None,
     {}
@@ -292,12 +292,12 @@ try:
           print('Uploading: '+path+' '+str(offset)+'-'+str(min(offset+upload_chunk_size, size))+' '+str(round(offset/size*100))+'%')
         data = fin.read(upload_chunk_size)
         #print(data)
-        putChunk(f, data, offset)
+        putChunk(transfer, f, data, offset)
 
     #fileComplete
     if debug:
       print('fileComplete: '+path)
-    fileComplete(f)
+    fileComplete(transfer,f)
     if progress:
       print('Uploading: '+path+' '+str(size)+' 100%')
 

@@ -192,6 +192,16 @@ window.filesender.client = {
                     filesender.client.authentication_required.text(lang.tr('authentication_required_explanation'));
                     return;
                 }
+
+
+                if( error.message == 'rest_roundtrip_token_invalid')
+                {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.rest_roundtrip_token_invalid,
+                                        function() {} );
+                    return;
+                }
+
                 
                 if(error.message == 'undergoing_maintenance') {
                     if(filesender.client.maintenance) return;
@@ -750,7 +760,7 @@ window.filesender.client = {
     },
 
     remindLocalAuthDBPassword: function(id, password, callback ) {
-        return this.post('/user/' + id, {remind: true, username: id, password, password }, callback );
+        return this.post('/user/' + id, {remind: true, username: id, password: password }, callback );
     },
     
 
