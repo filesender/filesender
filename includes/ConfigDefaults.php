@@ -92,6 +92,7 @@ $default = array(
     'upload_chunk_size' => 5 * 1024 * 1024,
     'chunk_upload_security' => 'key',
     'chunk_upload_roundtriptoken_check_enabled' => false,
+    'chunk_upload_roundtriptoken_accept_empty_before' => 0,
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,

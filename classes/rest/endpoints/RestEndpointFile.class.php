@@ -140,6 +140,43 @@ class RestEndpointFile extends RestEndpoint
         
         return self::cast($file);
     }
+
+    /**
+     * Test that the supplied round trip token from the client meets
+     * the security configuraiton that is set for this server. This method
+     * may throw RestRoundTripTokensInvalidException to indicate failure.
+     *
+     * @param object $file
+     * @param string $rtt the round trip token from the client.
+     */
+    private function testRoundTripToken( $file, $userrtt )
+    {
+        if( Utilities::isTrue(Config::get('chunk_upload_roundtriptoken_check_enabled'))) {
+
+            // To allow old transfers to complete we allow this test to pass
+            // with a warning if there is no roundtriptoken in the database
+            // and the transfer was already 'created' before the server was upgraded
+            if( strlen($file->transfer->roundtriptoken) < 5 ) {
+                $accept_before = Config::get('chunk_upload_roundtriptoken_accept_empty_before');
+                if( $accept_before > 0 ) {
+                    if( $file->transfer->created < $accept_before ) {
+                        Logger::warn('Allowing a transfer roundtriptoken_check to pass because the transfer is older than accept_empty_before.');
+                        return;
+                    }
+                }
+            }
+            
+
+            // make sure the db token is something
+            // and that what the client has passed us is that exact token
+            if( strlen($file->transfer->roundtriptoken) < 5 ||
+                $file->transfer->roundtriptoken != $userrtt )
+            {
+                throw new RestRoundTripTokensInvalidException();
+            }
+        }
+        
+    }
     
     /**
      * Add chunk to a file or upload whole file
@@ -193,16 +230,7 @@ class RestEndpointFile extends RestEndpoint
             }
         }
 
-        if( Utilities::isTrue(Config::get('chunk_upload_roundtriptoken_check_enabled'))) {
-            $userrtt = Utilities::getGETparam('roundtriptoken');
-
-            // make sure the db token is something
-            // and that what the client has passed us is that exact token
-            if( strlen($file->transfer->roundtriptoken) < 5 ||
-                $file->transfer->roundtriptoken != $userrtt ) {
-                throw new RestRoundTripTokensInvalidException();
-            }
-        }
+        self::testRoundTripToken( $file, Utilities::getGETparam('roundtriptoken'));
         
         // Get chunk data
         $data = $this->request->input;
@@ -338,16 +366,8 @@ class RestEndpointFile extends RestEndpoint
             }
         }
 
-        if( Utilities::isTrue(Config::get('chunk_upload_roundtriptoken_check_enabled'))) {
-            $userrtt = Utilities::getGETparam('roundtriptoken');
-
-            // make sure the db token is something
-            // and that what the client has passed us is that exact token
-            if( strlen($file->transfer->roundtriptoken) < 5 ||
-                $file->transfer->roundtriptoken != $userrtt ) {
-                throw new RestRoundTripTokensInvalidException();
-            }
-        }
+        self::testRoundTripToken( $file, Utilities::getGETparam('roundtriptoken'));
+        
 
         
         // Get request data
