@@ -161,17 +161,7 @@ class RestEndpointUser extends RestEndpoint
         }
         
         if ($property == 'frequent_recipients') {
-            // Get frequent recipients with optionnal filter
-            $rcpt = array();
-            
-            if (
-                array_key_exists('email', $this->request->filterOp)
-                && array_key_exists('contains', $this->request->filterOp['email'])
-            ) {
-                $rcpt = $this->getFrequentRecipients($this->request->filterOp['email']['contains']);
-            }
-            
-            return $rcpt;
+            throw new RestUsePOSTException();
         }
         
         if ($property == 'quota') {
@@ -363,6 +353,10 @@ class RestEndpointUser extends RestEndpoint
         if(!Config::get('using_local_saml_dbauth')) {
             throw new RestAuthenticationRequiredException();
         }
+        // ... and not guest
+        if (Auth::isGuest()) {
+            throw new RestOwnershipRequiredException((string)AuthGuest::getGuest(), 'user_info');
+        }
         
         $user = Auth::user();
         $userid = -1;
@@ -370,6 +364,18 @@ class RestEndpointUser extends RestEndpoint
         // Raw data
         $username = $data->username;
         $password = $data->password;
+
+
+        if ($data->property == 'frequent_recipients') {
+            // Get frequent recipients with optionnal filter
+            $ret = $this->getFrequentRecipients( $data->needle );
+            return array(
+                'path' => '/user/'.$user->id,
+                'data' => $ret
+            );
+            
+        }
+        
         
         if ($username != "@me" && !Auth::isAdmin()) {
             throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
