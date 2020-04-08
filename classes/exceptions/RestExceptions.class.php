@@ -150,6 +150,22 @@ class RestMissingParameterException extends RestException
 }
 
 /**
+ * REST use POST for this feature now
+ */
+class RestUsePOSTException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param string $name name of the missing parameter
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_use_post', 403, array());
+    }
+}
+
+/**
  * REST bad parameter
  */
 class RestBadParameterException extends RestException

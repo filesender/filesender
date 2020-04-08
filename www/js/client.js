@@ -681,9 +681,14 @@ window.filesender.client = {
     
     
     getFrequentRecipients: function(needle, callback) {
-        return this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[email][contains]': needle}} : undefined);
+        return this.post('/user/@me',
+                         {
+                             property: 'frequent_recipients',
+                             needle: needle
+                         },
+                         callback );
     },
-    
+
     getTransferOption: function(id, option, token, callback) {
         return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
