@@ -170,6 +170,8 @@ window.filesender.config = {
 
     tr_dp_date_format:   "<?php echo Config::get('tr_dp_date_format') ?>",
     tr_dp_date_format_hint:   "<?php echo Config::get('tr_dp_date_format_hint') ?>",
+
+    internal_use_only_running_on_ci:  "<?php echo Config::get('internal_use_only_running_on_ci') ?>",
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
