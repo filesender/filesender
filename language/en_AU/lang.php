@@ -547,6 +547,7 @@ $lang['you_can_report_exception'] = 'When reporting this error please give the f
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
+
 $lang['create_user'] = 'Create user';
 $lang['email_address'] = 'Email address';
 $lang['password'] = 'Password';
