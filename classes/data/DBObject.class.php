@@ -738,4 +738,28 @@ class DBObject
     {
         return strtolower(self::getDBTable()) . 'view';
     }
+
+    /**
+     * This is like count(*) but allows statictics to be used to very quickly
+     * return an answer that is close to the real number
+     */
+    public static function countEstimate()
+    {
+        $datakey = 'rows';
+        $placeholders = array();
+
+        $dbtype = Config::get('db_type');
+        if ($dbtype == 'pgsql') {
+            $query = "SELECT reltuples AS rows FROM pg_class WHERE lower(relname) = lower('".static::getDBTable()."')";
+            $datakey = 'rows';
+        }
+        if ($dbtype == 'mysql') {
+            $query = "show table status like '".static::getDBTable()."'";
+            $datakey = "Rows";
+        }
+        $statement = DBI::prepare($query);
+        $statement->execute($placeholders);
+        $data = $statement->fetch();
+        return $data[$datakey];
+    }
 }

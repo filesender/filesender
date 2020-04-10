@@ -555,3 +555,5 @@ $lang['password'] = 'Password';
 $lang['change_password'] = 'Change password';
 $lang['create_user_details'] = 'When you create a new user an email with the nominated password will be sent to their email address and they will be encouraged to login and change the password. If the user already exists in the system then attempting to create them a second time will set their password to your nominated value and send the email out to them again.';
 $lang['rest_roundtrip_token_invalid'] = 'FileSender checks that the same web browser that started an operation is used for subsequent operations to complete that operation. For example, to upload all the parts of a file. This check has failed.';
+
+$lang['user_count_estimate'] = 'User count (estimate)';
