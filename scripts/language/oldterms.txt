@@ -71,6 +71,7 @@ can_only_send_to_me
 cancel
 cannot_alter_closed_transfer
 cannot_open_input_file
+change_password
 clear_all
 clear_client_logs
 click_to_delete_file
@@ -108,6 +109,8 @@ core_class_not_found
 core_file_not_found
 count
 count_from_date_to_date
+create_user
+create_user_details
 created
 created_transfers
 crypto_pbkdf2_dialog
@@ -170,6 +173,7 @@ dp_week_header
 dp_year_suffix
 drag_and_drop
 duplicate_recipient
+email_address
 email_daily_statistics
 email_download_complete
 email_feedback
@@ -280,6 +284,7 @@ kb_per_second
 last_activity
 later
 load
+local_authdb_password_reminder
 logoff
 logon
 logout
@@ -317,6 +322,7 @@ optional
 options
 pager_has_no_more
 pager_more
+password
 password_hashing_performance
 pause
 paused
@@ -396,6 +402,7 @@ rest_method_not_allowed
 rest_method_not_implemented
 rest_missing_parameter
 rest_ownership_required
+rest_roundtrip_token_invalid
 rest_sanity_check_failed
 rest_updatedsince_bad_format
 rest_xsrf_token_did_not_match

@@ -186,7 +186,7 @@ class Lang
                     }
                     
                     // User preference stored language
-                    if (Config::get('lang_userpref_enabled') && Auth::isAuthenticated()) {
+                    if (Config::get('lang_userpref_enabled') && Auth::isAuthenticated() && Auth::user()) {
                         $code = Auth::user()->lang;
                         if ($code && !in_array($code, $stack)) {
                             $stack[] = $code;

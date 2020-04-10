@@ -105,6 +105,22 @@ class Utilities
     }
 
     /**
+     * Generate a string contains numbytes of entropy and is then
+     * encoded as a hex string for storage in a database or transmission.
+     *
+     * @param $numbytes int number of bytes with forced min value of 16.
+     */
+    public static function generateEntropyString( $numbytes = 16 )
+    {
+        if( is_null($numbytes) || $numbytes < 16 ) {
+            $numbytes = 16;
+        }
+        $bytes = random_bytes($numbytes);
+        $ret = bin2hex($bytes);
+        return $ret;
+    }
+    
+    /**
      * Validates a personal message
      *
      */
@@ -316,7 +332,25 @@ class Utilities
      */
     public static function getClientIP()
     {
-        return isset($_SERVER[Config::get('client_ip_key')]) ? $_SERVER[Config::get('client_ip_key')] : '';
+        $ips = array();
+        
+        $candidates = array_reverse((array)Config::get('client_ip_key'));
+        foreach($candidates as $candidate) {
+            if(!array_key_exists($candidate, $_SERVER)) continue;
+            
+            foreach(explode(',', $_SERVER[$candidate]) as $value) {
+                $ips[] = trim($value);
+            }
+        }
+        
+        $ips = array_filter($ips, function($ip) {
+            return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+        });
+        
+        if(!count($ips))
+            return $_SERVER['REMOTE_ADDR']; // fallback
+        
+        return array_pop($ips);
     }
     
     /**
@@ -625,5 +659,20 @@ class Utilities
             Logger::haltWithErorr('Failed to include file from path ' . $path
                                 . ' ' . $haltmsg);
         }
+    }
+
+    /**
+     * A central call to interact with the $_GET[] array
+     * 
+     * @param name name of CGI arg to get
+     * @param def default value to return if name is not set in query.
+     */
+    public static function getGETparam( $name, $def = null ) 
+    {
+        $ret = $def;
+        if(array_key_exists($name, $_GET)) {
+            $ret = $_GET[$name];
+        }
+        return $ret;
     }
 }

@@ -126,7 +126,14 @@ $(function() {
         
         return false;
     });
-    
+
+    $('.change_password a').button().on('click', function(e) {
+
+        var saml_id = '@me';
+        filesender.client.changeLocalAuthDBPassword( saml_id );
+        
+        
+    });    
     
     page.find(':input').on('change', function() {
         var i = $(this);

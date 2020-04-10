@@ -38,6 +38,8 @@ $(function() {
     var match = section.find('.search [name="match"]');
     var results = section.find('.results');
     var logs = section.find('.client-logs');
+    var email = section.find('input[name="createusername"]');
+    var pass  = section.find('input[name="createuserpassword"]');
 
     var clean_logs = function() {
         logs.find('.log').remove();
@@ -72,6 +74,7 @@ $(function() {
     var add_user = function(user) {
         var u = results.find('.tpl').clone().removeClass('tpl').addClass('user');
         u.attr({'data-id': user.id});
+        u.attr({'data-saml-id': user.saml_id});
         u.find('.id').text(user.id);
         u.find('.saml_id').text(user.saml_id);
         u.find('.last_activity').text(user.last_activity.formatted);
@@ -91,6 +94,12 @@ $(function() {
                 filesender.ui.notify('success', lang.tr('preferences_updated'));
             });
         });
+        u.find('[data-action="set-local-authdb-password"]').on('click', function() {
+            var id      = $(this).closest('.user').attr('data-id');
+            var saml_id = $(this).closest('.user').attr('data-saml-id');
+
+            filesender.client.changeLocalAuthDBPassword( saml_id );
+        });
     };
 
     section.find('[data-action="all-delete-api-secret"]').on('click', function() {
@@ -100,6 +109,13 @@ $(function() {
             filesender.client.updateUserIDPreferences( '@all', p, function() {
                 filesender.ui.notify('success', lang.tr('preferences_updated'));
             });
+        });
+    });
+
+    section.find('[data-action="create-user"]').on('click', function() {
+        filesender.client.createLocalDBAuthUser( email.val(), pass.val(), function() {
+            filesender.ui.notify('success', lang.tr('user_created'));
+            filesender.client.remindLocalAuthDBPassword(email.val(), pass.val(), function() {} );
         });
     });
     

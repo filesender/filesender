@@ -122,6 +122,8 @@ A note about colours;
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
+* [chunk_upload_roundtriptoken_check_enabled](#chunk_upload_roundtriptoken_check_enabled)
+* [chunk_upload_roundtriptoken_check_accept_before](#chunk_upload_roundtriptoken_check_accept_before)
 
 ## Graphs
 
@@ -164,6 +166,7 @@ A note about colours;
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
+        * [using_local_saml_dbauth](#using_local_saml_dbauth)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -321,7 +324,7 @@ A note about colours;
 * __description:__ Show the IP addresses used in reports
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ true
+* __default:__ false
 * __available:__ since version 2.0
 * __comment:__ If you want to hide IP addresses from reports set it to false
 
@@ -821,6 +824,7 @@ User language detection is done in the following order:
 
 
 
+
 ---
 
 ## Transfers
@@ -1168,6 +1172,67 @@ these iteration counts take to perform on your local machine.
 * __default:__ see ConfigDefaults.php
 * __available:__ since version 2.6
 * __comment:__ 
+
+
+### chunk_upload_roundtriptoken_check_enabled
+* __description:__ Check that a random token handed out during transfer creation is always passed back exactly as expected from the client. This parameter was created to disable the check in case some edge case is discovered and a site wishes to turn off this security feature temporarily.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.16
+* __comment:__ 
+
+
+### chunk_upload_roundtriptoken_accept_empty_before
+* __description:__ As of FileSender 2.16 all newly created transfers will have a
+roundtriptoken created and stored on the server. The roundtriptoken is
+only sent to client when a tranfer is being created. The aim is that
+knowledge of the roundtriptoken means that a particular client is the
+one that created the transfer. The roundtriptoken is a large random
+value. The roundtriptoken is sent back by the clients during chunk
+uploads to be able to verify that they made the transfer. Creating and
+sending the roundtriptoken will happen regardless of the
+chunk_upload_roundtriptoken_check_enabled setting.
+If chunk_upload_roundtriptoken_check_enabled is set to true then the
+transfer on the server must have a roundtriptoken recorded and the
+roundtriptoken supplied by the client must match the one from the
+database on the server in order for the chunk upload to be accepted.
+Though without another option one might see a migration issue when a
+client tries to load a failed transfer and resume it. This will happen
+for example if a user revists the upload page and the dialog offers to
+reload a failed transfer. This failed transfer state will have no
+roundtriptoken on the client and as the transfer was created with
+older server code there will be no roundtriptoken stored in the
+database either.
+To allow easier migration of existing transfers this configuration
+setting can be used. If
+chunk_upload_roundtriptoken_accept_empty_before is non zero then
+transfers with an empty roundtriptoken which were created before the
+value of chunk_upload_roundtriptoken_accept_empty_before will be
+accepted. This allows transfers created before deployment of FileSender 2.16 to continue
+as they would have. It may be tempting to just allow transfers that
+have no roundtriptoken in the database to pass, but if you have set
+chunk_upload_roundtriptoken_check_enabled to true you cerainly want
+to enforce that all new transfers have a token in the database to ensure that this
+test is active.
+Setting this to the deployment time plus one week for example should
+allow existing uploads to complete. The value for the current time can
+be found using "date +%s" on a Linux machine for example. Though that
+will not have any wiggle room added.  Note that if a transfer has a roundtriptoken
+set then this setting will not change if the client must present the roundtriptoken again.
+This is only for old, existing transfers which have no roundtriptoken set.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ false
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.16
+* __comment:__ 
+
+
+
+
+
 
 
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
@@ -1526,6 +1591,20 @@ these iteration counts take to perform on your local machine.
 * __available:__ since version 1.0
 * __1.x name:__ saml_name_attribute
 * __comment:__
+
+
+### using_local_saml_dbauth
+
+* __description:__ enable web interface elements for managing passwords in the filesender database. See scripts/simplesamlphp/passwordverify in the release for details of how to setup your SimpleSAMLphp to authenticate against this information.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ 0
+* __available:__ since version 2.16
+* __comment:__ 
+
+
+
+
 
 ## Authentication: Shibboleth
 

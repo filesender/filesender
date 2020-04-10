@@ -89,6 +89,20 @@ class RestAuthenticationRequiredException extends RestException
 }
 
 /**
+ * REST roundtrip tokens to not match expected value
+ */
+class RestRoundTripTokensInvalidException extends RestException
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_roundtrip_token_invalid', 403);
+    }
+}
+
+/**
  * REST admin required
  */
 class RestAdminRequiredException extends RestException
@@ -132,6 +146,22 @@ class RestMissingParameterException extends RestException
     public function __construct($name)
     {
         parent::__construct('rest_missing_parameter', 400, array('parameter' => $name));
+    }
+}
+
+/**
+ * REST use POST for this feature now
+ */
+class RestUsePOSTException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param string $name name of the missing parameter
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_use_post', 403, array());
     }
 }
 

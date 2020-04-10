@@ -145,7 +145,16 @@ class Transfer extends DBObject
             'size'    => '44',
             'null'    => true,
         ),
-        
+
+        //
+        // This is to hand to a client that is making the transfer and to upload
+        // they have to hand it back to ensure they are the one who made the transfer
+        //
+        'roundtriptoken' => array(
+            'type'    => 'string',
+            'size'    => '44',
+            'null'    => true,
+        ),
     );
 
     /**
@@ -199,6 +208,8 @@ class Transfer extends DBObject
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
+
+    const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
     /**
      * Properties
@@ -224,6 +235,7 @@ class Transfer extends DBObject
     protected $password_encoding_string = 'none';
     protected $password_hash_iterations = 150000;
     protected $client_entropy = '';
+    protected $roundtriptoken = '';
     
     /**
      * Related objects cache
@@ -390,6 +402,9 @@ class Transfer extends DBObject
         $transfer->logsCache = array();
         
         $transfer->userid = Auth::user()->id;
+
+        $transfer->roundtriptoken = Utilities::generateEntropyString(
+            self::ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT );
 
         if (!$user_email) {
             $user_email = Auth::user()->email;
@@ -787,7 +802,7 @@ class Transfer extends DBObject
             'subject', 'message', 'created', 'made_available',
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
-            , 'client_entropy'
+            , 'client_entropy', 'roundtriptoken'
         ))) {
             return $this->$property;
         }

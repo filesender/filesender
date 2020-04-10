@@ -141,6 +141,7 @@ window.filesender.terasender = {
             },
 	    encryption: this.transfer.encryption,
 	    encryption_details: encryption_details,
+            roundtriptoken: this.transfer.roundtriptoken,
             file: {
                 id: file.id,
                 name: file.name,

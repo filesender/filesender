@@ -491,7 +491,7 @@ filesender.ui.files = {
         filesender.ui.evalUploadEnabled();
     },
 
-    checkEncryptionPassword: function(input) {
+    checkEncryptionPassword: function(input,slideMessage) {
         input = $(input);
         var crypto = window.filesender.crypto_app();
 
@@ -509,19 +509,22 @@ filesender.ui.files = {
                 }
             }
         }
-        
-        var msg = $('#encryption_password_container_too_short_message');
-        if(invalid) {
-            input.addClass('invalid');
-            if( msg.css('display')=='none') {
-                msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
-            }
-        }else{
-            input.removeClass('invalid');
-            if( msg.css('display')!='none') {
-                msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
+
+        if( slideMessage ) {
+            var msg = $('#encryption_password_container_too_short_message');
+            if(invalid) {
+                input.addClass('invalid');
+                if( msg.css('display')=='none') {
+                    msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
+                }
+            }else{
+                input.removeClass('invalid');
+                if( msg.css('display')!='none') {
+                    msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
+                }
             }
         }
+        return !invalid;
     },
 };
 
@@ -660,20 +663,22 @@ filesender.ui.recipients = {
         
         $(filesender.ui.nodes.recipients.input).autocomplete({
             source: function (request, response) {
-                filesender.client.getFrequentRecipients(request.term,
-                    function (data) {
-                        response($.map(data, function (item) { 
-                            if (filesender.ui.nodes.recipients.list.find('[email="'+item+'"]').length == 0){
-                                return { 
-                                    label: item,
-                                    value: item
-                                };
-                            }else{
-                                return undefined;
-                            }
-                        })) 
-                    }
-                );
+                if(!filesender.config.internal_use_only_running_on_ci) {
+                    filesender.client.getFrequentRecipients(request.term,
+                        function (loc,data) {
+                            response($.map(data, function (item) { 
+                                if (filesender.ui.nodes.recipients.list.find('[email="'+item+'"]').length == 0){
+                                    return { 
+                                        label: item,
+                                        value: item
+                                    };
+                                }else{
+                                    return undefined;
+                                }
+                            })) 
+                        }
+                    );
+                }
             },
             select: function (event, ui) {
                 filesender.ui.recipients.add(ui.item.value);
@@ -717,6 +722,10 @@ filesender.ui.evalUploadEnabled = function() {
     
     if(filesender.ui.nodes.aup.length)
         if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
+
+    if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
+        ok = ok && filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password,false );
+    }
 
     var invalid_nodes = filesender.ui.nodes.files.list.find('.invalid');
     if( invalid_nodes.length ) {
@@ -1295,7 +1304,8 @@ $(function() {
     filesender.ui.nodes.encryption.password.on(
         'keyup',
         delayAndCallOnlyOnce(function(e) {
-            filesender.ui.files.checkEncryptionPassword($(this));
+            filesender.ui.files.checkEncryptionPassword($(this),true);
+            filesender.ui.evalUploadEnabled();
         }, checkEncryptionPassword_delay )
     );
     filesender.ui.nodes.encryption.password.on('click', function() {
@@ -1422,7 +1432,7 @@ $(function() {
         filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
         
         if( filesender.ui.transfer.encryption ) {
-            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
+            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
         } else {
             var msg = $('#encryption_password_container_too_short_message');
             msg.hide();
@@ -1465,7 +1475,8 @@ $(function() {
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
         $('#encryption_password_show_container').hide();
-        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
+        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
+        filesender.ui.evalUploadEnabled();
     });
 
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
