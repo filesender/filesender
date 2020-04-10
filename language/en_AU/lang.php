@@ -474,6 +474,7 @@ $lang['tracking_unknown_event'] = 'Unknown tracking event';
 $lang['transfer_closed'] = 'Transfer closed';
 $lang['transfer_deleted'] = 'Transfer deleted';
 $lang['transfer_expired'] = 'Transfer expired';
+$lang['transfer_presumed_expired'] = 'The transfer has expired and files have been deleted from {cfg:site_name}.';
 $lang['transfer_expiry_extension_count_exceeded'] = 'Transfer expiry date extension maximum reached';
 $lang['transfer_expiry_extension_not_allowed'] = 'Transfer expiry date extension is not allowed';
 $lang['transfer_extended'] = 'Expiry date extended until {expires}';

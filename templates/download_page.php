@@ -9,8 +9,12 @@
     $token = $_REQUEST['token'];
     if(!Utilities::isValidUID($token))
         throw new TokenHasBadFormatException($token);
-    
-    $recipient = Recipient::fromToken($token); // Throws
+
+    try {
+        $recipient = Recipient::fromToken($token); // Throws
+    } catch (RecipientNotFoundException $e) {
+        throw new TransferPresumedExpiredException();
+    }
     $transfer = $recipient->transfer;
     
     if($transfer->isExpired()) throw new TransferExpiredException($transfer);
