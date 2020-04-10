@@ -401,7 +401,7 @@ class User extends DBObject
         // Filter if requested
         if ($criteria) {
             $recipients = array_filter($recipients, function ($recipient) use ($criteria) {
-                return strpos($recipient->email, $criteria) !== false;
+                return stripos($recipient->email, $criteria) !== false;
             });
         }
         
