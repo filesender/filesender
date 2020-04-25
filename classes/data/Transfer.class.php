@@ -468,7 +468,7 @@ class Transfer extends DBObject
         $quota = Config::get('host_quota');
         
         $used = 0;
-        $s = DBI::query('SELECT size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
+        $s = DBI::query('SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
         foreach ($s->fetchAll() as $r) {
             $used += $r['size'];
         }
