@@ -432,6 +432,16 @@ class RestEndpointTransfer extends RestEndpoint
             if (Auth::isGuest()) {
                 $guest = AuthGuest::getGuest();
             }
+
+            // if we are a guest then we can not change some options
+            if (Auth::isGuest()) {
+                if( $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                    $r = Utilities::ensureArray($data->recipients);
+                    if( count($r) ) {
+                        throw new TransferTooManyRecipientsException(count($data->recipients), 0);
+                    }
+                }
+            }
             
             // Must have files ...
             if (!count($data->files)) {
