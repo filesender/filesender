@@ -199,8 +199,8 @@ class RestEndpointTransfer extends RestEndpoint
             $transfer = Transfer::fromId($id);
             
             // Check ownership
-            if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+            if( !$transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
             }
             
             // Only want transfer options
@@ -395,8 +395,8 @@ class RestEndpointTransfer extends RestEndpoint
             $transfer = Transfer::fromId($id);
             
             // Check ownership
-            if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+            if( !$transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
             }
             
             // Cannot update a closed transfer
@@ -771,8 +771,8 @@ class RestEndpointTransfer extends RestEndpoint
             }
         } else {
             // check ownership
-            if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+            if( !$transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
             }
             
             // Close and remind action need to stay here as only complete action is allowed with either session or key
@@ -835,10 +835,8 @@ class RestEndpointTransfer extends RestEndpoint
         
         $transfer = Transfer::fromId($id);
         
-        $user = Auth::user();
-        
-        if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+        if( !$transfer->havePermission()) {
+            throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
         }
         
         // Delete the transfer (not recoverable)
