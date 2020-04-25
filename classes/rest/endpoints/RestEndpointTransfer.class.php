@@ -435,6 +435,7 @@ class RestEndpointTransfer extends RestEndpoint
 
             // if we are a guest then we can not change some options
             if (Auth::isGuest()) {
+                $guest = AuthGuest::getGuest();
                 if( $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
                     $r = Utilities::ensureArray($data->recipients);
                     if( count($r) ) {
