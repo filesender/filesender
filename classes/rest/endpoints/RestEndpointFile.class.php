@@ -131,11 +131,10 @@ class RestEndpointFile extends RestEndpoint
         }
         
         // Get required file and current user then check ownership
-        $user = Auth::user();
         $file = File::fromId($id);
         
-        if (!$file->transfer->isOwner($user) && !Auth::isAdmin()) {
-            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
+        if( !$file->transfer->havePermission()) {
+            throw new RestTransferPermissionRequiredException('file = '.$file->id);
         }
         
         return self::cast($file);
@@ -223,10 +222,8 @@ class RestEndpointFile extends RestEndpoint
                 throw new RestAuthenticationRequiredException();
             }
         } else {
-            $user = Auth::user();
-            
-            if (!$file->transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
+            if( !$file->transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('file = '.$file->id);
             }
         }
 
@@ -359,10 +356,8 @@ class RestEndpointFile extends RestEndpoint
                 throw new RestAuthenticationRequiredException();
             }
         } else {
-            $user = Auth::user();
-            
-            if (!$file->transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
+            if( !$file->transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('file = '.$file->id);
             }
         }
 
@@ -532,12 +527,11 @@ class RestEndpointFile extends RestEndpoint
         }
         
         // Get file object and user ...
-        $user = Auth::user();
         $file = File::fromId($id);
-        
+
         // ... and check ownership
-        if (!$file->transfer->isOwner($user) && !Auth::isAdmin()) {
-            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
+        if( !$file->transfer->havePermission()) {
+            throw new RestTransferPermissionRequiredException('file = '.$file->id);
         }
         
         if (count($file->transfer->files) > 1) {

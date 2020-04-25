@@ -632,6 +632,40 @@ class Transfer extends DBObject
     {
         return $this->owner->is($user);
     }
+
+    /**
+     * Check that the user has read/write permission 
+     * for this transfer.
+     * 
+     * @return true if they are allowed or false if access should be forbidden
+     */
+    public function havePermission()
+    {
+        $user = Auth::user();
+
+        // This should never happen
+        if (Auth::isGuest() && Auth::isAdmin()) {
+            return FALSE;
+        }
+        
+        if (Auth::isGuest()) {
+            $guest = AuthGuest::getGuest();
+            if( !$guest ) {
+                return FALSE;
+            }
+            if( $guest->id != $this->guest_id ) {
+                return FALSE;
+            }
+        }
+        
+        if (!$this->isOwner($user)) {
+            if( !Auth::isAdmin()) {
+                return FALSE;
+            }
+        }
+
+        return TRUE;
+    }
     
     /**
      * Get all options
