@@ -631,6 +631,14 @@ class Utilities
         return false;
     }
 
+    public static function ensureArray($v) 
+    {
+        if(is_array($v))
+            return $v;
+
+        return array($v);
+    }
+
     /**
      * This does some sniffing around first to see if the file exists
      * and can be read before trying to include it. If the include
