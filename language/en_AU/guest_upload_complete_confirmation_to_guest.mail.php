@@ -11,9 +11,9 @@ subject: Guest ended to upload files
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
-The following guest ended to upload files using a guest voucher :
+The following guest ended file uploads using a guest voucher:
 
 Guest: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
@@ -26,11 +26,11 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>
-The following guest ended to upload files using a guest voucher :
+The following guest ended file uploads using a guest voucher:
 </p>
 
 <table rules="rows">

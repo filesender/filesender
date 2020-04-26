@@ -11,7 +11,7 @@ subject: Guest voucher expired
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 A guest voucher from {guest.user_email} has expired.
 
@@ -21,7 +21,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

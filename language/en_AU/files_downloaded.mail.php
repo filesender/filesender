@@ -11,7 +11,7 @@ subject: Download receipt
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 {if:files>1}Several files{else}A file{endif} you uploaded {if:files>1}have{else}has{endif} been downloaded from {cfg:site_name} by {recipient.email} :
 
@@ -29,7 +29,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

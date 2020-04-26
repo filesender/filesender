@@ -164,20 +164,22 @@ filesender.ui.recipients = {
         
         $(filesender.ui.nodes.recipients.input).autocomplete({
             source: function (request, response) {
-                filesender.client.getFrequentRecipients(request.term,
-                    function (data) {
-                        response($.map(data, function (item) { 
-                            if (filesender.ui.nodes.recipients.list.find('[email="'+item+'"]').length == 0){
-                                return { 
-                                    label: item,
-                                    value: item
-                                };
-                            }else{
-                                return undefined;
-                            }
-                        })) 
-                    }
-                );
+                if(!filesender.config.internal_use_only_running_on_ci) {
+                    filesender.client.getFrequentRecipients(request.term,
+                        function (loc,data) {
+                            response($.map(data, function (item) { 
+                                if (filesender.ui.nodes.recipients.list.find('[email="'+item+'"]').length == 0){
+                                    return { 
+                                        label: item,
+                                        value: item
+                                    };
+                                }else{
+                                    return undefined;
+                                }
+                            })) 
+                        }
+                    );
+                }
             },
             select: function (event, ui) {
                 filesender.ui.recipients.add(ui.item.value);

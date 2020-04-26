@@ -12,7 +12,7 @@ subject: {transfer.subject}
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 The following {if:transfer.files>1}files have{else}file has{endif} been uploaded to {cfg:site_name} by {transfer.user_email} and you have been granted permission to download {if:transfer.files>1}their{else}its{endif} contents :
 
@@ -38,7 +38,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

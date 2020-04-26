@@ -68,6 +68,7 @@ if 'user' in config:
 parser = argparse.ArgumentParser()
 parser.add_argument("files", help="path to file(s) to send", nargs='+')
 parser.add_argument("-v", "--verbose", action="store_true")
+parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
@@ -88,6 +89,7 @@ requiredNamed.add_argument("-r", "--recipients", required=True)
 args = parser.parse_args()
 debug = args.verbose
 progress = args.progress
+insecure = args.insecure
 
 if args.username is not None:
   username = args.username
@@ -97,7 +99,19 @@ if args.apikey is not None:
 
   
 #configs
-response = requests.get(base_url+'/info', verify=False)
+try:
+  response = requests.get(base_url+'/info', verify=True)
+except requests.exceptions.SSLError as exc:
+  if not insecure:
+    print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
+    print(exc)
+    print('For more information, please refer to https://www.digicert.com/ssl/. If you are absolutely certain of the identity of the server you are connecting to, you can use the --insecure flag to bypass this warning. Exiting...')
+    sys.exit(1)
+  elif insecure:
+    print('Warning: Error: the SSL certificate of the server you are connecting to cannot be verified:')
+    print(exc)
+    print('Running with --insecure flag, ignoring warning...')
+    response = requests.get(base_url+'/info', verify=False)
 upload_chunk_size = response.json()['upload_chunk_size']
 
 if debug:
@@ -107,6 +121,8 @@ if debug:
   print('upload_chunk_size : '+str(upload_chunk_size)+' bytes')
   print('recipients        : '+args.recipients)
   print('files             : '+','.join(args.files))
+  print('insecure          : '+str(insecure))
+
 
 ##########################################################################
 
@@ -150,13 +166,13 @@ def call(method, path, data, content=None, rawContent=None, options={}):
   }
   response = None
   if method == "get":
-    response = requests.get(url, verify=False, headers=headers)
+    response = requests.get(url, verify=not insecure, headers=headers)
   elif method == "post":
-    response = requests.post(url, data=inputcontent, verify=False, headers=headers)
+    response = requests.post(url, data=inputcontent, verify=not insecure, headers=headers)
   elif method == "put":
-    response = requests.put(url, data=inputcontent, verify=False, headers=headers)
+    response = requests.put(url, data=inputcontent, verify=not insecure, headers=headers)
   elif method == "delete":
-    response = requests.delete(url, verify=False, headers=headers)
+    response = requests.delete(url, verify=not insecure, headers=headers)
 
   if response is None:
     raise Exception('Client error')
@@ -207,21 +223,21 @@ def postTransfer(user_id, files, recipients, subject=None, message=None, expires
     {}
   )
 
-def putChunk(f, chunk, offset):
+def putChunk(t, f, chunk, offset):
   return call(
     'put',
     '/file/'+str(f['id'])+'/chunk/'+str(offset),
-    { 'key': f['uid'] },
+    { 'key': f['uid'], 'roundtriptoken': t['roundtriptoken'] },
     None,
     chunk,
     { 'Content-Type': 'application/octet-stream' }
   )
 
-def fileComplete(f):
+def fileComplete(t,f):
   return call(
     'put',
     '/file/'+str(f['id']),
-    { 'key': f['uid'] },
+    { 'key': f['uid'], 'roundtriptoken': t['roundtriptoken'] },
     { 'complete': True },
     None,
     {}
@@ -292,12 +308,12 @@ try:
           print('Uploading: '+path+' '+str(offset)+'-'+str(min(offset+upload_chunk_size, size))+' '+str(round(offset/size*100))+'%')
         data = fin.read(upload_chunk_size)
         #print(data)
-        putChunk(f, data, offset)
+        putChunk(transfer, f, data, offset)
 
     #fileComplete
     if debug:
       print('fileComplete: '+path)
-    fileComplete(f)
+    fileComplete(transfer,f)
     if progress:
       print('Uploading: '+path+' '+str(size)+' 100%')
 

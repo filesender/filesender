@@ -11,7 +11,7 @@ subject: Storage usage warning
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 The storage usage of {cfg:site_name} is warning :
 
@@ -27,7 +27,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

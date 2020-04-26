@@ -89,6 +89,20 @@ class RestAuthenticationRequiredException extends RestException
 }
 
 /**
+ * REST roundtrip tokens to not match expected value
+ */
+class RestRoundTripTokensInvalidException extends RestException
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_roundtrip_token_invalid', 403);
+    }
+}
+
+/**
  * REST admin required
  */
 class RestAdminRequiredException extends RestException
@@ -120,6 +134,31 @@ class RestOwnershipRequiredException extends RestException
 }
 
 /**
+ * Used when Transfer::havePermission() returns false. 
+ * Similar to throwing RestOwnershipRequiredException but
+ * user info does not need to be passed it is taken from 
+ * active environment.
+ */
+class RestTransferPermissionRequiredException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param mixed $resource the wanted resource selector
+     */
+    public function __construct($resource)
+    {
+        $user = Auth::user();
+        $uid = $user->id;
+        if (Auth::isGuest()) {
+            $guest = AuthGuest::getGuest();
+            $uid = $guest->id;
+        }
+        parent::__construct('rest_ownership_required', 403, array('uid' => $uid, 'ressource' => $resource));
+    }
+}
+
+/**
  * REST missing parameter
  */
 class RestMissingParameterException extends RestException
@@ -132,6 +171,22 @@ class RestMissingParameterException extends RestException
     public function __construct($name)
     {
         parent::__construct('rest_missing_parameter', 400, array('parameter' => $name));
+    }
+}
+
+/**
+ * REST use POST for this feature now
+ */
+class RestUsePOSTException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param string $name name of the missing parameter
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_use_post', 403, array());
     }
 }
 

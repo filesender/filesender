@@ -15,6 +15,7 @@ if (AggregateStatistic::enabled()) {
 <h3>{tr:global_statistics}</h3>
 
 <table class="global_statistics">
+    <tr><th>{tr:user_count_estimate}</th><td><?php echo User::countEstimate() ?></td></tr>
     <tr><th>{tr:available_transfers}</th><td><?php echo count(Transfer::all(Transfer::AVAILABLE)) ?></td></tr>
     <tr><th>{tr:uploading_transfers}</th><td><?php echo count(Transfer::all(Transfer::UPLOADING)) ?></td></tr>
     

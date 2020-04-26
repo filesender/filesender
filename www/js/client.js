@@ -192,6 +192,16 @@ window.filesender.client = {
                     filesender.client.authentication_required.text(lang.tr('authentication_required_explanation'));
                     return;
                 }
+
+
+                if( error.message == 'rest_roundtrip_token_invalid')
+                {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.rest_roundtrip_token_invalid,
+                                        function() {} );
+                    return;
+                }
+
                 
                 if(error.message == 'undergoing_maintenance') {
                     if(filesender.client.maintenance) return;
@@ -671,12 +681,18 @@ window.filesender.client = {
     
     
     getFrequentRecipients: function(needle, callback) {
-        return this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[email][contains]': needle}} : undefined);
+        return this.post('/user/@me',
+                         {
+                             property: 'frequent_recipients',
+                             needle: needle
+                         },
+                         callback );
     },
-    
+
     getTransferOption: function(id, option, token, callback) {
         return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
+
     
     getTransferAuditlog: function(id, callback) {
         return this.get('/transfer/' + id + '/auditlog', callback);
@@ -723,5 +739,34 @@ window.filesender.client = {
         return this.delete('/user/' + id, callback, opts);
     },
 
+    
+    createLocalDBAuthUser: function(username,password,callback,onerror) {
+        var opts = {};
+        if(onerror) opts.error = onerror;
+        
+        return this.post('/user/', {username:username, password:password}, callback, opts);
+    },
+
+    changeLocalAuthDBPassword: function(username,callback) {
+        
+        var prompt = window.filesender.ui.prompt('new password', function (password) {
+            var pass = $(this).find('input').val();
+            filesender.client.createLocalDBAuthUser( username, pass, function() {
+                filesender.ui.notify('success', lang.tr('password_updated'));
+                if( callback ) {
+                    callback(username);
+                }
+            });
+            
+        });
+        // Add a field to the prompt
+        var input = $('<input type="text" class="wide" />').appendTo(prompt);
+        input.focus();
+    },
+
+    remindLocalAuthDBPassword: function(id, password, callback ) {
+        return this.post('/user/' + id, {remind: true, username: id, password: password }, callback );
+    },
+    
 
 };

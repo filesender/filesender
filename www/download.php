@@ -52,6 +52,7 @@ try {
     
     if(count($files_ids) != count($good_files_ids))
         throw new DownloadBadFilesIDsException(array_diff($files_ids, $good_files_ids));
+
     
     if(array_key_exists('token', $_REQUEST)) {
         // Token on get request
@@ -59,9 +60,13 @@ try {
         
         if(!Utilities::isValidUID($token))
             throw new TokenHasBadFormatException($token);
-        
-        // Getting recipient from the token
-        $recipient = Recipient::fromToken($token); // Throws
+
+        try {
+            // Getting recipient from the token
+            $recipient = Recipient::fromToken($token); // Throws
+        } catch (RecipientNotFoundException $e) {
+            throw new TransferPresumedExpiredException();
+        }
         
         // Getting associated transfer 
         $transfer = $recipient->transfer;

@@ -12,9 +12,9 @@ subject: (automatic reminders sent) {transfer.subject}
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
-An automatic reminder was sent to recipients that did not download files from your transfer n°{transfer.id} on {cfg:site_name} ({transfer.link}) :
+An automatic reminder was sent to recipients that did not download files from transfer n°{transfer.id} on {cfg:site_name} ({transfer.link}) :
 
 {each:recipients as recipient}
   - {recipient.email}
@@ -26,11 +26,11 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>
-    An automatic reminder was sent to recipients that did not download files from your <a href="{transfer.link}">transfer n°{transfer.id}</a> on <a href="{cfg:site_url}">{cfg:site_name}</a> :
+    An automatic reminder was sent to recipients that did not download files from <a href="{transfer.link}">transfer n°{transfer.id}</a> on <a href="{cfg:site_url}">{cfg:site_name}</a> :
 </p>
 
 <p>
