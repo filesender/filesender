@@ -40,7 +40,7 @@ $daysvalid=Config::get('default_transfer_days_valid');
 // This makes a config file for the python script to connect to this filesender
 // server and authenticate as this user.
 //
-if( $_GET['config']=='1' ) {
+if( array_key_exists('config',$_GET) && $_GET['config']=='1' ) {
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="filesender.py.ini"');

@@ -73,6 +73,11 @@ class Authentication extends DBObject
             'size' => 100,
             'null' => true
         ),
+        'passwordhash' => array(
+            'type' => 'string',
+            'size' => '255',
+            'null' => true
+        ),
     );
     protected static $secondaryIndexMap = array(
         'saml_user_identification_uid' => array(
@@ -95,7 +100,7 @@ class Authentication extends DBObject
     protected $created = 0;
     protected $last_activity = 0;
     protected $comment = null;
-    
+    protected $passwordhash = null;
     
     /**
      * Constructor
@@ -184,7 +189,7 @@ class Authentication extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'created','last_activity'
+            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'created','last_activity','passwordhash'
         ))) {
             return $this->$property;
         }
@@ -207,6 +212,10 @@ class Authentication extends DBObject
     {
         if ($property == 'saml_user_identification_uid_hash') {
             $this->saml_user_identification_uid_hash = $value;
+        } elseif ($property == 'passwordhash') {
+            $this->passwordhash = $value;
+        } elseif ($property == 'password') {
+            $this->passwordhash = password_hash($value, PASSWORD_ARGON2ID );
         } else {
             throw new PropertyAccessException($this, $property);
         }

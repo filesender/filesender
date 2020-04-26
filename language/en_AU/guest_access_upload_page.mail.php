@@ -11,7 +11,7 @@ subject: Guest access upload page
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 The guest {guest.email} has accessed to the upload page from your voucher.
 
@@ -21,7 +21,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>

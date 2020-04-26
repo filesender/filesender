@@ -401,7 +401,7 @@ class User extends DBObject
         // Filter if requested
         if ($criteria) {
             $recipients = array_filter($recipients, function ($recipient) use ($criteria) {
-                return strpos($recipient->email, $criteria) !== false;
+                return stripos($recipient->email, $criteria) !== false;
             });
         }
         
@@ -716,4 +716,11 @@ class User extends DBObject
             $g->delete();
         }
     }
+
+    public function remindLocalAuthDBPassword( $password )
+    {
+        $user = $this;
+        TranslatableEmail::quickSend('local_authdb_password_reminder', $user, array('password' => $password));
+    }
+    
 }

@@ -75,6 +75,7 @@ window.filesender.lang = {
                     }
                     
                     if(typeof v == 'function') v = v();
+                    if(v === undefined || v === null) v = ''; // catch it here since next statement is going to fail
                     if((typeof v == 'object') && (typeof v.length != 'undefined')) v = v.length; // Array
                     
                     switch(fct) {

@@ -334,6 +334,22 @@ class TransferExpiredException extends TransferException
 }
 
 /**
+ * Presumed Expired, when a recipient token is given but it is not found in the database
+ */
+class TransferPresumedExpiredException extends TransferException
+{
+    /**
+     * Constructor
+     *
+     * @param Transfer $transfer
+     */
+    public function __construct()
+    {
+        parent::__construct(null, 'presumed_expired');
+    }
+}
+
+/**
  * Not available
  */
 class TransferNotAvailableException extends TransferException

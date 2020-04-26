@@ -91,6 +91,8 @@ $default = array(
     'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 5 * 1024 * 1024,
     'chunk_upload_security' => 'key',
+    'chunk_upload_roundtriptoken_check_enabled' => false,
+    'chunk_upload_roundtriptoken_accept_empty_before' => 0,
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,
@@ -249,6 +251,11 @@ $default = array(
     //
     'encryption_password_hash_iterations_new_files' => 150000,
 
+
+    // This allows authentication against password hashes in the local filesender db
+    // with the right SAML setup.
+    'using_local_saml_dbauth' => 0,
+    
     
     'transfer_options' => array(
         'email_me_copies' => array(

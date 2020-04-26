@@ -11,7 +11,7 @@ subject: Report about {target.type} #{target.id}
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 Here is the report about your {target.type}:
 
@@ -31,7 +31,7 @@ This file is named {file.path}, has a size of {size:file.size} and is/was availa
 This recipient has email address {recipient.email} and is/was valid until {date:recipient.expires}.
 {endif}
 
-Here is the full log of what happened to the transfer :
+Here is the full log of what happened to the transfer:
 
 {raw:content.plain}
 
@@ -41,7 +41,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>
@@ -65,7 +65,7 @@ Best regards,
 </p>
 
 <p>
-    Here is the full log of what happened to the transfer :
+    Here is the full log of what happened to the transfer:
     <table class="auditlog" rules="rows">
         <thead>
             <th>Date</th>

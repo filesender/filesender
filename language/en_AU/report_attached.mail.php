@@ -11,7 +11,7 @@ subject: Report about {target.type} #{target.id}
 
 {alternative:plain}
 
-Dear Sir or Madam,
+Hello,
 
 Please find the report about transfer #{target.id} attached to this email.
 
@@ -21,7 +21,7 @@ Best regards,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Hello,
 </p>
 
 <p>
