@@ -350,9 +350,6 @@ class RestEndpointUser extends RestEndpoint
         if (!Auth::isAuthenticated()) {
             throw new RestAuthenticationRequiredException();
         }
-        if(!Config::get('using_local_saml_dbauth')) {
-            throw new RestAuthenticationRequiredException();
-        }
         // ... and not guest
         if (Auth::isGuest()) {
             throw new RestOwnershipRequiredException((string)AuthGuest::getGuest(), 'user_info');
@@ -361,9 +358,6 @@ class RestEndpointUser extends RestEndpoint
         $user = Auth::user();
         $userid = -1;
         $data = $this->request->input;
-        // Raw data
-        $username = $data->username;
-        $password = $data->password;
 
 
         if ($data->property == 'frequent_recipients') {
@@ -375,7 +369,14 @@ class RestEndpointUser extends RestEndpoint
             );
             
         }
-        
+
+        // The user/password options are only for local db auth
+        if(!Config::get('using_local_saml_dbauth')) {
+            throw new RestAuthenticationRequiredException();
+        }
+        // Raw data
+        $username = $data->username;
+        $password = $data->password;
         
         if ($username != "@me" && !Auth::isAdmin()) {
             throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
