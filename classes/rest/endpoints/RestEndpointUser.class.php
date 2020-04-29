@@ -370,6 +370,14 @@ class RestEndpointUser extends RestEndpoint
             
         }
 
+        
+        /////////
+        //
+        // WARNING
+        //
+        // From here down we are only handling updates to local user and password
+        // when local_saml_db_auth is in place
+        // 
         // The user/password options are only for local db auth
         if(!Config::get('using_local_saml_dbauth')) {
             throw new RestAuthenticationRequiredException();
