@@ -60,7 +60,8 @@ class RestEndpointUser extends RestEndpoint
             'created' => RestUtilities::formatDate($user->created),
             'last_activity' => RestUtilities::formatDate($user->last_activity),
             'lang' => $user->lang,
-            'frequent_recipients' => $user->frequent_recipients
+            'frequent_recipients' => $user->frequent_recipients,
+            'eventcount' => $user->eventcount,
         );
     }
     
@@ -144,6 +145,29 @@ class RestEndpointUser extends RestEndpoint
             // Search user
             if (!Auth::isAdmin()) {
                 throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
+            }
+
+            $since = null;
+            if (array_key_exists('since', $_REQUEST)) {
+                $since = Utilities::sanitizeInput($_REQUEST['since']);
+                if( !is_numeric($since) ) {
+                    $since = null;
+                }
+            }
+            
+            if (array_key_exists('hitlimit', $_REQUEST) && $_REQUEST['hitlimit']!='') {
+                $s = Utilities::sanitizeInput($_REQUEST['hitlimit']);
+
+                return array_map(function ($user) {
+                    return self::cast($user);
+                }, array_values(AuditLog::findUsers($s,'User',$since)));
+            }
+            if (array_key_exists('hitlimitbycount', $_REQUEST)) {
+                $s = Utilities::sanitizeInput($_REQUEST['hitlimitbycount']);
+
+                return array_map(function ($user) {
+                    return self::cast($user);
+                }, array_values(AuditLog::findUsersOrderedByCount($s,'User',$since)));
             }
             
             if (!array_key_exists('match', $_REQUEST)) {

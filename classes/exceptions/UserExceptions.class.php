@@ -84,3 +84,15 @@ class UserHitGuestLimitException extends DetailedException
         );
     }
 }
+class UserHitGuestRateLimitException extends DetailedException
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct(
+            'user_hit_guest_rate_limit'
+        );
+    }
+}
