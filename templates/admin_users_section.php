@@ -37,6 +37,7 @@
     
 <br/>
 
+
 <h2>{tr:find_users_who_might_be_abusing_the_system}</h2>
 <fieldset class="search">
 <table>
