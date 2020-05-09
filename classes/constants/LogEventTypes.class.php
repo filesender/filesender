@@ -32,6 +32,9 @@
 
 /**
  * Class containing all tags (constants) for audit logs
+ *
+ * Note that the _LH entries are made by Logger::rateLimit() for the caller automatically
+ * to indicate a "Limit is Hit" for an event type.
  */
 class LogEventTypes extends Enum
 {
@@ -49,14 +52,21 @@ class LogEventTypes extends Enum
    const FILE_UPDATED             = 'file_updated';   // File has been updated
    const FILE_MOVED               = 'file_moved';     // File has been moved
    const FILE_DELETED             = 'file_deleted';   // File has been deleted
-   
+
    /* GUEST */
-    const GUEST_CREATED            = 'guest_created';   // Guest created
+   const GUEST_CREATED            = 'guest_created';         // Guest created (logs the guest)
+   const GUEST_CREATED_RATE       = 'guest_created_rate';    // Guest created (target = user) used in rate limiting
+   const GUEST_CREATED_LH         = 'guest_created_lh';      // limit hit (target = user)
+   const GUEST_CREATED_RATE_LH    = 'guest_created_rate_lh'; // limit hit (target = user)
    const GUEST_SENT               = 'guest_sent';      // Guest send to recipients
    const GUEST_USED               = 'guest_used';      // Guest has been used
    const GUEST_EXPIRED            = 'guest_expired';   // Guest expired
    const GUEST_CLOSED             = 'guest_closed';    // Guest closed
    const GUEST_DELETED            = 'guest_deleted';   // Guest canceled
+   const GUEST_CLOSED_UNUSED      = 'guest_closed_unused'; // Guest did not upload a single file
+   const GUEST_REMIND_RATE        = 'guest_remind_rate';
+   const GUEST_REMIND_RATE_LH     = 'guest_remind_rate_lh';
+
    
    /* TRANSFER */
     const TRANSFER_STARTED         = 'transfer_started';         // Transfer started

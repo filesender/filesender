@@ -202,6 +202,22 @@ window.filesender.client = {
                     return;
                 }
 
+                if( error.message == 'guest_reminder_rate_limit_reached')
+                {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.guest_reminder_rate_limit_reached,
+                                        function() {} );
+                    return;
+                }
+
+                if( error.message == 'user_hit_guest_rate_limit')
+                {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.user_hit_guest_rate_limit,
+                                        function() {} );
+                    return;
+                }
+                
                 
                 if(error.message == 'undergoing_maintenance') {
                     if(filesender.client.maintenance) return;
