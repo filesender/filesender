@@ -60,7 +60,7 @@ $(function() {
 
             logs.toggleClass('no_results', !found.length);
 
-            for(var i=0; i<found.length; i++)
+            for(var i=found.length-1; i>=0; i--)
                 add_log(found[i]);
 
             logs.removeClass('searching');
