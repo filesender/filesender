@@ -39,6 +39,7 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
+
 window.filesender.logger = {
     // Log stash (memory)
     stash: [],
@@ -88,7 +89,18 @@ window.filesender.logger = {
         filesender.client.put('/clientlogs/@me', this.stash, function(data) {
             if(callback) callback(data);
         });
+    },
+
+    export: function() {
+        var d = new Date();
+        var obj = { type: "filesender-client-log",
+                    generated: d.toLocaleString(),
+                    log: this.stash
+                  };
+        var blob = new Blob([JSON.stringify(obj, null, '\t')], {'type':'text/plain'});
+        saveAs(blob, 'filesender-clientlog.txt');
     }
+    
 };
 
 filesender.logger.nopwatcher = {
@@ -172,6 +184,17 @@ jQuery.each( wrap, function(i,val) {
         f(msg);
     };
 });
+
+
+/**
+ * Replace the filesender log function with a forward to logger.log
+ * to collect logging information in the clientlogs
+ */
+window.filesender.log = function( msg )
+{
+    filesender.logger.log(msg);
+    console.log(msg);
+}
 
 // Capture js errors
 window.addEventListener('error', function(e) {
