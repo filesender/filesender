@@ -175,7 +175,7 @@ window.filesender.config = {
     tr_dp_date_format:   "<?php echo Config::get('tr_dp_date_format') ?>",
     tr_dp_date_format_hint:   "<?php echo Config::get('tr_dp_date_format_hint') ?>",
 
-    internal_use_only_running_on_ci:  "<?php echo Config::get('internal_use_only_running_on_ci') ?>",
+    internal_use_only_running_on_ci:  <?php echo value_to_TF(Config::get('internal_use_only_running_on_ci')) ?>,
     guest_reminder_limit_per_day:  <?php echo Config::get('guest_reminder_limit_per_day') ?>,
 };
 
