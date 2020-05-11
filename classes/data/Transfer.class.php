@@ -208,6 +208,7 @@ class Transfer extends DBObject
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
+    const COUNT_UPLOADED_FROM_GUEST = "guest_id = :guest_id AND status!='created' ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -338,6 +339,24 @@ class Transfer extends DBObject
         }
         
         return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
+    }
+
+
+    /**
+     * Get number of transfers created by guest that were at some stage
+     * made available.
+     *
+     * @param mixed $guest Guest or Guest id
+     *
+     * @return int count
+     */
+    public static function countUploadedFromGuest($guest)
+    {
+        if ($guest instanceof Guest) {
+            $guest = $guest->id;
+        }
+        
+        return self::count(self::COUNT_UPLOADED_FROM_GUEST, array(':guest_id' => $guest));
     }
     
 

@@ -349,7 +349,11 @@ class DatabasePgsql
             case 'text':
                 $typematcher = 'text';
                 break;
-            
+
+            case 'mediumtext':
+                $typematcher = 'text';
+                break;
+                
             case 'date':
                 $typematcher = 'date';
                 break;
@@ -491,7 +495,11 @@ class DatabasePgsql
                 case 'text':
                     $type .= 'text';
                     break;
-                
+
+                case 'mediumtext':
+                    $type .= 'text';
+                    break;
+                    
                 case 'date':
                     $type .= 'date';
                     break;
@@ -610,7 +618,11 @@ class DatabasePgsql
             case 'text':
                 $sql .= 'text';
                 break;
-            
+
+            case 'mediumtext':
+                $sql .= 'text';
+                break;
+                
             case 'date':
                 $sql .= 'date';
                 break;

@@ -171,11 +171,18 @@ class RestEndpointGuest extends RestEndpoint
         // Check Guest creation limits
         $existingGuests = Guest::fromUserAvailable($user);
         if (count($existingGuests) >= Config::get('guest_limit_per_user')) {
+            Logger::logActivity( LogEventTypes::GUEST_CREATED_LH, $user );
             throw new UserHitGuestLimitException();
         }
-        
+
+        // Can only re(create) $x guests per day
+        Logger::logActivityRateLimited( 'UserHitGuestRateLimitException',
+                                        'guest_create_limit_per_day',
+                                        LogEventTypes::GUEST_CREATED_RATE, $user );
+
         // Create new guest object
         $guest = Guest::create($data->recipient, $data->from);
+
         
         // Set provided metadata
         if ($data->subject) {
@@ -240,6 +247,7 @@ class RestEndpointGuest extends RestEndpoint
         
         // Make guest available, this saves the object and send email to the guest
         $guest->makeAvailable();
+
         
         return array(
             'path' => '/guest/'.$guest->id,
