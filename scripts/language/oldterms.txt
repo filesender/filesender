@@ -204,6 +204,7 @@ error_date
 error_details
 error_dialog
 error_type
+event_count
 expand_all
 expires
 expiry_date
@@ -235,6 +236,7 @@ file_size_does_not_match
 files
 files_downloaded
 filtered_transfer_log
+find_users_who_might_be_abusing_the_system
 forget
 forward
 forward_guest_voucher
@@ -254,6 +256,8 @@ guest_not_found
 guest_options
 guest_reminded
 guest_reminder
+guest_reminder_limit_reached
+guest_reminder_rate_limit_reached
 guest_too_many_recipients
 guest_transfer_options
 guest_upload_complete
@@ -268,6 +272,8 @@ help
 help_page
 help_text
 hide_details
+hit_guest_creation_rate_limit
+hit_guest_creation_total_limit
 host_quota
 host_quota_usage
 ignore
@@ -300,6 +306,8 @@ me
 message
 message_can_not_contain_urls
 missing_files_for_restart
+most_guest_deletion
+most_user_deleted_guests_that_did_not_send_a_single_file
 n_more
 need_to_readd_files
 never
@@ -315,6 +323,8 @@ noscript
 nothing_happened_as_of_late_you_can_send_client_logs
 number_of_files
 ok
+oneday
+oneweek
 open_auditlog
 open_file_auditlog
 open_recipient_auditlog
@@ -518,6 +528,7 @@ transfer_no_files
 transfer_no_recipients
 transfer_not_availabe
 transfer_not_found
+transfer_presumed_expired
 transfer_rejected
 transfer_reminded
 transfer_reminder
@@ -530,6 +541,7 @@ transfers_page
 translate_email_footer
 translate_to
 turning_on_guests_get_a_link_disables_can_only_send_to_me
+twoeightdays
 undergoing_maintenance
 unexpected_file
 unknown_page
@@ -551,9 +563,11 @@ user_additional
 user_additional_body
 user_additionnal
 user_auth_secret
+user_count_estimate
 user_created
 user_deleted
 user_hit_guest_limit
+user_hit_guest_rate_limit
 user_id
 user_lang
 user_missing_uid

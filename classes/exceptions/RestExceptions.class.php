@@ -134,6 +134,31 @@ class RestOwnershipRequiredException extends RestException
 }
 
 /**
+ * Used when Transfer::havePermission() returns false. 
+ * Similar to throwing RestOwnershipRequiredException but
+ * user info does not need to be passed it is taken from 
+ * active environment.
+ */
+class RestTransferPermissionRequiredException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param mixed $resource the wanted resource selector
+     */
+    public function __construct($resource)
+    {
+        $user = Auth::user();
+        $uid = $user->id;
+        if (Auth::isGuest()) {
+            $guest = AuthGuest::getGuest();
+            $uid = $guest->id;
+        }
+        parent::__construct('rest_ownership_required', 403, array('uid' => $uid, 'ressource' => $resource));
+    }
+}
+
+/**
  * REST missing parameter
  */
 class RestMissingParameterException extends RestException

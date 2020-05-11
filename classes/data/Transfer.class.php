@@ -208,6 +208,7 @@ class Transfer extends DBObject
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
+    const COUNT_UPLOADED_FROM_GUEST = "guest_id = :guest_id AND status!='created' ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -339,6 +340,24 @@ class Transfer extends DBObject
         
         return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
     }
+
+
+    /**
+     * Get number of transfers created by guest that were at some stage
+     * made available.
+     *
+     * @param mixed $guest Guest or Guest id
+     *
+     * @return int count
+     */
+    public static function countUploadedFromGuest($guest)
+    {
+        if ($guest instanceof Guest) {
+            $guest = $guest->id;
+        }
+        
+        return self::count(self::COUNT_UPLOADED_FROM_GUEST, array(':guest_id' => $guest));
+    }
     
 
     /**
@@ -468,7 +487,7 @@ class Transfer extends DBObject
         $quota = Config::get('host_quota');
         
         $used = 0;
-        $s = DBI::query('SELECT size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
+        $s = DBI::query('SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
         foreach ($s->fetchAll() as $r) {
             $used += $r['size'];
         }
@@ -631,6 +650,40 @@ class Transfer extends DBObject
     public function isOwner($user)
     {
         return $this->owner->is($user);
+    }
+
+    /**
+     * Check that the user has read/write permission 
+     * for this transfer.
+     * 
+     * @return true if they are allowed or false if access should be forbidden
+     */
+    public function havePermission()
+    {
+        $user = Auth::user();
+
+        // This should never happen
+        if (Auth::isGuest() && Auth::isAdmin()) {
+            return FALSE;
+        }
+        
+        if (Auth::isGuest()) {
+            $guest = AuthGuest::getGuest();
+            if( !$guest ) {
+                return FALSE;
+            }
+            if( $guest->id != $this->guest_id ) {
+                return FALSE;
+            }
+        }
+        
+        if (!$this->isOwner($user)) {
+            if( !Auth::isAdmin()) {
+                return FALSE;
+            }
+        }
+
+        return TRUE;
     }
     
     /**

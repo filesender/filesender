@@ -166,7 +166,9 @@ $default = array(
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
     'guest_limit_per_user' => 50,
+    'guest_create_limit_per_day' => 30,
     'guest_reminder_limit' => 50,
+    'guest_reminder_limit_per_day' => 3,
     'recipient_reminder_limit' => 50,
 
     'autocomplete' => false, 

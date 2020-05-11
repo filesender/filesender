@@ -251,6 +251,10 @@ class DatabaseMysql
             case 'text':
                 $typematcher = 'text';
                 break;
+
+            case 'mediumtext':
+                $typematcher = 'mediumtext';
+                break;
             
             case 'date':
                 $typematcher = 'date';
@@ -404,7 +408,11 @@ class DatabaseMysql
             case 'text':
                 $mysql = 'TEXT';
                 break;
-            
+
+            case 'mediumtext':
+                $mysql = 'MEDIUMTEXT';
+                break;
+                
             case 'date':
                 $mysql = 'DATE';
                 break;

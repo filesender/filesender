@@ -858,7 +858,18 @@ window.filesender.crypto_app = function () {
             });
 
             // Add a field to the prompt
-            var input = $('<input type="text" class="wide" />').appendTo(prompt);
+            var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
+            var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
+            prompt.append(toggleView);
+            $('#showdlpass').on(
+                "click",
+                function() {
+                    var v = $('#showdlpass').is(':checked');
+                    if( v ) { $('#dlpass').attr('type','text'); }
+                    else    { $('#dlpass').attr('type','password'); }
+                }
+            );
             input.focus();
         },
         /**

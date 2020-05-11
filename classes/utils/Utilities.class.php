@@ -347,8 +347,12 @@ class Utilities
             return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
         });
         
-        if(!count($ips))
-            return $_SERVER['REMOTE_ADDR']; // fallback
+        if(!count($ips)) {
+            if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+                return $_SERVER['REMOTE_ADDR']; // fallback
+            }
+            return '127.0.0.1';
+        }
         
         return array_pop($ips);
     }
@@ -629,6 +633,14 @@ class Utilities
             return true;
         }
         return false;
+    }
+
+    public static function ensureArray($v) 
+    {
+        if(is_array($v))
+            return $v;
+
+        return array($v);
     }
 
     /**
