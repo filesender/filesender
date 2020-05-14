@@ -5,11 +5,29 @@
     if(!isset($limit)) $limit = 100000;
     if(!isset($offset)) $offset = 0;
     if(!isset($pagerprefix)) $pagerprefix = '';
+    if(!isset($trsort)) $trsort = TransferQueryOrder::create(); 
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
     $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
     $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
     $haveNext = 0;
     $havePrev = 0;
+
+
+
+if (!function_exists('clickableHeader')) {
+
+    function clickableHeader($displayName,$trsortcol,$trsort) {
+    
+        $tr_url = Utilities::http_build_query(array(
+            's' => Utilities::getGETparam('s','')
+          , 'transfersort' => $trsort->clickableSortValue($trsortcol)
+        ));
+        echo '<a href="' . $tr_url . '">';
+        echo $displayName;
+        echo ' ' . $trsort->screenArrowHTML($trsortcol); 
+        echo '</a>';
+    }
+}
 
 
     // This allows us to key informational displays to a large
@@ -66,7 +84,7 @@
             </th>
             
             <th class="transfer_id">
-                {tr:transfer_id}
+                <?php clickableHeader('{tr:transfer_id}',TransferQueryOrder::COLUMN_ID,$trsort); ?>
             </th>
             
             <?php if($show_guest) { ?>
@@ -76,23 +94,23 @@
             <?php } ?>
             
             <th class="recipients">
-                {tr:recipients}
+                <?php clickableHeader('{tr:recipients}',TransferQueryOrder::COLUMN_RECIPIENTS,$trsort); ?>
             </th>
             
             <th class="size">
-                {tr:size}
+                <?php clickableHeader('{tr:size}',TransferQueryOrder::COLUMN_SIZE,$trsort); ?>
             </th>
             
             <th class="files">
-                {tr:files}
+                <?php clickableHeader('{tr:files}',TransferQueryOrder::COLUMN_FILE,$trsort); ?>
             </th>
             
             <th class="downloads">
-                {tr:downloads}
+                <?php clickableHeader('{tr:downloads}',TransferQueryOrder::COLUMN_DOWNLOAD,$trsort); ?>
             </th>
             
             <th class="expires">
-                {tr:expires}
+                <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort); ?>
             </th>
             
             <th class="actions">

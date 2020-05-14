@@ -176,6 +176,8 @@ class Transfer extends DBObject
     {
         $a = array();
         $authviewdef = array();
+        $sizeviewdev = array();
+        $recipientviewdev = array();
         foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = self::getPrimaryViewDefinition($dbtype);
             
@@ -185,9 +187,55 @@ class Transfer extends DBObject
                                       . self::getDBTable().' t, '
                                             . call_user_func('User::getDBTable').' u, '
                                             . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
+
+            $sizeviewdev[$dbtype] = 'select t.*,sum(f.size) as size from '
+                                  . self::getDBTable().' t, '
+                                        . call_user_func('File::getDBTable').' f '
+                                        . ' where '
+                                        . ' f.transfer_id=t.id '
+                                        . '  group by t.id ';
+            
+            $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
+                                       . self::getDBTable().' t, '
+                                             . call_user_func('Recipient::getDBTable').' r '
+                                             . ' where '
+                                             . ' r.transfer_id=t.id ';
+            $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
+                                . self::getDBTable().' t, '
+                                      . call_user_func('File::getDBTable').' f '
+                                      . ' where '
+                                      . ' f.transfer_id=t.id ';
+
+            $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
+                                    . ' from '
+                                    . self::getDBTable().' t, '
+                                          . call_user_func('AuditLog::getDBTable').' a '
+                                          . " where "
+                                          . " a.target_id=cast(t.id as varchar(255)) "
+                                          . " and target_type = 'Transfer'  "
+                                     . " UNION "
+                                          . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
+                                          . ' from '
+                                          . self::getDBTable().' t, '
+                                          . call_user_func('AuditLog::getDBTable').' a, '
+                                          . call_user_func('File::getDBTable').' f '
+                                          . " where  f.transfer_id=t.id  "
+                                          . "   and a.target_id=cast(f.id as varchar(255)) "
+                                                . "   and target_type = 'File'  ";
+            $auditlogsviewdlc[$dbtype] = 'select t.*,count from '
+                                       . self::getDBTable() . ' t '
+                                             . " left outer join (select id,count(*) as count from transfersauditlogsview where  "
+                                             . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id) zz "
+                                             . " on t.id = zz.id  " ;
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a,
-                      'transfersauthview' => $authviewdef );
+        return array( strtolower(self::getDBTable()) . 'view' => $a
+                    , 'transfersauthview' => $authviewdef
+                    , 'transferssizeview' => $sizeviewdev
+                    , 'transfersrecipientview' => $recipientviewdev
+                    , 'transfersfilesview' => $filesview
+                    , 'transfersauditlogsview' => $auditlogsview
+                    , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
+        );
     }
 
     protected static $secondaryIndexMap = array(
@@ -209,6 +257,9 @@ class Transfer extends DBObject
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
     const COUNT_UPLOADED_FROM_GUEST = "guest_id = :guest_id AND status!='created' ";
+    const UPLOADING_NO_ORDER = "status = 'uploading' ";
+    const AVAILABLE_NO_ORDER = "status = 'available' ";
+    const CLOSED_NO_ORDER = "status = 'closed' ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
