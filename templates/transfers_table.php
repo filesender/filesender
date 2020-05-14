@@ -1,4 +1,7 @@
 <?php
+$nosort = false;
+if(!isset($trsort))  $nosort = true;
+
     if(!isset($status)) $status = 'available';
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
@@ -16,8 +19,12 @@
 
 if (!function_exists('clickableHeader')) {
 
-    function clickableHeader($displayName,$trsortcol,$trsort) {
-    
+    function clickableHeader($displayName,$trsortcol,$trsort,$nosort) {
+        
+        if( $nosort ) {
+            echo $displayName;
+            return;
+        }
         $tr_url = Utilities::http_build_query(array(
             's' => Utilities::getGETparam('s','')
           , 'transfersort' => $trsort->clickableSortValue($trsortcol)
@@ -84,7 +91,7 @@ if (!function_exists('clickableHeader')) {
             </th>
             
             <th class="transfer_id">
-                <?php clickableHeader('{tr:transfer_id}',TransferQueryOrder::COLUMN_ID,$trsort); ?>
+                <?php clickableHeader('{tr:transfer_id}',TransferQueryOrder::COLUMN_ID,$trsort,$nosort); ?>
             </th>
             
             <?php if($show_guest) { ?>
@@ -94,23 +101,23 @@ if (!function_exists('clickableHeader')) {
             <?php } ?>
             
             <th class="recipients">
-                <?php clickableHeader('{tr:recipients}',TransferQueryOrder::COLUMN_RECIPIENTS,$trsort); ?>
+                <?php clickableHeader('{tr:recipients}',TransferQueryOrder::COLUMN_RECIPIENTS,$trsort,$nosort); ?>
             </th>
             
             <th class="size">
-                <?php clickableHeader('{tr:size}',TransferQueryOrder::COLUMN_SIZE,$trsort); ?>
+                <?php clickableHeader('{tr:size}',TransferQueryOrder::COLUMN_SIZE,$trsort,$nosort); ?>
             </th>
             
             <th class="files">
-                <?php clickableHeader('{tr:files}',TransferQueryOrder::COLUMN_FILE,$trsort); ?>
+                <?php clickableHeader('{tr:files}',TransferQueryOrder::COLUMN_FILE,$trsort,$nosort); ?>
             </th>
             
             <th class="downloads">
-                <?php clickableHeader('{tr:downloads}',TransferQueryOrder::COLUMN_DOWNLOAD,$trsort); ?>
+                <?php clickableHeader('{tr:downloads}',TransferQueryOrder::COLUMN_DOWNLOAD,$trsort,$nosort); ?>
             </th>
             
             <th class="expires">
-                <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort); ?>
+                <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort,$nosort); ?>
             </th>
             
             <th class="actions">
