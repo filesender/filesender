@@ -30,11 +30,12 @@ $transfers_page = function($status) {
     ));
     
     $navigation = '<div class="transfers_list_page_navigation">'."\n";
-    
+    $transfersort = Utilities::getGETparam('transfersort','');
+
     if($offset) {
         $po = max(0, $offset - $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $p = 1;
@@ -42,7 +43,7 @@ $transfers_page = function($status) {
         if($o >= $offset && $o < $offset + $page_size) {
             $navigation .= '<span>'.$p.'</span>'."\n";
         } else {
-            $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'#'.$status.'_transfers">'.$p.'</a>'."\n";
+            $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'&transfersort='.$transfersort.'#'.$status.'_transfers">'.$p.'</a>'."\n";
         }
         
         $p++;
@@ -51,8 +52,8 @@ $transfers_page = function($status) {
     if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
         $lo = $total_count - ($total_count % $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $navigation .= '</div>'."\n";

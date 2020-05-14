@@ -60,12 +60,13 @@ if (!function_exists('clickableHeader')) {
         $cgioffset = $pagerprefix . 'offset';
         $cgilimit  = $pagerprefix . 'limit';
         $nextPage  = $offset+$limit;
-        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit";
+        $transfersort = Utilities::getGETparam('transfersort','');
+        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort";
         
         if( $havePrev ) {
            $prevPage = max(0,$offset-$limit);
-           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
-           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit&transfersort=$transfersort'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit&transfersort=$transfersort'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
         }
