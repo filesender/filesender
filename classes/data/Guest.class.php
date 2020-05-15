@@ -538,9 +538,13 @@ class Guest extends DBObject
      * by calling class::validateConfig() so that particular pages do not
      * have to be loaded to find configuration issues.
      */
-    public static function validateConfig()
+    public static function validateConfig( $allowSlowerTests = false )
     {
         self::allOptions();
+
+        if( $allowSlowerTests ) {
+        }
+        
     }
     
     /**
