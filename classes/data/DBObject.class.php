@@ -247,7 +247,16 @@ class DBObject
      */
     private static function buildStatement($selectClause, $criteria = null, $placeholders = array())
     {
-        $query = 'SELECT ' . $selectClause . ' FROM '.static::getDBTable();
+        $tablename = static::getDBTable();
+        if (is_array($criteria)) {
+            if (array_key_exists('view', $criteria)) {
+                $v = $criteria['view'];
+                if( $v ) {
+                    $tablename = $v;
+                }
+            }
+        }
+        $query = 'SELECT ' . $selectClause . ' FROM '. $tablename . ' ';
         $count = null;
         $offset = null;
         

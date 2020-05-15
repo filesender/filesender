@@ -1,15 +1,40 @@
 <?php
+$nosort = false;
+if(!isset($trsort))  $nosort = true;
+
     if(!isset($status)) $status = 'available';
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
     if(!isset($limit)) $limit = 100000;
     if(!isset($offset)) $offset = 0;
     if(!isset($pagerprefix)) $pagerprefix = '';
+    if(!isset($trsort)) $trsort = TransferQueryOrder::create(); 
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
     $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
     $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
     $haveNext = 0;
     $havePrev = 0;
+
+
+
+if (!function_exists('clickableHeader')) {
+
+    function clickableHeader($displayName,$trsortcol,$trsort,$nosort) {
+        
+        if( $nosort ) {
+            echo $displayName;
+            return;
+        }
+        $tr_url = Utilities::http_build_query(array(
+            's' => Utilities::getGETparam('s','')
+          , 'transfersort' => $trsort->clickableSortValue($trsortcol)
+        ));
+        echo '<a href="' . $tr_url . '">';
+        echo $displayName;
+        echo ' ' . $trsort->screenArrowHTML($trsortcol); 
+        echo '</a>';
+    }
+}
 
 
     // This allows us to key informational displays to a large
@@ -35,12 +60,13 @@
         $cgioffset = $pagerprefix . 'offset';
         $cgilimit  = $pagerprefix . 'limit';
         $nextPage  = $offset+$limit;
-        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit";
+        $transfersort = Utilities::getGETparam('transfersort','');
+        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort";
         
         if( $havePrev ) {
            $prevPage = max(0,$offset-$limit);
-           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
-           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit&transfersort=$transfersort'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit&transfersort=$transfersort'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
         }
@@ -66,7 +92,7 @@
             </th>
             
             <th class="transfer_id">
-                {tr:transfer_id}
+                <?php clickableHeader('{tr:transfer_id}',TransferQueryOrder::COLUMN_ID,$trsort,$nosort); ?>
             </th>
             
             <?php if($show_guest) { ?>
@@ -76,23 +102,23 @@
             <?php } ?>
             
             <th class="recipients">
-                {tr:recipients}
+                <?php clickableHeader('{tr:recipients}',TransferQueryOrder::COLUMN_RECIPIENTS,$trsort,$nosort); ?>
             </th>
             
             <th class="size">
-                {tr:size}
+                <?php clickableHeader('{tr:size}',TransferQueryOrder::COLUMN_SIZE,$trsort,$nosort); ?>
             </th>
             
             <th class="files">
-                {tr:files}
+                <?php clickableHeader('{tr:files}',TransferQueryOrder::COLUMN_FILE,$trsort,$nosort); ?>
             </th>
             
             <th class="downloads">
-                {tr:downloads}
+                <?php clickableHeader('{tr:downloads}',TransferQueryOrder::COLUMN_DOWNLOAD,$trsort,$nosort); ?>
             </th>
             
             <th class="expires">
-                {tr:expires}
+                <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort,$nosort); ?>
             </th>
             
             <th class="actions">
