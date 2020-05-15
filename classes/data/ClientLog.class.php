@@ -235,7 +235,7 @@ class ClientLog extends DBObject
      * by calling class::validateConfig() so that particular pages do not
      * have to be loaded to find configuration issues.
      */
-    public static function validateConfig()
+    public static function validateConfig( $allowSlowerTests = false )
     {
         $days = Config::get('clientlogs_lifetime');
         if (!$days || !is_int($days) || $days <= 0) {
@@ -245,6 +245,9 @@ class ClientLog extends DBObject
         $size = Config::get('clientlogs_stashsize');
         if (!is_int($size) || ($size <= 0)) {
             throw new ConfigBadParameterException('clientlogs_stashsize must be a positive integer');
+        }
+
+        if( $allowSlowerTests ) {
         }
     }
 
