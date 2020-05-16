@@ -426,6 +426,7 @@ class RestEndpointUser extends RestEndpoint
             // Get matching user
             $authid = Authentication::ensureAuthIDFromSAMLUID($username);
             $user = User::fromAuthId($authid);
+            $user->email_addresses = $username;
             
             $user->remindLocalAuthDBPassword( $password );
             return array(
