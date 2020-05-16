@@ -75,6 +75,7 @@ before_script:
 # to catch bad configurations that might use the wrong database by mistake
 - sh -c "if [ '$DB' = 'pgsql' ]; then sudo service mysql stop  ; fi "
 - sh -c "if [ '$DB' = 'mysql' ]; then sudo service postgresql stop  ; fi "
+- sh -c "if [ '$TESTSUITE' = 'core' ]; then php scripts/task/cron.php ; fi "
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
