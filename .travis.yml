@@ -76,7 +76,8 @@ before_script:
 - sh -c "if [ '$DB' = 'pgsql' ]; then sudo service mysql stop  ; fi "
 - sh -c "if [ '$DB' = 'mysql' ]; then sudo service postgresql stop  ; fi "
 - echo "$TESTSUITE"
-- sh -c "if [ '$TESTSUITE' = 'core' ]; then echo "testing cron job..."; php scripts/task/cron.php ; fi "
+- sh -c "if [ '$TESTSUITE' = 'core' ]; then echo "testing cron job..." ; fi "
+- sh -c "if [ '$TESTSUITE' = 'core' ]; then php scripts/task/cron.php ; fi "
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
