@@ -409,7 +409,7 @@ class RestEndpointUser extends RestEndpoint
         // Raw data
         $username = $data->username;
         $password = $data->password;
-        
+
         if ($username != "@me" && !Auth::isAdmin()) {
             throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
         }
@@ -422,18 +422,28 @@ class RestEndpointUser extends RestEndpoint
             if(!Auth::isAdmin()) {
                 throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
             }
+
+            // Get matching user
+            $authid = Authentication::ensureAuthIDFromSAMLUID($username);
+            $user = User::fromAuthId($authid);
+            $user->email_addresses = $username;
+            
             $user->remindLocalAuthDBPassword( $password );
             return array(
-                'path' => '/user/'.$username
+                'path' => '/user/'.$username,
+                'data' => ''
             );
         }
         
         $aa = Authentication::ensure( $username );
         $aa->password = $password;
         $aa->save();
+        $user = User::fromAuthID($aa->id);
+        $user->save();
 
         return array(
-            'path' => '/user/'.$username
+            'path' => '/user/'.$username,
+            'data' => ''
         );
         
     }
