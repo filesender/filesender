@@ -81,8 +81,8 @@ after_failure:
 - find ./log -type f -exec cat {} +
 script:
 - ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
-- sh -c "if [ '$TESTSUITE' = 'core' ]; then echo testing cron job ; fi "
-- sh -c "if [ '$TESTSUITE' = 'core' ]; then php scripts/task/cron.php ; fi "
+- sh -c "if [ '$TESTSUITE' = 'cron' ]; then echo testing cron job ; fi "
+- sh -c "if [ '$TESTSUITE' = 'cron' ]; then php scripts/task/cron.php --testing-mode ; fi "
 notifications:
   email: false
 ##
@@ -99,4 +99,6 @@ matrix:
       env:  DB=mysql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
     - name: mysql-selemium1
       env:  DB=mysql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+    - name: pgsql-cron
+      env:  DB=pgsql TESTSUITE=cron      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
 
