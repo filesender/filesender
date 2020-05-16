@@ -924,6 +924,43 @@ table.list .date {
     margin-right: 1em;
 }
 
+/* transfers page */
+
+.transfers_page .menu {
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+
+.transfers_page .menu ul {
+    display: inline;
+    float: left;
+    list-style: none outside none;
+    margin-bottom: -1px;
+}
+
+.transfers_page .menu li {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin: 0 0.3em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em 0.5em 0 0;
+    -moz-border-radius: 0.5em 0.5em 0 0;
+    cursor: pointer;
+    background-color: #ccc;
+}
+
+.transfers_page .menu li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+.transfers_page .menu li.current {
+    background-color: #fff;
+}
+
 
 /* transfers table */
 

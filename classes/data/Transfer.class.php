@@ -260,6 +260,8 @@ class Transfer extends DBObject
     const UPLOADING_NO_ORDER = "status = 'uploading' ";
     const AVAILABLE_NO_ORDER = "status = 'available' ";
     const CLOSED_NO_ORDER = "status = 'closed' ";
+    const FROM_USER_NO_ORDER = "userid = :userid AND status='available' ";
+    const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed' ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -369,6 +371,46 @@ class Transfer extends DBObject
 
         return self::all(
             array('where' => $closed ? self::FROM_USER_CLOSED : self::FROM_USER
+                               ,'limit' => $limit
+                               ,'offset' => $offset
+                               ),
+            array(':userid' => $user)
+                         );
+    }
+    /**
+     * Get transfers from user. This is like fromUser() but allows you to pass in
+     * data from a TransferQueryOrder or other source to pick data from a view and 
+     * sort the result explicitly. A view can be used to pick the resulting data from one
+     * of the transfers views defined above, for example, using transfersfilesview to
+     * include the total transfer size that can then be used to "ORDER BY size".
+     *
+     * $limit and $offset can be used to page through an ordered result set by starting
+     * at $offset in the results and only returning $limit results. The next page would
+     * then be $newoffset = $offset+$limit and a slice of $limit results returned again.
+     *
+     * @param mixed $user User or user id
+     * @param string $viewClause the view to use for example from TransferQueryOrder::getViewName()
+     * @param string $orderByClause how to ORDER BY the results. For example from TransferQueryOrder::getOrderByClause()
+     * @param bool $closed
+     * @param int $limit how many result to return
+     * @param int $offset where to start results from in ordered result set.
+     *
+     * @return array of Transfer
+     */
+    public static function fromUserOrdered( $user,
+                                            $viewClause,
+                                            $orderByClause,
+                                            $closed = false, $limit = null, $offset = null)
+    {
+        if ($user instanceof User) {
+            $user = $user->id;
+        }
+
+        return self::all(
+            array(
+                'view'  => $viewClause,
+                'order' => $orderByClause,
+                'where' => $closed ? self::FROM_USER_CLOSED_NO_ORDER : self::FROM_USER_NO_ORDER
                                ,'limit' => $limit
                                ,'offset' => $offset
                                ),
