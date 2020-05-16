@@ -75,14 +75,14 @@ before_script:
 # to catch bad configurations that might use the wrong database by mistake
 - sh -c "if [ '$DB' = 'pgsql' ]; then sudo service mysql stop  ; fi "
 - sh -c "if [ '$DB' = 'mysql' ]; then sudo service postgresql stop  ; fi "
+- sh -c "if [ '$TESTSUITE' = 'cron' ]; then echo testing cron job ; fi "
+- sh -c "if [ '$TESTSUITE' = 'cron' ]; then php scripts/task/cron.php --testing-mode ; fi "
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
 - ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
-- sh -c "if [ '$TESTSUITE' = 'cron' ]; then echo testing cron job ; fi "
-- sh -c "if [ '$TESTSUITE' = 'cron' ]; then php scripts/task/cron.php --testing-mode ; fi "
 notifications:
   email: false
 ##
