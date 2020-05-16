@@ -439,7 +439,7 @@ class RestEndpointUser extends RestEndpoint
         $aa->password = $password;
         $aa->save();
         $user = User::fromAuthID($aa->id);
-        
+        $user->save();
 
         return array(
             'path' => '/user/'.$username,
