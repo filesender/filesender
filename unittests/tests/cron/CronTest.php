@@ -37,7 +37,7 @@ require_once dirname(__FILE__) . '/../common/CommonUnitTestCase.php';
  * 
  * @backupGlobals disabled
  */
-class DatasetTest extends CommonUnitTestCase {
+class CronTest extends CommonUnitTestCase {
     /*
      * Some variables used in tests case
      */
@@ -60,7 +60,18 @@ class DatasetTest extends CommonUnitTestCase {
      * @return int: true test succeed
      */
     public function testCron() {
-        $this->assertEquals( 1,1 );
+
+        $f = File::fromUid('23e81e38-7796-4af5-b63f-c4e3626166a9');
+        $t = $f->transfer;
+        $this->assertEquals( 2, $t->id );
+        $this->assertEquals( 'closed',  $t->status );
+
+        $f = File::fromUid('6fa18c0f-46fb-44ec-96c1-783525e6c5e7');
+        $t = $f->transfer;
+        $this->assertEquals( 5, $t->id );
+        $this->assertEquals( 'available',  $t->status );
+
+        
         return true;
     }
     

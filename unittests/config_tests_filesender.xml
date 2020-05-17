@@ -63,7 +63,7 @@
         </testsuite>
 
         <testsuite name="cron" >
-          <file>tests/dataset/CronTest.php</file>
+          <file>tests/cron/CronTest.php</file>
         </testsuite>
         
     </testsuites>
