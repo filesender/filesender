@@ -19,6 +19,22 @@
     if(!in_array($section, $sections)) {
         throw new GUIUnknownAdminSectionException($section);
     }
+
+    $cgiuid = "";
+
+    $user = Auth::user();
+    if (Auth::isAuthenticated()) {
+        if (Auth::isAdmin()) {
+            
+            $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
+            if( $uid ) {
+                if( Config::get('admin_can_view_user_transfers_page')) {
+                    $user = User::fromId( $uid );
+                }
+                $cgiuid = "&uid=".$uid;
+            }
+        }
+    }
 ?>
 <div class="box">
 
@@ -26,7 +42,7 @@
         <ul>
         <?php foreach($sections as $s) { ?>
             <li class="<?php if($s == $section) echo 'current' ?>">
-                <a href="?s=transfers&as=<?php echo $s ?>">
+                <a href="?s=transfers&as=<?php echo $s . $cgiuid ?>">
                     <?php echo Lang::tr($s.'_transfers') ?>
                 </a>
             </li>
@@ -41,7 +57,7 @@
             Template::display('transfers_table', array(
                 'status' => 'closed',
                 'mode' => 'user',
-                'transfers' => Transfer::fromUserOrdered(Auth::user(),
+                'transfers' => Transfer::fromUserOrdered($user,
                                                          $trsort->getViewName(),
                                                          $trsort->getOrderByClause(),
                                                          true, $closedlimit+1, $closedoffset ),
@@ -55,7 +71,7 @@
             Template::display('transfers_table', array(
                 'status' => 'available',
                 'mode' => 'user',
-                'transfers' => Transfer::fromUserOrdered(Auth::user(),
+                'transfers' => Transfer::fromUserOrdered($user,
                                                          $trsort->getViewName(),
                                                          $trsort->getOrderByClause(),
                                                          false, $openlimit+1, $openoffset ),

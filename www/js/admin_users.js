@@ -81,6 +81,14 @@ $(function() {
         u.find('.event_count').text(user.eventcount);
         u.appendTo(results);
 
+        u.find('[data-action="show-transfers"]').on('click', function() {
+            var id = $(this).closest('.user').attr('data-id');
+            filesender.ui.redirect( filesender.config.base_path
+                                    + '?s=transfers'
+                                    + '&uid=' + id );
+            
+        });
+        
         u.find('[data-action="show-client-logs"]').on('click', function() {
             var id = $(this).closest('.user').attr('data-id');
             show_logs(id);

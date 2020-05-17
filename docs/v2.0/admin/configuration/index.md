@@ -26,7 +26,7 @@ A note about colours;
 * [site_url](#site_url)
 * [site_logouturl](#site_logouturl)
 * [reports_show_ip_addr](#reports_show_ip_addr)
-
+* [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
 
 ## Security settings
 * [header_x_frame_options](#header_x_frame_options)
@@ -327,6 +327,17 @@ A note about colours;
 * __default:__ false
 * __available:__ since version 2.0
 * __comment:__ If you want to hide IP addresses from reports set it to false
+
+
+### admin_can_view_user_transfers_page
+
+* __description:__ Allow admin to view transfers page for users
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.18
+* __comment:__ This allows an admin to find a user with admin/users and click to see the "my transfers" page that the specific user would see. ie, the admin sees the user's transfers instead of seeing their own. The menu becomes red in this mode and "my transfers" is changed to "user transfers" to attempt to caution the administrator that they are dealing with user data rather than their own.
+
 
 
 ### header_x_frame_options

@@ -195,7 +195,8 @@ $default = array(
     'site_logouturl' => function() {
         return Config::get('site_url').'?s=logout';
     },
-    
+
+    'admin_can_view_user_transfers_page' => false,
     'show_storage_statistics_in_admin' => true,
 
     'cloud_s3_region'   => 'us-east-1',
