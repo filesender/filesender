@@ -12,7 +12,8 @@ If you want to add your FileSender installation to this list, send an email to f
 | --- | --- | --- |---|
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016|
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012|
-| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014|
+| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at/](https://filesender.ihs.ac.at)  | Jan 2014|
+|Azerbeijan| National Academy of Sciences | [https://filesender.science.az/] (https://filesender.science.az) | Mar 2020 |
 | Belgium  | BELNET  | [https://filesender.belnet.be/](https://filesender.belnet.be/)      | Mar 2010|
 | Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011|
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010|
@@ -36,7 +37,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Norway  | UNINETT  | [https://filesender.uninett.no/](https://filesender.uninett.no/)    | 2009|
 | Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013|
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011|
-| Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018|
+| Russian Federation | RUNNet |  [https://filesender.runnet.ru/] (https://filesender.runnet.ru/)  | Mar 2018|
 | Serbia  | AMRES    | [https://filesender.amres.ac.rs/](https://filesender.amres.ac.rs/)    | Jul 2014|
 | Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011|
 | Spain    | RedIRIS  | [https://filesender.rediris.es](https://filesender.rediris.es)      | Mar 2017|
