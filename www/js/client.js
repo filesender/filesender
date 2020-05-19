@@ -784,5 +784,8 @@ window.filesender.client = {
         return this.post('/user/' + id, {remind: true, username: id, password: password }, callback );
     },
     
+    removeTransferOption: function(id, tropt, callback) {
+        return this.put('/transfer/' + id, {'optionremove':true, option: tropt}, callback);
+    },
 
 };

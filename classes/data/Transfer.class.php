@@ -887,6 +887,17 @@ class Transfer extends DBObject
         }
         return false;
     }
+    public function setOption($option,$v)
+    {
+        // allow population from default.
+        $this->getOption($option);
+        
+        $options = static::allOptions();
+        if (array_key_exists($option, $options)) {
+            $this->options[$option] = $v;
+        }
+        return $v;
+    }
     
     /**
      * Tells wether the transfer is expired

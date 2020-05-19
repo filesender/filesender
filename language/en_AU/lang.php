@@ -570,3 +570,7 @@ $lang['oneweek'] = '1 week';
 $lang['twoeightdays'] = '28 days';
 $lang['show_transfers'] = 'Show transfers';
 $lang['transfers_uid_page'] = 'User Transfers';
+
+$lang['confirm_remove_daily_stats_transfer'] = 'Are you sure you no longer wish to receive daily statistics for this transfer';
+$lang['transfer_option_modified'] = 'Transfer option modified';
+$lang['remove_option'] = 'Remove option';
