@@ -9,10 +9,21 @@ $transfers_page = function($status) {
         case 'available': $selector = Transfer::AVAILABLE_NO_ORDER; break;
         case 'uploading': $selector = Transfer::UPLOADING_NO_ORDER; break;
         case 'closed':    $selector = Transfer::CLOSED_NO_ORDER;    break;
+        case 'search':    $selector = Transfer::AVAILABLE_NO_ORDER; break;
         default: return;
     }
 
     $trsort = TransferQueryOrder::create();
+
+    $idmin = Utilities::arrayKeyOrDefault( $_GET, 'idmin', -1, FILTER_VALIDATE_INT  );
+    $idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  );
+    if( $status == 'search' ) {
+        if( $idmin != -1 && $idmax != -1 ) {
+            // Note that we are using semi validated data from above
+            // and that this is an admin only page, so hacking is less likely.
+            $selector .= " AND id >= $idmin AND id <= $idmax ";
+        }
+    }
         
     $offset = array_key_exists($status.'_tpo', $_REQUEST) ? (int)$_REQUEST[$status.'_tpo'] : 0;
     $offset = max(0, $offset);
@@ -32,10 +43,19 @@ $transfers_page = function($status) {
     $navigation = '<div class="transfers_list_page_navigation">'."\n";
     $transfersort = Utilities::getGETparam('transfersort','');
 
+    $cgiminmax = "";
+    if( $idmin >= 0 ) {
+        $cgiminmax .= "&idmin=".$idmin;
+    }
+    if( $idmax >= 0 ) {
+        $cgiminmax .= "&idmax=".$idmax;
+    }
+    
+
     if($offset) {
         $po = max(0, $offset - $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $p = 1;
@@ -43,7 +63,7 @@ $transfers_page = function($status) {
         if($o >= $offset && $o < $offset + $page_size) {
             $navigation .= '<span>'.$p.'</span>'."\n";
         } else {
-            $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'&transfersort='.$transfersort.'#'.$status.'_transfers">'.$p.'</a>'."\n";
+            $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers">'.$p.'</a>'."\n";
         }
         
         $p++;
@@ -52,8 +72,8 @@ $transfers_page = function($status) {
     if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
         $lo = $total_count - ($total_count % $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'&transfersort='.$transfersort.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $navigation .= '</div>'."\n";
@@ -72,7 +92,30 @@ $transfers_page = function($status) {
         echo $navigation;
 };
 
-echo '<h2>{tr:admin_transfers_section}</h2>'."\n";
+echo "<h2>{tr:admin_transfers_section}</h2>\n";
+echo "<p>{tr:admin_transfers_page_description}</p>\n";
+
+// search
+echo '<span id="search_transfers"></span>'."\n";
+if($auditlogs)
+    echo "<h3>{tr:search_transfers}</h3>\n";
+echo "<p>{tr:search_transfer_id_inclusive_description}</p>\n";
+
+$idmin = Utilities::arrayKeyOrDefault( $_GET, 'idmin', 0, FILTER_VALIDATE_INT  );
+$idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  );
+if( $idmax == -1 ) {
+    $idmax = '';
+}
+?>
+<fieldset class="search">
+    <label for="idmin" class="mandatory">{tr:minimum}</label>
+    <input type="text" name="idmin" value="<?php echo $idmin ?>" />
+    <label for="idmax" class="mandatory">{tr:maximum}</label>
+    <input type="text" name="idmax" value="<?php echo $idmax ?>" />
+    <input type="button" name="idbutton" value="{tr:search}" />
+</fieldset>
+<?php 
+$transfers_page('search');
 
 
 // available
@@ -97,3 +140,5 @@ if($auditlogs) {
     
     $transfers_page('closed');
 }
+?>
+<script type="text/javascript" src="{path:js/admin_transfers.js}"></script>

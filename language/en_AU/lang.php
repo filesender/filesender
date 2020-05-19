@@ -570,7 +570,11 @@ $lang['oneweek'] = '1 week';
 $lang['twoeightdays'] = '28 days';
 $lang['show_transfers'] = 'Show transfers';
 $lang['transfers_uid_page'] = 'User Transfers';
-
+$lang['minimum'] = 'Minimum';
+$lang['maximum'] = 'Maximum';
+$lang['search_transfers'] = 'Search transfers';
+$lang['search_transfer_id_inclusive_description'] = 'Search transfers by transfer id within a min and max range (inclusive)';
+$lang['admin_transfers_page_description'] = 'There are a number of sections on this page. Here are some links to help jump to your desired section:<ul><li><a href="#search_transfers">Search</a></li><li><a href="#available_transfers">Currently available</a></li><li><a href="#uploading_transfers">Currently uploading</a></li><li><a href="#closed_transfers">Closed</a></li><ul>';
 $lang['confirm_remove_daily_stats_transfer'] = 'Are you sure you no longer wish to receive daily statistics for this transfer';
 $lang['transfer_option_modified'] = 'Transfer option modified';
 $lang['remove_option'] = 'Remove option';
