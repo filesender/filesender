@@ -802,12 +802,24 @@ class RestEndpointTransfer extends RestEndpoint
             if ($data->remind) {
                 $transfer->remind();
             }
+
+            // Modify transfer option
+            if( $data->optionremove ) {
+                $v = false;
+                
+                if( $data->option == 'email_daily_statistics' ) {
+                    $transfer->setOption($data->option,$v);
+                    $transfer->save();
+                }
+            }
         }
         
         // Need to make the transfer available (sends email to recipients) ?
         if ($data->complete) {
             $transfer->makeAvailable();
         }
+
+
         
         return self::cast($transfer);
     }

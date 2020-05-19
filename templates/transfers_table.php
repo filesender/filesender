@@ -336,13 +336,20 @@ if (!function_exists('clickableHeader')) {
                             </tr>
                         <?php } ?>
 
-                        <tr>
+                        <tr class="transfer_options">
                             <td class="desc">{tr:options}</td>
                             <td><div class="options">
                                 <?php if(count($transfer->options)) { ?>
                                     <ul class="options">
                                         <li>
                                             <?php echo implode('</li><li>', array_map(function($o) {
+                                                if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
+                                                    return Lang::tr($o) . '&nbsp;'
+                                                    . '<span data-action="remove" data-option="' 
+                                                               . TransferOptions::EMAIL_DAILY_STATISTICS 
+                                                               . '" class="fa fa-lg fa-times" title="{tr:remove_option}"></span>'
+                                                    ;
+                                                }
                                                 return Lang::tr($o);
                                             }, array_keys(array_filter($transfer->options)))) ?>
                                         </li>

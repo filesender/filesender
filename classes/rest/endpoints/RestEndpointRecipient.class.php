@@ -147,7 +147,7 @@ class RestEndpointRecipient extends RestEndpoint
         if ($data->remind) {
             $recipient->remind();
         }
-        
+
         return self::cast($recipient);
     }
     
