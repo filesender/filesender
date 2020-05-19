@@ -568,3 +568,5 @@ $lang['most_guest_deletion'] = 'Most guest deletion';
 $lang['oneday'] = '1 day';
 $lang['oneweek'] = '1 week';
 $lang['twoeightdays'] = '28 days';
+$lang['show_transfers'] = 'Show transfers';
+$lang['transfers_uid_page'] = 'User Transfers';

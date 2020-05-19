@@ -96,6 +96,9 @@
         <td class="event_count"></td>
         
         <td>
+<?php if( Config::get('admin_can_view_user_transfers_page')) : ?>
+            <input type="button" data-action="show-transfers" value="{tr:show_transfers}" />
+<?php endif; ?>
             <input type="button" data-action="show-client-logs" value="{tr:show_client_logs}" />
             <input type="button" data-action="delete-api-secret" value="{tr:api_secret_delete}" />
 <?php if( Config::get('using_local_saml_dbauth')) : ?>

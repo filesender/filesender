@@ -16,6 +16,19 @@ if(!isset($trsort))  $nosort = true;
     $havePrev = 0;
 
 
+    $cgiuid = "";
+    if (Auth::isAuthenticated()) {
+        if (Auth::isAdmin()) {
+            
+            $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
+            if( $uid ) {
+                $cgiuid = "&uid=".$uid;
+            }
+        }
+    }
+
+
+
 
 if (!function_exists('clickableHeader')) {
 
@@ -25,11 +38,24 @@ if (!function_exists('clickableHeader')) {
             echo $displayName;
             return;
         }
-        $tr_url = Utilities::http_build_query(array(
+
+        $qa = array(
             's' => Utilities::getGETparam('s','')
           , 'transfersort' => $trsort->clickableSortValue($trsortcol)
           , 'as' => Utilities::getGETparam('as','')
-        ));
+        );
+        
+        if (Auth::isAuthenticated()) {
+            if (Auth::isAdmin()) {
+                
+                $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
+                if( $uid ) {
+                    $qa["uid"] = $uid;
+                }
+            }
+        }
+        
+        $tr_url = Utilities::http_build_query($qa);
         echo '<a href="' . $tr_url . '">';
         echo $displayName;
         echo ' ' . $trsort->screenArrowHTML($trsortcol); 
@@ -63,12 +89,12 @@ if (!function_exists('clickableHeader')) {
         $nextPage  = $offset+$limit;
         $transfersort = Utilities::getGETparam('transfersort','');
         $cgias = Utilities::getGETparam('as','');
-        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias";
+        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid";
         
         if( $havePrev ) {
            $prevPage = max(0,$offset-$limit);
-           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit&transfersort=$transfersort&as=$cgias'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
-           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
         }

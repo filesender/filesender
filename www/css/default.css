@@ -79,6 +79,12 @@ abbr {
     margin-bottom: 1em;
 }
 
+#headeruid {
+    background: #666 url(../images/banner-uid-900.png) no-repeat top left;
+    height: 60px;
+    margin-bottom: 1em;
+}
+
 #langmenu {
     border-radius: 0 0 0.5em 0.5em;
     -moz-border-radius: 0 0 0.5em 0.5em;
@@ -173,6 +179,11 @@ abbr {
 #menu a:hover, .current, #menu a:active {
     background-color: rgb(51,51,51);
 }
+
+#menu .red {
+    background-color: rgb(151,51,51);
+}
+
 
 #menu ul li select {
     display: block;
