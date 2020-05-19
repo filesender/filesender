@@ -1200,6 +1200,12 @@ table.guests .guest .to .errors .details {
     text-decoration: none;
 }
 
+.admin_page li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
 .admin_page .menu li.current {
     background-color: #fff;
 }
