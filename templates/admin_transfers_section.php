@@ -85,7 +85,8 @@ $transfers_page = function($status) {
         'status' => $status,
         'mode' => 'admin',
         'transfers' => $entries,
-        'trsort' => $trsort
+        'trsort' => $trsort,
+        'limit' => $page_size
     ));
     
     if($total_count > $page_size)
