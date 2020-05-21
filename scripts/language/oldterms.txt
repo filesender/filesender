@@ -12,6 +12,7 @@ admin_guests_section
 admin_page
 admin_statistics_section
 admin_testing_section
+admin_transfers_page_description
 admin_transfers_section
 admin_users_section
 advanced_settings
@@ -103,6 +104,7 @@ confirm_leave_upload_page
 confirm_remind_guest
 confirm_remind_recipient
 confirm_remind_transfer
+confirm_remove_daily_stats_transfer
 confirm_stop_upload
 copy_text
 core_class_not_found
@@ -208,6 +210,7 @@ event_count
 expand_all
 expires
 expiry_date
+export_client_logs
 extend
 extend_and_remind
 extend_expiry_date
@@ -299,12 +302,14 @@ maintenance
 maintenance_autoresume
 make_default
 max_email_recipients_exceeded
+maximum
 maximum_encrypted_file_size_exceeded
 maximum_file_size_exceeded
 mb_per_second
 me
 message
 message_can_not_contain_urls
+minimum
 missing_files_for_restart
 most_guest_deletion
 most_user_deleted_guests_that_did_not_send_a_single_file
@@ -364,6 +369,7 @@ recipients_notifications_language
 reconnect_and_continue
 redirect_url_on_complete
 remote_auth_sync_request
+remove_option
 report_attached
 report_cannot_write_file
 report_event_archive_download_ended
@@ -424,6 +430,8 @@ retry_attempt_x
 retry_later
 save
 search
+search_transfer_id_inclusive_description
+search_transfers
 search_user
 searching
 seconds_since_data_was_last_sent
@@ -444,6 +452,7 @@ serverlog_config_directive
 serverlog_wanted_key_in_array
 show_client_logs
 show_details
+show_transfers
 showhide
 site_footer
 site_splash
@@ -528,6 +537,7 @@ transfer_no_files
 transfer_no_recipients
 transfer_not_availabe
 transfer_not_found
+transfer_option_modified
 transfer_presumed_expired
 transfer_rejected
 transfer_reminded
@@ -538,6 +548,7 @@ transfer_too_many_recipients
 transfer_upload_stopped
 transfer_user_quota_exceeded
 transfers_page
+transfers_uid_page
 translate_email_footer
 translate_to
 turning_on_guests_get_a_link_disables_can_only_send_to_me
