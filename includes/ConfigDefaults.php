@@ -169,7 +169,7 @@ $default = array(
     'guest_limit_per_user' => 50,
     'guest_create_limit_per_day' => 30,
     'guest_reminder_limit' => 50,
-    'guest_reminder_limit_per_day' => 3,
+    'guest_reminder_limit_per_day' => 5,
     'recipient_reminder_limit' => 50,
 
     'autocomplete' => false, 

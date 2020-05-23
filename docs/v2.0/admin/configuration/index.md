@@ -153,6 +153,8 @@ A note about colours;
 * [max_guest_recipients](#max_guest_recipients)
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 * [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
+* [guest_create_limit_per_day](#guest_create_limit_per_day)
+* [guest_reminder_limit_per_day](#guest_reminder_limit_per_day)
 
 ## Authentication
 
@@ -1477,6 +1479,29 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ if set to true a user will only see uploads for their guests where the can_only_send_to_me was set
   when the guest was invited or when the guest uploads the file and explicitly includes the user in the recipients.
   This may be updated in the future if we wish to force a 'must also send to me' option when inviting some guests.
+
+### guest_create_limit_per_day
+
+* __description:__ The number of guests a user can create per day
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 30
+* __available:__ since version 2.18
+* __comment:__ If the user tries to create more than this number of guests in any 24 hour window of time
+  the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 2
+  will allow creation of 2 guests but not 3.
+
+### guest_reminder_limit_per_day
+
+* __description:__ The number of reminders to each guest that user can send per day
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 5
+* __available:__ since version 2.18
+* __comment:__ If the user tries to send a reminder to a specific guest more than this number of times a day then
+  the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 5
+  will allow 5 reminders to be sent to a guest but not 6.
+
 
 
 
