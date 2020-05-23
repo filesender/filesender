@@ -132,7 +132,9 @@ class AuditLog extends DBObject
     const FROM_AUTHOR = 'author_type = :type AND author_id = :id ORDER BY created ASC, id ASC';
     const FROM_TARGET_AND_AUTHOR = 'event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ORDER BY created DESC limit 10 ';
     const FROM_TARGET_AND_AUTHOR_SINCE = 'created > :created AND event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ';    
-    const FIND_USERS_SINCE = array( 'select' => '*', 'where' => 'created > :created AND event = :event AND target_type = :ttype ' );
+    const FIND_USERS_SINCE = array( 'select' => 'max(id) as id,target_id',
+                                    'where' => 'created > :created AND event = :event AND target_type = :ttype ',
+                                    'group' => 'target_id' );
     
     /**
      * Properties
