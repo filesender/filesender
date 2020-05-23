@@ -135,6 +135,9 @@ class AuditLog extends DBObject
     const FIND_USERS_SINCE = array( 'select' => 'max(id) as id,target_id',
                                     'where' => 'created > :created AND event = :event AND target_type = :ttype ',
                                     'group' => 'target_id' );
+    const FIND_USERS_SINCE_GAID = array( 'select' => 'max(id) as id,author_id',
+                                    'where' => 'created > :created AND event = :event AND target_type = :ttype ',
+                                    'group' => 'author_id' );
     
     /**
      * Properties
@@ -421,7 +424,11 @@ class AuditLog extends DBObject
         }
         $created = time() - $secondsAgo;
 
-        $logs = self::all(self::FIND_USERS_SINCE,
+        $query = self::FIND_USERS_SINCE;
+        if( $ttype == 'Guest' ) {
+            $query = self::FIND_USERS_SINCE_GAID;
+        }
+        $logs = self::all($query,
                           array(
                              'created' => date('Y-m-d H:0:0', $created),
                               'event' => $logEvent,
@@ -429,12 +436,17 @@ class AuditLog extends DBObject
                           ));
         $ret = array();
         foreach ($logs as $log) {
-            $ret[] = User::fromId($log->target_id);
+            if( $ttype == 'Guest' ) {
+                $ret[] = User::fromId($log->author_id);
+            } else {
+                $ret[] = User::fromId($log->target_id);
+            }
         }
         return $ret;
     }
 
 
+    
     public static function findUsersOrderedByCount($logEvent,$atype = 'User',$secondsAgo = null)
     {
         if(!$secondsAgo) {

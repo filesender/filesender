@@ -157,10 +157,14 @@ class RestEndpointUser extends RestEndpoint
             
             if (array_key_exists('hitlimit', $_REQUEST) && $_REQUEST['hitlimit']!='') {
                 $s = Utilities::sanitizeInput($_REQUEST['hitlimit']);
-
+                $ttype = Utilities::sanitizeInput($_REQUEST['ttype']);
+                // Force to only valid values
+                if( $ttype != "User" && $ttype != "Guest" ) {
+                    $ttype = "User";
+                }
                 return array_map(function ($user) {
                     return self::cast($user);
-                }, array_values(AuditLog::findUsers($s,'User',$since)));
+                }, array_values(AuditLog::findUsers($s,$ttype,$since)));
             }
             if (array_key_exists('hitlimitbycount', $_REQUEST)) {
                 $s = Utilities::sanitizeInput($_REQUEST['hitlimitbycount']);

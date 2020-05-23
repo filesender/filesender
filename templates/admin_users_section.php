@@ -53,6 +53,11 @@
         <input type="button" class="ab_hit_create_rate_limit" value="{tr:oneweek}"      data-since="604800" />
         <input type="button" class="ab_hit_create_rate_limit" value="{tr:twoeightdays}" data-since="2419200" />
     </td></tr>
+    <tr><td>{tr:hit_guest_remind_rate_limit}</td><td>
+        <input type="button" class="ab_hit_remind_rate_limit" value="{tr:oneday}"       data-since="86400" />
+        <input type="button" class="ab_hit_remind_rate_limit" value="{tr:oneweek}"      data-since="604800" />
+        <input type="button" class="ab_hit_remind_rate_limit" value="{tr:twoeightdays}" data-since="2419200" />
+    </td></tr>
     <tr><td>{tr:most_user_deleted_guests_that_did_not_send_a_single_file}</td><td>
         <input type="button" class="ab_guests_no_file" value="{tr:oneday}"        data-since="86400" />
         <input type="button" class="ab_guests_no_file" value="{tr:oneweek}"       data-since="604800" />

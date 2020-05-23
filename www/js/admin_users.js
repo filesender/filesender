@@ -159,7 +159,7 @@ $(function() {
         search_user();
     });
 
-    var search_potential_abuse = function( key,keyc,since ) {
+    var search_potential_abuse = function( key,keyc,ttype,since ) {
         results.removeClass('no_results').addClass('searching');
 
         filesender.client.get('/user', function(matches) {
@@ -172,22 +172,25 @@ $(function() {
 
             results.removeClass('searching');
         }, {
-            args: {hitlimit: key, hitlimitbycount: keyc, since:since }
+            args: {hitlimit: key, hitlimitbycount: keyc, ttype: ttype, since:since }
         });
     }
 
     section.find('.search [class="ab_hit_create_total_limit"]').on('click', function() {
-        search_potential_abuse('guest_created_lh','',$(this).attr('data-since'));
+        search_potential_abuse('guest_created_lh','','User',$(this).attr('data-since'));
     });
     
     section.find('.search [class="ab_hit_create_rate_limit"]').on('click', function() {
-        search_potential_abuse('guest_created_rate_lh','',$(this).attr('data-since'));
+        search_potential_abuse('guest_created_rate_lh','','User',$(this).attr('data-since'));
+    });
+    section.find('.search [class="ab_hit_remind_rate_limit"]').on('click', function() {
+        search_potential_abuse('guest_remind_rate_lh','','Guest',$(this).attr('data-since'));
     });
     section.find('.search [class="ab_guests_no_file"]').on('click', function() {
-        search_potential_abuse('','guest_closed_unused',$(this).attr('data-since'));
+        search_potential_abuse('','guest_closed_unused','User',$(this).attr('data-since'));
     });
     section.find('.search [class="ab_guests_del"]').on('click', function() {
-        search_potential_abuse('','guest_closed',$(this).attr('data-since'));
+        search_potential_abuse('','guest_closed','User',$(this).attr('data-since'));
     });
 
 
