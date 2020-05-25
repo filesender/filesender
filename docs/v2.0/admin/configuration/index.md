@@ -1485,9 +1485,10 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __description:__ The number of guests a user can create per day
 * __mandatory:__ no
 * __type:__ int
-* __default:__ 30
+* __default:__ 0
 * __available:__ since version 2.18
-* __comment:__ If the user tries to create more than this number of guests in any 24 hour window of time
+* __comment:__ This setting is disabled when set to 0, no rate limit will be enforced.
+  If the user tries to create more than this number of guests in any 24 hour window of time
   the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 2
   will allow creation of 2 guests but not 3.
 
@@ -1496,9 +1497,10 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __description:__ The number of reminders to each guest that user can send per day
 * __mandatory:__ no
 * __type:__ int
-* __default:__ 5
+* __default:__ 0
 * __available:__ since version 2.18
-* __comment:__ If the user tries to send a reminder to a specific guest more than this number of times a day then
+* __comment:__ This setting is disabled when set to 0, no rate limit will be enforced.
+  If the user tries to send a reminder to a specific guest more than this number of times a day then
   the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 5
   will allow 5 reminders to be sent to a guest but not 6.
 
