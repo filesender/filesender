@@ -1075,7 +1075,7 @@ window.filesender.transfer = function() {
             this.updateFileInRestartTracker(file);
             this.onprogress.call(this, file, false);
         } else {
-	    console.log("transfer has not onprogress");
+	    window.filesender.log("transfer has not onprogress");
 	}
     };
     
@@ -1222,13 +1222,13 @@ window.filesender.transfer = function() {
                     filesender.terasender.start(transfer);
                 } else {
                     // Chunk by chunk upload
-                    console.log('*** Not using terasender ***');
+                    window.filesender.log('*** Not using terasender ***');
                     transfer.registerProcessInWatchdog('main');
                     transfer.uploadChunk();
                 }
             } else {
                 // Legacy upload
-                console.log('*** Warning: using legacy upload ***');
+                window.filesender.log('*** Warning: using legacy upload ***');
                 transfer.uploadWhole();
             }
         }, function(error) {

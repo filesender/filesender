@@ -66,6 +66,8 @@ class Autoloader
         'CollectionType' => 'data/',
         'FileCollection' => 'data/',
         'Collection' => 'data/',
+        'CollectionDirectory' => 'data/',
+        'CollectionTree' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
         'ShredFile' => 'data/',

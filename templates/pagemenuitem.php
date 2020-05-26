@@ -11,6 +11,19 @@ function pagelink($page) {
 function pagemenuitem($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
     $class = ($page == GUI::currentPage()) ? 'current' : '';
-    echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.Lang::tr($page.'_page').'</a></li>';
+
+    $label = Lang::tr($page.'_page');
+    if( $page == 'transfers' ) {
+        if (Auth::isAuthenticated()) {
+            if (Auth::isAdmin()) {
+                $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
+                if( $uid ) {
+                    $label = $label = Lang::tr($page.'_uid_page');
+                    $class .= ' red';
+                }
+            }
+        }
+    }
+    echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.$label.'</a></li>';
 }
 

@@ -462,8 +462,15 @@ class Guest extends DBObject
         if ($this->reminder_count >= Config::get('guest_reminder_limit')) {
             throw new GuestReminderLimitReachedException();
         }
+        
+        // Can only remind $x times per day
+        Logger::logActivityRateLimited( 'GuestReminderRateLimitReachedException',
+                                        'guest_reminder_limit_per_day',
+                                        LogEventTypes::GUEST_REMIND_RATE, $this );
         $this->reminder_count++;
         $this->save();
+
+        
         
         TranslatableEmail::quickSend('guest_reminder', $this);
             
@@ -486,6 +493,18 @@ class Guest extends DBObject
             $manualy ? LogEventTypes::GUEST_CLOSED : LogEventTypes::GUEST_EXPIRED,
             $this
         );
+
+        //
+        // if the user is manually closing a guest then we audit some other
+        // properties to detect churn.
+        //
+        if( $manualy )
+        {
+            $count = Transfer::countUploadedFromGuest($this);
+            if( !$count ) {
+                Logger::logActivity( LogEventTypes::GUEST_CLOSED_UNUSED, $this );
+            }
+        }
         
         // Sending notification to recipient
         if ($this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED)) {
@@ -519,9 +538,13 @@ class Guest extends DBObject
      * by calling class::validateConfig() so that particular pages do not
      * have to be loaded to find configuration issues.
      */
-    public static function validateConfig()
+    public static function validateConfig( $allowSlowerTests = false )
     {
         self::allOptions();
+
+        if( $allowSlowerTests ) {
+        }
+        
     }
     
     /**

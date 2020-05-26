@@ -12,14 +12,12 @@ If you want to add your FileSender installation to this list, send an email to f
 | --- | --- | --- |---|
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016|
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012|
-| Austria  | Universität Graz | [https://share.uni-graz.at/](https://share.uni-graz.at/)      | Mar 2020|
-| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at/](https://filesender.ihs.ac.at)  | Jan 2014|
-| Azerbeijan | National Academy of Sciences | [https://filesender.science.az/](https://filesender.science.az) | Mar 2020 |
+| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014|
 | Belgium  | BELNET  | [https://filesender.belnet.be/](https://filesender.belnet.be/)      | Mar 2010|
 | Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011|
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010|
 | Cyprus  | CYNET    | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012|
-| Czech Republic | CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012|
+| Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012|
 | Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012|
 | Europe  | GÉANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010|
 | Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012|
@@ -27,27 +25,26 @@ If you want to add your FileSender installation to this list, send an email to f
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018|
 | Hungary  | NIIF    | [https://filesender.niif.hu](https://filesender.niif.hu)      | Feb 2012|
 | Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 |
-| Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016 |
-| Israel  | IUCC/HUJI  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012 |
-| Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012 |
+| Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016|
+| Israel  | IUCC/HUJI  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012|
+| Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012|
 | Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012|
-| Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012 |
-| Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011 |
-| Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016 |
-| Netherlands  | SURFnet  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010 |
-| Norway  | UNINETT  | [https://filesender.uninett.no/](https://filesender.uninett.no/)    | 2009 |
-| Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013 |
+| Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012|
+| Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011|
+| Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016|
+| Netherlands  | SURFnet  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010|
+| Norway  | UNINETT  | [https://filesender.uninett.no/](https://filesender.uninett.no/)    | 2009|
+| Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013|
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011|
-| Réunion (FR) | Universite de Reunion | [https://filesender.univ-reunion.fr/](https://filesender.univ-reunion.fr/) | Mar 2020 |
-| Russian Federation | RUNNet |  [https://filesender.runnet.ru/](https://filesender.runnet.ru/)  | Mar 2018 |
-| Serbia  | AMRES    | [https://filesender.amres.ac.rs/](https://filesender.amres.ac.rs/)    | Jul 2014 |
-| Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011 |
-| Spain    | RedIRIS  | [https://filesender.rediris.es](https://filesender.rediris.es)      | Mar 2017 |
-| Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014 |
-| Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://filesender.upo.es/](https://filesender.upo.es/)  | May 2014 |
-| Switzerland  | SWITCH  | [https://filesender.switch.ch](https://filesender.switch.ch)      | Sep 2012 |
-| UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014 |
-| Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018 |
+| Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018|
+| Serbia  | AMRES    | [https://filesender.amres.ac.rs/](https://filesender.amres.ac.rs/)    | Jul 2014|
+| Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011|
+| Spain    | RedIRIS  | [https://filesender.rediris.es](https://filesender.rediris.es)      | Mar 2017|
+| Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014|
+| Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://filesender.upo.es/](https://filesender.upo.es/)  | May 2014|
+| Switzerland  | SWITCH  | [https://filesender.switch.ch](https://filesender.switch.ch)      | Sep 2012|
+| UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014|
+| Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018|
 
 ## HE&R Community installations - Asia - Pacific
 

@@ -6,8 +6,11 @@ if (!('filesender' in window))
 if (!('ui' in window.filesender)) {
     window.filesender.ui = {};
     window.filesender.ui.log = function(e) {
-        console.log(e);
+        window.filesender.log(e);
     }
+}
+window.filesender.log = function( msg ) {
+    console.log( msg );
 }
 
 Uint8Array.prototype.equals = function (a) {
@@ -20,17 +23,17 @@ if (!('key_cache' in window.filesender)) {
 
 if (!('onPBKDF2Starting' in window.filesender)) {
     window.filesender.onPBKDF2Starting = function() {
-        console.log("crypto_app onPBKDF2Starting()");
+        window.filesender.log("crypto_app onPBKDF2Starting()");
     };
 }
 if (!('onPBKDF2Ended' in window.filesender)) {
     window.filesender.onPBKDF2Ended = function() {
-        console.log("crypto_app onPBKDF2Ended()");
+        window.filesender.log("crypto_app onPBKDF2Ended()");
     };
 }
 if (!('onPBKDF2AllEnded' in window.filesender)) {
     window.filesender.onPBKDF2AllEnded = function() {
-        console.log("crypto_app onPBKDF2AllEnded()");
+        window.filesender.log("crypto_app onPBKDF2AllEnded()");
     };
 }
 
@@ -298,7 +301,7 @@ window.filesender.crypto_app = function () {
                     setTimeout(
                         function(){
                     
-                            console.log("***** USING CUSTOM CODE ON PASSWORD ****");
+                            window.filesender.log("***** USING CUSTOM CODE ON PASSWORD ****");
                             
                             window.filesender.asmcrypto().importKeyFromPasswordUsingPBKDF2(
                                 passwordBuffer,
@@ -466,18 +469,18 @@ window.filesender.crypto_app = function () {
             
 
             var keydesc = JSON.stringify(encryption_details);
-            console.log("keygen: keydesc cache size " + window.filesender.key_cache.size );
+            window.filesender.log("keygen: keydesc cache size " + window.filesender.key_cache.size );
             
             var k = window.filesender.key_cache.get( keydesc );
             if( k ) {
-                console.log("keygen: reusing existing key");
+                window.filesender.log("keygen: reusing existing key");
                 callback( k );
                 return;
             }
 
             // there was no key, really generate one and set it in the
             // cache before calling the passed 'ok' callback.
-            console.log("keygen: generating key for this thread/worker");
+            window.filesender.log("keygen: generating key for this thread/worker");
             this.generateKey(chunkid, encryption_details,
                              function (key) {
                                  window.filesender.key_cache.set(keydesc, key );
@@ -748,9 +751,9 @@ window.filesender.crypto_app = function () {
         {
             if(xhr.responseURL && xhr.responseURL.includes("/?s=exception&"))
             {
-                console.log("handleXHRError() XHR ERROR DETECTED");
-                console.log("link " + link );
-                console.log("got  " + xhr.responseURL );
+                window.filesender.log("handleXHRError() XHR ERROR DETECTED");
+                window.filesender.log("link " + link );
+                window.filesender.log("got  " + xhr.responseURL );
 
                 var message = defaultMsg;
                 var url = new URL(xhr.responseURL);
@@ -760,7 +763,7 @@ window.filesender.crypto_app = function () {
                         var jc = JSON.parse(atob(c));
                         if( jc ) {
                             message = jc.message;
-                            console.log("have untranslated message: " + message );
+                            window.filesender.log("have untranslated message: " + message );
                         }
                     } catch( e ) {
                         // use default message if base64 decode failed.
@@ -974,7 +977,7 @@ window.filesender.crypto_app = function () {
                             raw[i] = decoded.charCodeAt(i);
                         }
                     } catch(e) {
-                        console.log(e);
+                        window.filesender.log(e);
                         // we know the password is invalid bad if we can not base64 decode it
                         // after all, we base64 encoded it in generateRandomPassword().
                         throw(window.filesender.config.language.file_encryption_wrong_password);

@@ -92,7 +92,14 @@ class AuditLog extends DBObject
         ),
         'Created' => array(
             'created' => array()
-        )
+        ),
+        // This is for FROM_TARGET_AND_AUTHOR_SINCE which is used by Logger::rateLimit()
+        'created_event_ttype_tid' => array(
+            'created' => array(),
+            'event' => array(),
+            'target_type' => array(),
+            'target_id'   => array()
+        )            
         
 //        'Type_ID_AType_AID_IP_Event_Created' => array(
 //            'target_type' => array(),
@@ -123,6 +130,14 @@ class AuditLog extends DBObject
      */
     const FROM_TARGET = 'target_type = :type AND target_id = :id ORDER BY created ASC, id ASC';
     const FROM_AUTHOR = 'author_type = :type AND author_id = :id ORDER BY created ASC, id ASC';
+    const FROM_TARGET_AND_AUTHOR = 'event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ORDER BY created DESC limit 10 ';
+    const FROM_TARGET_AND_AUTHOR_SINCE = 'created > :created AND event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ';    
+    const FIND_USERS_SINCE = array( 'select' => 'max(id) as id,target_id',
+                                    'where' => 'created > :created AND event = :event AND target_type = :ttype ',
+                                    'group' => 'target_id' );
+    const FIND_USERS_SINCE_GAID = array( 'select' => 'max(id) as id,author_id',
+                                    'where' => 'created > :created AND event = :event AND target_type = :ttype ',
+                                    'group' => 'author_id' );
     
     /**
      * Properties
@@ -331,6 +346,133 @@ class AuditLog extends DBObject
         
         return $logs;
     }
+
+    /**
+     * Get the most recent audit entry for a specific {$logEvent, $target, $author} 
+     *
+     * @param string from LogEventTypes
+     * @param DBObject the target to be logged
+     * @param DBObject the author of the action
+     * 
+     * @return the database entry for the last log item or array()
+     */
+    public static function latestEntry($logEvent, $target, $author = null )
+    {
+        if (!$author) {
+            $author = Auth::user();
+        }
+        
+        $logs = self::all(self::FROM_TARGET_AND_AUTHOR,
+                          array(
+                              'event' => $logEvent,
+                              'ttype' => $target->getClassName(), 'tid' => (string)$target->id,
+                              'atype' => $author->getClassName(), 'aid' => (string)$author->id
+                          ));
+        if( is_array($logs)) {
+            // first element
+            return reset($logs);
+        }
+        return array();
+    }
+
+
+    /**
+     * This is a mirror of AuditLog::create() but you want to find the number 
+     * of auditlog entries with the same {$logEvent, $target, $author} since a given number
+     * of seconds ago. This way you can use the same parameters to a call to AuditLog::create()
+     * and countEntries() to rate limit how many times something can happen in a given window of time
+     *
+     * If you just want to rate limit access to a code path please see
+     * Logger::logActivityRateLimited().
+     *
+     * @param string from LogEventTypes
+     * @param DBObject the target to be logged
+     * @param DBObject the author of the action
+     * @param int secondsAgo where to start the count. Defauts to 1 day in seconds.
+     * @param DBObject $author
+     * 
+     */
+    public static function countEntries($logEvent, $target, $secondsAgo = null, $author = null )
+    {
+        if(!$secondsAgo) {
+            $secondsAgo = 24*3600;
+        }
+        $created = time() - $secondsAgo;
+        
+        if (!$author) {
+            $author = Auth::user();
+        }
+
+        $statement = DBI::prepare('select count(*) as count '
+                                . ' from ' . self::getDBTable() . ' where '
+                                . self::FROM_TARGET_AND_AUTHOR_SINCE );
+        $statement->execute(array(
+            'created' => date('Y-m-d H:0:0', $created),
+            'event' => $logEvent,
+            'ttype' => $target->getClassName(), 'tid' => (string)$target->id,
+            'atype' => $author->getClassName(), 'aid' => (string)$author->id
+        ));
+        $data = $statement->fetch();
+        $c = $data['count'];
+        return $c;
+    }
+    
+    public static function findUsers($logEvent,$ttype,$secondsAgo = null)
+    {
+        if(!$secondsAgo) {
+            $secondsAgo = 28*24*3600;
+        }
+        $created = time() - $secondsAgo;
+
+        $query = self::FIND_USERS_SINCE;
+        if( $ttype == 'Guest' ) {
+            $query = self::FIND_USERS_SINCE_GAID;
+        }
+        $logs = self::all($query,
+                          array(
+                             'created' => date('Y-m-d H:0:0', $created),
+                              'event' => $logEvent,
+                              'ttype' => $ttype
+                          ));
+        $ret = array();
+        foreach ($logs as $log) {
+            if( $ttype == 'Guest' ) {
+                $ret[] = User::fromId($log->author_id);
+            } else {
+                $ret[] = User::fromId($log->target_id);
+            }
+        }
+        return $ret;
+    }
+
+
+    
+    public static function findUsersOrderedByCount($logEvent,$atype = 'User',$secondsAgo = null)
+    {
+        if(!$secondsAgo) {
+            $secondsAgo = 28*24*3600;
+        }
+        $created = time() - $secondsAgo;
+
+        $statement = DBI::prepare('select count(event) as count,event,author_type,author_id from '.self::getDBTable()
+                                . ' where event=:event AND author_type=:atype AND created > :created  '
+                                . ' group by event,author_type,author_id order by count desc');
+        $statement->execute(array(
+            'created' => date('Y-m-d H:0:0', $created),
+            'event' => $logEvent,
+            'atype' => $atype
+        ));
+        $records = $statement->fetchAll();
+        $ret = array();
+        foreach ($records as $r) {
+            $u = User::fromId($r['author_id']);
+            $u->eventcount = $r['count'];
+            $ret[] = $u;
+        }
+        return $ret;
+    }
+    
+
     
     /**
      * Get logs related to a transfer
@@ -455,5 +597,9 @@ class AuditLog extends DBObject
             $statement = DBI::prepare("delete from ".self::getDBTable()." where created < :cutoff ");
             $statement->execute(array(':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))));
         }
+    }
+
+    public function createdWithinLastDay() {
+        return $this->created > (time() - 24*3600);
     }
 }

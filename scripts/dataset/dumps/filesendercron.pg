@@ -1,0 +1,2553 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.7
+-- Dumped by pg_dump version 11.7
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+DROP DATABASE filesender;
+--
+-- Name: filesender; Type: DATABASE; Schema: -; Owner: filesender
+--
+
+CREATE DATABASE filesender WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+
+
+ALTER DATABASE filesender OWNER TO filesender;
+
+\connect filesender
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: aggregatestatisticmetadatas; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.aggregatestatisticmetadatas (
+    id integer NOT NULL,
+    filesenderversion character varying(170),
+    lastsend timestamp without time zone
+);
+
+
+ALTER TABLE public.aggregatestatisticmetadatas OWNER TO filesender;
+
+--
+-- Name: aggregatestatisticmetadatasview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.aggregatestatisticmetadatasview AS
+ SELECT aggregatestatisticmetadatas.id,
+    aggregatestatisticmetadatas.filesenderversion,
+    aggregatestatisticmetadatas.lastsend,
+    date_part('day'::text, (now() - (aggregatestatisticmetadatas.lastsend)::timestamp with time zone)) AS lastsend_days_ago
+   FROM public.aggregatestatisticmetadatas;
+
+
+ALTER TABLE public.aggregatestatisticmetadatasview OWNER TO filesender;
+
+--
+-- Name: aggregatestatistics; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.aggregatestatistics (
+    epoch timestamp without time zone NOT NULL,
+    epochtype integer NOT NULL,
+    eventtype integer NOT NULL,
+    eventcount bigint,
+    timesum numeric DEFAULT '0'::numeric NOT NULL,
+    sizesum numeric DEFAULT '0'::numeric NOT NULL,
+    encryptedsum numeric DEFAULT '0'::numeric NOT NULL
+);
+
+
+ALTER TABLE public.aggregatestatistics OWNER TO filesender;
+
+--
+-- Name: dbconstantepochtypes; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.dbconstantepochtypes (
+    id integer NOT NULL,
+    description character varying(160) NOT NULL
+);
+
+
+ALTER TABLE public.dbconstantepochtypes OWNER TO filesender;
+
+--
+-- Name: dbconstantstatsevents; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.dbconstantstatsevents (
+    id integer NOT NULL,
+    description character varying(160) NOT NULL
+);
+
+
+ALTER TABLE public.dbconstantstatsevents OWNER TO filesender;
+
+--
+-- Name: aggregatestatisticsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.aggregatestatisticsview AS
+ SELECT agg.epoch,
+    agg.epochtype,
+    agg.eventtype,
+    agg.eventcount,
+    agg.timesum,
+    agg.sizesum,
+    agg.encryptedsum,
+    (agg.sizesum / (agg.eventcount)::numeric) AS sizemean,
+    (agg.timesum / (agg.eventcount)::numeric) AS timemean,
+    dbconstantepochtypes.description AS epochtypetext,
+    dbconstantstatsevents.description AS eventtypetext
+   FROM ((public.aggregatestatistics agg
+     JOIN public.dbconstantepochtypes ON ((dbconstantepochtypes.id = agg.epochtype)))
+     JOIN public.dbconstantstatsevents ON ((dbconstantstatsevents.id = agg.eventtype)));
+
+
+ALTER TABLE public.aggregatestatisticsview OWNER TO filesender;
+
+--
+-- Name: auditlogs; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.auditlogs (
+    id bigint NOT NULL,
+    event character varying(32) NOT NULL,
+    target_type character varying(255) NOT NULL,
+    target_id character varying(255) NOT NULL,
+    author_type character varying(255),
+    author_id character varying(255),
+    ip character varying(39) NOT NULL,
+    created timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.auditlogs OWNER TO filesender;
+
+--
+-- Name: auditlogs_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.auditlogs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auditlogs_id_seq OWNER TO filesender;
+
+--
+-- Name: auditlogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.auditlogs_id_seq OWNED BY public.auditlogs.id;
+
+
+--
+-- Name: auditlogsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.auditlogsview AS
+ SELECT auditlogs.id,
+    auditlogs.event,
+    auditlogs.target_type,
+    auditlogs.target_id,
+    auditlogs.author_type,
+    auditlogs.author_id,
+    auditlogs.ip,
+    auditlogs.created,
+    date_part('day'::text, (now() - (auditlogs.created)::timestamp with time zone)) AS created_days_ago,
+    (auditlogs.target_id)::bigint AS target_id_as_number
+   FROM public.auditlogs;
+
+
+ALTER TABLE public.auditlogsview OWNER TO filesender;
+
+--
+-- Name: authentications; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.authentications (
+    id bigint NOT NULL,
+    saml_user_identification_uid character varying(170) NOT NULL,
+    saml_user_identification_uid_hash character varying(200),
+    created timestamp without time zone,
+    last_activity timestamp without time zone,
+    comment character varying(100),
+    passwordhash character varying(255)
+);
+
+
+ALTER TABLE public.authentications OWNER TO filesender;
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.authentications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.authentications_id_seq OWNER TO filesender;
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.authentications_id_seq OWNED BY public.authentications.id;
+
+
+--
+-- Name: clientlogs; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.clientlogs (
+    id bigint NOT NULL,
+    userid bigint,
+    created timestamp without time zone NOT NULL,
+    message text NOT NULL
+);
+
+
+ALTER TABLE public.clientlogs OWNER TO filesender;
+
+--
+-- Name: clientlogs_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.clientlogs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.clientlogs_id_seq OWNER TO filesender;
+
+--
+-- Name: clientlogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.clientlogs_id_seq OWNED BY public.clientlogs.id;
+
+
+--
+-- Name: clientlogsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.clientlogsview AS
+ SELECT clientlogs.id,
+    clientlogs.userid,
+    clientlogs.created,
+    clientlogs.message,
+    date_part('day'::text, (now() - (clientlogs.created)::timestamp with time zone)) AS created_days_ago
+   FROM public.clientlogs;
+
+
+ALTER TABLE public.clientlogsview OWNER TO filesender;
+
+--
+-- Name: collections; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.collections (
+    id integer NOT NULL,
+    transfer_id integer NOT NULL,
+    parent_id integer,
+    type_id integer NOT NULL,
+    info character varying(2048)
+);
+
+
+ALTER TABLE public.collections OWNER TO filesender;
+
+--
+-- Name: collections_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.collections_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.collections_id_seq OWNER TO filesender;
+
+--
+-- Name: collections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.collections_id_seq OWNED BY public.collections.id;
+
+
+--
+-- Name: collectiontypes; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.collectiontypes (
+    id integer NOT NULL,
+    name character varying(60) NOT NULL,
+    description character varying(512) NOT NULL
+);
+
+
+ALTER TABLE public.collectiontypes OWNER TO filesender;
+
+--
+-- Name: dbconstantbrowsertypes; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.dbconstantbrowsertypes (
+    id integer NOT NULL,
+    description character varying(160) NOT NULL
+);
+
+
+ALTER TABLE public.dbconstantbrowsertypes OWNER TO filesender;
+
+--
+-- Name: dbconstantoperatingsystems; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.dbconstantoperatingsystems (
+    id integer NOT NULL,
+    description character varying(160) NOT NULL
+);
+
+
+ALTER TABLE public.dbconstantoperatingsystems OWNER TO filesender;
+
+--
+-- Name: dbconstantpasswordencodings; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.dbconstantpasswordencodings (
+    id integer NOT NULL,
+    description character varying(160) NOT NULL
+);
+
+
+ALTER TABLE public.dbconstantpasswordencodings OWNER TO filesender;
+
+--
+-- Name: dbtestingtablestringnumbers; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.dbtestingtablestringnumbers (
+    id integer NOT NULL,
+    data character varying(160) NOT NULL,
+    created timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.dbtestingtablestringnumbers OWNER TO filesender;
+
+--
+-- Name: dbtestingtablestringnumbers_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.dbtestingtablestringnumbers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dbtestingtablestringnumbers_id_seq OWNER TO filesender;
+
+--
+-- Name: dbtestingtablestringnumbers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.dbtestingtablestringnumbers_id_seq OWNED BY public.dbtestingtablestringnumbers.id;
+
+
+--
+-- Name: filecollections; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.filecollections (
+    collection_id integer NOT NULL,
+    file_id integer NOT NULL
+);
+
+
+ALTER TABLE public.filecollections OWNER TO filesender;
+
+--
+-- Name: files; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.files (
+    id integer NOT NULL,
+    transfer_id integer NOT NULL,
+    uid character varying(60) NOT NULL,
+    name character varying(255) NOT NULL,
+    mime_type character varying(255) NOT NULL,
+    size bigint NOT NULL,
+    encrypted_size bigint,
+    upload_start timestamp without time zone,
+    upload_end timestamp without time zone,
+    sha1 character varying(40),
+    storage_class_name character varying(60) DEFAULT 'StorageFilesystem'::character varying,
+    iv character varying(24),
+    aead character varying(512)
+);
+
+
+ALTER TABLE public.files OWNER TO filesender;
+
+--
+-- Name: files_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.files_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.files_id_seq OWNER TO filesender;
+
+--
+-- Name: files_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.files_id_seq OWNED BY public.files.id;
+
+
+--
+-- Name: transfers; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.transfers (
+    id integer NOT NULL,
+    userid bigint NOT NULL,
+    user_email character varying(250) NOT NULL,
+    guest_id integer,
+    lang character varying(8),
+    subject character varying(250),
+    message text,
+    created timestamp without time zone NOT NULL,
+    made_available timestamp without time zone,
+    expires timestamp without time zone NOT NULL,
+    expiry_extensions smallint DEFAULT 0 NOT NULL,
+    status character varying(32) NOT NULL,
+    options text NOT NULL,
+    key_version smallint DEFAULT 0 NOT NULL,
+    salt character varying(32),
+    password_version smallint DEFAULT 1 NOT NULL,
+    password_encoding integer DEFAULT 0 NOT NULL,
+    password_hash_iterations bigint DEFAULT 150000 NOT NULL,
+    client_entropy character varying(44),
+    roundtriptoken character varying(44)
+);
+
+
+ALTER TABLE public.transfers OWNER TO filesender;
+
+--
+-- Name: filestranferviewcopy; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.filestranferviewcopy AS
+ SELECT transfers.id,
+    transfers.userid,
+    transfers.user_email,
+    transfers.guest_id,
+    transfers.lang,
+    transfers.subject,
+    transfers.message,
+    transfers.created,
+    transfers.made_available,
+    transfers.expires,
+    transfers.expiry_extensions,
+    transfers.status,
+    transfers.options,
+    transfers.key_version,
+    transfers.salt,
+    transfers.password_version,
+    transfers.password_encoding,
+    transfers.password_hash_iterations,
+    transfers.client_entropy,
+    transfers.roundtriptoken,
+    date_part('day'::text, (now() - (transfers.created)::timestamp with time zone)) AS created_days_ago,
+    date_part('day'::text, (now() - (transfers.expires)::timestamp with time zone)) AS expires_days_ago,
+    date_part('day'::text, (now() - (transfers.made_available)::timestamp with time zone)) AS made_available_days_ago,
+    (transfers.options ~~ '%encryption":true%'::text) AS is_encrypted,
+        CASE
+            WHEN (transfers.password_version = 1) THEN 'user'::text
+            ELSE 'generated'::text
+        END AS password_origin
+   FROM public.transfers;
+
+
+ALTER TABLE public.filestranferviewcopy OWNER TO filesender;
+
+--
+-- Name: filesbywhoview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.filesbywhoview AS
+ SELECT t.id AS transferid,
+    f.name,
+    f.upload_end,
+    f.id AS fileid,
+    f.mime_type,
+    f.size,
+    t.id,
+    t.userid,
+    t.user_email,
+    t.guest_id,
+    t.lang,
+    t.subject,
+    t.message,
+    t.created,
+    t.made_available,
+    t.expires,
+    t.expiry_extensions,
+    t.status,
+    t.options,
+    t.key_version,
+    t.salt,
+    t.password_version,
+    t.password_encoding,
+    t.password_hash_iterations,
+    t.client_entropy,
+    t.roundtriptoken,
+    t.created_days_ago,
+    t.expires_days_ago,
+    t.made_available_days_ago,
+    t.is_encrypted,
+    t.password_origin
+   FROM public.files f,
+    public.filestranferviewcopy t
+  WHERE (f.transfer_id = t.id)
+  ORDER BY t.id;
+
+
+ALTER TABLE public.filesbywhoview OWNER TO filesender;
+
+--
+-- Name: filesview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.filesview AS
+ SELECT files.id,
+    files.transfer_id,
+    files.uid,
+    files.name,
+    files.mime_type,
+    files.size,
+    files.encrypted_size,
+    files.upload_start,
+    files.upload_end,
+    files.sha1,
+    files.storage_class_name,
+    files.iv,
+    files.aead,
+    date_part('day'::text, (now() - (files.upload_start)::timestamp with time zone)) AS upload_start_days_ago,
+    date_part('day'::text, (now() - (files.upload_end)::timestamp with time zone)) AS upload_end_days_ago
+   FROM public.files;
+
+
+ALTER TABLE public.filesview OWNER TO filesender;
+
+--
+-- Name: guests; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.guests (
+    id integer NOT NULL,
+    userid bigint NOT NULL,
+    user_email character varying(250) NOT NULL,
+    token character varying(60) NOT NULL,
+    email character varying(255) NOT NULL,
+    transfer_count integer NOT NULL,
+    subject character varying(255),
+    message text,
+    options text NOT NULL,
+    transfer_options text NOT NULL,
+    status character varying(32) NOT NULL,
+    created timestamp without time zone NOT NULL,
+    expires timestamp without time zone,
+    last_activity timestamp without time zone NOT NULL,
+    reminder_count integer DEFAULT 0 NOT NULL,
+    last_reminder timestamp without time zone
+);
+
+
+ALTER TABLE public.guests OWNER TO filesender;
+
+--
+-- Name: guests_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.guests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.guests_id_seq OWNER TO filesender;
+
+--
+-- Name: guests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.guests_id_seq OWNED BY public.guests.id;
+
+
+--
+-- Name: guestsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.guestsview AS
+ SELECT guests.id,
+    guests.userid,
+    guests.user_email,
+    guests.token,
+    guests.email,
+    guests.transfer_count,
+    guests.subject,
+    guests.message,
+    guests.options,
+    guests.transfer_options,
+    guests.status,
+    guests.created,
+    guests.expires,
+    guests.last_activity,
+    guests.reminder_count,
+    guests.last_reminder,
+    date_part('day'::text, (now() - (guests.created)::timestamp with time zone)) AS created_days_ago,
+    date_part('day'::text, (now() - (guests.expires)::timestamp with time zone)) AS expires_days_ago,
+    date_part('day'::text, (now() - (guests.last_activity)::timestamp with time zone)) AS last_activity_days_ago,
+    date_part('day'::text, (now() - (guests.last_reminder)::timestamp with time zone)) AS last_reminder_days_ago,
+    (guests.expires < now()) AS expired,
+    ((guests.status)::text = 'available'::text) AS is_available
+   FROM public.guests;
+
+
+ALTER TABLE public.guestsview OWNER TO filesender;
+
+--
+-- Name: metadatas; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.metadatas (
+    id integer NOT NULL,
+    schemaversion integer NOT NULL,
+    created timestamp without time zone NOT NULL,
+    message text NOT NULL
+);
+
+
+ALTER TABLE public.metadatas OWNER TO filesender;
+
+--
+-- Name: metadatas_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.metadatas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.metadatas_id_seq OWNER TO filesender;
+
+--
+-- Name: metadatas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.metadatas_id_seq OWNED BY public.metadatas.id;
+
+
+--
+-- Name: recipients; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.recipients (
+    id integer NOT NULL,
+    transfer_id integer NOT NULL,
+    email character varying(255) NOT NULL,
+    token character varying(60) NOT NULL,
+    created timestamp without time zone NOT NULL,
+    last_activity timestamp without time zone,
+    options text NOT NULL,
+    reminder_count integer DEFAULT 0 NOT NULL,
+    last_reminder timestamp without time zone
+);
+
+
+ALTER TABLE public.recipients OWNER TO filesender;
+
+--
+-- Name: recipients_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.recipients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipients_id_seq OWNER TO filesender;
+
+--
+-- Name: recipients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.recipients_id_seq OWNED BY public.recipients.id;
+
+
+--
+-- Name: shredfiles; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.shredfiles (
+    id integer NOT NULL,
+    name character varying(60) NOT NULL,
+    errormessage character varying(300)
+);
+
+
+ALTER TABLE public.shredfiles OWNER TO filesender;
+
+--
+-- Name: shredfiles_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.shredfiles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.shredfiles_id_seq OWNER TO filesender;
+
+--
+-- Name: shredfiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.shredfiles_id_seq OWNED BY public.shredfiles.id;
+
+
+--
+-- Name: statlogs; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.statlogs (
+    id bigint NOT NULL,
+    event character varying(32) NOT NULL,
+    target_type character varying(255) NOT NULL,
+    size bigint,
+    time_taken bigint,
+    additional_attributes text,
+    created timestamp without time zone NOT NULL,
+    browser integer,
+    os integer,
+    is_encrypted boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public.statlogs OWNER TO filesender;
+
+--
+-- Name: statlogs_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.statlogs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.statlogs_id_seq OWNER TO filesender;
+
+--
+-- Name: statlogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.statlogs_id_seq OWNED BY public.statlogs.id;
+
+
+--
+-- Name: statlogsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.statlogsview AS
+ SELECT base.id,
+    base.event,
+    base.target_type,
+    base.size,
+    base.time_taken,
+    base.additional_attributes,
+    base.created,
+    base.browser,
+    base.os,
+    base.is_encrypted,
+    date_part('day'::text, (now() - (base.created)::timestamp with time zone)) AS created_days_ago,
+    ( SELECT dbconstantbrowsertypes.description
+           FROM public.dbconstantbrowsertypes
+          WHERE (dbconstantbrowsertypes.id = base.browser)
+         LIMIT 1) AS browser_name,
+    ( SELECT dbconstantoperatingsystems.description
+           FROM public.dbconstantoperatingsystems
+          WHERE (dbconstantoperatingsystems.id = base.os)
+         LIMIT 1) AS os_name
+   FROM public.statlogs base;
+
+
+ALTER TABLE public.statlogsview OWNER TO filesender;
+
+--
+-- Name: trackingevents; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.trackingevents (
+    id integer NOT NULL,
+    type character varying(16) NOT NULL,
+    target_type character varying(255) NOT NULL,
+    target_id character varying(255) NOT NULL,
+    details text NOT NULL,
+    created timestamp without time zone NOT NULL,
+    reported timestamp without time zone
+);
+
+
+ALTER TABLE public.trackingevents OWNER TO filesender;
+
+--
+-- Name: trackingevents_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.trackingevents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.trackingevents_id_seq OWNER TO filesender;
+
+--
+-- Name: trackingevents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.trackingevents_id_seq OWNED BY public.trackingevents.id;
+
+
+--
+-- Name: trackingeventsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.trackingeventsview AS
+ SELECT trackingevents.id,
+    trackingevents.type,
+    trackingevents.target_type,
+    trackingevents.target_id,
+    trackingevents.details,
+    trackingevents.created,
+    trackingevents.reported,
+    date_part('day'::text, (now() - (trackingevents.created)::timestamp with time zone)) AS created_days_ago,
+    date_part('day'::text, (now() - (trackingevents.reported)::timestamp with time zone)) AS reported_days_ago
+   FROM public.trackingevents;
+
+
+ALTER TABLE public.trackingeventsview OWNER TO filesender;
+
+--
+-- Name: transfers_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.transfers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.transfers_id_seq OWNER TO filesender;
+
+--
+-- Name: transfers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.transfers_id_seq OWNED BY public.transfers.id;
+
+
+--
+-- Name: transfersauditlogsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.transfersauditlogsview AS
+ SELECT t.id,
+    t.userid,
+    t.user_email,
+    t.guest_id,
+    t.lang,
+    t.subject,
+    t.message,
+    t.created,
+    t.made_available,
+    t.expires,
+    t.expiry_extensions,
+    t.status,
+    t.options,
+    t.key_version,
+    t.salt,
+    t.password_version,
+    t.password_encoding,
+    t.password_hash_iterations,
+    t.client_entropy,
+    t.roundtriptoken,
+    0 AS fileid,
+    a.created AS acreated,
+    a.author_type,
+    a.author_id,
+    a.target_type,
+    a.target_id,
+    a.event,
+    a.id AS aid
+   FROM public.transfers t,
+    public.auditlogs a
+  WHERE (((a.target_id)::text = ((t.id)::character varying(255))::text) AND ((a.target_type)::text = 'Transfer'::text))
+UNION
+ SELECT t.id,
+    t.userid,
+    t.user_email,
+    t.guest_id,
+    t.lang,
+    t.subject,
+    t.message,
+    t.created,
+    t.made_available,
+    t.expires,
+    t.expiry_extensions,
+    t.status,
+    t.options,
+    t.key_version,
+    t.salt,
+    t.password_version,
+    t.password_encoding,
+    t.password_hash_iterations,
+    t.client_entropy,
+    t.roundtriptoken,
+    0 AS fileid,
+    a.created AS acreated,
+    a.author_type,
+    a.author_id,
+    a.target_type,
+    a.target_id,
+    a.event,
+    a.id AS aid
+   FROM public.transfers t,
+    public.auditlogs a,
+    public.files f
+  WHERE ((f.transfer_id = t.id) AND ((a.target_id)::text = ((f.id)::character varying(255))::text) AND ((a.target_type)::text = 'File'::text));
+
+
+ALTER TABLE public.transfersauditlogsview OWNER TO filesender;
+
+--
+-- Name: transfersauditlogsdlcountview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.transfersauditlogsdlcountview AS
+ SELECT t.id,
+    t.userid,
+    t.user_email,
+    t.guest_id,
+    t.lang,
+    t.subject,
+    t.message,
+    t.created,
+    t.made_available,
+    t.expires,
+    t.expiry_extensions,
+    t.status,
+    t.options,
+    t.key_version,
+    t.salt,
+    t.password_version,
+    t.password_encoding,
+    t.password_hash_iterations,
+    t.client_entropy,
+    t.roundtriptoken,
+    zz.count
+   FROM (public.transfers t
+     LEFT JOIN ( SELECT transfersauditlogsview.id,
+            count(*) AS count
+           FROM public.transfersauditlogsview
+          WHERE (((transfersauditlogsview.event)::text = 'download_ended'::text) OR ((transfersauditlogsview.event)::text = 'archive_download_ended'::text))
+          GROUP BY transfersauditlogsview.id) zz ON ((t.id = zz.id)));
+
+
+ALTER TABLE public.transfersauditlogsdlcountview OWNER TO filesender;
+
+--
+-- Name: userpreferences; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.userpreferences (
+    id bigint NOT NULL,
+    authid bigint NOT NULL,
+    additional_attributes text,
+    lang character varying(8),
+    aup_ticked boolean NOT NULL,
+    aup_last_ticked_date date,
+    transfer_preferences text NOT NULL,
+    guest_preferences text NOT NULL,
+    frequent_recipients text NOT NULL,
+    created timestamp without time zone NOT NULL,
+    last_activity timestamp without time zone,
+    auth_secret character varying(64),
+    auth_secret_created timestamp without time zone,
+    quota bigint
+);
+
+
+ALTER TABLE public.userpreferences OWNER TO filesender;
+
+--
+-- Name: transfersauthview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.transfersauthview AS
+ SELECT t.id,
+    t.userid,
+    u.authid,
+    a.saml_user_identification_uid AS user_id,
+    t.made_available,
+    t.expires,
+    t.created
+   FROM public.transfers t,
+    public.userpreferences u,
+    public.authentications a
+  WHERE ((t.userid = u.id) AND (u.authid = a.id));
+
+
+ALTER TABLE public.transfersauthview OWNER TO filesender;
+
+--
+-- Name: transfersfilesview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.transfersfilesview AS
+ SELECT t.id,
+    t.userid,
+    t.user_email,
+    t.guest_id,
+    t.lang,
+    t.subject,
+    t.message,
+    t.created,
+    t.made_available,
+    t.expires,
+    t.expiry_extensions,
+    t.status,
+    t.options,
+    t.key_version,
+    t.salt,
+    t.password_version,
+    t.password_encoding,
+    t.password_hash_iterations,
+    t.client_entropy,
+    t.roundtriptoken,
+    f.name AS filename,
+    f.size AS filesize
+   FROM public.transfers t,
+    public.files f
+  WHERE (f.transfer_id = t.id);
+
+
+ALTER TABLE public.transfersfilesview OWNER TO filesender;
+
+--
+-- Name: transfersrecipientview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.transfersrecipientview AS
+ SELECT t.id,
+    t.userid,
+    t.user_email,
+    t.guest_id,
+    t.lang,
+    t.subject,
+    t.message,
+    t.created,
+    t.made_available,
+    t.expires,
+    t.expiry_extensions,
+    t.status,
+    t.options,
+    t.key_version,
+    t.salt,
+    t.password_version,
+    t.password_encoding,
+    t.password_hash_iterations,
+    t.client_entropy,
+    t.roundtriptoken,
+    r.email AS recipientemail,
+    r.id AS recipientid
+   FROM public.transfers t,
+    public.recipients r
+  WHERE (r.transfer_id = t.id);
+
+
+ALTER TABLE public.transfersrecipientview OWNER TO filesender;
+
+--
+-- Name: transferssizeview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.transferssizeview AS
+SELECT
+    NULL::integer AS id,
+    NULL::bigint AS userid,
+    NULL::character varying(250) AS user_email,
+    NULL::integer AS guest_id,
+    NULL::character varying(8) AS lang,
+    NULL::character varying(250) AS subject,
+    NULL::text AS message,
+    NULL::timestamp without time zone AS created,
+    NULL::timestamp without time zone AS made_available,
+    NULL::timestamp without time zone AS expires,
+    NULL::smallint AS expiry_extensions,
+    NULL::character varying(32) AS status,
+    NULL::text AS options,
+    NULL::smallint AS key_version,
+    NULL::character varying(32) AS salt,
+    NULL::smallint AS password_version,
+    NULL::integer AS password_encoding,
+    NULL::bigint AS password_hash_iterations,
+    NULL::character varying(44) AS client_entropy,
+    NULL::character varying(44) AS roundtriptoken,
+    NULL::numeric AS size;
+
+
+ALTER TABLE public.transferssizeview OWNER TO filesender;
+
+--
+-- Name: transfersview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.transfersview AS
+ SELECT transfers.id,
+    transfers.userid,
+    transfers.user_email,
+    transfers.guest_id,
+    transfers.lang,
+    transfers.subject,
+    transfers.message,
+    transfers.created,
+    transfers.made_available,
+    transfers.expires,
+    transfers.expiry_extensions,
+    transfers.status,
+    transfers.options,
+    transfers.key_version,
+    transfers.salt,
+    transfers.password_version,
+    transfers.password_encoding,
+    transfers.password_hash_iterations,
+    transfers.client_entropy,
+    transfers.roundtriptoken,
+    date_part('day'::text, (now() - (transfers.created)::timestamp with time zone)) AS created_days_ago,
+    date_part('day'::text, (now() - (transfers.expires)::timestamp with time zone)) AS expires_days_ago,
+    date_part('day'::text, (now() - (transfers.made_available)::timestamp with time zone)) AS made_available_days_ago,
+    (transfers.options ~~ '%encryption":true%'::text) AS is_encrypted,
+        CASE
+            WHEN (transfers.password_version = 1) THEN 'user'::text
+            ELSE 'generated'::text
+        END AS password_origin
+   FROM public.transfers;
+
+
+ALTER TABLE public.transfersview OWNER TO filesender;
+
+--
+-- Name: translatableemails; Type: TABLE; Schema: public; Owner: filesender
+--
+
+CREATE TABLE public.translatableemails (
+    id integer NOT NULL,
+    context_type character varying(255) NOT NULL,
+    context_id character varying(255) NOT NULL,
+    token character varying(60) NOT NULL,
+    translation_id character varying(255) NOT NULL,
+    variables text NOT NULL,
+    created timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.translatableemails OWNER TO filesender;
+
+--
+-- Name: translatableemails_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.translatableemails_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.translatableemails_id_seq OWNER TO filesender;
+
+--
+-- Name: translatableemails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.translatableemails_id_seq OWNED BY public.translatableemails.id;
+
+
+--
+-- Name: translatableemailsview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.translatableemailsview AS
+ SELECT translatableemails.id,
+    translatableemails.context_type,
+    translatableemails.context_id,
+    translatableemails.token,
+    translatableemails.translation_id,
+    translatableemails.variables,
+    translatableemails.created,
+    date_part('day'::text, (now() - (translatableemails.created)::timestamp with time zone)) AS created_days_ago
+   FROM public.translatableemails;
+
+
+ALTER TABLE public.translatableemailsview OWNER TO filesender;
+
+--
+-- Name: userauthview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.userauthview AS
+ SELECT up.id,
+    up.authid,
+    a.saml_user_identification_uid AS user_id,
+    up.last_activity,
+    up.aup_ticked,
+    up.created
+   FROM public.userpreferences up,
+    public.authentications a
+  WHERE (up.authid = a.id);
+
+
+ALTER TABLE public.userauthview OWNER TO filesender;
+
+--
+-- Name: userpreferences_id_seq; Type: SEQUENCE; Schema: public; Owner: filesender
+--
+
+CREATE SEQUENCE public.userpreferences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.userpreferences_id_seq OWNER TO filesender;
+
+--
+-- Name: userpreferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: filesender
+--
+
+ALTER SEQUENCE public.userpreferences_id_seq OWNED BY public.userpreferences.id;
+
+
+--
+-- Name: userpreferencesview; Type: VIEW; Schema: public; Owner: filesender
+--
+
+CREATE VIEW public.userpreferencesview AS
+ SELECT userpreferences.id,
+    userpreferences.authid,
+    userpreferences.additional_attributes,
+    userpreferences.lang,
+    userpreferences.aup_ticked,
+    userpreferences.aup_last_ticked_date,
+    userpreferences.transfer_preferences,
+    userpreferences.guest_preferences,
+    userpreferences.frequent_recipients,
+    userpreferences.created,
+    userpreferences.last_activity,
+    userpreferences.auth_secret,
+    userpreferences.auth_secret_created,
+    userpreferences.quota,
+    date_part('day'::text, (now() - (userpreferences.created)::timestamp with time zone)) AS created_days_ago,
+    (userpreferences.transfer_preferences ~~ '%encryption":true%'::text) AS prefers_enceyption,
+    date_part('day'::text, (now() - (userpreferences.last_activity)::timestamp with time zone)) AS last_activity_days_ago,
+    date_part('day'::text, (now() - (userpreferences.aup_last_ticked_date)::timestamp with time zone)) AS aup_last_ticked_days_ago,
+    userpreferences.id AS email_address,
+    (userpreferences.id IS NOT NULL) AS is_active
+   FROM public.userpreferences;
+
+
+ALTER TABLE public.userpreferencesview OWNER TO filesender;
+
+--
+-- Name: auditlogs id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.auditlogs ALTER COLUMN id SET DEFAULT nextval('public.auditlogs_id_seq'::regclass);
+
+
+--
+-- Name: authentications id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.authentications ALTER COLUMN id SET DEFAULT nextval('public.authentications_id_seq'::regclass);
+
+
+--
+-- Name: clientlogs id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.clientlogs ALTER COLUMN id SET DEFAULT nextval('public.clientlogs_id_seq'::regclass);
+
+
+--
+-- Name: collections id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.collections ALTER COLUMN id SET DEFAULT nextval('public.collections_id_seq'::regclass);
+
+
+--
+-- Name: dbtestingtablestringnumbers id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.dbtestingtablestringnumbers ALTER COLUMN id SET DEFAULT nextval('public.dbtestingtablestringnumbers_id_seq'::regclass);
+
+
+--
+-- Name: files id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.files ALTER COLUMN id SET DEFAULT nextval('public.files_id_seq'::regclass);
+
+
+--
+-- Name: guests id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.guests ALTER COLUMN id SET DEFAULT nextval('public.guests_id_seq'::regclass);
+
+
+--
+-- Name: metadatas id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.metadatas ALTER COLUMN id SET DEFAULT nextval('public.metadatas_id_seq'::regclass);
+
+
+--
+-- Name: recipients id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.recipients ALTER COLUMN id SET DEFAULT nextval('public.recipients_id_seq'::regclass);
+
+
+--
+-- Name: shredfiles id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.shredfiles ALTER COLUMN id SET DEFAULT nextval('public.shredfiles_id_seq'::regclass);
+
+
+--
+-- Name: statlogs id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.statlogs ALTER COLUMN id SET DEFAULT nextval('public.statlogs_id_seq'::regclass);
+
+
+--
+-- Name: trackingevents id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.trackingevents ALTER COLUMN id SET DEFAULT nextval('public.trackingevents_id_seq'::regclass);
+
+
+--
+-- Name: transfers id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.transfers ALTER COLUMN id SET DEFAULT nextval('public.transfers_id_seq'::regclass);
+
+
+--
+-- Name: translatableemails id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.translatableemails ALTER COLUMN id SET DEFAULT nextval('public.translatableemails_id_seq'::regclass);
+
+
+--
+-- Name: userpreferences id; Type: DEFAULT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.userpreferences ALTER COLUMN id SET DEFAULT nextval('public.userpreferences_id_seq'::regclass);
+
+
+--
+-- Data for Name: aggregatestatisticmetadatas; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.aggregatestatisticmetadatas (id, filesenderversion, lastsend) FROM stdin;
+1	2.5	2020-05-17 02:29:34
+\.
+
+
+--
+-- Data for Name: aggregatestatistics; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.aggregatestatistics (epoch, epochtype, eventtype, eventcount, timesum, sizesum, encryptedsum) FROM stdin;
+2020-05-17 02:15:00	1	1	1	0	33	0
+2020-05-17 02:15:00	1	101	1	0	33	0
+2020-05-17 02:15:00	1	3	1	0	33	0
+2020-05-17 02:15:00	1	11	1	0	33	0
+2020-05-17 02:15:00	1	103	1	0	33	0
+2020-05-17 02:15:00	1	7	2	0	66	0
+2020-05-17 02:00:00	2	107	5	0	165	0
+2020-05-17 00:00:00	3	107	5	0	165	0
+2020-05-17 00:00:00	4	107	5	0	165	0
+2020-05-01 00:00:00	5	107	5	0	165	0
+2020-01-01 00:00:00	6	107	5	0	165	0
+2020-05-17 02:15:00	1	107	2	0	66	0
+2020-05-17 02:30:00	1	9	3	0	99	0
+2020-05-17 02:00:00	2	9	5	0	165	0
+2020-05-17 00:00:00	3	9	5	0	165	0
+2020-05-17 00:00:00	4	9	5	0	165	0
+2020-05-01 00:00:00	5	9	5	0	165	0
+2020-05-17 02:15:00	1	9	2	0	66	0
+2020-01-01 00:00:00	6	9	5	0	165	0
+2020-05-17 02:30:00	1	109	3	0	99	0
+2020-05-17 02:15:00	1	109	2	0	66	0
+2020-05-17 02:30:00	1	1	5	0	561	0
+2020-05-17 02:00:00	2	1	6	0	594	0
+2020-05-17 00:00:00	3	1	6	0	594	0
+2020-05-17 00:00:00	4	1	6	0	594	0
+2020-05-01 00:00:00	5	1	6	0	594	0
+2020-01-01 00:00:00	6	1	6	0	594	0
+2020-05-17 02:30:00	1	101	5	0	561	0
+2020-05-17 02:00:00	2	101	6	0	594	0
+2020-05-17 00:00:00	3	101	6	0	594	0
+2020-05-17 00:00:00	4	101	6	0	594	0
+2020-05-01 00:00:00	5	101	6	0	594	0
+2020-01-01 00:00:00	6	101	6	0	594	0
+2020-05-17 02:30:00	1	3	5	4	561	0
+2020-05-17 02:00:00	2	3	6	4	594	0
+2020-05-17 00:00:00	3	3	6	4	594	0
+2020-05-17 00:00:00	4	3	6	4	594	0
+2020-05-01 00:00:00	5	3	6	4	594	0
+2020-01-01 00:00:00	6	3	6	4	594	0
+2020-05-17 02:00:00	2	109	5	0	165	0
+2020-05-17 00:00:00	3	109	5	0	165	0
+2020-05-17 00:00:00	4	109	5	0	165	0
+2020-05-01 00:00:00	5	109	5	0	165	0
+2020-01-01 00:00:00	6	109	5	0	165	0
+2020-05-17 02:30:00	1	11	5	1	165	0
+2020-05-17 02:00:00	2	11	6	1	165	0
+2020-05-17 00:00:00	3	11	6	1	165	0
+2020-05-17 00:00:00	4	11	6	1	165	0
+2020-05-01 00:00:00	5	11	6	1	165	0
+2020-01-01 00:00:00	6	11	6	1	165	0
+2020-05-17 02:30:00	1	103	5	4	561	0
+2020-05-17 02:00:00	2	103	6	4	594	0
+2020-05-17 00:00:00	3	103	6	4	594	0
+2020-05-17 00:00:00	4	103	6	4	594	0
+2020-05-01 00:00:00	5	103	6	4	594	0
+2020-01-01 00:00:00	6	103	6	4	594	0
+2020-05-17 02:30:00	1	7	3	0	99	0
+2020-05-17 02:00:00	2	7	5	0	165	0
+2020-05-17 00:00:00	3	7	5	0	165	0
+2020-05-17 00:00:00	4	7	5	0	165	0
+2020-05-01 00:00:00	5	7	5	0	165	0
+2020-01-01 00:00:00	6	7	5	0	165	0
+2020-05-17 02:30:00	1	107	3	0	99	0
+\.
+
+
+--
+-- Data for Name: auditlogs; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.auditlogs (id, event, target_type, target_id, author_type, author_id, ip, created) FROM stdin;
+1	transfer_started	Transfer	1	User	15	192.168.0.200	2020-05-17 02:29:44
+2	upload_started	Transfer	1	User	15	192.168.0.200	2020-05-17 02:29:44
+3	file_uploaded	File	1	User	15	192.168.0.200	2020-05-17 02:29:44
+4	upload_ended	Transfer	1	User	15	192.168.0.200	2020-05-17 02:29:45
+5	transfer_available	Transfer	1	User	15	192.168.0.200	2020-05-17 02:29:45
+6	download_started	File	1	User	15	192.168.0.200	2020-05-17 02:29:52
+7	download_ended	File	1	User	15	192.168.0.200	2020-05-17 02:29:52
+8	download_started	File	1	User	15	192.168.0.200	2020-05-17 02:29:58
+9	download_ended	File	1	User	15	192.168.0.200	2020-05-17 02:29:58
+10	transfer_started	Transfer	2	User	15	192.168.0.200	2020-05-17 02:30:13
+11	upload_started	Transfer	2	User	15	192.168.0.200	2020-05-17 02:30:13
+12	file_uploaded	File	3	User	15	192.168.0.200	2020-05-17 02:30:14
+13	file_uploaded	File	4	User	15	192.168.0.200	2020-05-17 02:30:14
+14	file_uploaded	File	5	User	15	192.168.0.200	2020-05-17 02:30:14
+15	file_uploaded	File	6	User	15	192.168.0.200	2020-05-17 02:30:14
+16	file_uploaded	File	7	User	15	192.168.0.200	2020-05-17 02:30:14
+17	upload_ended	Transfer	2	User	15	192.168.0.200	2020-05-17 02:30:14
+18	transfer_available	Transfer	2	User	15	192.168.0.200	2020-05-17 02:30:14
+19	transfer_started	Transfer	3	User	15	192.168.0.200	2020-05-17 02:30:32
+20	upload_started	Transfer	3	User	15	192.168.0.200	2020-05-17 02:30:32
+21	file_uploaded	File	9	User	15	192.168.0.200	2020-05-17 02:30:33
+22	file_uploaded	File	10	User	15	192.168.0.200	2020-05-17 02:30:33
+23	file_uploaded	File	11	User	15	192.168.0.200	2020-05-17 02:30:33
+24	file_uploaded	File	12	User	15	192.168.0.200	2020-05-17 02:30:33
+25	file_uploaded	File	13	User	15	192.168.0.200	2020-05-17 02:30:33
+26	upload_ended	Transfer	3	User	15	192.168.0.200	2020-05-17 02:30:33
+27	transfer_available	Transfer	3	User	15	192.168.0.200	2020-05-17 02:30:34
+28	download_started	File	12	User	15	192.168.0.200	2020-05-17 02:30:39
+29	download_ended	File	12	User	15	192.168.0.200	2020-05-17 02:30:39
+30	download_started	File	10	User	15	192.168.0.200	2020-05-17 02:30:47
+31	download_ended	File	10	User	15	192.168.0.200	2020-05-17 02:30:47
+32	transfer_started	Transfer	4	User	15	192.168.0.200	2020-05-17 02:31:02
+33	upload_started	Transfer	4	User	15	192.168.0.200	2020-05-17 02:31:02
+34	file_uploaded	File	15	User	15	192.168.0.200	2020-05-17 02:31:02
+35	file_uploaded	File	16	User	15	192.168.0.200	2020-05-17 02:31:02
+36	file_uploaded	File	17	User	15	192.168.0.200	2020-05-17 02:31:02
+37	file_uploaded	File	18	User	15	192.168.0.200	2020-05-17 02:31:02
+38	file_uploaded	File	19	User	15	192.168.0.200	2020-05-17 02:31:02
+39	upload_ended	Transfer	4	User	15	192.168.0.200	2020-05-17 02:31:03
+40	transfer_available	Transfer	4	User	15	192.168.0.200	2020-05-17 02:31:03
+41	transfer_started	Transfer	5	User	15	192.168.0.200	2020-05-17 02:31:12
+42	upload_started	Transfer	5	User	15	192.168.0.200	2020-05-17 02:31:12
+43	file_uploaded	File	20	User	15	192.168.0.200	2020-05-17 02:31:13
+44	upload_ended	Transfer	5	User	15	192.168.0.200	2020-05-17 02:31:13
+45	transfer_available	Transfer	5	User	15	192.168.0.200	2020-05-17 02:31:13
+46	transfer_started	Transfer	6	User	15	192.168.0.200	2020-05-17 02:31:26
+47	upload_started	Transfer	6	User	15	192.168.0.200	2020-05-17 02:31:26
+48	file_uploaded	File	21	User	15	192.168.0.200	2020-05-17 02:31:27
+49	upload_ended	Transfer	6	User	15	192.168.0.200	2020-05-17 02:31:27
+50	transfer_available	Transfer	6	User	15	192.168.0.200	2020-05-17 02:31:27
+51	download_started	File	21	User	15	192.168.0.200	2020-05-17 02:31:31
+52	download_ended	File	21	User	15	192.168.0.200	2020-05-17 02:31:31
+\.
+
+
+--
+-- Data for Name: authentications; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.authentications (id, saml_user_identification_uid, saml_user_identification_uid_hash, created, last_activity, comment, passwordhash) FROM stdin;
+1	filesender-upgrade@localhost.localdomain	eece83dce87f847507180314d6b8136287df6638	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+2	filesender-cronjob@localhost.localdomain	09551aefc9814314a39bca7665b2b6e3f7bb7768	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+3	filesender-authlocal@localhost.localdomain	fc1480ea65924356a16044044011241e417eda18	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+4	filesender-phpunit@localhost.localdomain	1f3d0c70881af2f372047979212d631e34d6942c	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+5	filesender-testdriver@localhost.localdomain	95a3b99f10c24104ccc6a3a885761bd1cdfb5612	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+6	filesender-reserved1@localhost.localdomain	dc422eaa60c2d7f6aa89bb91fb3d5c77d1daefc9	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+7	filesender-reserved2@localhost.localdomain	11d71451001a1929f12c121d8c51490c23b47721	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+8	filesender-reserved3@localhost.localdomain	631bb38331308e068e9761d50636c1dcf142d721	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+9	filesender-reserved4@localhost.localdomain	25fe1ff3e3597518aa26a75e58a6cb8193f798b9	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+10	filesender-reserved5@localhost.localdomain	922b11256bd3cc8eb958914248636e326bbb4a03	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+11	filesender-reserved6@localhost.localdomain	710be4f36b094642ca00abd77d1248b72e63561c	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+12	filesender-reserved7@localhost.localdomain	8f31f04fd084fd30b32fcd9dfb822953db4d884a	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+13	filesender-reserved8@localhost.localdomain	af6c5b4e8a42b675c84ebe2d7d140675fbfec35d	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+14	filesender-reserved9@localhost.localdomain	5db030b8e1853eba8a4ac60f745642dc69a05008	2020-05-17 02:29:34	2020-05-17 02:29:34	\N	\N
+15	testdriver@localhost.localdomain	e08fc8432c5efc32b9c027e724f6e4e0c97e49e6	2020-05-17 02:29:39	2020-05-17 02:29:39	\N	\N
+\.
+
+
+--
+-- Data for Name: clientlogs; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.clientlogs (id, userid, created, message) FROM stdin;
+\.
+
+
+--
+-- Data for Name: collections; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.collections (id, transfer_id, parent_id, type_id, info) FROM stdin;
+1	2	\N	1	dirtree
+2	2	1	2	dirtree
+3	2	1	2	dirtree/subdir1
+4	3	\N	1	dirtree
+5	3	4	2	dirtree
+6	3	4	2	dirtree/subdir1
+7	4	\N	1	dirtree
+8	4	7	2	dirtree
+9	4	7	2	dirtree/subdir1
+\.
+
+
+--
+-- Data for Name: collectiontypes; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.collectiontypes (id, name, description) FROM stdin;
+0	UNKNOWN	undefined collection type
+1	TREE	directory tree collection
+2	DIRECTORY	directory path collection
+999	LASTSTATIC	last static collection type
+\.
+
+
+--
+-- Data for Name: dbconstantbrowsertypes; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.dbconstantbrowsertypes (id, description) FROM stdin;
+0	Unknown
+1	Edge
+2	Internet Explorer
+3	Mozilla Firefox
+4	Vivaldi
+5	Opera
+6	Google Chrome
+7	Apple Safari
+8	Outlook
+\.
+
+
+--
+-- Data for Name: dbconstantepochtypes; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.dbconstantepochtypes (id, description) FROM stdin;
+1	fifteen_minutes
+2	hour
+3	day
+4	week
+5	month
+6	year
+\.
+
+
+--
+-- Data for Name: dbconstantoperatingsystems; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.dbconstantoperatingsystems (id, description) FROM stdin;
+0	Unknown
+1	iPad
+2	iPod
+3	iPhone
+4	Mac
+5	OSX
+6	Android
+7	Linux
+8	Nokia
+9	Windows 10
+10	Windows 8.1
+11	Windows 8.0
+12	Windows 7.0
+13	Windows (Other)
+14	FreeBSD
+15	OpenBSD
+16	NetBSD
+17	Solaris
+18	OS2
+19	BEOS
+\.
+
+
+--
+-- Data for Name: dbconstantpasswordencodings; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.dbconstantpasswordencodings (id, description) FROM stdin;
+0	none
+1	base64
+2	ascii85
+\.
+
+
+--
+-- Data for Name: dbconstantstatsevents; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.dbconstantstatsevents (id, description) FROM stdin;
+1	upload_started
+2	upload_resumed
+3	upload_ended
+4	user_created
+5	user_purged
+6	user_inactived
+7	download_started
+8	download_resumed
+9	download_ended
+11	upload_maxsize_ended
+101	upload_nocrypt_started
+102	upload_nocrypt_resumed
+103	upload_nocrypt_ended
+107	download_nocrypt_started
+108	download_nocrypt_resumed
+109	download_nocrypt_ended
+111	upload_nocrypt_maxsize_ended
+201	upload_encrypted_started
+202	upload_encrypted_resumed
+203	upload_encrypted_ended
+207	download_encrypted_started
+208	download_encrypted_resumed
+209	download_encrypted_ended
+211	upload_encrypted_maxsize_ended
+501	storage-expired-transfers-size
+502	storage-used-size
+503	storage-free-size
+\.
+
+
+--
+-- Data for Name: dbtestingtablestringnumbers; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.dbtestingtablestringnumbers (id, data, created) FROM stdin;
+\.
+
+
+--
+-- Data for Name: filecollections; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.filecollections (collection_id, file_id) FROM stdin;
+1	2
+2	3
+2	4
+2	5
+3	6
+3	7
+4	8
+5	9
+5	10
+5	11
+6	12
+6	13
+7	14
+8	15
+8	16
+8	17
+9	18
+9	19
+\.
+
+
+--
+-- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.files (id, transfer_id, uid, name, mime_type, size, encrypted_size, upload_start, upload_end, sha1, storage_class_name, iv, aead) FROM stdin;
+11	3	2a798ab4-d55d-4447-ba53-2f4a259e970a	file1.txt	application/binary	33	64	2020-05-17 02:30:32	2020-05-17 02:30:33	\N	StorageFilesystemChunked	\N	
+1	1	3210b12f-d083-4859-9872-c38501c2a02e	df2.txt	text/plain	33	64	2020-05-17 02:29:44	2020-05-17 02:29:44	\N	StorageFilesystemChunked	\N	
+2	2	23e81e38-7796-4af5-b63f-c4e3626166a9	dirtree	text/directory	0	0	1970-01-01 01:00:00	1970-01-01 01:00:00	\N	StorageFilesystemChunked	\N	\N
+12	3	572467d7-e852-4115-97ea-4514a1124e1a	subfile1.txt	application/binary	33	64	2020-05-17 02:30:32	2020-05-17 02:30:33	\N	StorageFilesystemChunked	\N	
+13	3	90bb3e3f-a75b-4332-b377-db2c0f5a2860	subfile9.txt	application/binary	33	64	2020-05-17 02:30:33	2020-05-17 02:30:33	\N	StorageFilesystemChunked	\N	
+14	4	6c3ec156-40e5-49ad-98a9-a731327c4523	dirtree	text/directory	0	0	1970-01-01 01:00:00	1970-01-01 01:00:00	\N	StorageFilesystemChunked	\N	\N
+21	6	152441f6-e9b7-4401-9aa0-f5e4bbbd0b4d	aa3.txt	text/plain	33	64	2020-05-17 02:31:26	2020-05-17 02:31:27	\N	StorageFilesystemChunked	\N	
+3	2	db260d8f-efb8-421f-b62e-900825ca0b3e	file2.txt	application/binary	33	64	2020-05-17 02:30:13	2020-05-17 02:30:14	\N	StorageFilesystemChunked	\N	
+4	2	74bc87a5-65c8-44dd-b2a4-b8755198f37f	filez.txt	application/binary	33	64	2020-05-17 02:30:13	2020-05-17 02:30:14	\N	StorageFilesystemChunked	\N	
+5	2	b8b2b203-6b66-4234-9c3d-c4f606a8d978	file1.txt	application/binary	33	64	2020-05-17 02:30:13	2020-05-17 02:30:14	\N	StorageFilesystemChunked	\N	
+6	2	ae360f40-52f4-4b22-ab6a-ef6507023652	subfile1.txt	application/binary	33	64	2020-05-17 02:30:13	2020-05-17 02:30:14	\N	StorageFilesystemChunked	\N	
+7	2	5aef4f1d-e58e-4406-9f47-e41650813504	subfile9.txt	application/binary	33	64	2020-05-17 02:30:14	2020-05-17 02:30:14	\N	StorageFilesystemChunked	\N	
+8	3	aa883222-5f5b-4328-aaf4-6e08902a61c8	dirtree	text/directory	0	0	1970-01-01 01:00:00	1970-01-01 01:00:00	\N	StorageFilesystemChunked	\N	\N
+9	3	f96ed8ef-2f0b-49ec-9da5-de7220f8e5a0	file2.txt	application/binary	33	64	2020-05-17 02:30:32	2020-05-17 02:30:33	\N	StorageFilesystemChunked	\N	
+10	3	a5b2dedb-3a66-4c7b-9cc3-9a84c4fd4eca	filez.txt	application/binary	33	64	2020-05-17 02:30:32	2020-05-17 02:30:33	\N	StorageFilesystemChunked	\N	
+15	4	7784ff58-6e68-45f6-9b49-b40bbe7dbe63	file2.txt	application/binary	33	64	2020-05-17 02:31:02	2020-05-17 02:31:02	\N	StorageFilesystemChunked	\N	
+16	4	4b18836d-cd7a-47f4-a956-92b5ef301986	filez.txt	application/binary	33	64	2020-05-17 02:31:02	2020-05-17 02:31:02	\N	StorageFilesystemChunked	\N	
+17	4	7ef91739-9b08-4527-b191-2b9f84874d8b	file1.txt	application/binary	33	64	2020-05-17 02:31:02	2020-05-17 02:31:02	\N	StorageFilesystemChunked	\N	
+18	4	7d6485eb-7c12-43fb-ab89-5aec9ccfd22d	subfile1.txt	application/binary	33	64	2020-05-17 02:31:02	2020-05-17 02:31:02	\N	StorageFilesystemChunked	\N	
+19	4	46a020d9-ca2a-4d95-8b1c-590a18ea345a	subfile9.txt	application/binary	33	64	2020-05-17 02:31:02	2020-05-17 02:31:02	\N	StorageFilesystemChunked	\N	
+20	5	6fa18c0f-46fb-44ec-96c1-783525e6c5e7	zz.txt	text/plain	33	64	2020-05-17 02:31:12	2020-05-17 02:31:13	\N	StorageFilesystemChunked	\N	
+\.
+
+
+--
+-- Data for Name: guests; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.guests (id, userid, user_email, token, email, transfer_count, subject, message, options, transfer_options, status, created, expires, last_activity, reminder_count, last_reminder) FROM stdin;
+\.
+
+
+--
+-- Data for Name: metadatas; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.metadatas (id, schemaversion, created, message) FROM stdin;
+1	22	2020-05-17 02:29:34	running database update script on existing schema version 0
+2	22	2020-05-17 02:31:41	running database update script on existing schema version 22
+\.
+
+
+--
+-- Data for Name: recipients; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.recipients (id, transfer_id, email, token, created, last_activity, options, reminder_count, last_reminder) FROM stdin;
+1	1		d9ef031e-f422-4a6f-9145-6a0284621e73	2020-05-17 02:29:44	\N	null	0	1970-01-01 01:00:00
+2	2		2c32ffc0-d8a0-42b8-85da-be8b1aeb0fa5	2020-05-17 02:30:13	\N	null	0	1970-01-01 01:00:00
+3	3		213edf60-6cf4-4ec9-a15e-6fbd52bb9408	2020-05-17 02:30:32	\N	null	0	1970-01-01 01:00:00
+4	4		acd79239-e78b-4c37-9e3c-0c22b3dd9c8a	2020-05-17 02:31:02	\N	null	0	1970-01-01 01:00:00
+5	5		7e5be16a-cf9c-4369-a19c-3aeb79640006	2020-05-17 02:31:12	\N	null	0	1970-01-01 01:00:00
+6	6		7828f36d-edb8-4b09-820a-c6d19cf10125	2020-05-17 02:31:26	\N	null	0	1970-01-01 01:00:00
+\.
+
+
+--
+-- Data for Name: shredfiles; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.shredfiles (id, name, errormessage) FROM stdin;
+\.
+
+
+--
+-- Data for Name: statlogs; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.statlogs (id, event, target_type, size, time_taken, additional_attributes, created, browser, os, is_encrypted) FROM stdin;
+1	transfer_started	Transfer	33	0	\N	2020-05-17 02:29:44	3	7	f
+2	upload_started	Transfer	33	0	\N	2020-05-17 02:29:44	3	7	f
+3	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:29:44	3	7	f
+4	upload_ended	Transfer	33	0	\N	2020-05-17 02:29:45	3	7	f
+5	transfer_available	Transfer	33	1	\N	2020-05-17 02:29:45	3	7	f
+6	download_started	File	33	0	\N	2020-05-17 02:29:52	3	7	f
+7	download_ended	File	33	0	\N	2020-05-17 02:29:52	3	7	f
+8	download_started	File	33	0	\N	2020-05-17 02:29:58	3	7	f
+9	download_ended	File	33	0	\N	2020-05-17 02:29:58	3	7	f
+10	transfer_started	Transfer	165	0	\N	2020-05-17 02:30:13	3	7	f
+11	upload_started	Transfer	165	0	\N	2020-05-17 02:30:13	3	7	f
+12	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:14	3	7	f
+13	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:14	3	7	f
+14	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:14	3	7	f
+15	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:14	3	7	f
+16	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:30:14	3	7	f
+17	upload_ended	Transfer	165	1	\N	2020-05-17 02:30:14	3	7	f
+18	transfer_available	Transfer	165	1	\N	2020-05-17 02:30:14	3	7	f
+19	transfer_started	Transfer	165	0	\N	2020-05-17 02:30:32	3	7	f
+20	upload_started	Transfer	165	0	\N	2020-05-17 02:30:32	3	7	f
+21	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:33	3	7	f
+22	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:33	3	7	f
+23	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:33	3	7	f
+24	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:30:33	3	7	f
+25	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:30:33	3	7	f
+26	upload_ended	Transfer	165	1	\N	2020-05-17 02:30:33	3	7	f
+27	transfer_available	Transfer	165	2	\N	2020-05-17 02:30:34	3	7	f
+28	download_started	File	33	0	\N	2020-05-17 02:30:39	3	7	f
+29	download_ended	File	33	0	\N	2020-05-17 02:30:39	3	7	f
+30	download_started	File	33	0	\N	2020-05-17 02:30:47	3	7	f
+31	download_ended	File	33	0	\N	2020-05-17 02:30:47	3	7	f
+32	transfer_started	Transfer	165	0	\N	2020-05-17 02:31:02	3	7	f
+33	upload_started	Transfer	165	0	\N	2020-05-17 02:31:02	3	7	f
+34	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:31:02	3	7	f
+35	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:31:02	3	7	f
+36	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:31:02	3	7	f
+37	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:31:02	3	7	f
+38	file_uploaded	File	33	0	{"encryption":false}	2020-05-17 02:31:02	3	7	f
+39	upload_ended	Transfer	165	0	\N	2020-05-17 02:31:03	3	7	f
+40	transfer_available	Transfer	165	2	\N	2020-05-17 02:31:03	3	7	f
+41	transfer_started	Transfer	33	0	\N	2020-05-17 02:31:12	3	7	f
+42	upload_started	Transfer	33	0	\N	2020-05-17 02:31:12	3	7	f
+43	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:31:13	3	7	f
+44	upload_ended	Transfer	33	1	\N	2020-05-17 02:31:13	3	7	f
+45	transfer_available	Transfer	33	1	\N	2020-05-17 02:31:13	3	7	f
+46	transfer_started	Transfer	33	0	\N	2020-05-17 02:31:26	3	7	f
+47	upload_started	Transfer	33	0	\N	2020-05-17 02:31:26	3	7	f
+48	file_uploaded	File	33	1	{"encryption":false}	2020-05-17 02:31:27	3	7	f
+49	upload_ended	Transfer	33	1	\N	2020-05-17 02:31:27	3	7	f
+50	transfer_available	Transfer	33	1	\N	2020-05-17 02:31:27	3	7	f
+51	download_started	File	33	0	\N	2020-05-17 02:31:31	3	7	f
+52	download_ended	File	33	0	\N	2020-05-17 02:31:31	3	7	f
+\.
+
+
+--
+-- Data for Name: trackingevents; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.trackingevents (id, type, target_type, target_id, details, created, reported) FROM stdin;
+\.
+
+
+--
+-- Data for Name: transfers; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.transfers (id, userid, user_email, guest_id, lang, subject, message, created, made_available, expires, expiry_extensions, status, options, key_version, salt, password_version, password_encoding, password_hash_iterations, client_entropy, roundtriptoken) FROM stdin;
+4	15	testdriver@localhost.localdomain	\N	en-us	\N	\N	2020-05-17 02:31:01	2020-05-17 02:31:03	2020-05-26 15:00:00	0	available	{"get_a_link":true,"email_me_on_expire":true,"email_upload_complete":false,"email_download_complete":true,"email_daily_statistics":false,"email_report_on_closing":true,"encryption":false,"collection":true}	0	rLMIeSPnrqhecE8dYjw3Q5eSQlf+ndV2	1	0	30000		02b713eff1d453d8d8027073056426c3
+5	15	testdriver@localhost.localdomain	\N	en-us	\N	\N	2020-05-17 02:31:12	2020-05-17 02:31:13	2020-05-26 15:00:00	0	available	{"get_a_link":true,"email_me_on_expire":true,"email_upload_complete":false,"email_download_complete":true,"email_daily_statistics":false,"email_report_on_closing":true,"encryption":false}	0	jbAVlvcHKxx8cfkEoT0ZZD9ozO4ABbFz	1	0	30000		4f3a9e6aab3b3880ea6a3ee0b5d069b3
+3	15	testdriver@localhost.localdomain	\N	en-us	\N	\N	2020-05-17 02:30:32	2020-05-17 02:30:34	2020-05-26 15:00:00	0	available	{"get_a_link":true,"email_me_on_expire":true,"email_upload_complete":false,"email_download_complete":true,"email_daily_statistics":false,"email_report_on_closing":true,"encryption":false,"collection":true}	0	nG9SfHYjqFqFPgNaPrF/WF/hseBcaDw7	1	0	30000		12f33e6aae96032f933010d09e71890c
+6	15	testdriver@localhost.localdomain	\N	en-us	\N	\N	2020-05-17 02:31:26	2020-05-17 02:31:27	2020-05-26 15:00:00	0	available	{"get_a_link":true,"email_me_on_expire":true,"email_upload_complete":false,"email_download_complete":true,"email_daily_statistics":false,"email_report_on_closing":true,"encryption":false}	0	JD3KmyxGvn0HkBQosf2nqEkzYiTM5AxE	1	0	30000		4d9a80eafdf4a2b31843955c8f37c012
+1	15	testdriver@localhost.localdomain	\N	en-us	\N	\N	2020-05-17 02:29:44	2020-05-17 02:29:45	2020-04-28 15:00:00	0	available	{"get_a_link":true,"email_me_on_expire":true,"email_upload_complete":false,"email_download_complete":true,"email_daily_statistics":false,"email_report_on_closing":true,"encryption":false}	0	ljCb9P0Bu+RqNwNl2td4xsC5qj9dMSSK	1	0	30000		119e8eb0c4e47e726376f064424b0dfd
+2	15	testdriver@localhost.localdomain	\N	en-us	\N	\N	2020-05-17 02:30:13	2020-05-17 02:30:14	2020-04-28 15:00:00	0	available	{"get_a_link":true,"email_me_on_expire":true,"email_upload_complete":false,"email_download_complete":true,"email_daily_statistics":false,"email_report_on_closing":true,"encryption":false,"collection":true}	0	XkzQfCVJwPWkfja4TqJLhdXYbnV6gpjE	1	0	30000		01b0bf47a122f833d27e02667596ed7f
+\.
+
+
+--
+-- Data for Name: translatableemails; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.translatableemails (id, context_type, context_id, token, translation_id, variables, created) FROM stdin;
+\.
+
+
+--
+-- Data for Name: userpreferences; Type: TABLE DATA; Schema: public; Owner: filesender
+--
+
+COPY public.userpreferences (id, authid, additional_attributes, lang, aup_ticked, aup_last_ticked_date, transfer_preferences, guest_preferences, frequent_recipients, created, last_activity, auth_secret, auth_secret_created, quota) FROM stdin;
+1	1	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+2	2	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+3	3	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+4	4	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+5	5	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+6	6	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+7	7	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+8	8	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+9	9	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+10	10	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+11	11	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+12	12	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+13	13	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+14	14	\N	\N	f	1970-01-01	null	null	null	2020-05-17 02:29:34	1970-01-01 01:00:00	\N	\N	0
+15	15	\N	\N	f	1970-01-01	[]	null	[{"email":"","date":1589679087}]	2020-05-17 02:29:39	2020-05-17 02:29:39	\N	\N	0
+\.
+
+
+--
+-- Name: auditlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.auditlogs_id_seq', 52, true);
+
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.authentications_id_seq', 15, true);
+
+
+--
+-- Name: clientlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.clientlogs_id_seq', 1, false);
+
+
+--
+-- Name: collections_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.collections_id_seq', 9, true);
+
+
+--
+-- Name: dbtestingtablestringnumbers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.dbtestingtablestringnumbers_id_seq', 1, false);
+
+
+--
+-- Name: files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.files_id_seq', 21, true);
+
+
+--
+-- Name: guests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.guests_id_seq', 1, false);
+
+
+--
+-- Name: metadatas_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.metadatas_id_seq', 2, true);
+
+
+--
+-- Name: recipients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.recipients_id_seq', 6, true);
+
+
+--
+-- Name: shredfiles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.shredfiles_id_seq', 1, false);
+
+
+--
+-- Name: statlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.statlogs_id_seq', 52, true);
+
+
+--
+-- Name: trackingevents_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.trackingevents_id_seq', 1, false);
+
+
+--
+-- Name: transfers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.transfers_id_seq', 6, true);
+
+
+--
+-- Name: translatableemails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.translatableemails_id_seq', 1, false);
+
+
+--
+-- Name: userpreferences_id_seq; Type: SEQUENCE SET; Schema: public; Owner: filesender
+--
+
+SELECT pg_catalog.setval('public.userpreferences_id_seq', 15, true);
+
+
+--
+-- Name: aggregatestatisticmetadatas aggregatestatisticmetadatas_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.aggregatestatisticmetadatas
+    ADD CONSTRAINT aggregatestatisticmetadatas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: aggregatestatistics aggregatestatistics_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.aggregatestatistics
+    ADD CONSTRAINT aggregatestatistics_pkey PRIMARY KEY (epoch, epochtype, eventtype);
+
+
+--
+-- Name: auditlogs auditlogs_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.auditlogs
+    ADD CONSTRAINT auditlogs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authentications authentications_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.authentications
+    ADD CONSTRAINT authentications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clientlogs clientlogs_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.clientlogs
+    ADD CONSTRAINT clientlogs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: collections collections_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: collectiontypes collectiontypes_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.collectiontypes
+    ADD CONSTRAINT collectiontypes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dbconstantbrowsertypes dbconstantbrowsertypes_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.dbconstantbrowsertypes
+    ADD CONSTRAINT dbconstantbrowsertypes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dbconstantepochtypes dbconstantepochtypes_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.dbconstantepochtypes
+    ADD CONSTRAINT dbconstantepochtypes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dbconstantoperatingsystems dbconstantoperatingsystems_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.dbconstantoperatingsystems
+    ADD CONSTRAINT dbconstantoperatingsystems_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dbconstantpasswordencodings dbconstantpasswordencodings_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.dbconstantpasswordencodings
+    ADD CONSTRAINT dbconstantpasswordencodings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dbconstantstatsevents dbconstantstatsevents_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.dbconstantstatsevents
+    ADD CONSTRAINT dbconstantstatsevents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dbtestingtablestringnumbers dbtestingtablestringnumbers_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.dbtestingtablestringnumbers
+    ADD CONSTRAINT dbtestingtablestringnumbers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: filecollections filecollections_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.filecollections
+    ADD CONSTRAINT filecollections_pkey PRIMARY KEY (collection_id, file_id);
+
+
+--
+-- Name: files files_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.files
+    ADD CONSTRAINT files_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: guests guests_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.guests
+    ADD CONSTRAINT guests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: guests guests_token_key; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.guests
+    ADD CONSTRAINT guests_token_key UNIQUE (token);
+
+
+--
+-- Name: metadatas metadatas_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.metadatas
+    ADD CONSTRAINT metadatas_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipients recipients_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.recipients
+    ADD CONSTRAINT recipients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shredfiles shredfiles_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.shredfiles
+    ADD CONSTRAINT shredfiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: statlogs statlogs_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.statlogs
+    ADD CONSTRAINT statlogs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: trackingevents trackingevents_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.trackingevents
+    ADD CONSTRAINT trackingevents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: transfers transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.transfers
+    ADD CONSTRAINT transfers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: translatableemails translatableemails_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.translatableemails
+    ADD CONSTRAINT translatableemails_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: userpreferences userpreferences_pkey; Type: CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.userpreferences
+    ADD CONSTRAINT userpreferences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auditlogs_author_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX auditlogs_author_id ON public.auditlogs USING btree (author_type, author_id);
+
+
+--
+-- Name: auditlogs_created; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX auditlogs_created ON public.auditlogs USING btree (created);
+
+
+--
+-- Name: auditlogs_created_event_ttype_tid; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX auditlogs_created_event_ttype_tid ON public.auditlogs USING btree (created, event, target_type, target_id);
+
+
+--
+-- Name: auditlogs_type_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX auditlogs_type_id ON public.auditlogs USING btree (target_type, target_id);
+
+
+--
+-- Name: authentications_saml_user_identification_uid; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE UNIQUE INDEX authentications_saml_user_identification_uid ON public.authentications USING btree (saml_user_identification_uid);
+
+
+--
+-- Name: authentications_saml_user_identification_uid_hash; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX authentications_saml_user_identification_uid_hash ON public.authentications USING btree (saml_user_identification_uid_hash);
+
+
+--
+-- Name: clientlogs_created_and_userid; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX clientlogs_created_and_userid ON public.clientlogs USING btree (created, userid);
+
+
+--
+-- Name: clientlogs_userid; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX clientlogs_userid ON public.clientlogs USING btree (userid);
+
+
+--
+-- Name: collections_parent_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX collections_parent_id ON public.collections USING btree (parent_id);
+
+
+--
+-- Name: collections_transfer_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX collections_transfer_id ON public.collections USING btree (transfer_id);
+
+
+--
+-- Name: collections_type_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX collections_type_id ON public.collections USING btree (type_id);
+
+
+--
+-- Name: dbconstantbrowsertypes_description; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX dbconstantbrowsertypes_description ON public.dbconstantbrowsertypes USING btree (description);
+
+
+--
+-- Name: dbconstantepochtypes_description; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX dbconstantepochtypes_description ON public.dbconstantepochtypes USING btree (description);
+
+
+--
+-- Name: dbconstantoperatingsystems_description; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX dbconstantoperatingsystems_description ON public.dbconstantoperatingsystems USING btree (description);
+
+
+--
+-- Name: dbconstantpasswordencodings_description; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX dbconstantpasswordencodings_description ON public.dbconstantpasswordencodings USING btree (description);
+
+
+--
+-- Name: dbconstantstatsevents_description; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX dbconstantstatsevents_description ON public.dbconstantstatsevents USING btree (description);
+
+
+--
+-- Name: dbtestingtablestringnumbers_dataidx; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX dbtestingtablestringnumbers_dataidx ON public.dbtestingtablestringnumbers USING btree (data);
+
+
+--
+-- Name: filecollections_file_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX filecollections_file_id ON public.filecollections USING btree (file_id);
+
+
+--
+-- Name: files_transfer_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX files_transfer_id ON public.files USING btree (transfer_id);
+
+
+--
+-- Name: recipients_token; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX recipients_token ON public.recipients USING btree (token);
+
+
+--
+-- Name: statlogs_created; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX statlogs_created ON public.statlogs USING btree (created);
+
+
+--
+-- Name: statlogs_event_tt; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX statlogs_event_tt ON public.statlogs USING btree (event, target_type);
+
+
+--
+-- Name: trackingevents_type_id; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX trackingevents_type_id ON public.trackingevents USING btree (target_type, id);
+
+
+--
+-- Name: transfers_userid; Type: INDEX; Schema: public; Owner: filesender
+--
+
+CREATE INDEX transfers_userid ON public.transfers USING btree (userid);
+
+
+--
+-- Name: transferssizeview _RETURN; Type: RULE; Schema: public; Owner: filesender
+--
+
+CREATE OR REPLACE VIEW public.transferssizeview AS
+ SELECT t.id,
+    t.userid,
+    t.user_email,
+    t.guest_id,
+    t.lang,
+    t.subject,
+    t.message,
+    t.created,
+    t.made_available,
+    t.expires,
+    t.expiry_extensions,
+    t.status,
+    t.options,
+    t.key_version,
+    t.salt,
+    t.password_version,
+    t.password_encoding,
+    t.password_hash_iterations,
+    t.client_entropy,
+    t.roundtriptoken,
+    sum(f.size) AS size
+   FROM public.transfers t,
+    public.files f
+  WHERE (f.transfer_id = t.id)
+  GROUP BY t.id;
+
+
+--
+-- Name: aggregatestatistics aggregatestatistic_epochtype; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.aggregatestatistics
+    ADD CONSTRAINT aggregatestatistic_epochtype FOREIGN KEY (epochtype) REFERENCES public.dbconstantepochtypes(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: aggregatestatistics aggregatestatistic_eventtype; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.aggregatestatistics
+    ADD CONSTRAINT aggregatestatistic_eventtype FOREIGN KEY (eventtype) REFERENCES public.dbconstantstatsevents(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: clientlogs clientlog_userid; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.clientlogs
+    ADD CONSTRAINT clientlog_userid FOREIGN KEY (userid) REFERENCES public.userpreferences(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: guests guests_userid; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.guests
+    ADD CONSTRAINT guests_userid FOREIGN KEY (userid) REFERENCES public.userpreferences(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: statlogs statlogs_browsertype; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.statlogs
+    ADD CONSTRAINT statlogs_browsertype FOREIGN KEY (browser) REFERENCES public.dbconstantbrowsertypes(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: statlogs statlogs_operatingsystem; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.statlogs
+    ADD CONSTRAINT statlogs_operatingsystem FOREIGN KEY (os) REFERENCES public.dbconstantoperatingsystems(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: transfers transfer_passwordencoding; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.transfers
+    ADD CONSTRAINT transfer_passwordencoding FOREIGN KEY (password_encoding) REFERENCES public.dbconstantpasswordencodings(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: transfers transfers_userid; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.transfers
+    ADD CONSTRAINT transfers_userid FOREIGN KEY (userid) REFERENCES public.userpreferences(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- Name: userpreferences userpreferences_authid; Type: FK CONSTRAINT; Schema: public; Owner: filesender
+--
+
+ALTER TABLE ONLY public.userpreferences
+    ADD CONSTRAINT userpreferences_authid FOREIGN KEY (authid) REFERENCES public.authentications(id) ON UPDATE RESTRICT ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

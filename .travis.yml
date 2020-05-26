@@ -75,6 +75,8 @@ before_script:
 # to catch bad configurations that might use the wrong database by mistake
 - sh -c "if [ '$DB' = 'pgsql' ]; then sudo service mysql stop  ; fi "
 - sh -c "if [ '$DB' = 'mysql' ]; then sudo service postgresql stop  ; fi "
+- sh -c "if [ '$TESTSUITE' = 'cron' ]; then echo testing cron job ; fi "
+- sh -c "if [ '$TESTSUITE' = 'cron' ]; then php scripts/task/cron.php --testing-mode ; fi "
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
@@ -97,4 +99,6 @@ matrix:
       env:  DB=mysql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
     - name: mysql-selemium1
       env:  DB=mysql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+    - name: pgsql-cron
+      env:  DB=pgsql TESTSUITE=cron      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
 

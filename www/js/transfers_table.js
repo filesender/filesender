@@ -339,6 +339,18 @@ $(function() {
             filesender.ui.relocatePopup(popup);
         });
     });
+
+    // Transfer options
+    $('.transfer_options [data-action="remove"]').on('click', function() {
+        var id = $(this).closest('[data-transfer]').attr('data-id');
+        if(!id || isNaN(id)) return;
+        
+        filesender.ui.confirm(lang.tr('confirm_remove_daily_stats_transfer'), function() {
+            filesender.client.removeTransferOption(id, 'email_daily_statistics', function() {
+                filesender.ui.notify('success', lang.tr('transfer_option_modified'));
+            });
+        });
+    });
     
     // File delete buttons
     $('.transfer_details .file [data-action="delete"]').on('click', function() {

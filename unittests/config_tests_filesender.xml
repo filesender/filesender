@@ -61,5 +61,10 @@
         <testsuite name="dataset" >
           <file>tests/dataset/DatasetTest.php</file>
         </testsuite>
+
+        <testsuite name="cron" >
+          <file>tests/cron/CronTest.php</file>
+        </testsuite>
+        
     </testsuites>
 </phpunit>
