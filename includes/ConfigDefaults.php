@@ -74,6 +74,7 @@ $default = array(
     'mac_unzip_link' => 'https://theunarchiver.com/',
     'ban_extension' => 'exe,bat',
     'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
+    'internal_use_only_running_on_ci' => false,
     
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,
@@ -166,7 +167,9 @@ $default = array(
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
     'guest_limit_per_user' => 50,
+    'guest_create_limit_per_day' => 0,
     'guest_reminder_limit' => 50,
+    'guest_reminder_limit_per_day' => 0,
     'recipient_reminder_limit' => 50,
 
     'autocomplete' => false, 
@@ -192,7 +195,8 @@ $default = array(
     'site_logouturl' => function() {
         return Config::get('site_url').'?s=logout';
     },
-    
+
+    'admin_can_view_user_transfers_page' => false,
     'show_storage_statistics_in_admin' => true,
 
     'cloud_s3_region'   => 'us-east-1',

@@ -329,6 +329,21 @@ class Config
         Guest::validateConfig();
         ClientLog::validateConfig();
     }
+
+    
+    public static function performLongerValidation()
+    {
+        Config::get('db_database');
+
+        echo "performing longer configuration validation...\n";
+        Logger::info("You have executed checkconfig.php to perform longer validation...");
+        
+        $allowSlowerTests = true;
+        Guest::validateConfig($allowSlowerTests);
+        ClientLog::validateConfig($allowSlowerTests);
+        
+        echo "longer configuration validation has passed\n";
+    }
             
     /**
      * Get virtualhosts list

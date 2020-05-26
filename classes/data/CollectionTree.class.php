@@ -1,5 +1,4 @@
 <?php
-
 /*
  * FileSender www.filesender.org
  *
@@ -30,69 +29,81 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
+// Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
+
 /**
- * Unknown user exception
+ *  Represents a directory tree Collection of subdirs and files
+ *  It creates a File of mime type 'text/directory' so
+ *  a uuid can be associated with a CollectionTree
  */
-class UserNotFoundException extends DetailedException
+class CollectionTree extends Collection
 {
+    const FILE_MIME_TYPE = 'text/directory';
+    
     /**
-     * Constructor
+     * Properties
+     */
+    protected $uid = null;
+   
+    /**
+     * Related objects cache
+     */
+    protected $fileCache = null;
+    
+    /**
+     * Loads the extra objects associated with a Collection of type
      *
-     * @param string $selector column used to select user
+     * @throws TreeFileCollectionException
      */
-    public function __construct($selector)
+    protected function loadInfo()
     {
-        parent::__construct(
-            'user_not_found', // Message to give to the user
-            array('selector' => $selector) // Real message to log
-        );
+        if (is_null($this->filesCache)) {
+            $this->filesCache = FileCollection::fromCollection($this);
+        }
+    
+        $this->fileCache = File::fromId(key($this->filesCache));
+        $this->uid = $this->fileCache->uid;
+    }
+
+    /**
+     * Process the info value on a newly created CollectionTree
+     */
+    protected function processInfo()
+    {
+        $this->fileCache = $this->transfer->addFile($this->info, 0, CollectionTree::FILE_MIME_TYPE);
+        $this->uid = $this->fileCache->uid;
+        $this->addFile($this->fileCache);
+    }
+
+    /**
+     * Getter
+     *
+     * @param string $property property to get
+     *
+     * @throws PropertyAccessException
+     *
+     * @return property value
+     */
+    public function __get($property)
+    {
+        if (in_array($property, array(
+            'uid', 'file'
+        ))) {
+            if (is_null($this->uid)) {
+                $this->loadInfo();
+            }
+               
+            if ($property == 'file') {
+                return $this->fileCache;
+            } else {
+                return $this->$property;
+            }
+        }
+        return parent::__get($property);
     }
 }
 
-/**
- * Missing UID exception
- */
-class UserMissingUIDException extends DetailedException
-{
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct(
-            'user_missing_uid'
-        );
-    }
-}
-
-/**
- * Too many guests
- */
-class UserHitGuestLimitException extends DetailedException
-{
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct(
-            'user_hit_guest_limit'
-        );
-    }
-}
-class UserHitGuestRateLimitException extends DetailedException
-{
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct(
-            'user_hit_guest_rate_limit'
-        );
-    }
-}

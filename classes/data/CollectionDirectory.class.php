@@ -1,5 +1,4 @@
 <?php
-
 /*
  * FileSender www.filesender.org
  *
@@ -30,69 +29,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
+// Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
-/**
- * Unknown user exception
- */
-class UserNotFoundException extends DetailedException
-{
-    /**
-     * Constructor
-     *
-     * @param string $selector column used to select user
-     */
-    public function __construct($selector)
-    {
-        parent::__construct(
-            'user_not_found', // Message to give to the user
-            array('selector' => $selector) // Real message to log
-        );
-    }
-}
 
 /**
- * Missing UID exception
+ *  Represents a Collection of Files underneath a directory path,
+ *  which belongs to a CollectionTree.
  */
-class UserMissingUIDException extends DetailedException
+class CollectionDirectory extends Collection
 {
     /**
-     * Constructor
+     * Processing of the info dependant on the collection's type
      */
-    public function __construct()
+    protected function processInfo()
     {
-        parent::__construct(
-            'user_missing_uid'
-        );
-    }
-}
+        $pathInfo = $this->info;
+        $tree_path = $pathInfo;
+        $pos = strpos($pathInfo, '/');
+      
+        if (!($pos === false)) {
+            $tree_path = substr($pathInfo, 0, $pos);
+        }
 
-/**
- * Too many guests
- */
-class UserHitGuestLimitException extends DetailedException
-{
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct(
-            'user_hit_guest_limit'
-        );
-    }
-}
-class UserHitGuestRateLimitException extends DetailedException
-{
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct(
-            'user_hit_guest_rate_limit'
-        );
+        $tree = $this->transfer->addCollection(CollectionType::$TREE, $tree_path);
+        $tree->addCollection($this);
     }
 }

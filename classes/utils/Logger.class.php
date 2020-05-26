@@ -520,4 +520,71 @@ class Logger
         
         self::info('Event#'.$logEvent.' on '.(string)$target.($author ? ' by '.(string)$author : ''));
     }
+
+    /**
+     * This has similar parameters to logActivity() but will throw an exception if called too frequently.
+     * The method relies on entries created with logActivity($logEvent, $target, $author) to function.
+     * Unless you are performing many checks over different time periods you might like to use
+     * logActivityRateLimited() to perform the logging and checking in one call.
+     * 
+     * 'too frequently' is more than $rate times per $secondsAgo seconds.
+     * To be counted the same {$logEvent, $target, $author} must be passed to each call to this method.
+     * so you can limit how many times a specific user does a specific $logEvent on a specific $target.
+     *
+     * Note an auditlog event is created using $logEvent_lh so that needs to be defined in LogEventTypes
+     *
+     * @param string $exceptionClass name of exception to throw if too frequent
+     * @param string $rate Config key name for the rate this can be performed per amount of time.
+     * @param string $logEvent
+     * @param object $target
+     * @param int    $secondsAgo number of seconds ago to start counting the times this action has been done for {$logEvent, $target, $author}
+     * @param object $author
+     */
+    public static function rateLimit($exceptionClass, $rate, $logEvent, $target, $secondsAgo = null, $author = null)
+    {
+        $rate = Config::get($rate);
+        
+        if( $rate > 0 ) {
+
+            $c = Logger::countEntries($logEvent,$target,$author);
+            if( $c >= $rate ) {
+                Logger::logActivity( $logEvent . '_lh', $target, $author );
+                throw new $exceptionClass();
+            }            
+        }
+    }
+
+    
+    /**
+     * This is like logActivity() but will throw an exception if called too frequently.
+     * 
+     * 'too frequently' is more than $rate times per $secondsAgo seconds.
+     * To be counted the same {$logEvent, $target, $author} must be passed to each call to this method.
+     * so you can limit how many times a specific user does a specific $logEvent on a specific $target.
+     *
+     * Note an auditlog event is created using $logEvent_lh so that needs to be defined in LogEventTypes
+     *
+     * @param string $exceptionClass name of exception to throw if too frequent
+     * @param string $rate Config key name for the rate this can be performed per amount of time.
+     * @param string $logEvent
+     * @param object $target
+     * @param int    $secondsAgo number of seconds ago to start counting the times this action has been done for {$logEvent, $target, $author}
+     * @param object $author
+     */
+    public static function logActivityRateLimited($exceptionClass, $rate, $logEvent, $target, $secondsAgo = null, $author = null)
+    {
+        self::rateLimit($exceptionClass, $rate, $logEvent, $target, $secondsAgo, $author);
+        Logger::logActivity($logEvent,$target,$author);
+    }
+
+    // See AuditLog for details
+    public static function latestEntry($logEvent, $target, $author = null )
+    {
+        return AuditLog::latestEntry($logEvent, $target, $author);
+    }
+    // See AuditLog for details
+    public static function countEntries($logEvent, $target, $secondsAgo = null, $author = null )
+    {
+        return AuditLog::countEntries($logEvent, $target, $secondsAgo, $author);
+    }
 }

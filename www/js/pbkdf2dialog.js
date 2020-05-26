@@ -78,7 +78,7 @@ window.filesender.pbkdf2dialog = {
 
 
         window.filesender.onPBKDF2Starting = function() {
-            console.log("pbkdf2dialog onPBKDF2Starting()");
+            window.filesender.log("pbkdf2dialog onPBKDF2Starting()");
             $this.time_start = Date.now();
             expected_delay = window.localStorage.getItem('crypto_pbkdf2_delay_seconds');
             
@@ -105,7 +105,7 @@ window.filesender.pbkdf2dialog = {
 
         window.filesender.onPBKDF2Ended = function() {
             
-            console.log("ended() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            window.filesender.log("ended() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
             if( $this.only_one_pbkdf2_process ) {
                 $this.onPBKDF2Over();
             }
@@ -114,12 +114,12 @@ window.filesender.pbkdf2dialog = {
         // Chain this out so the UI can still get it.
         var allEnded = window.filesender.onPBKDF2AllEnded;
         window.filesender.onPBKDF2AllEnded = function() {
-            console.log("ending() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            window.filesender.log("ending() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
             if( !($this.only_one_pbkdf2_process)) {
                 $this.onPBKDF2Over();
             }
             
-            console.log("pbkdf2dialog onPBKDF2AllEnded()");
+            window.filesender.log("pbkdf2dialog onPBKDF2AllEnded()");
             allEnded();
         };
     },
@@ -128,7 +128,7 @@ window.filesender.pbkdf2dialog = {
     onPBKDF2Over: function() {
         $this = this;
         $this.time_end = Date.now();
-        console.log("pbkdf2dialog onPBKDF2Over()");
+        window.filesender.log("pbkdf2dialog onPBKDF2Over()");
         $this.already_complete = true;
         if( $this.dialog ) {
             $this.dialog.dialog('close');

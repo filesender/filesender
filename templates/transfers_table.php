@@ -1,15 +1,86 @@
 <?php
+$nosort = false;
+if(!isset($trsort))  $nosort = true;
+
     if(!isset($status)) $status = 'available';
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
     if(!isset($limit)) $limit = 100000;
     if(!isset($offset)) $offset = 0;
     if(!isset($pagerprefix)) $pagerprefix = '';
+    if(!isset($trsort)) $trsort = TransferQueryOrder::create(); 
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
     $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
     $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
     $haveNext = 0;
     $havePrev = 0;
+
+
+    $cgiuid = "";
+    if (Auth::isAuthenticated()) {
+        if (Auth::isAdmin()) {
+            
+            $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
+            if( $uid ) {
+                $cgiuid = "&uid=".$uid;
+            }
+        }
+    }
+
+
+$cgiminmax = "";
+$idmin = Utilities::arrayKeyOrDefault( $_GET, 'idmin', -1, FILTER_VALIDATE_INT  );
+$idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  );
+if( $idmin >= 0 ) {
+    $cgiminmax .= "&idmin=".$idmin;
+}
+if( $idmax >= 0 ) {
+    $cgiminmax .= "&idmax=".$idmax;
+}
+
+
+
+
+if (!function_exists('clickableHeader')) {
+
+    function clickableHeader($displayName,$trsortcol,$trsort,$nosort) {
+        
+        if( $nosort ) {
+            echo $displayName;
+            return;
+        }
+
+        $qa = array(
+            's' => Utilities::getGETparam('s','')
+          , 'transfersort' => $trsort->clickableSortValue($trsortcol)
+          , 'as' => Utilities::getGETparam('as','')
+        );
+        
+        if (Auth::isAuthenticated()) {
+            if (Auth::isAdmin()) {
+                
+                $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
+                if( $uid ) {
+                    $qa["uid"] = $uid;
+                }
+            }
+        }
+        $idmin = Utilities::arrayKeyOrDefault( $_GET, 'idmin', -1, FILTER_VALIDATE_INT  );
+        $idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  );
+        if( $idmin >= 0 ) {
+            $qa["idmin"] = $idmin;
+        }
+        if( $idmax >= 0 ) {
+            $qa["idmax"] = $idmax;
+        }
+        
+        $tr_url = Utilities::http_build_query($qa);
+        echo '<a href="' . $tr_url . '">';
+        echo $displayName;
+        echo ' ' . $trsort->screenArrowHTML($trsortcol); 
+        echo '</a>';
+    }
+}
 
 
     // This allows us to key informational displays to a large
@@ -35,12 +106,14 @@
         $cgioffset = $pagerprefix . 'offset';
         $cgilimit  = $pagerprefix . 'limit';
         $nextPage  = $offset+$limit;
-        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit";
+        $transfersort = Utilities::getGETparam('transfersort','');
+        $cgias = Utilities::getGETparam('as','');
+        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax&nextlink=1";
         
         if( $havePrev ) {
            $prevPage = max(0,$offset-$limit);
-           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
-           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
         }
@@ -66,7 +139,7 @@
             </th>
             
             <th class="transfer_id">
-                {tr:transfer_id}
+                <?php clickableHeader('{tr:transfer_id}',TransferQueryOrder::COLUMN_ID,$trsort,$nosort); ?>
             </th>
             
             <?php if($show_guest) { ?>
@@ -76,23 +149,23 @@
             <?php } ?>
             
             <th class="recipients">
-                {tr:recipients}
+                <?php clickableHeader('{tr:recipients}',TransferQueryOrder::COLUMN_RECIPIENTS,$trsort,$nosort); ?>
             </th>
             
             <th class="size">
-                {tr:size}
+                <?php clickableHeader('{tr:size}',TransferQueryOrder::COLUMN_SIZE,$trsort,$nosort); ?>
             </th>
             
             <th class="files">
-                {tr:files}
+                <?php clickableHeader('{tr:files}',TransferQueryOrder::COLUMN_FILE,$trsort,$nosort); ?>
             </th>
             
             <th class="downloads">
-                {tr:downloads}
+                <?php clickableHeader('{tr:downloads}',TransferQueryOrder::COLUMN_DOWNLOAD,$trsort,$nosort); ?>
             </th>
             
             <th class="expires">
-                {tr:expires}
+                <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort,$nosort); ?>
             </th>
             
             <th class="actions">
@@ -263,13 +336,20 @@
                             </tr>
                         <?php } ?>
 
-                        <tr>
+                        <tr class="transfer_options">
                             <td class="desc">{tr:options}</td>
                             <td><div class="options">
                                 <?php if(count($transfer->options)) { ?>
                                     <ul class="options">
                                         <li>
                                             <?php echo implode('</li><li>', array_map(function($o) {
+                                                if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
+                                                    return Lang::tr($o) . '&nbsp;'
+                                                    . '<span data-action="remove" data-option="' 
+                                                               . TransferOptions::EMAIL_DAILY_STATISTICS 
+                                                               . '" class="fa fa-lg fa-times" title="{tr:remove_option}"></span>'
+                                                    ;
+                                                }
                                                 return Lang::tr($o);
                                             }, array_keys(array_filter($transfer->options)))) ?>
                                         </li>

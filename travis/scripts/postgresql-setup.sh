@@ -13,4 +13,8 @@ if [ "$TESTSUITE" = 'dataset' ]; then
     bzcat ./scripts/dataset/dumps/filesender-2.2.pg.bz2 | psql -d filesenderdataset -U postgres
 fi
 
+if [ "$TESTSUITE" = 'cron' ]; then 
+    cat ./scripts/dataset/dumps/filesendercron.pg | psql -U postgres
+    cat ./scripts/dataset/dumps/filesendercron-touch.pg | psql -U postgres
+fi
 

@@ -1,0 +1,3 @@
+update transfers set expires = NOW() - INTERVAL '21 DAY' where id < 3;
+update transfers set expires = NOW() + INTERVAL '7 DAY' where id >= 3;
+

@@ -392,7 +392,7 @@ filesender.ui.files = {
     },
     
     update_crust_meter: function( file ) {
-//        console.log("update_crust_meter(top) status " +  filesender.ui.transfer.status );
+//        window.filesender.log("update_crust_meter(top) status " +  filesender.ui.transfer.status );
         if (!filesender.config.upload_display_per_file_stats) {
             return;
         }
@@ -785,7 +785,7 @@ filesender.ui.scheduleAutomaticResume = function(msg) {
                 window.clearTimeout(filesender.ui.automatic_resume_timer_countdown);
                 filesender.ui.automatic_resume_timer_countdown = 0;
 
-                console.log('scheduleAutomaticResume(calling retry) ' + msg );
+                window.filesender.log('scheduleAutomaticResume(calling retry) ' + msg );
                 resume( true, false );
             },
             filesender.config.automatic_resume_delay_to_resume * 1000
@@ -823,7 +823,7 @@ filesender.ui.retryingErrorHandler = function(error,callback) {
 
     filesender.ui.automatic_resume_retries++;
     if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
-        console.log("The user has run out of automatic retries so we are going to report this as a fatal error");
+        window.filesender.log("The user has run out of automatic retries so we are going to report this as a fatal error");
         pause( true );
         filesender.ui.errorOriginal( error, callback );
         return;
@@ -1750,7 +1750,7 @@ $(function() {
                 $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
             }            
         }, function(error) {
-            console.log('getTransfer() msg: ' + error.message);
+            window.filesender.log('getTransfer() msg: ' + error.message);
             if(error.message == 'transfer_not_found') {
                 // Transfer does not exist anymore on server side, remove from tracker
                 filesender.ui.transfer.removeFromRestartTracker(failed.id);

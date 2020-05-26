@@ -26,7 +26,7 @@ A note about colours;
 * [site_url](#site_url)
 * [site_logouturl](#site_logouturl)
 * [reports_show_ip_addr](#reports_show_ip_addr)
-
+* [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
 
 ## Security settings
 * [header_x_frame_options](#header_x_frame_options)
@@ -153,6 +153,8 @@ A note about colours;
 * [max_guest_recipients](#max_guest_recipients)
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 * [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
+* [guest_create_limit_per_day](#guest_create_limit_per_day)
+* [guest_reminder_limit_per_day](#guest_reminder_limit_per_day)
 
 ## Authentication
 
@@ -327,6 +329,17 @@ A note about colours;
 * __default:__ false
 * __available:__ since version 2.0
 * __comment:__ If you want to hide IP addresses from reports set it to false
+
+
+### admin_can_view_user_transfers_page
+
+* __description:__ Allow admin to view transfers page for users
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.18
+* __comment:__ This allows an admin to find a user with admin/users and click to see the "my transfers" page that the specific user would see. ie, the admin sees the user's transfers instead of seeing their own. The menu becomes red in this mode and "my transfers" is changed to "user transfers" to attempt to caution the administrator that they are dealing with user data rather than their own.
+
 
 
 ### header_x_frame_options
@@ -1466,6 +1479,31 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ if set to true a user will only see uploads for their guests where the can_only_send_to_me was set
   when the guest was invited or when the guest uploads the file and explicitly includes the user in the recipients.
   This may be updated in the future if we wish to force a 'must also send to me' option when inviting some guests.
+
+### guest_create_limit_per_day
+
+* __description:__ The number of guests a user can create per day
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.18
+* __comment:__ This setting is disabled when set to 0, no rate limit will be enforced.
+  If the user tries to create more than this number of guests in any 24 hour window of time
+  the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 2
+  will allow creation of 2 guests but not 3.
+
+### guest_reminder_limit_per_day
+
+* __description:__ The number of reminders to each guest that user can send per day
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.18
+* __comment:__ This setting is disabled when set to 0, no rate limit will be enforced.
+  If the user tries to send a reminder to a specific guest more than this number of times a day then
+  the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 5
+  will allow 5 reminders to be sent to a guest but not 6.
+
 
 
 

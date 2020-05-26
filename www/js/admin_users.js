@@ -60,7 +60,7 @@ $(function() {
 
             logs.toggleClass('no_results', !found.length);
 
-            for(var i=0; i<found.length; i++)
+            for(var i=found.length-1; i>=0; i--)
                 add_log(found[i]);
 
             logs.removeClass('searching');
@@ -78,8 +78,17 @@ $(function() {
         u.find('.id').text(user.id);
         u.find('.saml_id').text(user.saml_id);
         u.find('.last_activity').text(user.last_activity.formatted);
+        u.find('.event_count').text(user.eventcount);
         u.appendTo(results);
 
+        u.find('[data-action="show-transfers"]').on('click', function() {
+            var id = $(this).closest('.user').attr('data-id');
+            filesender.ui.redirect( filesender.config.base_path
+                                    + '?s=transfers'
+                                    + '&uid=' + id );
+            
+        });
+        
         u.find('[data-action="show-client-logs"]').on('click', function() {
             var id = $(this).closest('.user').attr('data-id');
             show_logs(id);
@@ -150,5 +159,41 @@ $(function() {
         search_user();
     });
 
+    var search_potential_abuse = function( key,keyc,ttype,since ) {
+        results.removeClass('no_results').addClass('searching');
+
+        filesender.client.get('/user', function(matches) {
+            clean_users();
+
+            results.toggleClass('no_results', !matches.length);
+
+            for(var i=0; i<matches.length; i++)
+                add_user(matches[i]);
+
+            results.removeClass('searching');
+        }, {
+            args: {hitlimit: key, hitlimitbycount: keyc, ttype: ttype, since:since }
+        });
+    }
+
+    section.find('.search [class="ab_hit_create_total_limit"]').on('click', function() {
+        search_potential_abuse('guest_created_lh','','User',$(this).attr('data-since'));
+    });
+    
+    section.find('.search [class="ab_hit_create_rate_limit"]').on('click', function() {
+        search_potential_abuse('guest_created_rate_lh','','User',$(this).attr('data-since'));
+    });
+    section.find('.search [class="ab_hit_remind_rate_limit"]').on('click', function() {
+        search_potential_abuse('guest_remind_rate_lh','','Guest',$(this).attr('data-since'));
+    });
+    section.find('.search [class="ab_guests_no_file"]').on('click', function() {
+        search_potential_abuse('','guest_closed_unused','User',$(this).attr('data-since'));
+    });
+    section.find('.search [class="ab_guests_del"]').on('click', function() {
+        search_potential_abuse('','guest_closed','User',$(this).attr('data-since'));
+    });
+
+
+    
     eval_go();
 });
