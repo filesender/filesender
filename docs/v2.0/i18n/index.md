@@ -175,13 +175,13 @@ of day is not included.
 
 In March 2019 the format of date_format and datetime_format was
 changed from using the old
-[https://www.php.net/manual/en/function.date.php](php date format) to
-using the [https://www.php.net/manual/en/function.strftime.php](php
-strftime format). You can know which format your configuration is
+[php date format](https://www.php.net/manual/en/function.date.php) to
+using the [php
+strftime format](https://www.php.net/manual/en/function.strftime.php). You can know which format your configuration is
 using because the newer format uses the % sign to select items to
 format. This move was done to allow improved formatting in non English
 languages as recommended by the
-[https://www.php.net/manual/en/function.date.php](php date page).
+[php date page](https://www.php.net/manual/en/function.date.php).
 One advantage as an example is being able to use '%A' to display
 the day of week in the current language. 
 
@@ -190,8 +190,7 @@ experience will be improved if the date_format and dp_date_format
 both present dates in the same way for a locale. 
 For the datepicker jquery item the dp_date_format is used. The format
 for dp_date_format follows the information for the
-[http://api.jqueryui.com/datepicker/#utility-formatDate](jquery
-datepicker widget).
+[jquery datepicker widget](http://api.jqueryui.com/datepicker/#utility-formatDate).
 
 ```
 $lang['date_format'] = '%d/%m/%Y';
