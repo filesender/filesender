@@ -15,6 +15,7 @@ fi
 
 if [ "$TESTSUITE" = 'cron' ]; then 
     cat ./scripts/dataset/dumps/filesendercron.pg | psql -U postgres
-    cat ./scripts/dataset/dumps/filesendercron-touch.pg | psql -U postgres
+    cat ./scripts/dataset/dumps/filesendercron-touch.pg | psql -U postgres -d filesender
+    echo 'select * from files' | psql -U postgres -d filesender
 fi
 
