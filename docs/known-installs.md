@@ -34,6 +34,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016|
 | Netherlands  | SURFnet  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010|
 | Norway  | UNINETT  | [https://filesender.uninett.no/](https://filesender.uninett.no/)    | 2009|
+| Oman    | OMREN    | [https://mirsal.omren.om/](https://mirsal.omren.om/) | Mar 2020 |
 | Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013|
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011|
 | Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018|
