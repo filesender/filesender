@@ -129,7 +129,15 @@ class StorageFilesystemChunked extends StorageFilesystem
             if ($fh !== false) {
                 $written = fwrite($fh, $data, $chunk_size);
                 fclose($fh);
-                $pass = $chunk_size == $written;
+
+                //at this point the file should have written, lets have a look.
+                if ($chunk_size != $written) {
+                    Logger::info('writeChunk() : '.$chunkFile.' (chunk_size!=written)');
+                } else if ($chunk_size != filesize($chunkFile)) {
+                    Logger::info('writeChunk() : '.$chunkFile.' (chunk_size!=filesize())');
+                } else {
+                    $pass = true;
+                }
             }
             $i++;
             if (!$pass) {
