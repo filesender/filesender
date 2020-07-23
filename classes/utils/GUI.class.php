@@ -106,9 +106,7 @@ class GUI
     {
         $sources = array();
         
-        Logger::info('FIXME:AAA allowStreamSaver is: ' . Browser::instance()->allowStreamSaver );
         if( Browser::instance()->allowStreamSaver ) {
-            Logger::info('FIXME:AAA allowStreamSaver YES ');
             array_push( $sources,
                         'lib/streamsaver/StreamSaver.js',
                         'js/crypter/streamsaver_sink.js'

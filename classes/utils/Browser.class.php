@@ -57,7 +57,6 @@ class Browser
         $this->isSafari  = preg_match('/[Ss]afari/',  $ua );
         $this->isEdge    = preg_match('/[Ee]dge/',    $ua );
 
-        Logger::info('FIXME:AAA ui: ' . $ua );
         if( Config::get('streamsaver_enabled')) {
 
             $this->allowStreamSaver = Config::get('streamsaver_on_unknown_browser');
@@ -76,7 +75,6 @@ class Browser
             }
             
         }
-        Logger::info('FIXME:AAA using streamsaver: ' . Utilities::boolToString($this->allowStreamSaver));
     }
     static function instance()
     {

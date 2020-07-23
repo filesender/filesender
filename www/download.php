@@ -196,8 +196,6 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     if(!$file->transfer->is($transfer))
         throw new FileNotFoundException(array('transfer_id : ' . $transfer->id, 'file_id : ' . $file_id));
 
-    Logger::info('DDD dlsingle range ' . $_SERVER['HTTP_RANGE'] );
-//    Logger::info('CCC server ' . var_export($_SERVER,1));
     $ranges = null;
     if (array_key_exists('HTTP_RANGE', $_SERVER) && $_SERVER['HTTP_RANGE']) {
         try {
@@ -277,7 +275,6 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             
             Logger::debug('Send chunk at offset ' . $offset . ' with length ' . $length);
             
-            Logger::info('DDD readChunk ' . $offset . '  len ' . $length );
             echo $file->readChunk($offset, $length);
             
             // TODO Log download progress ?
@@ -315,7 +312,6 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
 
-            Logger::info("DDD DL cl " . ($range['end'] - $range['start'] + 1));
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
             header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);
@@ -384,7 +380,6 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         $done = true;
         $size += $file->size;
     }
-    Logger::info('DDD xxx'  );
     
     if($done) {
         Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
