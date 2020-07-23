@@ -83,7 +83,7 @@ class EncryptionTest extends SeleniumTest {
         sleep(10);
         
         // click download
-        $this->byCss(".transfer-download")->click();
+        $this->byCss(".transfer-download:first-of-type")->click();
         
         // set password
         $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("1231223");
@@ -102,7 +102,7 @@ class EncryptionTest extends SeleniumTest {
         }
         
          // click download
-        $this->byCss(".transfer-download")->click();
+        $this->byCss(".transfer-download:first-of-type")->click();
         
         // set password
         $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("123123");
