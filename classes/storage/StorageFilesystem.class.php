@@ -355,7 +355,7 @@ class StorageFilesystem
             throw new StorageFilesystemFileNotFoundException($file_path, $file);
         }
 
-        if ($file->transfer->options['encryption']) {
+        if ($file->transfer->is_encrypted) {
             $offset=floor($offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size'));
         }
 
@@ -455,7 +455,7 @@ class StorageFilesystem
         clearstatcache(true, $file_path);
         $size = filesize($file_path);
 
-        if ($file->transfer->options['encryption']) {
+        if ($file->transfer->is_encrypted) {
             if ($size != $file->encrypted_size) {
                 throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->size.' but size on disk is '.$size);
             }
