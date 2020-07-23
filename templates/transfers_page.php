@@ -1,7 +1,7 @@
 <?php
 
     $openoffset   = Utilities::arrayKeyOrDefault( $_GET, 'openoffset',    0, FILTER_VALIDATE_INT  );
-    $openlimit    = Utilities::arrayKeyOrDefault( $_GET, 'openlimit',    25, FILTER_VALIDATE_INT  );
+    $openlimit    = Utilities::arrayKeyOrDefault( $_GET, 'openlimit',    15, FILTER_VALIDATE_INT  );
     $closedoffset = Utilities::arrayKeyOrDefault( $_GET, 'closedoffset',  0, FILTER_VALIDATE_INT  );
     $closedlimit  = Utilities::arrayKeyOrDefault( $_GET, 'closedlimit',  15, FILTER_VALIDATE_INT  );
 
