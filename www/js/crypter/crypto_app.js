@@ -200,10 +200,9 @@ window.filesender.crypto_app = function () {
                 window.filesender.config.encryption_key_version_new_files);
             return $this.generateBase64EncodedEntropy(numOctets);
         },
-        decodeCryptoFileIV: function( b64data ) {
+        decodeCryptoFileIV: function( b64data, key_version ) {
             var $this = this;
-            var numOctets = $this.getNumberOctetsForIV(
-                window.filesender.config.encryption_key_version_new_files);
+            var numOctets = $this.getNumberOctetsForIV(key_version);
             return $this.decodeBase64EncodedEntropy(b64data,numOctets);
         },
         /**
@@ -663,7 +662,7 @@ window.filesender.crypto_app = function () {
                 // first chunk is i=0, but there is 1 chunk at that point.
                 var expectedchunkcount = i+1;
                 if( encryption_details.aead.chunkcount != expectedchunkcount ) {
-                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead");
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 1");
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
                 }
@@ -1008,19 +1007,23 @@ window.filesender.crypto_app = function () {
                 // and the the chunk size has not changed, and we expect
                 // the same number of chunks as the AEAD stipulates
                 if( !encryption_details.fileaead || !encryption_details.fileaead.length  ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 2");
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
                 }
                 encryption_details.aead = JSON.parse(encryption_details.fileaead);
                 if( encryption_details.aead.aeadversion != 1 ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 3");
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
                 }
                 if( encryption_details.aead.chunksize != window.filesender.config.upload_chunk_size ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 4");
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
                 }
                 if( !encryption_details.aead.iv ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 5");
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
                 }
@@ -1028,8 +1031,9 @@ window.filesender.crypto_app = function () {
                 // Make sure that the 96bits of entropy from the file iv contained in
                 // AEAD matches the 96bits of the expected IV that was sent
                 // from the server
-                var aeadiv = $this.decodeCryptoFileIV(encryption_details.aead.iv);
+                var aeadiv = $this.decodeCryptoFileIV(encryption_details.aead.iv,key_version);
                 if( !encryption_details.expected_fixed_chunk_iv.equals(aeadiv)) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 6");
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
                 }

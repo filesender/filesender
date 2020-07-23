@@ -239,6 +239,7 @@ window.filesender.transfer = function() {
     };
 
     this.getEncryptionMetadata = function( file ) {
+        var key_version = this.encryption_key_version;
 	var ret = {
             password:          this.encryption_password,
             password_encoding: this.encryption_password_encoding,
@@ -250,7 +251,7 @@ window.filesender.transfer = function() {
         };
         
         if( this.encryption ) {
-            ret['fileiv']   = window.filesender.crypto_app().decodeCryptoFileIV(file.iv);
+            ret['fileiv']   = window.filesender.crypto_app().decodeCryptoFileIV(file.iv,key_version);
             ret['fileaead'] = file.aead;
         }
         

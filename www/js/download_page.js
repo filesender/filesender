@@ -123,7 +123,7 @@ $(function() {
                                             password_version, password_encoding,
                                             password_hash_iterations,
                                             client_entropy,
-                                            window.filesender.crypto_app().decodeCryptoFileIV(fileiv),
+                                            window.filesender.crypto_app().decodeCryptoFileIV(fileiv,key_version),
                                             fileaead,
                                             progress );
             }else{
