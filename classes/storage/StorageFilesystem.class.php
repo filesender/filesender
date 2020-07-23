@@ -355,12 +355,9 @@ class StorageFilesystem
             throw new StorageFilesystemFileNotFoundException($file_path, $file);
         }
 
-        Logger::info("DDDA StorageFS readChunk offset " . $offset );
         if ($file->transfer->options['encryption']) {
             $offset=floor($offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size'));
         }
-        Logger::info("DDDB StorageFS readChunk offset " . $offset );
-        Logger::info("DDDB StorageFS readChunk file   " . $file_path );
 
         // Open file for reading
         if ($fh = fopen($file_path, 'rb')) {
@@ -371,7 +368,6 @@ class StorageFilesystem
             
             // Try to read chunk
             $chunk_data = fread($fh, $length);
-            Logger::info("DDDB StorageFS readChunk read sz   " . strlen($chunk_data) );
             
             // Close reader
             fclose($fh);

@@ -49,17 +49,12 @@ class StorageFilesystemChunked extends StorageFilesystem
     public static function getOffsetWithinChunkedFile($file_path, $offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
-//        $file_chunk_size = intval(Config::get('upload_crypted_chunk_size'));
         return ($offset % $file_chunk_size);
     }
     
     public static function getChunkFilename($file_path, $offset)
     {
-        Logger::info("DDD getChunkFilename(top)" );
         $file_chunk_size = Config::get('upload_chunk_size');
-//        $file_chunk_size = intval(Config::get('upload_crypted_chunk_size'));
-        Logger::info("DDD getChunkFilename()   offset " . $offset );
-        Logger::info("DDD getChunkFilename()   file_chunk_size " . $file_chunk_size );
         $offset = $offset - ($offset % $file_chunk_size);
         return $file_path.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
