@@ -260,7 +260,7 @@ $default = array(
     // with the right SAML setup.
     'using_local_saml_dbauth' => 0,
 
-    'streamsaver_enabled' => false,
+    'streamsaver_enabled' => true,
     'streamsaver_on_unknown_browser' => false,
     'streamsaver_on_firefox' => false,
     'streamsaver_on_chrome' => true,
