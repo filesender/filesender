@@ -49,12 +49,17 @@ class StorageFilesystemChunked extends StorageFilesystem
     public static function getOffsetWithinChunkedFile($file_path, $offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
+//        $file_chunk_size = intval(Config::get('upload_crypted_chunk_size'));
         return ($offset % $file_chunk_size);
     }
     
     public static function getChunkFilename($file_path, $offset)
     {
+        Logger::info("DDD getChunkFilename(top)" );
         $file_chunk_size = Config::get('upload_chunk_size');
+//        $file_chunk_size = intval(Config::get('upload_crypted_chunk_size'));
+        Logger::info("DDD getChunkFilename()   offset " . $offset );
+        Logger::info("DDD getChunkFilename()   file_chunk_size " . $file_chunk_size );
         $offset = $offset - ($offset % $file_chunk_size);
         return $file_path.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
@@ -73,6 +78,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
+        Logger::info("DDDA readChunk offset " . $offset );
         if ($file->transfer->options['encryption']) {
             $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
         }
@@ -80,6 +86,8 @@ class StorageFilesystemChunked extends StorageFilesystem
         $file_path = self::buildPath($file).$file->uid;
 
         $chunkFile=self::getChunkFilename($file_path, $offset);
+        Logger::info("DDDB readChunk offset " . $offset );
+        Logger::info("DDDB readChunk chunkFile " . $chunkFile );
 
         if (!file_exists($chunkFile)) {
             throw new StorageFilesystemFileNotFoundException($file_path, $file);

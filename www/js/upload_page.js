@@ -949,7 +949,6 @@ filesender.ui.startUpload = function() {
             );
         };
 
-        
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), close);
         
         var t = null;
