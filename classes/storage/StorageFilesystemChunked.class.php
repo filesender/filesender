@@ -73,7 +73,6 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
-        Logger::info("DDDA readChunk offset " . $offset );
         if ($file->transfer->options['encryption']) {
             $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
         }
@@ -81,8 +80,6 @@ class StorageFilesystemChunked extends StorageFilesystem
         $file_path = self::buildPath($file).$file->uid;
 
         $chunkFile=self::getChunkFilename($file_path, $offset);
-        Logger::info("DDDB readChunk offset " . $offset );
-        Logger::info("DDDB readChunk chunkFile " . $chunkFile );
 
         if (!file_exists($chunkFile)) {
             throw new StorageFilesystemFileNotFoundException($file_path, $file);
