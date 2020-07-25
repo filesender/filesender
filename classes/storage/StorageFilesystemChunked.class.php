@@ -73,7 +73,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
-        if ($file->transfer->options['encryption']) {
+        if ($file->transfer->is_encrypted) {
             $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
         }
 

@@ -20,7 +20,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         
         <title><?php echo htmlspecialchars(Config::get('site_name')); ?></title>
-        
+
         <?php GUI::includeStylesheets() ?>
         
         <?php GUI::includeFavicon() ?>

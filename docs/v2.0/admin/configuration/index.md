@@ -124,6 +124,13 @@ A note about colours;
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
 * [chunk_upload_roundtriptoken_check_enabled](#chunk_upload_roundtriptoken_check_enabled)
 * [chunk_upload_roundtriptoken_check_accept_before](#chunk_upload_roundtriptoken_check_accept_before)
+* [streamsaver_enabled](#streamsaver_enabled)
+* [streamsaver_on_unknown_browser](#streamsaver_on_unknown_browser)
+* [streamsaver_on_firefox](#streamsaver_on_firefox)
+* [streamsaver_on_chrome](#streamsaver_on_chrome)
+* [streamsaver_on_edge](#streamsaver_edge)
+* [streamsaver_on_safari](#streamsaver_safari)
+
 
 ## Graphs
 
@@ -1244,11 +1251,67 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 
 
+### streamsaver_enabled
+* __description:__ Allow the use of StreamSaver to perform streaming download of encrypted files on supported browsers.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_unknown_browser
+* __description:__ If streamsaver_enabled and the browser does not match any known browser with explicit configuration (eg streamsaver_on_firefox) then this is the default if the site should try to use streamsaver on that unknown environment.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_firefox
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Firefox.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ false
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.19
+* __comment:__ 
+
+
+### streamsaver_on_chrome
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Google Chrome.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_edge
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Microsoft Edge.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_safari
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Safari.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
 
 
 
 
-* [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
+
+
+
 
 
 ---

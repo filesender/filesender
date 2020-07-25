@@ -986,6 +986,9 @@ class Transfer extends DBObject
         }
 
         if ($property == 'is_encrypted') {
+            if (!array_key_exists('encryption', $this->options)) {
+                return false;
+            }
             return $this->options['encryption'];
         }
         if ($property == "get_a_link") {

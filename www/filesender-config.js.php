@@ -63,6 +63,7 @@ window.filesender.config = {
     site_name: '<?php echo Config::get('site_name') ?>',
     
     upload_chunk_size: <?php echo Config::get('upload_chunk_size') ?>,
+    upload_crypted_chunk_size: <?php echo Config::get('upload_crypted_chunk_size') ?>,
     
     upload_display_bits_per_sec: <?php echo value_to_TF(Config::get('upload_display_bits_per_sec')) ?>,
 
@@ -113,6 +114,8 @@ window.filesender.config = {
     terasender_worker_xhr_timeout: <?php  echo Config::get('terasender_worker_xhr_timeout') ?>,
     terasender_worker_start_must_complete_within_ms: <?php  echo Config::get('terasender_worker_start_must_complete_within_ms') ?>,
 
+    streamsaver_mitm_url: '<?php echo Config::get('site_url') ?>lib/streamsaver/mitm.html',
+
 
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
@@ -159,7 +162,8 @@ window.filesender.config = {
                 file_encryption_show_password : "<?php echo Lang::tr('file_encryption_show_password')->out(); ?>"
                 , guest_reminder_rate_limit_reached : "<?php echo Lang::tr('guest_reminder_rate_limit_reached')->out(); ?>"
                 , user_hit_guest_rate_limit : "<?php echo Lang::tr('user_hit_guest_rate_limit')->out(); ?>"
-
+                , download_complete:       "<?php echo Lang::tr('download_complete')->out(); ?>"
+/**/            , download_chunk_progress: "<?php echo Lang::tr('download_chunk_progress')->out(); ?>"
 	},
     
     clientlogs: {
@@ -177,6 +181,8 @@ window.filesender.config = {
 
     internal_use_only_running_on_ci:  <?php echo value_to_TF(Config::get('internal_use_only_running_on_ci')) ?>,
     guest_reminder_limit_per_day:  <?php echo Config::get('guest_reminder_limit_per_day') ?>,
+    storage_type:  "<?php echo Config::get('storage_type') ?>",
+    allow_streamsaver: <?php echo value_to_TF(Browser::instance()->allowStreamSaver) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
