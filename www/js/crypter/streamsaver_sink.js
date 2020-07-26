@@ -24,6 +24,19 @@ window.filesender.streamsaver_sink = function ( arg_name, arg_expected_size, arg
             }
             if( !$this.writer ) {
                 $this.writer = $this.fileStream.getWriter();
+
+                window.onunload = () => {
+                    window.filesender.log('user navigated away from page');
+                    if($this.writer) {
+                        $this.writer.abort();
+                    }
+                }
+
+                window.onbeforeunload = evt => {
+                    if (!$this.complete) {
+                        evt.returnValue = lang.tr('confirm_leave_download_page');
+                    }
+                }
             }
         },
         visit: function(chunkid,decryptedData) {
@@ -47,6 +60,7 @@ window.filesender.streamsaver_sink = function ( arg_name, arg_expected_size, arg
                               }
                               
                               $this.writer.close();
+                              $this.writer = null;
                           }
                       }
                       else {
