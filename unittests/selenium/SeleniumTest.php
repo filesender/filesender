@@ -65,7 +65,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         $this->setDesiredCapabilities([
             'goog:chromeOptions' => [
-               'w3c' => false
+                'w3c' => false,
+                'args' => ['--ignore-certificate-errors']
             ]
          ]);
 
