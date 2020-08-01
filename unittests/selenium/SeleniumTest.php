@@ -9,6 +9,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected $use_mails = false;
 
+    protected $encryption_key_version_new_files = 0;
+    
+
     public static $browsers = array(
         // run FF15 on Windows 8 on Sauce
         //        array(
@@ -256,6 +259,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setKeyVersionNewFiles($v = 0)
     {
+        $this->encryption_key_version_new_files = $v;
         $this->changeConfigValue('encryption_key_version_new_files', $v);
         $this->refresh();
         sleep(2);
