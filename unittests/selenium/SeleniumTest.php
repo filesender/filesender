@@ -9,6 +9,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected $use_mails = false;
 
+    protected $encryption_key_version_new_files = 0;
+    
+
     public static $browsers = array(
         // run FF15 on Windows 8 on Sauce
         //        array(
@@ -23,7 +26,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             'browserName' => 'chrome',
             'desiredCapabilities' => array(
                 'platform' => 'Linux',
-//                'version' => '84' // needs updates
+                'version' => '84'
             )
         ),
         // run Mobile Safari on iOS
@@ -61,6 +64,16 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         }
 
         $this->setSeleniumServerRequestsTimeout(120);
+
+
+        $this->setDesiredCapabilities([
+            'goog:chromeOptions' => [
+                'w3c' => false,
+                'args' => ['--ignore-certificate-errors']
+            ]
+         ]);
+
+         parent::setUp();
     }
 
     public static function browsers() {
@@ -71,10 +84,11 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             return array(
                 // run Chrome on Linux locally
                 array(          
-                    'browserName            ' => 'chrome',
+                    'browserName' => 'chrome',
                     'local' => true,        
                     'desiredCapabilities' =>         array(
-                        'platform' => 'Linux'
+                        'platform' => 'Linux',
+                        'version' => '84'
                     )
                 )
             );
@@ -245,6 +259,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setKeyVersionNewFiles($v = 0)
     {
+        $this->encryption_key_version_new_files = $v;
         $this->changeConfigValue('encryption_key_version_new_files', $v);
         $this->refresh();
         sleep(2);
