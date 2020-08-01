@@ -110,7 +110,7 @@ class EncryptionTest extends SeleniumTest {
     protected function waitForAlert() {
         $test = $this;
         sleep(1);
-        $this->waitUntil(function () use ($test) { return $test->alertIsPresent(); });
+        $this->waitUntil(function () use ($test) { return $test->alertIsPresent(); }, 30000 );
     }
     
     /**
