@@ -6,6 +6,7 @@ class EncryptionTest extends SeleniumTest {
 
     private function uploadEncrypted() {
         extract($this->getKeyBindings());
+        $test = $this;
 
         $this->setupAuthenticated();
 
@@ -17,6 +18,7 @@ class EncryptionTest extends SeleniumTest {
         // Turn on encrption
         $this->byId("encryption")->click();
 
+        
         sleep(3);
         // Set encryption password
         $this->byName("encryption_password")->clear();
@@ -25,11 +27,11 @@ class EncryptionTest extends SeleniumTest {
         // Upload files
         $this->uploadFiles();
 
-        sleep(10);
+            
+        sleep(1);
         $this->byCssSelector('.start.ui-button')->click();
 
         // wait for the dialog
-        $test = $this;
         $this->waitUntil(function() use ($test){
             $elements = $test->elements($test->using('css selector')->value('.ui-dialog-title'));
             $count = count($elements);
@@ -39,7 +41,7 @@ class EncryptionTest extends SeleniumTest {
             }
         }, 30000);
         // the popup is not instant.. sleep a bit
-        sleep(2);
+        sleep(1);
         
         // check for success
         $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
@@ -68,32 +70,85 @@ class EncryptionTest extends SeleniumTest {
         return array($test1_file_data);
     }
 
+    private function waitForCssElement($selector) {
+        $test = $this;
+        
+        $rv = $this->waitUntil(function() use ($test,$selector){
+            $elements = $test->elements($test->using('css selector')->value($selector));
+            if( count($elements)) {
+                return true;
+            }
+        }, 30000);
+        return $rv;
+    }
+
+    private function waitForAndEnsureCssElementContains($selector,$needle) {
+        $test = $this;
+        
+
+//        $v = $this->byCss($selector)->text();
+//        $this->assertTrue( false,'waitForAndEnsureCssElementContains(invalid response) v ' . $v . ' selector ' . $selector );
+
+        
+        
+        $rv = $this->waitUntil(function() use ($test,$selector,$needle){
+            try {
+                $v = $this->byCss($selector)->text();
+                if (strpos($v, $needle) !== false) {
+                    return true;
+                }
+            }
+            catch(PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e){
+            }
+        },5000);
+        if( $rv ) {
+            $this->assertTrue( $rv,'waitForAndEnsureCssElementContains(invalid response) selector ' . $selector );
+        }
+        return $rv;
+    }
+    
+    protected function waitForAlert() {
+        $test = $this;
+        sleep(1);
+        $this->waitUntil(function () use ($test) { return $test->alertIsPresent(); });
+    }
+    
     /**
      */
     private function downloadEncrypted() {
         extract($this->getKeyBindings());
+        $test = $this;
 
         $this->setupAuthenticated();
         
         // Turn on encrption
         $this->url(Config::get('site_url') . '?s=transfers');
-        
-        sleep(10);
-        
+
+        $this->waitForCssElement('.expand');        
         $this->byCss(".expand")->click();
-        sleep(10);
+
+        $this->waitForCssElement('.transfer-download');
+        sleep(1);
+
+        $this->byCss(".download_href")->click();
+        sleep(2);
+
         
         // click download
-        $this->byCss(".transfer-download")->click();
+        $this->byCss(".download")->click();
+        sleep(1);
         
         // set password
         $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("1231223");
         
         // click ok
         $this->byCss(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button")->click();
-        sleep(20);
+        //        sleep(20);
+        $this->waitForAlert();
         //
         try{
+            $this->assertContains("Incorrect", $this->alertText());
+            
             $this->acceptAlert();
             
             $this->assertTrue(true);
@@ -101,25 +156,19 @@ class EncryptionTest extends SeleniumTest {
         catch(PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e){
             $this->assertTrue(false);
         }
+
+
         
          // click download
-        $this->byCss(".transfer-download")->click();
+        $this->byCss(".download")->click();
+        sleep(1);
         
         // set password
         $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("123123");
         
         // click ok
         $this->byCss(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button")->click();
-        sleep(20);
-        //
-        try{
-            $this->acceptAlert();
-            
-            $this->assertTrue(false);
-        }
-        catch(Exception $e){
-            $this->assertTrue(true);
-        }
+        $this->waitForAndEnsureCssElementContains(".downloadprogress", 'Download complete');
         
         
     }
@@ -129,6 +178,7 @@ class EncryptionTest extends SeleniumTest {
      * upload a file using key_version = 0
      * @test 
      */
+    
     public function testEncryptionKeyVerZeroTest() {
         extract($this->getKeyBindings());
         $this->setKeyVersionNewFiles( 0 );        
@@ -144,6 +194,7 @@ class EncryptionTest extends SeleniumTest {
         $this->setKeyVersionNewFiles( 0 );        
         $this->downloadEncrypted();
     }
+    
     public function testDecryptionKeyVerZeroOneTest() {
         extract($this->getKeyBindings());
         $this->setKeyVersionNewFiles( 1 );        
@@ -171,7 +222,6 @@ class EncryptionTest extends SeleniumTest {
         $this->setKeyVersionNewFiles( 1 );        
         $this->downloadEncrypted();
     }
-    
 
     /**
      * Method testEncryptionTest 
@@ -206,5 +256,4 @@ class EncryptionTest extends SeleniumTest {
         $this->setKeyVersionNewFiles( 3 );        
         $this->downloadEncrypted();
     }
-    
 }
