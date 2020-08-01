@@ -1,13 +1,15 @@
 <?php
 
 $packages = array(
-    'chart.js'       => array(),
-    'font-awesome'   => array(),
-    'jquery'         => array(),
-    'jquery-ui-dist' => array(),
-    'promise-polyfill' => array(),
-    'webcrypto-shim' => array(),
-    'xregexp' => array(),
+    'chart.js'             => array(),
+    'font-awesome'         => array(),
+    'jquery'               => array(),
+    'jquery-ui-dist'       => array(),
+    'promise-polyfill'     => array(),
+    'streamsaver'          => array(),
+    'webcrypto-shim'       => array(),
+    'web-streams-polyfill' => array(),
+    'xregexp'              => array(),
 );
 $json = file_get_contents(dirname(__FILE__) . '/package-lock.json');
 

@@ -65,5 +65,6 @@ window.filesender.crypto_common = function () {
             }
             return str;
         }
+        
     };
 };

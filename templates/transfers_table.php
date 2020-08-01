@@ -433,6 +433,8 @@ if (!function_exists('clickableHeader')) {
                                         data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
                                         data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>" 
                                         data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
+                                        data-size="<?php echo $file->size; ?>"
+                                        data-encrypted-size="<?php echo $file->encrypted_size; ?>"
                                         data-key-version="<?php echo $transfer->key_version; ?>"
                                         data-key-salt="<?php echo $transfer->salt; ?>"
                                         data-password-version="<?php echo $transfer->password_version; ?>"

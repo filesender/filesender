@@ -104,24 +104,35 @@ class GUI
      */
     public static function scripts()
     {
-        $sources = array(
-            'lib/jquery/jquery.min.js',
-            'lib/jquery-ui/jquery-ui.min.js',
-            'lib/promise-polyfill/polyfill.min.js',
-            'lib/webcrypto-shim/webcrypto-shim.min.js',
-            'js/filesender.js',
-            'js/lang.js',
-            'js/client.js',
-            'js/transfer.js',
-            'js/logger.js',
-            'js/ui.js',
-            'js/FileSaver.js',
-            'js/crypter/crypto_common.js',
-            'js/crypter/crypto_blob_reader.js',
-            'js/crypter/crypto_app.js',
-            'js/pbkdf2dialog.js',
-            'lib/xregexp/xregexp-all.js'
+        $sources = array();
+        
+        if( Browser::instance()->allowStreamSaver ) {
+            array_push( $sources,
+                        'lib/streamsaver/StreamSaver.js',
+                        'js/crypter/streamsaver_sink.js'
+            );
+        }
+
+        array_push( $sources,
+                    'lib/jquery/jquery.min.js',
+                    'lib/jquery-ui/jquery-ui.min.js',
+                    'lib/promise-polyfill/polyfill.min.js',
+                    'lib/web-streams-polyfill/dist/ponyfill.js',
+                    'lib/webcrypto-shim/webcrypto-shim.min.js',
+                    'js/filesender.js',
+                    'js/lang.js',
+                    'js/client.js',
+                    'js/transfer.js',
+                    'js/logger.js',
+                    'js/ui.js',
+                    'js/FileSaver.js',
+                    'js/crypter/crypto_common.js',
+                    'js/crypter/crypto_blob_reader.js',
+                    'js/crypter/crypto_app.js',
+                    'js/pbkdf2dialog.js',
+                    'lib/xregexp/xregexp-all.js'
         );
+
         
         if (Config::get('terasender_enabled')) {
             $sources[] = 'js/terasender/terasender.js';

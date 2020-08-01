@@ -262,6 +262,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
         if($transfer->options['encryption'] == 1){
             $end = $file->encrypted_size;
+            $chunk_size = (int) Config::get('upload_crypted_chunk_size');
         }else{
             $end = $file->size;
         }
@@ -310,7 +311,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
-            
+
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
             header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);
