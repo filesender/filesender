@@ -361,7 +361,7 @@ if (!function_exists('clickableHeader')) {
                     
                         <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
                             <tr class="download_link desc">
-                                <td><a href="<?php echo $transfer->first_recipient->download_link ?>">{tr:download_link}</a></td>
+                                <td><a class="download_href" href="<?php echo $transfer->first_recipient->download_link ?>">{tr:download_link}</a></td>
                                 <td><input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" /></td>
                             </tr>
                         <?php } ?>

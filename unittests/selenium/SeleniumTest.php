@@ -10,7 +10,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected $use_mails = false;
 
     protected $encryption_key_version_new_files = 0;
-    
+    protected $authType = '';
 
     public static $browsers = array(
         // run FF15 on Windows 8 on Sauce
@@ -199,14 +199,19 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         sleep(2);
         $this->refresh();
         sleep(5);
+        $this->authType = 'saml';
     }
 
     protected function setupAuthenticated()
     {
+        if( $this->authType == 'fake' ) {
+            return;
+        }
         $this->changeConfigValue('auth_sp_type', "'fake'");
         sleep(2);
         $this->refresh();
-        sleep(5);
+        sleep(2);
+        $this->authType = 'fake';
     }
 
     protected function setAdmin()
