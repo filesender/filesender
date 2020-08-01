@@ -23,7 +23,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             'browserName' => 'chrome',
             'desiredCapabilities' => array(
                 'platform' => 'Linux',
-//                'version' => '84' // needs updates
+                'version' => '84'
             )
         ),
         // run Mobile Safari on iOS
@@ -61,6 +61,15 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         }
 
         $this->setSeleniumServerRequestsTimeout(120);
+
+
+        $this->setDesiredCapabilities([
+            'goog:chromeOptions' => [
+               'w3c' => false
+            ]
+         ]);
+
+         parent::setUp();
     }
 
     public static function browsers() {
@@ -71,10 +80,11 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             return array(
                 // run Chrome on Linux locally
                 array(          
-                    'browserName            ' => 'chrome',
+                    'browserName' => 'chrome',
                     'local' => true,        
                     'desiredCapabilities' =>         array(
-                        'platform' => 'Linux'
+                        'platform' => 'Linux',
+                        'version' => '84'
                     )
                 )
             );
