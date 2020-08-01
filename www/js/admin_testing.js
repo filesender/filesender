@@ -51,9 +51,10 @@ $(function() {
     
     section.find('[data-action="show-password-hashing-performance"]').on('click', function() {
 
+        var key_version = window.filesender.config.encryption_key_version_new_files;
         var currentSetting  = filesender.config.encryption_password_hash_iterations_new_files;
         var hash_iterations = [currentSetting,10000,100000,500000,1000000,5000000,16384000];
-        var iv = crypto.decodeCryptoFileIV(crypto.generateCryptoFileIV());
+        var iv = crypto.decodeCryptoFileIV(crypto.generateCryptoFileIV(),key_version);
         var file = { size: 100, iv: iv };
         hash_iterations.map( function( n ) {
             var encryption_details = {

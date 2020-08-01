@@ -437,6 +437,13 @@ class Utilities
     {
         return $v == '1' || $v == 'true';
     }
+    public static function boolToString($v)
+    {
+        if( $v == '1' || $v == 'true' ) {
+            return 'true';
+        }
+        return 'false';
+    }
 
     /**
      * This is a wrapper around the PHP http_build_query with some

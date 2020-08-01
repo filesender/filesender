@@ -22,7 +22,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'chrome',
             'desiredCapabilities' => array(
-                'platform' => 'Linux'
+                'platform' => 'Linux',
+//                'version' => '84' // needs updates
             )
         ),
         // run Mobile Safari on iOS

@@ -120,7 +120,7 @@ class RestEndpointClientlogs extends RestEndpoint
         }
         
         // Check ownership if specific user id given
-        if ($id & $id != '@me') {
+        if ($id && $id != '@me') {
             $user = User::fromId($id);
             
             if (!Auth::user()->is($user) && !Auth::isAdmin()) {

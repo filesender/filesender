@@ -184,7 +184,10 @@ class EncryptionTest extends SeleniumTest {
     }
     public function testDecryptionKeyVerThreeTest() {
         extract($this->getKeyBindings());
-        $this->setKeyVersionNewFiles( 0 );        
+        $this->setKeyVersionNewFiles( 0 );
+        // force a page refresh on my transfers.
+        $this->url(Config::get('site_url') . '?s=upload');
+        sleep(5);
         $this->downloadEncrypted();
     }
     public function testDecryptionKeyVerThreeOneTest() {

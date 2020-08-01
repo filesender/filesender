@@ -253,7 +253,20 @@ class AuditLog extends DBObject
  
         if ($property == 'ip') {
             //Strip out ::ffff: from ipv4 addresses when in ipv6 mode
-            return preg_replace('/^::ffff:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$/', '$1', $this->ip);
+            $ip = preg_replace('/^::ffff:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$/', '$1', $this->ip);
+
+            //Get hostname and store it for speed
+            if (!isSet($_SESSION['hosts'])) {
+                $_SESSION['hosts']=array();
+            }
+            if (!isSet($_SESSION['hosts'][$ip])) {
+                $_SESSION['hosts'][$ip]=gethostbyaddr($ip);
+            }
+            $host = $_SESSION['hosts'][$ip];
+            if ($host!==false && $host!=$ip) {
+                return $host.' ('.$ip.')';
+            }
+            return $ip;
         }
         
         if ($property == 'target') {
