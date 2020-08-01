@@ -16,7 +16,8 @@ class EncryptionTest extends SeleniumTest {
 
         // Turn on encrption
         $this->byId("encryption")->click();
-        
+
+        sleep(3);
         // Set encryption password
         $this->byName("encryption_password")->clear();
         $this->byName("encryption_password")->value("123123");
