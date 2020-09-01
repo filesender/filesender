@@ -296,7 +296,7 @@ config file itself.
 * **NOTE**: Replace the PASSWORD line with a choice of your own!
 
 ```
-PASSWORD=something-really-long-and-wonderful-written-near-the-keyboard
+PASS=something-really-long-and-wonderful-written-near-the-keyboard
 
 cd config
 SALT=$(LC_CTYPE=C tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo);
