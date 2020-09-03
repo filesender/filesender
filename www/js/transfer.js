@@ -185,6 +185,7 @@ window.filesender.transfer = function() {
     this.failed_transfer_restart = false;
     this.uploader = null;
     this.aup_checked = false;
+    this.roundtriptoken = '';
     
     this.watchdog_processes = {};
     
@@ -238,6 +239,7 @@ window.filesender.transfer = function() {
     };
 
     this.getEncryptionMetadata = function( file ) {
+        var key_version = this.encryption_key_version;
 	var ret = {
             password:          this.encryption_password,
             password_encoding: this.encryption_password_encoding,
@@ -249,7 +251,7 @@ window.filesender.transfer = function() {
         };
         
         if( this.encryption ) {
-            ret['fileiv']   = window.filesender.crypto_app().decodeCryptoFileIV(file.iv);
+            ret['fileiv']   = window.filesender.crypto_app().decodeCryptoFileIV(file.iv,key_version);
             ret['fileaead'] = file.aead;
         }
         
@@ -603,7 +605,8 @@ window.filesender.transfer = function() {
             files: [],
             file_index: 0,
             guest_token: null,
-            download_link: null
+            download_link: null,
+            roundtriptoken: this.roundtriptoken
         };
         
         for(var i=0; i<this.files.length; i++) {
@@ -728,7 +731,8 @@ window.filesender.transfer = function() {
         for(var i=0; i<tracker.files.length; i++) {
             filesender.ui.log('uploaded: ' + tracker.files[i].uploaded);
         }
-        
+
+        this.roundtriptoken = tracker.roundtriptoken;
         this.time = (new Date()).getTime();
         
         // Start uploading chunks
@@ -1022,6 +1026,9 @@ window.filesender.transfer = function() {
         
         if(this.guest_token)
             args.vid = this.guest_token;
+
+        if(this.roundtriptoken)
+            args.roundtriptoken = this.roundtriptoken;
         
         var q = [];
         for(var k in args) q.push(k + '=' + args[k]);
@@ -1069,7 +1076,7 @@ window.filesender.transfer = function() {
             this.updateFileInRestartTracker(file);
             this.onprogress.call(this, file, false);
         } else {
-	    console.log("transfer has not onprogress");
+	    window.filesender.log("transfer has not onprogress");
 	}
     };
     
@@ -1180,6 +1187,7 @@ window.filesender.transfer = function() {
         filesender.client.postTransfer(this, function(path, data) {
             transfer.id = data.id;
             transfer.encryption_salt = data.salt;
+            transfer.roundtriptoken  = data.roundtriptoken;
             
             for (var i = 0; i < transfer.files.length; i++) {
                 for (var j = 0; j < data.files.length; j++) {
@@ -1215,13 +1223,13 @@ window.filesender.transfer = function() {
                     filesender.terasender.start(transfer);
                 } else {
                     // Chunk by chunk upload
-                    console.log('*** Not using terasender ***');
+                    window.filesender.log('*** Not using terasender ***');
                     transfer.registerProcessInWatchdog('main');
                     transfer.uploadChunk();
                 }
             } else {
                 // Legacy upload
-                console.log('*** Warning: using legacy upload ***');
+                window.filesender.log('*** Warning: using legacy upload ***');
                 transfer.uploadWhole();
             }
         }, function(error) {

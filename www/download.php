@@ -52,6 +52,7 @@ try {
     
     if(count($files_ids) != count($good_files_ids))
         throw new DownloadBadFilesIDsException(array_diff($files_ids, $good_files_ids));
+
     
     if(array_key_exists('token', $_REQUEST)) {
         // Token on get request
@@ -59,9 +60,13 @@ try {
         
         if(!Utilities::isValidUID($token))
             throw new TokenHasBadFormatException($token);
-        
-        // Getting recipient from the token
-        $recipient = Recipient::fromToken($token); // Throws
+
+        try {
+            // Getting recipient from the token
+            $recipient = Recipient::fromToken($token); // Throws
+        } catch (RecipientNotFoundException $e) {
+            throw new TransferPresumedExpiredException();
+        }
         
         // Getting associated transfer 
         $transfer = $recipient->transfer;
@@ -257,6 +262,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
         if($transfer->options['encryption'] == 1){
             $end = $file->encrypted_size;
+            $chunk_size = (int) Config::get('upload_crypted_chunk_size');
         }else{
             $end = $file->size;
         }
@@ -305,7 +311,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
-            
+
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
             header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);

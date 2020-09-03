@@ -153,6 +153,8 @@ class User extends DBObject
     protected $auth_secret = null;
     protected $auth_secret_created = null;
     protected $quota = 0;
+
+    private $eventcount = 0;
     
     /**
      * From Auth if it makes sense
@@ -401,7 +403,7 @@ class User extends DBObject
         // Filter if requested
         if ($criteria) {
             $recipients = array_filter($recipients, function ($recipient) use ($criteria) {
-                return strpos($recipient->email, $criteria) !== false;
+                return stripos($recipient->email, $criteria) !== false;
             });
         }
         
@@ -640,6 +642,10 @@ class User extends DBObject
         if ($property == 'identity') {
             return $this->email;
         }
+
+        if ($property == 'eventcount') {
+            return $this->eventcount;
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -686,6 +692,8 @@ class User extends DBObject
             $this->name = (string)$value;
         } elseif ($property == 'quota') {
             $this->quota = (int)$value;
+        } elseif ($property == 'eventcount') {
+            $this->eventcount = (int)$value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

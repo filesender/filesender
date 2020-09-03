@@ -39,9 +39,17 @@ $packages = array(
         'path' => 'promise-polyfill/polyfill.min.js',
         'pattern' => '/v([0-9.]+)/m',
     ),
+    'streamsaver' => array(
+        'path' => 'streamsaver/StreamSaver.js',
+        'pattern' => '/v([0-9.]+)/m',
+    ),
     'webcrypto-shim' => array(
         'path' => 'webcrypto-shim/webcrypto-shim.min.js',
         'pattern' => '/ WebCrypto API shim v([0-9.]+)/m',
+    ),
+    'web-streams-polyfill' => array(
+        'path' => 'web-streams-polyfill/dist/ponyfill.js',
+        'pattern' => '/v([0-9.]+)/m',
     ),
     'xregexp' => array(
         'path' => 'xregexp/xregexp-all.js',

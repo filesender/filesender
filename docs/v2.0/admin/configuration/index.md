@@ -26,7 +26,7 @@ A note about colours;
 * [site_url](#site_url)
 * [site_logouturl](#site_logouturl)
 * [reports_show_ip_addr](#reports_show_ip_addr)
-
+* [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
 
 ## Security settings
 * [header_x_frame_options](#header_x_frame_options)
@@ -122,6 +122,15 @@ A note about colours;
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
+* [chunk_upload_roundtriptoken_check_enabled](#chunk_upload_roundtriptoken_check_enabled)
+* [chunk_upload_roundtriptoken_check_accept_before](#chunk_upload_roundtriptoken_check_accept_before)
+* [streamsaver_enabled](#streamsaver_enabled)
+* [streamsaver_on_unknown_browser](#streamsaver_on_unknown_browser)
+* [streamsaver_on_firefox](#streamsaver_on_firefox)
+* [streamsaver_on_chrome](#streamsaver_on_chrome)
+* [streamsaver_on_edge](#streamsaver_edge)
+* [streamsaver_on_safari](#streamsaver_safari)
+
 
 ## Graphs
 
@@ -151,6 +160,8 @@ A note about colours;
 * [max_guest_recipients](#max_guest_recipients)
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 * [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
+* [guest_create_limit_per_day](#guest_create_limit_per_day)
+* [guest_reminder_limit_per_day](#guest_reminder_limit_per_day)
 
 ## Authentication
 
@@ -325,6 +336,17 @@ A note about colours;
 * __default:__ false
 * __available:__ since version 2.0
 * __comment:__ If you want to hide IP addresses from reports set it to false
+
+
+### admin_can_view_user_transfers_page
+
+* __description:__ Allow admin to view transfers page for users
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.18
+* __comment:__ This allows an admin to find a user with admin/users and click to see the "my transfers" page that the specific user would see. ie, the admin sees the user's transfers instead of seeing their own. The menu becomes red in this mode and "my transfers" is changed to "user transfers" to attempt to caution the administrator that they are dealing with user data rather than their own.
+
 
 
 ### header_x_frame_options
@@ -1172,7 +1194,124 @@ these iteration counts take to perform on your local machine.
 * __comment:__ 
 
 
-* [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
+### chunk_upload_roundtriptoken_check_enabled
+* __description:__ Check that a random token handed out during transfer creation is always passed back exactly as expected from the client. This parameter was created to disable the check in case some edge case is discovered and a site wishes to turn off this security feature temporarily.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.16
+* __comment:__ 
+
+
+### chunk_upload_roundtriptoken_accept_empty_before
+* __description:__ As of FileSender 2.16 all newly created transfers will have a
+roundtriptoken created and stored on the server. The roundtriptoken is
+only sent to client when a tranfer is being created. The aim is that
+knowledge of the roundtriptoken means that a particular client is the
+one that created the transfer. The roundtriptoken is a large random
+value. The roundtriptoken is sent back by the clients during chunk
+uploads to be able to verify that they made the transfer. Creating and
+sending the roundtriptoken will happen regardless of the
+chunk_upload_roundtriptoken_check_enabled setting.
+If chunk_upload_roundtriptoken_check_enabled is set to true then the
+transfer on the server must have a roundtriptoken recorded and the
+roundtriptoken supplied by the client must match the one from the
+database on the server in order for the chunk upload to be accepted.
+Though without another option one might see a migration issue when a
+client tries to load a failed transfer and resume it. This will happen
+for example if a user revists the upload page and the dialog offers to
+reload a failed transfer. This failed transfer state will have no
+roundtriptoken on the client and as the transfer was created with
+older server code there will be no roundtriptoken stored in the
+database either.
+To allow easier migration of existing transfers this configuration
+setting can be used. If
+chunk_upload_roundtriptoken_accept_empty_before is non zero then
+transfers with an empty roundtriptoken which were created before the
+value of chunk_upload_roundtriptoken_accept_empty_before will be
+accepted. This allows transfers created before deployment of FileSender 2.16 to continue
+as they would have. It may be tempting to just allow transfers that
+have no roundtriptoken in the database to pass, but if you have set
+chunk_upload_roundtriptoken_check_enabled to true you cerainly want
+to enforce that all new transfers have a token in the database to ensure that this
+test is active.
+Setting this to the deployment time plus one week for example should
+allow existing uploads to complete. The value for the current time can
+be found using "date +%s" on a Linux machine for example. Though that
+will not have any wiggle room added.  Note that if a transfer has a roundtriptoken
+set then this setting will not change if the client must present the roundtriptoken again.
+This is only for old, existing transfers which have no roundtriptoken set.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ false
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.16
+* __comment:__ 
+
+
+
+### streamsaver_enabled
+* __description:__ Allow the use of StreamSaver to perform streaming download of encrypted files on supported browsers.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_unknown_browser
+* __description:__ If streamsaver_enabled and the browser does not match any known browser with explicit configuration (eg streamsaver_on_firefox) then this is the default if the site should try to use streamsaver on that unknown environment.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_firefox
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Firefox.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ false
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.19
+* __comment:__ 
+
+
+### streamsaver_on_chrome
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Google Chrome.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_edge
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Microsoft Edge.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
+
+### streamsaver_on_safari
+* __description:__ If streamsaver_enabled is true then this controls if streamsaver is used on Safari.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.19
+* __comment:__ 
+
+
+
+
+
+
+
 
 
 ---
@@ -1403,6 +1542,31 @@ these iteration counts take to perform on your local machine.
 * __comment:__ if set to true a user will only see uploads for their guests where the can_only_send_to_me was set
   when the guest was invited or when the guest uploads the file and explicitly includes the user in the recipients.
   This may be updated in the future if we wish to force a 'must also send to me' option when inviting some guests.
+
+### guest_create_limit_per_day
+
+* __description:__ The number of guests a user can create per day
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.18
+* __comment:__ This setting is disabled when set to 0, no rate limit will be enforced.
+  If the user tries to create more than this number of guests in any 24 hour window of time
+  the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 2
+  will allow creation of 2 guests but not 3.
+
+### guest_reminder_limit_per_day
+
+* __description:__ The number of reminders to each guest that user can send per day
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.18
+* __comment:__ This setting is disabled when set to 0, no rate limit will be enforced.
+  If the user tries to send a reminder to a specific guest more than this number of times a day then
+  the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 5
+  will allow 5 reminders to be sent to a guest but not 6.
+
 
 
 

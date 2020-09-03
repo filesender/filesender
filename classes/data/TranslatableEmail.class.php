@@ -69,7 +69,7 @@ class TranslatableEmail extends DBObject
             'size' => 255
         ),
         'variables' => array(
-            'type' => 'text',
+            'type' => 'mediumtext',
             'transform' => 'json'
         ),
         'created' => array(

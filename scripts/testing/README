@@ -3,4 +3,30 @@ of the souce tree and will copy the source code to
 /opt/filesenderetest
 and modify the config file to enable local testing.
 
+When testing upload and download of files and changes to that code
+it can be useful to have random files with specific sizes. The sizes
+allow testing around chunk boundaries. To aid in this the 
+generate-testfiles-for-current-chunk-size.php and verify-testfile-download-hash.php
+have been created.
 
+The generate-testfiles-for-current-chunk-size.php takes one parameter which is
+the location to create the test files and the script will generate a collection of files
+with random data for testing.
+
+That same location can be passed to verify-testfile-download-hash.php which also expects
+the path of a downloaded file as parameter 2. The verify script will test the md5 hash
+of your nominated file against the matching file in the generated test tree and report
+if they match or not. Note that the verify script will truncate common browser additions
+such as testfile-chunk0-1(1) back to find the base file name of testfile-chunk0-1.
+
+Common usage is as follows
+
+The same generated tree can be reused as desired
+php generate-testfiles-for-current-chunk-size.php  /tmp/xx2
+
+Files can be uploaded and downloaded in many browsers
+upload /tmp/xx2/testfile-chunk0-1
+download files to ~/Download/testfile-chunk0-1(1) testfile-chunk0-1(2) testfile-chunk0-1(3) and so on
+
+Verify downloads with
+php ./verify-testfile-download-hash.php /tmp/xx2  ~/Download/testfile-chunk0-1(3)

@@ -240,8 +240,10 @@ class RestServer
                         foreach ($v as $p => $f) {
                             $request->filterOp[$p] = array();
                             foreach (array('equals', 'startWith', 'contains', 'present') as $k) {
-                                if (array_key_exists($k, $f)) {
-                                    $request->filterOp[$p][$k] = $f[$k];
+                                if (is_array($f)) {
+                                    if (array_key_exists($k, $f)) {
+                                        $request->filterOp[$p][$k] = $f[$k];
+                                    }
                                 }
                             }
                         }

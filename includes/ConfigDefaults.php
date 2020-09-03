@@ -74,6 +74,7 @@ $default = array(
     'mac_unzip_link' => 'https://theunarchiver.com/',
     'ban_extension' => 'exe,bat',
     'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
+    'internal_use_only_running_on_ci' => false,
     
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,
@@ -91,6 +92,8 @@ $default = array(
     'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 5 * 1024 * 1024,
     'chunk_upload_security' => 'key',
+    'chunk_upload_roundtriptoken_check_enabled' => false,
+    'chunk_upload_roundtriptoken_accept_empty_before' => 0,
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,
@@ -164,7 +167,9 @@ $default = array(
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
     'guest_limit_per_user' => 50,
+    'guest_create_limit_per_day' => 0,
     'guest_reminder_limit' => 50,
+    'guest_reminder_limit_per_day' => 0,
     'recipient_reminder_limit' => 50,
 
     'autocomplete' => false, 
@@ -190,7 +195,8 @@ $default = array(
     'site_logouturl' => function() {
         return Config::get('site_url').'?s=logout';
     },
-    
+
+    'admin_can_view_user_transfers_page' => false,
     'show_storage_statistics_in_admin' => true,
 
     'cloud_s3_region'   => 'us-east-1',
@@ -253,6 +259,14 @@ $default = array(
     // This allows authentication against password hashes in the local filesender db
     // with the right SAML setup.
     'using_local_saml_dbauth' => 0,
+
+    'streamsaver_enabled' => true,
+    'streamsaver_on_unknown_browser' => false,
+    'streamsaver_on_firefox' => false,
+    'streamsaver_on_chrome' => true,
+    'streamsaver_on_edge'   => true,
+    'streamsaver_on_safari' => true,
+
     
     
     'transfer_options' => array(

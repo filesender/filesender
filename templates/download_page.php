@@ -9,8 +9,12 @@
     $token = $_REQUEST['token'];
     if(!Utilities::isValidUID($token))
         throw new TokenHasBadFormatException($token);
-    
-    $recipient = Recipient::fromToken($token); // Throws
+
+    try {
+        $recipient = Recipient::fromToken($token); // Throws
+    } catch (RecipientNotFoundException $e) {
+        throw new TransferPresumedExpiredException();
+    }
     $transfer = $recipient->transfer;
     
     if($transfer->isExpired()) throw new TransferExpiredException($transfer);
@@ -58,6 +62,16 @@
     <div class="crypto_not_supported_message">
          {tr:file_encryption_disabled}
     </div>
+
+    <?php if( Browser::instance()->allowStreamSaver ) { ?>
+
+        <div class="fieldcontainer" data-option="options">
+            <input id="streamsaverenabled" name="streamsaverenabled" type="checkbox" checked="checked" />
+            <label for="streamsaverenabled">{tr:use_streamsaver_for_download}</label>
+        </div>
+    <?php } ?>
+                            
+    
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
         <div class="from">{tr:from} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></div>
@@ -94,6 +108,8 @@
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
              data-name="<?php echo $file->path; ?>"
+             data-size="<?php echo $file->size; ?>"
+             data-encrypted-size="<?php echo $file->encrypted_size; ?>"
              data-key-version="<?php echo $transfer->key_version; ?>"
              data-key-salt="<?php echo $transfer->salt; ?>"
              data-password-version="<?php echo $transfer->password_version; ?>"
@@ -112,7 +128,7 @@
                 <span class="fa fa-2x fa-download"></span>
                 {tr:download}
             </a>
-            <span class="downloadprogress"></span>
+            <span class="downloadprogress"/>
         </div>
     <?php } ?>
         <?php if($canDownloadArchive) { ?>
@@ -135,7 +151,7 @@
                 {tr:archive_tar_download}
             </a>
             </div>
-            <span class="downloadprogress"></span>
+            <span class="downloadprogress"/>
         </div>
     <?php } ?>    
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>

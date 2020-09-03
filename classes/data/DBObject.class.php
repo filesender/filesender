@@ -234,19 +234,29 @@ class DBObject
         
         return $this->id == $other;
     }
-    
+
+
     /**
-     * Get a set objects
-     *
+     * Build and return an SQL statement. Used by all() and count().
+     * 
+     * @param string selectClause sql for what elements to SELECT
      * @param string $criteria sql criteria and/or pagination options
      * @param array $placeholders
-     * @param callable $run will be applied to all objects, return values will replace objects and result will be filtered to remove nulls
-     *
-     * @return array of objects or page object
+     * 
+     * @return Statement object
      */
-    public static function all($criteria = null, $placeholders = array(), $run = null)
+    private static function buildStatement($selectClause, $criteria = null, $placeholders = array())
     {
-        $query = 'SELECT * FROM '.static::getDBTable();
+        $tablename = static::getDBTable();
+        if (is_array($criteria)) {
+            if (array_key_exists('view', $criteria)) {
+                $v = $criteria['view'];
+                if( $v ) {
+                    $tablename = $v;
+                }
+            }
+        }
+        $query = 'SELECT ' . $selectClause . ' FROM '. $tablename . ' ';
         $count = null;
         $offset = null;
         
@@ -312,6 +322,27 @@ class DBObject
         } else {
             $statement = DBI::prepare($query);
         }
+        return $statement;
+    }    
+    /**
+     * Get a set objects
+     *
+     * @param string $criteria sql criteria and/or pagination options
+     * @param array $placeholders
+     * @param callable $run will be applied to all objects, return values will replace objects and result will be filtered to remove nulls
+     *
+     * @return array of objects or page object
+     */
+    public static function all($criteria = null, $placeholders = array(), $run = null)
+    {
+        $selectClause = '*';
+        if (is_array($criteria)) {
+            if (array_key_exists('select', $criteria)) {
+                $selectClause = $criteria['select'];
+            }
+        }
+            
+        $statement = self::buildStatement( $selectClause, $criteria, $placeholders );
         
         // run it
         $statement->execute($placeholders);
@@ -321,6 +352,25 @@ class DBObject
         return self::convertTableResultsToObjects( $records, $run );
     }
 
+    /**
+     * Get count(*) for query
+     *
+     * @param string $criteria sql criteria and/or pagination options
+     * @param array $placeholders
+     *
+     * @return int count
+     */
+    public static function count($criteria = null, $placeholders = array())
+    {
+        $statement = self::buildStatement('count(*) as count',$criteria, $placeholders);
+        
+        // run it
+        $statement->execute($placeholders);
+
+        $data = $statement->fetch();
+        return $data['count'];
+    }
+    
     /**
      * convert the result of an sql query on this table to a set objects
      *
@@ -737,5 +787,29 @@ class DBObject
     public function getViewName()
     {
         return strtolower(self::getDBTable()) . 'view';
+    }
+
+    /**
+     * This is like count(*) but allows statictics to be used to very quickly
+     * return an answer that is close to the real number
+     */
+    public static function countEstimate()
+    {
+        $datakey = 'rows';
+        $placeholders = array();
+
+        $dbtype = Config::get('db_type');
+        if ($dbtype == 'pgsql') {
+            $query = "SELECT reltuples AS rows FROM pg_class WHERE lower(relname) = lower('".static::getDBTable()."')";
+            $datakey = 'rows';
+        }
+        if ($dbtype == 'mysql') {
+            $query = "show table status like '".static::getDBTable()."'";
+            $datakey = "Rows";
+        }
+        $statement = DBI::prepare($query);
+        $statement->execute($placeholders);
+        $data = $statement->fetch();
+        return $data[$datakey];
     }
 }

@@ -79,6 +79,12 @@ abbr {
     margin-bottom: 1em;
 }
 
+#headeruid {
+    background: #666 url(../images/banner-uid-900.png) no-repeat top left;
+    height: 60px;
+    margin-bottom: 1em;
+}
+
 #langmenu {
     border-radius: 0 0 0.5em 0.5em;
     -moz-border-radius: 0 0 0.5em 0.5em;
@@ -173,6 +179,11 @@ abbr {
 #menu a:hover, .current, #menu a:active {
     background-color: rgb(51,51,51);
 }
+
+#menu .red {
+    background-color: rgb(151,51,51);
+}
+
 
 #menu ul li select {
     display: block;
@@ -924,6 +935,43 @@ table.list .date {
     margin-right: 1em;
 }
 
+/* transfers page */
+
+.transfers_page .menu {
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+
+.transfers_page .menu ul {
+    display: inline;
+    float: left;
+    list-style: none outside none;
+    margin-bottom: -1px;
+}
+
+.transfers_page .menu li {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin: 0 0.3em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em 0.5em 0 0;
+    -moz-border-radius: 0.5em 0.5em 0 0;
+    cursor: pointer;
+    background-color: #ccc;
+}
+
+.transfers_page .menu li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+.transfers_page .menu li.current {
+    background-color: #fff;
+}
+
 
 /* transfers table */
 
@@ -1147,6 +1195,12 @@ table.guests .guest .to .errors .details {
 }
 
 .admin_page .menu li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+.admin_page li a {
     display: block;
     padding: 0.1em 0.5em;
     text-decoration: none;
@@ -1589,3 +1643,4 @@ div.not_displayed {
 .active {
     font-weight: bold;
 }
+

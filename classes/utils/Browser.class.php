@@ -44,14 +44,37 @@ class Browser
     protected $ua = '';
     protected $isChrome  = false;
     protected $isFirefox = false;
+    protected $isSafari  = false;
+    protected $allowStreamSaver  = false;
     
     public function __construct()
     {
         $ua = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : '';
         $this->ua = $ua;
 
-        $this->isChrome  = preg_match('/[Cc]hrome/', $ua );
+        $this->isChrome  = preg_match('/[Cc]hrome/',  $ua );
         $this->isFirefox = preg_match('/[Ff]irefox/', $ua );
+        $this->isSafari  = preg_match('/[Ss]afari/',  $ua );
+        $this->isEdge    = preg_match('/[Ee]dge/',    $ua );
+
+        if( Config::get('streamsaver_enabled')) {
+
+            $this->allowStreamSaver = Config::get('streamsaver_on_unknown_browser');
+            
+            if( $this->isFirefox ) {
+                $this->allowStreamSaver = Config::get('streamsaver_on_firefox');
+            }
+            if( $this->isChrome ) {
+                $this->allowStreamSaver = Config::get('streamsaver_on_chrome');
+            }
+            if( $this->isEdge ) {
+                $this->allowStreamSaver = Config::get('streamsaver_on_edge');
+            }
+            if( $this->isSafari ) {
+                $this->allowStreamSaver = Config::get('streamsaver_on_safari');
+            }
+            
+        }
     }
     static function instance()
     {
@@ -63,7 +86,7 @@ class Browser
     public function __get($property)
     {
         if (in_array($property, array(
-            'isChrome','isFirefox'
+            'isChrome','isFirefox','allowStreamSaver',
         ))) {
             return $this->$property;
         }

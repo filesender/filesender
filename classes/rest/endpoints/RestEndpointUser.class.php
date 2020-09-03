@@ -60,7 +60,8 @@ class RestEndpointUser extends RestEndpoint
             'created' => RestUtilities::formatDate($user->created),
             'last_activity' => RestUtilities::formatDate($user->last_activity),
             'lang' => $user->lang,
-            'frequent_recipients' => $user->frequent_recipients
+            'frequent_recipients' => $user->frequent_recipients,
+            'eventcount' => $user->eventcount,
         );
     }
     
@@ -145,6 +146,33 @@ class RestEndpointUser extends RestEndpoint
             if (!Auth::isAdmin()) {
                 throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
             }
+
+            $since = null;
+            if (array_key_exists('since', $_REQUEST)) {
+                $since = Utilities::sanitizeInput($_REQUEST['since']);
+                if( !is_numeric($since) ) {
+                    $since = null;
+                }
+            }
+            
+            if (array_key_exists('hitlimit', $_REQUEST) && $_REQUEST['hitlimit']!='') {
+                $s = Utilities::sanitizeInput($_REQUEST['hitlimit']);
+                $ttype = Utilities::sanitizeInput($_REQUEST['ttype']);
+                // Force to only valid values
+                if( $ttype != "User" && $ttype != "Guest" ) {
+                    $ttype = "User";
+                }
+                return array_map(function ($user) {
+                    return self::cast($user);
+                }, array_values(AuditLog::findUsers($s,$ttype,$since)));
+            }
+            if (array_key_exists('hitlimitbycount', $_REQUEST)) {
+                $s = Utilities::sanitizeInput($_REQUEST['hitlimitbycount']);
+
+                return array_map(function ($user) {
+                    return self::cast($user);
+                }, array_values(AuditLog::findUsersOrderedByCount($s,'User',$since)));
+            }
             
             if (!array_key_exists('match', $_REQUEST)) {
                 throw new RestMissingParameterException('match');
@@ -161,17 +189,7 @@ class RestEndpointUser extends RestEndpoint
         }
         
         if ($property == 'frequent_recipients') {
-            // Get frequent recipients with optionnal filter
-            $rcpt = array();
-            
-            if (
-                array_key_exists('email', $this->request->filterOp)
-                && array_key_exists('contains', $this->request->filterOp['email'])
-            ) {
-                $rcpt = $this->getFrequentRecipients($this->request->filterOp['email']['contains']);
-            }
-            
-            return $rcpt;
+            throw new RestUsePOSTException();
         }
         
         if ($property == 'quota') {
@@ -360,17 +378,42 @@ class RestEndpointUser extends RestEndpoint
         if (!Auth::isAuthenticated()) {
             throw new RestAuthenticationRequiredException();
         }
-        if(!Config::get('using_local_saml_dbauth')) {
-            throw new RestAuthenticationRequiredException();
+        // ... and not guest
+        if (Auth::isGuest()) {
+            throw new RestOwnershipRequiredException((string)AuthGuest::getGuest(), 'user_info');
         }
         
         $user = Auth::user();
         $userid = -1;
         $data = $this->request->input;
+
+
+        if ($data->property == 'frequent_recipients') {
+            // Get frequent recipients with optionnal filter
+            $ret = $this->getFrequentRecipients( $data->needle );
+            return array(
+                'path' => '/user/'.$user->id,
+                'data' => $ret
+            );
+            
+        }
+
+        
+        /////////
+        //
+        // WARNING
+        //
+        // From here down we are only handling updates to local user and password
+        // when local_saml_db_auth is in place
+        // 
+        // The user/password options are only for local db auth
+        if(!Config::get('using_local_saml_dbauth')) {
+            throw new RestAuthenticationRequiredException();
+        }
         // Raw data
         $username = $data->username;
         $password = $data->password;
-        
+
         if ($username != "@me" && !Auth::isAdmin()) {
             throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
         }
@@ -383,18 +426,28 @@ class RestEndpointUser extends RestEndpoint
             if(!Auth::isAdmin()) {
                 throw new RestOwnershipRequiredException($userid, 'user = '.$userid);
             }
+
+            // Get matching user
+            $authid = Authentication::ensureAuthIDFromSAMLUID($username);
+            $user = User::fromAuthId($authid);
+            $user->email_addresses = $username;
+            
             $user->remindLocalAuthDBPassword( $password );
             return array(
-                'path' => '/user/'.$username
+                'path' => '/user/'.$username,
+                'data' => ''
             );
         }
         
         $aa = Authentication::ensure( $username );
         $aa->password = $password;
         $aa->save();
+        $user = User::fromAuthID($aa->id);
+        $user->save();
 
         return array(
-            'path' => '/user/'.$username
+            'path' => '/user/'.$username,
+            'data' => ''
         );
         
     }

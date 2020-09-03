@@ -91,7 +91,7 @@ $(function() {
         var id = $(this).closest('[data-transfer]').attr('data-id');
         if(!id || isNaN(id)) return;
         
-        if($(this).closest('table').filter('[data-mode="admin"][data-status="available"]')) {
+        if($(this).closest('table').is('[data-mode="admin"][data-status="available"]')) {
             var d = filesender.ui.chooseAction(['delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
                 var done = function() {
                     $('[data-transfer][data-id="' + id + '"]').remove();
@@ -110,7 +110,7 @@ $(function() {
                         break;
                 }
             });
-        } else if($(this).closest('table').filter('[data-mode="admin"][data-status="uploading"]')) {
+        } else if($(this).closest('table').is('[data-mode="admin"][data-status="uploading"]')) {
             filesender.ui.confirm(lang.tr('stop_transfer_upload'), function() {
                 filesender.client.deleteTransfer(id, function() {
                     $('[data-transfer][data-id="' + id + '"]').remove();
@@ -339,6 +339,18 @@ $(function() {
             filesender.ui.relocatePopup(popup);
         });
     });
+
+    // Transfer options
+    $('.transfer_options [data-action="remove"]').on('click', function() {
+        var id = $(this).closest('[data-transfer]').attr('data-id');
+        if(!id || isNaN(id)) return;
+        
+        filesender.ui.confirm(lang.tr('confirm_remove_daily_stats_transfer'), function() {
+            filesender.client.removeTransferOption(id, 'email_daily_statistics', function() {
+                filesender.ui.notify('success', lang.tr('transfer_option_modified'));
+            });
+        });
+    });
     
     // File delete buttons
     $('.transfer_details .file [data-action="delete"]').on('click', function() {
@@ -370,6 +382,8 @@ $(function() {
         var id = $(this).attr('data-id');
         var encrypted = $(this).attr('data-encrypted');
         var filename = $(this).attr('data-name');
+        var filesize = $(this).attr('data-size');
+        var encrypted_filesize = $(this).attr('data-encrypted-size');
         var mime = $(this).attr('data-mime');
         var key_version = $(this).attr('data-key-version');
         var salt = $(this).attr('data-key-salt');
@@ -386,13 +400,16 @@ $(function() {
         if (typeof id == 'string'){
             id = [id];
         }
+        
         window.filesender.crypto_app().decryptDownload(
             filesender.config.base_path + 'download.php?files_ids=' + id.join(','),
-            mime, filename, key_version, salt,
+            mime, filename,
+            filesize, encrypted_filesize,
+            key_version, salt,
             password_version, password_encoding,
             password_hash_iterations,
             client_entropy,
-            window.filesender.crypto_app().decodeCryptoFileIV(fileiv),
+            window.filesender.crypto_app().decodeCryptoFileIV(fileiv,key_version),
             fileaead
         );
 

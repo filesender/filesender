@@ -192,6 +192,32 @@ window.filesender.client = {
                     filesender.client.authentication_required.text(lang.tr('authentication_required_explanation'));
                     return;
                 }
+
+
+                if( error.message == 'rest_roundtrip_token_invalid')
+                {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.rest_roundtrip_token_invalid,
+                                        function() {} );
+                    return;
+                }
+
+                if( error.message == 'guest_reminder_rate_limit_reached')
+                {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.guest_reminder_rate_limit_reached,
+                                        function() {} );
+                    return;
+                }
+
+                if( error.message == 'user_hit_guest_rate_limit')
+                {
+                    filesender.ui.alert('error',
+                                        filesender.config.language.user_hit_guest_rate_limit,
+                                        function() {} );
+                    return;
+                }
+                
                 
                 if(error.message == 'undergoing_maintenance') {
                     if(filesender.client.maintenance) return;
@@ -671,9 +697,14 @@ window.filesender.client = {
     
     
     getFrequentRecipients: function(needle, callback) {
-        return this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[email][contains]': needle}} : undefined);
+        return this.post('/user/@me',
+                         {
+                             property: 'frequent_recipients',
+                             needle: needle
+                         },
+                         callback );
     },
-    
+
     getTransferOption: function(id, option, token, callback) {
         return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
@@ -750,8 +781,11 @@ window.filesender.client = {
     },
 
     remindLocalAuthDBPassword: function(id, password, callback ) {
-        return this.post('/user/' + id, {remind: true, username: id, password, password }, callback );
+        return this.post('/user/' + id, {remind: true, username: id, password: password }, callback );
     },
     
+    removeTransferOption: function(id, tropt, callback) {
+        return this.put('/transfer/' + id, {'optionremove':true, option: tropt}, callback);
+    },
 
 };

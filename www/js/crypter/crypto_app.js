@@ -1,3 +1,4 @@
+
 if (typeof window === 'undefined')
     window = {}; // dummy window for use in webworkers
 
@@ -6,8 +7,11 @@ if (!('filesender' in window))
 if (!('ui' in window.filesender)) {
     window.filesender.ui = {};
     window.filesender.ui.log = function(e) {
-        console.log(e);
+        window.filesender.log(e);
     }
+}
+window.filesender.log = function( msg ) {
+    console.log( msg );
 }
 
 Uint8Array.prototype.equals = function (a) {
@@ -20,23 +24,26 @@ if (!('key_cache' in window.filesender)) {
 
 if (!('onPBKDF2Starting' in window.filesender)) {
     window.filesender.onPBKDF2Starting = function() {
-        console.log("crypto_app onPBKDF2Starting()");
+        window.filesender.log("crypto_app onPBKDF2Starting()");
     };
 }
 if (!('onPBKDF2Ended' in window.filesender)) {
     window.filesender.onPBKDF2Ended = function() {
-        console.log("crypto_app onPBKDF2Ended()");
+        window.filesender.log("crypto_app onPBKDF2Ended()");
     };
 }
 if (!('onPBKDF2AllEnded' in window.filesender)) {
     window.filesender.onPBKDF2AllEnded = function() {
-        console.log("crypto_app onPBKDF2AllEnded()");
+        window.filesender.log("crypto_app onPBKDF2AllEnded()");
     };
 }
 
+window.filesender.crypto_app_downloading = false;
 
-
-
+/*
+ * Main entry points
+ *   decryptDownload()
+ */
 window.filesender.crypto_app = function () {
     return {
         crypto_is_supported: true,
@@ -44,6 +51,7 @@ window.filesender.crypto_app = function () {
         crypto_iv_len:       window.filesender.config.crypto_iv_len,
         crypto_crypt_name:   window.filesender.config.crypto_crypt_name,
         crypto_hash_name:    window.filesender.config.crypto_hash_name,
+        upload_crypted_chunk_size: window.filesender.config.upload_crypted_chunk_size,
         // random passwords should be 32 octects (256 bits) of entropy.
         crypto_client_entropy_octets: 32,
         crypto_random_password_octets: 32,
@@ -82,7 +90,9 @@ window.filesender.crypto_app = function () {
             //
             v2019_generated_password_that_is_full_256bit: 2
         },
-        
+        // Allow client of this class to force the use of streamsaver off
+        // for example, to respect a checkbox from the UI
+        disable_streamsaver: false,
 
         /**
          * This turns a filesender chunkid into a 4 byte array
@@ -190,10 +200,9 @@ window.filesender.crypto_app = function () {
                 window.filesender.config.encryption_key_version_new_files);
             return $this.generateBase64EncodedEntropy(numOctets);
         },
-        decodeCryptoFileIV: function( b64data ) {
+        decodeCryptoFileIV: function( b64data, key_version ) {
             var $this = this;
-            var numOctets = $this.getNumberOctetsForIV(
-                window.filesender.config.encryption_key_version_new_files);
+            var numOctets = $this.getNumberOctetsForIV(key_version);
             return $this.decodeBase64EncodedEntropy(b64data,numOctets);
         },
         /**
@@ -298,7 +307,7 @@ window.filesender.crypto_app = function () {
                     setTimeout(
                         function(){
                     
-                            console.log("***** USING CUSTOM CODE ON PASSWORD ****");
+                            window.filesender.log("***** USING CUSTOM CODE ON PASSWORD ****");
                             
                             window.filesender.asmcrypto().importKeyFromPasswordUsingPBKDF2(
                                 passwordBuffer,
@@ -466,18 +475,18 @@ window.filesender.crypto_app = function () {
             
 
             var keydesc = JSON.stringify(encryption_details);
-            console.log("keygen: keydesc cache size " + window.filesender.key_cache.size );
+            window.filesender.log("keygen: keydesc cache size " + window.filesender.key_cache.size );
             
             var k = window.filesender.key_cache.get( keydesc );
             if( k ) {
-                console.log("keygen: reusing existing key");
+                window.filesender.log("keygen: reusing existing key");
                 callback( k );
                 return;
             }
 
             // there was no key, really generate one and set it in the
             // cache before calling the passed 'ok' callback.
-            console.log("keygen: generating key for this thread/worker");
+            window.filesender.log("keygen: generating key for this thread/worker");
             this.generateKey(chunkid, encryption_details,
                              function (key) {
                                  window.filesender.key_cache.set(keydesc, key );
@@ -563,13 +572,13 @@ window.filesender.crypto_app = function () {
                         
                             var joinedData = window.filesender.crypto_common().joinIvAndData(iv, new Uint8Array(result));
 
-                            // this is the base64 variant. this will result in a larger string to send
+                        // this is the base64 variant. this will result in a larger string to send
                             var btoaData = btoa(
                                 // This string contains all kind of weird characters
                                 window.filesender.crypto_common().convertArrayBufferViewtoString(
                                         joinedData
                                     )
-                                );
+                            );
 
                             callback(btoaData);
                         },
@@ -584,173 +593,313 @@ window.filesender.crypto_app = function () {
                 window.filesender.ui.log(e);
             });
         },
-        decryptBlob: function (value, encryption_details, callbackDone, callbackProgress, callbackError) {
+        //
+        // These are checks to be performed on every crypted chunk
+        //
+        // i is the chunkid
+        // value is from separateIvFromData()
+        // decryptParams can be modified for example to add AEAD to the object
+        //
+        decryptBlobSpecificCryptoChunkChecks: function( i, value, encryption_details, decryptParams, callbackError )
+        {
             var $this = this;
             var key_version = encryption_details.key_version;
-            var client_entropy = new Uint8Array(16);
-            // For GCM this will be the fileiv (96 bits of fixed entropy).
-            var expected_fixed_chunk_iv = new Uint8Array(16);
-            var aead = {};
-            
-            /*
-             * Algorithm specific assertions.
-             */
+
+            window.filesender.log("decryptBlobSpecificCryptoChunkChecks(enter)");
+
+            // GCM checks
             if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
                 key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
             {
-                if( encryption_details.fileiv.length != $this.crypto_gcm_per_file_iv_octet_size )
+
+                // Check IV random 96 bits are the same
+                if( !encryption_details.expected_fixed_chunk_iv.equals(
+                    value.iv.slice(0,$this.crypto_gcm_per_file_iv_octet_size))  )
                 {
-                    return callbackError({message: 'decryption_verification_failed_bad_fixed_iv',
-                                          details: {}});
-                }
-                expected_fixed_chunk_iv = encryption_details.fileiv;
-
-                // assert that we know the version of AEAD structure
-                // and the the chunk size has not changed, and we expect
-                // the same number of chunks as the AEAD stipulates
-                if( !encryption_details.fileaead || !encryption_details.fileaead.length  ) {
-                    return callbackError({message: 'decryption_verification_failed_bad_aead',
-                                          details: {}});
-                }
-                aead = JSON.parse(encryption_details.fileaead);
-                if( aead.aeadversion != 1 ) {
-                    return callbackError({message: 'decryption_verification_failed_bad_aead',
-                                          details: {}});
-                }
-                if( aead.chunksize != window.filesender.config.upload_chunk_size ) {
-                    return callbackError({message: 'decryption_verification_failed_bad_aead',
-                                          details: {}});
-                }
-                if( !aead.iv ) {
-                    return callbackError({message: 'decryption_verification_failed_bad_aead',
-                                          details: {}});
-                }
-
-                // Make sure that the 96bits of entropy from the file iv contained in
-                // AEAD matches the 96bits of the expected IV that was sent
-                // from the server
-                var aeadiv = $this.decodeCryptoFileIV(aead.iv);
-                if( !expected_fixed_chunk_iv.equals(aeadiv)) {
-                    return callbackError({message: 'decryption_verification_failed_bad_aead',
+                    window.filesender.log("decryptBlobSpecificCryptoChunkChecks() invalid iv");
+                    return callbackError({message: 'decryption_verification_failed_invalid_iv',
                                           details: {}});
                 }
                 
+                // Check that chunkid from IV matches expected chunkid
+                var ivchunkid = $this.extractChunkIDFromIV( value.iv );
+                if( ivchunkid == -1 ) {
+                    window.filesender.log("decryptBlobSpecificCryptoChunkChecks() bad iv chunkid");
+                    return callbackError({message: 'decryption_verification_failed_bad_ivchunkid',
+                                          details: {}});
+                }
+                if( i != ivchunkid ) {
+                    window.filesender.log("decryptBlobSpecificCryptoChunkChecks() unexpected iv chunkid");
+                    return callbackError({message: 'decryption_verification_failed_unexpected_ivchunkid',
+                                          details: {}});
+                }
             }
 
-            // decode client entropy if we have it
-            if( encryption_details.client_entropy &&
-                encryption_details.client_entropy.length )
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
             {
-                client_entropy = $this.decodeClientEntropy( encryption_details.client_entropy );
+                decryptParams.additionalData = window.filesender.crypto_common().convertStringToArrayBufferView(
+                    encryption_details.fileaead);
             }
+            
+            window.filesender.log("decryptBlobSpecificCryptoChunkChecks(exit)");
+        },
 
-            var encryptedData = value; // array buffers array
+        /*
+         * These are final validation checks for a crypted file download. 
+         */
+        decryptBlobSpecificFinalChunkChecks: function( i, value, encryption_details, callbackError )
+        {
+            var $this = this;
+            var key_version = encryption_details.key_version;
+
+            // AES-GCM: a final check to see that we are stopping at the correct chunk
+            // number and the server has not sent fewer chunks than we expect
+            // We have it all, and only it all. No less, No more.
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                // first chunk is i=0, but there is 1 chunk at that point.
+                var expectedchunkcount = i+1;
+                if( encryption_details.aead.chunkcount != expectedchunkcount ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 1");
+                    return callbackError({message: 'decryption_verification_failed_bad_aead',
+                                          details: {}});
+                }
+            }
+            
+        },
+        decryptBlob: function (chunkid,encryptedChunk, encryption_details, key, blobSink, callbackNext, callbackDone, callbackError) {
+            var $this = this;
+            var key_version = encryption_details.key_version;
             var blobArray = [];
+	    var wrongPassword = false;
 
             try {
-                var chunkid = 0;
-                this.obtainKey(chunkid, encryption_details, function (key) {
-		    var wrongPassword = false;
-		    var decryptLoop = function(i) {
-                        
-		        callbackProgress(i,encryptedData.length); //once per chunk
-                        var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
+                    
+                var value = encryptedChunk;
+                var decryptParams = {
+                    // See the comment for encryptParams above for info.
+                    name: $this.crypto_crypt_name,
+                    iv: value.iv
+                };
 
-                        // GCM checks
-                        if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
-                            key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
-                        {
-                            
-                            // Check IV random 96 bits are the same
-                            if( !expected_fixed_chunk_iv.equals(value.iv.slice(0,$this.crypto_gcm_per_file_iv_octet_size))  ) {
-                                return callbackError({message: 'decryption_verification_failed_invalid_iv',
-                                                      details: {}});
-                            }
-                            
-                            // Check that chunkid from IV matches expected chunkid
-                            var ivchunkid = $this.extractChunkIDFromIV( value.iv );
-                            if( ivchunkid == -1 ) {
-                                return callbackError({message: 'decryption_verification_failed_bad_ivchunkid',
-                                                      details: {}});
-                            }
-                            if( i != ivchunkid ) {
-                                return callbackError({message: 'decryption_verification_failed_unexpected_ivchunkid',
-                                                      details: {}});
-                            }
+                $this.decryptBlobSpecificCryptoChunkChecks( chunkid, value, encryption_details,
+                                                            decryptParams,
+                                                            callbackError );
+
+                window.filesender.log("decryptBlob()" );
+                
+                crypto.subtle.decrypt(decryptParams, key, value.data).then(
+                    function (result) {
+                        var blobArrayBuffer = new Uint8Array(result);
+                        blobSink.visit(chunkid,blobArrayBuffer);
+                        // done
+                        if( chunkid == encryption_details.chunkcount ) {
+
+                            window.filesender.log("decryptBlob() done" );
+                            $this.decryptBlobSpecificFinalChunkChecks( chunkid,
+                                                                       encryption_details,
+                                                                       callbackError );
+                            callbackDone(blobSink);
                         }
-                        
-                        // See the comment for encryptParams above for info.
-                        var decryptParams = {
-                            name: $this.crypto_crypt_name,
-                            iv: value.iv
-                        };
-
-                        if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
-                            key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+                        else
                         {
-                            decryptParams.additionalData = window.filesender.crypto_common().convertStringToArrayBufferView(
-                                encryption_details.fileaead);
+                            callbackNext();
                         }
-                        
-                        crypto.subtle.decrypt(decryptParams, key, value.data).then(
-                            function (result) {
-                                var blobArrayBuffer = new Uint8Array(result);
-                                blobArray.push(blobArrayBuffer);
-                                // done
-                                if (blobArray.length === encryptedData.length) {
-
-                                    // AES-GCM: a final check to see that we are stopping at the correct chunk
-                                    // number and the server has not sent fewer chunks than we expect
-                                    // We have it all, and only it all. No less, No more.
-                                    if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
-                                        key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
-                                    {
-                                        // first chunk is i=0, but there is 1 chunk at that point.
-                                        var expectedchunkcount = i+1;
-                                        if( aead.chunkcount != expectedchunkcount ) {
-                                            return callbackError({message: 'decryption_verification_failed_bad_aead',
-                                                                  details: {}});
-                                        }
-                                    }
-                                    callbackDone(blobArray);
-                                }
-                                else
-                                {
-                                    // not done, so decrypt some more
-                                    if (i<encryptedData.length){
-                                        setTimeout(decryptLoop(i+1),300);
-                                    }
-                                }
-                            },
-                            function (e) {
-                                if (!wrongPassword) {
-                                    wrongPassword=true;
-                                    callbackError(e);
-                                }
-                            }
-		        );
-                    };
-		    decryptLoop(0);
-                },
-                function (e) {
-                    // error occured during obtainkey
-                    window.filesender.ui.log(e);
-                });
+                    },
+                    function (e) {
+                        window.filesender.log("decrypt(e)");
+                        window.filesender.log(e);
+                        if (!wrongPassword) {
+                            wrongPassword=true;
+                            callbackError(e);
+                        }
+                    }
+		);
             }
             catch(e) {
                 callbackError(e);                
             }            
         },
+        /*
+         * This method mainly focuses on creating an XMLHttpRequest to download the
+         * byte range for the desired chunk. There are some adjustments for padding 
+         * that have to be done which are handled by this method.
+         *
+         * Once a chunk has been downloaded decryptBlob() is called to decrypt and process it.
+         * In order to keep the download progressing, the callbackNext for decryptBlob is
+         * set to call ourself (downloadAndDecryptChunk) with the next chunkid.
+         * 
+         * So offset ranges and network are handled in this method, decryption is handled in
+         * decryptBlob() which this method calls.
+         */
+        downloadAndDecryptChunk: function (chunkid, link, progress,
+                                           encryption_details, key,
+                                           blobSink,
+                                           callbackDone, callbackProgress, callbackError)
+        {
+            var $this = this;
+            window.filesender.log("downloadAndDecryptChunk(top) chunkid " + chunkid + " of " + encryption_details.chunkcount );
+            
+            // Decrypt the contents of the file
+            var oReq = new XMLHttpRequest();
+            oReq.open("GET", link, true);
+            oReq.responseType = "arraybuffer";
+            var chunksz     = 1 * $this.crypto_chunk_size;
+            var startoffset = 1 * (chunkid * chunksz);
+            var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
+            var legacyChunkPadding = 0;
+
+            //
+            // There are some extra things to do for streaming legacy type files
+            //
+            if( encryption_details.key_version == $this.crypto_key_version_constants.v2018_importKey_deriveKey ||
+                encryption_details.key_version == $this.crypto_key_version_constants.v2017_digest_importKey )
+            {
+                legacyChunkPadding = 1;
+            }
+
+            //
+            // Handle last chunk details, some offsets might need to change slightly
+            //
+            if( chunkid == encryption_details.chunkcount ) {
+                var padding = (1*$this.upload_crypted_chunk_size) - (1* $this.crypto_chunk_size);
+                var blockPad = 32;
+
+                window.filesender.log("downloadAndDecryptChunk(last chunk offset adjustment) "
+                                      + " legacyPadding " + legacyChunkPadding
+                                      + " ccs "  + $this.crypto_chunk_size
+                                      + " uccs " + $this.upload_crypted_chunk_size
+                                      + " soffset " + startoffset
+                                      + " soffsetcc " + (1 * (chunkid * $this.upload_crypted_chunk_size))
+                                     );
+                window.filesender.log("downloadAndDecryptChunk(last chunk offset adjustment) "
+                                      + " eoffset " + endoffset
+                                      + " fs " + encryption_details.filesize
+                                      + " efs " + encryption_details.encrypted_filesize
+                                     );
+                
+                endoffset = (1*encryption_details.filesize) + blockPad - 1;
+                if( encryption_details.key_version < 2 ) {
+                    endoffset -= 4;
+                }
+                if( !chunkid ) {
+                    endoffset = encryption_details.encrypted_filesize - 1;
+                }
+                if( chunkid > 0 && legacyChunkPadding ) {
+
+                    var fs = (1*encryption_details.filesize);
+                    fs = fs % chunksz;
+                    if( fs == 0 ) {
+                        fs = chunksz;
+                    }
+                    
+                    endoffset = 1 * (chunkid * chunksz + fs + blockPad - (fs%16)) -1;
+                    window.filesender.log("downloadAndDecryptChunk(legacyPadding) new eoffset " + endoffset );
+                    
+                }
+
+                window.filesender.log("downloadAndDecryptChunk(adjustments done) "
+                                      + " eoffset " + endoffset
+                                      + " padding " + padding );
+            }
+            
+            var brange = 'bytes=' + startoffset + '-' + endoffset;
+            oReq.setRequestHeader('Range', brange);
+
+            //Download progress
+            oReq.addEventListener("progress", function(evt){
+                window.filesender.log("downloadAndDecryptChunk(progress) chunkid " + chunkid
+                                      + " loaded " + evt.loaded + " of total " + evt.total );
+                if (evt.lengthComputable) {
+                    var percentComplete = Math.round(evt.loaded / (1*$this.upload_crypted_chunk_size) *10000) / 100;
+                    if (progress) {
+
+                        var msg = lang.tr('download_chunk_progress').r({chunkid: chunkid,
+                                                                        chunkcount: encryption_details.chunkcount,
+                                                                        percentofchunkcomplete: percentComplete.toFixed(2)
+                                                                       }).out();
+                        progress.html(msg);
+                    }
+                }
+            }, false);
+
+            var transferError = function (error) {
+                window.filesender.log(error);
+                window.filesender.ui.error(error);
+                if (progress){
+                    progress.html("");
+                }
+            };
+
+            //
+            // When bad things happen
+            //
+            oReq.addEventListener("error", function(evt) {
+                window.filesender.log("oReq error: " + evt.toString());
+                transferError(lang.tr('download_error').out());
+                return;
+            });
+            oReq.addEventListener("abort", function(evt) {
+                transferError(lang.tr('download_error_abort').out());
+                return;
+            });
+            
+
+            //
+            // Primary path
+            // When we get the chunk data (or an XHR error)
+            //
+            oReq.onload = function (oEvent) {
+                window.filesender.log("ddChunk(onload)");
+                
+                // check for a redirect containing and error and halt if so
+                if( $this.handleXHRError( oReq, link, 'file_encryption_wrong_password' )) {
+                    return;
+                }
+
+                //
+                // call decryptBlob to handle this chunk and pass a "next"
+                // function to decryptBlob which will call us for the next chunk.
+                var arrayBuffer = new Uint8Array(oReq.response);
+                setTimeout(function(){
+
+                    var sliced = window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer);
+                    var encryptedChunk = window.filesender.crypto_common().separateIvFromData(sliced[0]);
+                    
+                    $this.decryptBlob(
+                        chunkid,
+                        encryptedChunk,
+                        encryption_details, key,
+                        blobSink,
+                        function() {
+                            $this.downloadAndDecryptChunk( chunkid+1, link, progress,
+                                                           encryption_details, key,
+                                                           blobSink,
+                                                           callbackDone, callbackProgress, callbackError);
+                        },
+                        callbackDone, callbackError );
+                }, 20);
+            };
+            
+            // start downloading this chunk
+            oReq.send();
+        },
+        
         /**
+         * Display an error message to the user in has the XHR error
+         * is fatal.
+         *
          * @return true if there was an error and code should halt.
          */
         handleXHRError: function( xhr, link, defaultMsg )
         {
             if(xhr.responseURL && xhr.responseURL.includes("/?s=exception&"))
             {
-                console.log("handleXHRError() XHR ERROR DETECTED");
-                console.log("link " + link );
-                console.log("got  " + xhr.responseURL );
+                window.filesender.log("handleXHRError() XHR ERROR DETECTED");
+                window.filesender.log("link " + link );
+                window.filesender.log("got  " + xhr.responseURL );
 
                 var message = defaultMsg;
                 var url = new URL(xhr.responseURL);
@@ -760,7 +909,7 @@ window.filesender.crypto_app = function () {
                         var jc = JSON.parse(atob(c));
                         if( jc ) {
                             message = jc.message;
-                            console.log("have untranslated message: " + message );
+                            window.filesender.log("have untranslated message: " + message );
                         }
                     } catch( e ) {
                         // use default message if base64 decode failed.
@@ -777,85 +926,254 @@ window.filesender.crypto_app = function () {
             return false;
         },
         /**
-         *
+         * This is the main entry point to download an encrypted file.
+         * The method sets up an encryption_details object, does some crypto checks that can be 
+         * done early, for example, making sure AEAD data seems valid (data present and some checks).
+         * 
+         * Then a password is requested, a key is setup, and a sink is created to save decrypted data
+         * depending on which features the browser supports. 
+         * Finally downloadAndDecryptChunk() is used to start streaming the chunks down to this system.
+         * 
          * @param fileiv is the decoded fileiv. Decoding can be done with decodeCryptoFileIV()
          */
-        decryptDownload: function (link, mime, name, key_version, salt,
+        decryptDownload: function (link, mime, name, filesize, encrypted_filesize,
+                                   key_version, salt,
                                    password_version, password_encoding, password_hash_iterations,
                                    client_entropy, fileiv, fileaead,
                                    progress) {
             var $this = this;
+            var encryption_details = { password:           '',
+                                       filesize:           filesize,
+                                       encrypted_filesize: encrypted_filesize,
+                                       // zero based count.
+                                       chunkcount: Math.ceil( filesize / (1* $this.crypto_chunk_size))-1,
+                                       key_version:       key_version,
+                                       salt:              salt,
+                                       password_version:  password_version,
+                                       password_encoding: password_encoding,
+                                       password_hash_iterations: password_hash_iterations,
+                                       client_entropy:    client_entropy,
+                                       fileiv:            fileiv,
+                                       fileaead:          fileaead
+                                     };
+            // For GCM this will be the fileiv (96 bits of fixed entropy).
+            encryption_details.expected_fixed_chunk_iv = new Uint8Array(16);
+            encryption_details.aead = {};
+            encryption_details.client_entropy_decoded = new Uint8Array(16);
+
+            // Should we use streamsaver for this download?
+            window.filesender.config.use_streamsaver = window.filesender.config.allow_streamsaver;
+            if( this.disable_streamsaver ) {
+                window.filesender.config.use_streamsaver = false;
+            }
+            window.filesender.log('StreamSaver info. config.allow ' + window.filesender.config.allow_streamsaver
+                                  + ' this.disable ' + this.disable_streamsaver
+                                  + ' config.use ' + window.filesender.config.use_streamsaver );
+
+            if( window.filesender.config.use_streamsaver ) {
+                const ponyfill = window.WebStreamsPolyfill || {};
+                streamSaver.WritableStream = ponyfill.WritableStream;
+                streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
+                streamSaver.WritableStream = ponyfill.WritableStream;
+            }
+
+
+            /*
+             * This error callback allows for more detail to be given if one of the
+             * prior to crypto Algorithm specific assertions fails.
+             */
+            var callbackError = function (error) {
+                window.filesender.log(error);
+                window.filesender.ui.error(error);
+                if (progress){
+                    progress.html("");
+                }
+            };
+
+            /*
+             * Algorithm specific assertions.
+             */
+            if( key_version == $this.crypto_key_version_constants.v2019_gcm_digest_importKey ||
+                key_version == $this.crypto_key_version_constants.v2019_gcm_importKey_deriveKey )
+            {
+                if( encryption_details.fileiv.length != $this.crypto_gcm_per_file_iv_octet_size )
+                {
+                    return callbackError({message: 'decryption_verification_failed_bad_fixed_iv',
+                                          details: {}});
+                }
+                encryption_details.expected_fixed_chunk_iv = encryption_details.fileiv;
+
+                // assert that we know the version of AEAD structure
+                // and the the chunk size has not changed, and we expect
+                // the same number of chunks as the AEAD stipulates
+                if( !encryption_details.fileaead || !encryption_details.fileaead.length  ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 2");
+                    return callbackError({message: 'decryption_verification_failed_bad_aead',
+                                          details: {}});
+                }
+                encryption_details.aead = JSON.parse(encryption_details.fileaead);
+                if( encryption_details.aead.aeadversion != 1 ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 3");
+                    return callbackError({message: 'decryption_verification_failed_bad_aead',
+                                          details: {}});
+                }
+                if( encryption_details.aead.chunksize != window.filesender.config.upload_chunk_size ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 4");
+                    return callbackError({message: 'decryption_verification_failed_bad_aead',
+                                          details: {}});
+                }
+                if( !encryption_details.aead.iv ) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 5");
+                    return callbackError({message: 'decryption_verification_failed_bad_aead',
+                                          details: {}});
+                }
+
+                // Make sure that the 96bits of entropy from the file iv contained in
+                // AEAD matches the 96bits of the expected IV that was sent
+                // from the server
+                var aeadiv = $this.decodeCryptoFileIV(encryption_details.aead.iv,key_version);
+                if( !encryption_details.expected_fixed_chunk_iv.equals(aeadiv)) {
+                    window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 6");
+                    return callbackError({message: 'decryption_verification_failed_bad_aead',
+                                          details: {}});
+                }
+                
+            }
+
+            // decode client entropy if we have it
+            if( encryption_details.client_entropy &&
+                encryption_details.client_entropy.length )
+            {
+                encryption_details.client_entropy_decoded =
+                    $this.decodeClientEntropy(
+                        encryption_details.client_entropy );
+            }
+
+            
+            //
+            // Perhaps we should change the default policy from converting errors
+            // to assumed password failures.
+            //
+            callbackError = function (error) {
+                window.filesender.log(error);
+                window.filesender.crypto_app_downloading = false;
+                alert( window.filesender.config.language.file_encryption_wrong_password );
+                if (progress){
+                    progress.html(window.filesender.config.language.file_encryption_wrong_password);
+                }
+            };
+            
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
+                encryption_details.password = pass;
 
-                // Decrypt the contents of the file
-                var oReq = new XMLHttpRequest();
-                oReq.open("GET", link, true);
-                oReq.responseType = "arraybuffer";
+                $this.obtainKey(
+                    0, encryption_details,
+                    function (key) {
+                        var chunkid = 0;
 
-                //Download progress
-                oReq.addEventListener("progress", function(evt){
-                        if (evt.lengthComputable) {
-                                var percentComplete = Math.round(evt.loaded / evt.total *10000)/100;
-                                if (progress) progress.html(window.filesender.config.language.downloading+": "+percentComplete.toFixed(2)+" %");
-                        }
-                }, false);
+                        /*
+                         * This is a blob visitor that performs a legacy (as of mid 2020)
+                         * chunked download. The legacy code has been brought forward to allow
+                         * older browsers to continue to work. The old style code creates a blob array
+                         * with all the data and saves it in one go at the end of download.
+                         * 
+                         * As decrypted data is visit()ed it is pushed onto a blob array.
+                         * When done() is called on this object the collected blob array 
+                         * is handed off to saveAs() for storage.
+                         * 
+                         * This is very RAM intensive but where browsers do not support more modern
+                         * features it will at least work up to the point that encrypted files are too
+                         * large to be temporarily held in RAM. 
+                         */
+                        var blobSinkLegacy = {
+                            blobArray: [],
+                            // keep a tally of bytes processed to make sure we get everything.
+                            bytesProcessed: 0,
+                            expected_size: encryption_details.filesize,
+                            callbackError: callbackError,
+                            visit: function(chunkid,decryptedData) {
+                                window.filesender.log("blobSinkLegacy visiting chunkid " + chunkid + "  data.len " + decryptedData.length );
+                                this.blobArray.push(decryptedData);
+                                this.bytesProcessed += decryptedData.length;
+                            },
+                            done: function() {
+                                window.filesender.log("blobSinkLegacy.done()");
+                                window.filesender.log("blobSinkLegacy.done()      expected size " + encryption_details.filesize );
+                                window.filesender.log("blobSinkLegacy.done() decryped data size " + this.bytesProcessed );
 
-                //on file arrived
-                oReq.onload = function (oEvent) {
-                        // check for a redirect containing and error and halt if so
-                        if( $this.handleXHRError( oReq, link, 'file_encryption_wrong_password' )) {
-                            return;
-                        }
-                        if (progress){
-                            progress.html(window.filesender.config.language.decrypting+"...");
-                        }
-                    
-                        // hands over to the decrypter
-                        var arrayBuffer = new Uint8Array(oReq.response);
-                        setTimeout(function(){
-                            $this.decryptBlob(
-                                window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
-                                { password: pass,
-                                  key_version: key_version, salt: salt,
-                                  password_version:  password_version,
-                                  password_encoding: password_encoding,
-                                  password_hash_iterations: password_hash_iterations,
-                                  client_entropy: client_entropy,
-                                  fileiv: fileiv,
-                                  fileaead: fileaead
-                                },
-                                function (decrypted) {
-                                    var blob = new Blob(decrypted, {type: mime});
-                                    saveAs(blob, name);
-                                    if (progress) {
-                                        progress.html("");
-                                    }
-                                },
-                                function (i,c) {
-                                    var percentComplete = Math.round(i / c *10000)/100;
-                                    if (progress) {
-                                        progress.html(window.filesender.config.language.decrypting+": "+percentComplete.toFixed(2)+" %");
-                                    }
-                                },
-                                function (error) {
-                                    alert(window.filesender.config.language.file_encryption_wrong_password);
-                                    if (progress){
-                                        progress.html(window.filesender.config.language.file_encryption_wrong_password);
-                                    }
+                                if( this.expected_size != this.bytesProcessed ) {
+                                    window.filesender.log("blobSinkLegacy.done() size mismatch");
+                                    this.callbackError('decrypted data size and expected data size do not match');
+                                    return;
                                 }
-                            );
-                        }, 300);
-                };
-                // create download
-                oReq.send();
+                                
+                                var blob = new Blob(this.blobArray, {type: mime});
+                                window.filesender.log("blobSinkLegacy.done() using saveas to write blob" );
+                                saveAs(blob, name);
+                            }
+                        };
+                        var blobSink = blobSinkLegacy;
+                        var blobSinkStreamed = blobSinkLegacy;
 
+                        /*
+                         * If we should use the streamsaver implementation then
+                         * declare the code and set blobSink to use that instead
+                         */                     
+                        if( window.filesender.config.use_streamsaver ) {
+
+                            window.filesender.log('Using new StreamSaver code for storing data...' );
+                            blobSinkStreamed = window.filesender.streamsaver_sink( name, encryption_details.filesize, callbackError );
+                            blobSink = blobSinkStreamed;
+                        }
+                        
+                        
+                        var callbackDone = function (blobSink) {
+
+                            window.filesender.log("callbackDone()");
+                            window.filesender.crypto_app_downloading = false;
+                                       
+                            if( progress ) {
+                                progress.html(window.filesender.config.language.download_complete);
+                            }
+                            blobSink.done();
+                        };
+                        
+                        var callbackProgress = function (i,c) {
+                            var percentComplete = Math.round(i / c *10000)/100;
+                            if (progress) {
+                                progress.html(window.filesender.config.language.decrypting+": "+percentComplete.toFixed(2)+" %");
+                            }
+                        };
+
+                        window.filesender.crypto_app_downloading = true;                        
+                        $this.downloadAndDecryptChunk( chunkid, link, progress,
+                                                       encryption_details, key,
+                                                       blobSink,
+                                                       callbackDone, callbackProgress, callbackError );
+                    },
+                    function (e) {
+                        // error occured during obtainkey
+                        window.filesender.ui.log(e);
+                    }
+                );
             }, function(){
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
             });
 
             // Add a field to the prompt
-            var input = $('<input type="text" class="wide" />').appendTo(prompt);
+            var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
+            var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
+            prompt.append(toggleView);
+            $('#showdlpass').on(
+                "click",
+                function() {
+                    var v = $('#showdlpass').is(':checked');
+                    if( v ) { $('#dlpass').attr('type','text'); }
+                    else    { $('#dlpass').attr('type','password'); }
+                }
+            );
             input.focus();
         },
         /**
@@ -963,7 +1281,7 @@ window.filesender.crypto_app = function () {
                             raw[i] = decoded.charCodeAt(i);
                         }
                     } catch(e) {
-                        console.log(e);
+                        window.filesender.log(e);
                         // we know the password is invalid bad if we can not base64 decode it
                         // after all, we base64 encoded it in generateRandomPassword().
                         throw(window.filesender.config.language.file_encryption_wrong_password);

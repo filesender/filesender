@@ -145,7 +145,16 @@ class Transfer extends DBObject
             'size'    => '44',
             'null'    => true,
         ),
-        
+
+        //
+        // This is to hand to a client that is making the transfer and to upload
+        // they have to hand it back to ensure they are the one who made the transfer
+        //
+        'roundtriptoken' => array(
+            'type'    => 'string',
+            'size'    => '44',
+            'null'    => true,
+        ),
     );
 
     /**
@@ -167,6 +176,8 @@ class Transfer extends DBObject
     {
         $a = array();
         $authviewdef = array();
+        $sizeviewdev = array();
+        $recipientviewdev = array();
         foreach (array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = self::getPrimaryViewDefinition($dbtype);
             
@@ -176,9 +187,55 @@ class Transfer extends DBObject
                                       . self::getDBTable().' t, '
                                             . call_user_func('User::getDBTable').' u, '
                                             . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
+
+            $sizeviewdev[$dbtype] = 'select t.*,sum(f.size) as size from '
+                                  . self::getDBTable().' t, '
+                                        . call_user_func('File::getDBTable').' f '
+                                        . ' where '
+                                        . ' f.transfer_id=t.id '
+                                        . '  group by t.id ';
+            
+            $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
+                                       . self::getDBTable().' t, '
+                                             . call_user_func('Recipient::getDBTable').' r '
+                                             . ' where '
+                                             . ' r.transfer_id=t.id ';
+            $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
+                                . self::getDBTable().' t, '
+                                      . call_user_func('File::getDBTable').' f '
+                                      . ' where '
+                                      . ' f.transfer_id=t.id ';
+
+            $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
+                                    . ' from '
+                                    . self::getDBTable().' t, '
+                                          . call_user_func('AuditLog::getDBTable').' a '
+                                          . " where "
+                                          . " a.target_id=cast(t.id as varchar(255)) "
+                                          . " and target_type = 'Transfer'  "
+                                     . " UNION "
+                                          . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
+                                          . ' from '
+                                          . self::getDBTable().' t, '
+                                          . call_user_func('AuditLog::getDBTable').' a, '
+                                          . call_user_func('File::getDBTable').' f '
+                                          . " where  f.transfer_id=t.id  "
+                                          . "   and a.target_id=cast(f.id as varchar(255)) "
+                                                . "   and target_type = 'File'  ";
+            $auditlogsviewdlc[$dbtype] = 'select t.*,count from '
+                                       . self::getDBTable() . ' t '
+                                             . " left outer join (select id,count(*) as count from transfersauditlogsview where  "
+                                             . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id) zz "
+                                             . " on t.id = zz.id  " ;
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a,
-                      'transfersauthview' => $authviewdef );
+        return array( strtolower(self::getDBTable()) . 'view' => $a
+                    , 'transfersauthview' => $authviewdef
+                    , 'transferssizeview' => $sizeviewdev
+                    , 'transfersrecipientview' => $recipientviewdev
+                    , 'transfersfilesview' => $filesview
+                    , 'transfersauditlogsview' => $auditlogsview
+                    , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
+        );
     }
 
     protected static $secondaryIndexMap = array(
@@ -199,6 +256,14 @@ class Transfer extends DBObject
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
+    const COUNT_UPLOADED_FROM_GUEST = "guest_id = :guest_id AND status!='created' ";
+    const UPLOADING_NO_ORDER = "status = 'uploading' ";
+    const AVAILABLE_NO_ORDER = "status = 'available' ";
+    const CLOSED_NO_ORDER = "status = 'closed' ";
+    const FROM_USER_NO_ORDER = "userid = :userid AND status='available' ";
+    const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed' ";
+
+    const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
     /**
      * Properties
@@ -224,6 +289,7 @@ class Transfer extends DBObject
     protected $password_encoding_string = 'none';
     protected $password_hash_iterations = 150000;
     protected $client_entropy = '';
+    protected $roundtriptoken = '';
     
     /**
      * Related objects cache
@@ -311,6 +377,46 @@ class Transfer extends DBObject
             array(':userid' => $user)
                          );
     }
+    /**
+     * Get transfers from user. This is like fromUser() but allows you to pass in
+     * data from a TransferQueryOrder or other source to pick data from a view and 
+     * sort the result explicitly. A view can be used to pick the resulting data from one
+     * of the transfers views defined above, for example, using transfersfilesview to
+     * include the total transfer size that can then be used to "ORDER BY size".
+     *
+     * $limit and $offset can be used to page through an ordered result set by starting
+     * at $offset in the results and only returning $limit results. The next page would
+     * then be $newoffset = $offset+$limit and a slice of $limit results returned again.
+     *
+     * @param mixed $user User or user id
+     * @param string $viewClause the view to use for example from TransferQueryOrder::getViewName()
+     * @param string $orderByClause how to ORDER BY the results. For example from TransferQueryOrder::getOrderByClause()
+     * @param bool $closed
+     * @param int $limit how many result to return
+     * @param int $offset where to start results from in ordered result set.
+     *
+     * @return array of Transfer
+     */
+    public static function fromUserOrdered( $user,
+                                            $viewClause,
+                                            $orderByClause,
+                                            $closed = false, $limit = null, $offset = null)
+    {
+        if ($user instanceof User) {
+            $user = $user->id;
+        }
+
+        return self::all(
+            array(
+                'view'  => $viewClause,
+                'order' => $orderByClause,
+                'where' => $closed ? self::FROM_USER_CLOSED_NO_ORDER : self::FROM_USER_NO_ORDER
+                               ,'limit' => $limit
+                               ,'offset' => $offset
+                               ),
+            array(':userid' => $user)
+                         );
+    }
     
     /**
      * Get transfers from guest
@@ -326,6 +432,24 @@ class Transfer extends DBObject
         }
         
         return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
+    }
+
+
+    /**
+     * Get number of transfers created by guest that were at some stage
+     * made available.
+     *
+     * @param mixed $guest Guest or Guest id
+     *
+     * @return int count
+     */
+    public static function countUploadedFromGuest($guest)
+    {
+        if ($guest instanceof Guest) {
+            $guest = $guest->id;
+        }
+        
+        return self::count(self::COUNT_UPLOADED_FROM_GUEST, array(':guest_id' => $guest));
     }
     
 
@@ -391,6 +515,9 @@ class Transfer extends DBObject
         
         $transfer->userid = Auth::user()->id;
 
+        $transfer->roundtriptoken = Utilities::generateEntropyString(
+            self::ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT );
+
         if (!$user_email) {
             $user_email = Auth::user()->email;
         }
@@ -453,7 +580,7 @@ class Transfer extends DBObject
         $quota = Config::get('host_quota');
         
         $used = 0;
-        $s = DBI::query('SELECT size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
+        $s = DBI::query('SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
         foreach ($s->fetchAll() as $r) {
             $used += $r['size'];
         }
@@ -617,6 +744,40 @@ class Transfer extends DBObject
     {
         return $this->owner->is($user);
     }
+
+    /**
+     * Check that the user has read/write permission 
+     * for this transfer.
+     * 
+     * @return true if they are allowed or false if access should be forbidden
+     */
+    public function havePermission()
+    {
+        $user = Auth::user();
+
+        // This should never happen
+        if (Auth::isGuest() && Auth::isAdmin()) {
+            return FALSE;
+        }
+        
+        if (Auth::isGuest()) {
+            $guest = AuthGuest::getGuest();
+            if( !$guest ) {
+                return FALSE;
+            }
+            if( $guest->id != $this->guest_id ) {
+                return FALSE;
+            }
+        }
+        
+        if (!$this->isOwner($user)) {
+            if( !Auth::isAdmin()) {
+                return FALSE;
+            }
+        }
+
+        return TRUE;
+    }
     
     /**
      * Get all options
@@ -726,6 +887,17 @@ class Transfer extends DBObject
         }
         return false;
     }
+    public function setOption($option,$v)
+    {
+        // allow population from default.
+        $this->getOption($option);
+        
+        $options = static::allOptions();
+        if (array_key_exists($option, $options)) {
+            $this->options[$option] = $v;
+        }
+        return $v;
+    }
     
     /**
      * Tells wether the transfer is expired
@@ -787,7 +959,7 @@ class Transfer extends DBObject
             'subject', 'message', 'created', 'made_available',
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
-            , 'client_entropy'
+            , 'client_entropy', 'roundtriptoken'
         ))) {
             return $this->$property;
         }
@@ -814,6 +986,9 @@ class Transfer extends DBObject
         }
 
         if ($property == 'is_encrypted') {
+            if (!array_key_exists('encryption', $this->options)) {
+                return false;
+            }
             return $this->options['encryption'];
         }
         if ($property == "get_a_link") {

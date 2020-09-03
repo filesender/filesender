@@ -45,10 +45,11 @@ class RestEndpointTransfer extends RestEndpoint
      *
      * @param Transfer $transfer
      * @param array $files_cids files client given id for strict matching
+     * @param bool $creatingTransfer if true then the roundtriptoken is also sent to the client
      *
      * @return array
      */
-    public static function cast(Transfer $transfer, $files_cids = null)
+    public static function cast(Transfer $transfer, $files_cids = null, $creatingTransfer = false )
     {
         return array(
             'id' => $transfer->id,
@@ -61,6 +62,7 @@ class RestEndpointTransfer extends RestEndpoint
             'expiry_date_extension' => $transfer->expiry_date_extension,
             'options' => $transfer->options,
             'salt' => $transfer->salt,
+            'roundtriptoken' => $creatingTransfer ? $transfer->roundtriptoken : '',
             
             'files' => array_map(function ($file) use ($files_cids) {
                 $file = RestEndpointFile::cast($file);
@@ -197,8 +199,8 @@ class RestEndpointTransfer extends RestEndpoint
             $transfer = Transfer::fromId($id);
             
             // Check ownership
-            if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+            if( !$transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
             }
             
             // Only want transfer options
@@ -387,14 +389,14 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
         }
-        
+
         if (!$creating_transfer) {
             // Add data to a specific transfer
             $transfer = Transfer::fromId($id);
             
             // Check ownership
-            if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+            if( !$transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
             }
             
             // Cannot update a closed transfer
@@ -429,6 +431,17 @@ class RestEndpointTransfer extends RestEndpoint
             $guest = null;
             if (Auth::isGuest()) {
                 $guest = AuthGuest::getGuest();
+            }
+
+            // if we are a guest then we can not change some options
+            if (Auth::isGuest()) {
+                $guest = AuthGuest::getGuest();
+                if( $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                    $r = Utilities::ensureArray($data->recipients);
+                    if( count($r) ) {
+                        throw new TransferTooManyRecipientsException(count($data->recipients), 0);
+                    }
+                }
             }
             
             // Must have files ...
@@ -695,7 +708,7 @@ class RestEndpointTransfer extends RestEndpoint
             
             return array(
                 'path' => '/transfer/'.$transfer->id,
-                'data' => self::cast($transfer, $files_cids)
+                'data' => self::cast($transfer, $files_cids, $creating_transfer)
             );
         }
     }
@@ -769,8 +782,8 @@ class RestEndpointTransfer extends RestEndpoint
             }
         } else {
             // check ownership
-            if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+            if( !$transfer->havePermission()) {
+                throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
             }
             
             // Close and remind action need to stay here as only complete action is allowed with either session or key
@@ -789,12 +802,24 @@ class RestEndpointTransfer extends RestEndpoint
             if ($data->remind) {
                 $transfer->remind();
             }
+
+            // Modify transfer option
+            if( $data->optionremove ) {
+                $v = false;
+                
+                if( $data->option == 'email_daily_statistics' ) {
+                    $transfer->setOption($data->option,$v);
+                    $transfer->save();
+                }
+            }
         }
         
         // Need to make the transfer available (sends email to recipients) ?
         if ($data->complete) {
             $transfer->makeAvailable();
         }
+
+
         
         return self::cast($transfer);
     }
@@ -833,10 +858,8 @@ class RestEndpointTransfer extends RestEndpoint
         
         $transfer = Transfer::fromId($id);
         
-        $user = Auth::user();
-        
-        if (!$transfer->isOwner($user) && !Auth::isAdmin()) {
-            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+        if( !$transfer->havePermission()) {
+            throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
         }
         
         // Delete the transfer (not recoverable)
