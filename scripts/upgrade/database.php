@@ -620,7 +620,8 @@ try {
     }        
     DBI::rollBack();
     $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
-    die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');
+    echo 'Encountered exception : ' . $e->getMessage() . ', see logs for details (uid: '.$uid.') ...\n';
+    exit(1);
 }
 
 echo "\n\n";
