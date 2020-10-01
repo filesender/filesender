@@ -1,3 +1,2 @@
 #!/bin/sh
 php -q /opt/filesender/filesender/scripts/task/cron.php
-EOF
