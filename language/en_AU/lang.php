@@ -612,3 +612,5 @@ $lang['ui2_no_active_transfers'] = 'No active transfers anymore';
 $lang['ui2_no_inactive_transfers'] = 'No inactive transfers anymore';
 $lang['ui2_show_more'] = 'Show more';
 $lang['ui2_show_all'] = 'Show all';
+
+$lang['encrypted_archive_download_overall_progress'] = 'Downloading file {currentfilenumber} of {totalfilestodownload}';
