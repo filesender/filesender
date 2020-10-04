@@ -211,7 +211,7 @@ class Transfer extends DBObject
                                     . self::getDBTable().' t, '
                                           . call_user_func('AuditLog::getDBTable').' a '
                                           . " where "
-                                          . " a.target_id=cast(t.id as varchar(255)) "
+                                          . " a.target_id=" . DBLayer::toViewVarCharCast("t.id",255)
                                           . " and target_type = 'Transfer'  "
                                      . " UNION "
                                           . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
@@ -220,12 +220,15 @@ class Transfer extends DBObject
                                           . call_user_func('AuditLog::getDBTable').' a, '
                                           . call_user_func('File::getDBTable').' f '
                                           . " where  f.transfer_id=t.id  "
-                                          . "   and a.target_id=cast(f.id as varchar(255)) "
-                                                . "   and target_type = 'File'  ";
+                                          . "   and a.target_id=" .  DBLayer::toViewVarCharCast("f.id",255)
+                                                                            . "   and target_type = 'File'  ";
+            
+            $auditlogsviewdlcss[$dbtype] = 'select id,count(*) as count from transfersauditlogsview where  '
+                                             . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id ";
+                
             $auditlogsviewdlc[$dbtype] = 'select t.*,count from '
                                        . self::getDBTable() . ' t '
-                                             . " left outer join (select id,count(*) as count from transfersauditlogsview where  "
-                                             . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id) zz "
+                                             . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
@@ -234,6 +237,7 @@ class Transfer extends DBObject
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
                     , 'transfersauditlogsview' => $auditlogsview
+                    , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
         );
     }

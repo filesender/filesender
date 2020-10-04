@@ -105,4 +105,22 @@ class DBLayer
             'SQLUNIMP timeStampToEpoch() called on unsupported backend'
         );
     }
+
+    /**
+     *
+     * @return string SQL fragment
+     */
+    public static function toViewVarCharCast($exp,$len)
+    {
+        if (self::isPostgress()) {
+            return "cast($exp as varchar($len))";
+        }
+        if (self::isMySQL()) {
+            return "cast($exp as char)";
+        }
+        throw new DBIBackendExplicitHandlerUnimplementedException(
+            'SQLUNIMP toViewVarChar() called on unsupported backend'
+        );
+    }
+    
 }

@@ -302,7 +302,7 @@ cd config
 SALT=$(LC_CTYPE=C tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo);
 sed -i -e "s@'secretsalt' => 'defaultsecretsalt'@'secretsalt' => '$SALT'@g" config.php
 
-HASH=$(echo $PASS | ../bin/pwgen.php | tail -2 | head -1 | cut -c3-200);
+HASH=$(echo $PASSWORD | ../bin/pwgen.php | tail -2 | head -1 | cut -c3-200);
 sed -i -e "s@'auth.adminpassword' => '123'@'auth.adminpassword' => '$HASH'@g" config.php
 
 ```

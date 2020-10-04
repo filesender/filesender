@@ -30,6 +30,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+if (typeof window === 'undefined')
+    window = {}; // dummy window for use in webworkers
+
+if (!('filesender' in window))
+    window.filesender = {};
+
+
+
 var getPBKDF2IterationCountForYear = function( wantedyear )
 {
     var baseyear=2009;
@@ -197,6 +205,55 @@ $(function() {
 
         });
     });
-    
 
+    var callbackError = function (error) {
+        window.filesender.log(error);
+        window.filesender.ui.error(error);
+    };
+
+    section.find('[data-action="generate-test-ss"]').on('click', function() {
+
+        const ponyfill = window.WebStreamsPolyfill || {};
+        streamSaver.WritableStream = ponyfill.WritableStream;
+        streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
+        streamSaver.WritableStream = ponyfill.WritableStream;
+        
+        var filename = 'filesendertest.txt';
+        streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
+        var fileStream = streamSaver.createWriteStream( filename );
+        var writer = fileStream.getWriter();
+
+        const blob = new Blob(['This file was generated with FileSender using StreamSaver.']);
+        const readableStream = new Response( blob ).body;
+
+        const reader = readableStream.getReader();
+        const pump = () => reader.read()
+              .then(res => res.done
+                    ? writer.close()
+                    : writer.write(res.value).then(pump));
+        
+        pump();
+    });
+
+    
+    section.find('[data-action="generate-test-zip64"]').on('click', function() {
+
+        var file1contents = 'abcdef';
+        
+        var zip = window.filesender.zip64handler();
+        zip.init('filesendertestzip.zip');
+        zip.openFile( 'abcdef.txt' );
+        zip.visit( window.filesender.crypto_common().convertStringToArrayBufferView(file1contents));
+        zip.closeFile();
+
+        zip.openFile( 'z123.txt' );
+        zip.visit( window.filesender.crypto_common().convertStringToArrayBufferView('z1'));
+        zip.visit( window.filesender.crypto_common().convertStringToArrayBufferView('23'));
+        zip.closeFile();
+        
+        zip.complete();
+    });
+    
+        
+    
 });

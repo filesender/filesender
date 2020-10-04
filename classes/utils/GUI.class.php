@@ -109,7 +109,9 @@ class GUI
         if( Browser::instance()->allowStreamSaver ) {
             array_push( $sources,
                         'lib/streamsaver/StreamSaver.js',
-                        'js/crypter/streamsaver_sink.js'
+                        'js/crypter/streamsaver_sink.js',
+                        'js/crc32handler.js',
+                        'js/zip64handler.js'
             );
         }
 

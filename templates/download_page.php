@@ -40,10 +40,16 @@
 
     $isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'];
     $canDownloadArchive = count($transfer->files) > 1;
+    $canDownloadAsTar = true;
+    $canDownloadAsZip = true;
     if($isEncrypted) {
-        // It is not possible to download archives of the encrypted files. 
-        // since there is no unzip -> decrypt -> zip process in the current filesender 
+        // Streaming to a local decrypted archive requires StreamSaver feature
         $canDownloadArchive = false;
+        // no stream to tar file support yet.
+        $canDownloadAsTar = false;
+        if( Browser::instance()->allowStreamSaver ) {
+            $canDownloadArchive = true;
+        }
     }
     ?>
     
@@ -95,7 +101,8 @@
             </div>
         <?php } ?>
     </div>
-    <div class="files box" data-count="<?php echo ($isEncrypted)?'1':count($transfer->files) ?>">
+    <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($transfer->files):'1' ?>">
+        <?php if($canDownloadArchive) { ?>
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
             <span class="select clickable">
@@ -103,6 +110,7 @@
                 <span>{tr:select_all_for_archive_download}</span>
             </span>
         </div>
+        <?php } ?>
     <?php foreach($transfer->files as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>"
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
@@ -120,7 +128,9 @@
              data-fileaead="<?php echo $file->aead; ?>"
         >
             
-            <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
+            <?php if($canDownloadArchive) { ?>
+                <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
+            <?php } ?>
             <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
             <span class="download_decryption_disabled"><br/>{tr:file_encryption_disabled}</span>
@@ -145,12 +155,14 @@
                 {tr:archive_download}
             </a>
             </div>
+            <?php if($canDownloadAsTar) { ?>
             <div class="archive_tar_download_frame">
             <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_tar_download" title="{tr:archive_tar_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_tar_download}
             </a>
             </div>
+            <?php } ?>    
             <span class="downloadprogress"/>
         </div>
     <?php } ?>    
