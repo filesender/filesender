@@ -40,12 +40,12 @@ function registerWorker() {
   return navigator.serviceWorker.getRegistration('./').then(swReg => {
     return swReg || navigator.serviceWorker.register('sw.js', { scope: './' })
   }).then(swReg => {
-      const swRegTmp = swReg.installing || swReg.waiting
+    const swRegTmp = swReg.installing || swReg.waiting
 
     scope = swReg.scope
 
     return (sw = swReg.active) || new Promise(resolve => {
-        swRegTmp.addEventListener('statechange', fn = () => {
+      swRegTmp.addEventListener('statechange', fn = () => {
         if (swRegTmp.state === 'activated') {
           swRegTmp.removeEventListener('statechange', fn)
           sw = swReg.active

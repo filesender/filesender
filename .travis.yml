@@ -7,7 +7,7 @@ services:
   - postgresql
   - mariadb
 addons:
-  mariadb: '10.0'
+  mariadb: '10.2'
   sauce_connect:
     username: "$SAUCE_USERNAME"
     no-ssl-bump-domains: file_sender.app

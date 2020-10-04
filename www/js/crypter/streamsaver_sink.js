@@ -39,6 +39,8 @@ window.filesender.streamsaver_sink = function ( arg_name, arg_expected_size, arg
                 }
             }
         },
+        error: function(error) {
+        },
         visit: function(chunkid,decryptedData) {
             var $this = this;
             $this.init();
@@ -75,6 +77,113 @@ window.filesender.streamsaver_sink = function ( arg_name, arg_expected_size, arg
             var $this = this;
             window.filesender.log("blobSinkStreamed.done(top)");
             $this.complete = true;
+        }
+    }
+};
+
+
+
+window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, archiveName, pass, selectedFiles, arg_callbackError ) {
+    return {
+        complete: false,
+        // keep a tally of bytes processed to make sure we get everything.
+        bytesProcessed: 0,
+        callbackError: arg_callbackError,
+        zip:null,
+        isFileOpen: false,
+        selectedFiles: selectedFiles,
+        cryptoapp: cryptoapp,
+        link: link,
+        pass: pass,
+        activeFileID: null,
+        progress: null,
+        archiveName: archiveName,
+        onOpen:  function( blobSink, fileid ) { },
+        onClose: function( blobSink, fileid ) { },
+        onComplete: function( blobSink ) {},
+
+        currentFileNumber: 0,
+        totalFilesToDownload: 0,
+        
+        init: function() {
+            var $this = this;
+
+            if( !$this.zip ) {
+                $this.zip = window.filesender.zip64handler();
+                $this.zip.init($this.archiveName);
+
+                $this.totalFilesToDownload = selectedFiles.length;
+            }
+        },
+        error: function(error) {
+            var $this = this;
+
+            window.filesender.log('zip64 sink error()');
+            if($this.zip) {
+                $this.zip.abort();
+            }
+        },
+        openFile: function(filename,fileid) {
+            var $this = this;
+            if( $this.isFileOpen ) {
+                $this.closeFile();
+            }
+            $this.zip.openFile(filename);
+            $this.isFileOpen = true;
+            $this.activeFileID = fileid;
+            $this.onOpen( $this, $this.activeFileID );
+            $this.currentFileNumber++;
+        },
+        closeFile: function() {
+            var $this = this;
+            $this.zip.closeFile();
+            $this.isFileOpen = false;
+            $this.onClose( $this, $this.activeFileID );
+            $this.activeFileID = null;
+        },
+
+        downloadNext: function() {
+            var $this = this;
+
+            if( $this.selectedFiles.length == 0 ) {
+                window.filesender.log("blobSinkStreamedzip64 no more files to add to archive... done");
+                $this.complete = true;
+                $this.zip.closeFile();
+                $this.closeZip();
+                $this.onComplete( $this );
+            }
+            else
+            {
+                var f = $this.selectedFiles.shift();
+                window.filesender.log("blobSinkStreamedzip64 adding next file with name " + f.filename );
+                $this.openFile(f.filename,f.fileid);
+                $this.cryptoapp.decryptDownloadToBlobSink( $this, pass,
+                                                           $this.link+f.fileid,
+                                                           f.mime, f.filename, f.filesize, f.encrypted_filesize,
+                                                           f.key_version, f.salt,
+                                                           f.password_version, f.password_encoding, f.password_hash_iterations,
+                                                           f.client_entropy, f.fileiv, f.fileaead,
+                                                           $this.progress);
+            }
+            
+        },
+        closeZip: function() {
+            var $this = this;
+            if( $this.isFileOpen ) {
+                $this.closeFile();
+            }
+            $this.zip.complete();
+        },
+        visit: function(chunkid,decryptedData) {
+            var $this = this;
+            $this.init();
+            
+//            window.filesender.log("BBB blobSinkStreamedzip64.visit chunkid " + chunkid + "  data.len " + decryptedData.length );
+            $this.zip.visit(decryptedData);
+        },
+        done: function() {
+            var $this = this;
+            $this.downloadNext();
         }
     }
 };
