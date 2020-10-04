@@ -936,13 +936,14 @@ window.filesender.crypto_app = function () {
          * 
          * @param fileiv is the decoded fileiv. Decoding can be done with decodeCryptoFileIV()
          */
-        decryptDownload: function (link, mime, name, filesize, encrypted_filesize,
-                                   key_version, salt,
-                                   password_version, password_encoding, password_hash_iterations,
-                                   client_entropy, fileiv, fileaead,
-                                   progress) {
+        decryptDownloadToBlobSink: function (blobSink, pass,
+                                             link, mime, name, filesize, encrypted_filesize,
+                                             key_version, salt,
+                                             password_version, password_encoding, password_hash_iterations,
+                                             client_entropy, fileiv, fileaead,
+                                             progress) {
             var $this = this;
-            var encryption_details = { password:           '',
+            var encryption_details = { password:           pass,
                                        filesize:           filesize,
                                        encrypted_filesize: encrypted_filesize,
                                        // zero based count.
@@ -988,6 +989,7 @@ window.filesender.crypto_app = function () {
                 if (progress){
                     progress.html("");
                 }
+                blobSink.error( error );
             };
 
             /*
@@ -1061,10 +1063,9 @@ window.filesender.crypto_app = function () {
                 if (progress){
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
+                blobSink.error( error );
             };
-            
-            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
-                var pass = $(this).find('input').val();
+
                 encryption_details.password = pass;
 
                 $this.obtainKey(
@@ -1072,60 +1073,6 @@ window.filesender.crypto_app = function () {
                     function (key) {
                         var chunkid = 0;
 
-                        /*
-                         * This is a blob visitor that performs a legacy (as of mid 2020)
-                         * chunked download. The legacy code has been brought forward to allow
-                         * older browsers to continue to work. The old style code creates a blob array
-                         * with all the data and saves it in one go at the end of download.
-                         * 
-                         * As decrypted data is visit()ed it is pushed onto a blob array.
-                         * When done() is called on this object the collected blob array 
-                         * is handed off to saveAs() for storage.
-                         * 
-                         * This is very RAM intensive but where browsers do not support more modern
-                         * features it will at least work up to the point that encrypted files are too
-                         * large to be temporarily held in RAM. 
-                         */
-                        var blobSinkLegacy = {
-                            blobArray: [],
-                            // keep a tally of bytes processed to make sure we get everything.
-                            bytesProcessed: 0,
-                            expected_size: encryption_details.filesize,
-                            callbackError: callbackError,
-                            visit: function(chunkid,decryptedData) {
-                                window.filesender.log("blobSinkLegacy visiting chunkid " + chunkid + "  data.len " + decryptedData.length );
-                                this.blobArray.push(decryptedData);
-                                this.bytesProcessed += decryptedData.length;
-                            },
-                            done: function() {
-                                window.filesender.log("blobSinkLegacy.done()");
-                                window.filesender.log("blobSinkLegacy.done()      expected size " + encryption_details.filesize );
-                                window.filesender.log("blobSinkLegacy.done() decryped data size " + this.bytesProcessed );
-
-                                if( this.expected_size != this.bytesProcessed ) {
-                                    window.filesender.log("blobSinkLegacy.done() size mismatch");
-                                    this.callbackError('decrypted data size and expected data size do not match');
-                                    return;
-                                }
-                                
-                                var blob = new Blob(this.blobArray, {type: mime});
-                                window.filesender.log("blobSinkLegacy.done() using saveas to write blob" );
-                                saveAs(blob, name);
-                            }
-                        };
-                        var blobSink = blobSinkLegacy;
-                        var blobSinkStreamed = blobSinkLegacy;
-
-                        /*
-                         * If we should use the streamsaver implementation then
-                         * declare the code and set blobSink to use that instead
-                         */                     
-                        if( window.filesender.config.use_streamsaver ) {
-
-                            window.filesender.log('Using new StreamSaver code for storing data...' );
-                            blobSinkStreamed = window.filesender.streamsaver_sink( name, encryption_details.filesize, callbackError );
-                            blobSink = blobSinkStreamed;
-                        }
                         
                         
                         var callbackDone = function (blobSink) {
@@ -1157,6 +1104,91 @@ window.filesender.crypto_app = function () {
                         window.filesender.ui.log(e);
                     }
                 );
+ 
+        },
+        decryptDownload: function (link, mime, name, filesize, encrypted_filesize,
+                                   key_version, salt,
+                                   password_version, password_encoding, password_hash_iterations,
+                                   client_entropy, fileiv, fileaead,
+                                   progress)
+        {
+            var $this = this;
+
+            callbackError = function (error) {
+                window.filesender.log(error);
+                window.filesender.crypto_app_downloading = false;
+                alert( window.filesender.config.language.file_encryption_wrong_password );
+                if (progress){
+                    progress.html(window.filesender.config.language.file_encryption_wrong_password);
+                }
+            };
+            
+            /*
+             * This is a blob visitor that performs a legacy (as of mid 2020)
+             * chunked download. The legacy code has been brought forward to allow
+             * older browsers to continue to work. The old style code creates a blob array
+             * with all the data and saves it in one go at the end of download.
+             * 
+             * As decrypted data is visit()ed it is pushed onto a blob array.
+             * When done() is called on this object the collected blob array 
+             * is handed off to saveAs() for storage.
+             * 
+             * This is very RAM intensive but where browsers do not support more modern
+             * features it will at least work up to the point that encrypted files are too
+             * large to be temporarily held in RAM. 
+             */
+            var blobSinkLegacy = {
+                blobArray: [],
+                // keep a tally of bytes processed to make sure we get everything.
+                bytesProcessed: 0,
+                expected_size: filesize,
+                callbackError: callbackError,
+                error: function(error) {
+                },
+                visit: function(chunkid,decryptedData) {
+                    window.filesender.log("blobSinkLegacy visiting chunkid " + chunkid + "  data.len " + decryptedData.length );
+                    this.blobArray.push(decryptedData);
+                    this.bytesProcessed += decryptedData.length;
+                },
+                done: function() {
+                    window.filesender.log("blobSinkLegacy.done()");
+                    window.filesender.log("blobSinkLegacy.done()      expected size " + filesize );
+                    window.filesender.log("blobSinkLegacy.done() decryped data size " + this.bytesProcessed );
+
+                    if( this.expected_size != this.bytesProcessed ) {
+                        window.filesender.log("blobSinkLegacy.done() size mismatch");
+                        this.callbackError('decrypted data size and expected data size do not match');
+                        return;
+                    }
+                    
+                    var blob = new Blob(this.blobArray, {type: mime});
+                    window.filesender.log("blobSinkLegacy.done() using saveas to write blob" );
+                    saveAs(blob, name);
+                }
+            };
+            var blobSink = blobSinkLegacy;
+            var blobSinkStreamed = blobSinkLegacy;
+
+            /*
+             * If we should use the streamsaver implementation then
+             * declare the code and set blobSink to use that instead
+             */                     
+            if( window.filesender.config.use_streamsaver ) {
+
+                window.filesender.log('Using new StreamSaver code for storing data...' );
+                blobSinkStreamed = window.filesender.streamsaver_sink( name, filesize, callbackError );
+                blobSink = blobSinkStreamed;
+            }
+
+            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
+                var pass = $(this).find('input').val();
+            
+                $this.decryptDownloadToBlobSink( blobSink, pass,
+                                                 link, mime, name, filesize, encrypted_filesize,
+                                                 key_version, salt,
+                                                 password_version, password_encoding, password_hash_iterations,
+                                                 client_entropy, fileiv, fileaead,
+                                                 progress);
             }, function(){
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
             });
@@ -1175,6 +1207,65 @@ window.filesender.crypto_app = function () {
                 }
             );
             input.focus();
+                
+        },
+        // Note that this can not include : in the time part as that
+        // does not work on Win in Edge.
+        getArchiveFileName: function(link,selectedFiles,archiveFormat) {
+            var d = new Date();
+            var archiveName = "FileSenderDownload_" + 
+                d.getDate() + "-" + (d.getMonth()+1)  + "-" + d.getFullYear() + "__"  
+                + d.getHours() + "-" + d.getMinutes() + "-" + d.getSeconds()
+                + "." + archiveFormat;
+            return archiveName;
+        },
+        decryptDownloadToZip: function(link,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
+
+            var $this = this;
+
+            callbackError = function (error) {
+                window.filesender.log(error);
+                window.filesender.crypto_app_downloading = false;
+                alert( window.filesender.config.language.file_encryption_wrong_password );
+                if (progress){
+                    progress.html(window.filesender.config.language.file_encryption_wrong_password);
+                }
+            };
+            
+            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
+                var pass = $(this).find('input').val();
+
+                var archiveName = $this.getArchiveFileName(link,selectedFiles,"zip");
+                blobSinkStreamed = window.filesender.streamsaver_sink_zip64( $this, link, archiveName, pass, selectedFiles, callbackError );
+                blobSink = blobSinkStreamed;
+                blobSink.init();
+                blobSink.progress = progress;
+                blobSink.onOpen   = onFileOpen;
+                blobSink.onClose  = onFileClose;
+                blobSink.onComplete = onComplete;
+
+                // start downloading.
+                blobSink.downloadNext();
+                
+            }, function(){
+                window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
+            });
+
+            // Add a field to the prompt
+            var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
+            var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
+            prompt.append(toggleView);
+            $('#showdlpass').on(
+                "click",
+                function() {
+                    var v = $('#showdlpass').is(':checked');
+                    if( v ) { $('#dlpass').attr('type','text'); }
+                    else    { $('#dlpass').attr('type','password'); }
+                }
+            );
+            input.focus();
+                
         },
         /**
          * Get secure random bytes of a given length

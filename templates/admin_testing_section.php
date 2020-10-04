@@ -77,6 +77,24 @@
 </table>
 
 
+<h2>StreamSaver file generation</h2>
+
+<p>
+    The below button will create a small file with some text in it.
+</p>
+
+<input type="button" data-action="generate-test-ss" value="generate file with StreamSaver" />
+
+
+<h2>Streaming zip64 generation</h2>
+
+<p>
+    The below button will create and save a zip64 file to your downloads directory for format testing.
+</p>
+
+<input type="button" data-action="generate-test-zip64" value="generate zip64" />
+
+
 <script type="text/javascript" src="{path:js/admin_testing.js}"></script>
 
 
