@@ -7,4 +7,4 @@
 // 
 // 
 ?>
- 
+Odjava završena, hvala na korišćenju

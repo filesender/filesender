@@ -7,4 +7,4 @@
 // 
 // 
 ?>
- 
+Prihvatam uslove i odredbe ove usluge
