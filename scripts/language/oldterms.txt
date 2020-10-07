@@ -198,6 +198,7 @@ empty_file
 enable_recipient_email_download_complete
 enable_recipient_email_download_complete_warning
 encountered_exception
+encrypted_archive_download_overall_progress
 encryption
 enter_to_email
 epoch_day
