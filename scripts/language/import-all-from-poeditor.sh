@@ -51,6 +51,7 @@ downloadAndConvert "ru" "Russian"   $dirname
 downloadAndConvert "sl" "Slovenian" $dirname
 downloadAndConvert "es" "Spanish"   $dirname
 downloadAndConvert "fr" "French"    $dirname
+downloadAndConvert "sr" "Serbian"   $dirname
 
 
 
