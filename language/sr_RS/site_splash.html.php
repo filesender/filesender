@@ -1,3 +1,15 @@
-Dobrodošli na {cfg:site_name}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+<h1>Dobrodošli na {cfg:site_name}</h1>
 
-{cfg:site_name} je siguran način za deljenje velikih fajlova sa bilo kim! Prijavite se da prosledite vaše fajlove ili pozovete nekog drugog da vam pošalje fajl.
+<p>
+ {cfg:site_name} je siguran način deljenja fajlova sa bilo kim !
+  Prijavite se za transfer Vaših fajlova ili pozovite ljude da vam pošalju fajl.
+</p>
