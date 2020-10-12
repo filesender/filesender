@@ -35,6 +35,10 @@ function loadLang( $code ) {
 }
 
 
+//
+//
+// see also resolveLangDirectoryReferences()
+//
 function loadLangDirectory( $code ) {
     global $BASE;
 
@@ -54,6 +58,50 @@ function loadLangDirectory( $code ) {
     return $keys;
 }
 
+//
+// This resolves references to files with the translation to the 
+// text itself.
+//
+function resolveLangDirectoryReferences( $keys, $code ) {
+    global $BASE;
+    global $warningAboutChangingFile;
+    $p = "$BASE/language/$code/";
+    $fn = '';
+
+    foreach ($keys as $term => $value) {
+
+        foreach( array('html','mail','text') as $type ) {
+            $fn = "$BASE/language/$code/$term.$type.php";
+            if( file_exists( $fn )) {
+
+                // This is not really ideal, the plan is to strip off the 
+                // read only header added by write_translation_term_file()
+                // without using any nasty eval() calls to run any php.
+                //
+                // Real php blocks and php blocks that do not close things 
+                // as expected will either be passed verbatim or in the later
+                // case might not be as expected.
+                $lines = explode("\n",file_get_contents( $fn ));
+                $data = "";
+                $inComment = false;
+                foreach( $lines as $l ) {
+                    if( preg_match('/<\?php/', $l )) {
+                        $inComment = true; 
+                    }
+                    if( preg_match('/\?>/', $l )) {
+                        $inComment = false; 
+                        continue;
+                    }
+                    if( !$inComment ) {
+                        $data .= $l . "\n";
+                    }
+                }
+                $keys[$term] = $data;
+            }
+        }
+    }
+    return $keys;
+}
 
 function squote( $s ) {
 
@@ -91,3 +139,4 @@ function write_translation_term_file( $code, $term, $data ) {
     echo "translation file for $term at $fn \n";
     file_put_contents( $fn, $warningAboutChangingFile . $data );
 }
+
