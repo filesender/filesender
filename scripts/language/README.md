@@ -80,3 +80,13 @@ php convert-php-to-poeditor-json.php \
        en_AU /tmp/test.json '/.*/' 0 \
        /tmp/filesender-poeditor-imports-wmsnC/FileSender_2.0_English_AU.php
 ```
+
+To generate the FileSender_2.0_English_AU.php file from the current data on poeditor
+one can use the below. See import-all-from-poeditor.sh for a list of poeditor language codes
+that are currently imported in bulk.
+
+```
+mkdir -p /tmp/filesender-poeditor-imports-wmsnC
+download-language-from-poeditor.sh "en-au" "English_AU" /tmp/filesender-poeditor-imports-wmsnC
+```
+
