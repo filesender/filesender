@@ -715,7 +715,15 @@ cd scripts/language
 ./export-terms-to-new-and-deleted-lists.sh
 ```
 
-The newterms.json file can them be imported using the "Import terms"
+If you have setup ~/.filesender/poeditor-apikey to allow write access to poeditor
+then the newterms.json file can be imported using the command line. See the README.md file
+in scripts/language for information about setting up the ~/.filesender/poeditor-apikey file.
+
+```
+send-newterms-json-to-poeditor.sh 48000 /tmp/newterms.json
+```
+
+The newterms.json file can also be imported using the "Import terms"
 menu item on poeditor. This option is about the third icon on the
 right menu of the poeditor web site as of 2018. After selecting the
 newterms.json file you will see how many terms were parsed and how
