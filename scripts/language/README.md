@@ -63,3 +63,20 @@ without impacting existing real translations.
 ```
 ./send-json-translations-for-language-to-poeditor.sh 48000 en-au /tmp/test.json
 ```
+
+
+Another useful code flow is to use the import-all-from-poeditor.sh script to download
+the translations for all terms for every language and use those files to only export
+translations from local files that are not already on poeditor.
+
+The below uses a permissive regex and a 0 term max and explicitly passes the English_AU
+translations that poeditor knows in order to not export existing terms. This should create
+a file with only translations in your ../language/en_AU directory that are not known
+to poeditor. Handy for sending terms from a pull request to poeditor for example. The
+output can be sent using send-json-translations-for-language-to-poeditor.sh as detailed above.
+
+```
+php convert-php-to-poeditor-json.php \
+       en_AU /tmp/test.json '/.*/' 0 \
+       /tmp/filesender-poeditor-imports-wmsnC/FileSender_2.0_English_AU.php
+```
