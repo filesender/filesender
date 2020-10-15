@@ -12,25 +12,32 @@ $warningAboutChangingFile .= "// \n";
 $warningAboutChangingFile .= "// \n";
 $warningAboutChangingFile .= "?>\n";
 
-function loadLang( $code ) {
+function loadLangFile( $infilepath ) {
     global $BASE;
     $n = 0; $kn = 0;
     $keys = array();
-    echo "reading $BASE/language/$code/lang.php", "\n";
-    foreach(explode("\n", file_get_contents("$BASE/language/$code/lang.php")) as $line) {
+    echo "reading $infilepath", "\n";
+    foreach(explode("\n", file_get_contents("$infilepath")) as $line) {
         $n++;
-        
         if(!preg_match('`\$lang\[[\'"]([^\'"]+)[\'"]\]\s*=\s*[\'"](.*)[\'"];`', $line, $m)) continue;
         $kn++;
         $k = $m[1];
         $v = $m[2];
-        echo "$k \n";
+//        echo "$k \n";
         if(array_key_exists($m[1], $keys)) {
             echo $m[1].' ('.$n.') already found at '.$keys[$m[1]]."\n";
         } else {
             $keys[$m[1]] = $v;
         }
     }
+    return $keys;
+}
+
+function loadLang( $code ) {
+    global $BASE;
+    $n = 0; $kn = 0;
+    $keys = array();
+    $keys = loadLangFile("$BASE/language/$code/lang.php");
     return $keys;
 }
 
