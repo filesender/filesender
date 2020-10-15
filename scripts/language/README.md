@@ -61,6 +61,8 @@ might like to first use the number 380345 which will upload to the
 without impacting existing real translations.
 
 ```
+# commentline    main project = 48000    test project = 380345
+
 ./send-json-translations-for-language-to-poeditor.sh 48000 en-au /tmp/test.json
 ```
 
