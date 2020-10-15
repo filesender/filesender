@@ -1,6 +1,8 @@
 #!/bin/bash
+set -eou pipefail
 
 . ~/.filesender/poeditor-apikey
+
 
 projectid=${1:?supply poeditor project id as arg1. Main project is 48000 test project is 380345 };
 langcode=${2:?supply poeditor language code as arg2};
