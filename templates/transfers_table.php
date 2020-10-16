@@ -407,4 +407,4 @@
 
 
 
-<script type="text/javascript" src="{path:js/transfers_table.js}"></script>
+

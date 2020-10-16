@@ -1,23 +1,23 @@
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *   Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
- * 
+ *
  * *   Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * 
+ *
  * *   Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -75,7 +75,7 @@ abbr {
 
 #header {
     background: #666 url(../images/banner900.png) no-repeat top left;
-    height: 60px;
+    height: 65px;
     margin-bottom: 1em;
 }
 
@@ -262,6 +262,13 @@ div.exception .details {
 .box {
     padding: 0.5em;
     border: 1px solid #aaa;
+    border-radius:0.5em;
+    -moz-border-radius: 0.5em;
+    margin: 0 0.25em 0.5em 0.25em;
+}
+
+.box-trans {
+    padding: 0.5em;
     border-radius:0.5em;
     -moz-border-radius: 0.5em;
     margin: 0 0.25em 0.5em 0.25em;
@@ -699,7 +706,7 @@ table.list .date {
     height: 5em;
     text-align: center;
     max-height: 300em;
-    overflow-y: scroll;   
+    overflow-y: scroll;
 }
 
 
@@ -1589,3 +1596,1856 @@ div.not_displayed {
 .active {
     font-weight: bold;
 }
+
+
+/* Fabrique */
+@import url(https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap);
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+#header {
+  z-index: 1;
+  background: var(--logoUrl) no-repeat top left;
+  display: inline-block;
+  height: 50px;
+  margin: 40px 30px 55px 45px;
+  width: 140px; }
+  #header a {
+    display: inline-block;
+    width: 100%;
+    height: 100%; }
+  #header h1 {
+    position: absolute;
+    margin-top: 20px; }
+    #header h1 a {
+      color: black; }
+
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+#menu {
+  z-index: 1;
+  height: auto;
+  background: none;
+  margin: 0px 0px 0px 50px;
+  width: 200px; }
+  #menu .leftmenu {
+    float: none;
+    margin-bottom: 50px; }
+  #menu .rightmenu {
+    float: none; }
+  #menu ul {
+    display: block;
+    float: none; }
+    #menu ul li a {
+      font-size: 14px;
+      line-height: 15px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      color: #040608;
+      padding-left: 0; }
+      #menu ul li a:hover {
+        background-color: transparent; }
+  #menu li {
+    border-right: none;
+    border-left: none;
+    text-shadow: none;
+    float: none;
+    display: block; }
+  #menu .rightmenu li {
+    border-left: none;
+    border-right: none; }
+  #menu #topmenu_logoff {
+    margin-top: 50px; }
+  #menu .current {
+    background-color: transparent;
+    font-size: 14px;
+    line-height: 15px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700; }
+
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+#page {
+  width: 60%;
+  margin-left: -250px;
+  z-index: 1; }
+  #page.logon_page {
+    margin-left: 0; }
+  #page.download_page {
+    margin-left: auto; }
+  #page h1 {
+    padding: 20px 0;
+    font-size: 20px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    margin-bottom: 10px; }
+  #page .logon {
+    padding: 30px 20px 20px 20px;
+    text-align: right; }
+  #page h2, #page h3 {
+    font-size: 17px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    margin-bottom: 10px; }
+
+.box {
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 100%; }
+
+.ui-button, button, #myTransfers, #submit_button, .send {
+  font-size: 15px;
+  line-height: 24px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+  background-color: #F07527;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 30px; }
+  .ui-button:hover, button:hover, #myTransfers:hover, #submit_button:hover, .send:hover {
+    font-size: 15px;
+    line-height: 24px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    background-color: #040608;
+    color: white;
+    border: 0px;
+    cursor: pointer;
+    line-height: 40px; }
+  .ui-button:focus, button:focus, #myTransfers:focus, #submit_button:focus, .send:focus {
+    border: 0;
+    font-weight: 600; }
+
+#submit_button {
+  background-image: none; }
+
+a.ui-button, a:link.ui-button, a:visited.ui-button, .ui-button {
+  color: white;
+  background-color: #F07527; }
+  a.ui-button:hover, a:link.ui-button:hover, a:visited.ui-button:hover, .ui-button:hover {
+    background-color: #040608; }
+  a.ui-button:active, a:link.ui-button:active, a:visited.ui-button:active, .ui-button:active {
+    border: 0;
+    background-color: #F07527;
+    font-size: 15px;
+    line-height: 24px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    line-height: 40px; }
+
+.ui-dialog .ui-dialog-buttonpane button {
+  font-size: 15px;
+  line-height: 24px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+  background-color: #F07527;
+  color: white;
+  margin: 5px 10px;
+  padding: 0 20px; }
+  .ui-dialog .ui-dialog-buttonpane button:hover {
+    background-color: #040608; }
+
+.fa-minus-square::before {
+  content: "";
+  background: var(--removeUrl) no-repeat;
+  background-size: 10px;
+  display: inline-block;
+  width: 10px;
+  height: 10px; }
+
+.fa-cloud-upload, .fa-stop, .fa-play, .fa-pause, .fa-send, .fa-times, .fa-history, .fa-download, .fa-trash-o {
+  display: none; }
+
+#upload_form .buttons a span.fa {
+  font-size: 15px;
+  line-height: 24px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600; }
+
+.logon_page {
+  position: absolute;
+  left: 300px;
+  top: 150px; }
+  .logon_page .box {
+    background-color: white;
+    border-radius: 10px; }
+    .logon_page .box h1 {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      margin-left: 20px; }
+    .logon_page .box p {
+      padding: 0 20px;
+      margin: 15px 0;
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+  .logon_page #btn_logon {
+    width: 100px; }
+
+#languagebar {
+  background-color: white;
+  padding: 20px; }
+
+#content {
+  background-color: white;
+  height: 35vh;
+  overflow-y: auto; }
+
+.transfers_page {
+  width: 60%;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+  margin-top: 100px;
+  min-width: 900px; }
+  .transfers_page .box {
+    background-color: white;
+    overflow: auto;
+    margin-top: 0;
+    border-radius: 10px;
+    padding: 30px;
+    margin-left: 20px;
+    width: auto;
+    height: auto; }
+  .transfers_page table.list thead tr {
+    display: none; }
+  .transfers_page table.list tbody td {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    border: none;
+    padding: 10px; }
+  .transfers_page .transfer {
+    border-bottom: 1px solid #CCCCCC;
+    cursor: pointer; }
+  .transfers_page .recipients {
+    width: 20%;
+    overflow: hidden; }
+  .transfers_page table.transfers {
+    opacity: 0; }
+    .transfers_page table.transfers.active {
+      opacity: 1; }
+    .transfers_page table.transfers .size {
+      width: 10%;
+      text-align: center; }
+    .transfers_page table.transfers tr {
+      background-color: white; }
+      .transfers_page table.transfers tr #nav_active_show_more, .transfers_page table.transfers tr #nav_inactive_show_more {
+        font-size: 14px;
+        line-height: 15px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 600;
+        color: #F07527;
+        cursor: pointer;
+        padding-right: 30px;
+        position: relative;
+        margin-right: 5px;
+        display: inline-block; }
+        .transfers_page table.transfers tr #nav_active_show_more::after, .transfers_page table.transfers tr #nav_inactive_show_more::after {
+          content: '';
+          background: var(--viewMoreUrl) no-repeat;
+          width: 13px;
+          height: 13px;
+          position: absolute;
+          top: 5px;
+          right: 15px;
+          background-size: 100%; }
+      .transfers_page table.transfers tr #nav_active_show_all, .transfers_page table.transfers tr #nav_inactive_show_more {
+        font-size: 14px;
+        line-height: 15px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 600;
+        color: #F07527;
+        cursor: pointer;
+        padding-right: 20px;
+        position: relative;
+        display: inline-block; }
+        .transfers_page table.transfers tr #nav_active_show_all::after, .transfers_page table.transfers tr #nav_inactive_show_more::after {
+          content: '';
+          background: var(--viewMoreUrl) no-repeat;
+          width: 13px;
+          height: 13px;
+          position: absolute;
+          top: 5px;
+          right: 6px;
+          background-size: 100%; }
+  .transfers_page #nav_inactive_show_more {
+    font-size: 14px;
+    line-height: 15px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    color: #F07527;
+    cursor: pointer;
+    padding-right: 30px;
+    position: relative;
+    margin-right: 5px;
+    display: inline-block; }
+    .transfers_page #nav_inactive_show_more::after {
+      content: '';
+      background: var(--viewMoreUrl) no-repeat;
+      width: 13px;
+      height: 13px;
+      position: absolute;
+      top: 5px;
+      right: 15px;
+      background-size: 100%; }
+  .transfers_page #nav_inactive_show_all {
+    font-size: 14px;
+    line-height: 15px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    color: #F07527;
+    cursor: pointer;
+    padding-right: 20px;
+    position: relative;
+    display: inline-block; }
+    .transfers_page #nav_inactive_show_all::after {
+      content: '';
+      background: var(--viewMoreUrl) no-repeat;
+      width: 13px;
+      height: 13px;
+      position: absolute;
+      vertical-align: middle;
+      top: 5px;
+      right: 6px;
+      background-size: 100%; }
+  .transfers_page .files {
+    width: 30%;
+    overflow: hidden; }
+  .transfers_page td.downloads {
+    width: 20%;
+    overflow: hidden; }
+  .transfers_page .expires {
+    width: 20% !important;
+    overflow: hidden; }
+
+.upload_page {
+  margin-top: 40px;
+  height: calc(100vh - 140px);
+  overflow-y: auto; }
+
+#upload_form {
+  min-width: 450px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto; }
+  #upload_form .step1 {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+            flex-direction: column;
+    margin-right: auto; }
+  #upload_form .files_dragdrop {
+    border: none;
+    background-color: transparent;
+    background: var(--dragDropUrl) no-repeat;
+    padding: 0;
+    height: auto;
+    background-size: 30%;
+    cursor: pointer;
+    background-position: 50% 50%;
+    transition: background-size 300ms ease-in; }
+    #upload_form .files_dragdrop:hover {
+      background-size: 35%; }
+    #upload_form .files_dragdrop .instructions {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #040608;
+      text-align: left;
+      height: 50vh; }
+  #upload_form .files_actions {
+    display: none;
+    -webkit-order: 3;
+            order: 3; }
+    #upload_form .files_actions div {
+      width: 100%;
+      padding-right: 15px; }
+      #upload_form .files_actions div a {
+        float: right;
+        width: auto;
+        -webkit-transform: translateY(-100%);
+                transform: translateY(-100%);
+        top: -25px; }
+        #upload_form .files_actions div a.clear_all {
+          margin-bottom: -40px; }
+    #upload_form .files_actions .stats,
+    #upload_form .files_actions div .select_files {
+      display: none; }
+  #upload_form .file_selector {
+    -webkit-order: 2;
+            order: 2;
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 8px;
+    padding: 30px 30px 25px 30px; }
+    #upload_form .file_selector label {
+      font-size: 14px;
+      line-height: 15px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 600;
+      color: #F07527;
+      position: relative;
+      height: 50px;
+      display: inline-block;
+      cursor: pointer;
+      line-height: 50px;
+      padding-left: 60px;
+      font-weight: bold; }
+      #upload_form .file_selector label:before {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 40px;
+        background: var(--addFilesUrl) no-repeat;
+        position: absolute;
+        left: 0;
+        top: 7px;
+        transition: -webkit-transform 250ms ease-in;
+        transition: transform 250ms ease-in;
+        transition: transform 250ms ease-in, -webkit-transform 250ms ease-in; }
+      #upload_form .file_selector label:hover:before {
+        -webkit-transform: scale(1.2);
+                transform: scale(1.2); }
+    #upload_form .file_selector input {
+      display: none; }
+  #upload_form .clear_all {
+    font-size: 14px;
+    line-height: 15px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    color: #F07527;
+    background-color: white;
+    font-weight: bold;
+    padding: 0; }
+    #upload_form .clear_all:hover {
+      background-color: white; }
+  #upload_form .files {
+    -webkit-order: 1;
+            order: 1;
+    margin-top: 65px;
+    background-color: white;
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    min-height: 300px;
+    max-height: none;
+    overflow-y: auto; }
+    #upload_form .files .file {
+      background-color: white;
+      border-bottom: 1px solid #CCCCCC;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      border-radius: initial;
+      padding: 0;
+      margin: 5px 30px 30px 30px;
+      padding-bottom: 15px; }
+      #upload_form .files .file .info {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400;
+        display: inline-block;
+        max-width: 90%; }
+    #upload_form .files .file.invalid {
+      box-shadow: none;
+      border-bottom: 1px solid red; }
+    #upload_form .files #fileDetails {
+      padding: 30px 30px 30px 30px;
+      top: 0;
+      z-index: 1;
+      background-color: white; }
+      #upload_form .files #fileDetails .fileCountDiv {
+        float: left; }
+        #upload_form .files #fileDetails .fileCountDiv span {
+          font-size: 20px;
+          line-height: 18px;
+          font-family: "Source Sans Pro", sans-serif;
+          font-weight: 700;
+          margin-bottom: 10px;
+          float: none !important;
+          font-weight: 700 !important; }
+      #upload_form .files #fileDetails .fileSizeDiv {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400;
+        float: right; }
+        #upload_form .files #fileDetails .fileSizeDiv span {
+          font-size: 14px;
+          line-height: 18px;
+          font-family: "Source Sans Pro", sans-serif;
+          font-weight: 400;
+          float: none !important; }
+  #upload_form .two_columns {
+    background-color: white;
+    margin: 0;
+    border-radius: 10px;
+    padding: 25px 20px;
+    margin-bottom: 0;
+    position: relative;
+    width: 100%; }
+    #upload_form .two_columns #encrypt_checkbox {
+      position: relative;
+      float: left;
+      width: 60%;
+      padding-left: 0.2em;
+      -webkit-order: 1;
+              order: 1; }
+      #upload_form .two_columns #encrypt_checkbox input[type="checkbox"] {
+        margin: 3px 0.5ex;
+        visibility: hidden;
+        margin: 0 10px 10px 0; }
+        #upload_form .two_columns #encrypt_checkbox input[type="checkbox"]:checked ~ label::before {
+          content: "";
+          background: var(--checkSmallUrl) no-repeat;
+          background-position: center;
+          position: absolute;
+          left: 5px;
+          z-index: 1;
+          top: 9px;
+          color: white;
+          width: 14px;
+          height: 14px;
+          background-color: #F07527; }
+      #upload_form .two_columns #encrypt_checkbox span {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400; }
+      #upload_form .two_columns #encrypt_checkbox label::after {
+        content: '';
+        width: 14px;
+        position: absolute;
+        height: 14px;
+        background-color: #FDE4D3;
+        left: 5px;
+        top: 9px; }
+    #upload_form .two_columns [for="encryption"] i {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      color: #040608 !important; }
+    #upload_form .two_columns #encryption_password_container {
+      clear: both;
+      padding-top: 1.5em;
+      -webkit-order: 2;
+              order: 2; }
+      #upload_form .two_columns #encryption_password_container label {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 10px; }
+      #upload_form .two_columns #encryption_password_container input {
+        height: 20px; }
+    #upload_form .two_columns #encryption_password_container_generate, #upload_form .two_columns #encryption_password_show_container {
+      -webkit-order: 2;
+              order: 2; }
+    #upload_form .two_columns .encryption_password {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+      border-bottom: 1px solid #CCCCCC;
+      height: 1em; }
+    #upload_form .two_columns .aup {
+      padding-left: 0;
+      padding-top: 0;
+      padding-bottom: 15px;
+      position: relative; }
+      #upload_form .two_columns .aup a {
+        text-decoration: underline; }
+    #upload_form .two_columns [name="aup"] {
+      visibility: hidden; }
+      #upload_form .two_columns [name="aup"]:checked ~ label::before {
+        content: '';
+        background: var(--checkSmallUrl) no-repeat;
+        background-position: center;
+        position: absolute;
+        left: 5px;
+        z-index: 1;
+        bottom: 17px;
+        color: white;
+        width: 14px;
+        height: 14px;
+        background-color: #F07527; }
+    #upload_form .two_columns [for="aup"] {
+      cursor: pointer; }
+      #upload_form .two_columns [for="aup"]::after {
+        content: '';
+        width: 14px;
+        position: absolute;
+        height: 14px;
+        background-color: #FDE4D3;
+        left: 5px;
+        bottom: 17px; }
+    #upload_form .two_columns #encryption_generate_password {
+      color: #F07527;
+      text-decoration: none; }
+    #upload_form .two_columns #encryption_password_show_container {
+      position: relative; }
+    #upload_form .two_columns #encryption_show_password {
+      visibility: hidden; }
+      #upload_form .two_columns #encryption_show_password:checked ~ label::before {
+        content: "";
+        background: var(--checkSmallUrl) no-repeat;
+        background-position: center;
+        position: absolute;
+        left: 5px;
+        z-index: 1;
+        top: 9px;
+        color: white;
+        width: 14px;
+        height: 14px;
+        background-color: #F07527; }
+    #upload_form .two_columns [for="encryption_show_password"] {
+      cursor: pointer; }
+      #upload_form .two_columns [for="encryption_show_password"]::after {
+        content: '';
+        width: 14px;
+        position: absolute;
+        height: 14px;
+        background-color: #FDE4D3;
+        left: 5px;
+        top: 9px; }
+    #upload_form .two_columns #encryption_description_container, #upload_form .two_columns #encryption_generate_password {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    #upload_form .two_columns #tooltip_encrypt_toggle {
+      visibility: hidden; }
+      #upload_form .two_columns #tooltip_encrypt_toggle::before {
+        content: var(--infoIconUrl);
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 9px;
+        visibility: visible;
+        cursor: pointer; }
+    #upload_form .two_columns #encryption_description_container {
+      -webkit-order: 3;
+              order: 3;
+      padding-bottom: 0; }
+      #upload_form .two_columns #encryption_description_container i {
+        display: block;
+        margin-top: 0;
+        visibility: hidden; }
+    #upload_form .two_columns #continue {
+      position: absolute;
+      top: 60px;
+      right: 30px;
+      width: auto;
+      padding: 0 40px;
+      text-transform: capitalize; }
+    #upload_form .two_columns td {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-direction: column;
+              flex-direction: column;
+      width: 100%; }
+    #upload_form .two_columns tr {
+      display: block; }
+    #upload_form .two_columns .buttons {
+      margin-left: auto;
+      margin-right: 0;
+      margin-bottom: -10px; }
+      #upload_form .two_columns .buttons a {
+        width: 100px;
+        height: 40px;
+        padding: 0 20px; }
+    #upload_form .two_columns #upload_mode_title {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: inline-block;
+      float: left;
+      margin-bottom: 20px;
+      margin-top: -5px; }
+    #upload_form .two_columns .recipients .recipient {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      display: inline-block;
+      background-color: #FDE4D3;
+      border: 0px; }
+      #upload_form .two_columns .recipients .recipient .remove {
+        margin-top: 0.15em; }
+    #upload_form .two_columns [data-option="add_me_to_recipients"] {
+      color: #F07527;
+      position: relative;
+      cursor: pointer;
+      padding-left: 20px; }
+      #upload_form .two_columns [data-option="add_me_to_recipients"] input:checked ~ label::before {
+        content: "";
+        background: var(--checkSmallUrl) no-repeat;
+        background-position: center;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        top: 9px;
+        color: white;
+        width: 14px;
+        height: 14px;
+        background-color: #F07527; }
+      #upload_form .two_columns [data-option="add_me_to_recipients"] label {
+        padding-left: 20px; }
+        #upload_form .two_columns [data-option="add_me_to_recipients"] label::after {
+          content: '';
+          width: 14px;
+          position: absolute;
+          height: 14px;
+          background-color: #FDE4D3;
+          left: 0;
+          top: 9px; }
+      #upload_form .two_columns [data-option="add_me_to_recipients"] label {
+        cursor: pointer; }
+      #upload_form .two_columns [data-option="add_me_to_recipients"] input {
+        display: none; }
+    #upload_form .two_columns #to, #upload_form .two_columns #subject {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      width: 100%;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid #CCCCCC;
+      height: 20px; }
+      #upload_form .two_columns #to::-webkit-input-placeholder, #upload_form .two_columns #subject::-webkit-input-placeholder {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400; }
+      #upload_form .two_columns #to:-ms-input-placeholder, #upload_form .two_columns #subject:-ms-input-placeholder {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400; }
+      #upload_form .two_columns #to::-ms-input-placeholder, #upload_form .two_columns #subject::-ms-input-placeholder {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400; }
+      #upload_form .two_columns #to::placeholder, #upload_form .two_columns #subject::placeholder {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400; }
+    #upload_form .two_columns textarea[name="message"] {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      min-height: 2em;
+      border-left: none;
+      border-top: none;
+      border-right: none;
+      border-bottom: 1px solid #CCCCCC; }
+    #upload_form .two_columns [data-related-to="message"] {
+      padding-left: 0;
+      padding-bottom: 2em; }
+      #upload_form .two_columns [data-related-to="message"] .invalid {
+        margin-bottom: 5px; }
+    #upload_form .two_columns .fieldcontainer [for="subject"], #upload_form .two_columns .fieldcontainer [for="message"] {
+      font-size: 17px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+    #upload_form .two_columns .fieldcontainer label {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      display: inline-block;
+      padding: 0; }
+    #upload_form .two_columns .fieldcontainer [for="to"] {
+      font-size: 17px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      margin-bottom: 0; }
+    #upload_form .two_columns .hidden_options + .fieldcontainer {
+      position: absolute;
+      bottom: 45px;
+      padding-left: 0; }
+    #upload_form .two_columns #expires {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      border: none;
+      text-decoration: underline;
+      cursor: pointer; }
+  #upload_form .basic_options .languageDropdown {
+    padding-left: 0; }
+    #upload_form .basic_options .languageDropdown label {
+      position: relative; }
+      #upload_form .basic_options .languageDropdown label::after {
+        content: "";
+        background: var(--viewMoreUrl) no-repeat;
+        width: 13px;
+        height: 13px;
+        position: absolute;
+        bottom: -22px;
+        right: 15px;
+        background-size: 100%;
+        pointer-events: none; }
+    #upload_form .basic_options .languageDropdown #lang {
+      border-left: 0;
+      border-top: 0;
+      border-right: 0;
+      border-bottom: 1px solid #040608;
+      display: block;
+      margin-top: 5px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      cursor: pointer; }
+  #upload_form .basic_options #email_upload_complete, #upload_form .basic_options #email_download_complete {
+    visibility: hidden; }
+    #upload_form .basic_options #email_upload_complete:checked ~ label::before, #upload_form .basic_options #email_download_complete:checked ~ label::before {
+      content: "";
+      background: var(--checkSmallUrl) no-repeat;
+      background-position: center;
+      position: absolute;
+      left: 0;
+      z-index: 1;
+      top: 9px;
+      color: white;
+      width: 14px;
+      height: 14px;
+      background-color: #F07527; }
+  #upload_form .basic_options [data-option="email_upload_complete"], #upload_form .basic_options [data-option="email_download_complete"] {
+    position: relative;
+    padding-left: 0; }
+  #upload_form .basic_options [for="email_upload_complete"], #upload_form .basic_options [for="email_download_complete"] {
+    cursor: pointer; }
+    #upload_form .basic_options [for="email_upload_complete"]::after, #upload_form .basic_options [for="email_download_complete"]::after {
+      content: '';
+      width: 14px;
+      position: absolute;
+      height: 14px;
+      background-color: #FDE4D3;
+      left: 0;
+      top: 9px; }
+  #upload_form table > .fieldcontainer {
+    font-weight: bold;
+    float: right;
+    padding: 0; }
+    #upload_form table > .fieldcontainer [for="get_a_link"] {
+      font-size: 14px;
+      line-height: 15px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 600;
+      color: #F07527;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: -5px;
+      margin-right: 5px; }
+  #upload_form [data-option="disable_terasender"] {
+    padding-left: 0;
+    position: relative; }
+    #upload_form [data-option="disable_terasender"] #disable_terasender {
+      visibility: hidden; }
+      #upload_form [data-option="disable_terasender"] #disable_terasender:checked ~ label::before {
+        content: "";
+        background: var(--checkSmallUrl) no-repeat;
+        background-position: center;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        top: 9px;
+        color: white;
+        width: 14px;
+        height: 14px;
+        background-color: #F07527; }
+    #upload_form [data-option="disable_terasender"] [for="disable_terasender"] {
+      cursor: pointer; }
+      #upload_form [data-option="disable_terasender"] [for="disable_terasender"]::after {
+        content: '';
+        width: 14px;
+        position: absolute;
+        height: 14px;
+        background-color: #FDE4D3;
+        left: 0;
+        top: 9px; }
+  #upload_form #filesList {
+    margin-top: 65px;
+    background-color: white;
+    padding: 30px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    min-width: 450px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto; }
+    #upload_form #filesList:hover {
+      cursor: pointer; }
+    #upload_form #filesList div:nth-child(1) {
+      float: left;
+      margin-bottom: 10px;
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+      #upload_form #filesList div:nth-child(1) #fileCount, #upload_form #filesList div:nth-child(1) #maxFileCount {
+        font-size: 20px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 700;
+        margin-bottom: 10px; }
+    #upload_form #filesList div:nth-child(2) {
+      float: right;
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    #upload_form #filesList div:nth-child(3) {
+      clear: both;
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+  #upload_form #uploadDone {
+    min-height: 240px;
+    background-color: white;
+    margin-top: 80px;
+    border-radius: 10px;
+    position: relative; }
+    #upload_form #uploadDone div:first-child {
+      background: var(--checkUrl) no-repeat;
+      background-size: 50px;
+      height: 50px;
+      width: 50px;
+      position: relative;
+      margin: 0 auto;
+      top: 40px; }
+    #upload_form #uploadDone #done {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+      text-align: center;
+      margin-top: 70px;
+      margin-bottom: 30px; }
+  #upload_form #uploadDone.downloadlink {
+    min-height: 310px; }
+    #upload_form #uploadDone.downloadlink #done {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding: 0 30px; }
+    #upload_form #uploadDone.downloadlink #downloadLinkArea {
+      text-align: center;
+      width: auto;
+      margin: 30px; }
+      #upload_form #uploadDone.downloadlink #downloadLinkArea .wide {
+        font-size: 14px;
+        line-height: 18px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 400;
+        width: 100%;
+        background-color: white;
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 1px solid #F07527;
+        text-align: center; }
+  #upload_form #myTransfers {
+    display: inline-block;
+    text-decoration: none;
+    position: static;
+    float: right;
+    margin-right: 30px; }
+
+.ui-datepicker-calendar .ui-state-default {
+  background-color: white;
+  color: #040608; }
+
+.ui-datepicker-calendar .ui-state-active {
+  background-color: #FFF3EB;
+  border: 1px solid #F07527;
+  color: #040608; }
+
+.ui-widget-header .ui-icon {
+  background: var(--arrowLeftUrl) no-repeat;
+  background-size: 100%; }
+
+.ui-widget-header .ui-icon-circle-triangle-e {
+  background: var(--arrowRightUrl) no-repeat;
+  background-size: 100%; }
+
+.user_page, .privacy_page, .about_page, .help_page {
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+  margin-top: 100px; }
+  .user_page .box, .privacy_page .box, .about_page .box, .help_page .box {
+    background-color: white;
+    padding: 30px;
+    margin-top: 0;
+    border-radius: 10px;
+    overflow-y: hidden;
+    height: auto;
+    width: auto; }
+    .user_page .box h2, .user_page .box h3, .privacy_page .box h2, .privacy_page .box h3, .about_page .box h2, .about_page .box h3, .help_page .box h2, .help_page .box h3 {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+    .user_page .box p, .user_page .box li, .privacy_page .box p, .privacy_page .box li, .about_page .box p, .about_page .box li, .help_page .box p, .help_page .box li {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      margin: 1em 0; }
+    .user_page .box #dialog-help strong, .privacy_page .box #dialog-help strong, .about_page .box #dialog-help strong, .help_page .box #dialog-help strong {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      font-weight: bold; }
+    .user_page .box #dialog-privacy, .privacy_page .box #dialog-privacy, .about_page .box #dialog-privacy, .help_page .box #dialog-privacy {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+
+.guests_page {
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+  margin-top: 40px;
+  width: 50%; }
+  .guests_page .box {
+    width: auto;
+    min-width: 450px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto; }
+    .guests_page .box h2 {
+      padding: 0 0 10px 0 !important; }
+    .guests_page .box .title {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      margin-bottom: 0;
+      width: 100%;
+      padding: 5px 0 30px 0;
+      background-color: #FFF3EB; }
+  .guests_page #send_voucher {
+    background-color: white;
+    padding: 30px 30px 15px 30px;
+    border-radius: 10px; }
+    .guests_page #send_voucher .recipients .recipient {
+      display: inline-block;
+      background-color: #FDE4D3;
+      border: 0; }
+    .guests_page #send_voucher input[type="checkbox"] {
+      visibility: hidden; }
+      .guests_page #send_voucher input[type="checkbox"]:checked ~ label::before {
+        content: "";
+        background: var(--checkSmallUrl) no-repeat;
+        background-position: center;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        top: 9px;
+        color: white;
+        width: 14px;
+        height: 14px;
+        background-color: #F07527; }
+  .guests_page div:first-child {
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding: 5px 0 0 0; }
+  .guests_page .disclamer, .guests_page div {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    margin-right: 30px; }
+  .guests_page .two_columns {
+    border-spacing: 0;
+    border-collapse: collapse; }
+    .guests_page .two_columns td {
+      width: 100%; }
+    .guests_page .two_columns .subtitle {
+      font-size: 17px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+  .guests_page tbody {
+    border-spacing: 0;
+    border-collapse: collapse; }
+  .guests_page tr {
+    border-spacing: 0;
+    border-collapse: collapse; }
+  .guests_page .mandatory {
+    font-size: 17px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    margin-bottom: 10px; }
+  .guests_page [for="to"], .guests_page [for="subject"], .guests_page [for="message"] {
+    font-size: 17px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: inline-block; }
+  .guests_page #to {
+    margin-bottom: 1.5em; }
+  .guests_page #expires {
+    width: 80%; }
+  .guests_page input {
+    display: block;
+    width: 100%;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom: 1px solid #CCCCCC;
+    padding-top: 0;
+    height: 20px;
+    margin-bottom: 1em; }
+    .guests_page input::-webkit-input-placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    .guests_page input:-ms-input-placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    .guests_page input::-ms-input-placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    .guests_page input::placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+  .guests_page textarea[name="message"] {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    height: 60px;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: 1px solid #CCCCCC;
+    margin-bottom: 1em; }
+  .guests_page .fieldcontainer {
+    padding-left: 0;
+    position: relative; }
+  .guests_page .basic_options .subtitle {
+    margin-bottom: 10px; }
+  .guests_page .guest_options {
+    margin-top: 0;
+    padding-left: 30px; }
+  .guests_page .transfer_options {
+    padding-left: 30px; }
+  .guests_page #base_notifications {
+    margin-top: 1em; }
+  .guests_page [for="can_only_send_to_me"], .guests_page [for="add_me_to_recipients"], .guests_page [for="email_upload_complete"], .guests_page [for="get_a_link"], .guests_page [for="email_download_complete"] {
+    cursor: pointer; }
+    .guests_page [for="can_only_send_to_me"]::after, .guests_page [for="add_me_to_recipients"]::after, .guests_page [for="email_upload_complete"]::after, .guests_page [for="get_a_link"]::after, .guests_page [for="email_download_complete"]::after {
+      content: '';
+      width: 14px;
+      position: absolute;
+      height: 14px;
+      background-color: #FDE4D3;
+      left: 0;
+      top: 9px; }
+  .guests_page .buttons {
+    margin-right: 0; }
+    .guests_page .buttons a {
+      padding: 0 20px;
+      text-decoration: none; }
+  .guests_page .transfers {
+    padding: 30px;
+    display: block;
+    border-radius: 10px;
+    background-color: white; }
+    .guests_page .transfers tr {
+      display: table;
+      background-color: white; }
+  .guests_page table {
+    border-spacing: 0;
+    border-collapse: collapse; }
+    .guests_page table.guests.list, .guests_page table.transfers.list {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      table-layout: fixed;
+      display: table;
+      width: 100%; }
+      .guests_page table.guests.list thead, .guests_page table.transfers.list thead {
+        border: 0; }
+        .guests_page table.guests.list thead td, .guests_page table.transfers.list thead td {
+          padding-top: 30px; }
+      .guests_page table.guests.list th, .guests_page table.transfers.list th {
+        text-align: left; }
+      .guests_page table.guests.list tr, .guests_page table.transfers.list tr {
+        display: table;
+        width: calc(100% - 60px);
+        background-color: white;
+        margin: 0px 30px;
+        border-bottom: 1px solid #CCCCCC; }
+      .guests_page table.guests.list tbody tr:last-child, .guests_page table.transfers.list tbody tr:last-child {
+        margin-bottom: 30px; }
+      .guests_page table.guests.list td, .guests_page table.transfers.list td {
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 4px 10px; }
+        .guests_page table.guests.list td.to, .guests_page table.transfers.list td.to {
+          width: 130px;
+          max-width: 130px; }
+        .guests_page table.guests.list td.recipients, .guests_page table.transfers.list td.recipients {
+          width: 130px;
+          max-width: 130px; }
+        .guests_page table.guests.list td.subject, .guests_page table.transfers.list td.subject {
+          width: 22%;
+          max-width: 22%;
+          text-align: left; }
+        .guests_page table.guests.list td.message, .guests_page table.transfers.list td.message {
+          text-align: left; }
+        .guests_page table.guests.list td.created, .guests_page table.guests.list td.expires, .guests_page table.transfers.list td.created, .guests_page table.transfers.list td.expires {
+          text-align: left;
+          width: 90px;
+          max-width: 90px; }
+
+.logout_page {
+  height: calc(100vh - 200px);
+  margin-top: 100px; }
+  .logout_page .box {
+    padding: 30px;
+    border-radius: 10px;
+    background-color: white; }
+    .logout_page .box p {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px;
+      margin: 0; }
+
+.user_page .send_client_logs {
+  margin: 20px 0; }
+
+.download_page {
+  background-color: white;
+  border-radius: 10px;
+  width: 60%;
+  min-width: 450px;
+  max-width: 900px;
+  margin-top: 100px;
+  margin-right: auto;
+  max-height: calc(100vh - 200px);
+  overflow-y: scroll; }
+  .download_page .titlebar {
+    padding: 30px; }
+    .download_page .titlebar #title {
+      font-size: 20px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+    .download_page .titlebar #totalsize {
+      display: block;
+      float: right; }
+  .download_page div {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400; }
+  .download_page .boxnoframe {
+    overflow: visible;
+    padding: 0 30px 30px 30px;
+    position: relative;
+    margin-bottom: 0; }
+  .download_page .disclamer {
+    margin: 1em 0; }
+  .download_page .files .file {
+    margin: 0 0 20px 0;
+    padding: 0; }
+    .download_page .files .file .name {
+      width: auto;
+      height: auto;
+      display: inline;
+      margin-right: 5px; }
+    .download_page .files .file .download {
+      border: 0; }
+  .download_page .files .notOrange {
+    border-bottom: 1px solid #CCCCCC; }
+    .download_page .files .notOrange a {
+      color: #040608;
+      background-color: transparent;
+      font-size: 14px;
+      line-height: 15px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 600;
+      color: #F07527;
+      line-height: 40px;
+      padding: 0; }
+  .download_page .files .select_all {
+    margin-bottom: 2em;
+    margin-left: 0; }
+  .download_page .archive {
+    margin: 30px 0 0 0;
+    text-align: right; }
+    .download_page .archive .transferInfo div {
+      text-align: left; }
+    .download_page .archive .transferInfo #expiryDate {
+      font-size: 17px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+    .download_page .archive .mac_archive_message {
+      text-align: left;
+      margin-right: 300px; }
+  .download_page .archive_tar_download_frame {
+    border: 0;
+    background-color: transparent; }
+  .download_page .recommended {
+    margin-top: 5px; }
+
+.ui-widget {
+  background-color: white; }
+  .ui-widget.ui-widget-content {
+    border: 0; }
+
+.ui-widget-overlay {
+  background-color: #040608;
+  opacity: 0.4; }
+
+.ui-widget-header {
+  background-color: white;
+  border: 0; }
+  .ui-widget-header .ui-dialog-title {
+    font-size: 17px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    margin-bottom: 10px; }
+
+.ui-dialog {
+  border-radius: 10px;
+  padding: 20px 15px; }
+  .ui-dialog .ui-widget-content {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    border: 0; }
+    .ui-dialog .ui-widget-content p, .ui-dialog .ui-widget-content div {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    .ui-dialog .ui-widget-content p {
+      margin-left: 0; }
+    .ui-dialog .ui-widget-content .failed_transfer div {
+      margin-left: 0; }
+  .ui-dialog .ui-dialog-titlebar-close {
+    top: 40%; }
+
+.ui-button:hover {
+  background-color: transparent; }
+  .ui-button:hover .ui-icon {
+    background: var(--removeUrl) no-repeat;
+    background-size: 100%; }
+
+.ui-button .ui-icon {
+  background: var(--removeUrl) no-repeat;
+  background-size: 100%; }
+
+.block-e {
+  display: block !important;
+  opacity: 0;
+  transition: opacity 500ms ease-in, -webkit-transform 300ms ease-out;
+  transition: opacity 500ms ease-in, transform 300ms ease-out;
+  transition: opacity 500ms ease-in, transform 300ms ease-out, -webkit-transform 300ms ease-out;
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px); }
+
+.appear-e {
+  opacity: 1;
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px); }
+
+.disappear-e {
+  opacity: 0; }
+
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+#footer {
+  font-size: 14px;
+  line-height: 18px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+  z-index: 1;
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+  #footer p {
+    color: #808282; }
+
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+#notifications .notification {
+  font-size: 14px;
+  line-height: 18px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+  background-color: #FFF3EB;
+  border: 1px solid #F07527;
+  background-image: var(--checkUrl);
+  padding: 10px 40px;
+  border-radius: 10px; }
+
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+#langmenu {
+  border-radius: 0;
+  margin: 0px 0px 30px 50px; }
+  #langmenu label::after {
+    content: "";
+    background: var(--viewMoreUrl) no-repeat;
+    width: 13px;
+    height: 13px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-size: 100%;
+    pointer-events: none; }
+  #langmenu #language_selector {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-top: 5px;
+    display: block;
+    background-color: #FFF3EB;
+    border-left: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 1px solid #040608;
+    cursor: pointer; }
+  #langmenu li {
+    border: 0; }
+
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+#transferDetails {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  overflow-y: scroll; }
+  #transferDetails #popup_wrapper {
+    position: fixed;
+    top: 50%;
+    text-align: center;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    left: 50%; }
+    #transferDetails #popup_wrapper [colspan="8"] {
+      padding: 30px;
+      margin-bottom: 20px;
+      display: -webkit-flex;
+      display: flex;
+      min-width: 450px;
+      width: 50vw;
+      max-width: 900px;
+      margin: 0 auto;
+      -webkit-flex-direction: column;
+              flex-direction: column;
+      max-height: calc(100vh - 200px);
+      overflow: auto; }
+  #transferDetails .detail_popup_title {
+    font-size: 17px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background-color: white;
+    text-align: left;
+    -webkit-order: 1;
+            order: 1;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 30px 0; }
+  #transferDetails .title-popup-details, #transferDetails .title-popup-options, #transferDetails .title-popup-transferlog {
+    padding-top: 30px; }
+  #transferDetails .collapse {
+    margin-bottom: 1em; }
+  #transferDetails td {
+    background-color: white;
+    border-radius: 10px;
+    text-align: left; }
+    #transferDetails td input {
+      width: 100%; }
+    #transferDetails td .desc {
+      text-align: left;
+      padding-left: 0; }
+  #transferDetails .detail_fileslist_title {
+    -webkit-order: 3;
+            order: 3; }
+    #transferDetails .detail_fileslist_title h2 {
+      font-size: 17px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+    #transferDetails .detail_fileslist_title div {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      padding: 15px 0;
+      border-bottom: 1px solid #CCCCCC; }
+    #transferDetails .detail_fileslist_title div:last-child {
+      margin-bottom: 20px; }
+    #transferDetails .detail_fileslist_title [data-action="remind"] {
+      float: right; }
+  #transferDetails .files {
+    -webkit-order: 2;
+            order: 2; }
+    #transferDetails .files h2 {
+      font-size: 17px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 700;
+      margin-bottom: 10px; }
+    #transferDetails .files div {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400;
+      padding: 15px 0;
+      border-bottom: 1px solid #CCCCCC; }
+    #transferDetails .files div:last-child {
+      margin-bottom: 20px; }
+    #transferDetails .files .file {
+      display: -webkit-flex;
+      display: flex; }
+      #transferDetails .files .file .popupList_fileName {
+        max-width: 80%; }
+      #transferDetails .files .file .popupList_downloadCount {
+        margin-left: auto; }
+      #transferDetails .files .file #deleteTransferFile {
+        margin-left: 10px;
+        cursor: pointer; }
+        #transferDetails .files .file #deleteTransferFile::before {
+          content: "";
+          background: var(--removeUrl) no-repeat;
+          background-size: 10px;
+          display: inline-block;
+          width: 10px;
+          height: 10px; }
+  #transferDetails .recipients {
+    padding-top: 20px; }
+    #transferDetails .recipients .recipient {
+      display: -webkit-flex;
+      display: flex; }
+      #transferDetails .recipients .recipient .popupList_fileName {
+        max-width: 50%; }
+      #transferDetails .recipients .recipient .popupList_downloadCount {
+        margin-left: auto; }
+      #transferDetails .recipients .recipient #remindRecipient {
+        margin-left: 10px;
+        font-size: 14px;
+        line-height: 15px;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 600;
+        color: #F07527; }
+      #transferDetails .recipients .recipient #deleteRecipient {
+        margin-left: 10px; }
+        #transferDetails .recipients .recipient #deleteRecipient::before {
+          content: "";
+          background: var(--removeUrl) no-repeat;
+          background-size: 10px;
+          display: inline-block;
+          width: 10px;
+          height: 10px; }
+  #transferDetails #addRecipient {
+    margin-top: 10px; }
+  #transferDetails #addRecipient, #transferDetails #deleteTransfer, #transferDetails #extendTransfer, #transferDetails .seeTransferLogs {
+    font-size: 14px;
+    line-height: 15px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    color: #F07527;
+    cursor: pointer;
+    padding: 0 0 5px 0;
+    display: inline-block;
+    text-decoration: none; }
+  #transferDetails table {
+    -webkit-order: 4;
+            order: 4;
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    width: 100%;
+    position: relative; }
+  #transferDetails .ui-button {
+    margin: 10px 0; }
+  #transferDetails .download_link td {
+    padding-left: 0; }
+    #transferDetails .download_link td input {
+      margin-top: 15px;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+      border-bottom: 1px solid #F07527; }
+  #transferDetails .download_link a {
+    font-size: 15px;
+    line-height: 24px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    background-color: #F07527;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 30px;
+    display: inline-block;
+    text-decoration: none; }
+    #transferDetails .download_link a:hover {
+      font-size: 15px;
+      line-height: 24px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 600;
+      background-color: #040608;
+      color: white;
+      border: 0px;
+      cursor: pointer;
+      line-height: 40px; }
+    #transferDetails .download_link a:focus {
+      border: 0;
+      font-weight: 600; }
+  #transferDetails .auditlog .ui-widget {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    font-weight: bold;
+    margin: 10px 0;
+    display: inline-block; }
+  #transferDetails .transferLogsDiv {
+    position: absolute;
+    width: 100%;
+    margin-bottom: 30px; }
+  #transferDetails .transferLogTableRow .date {
+    padding-left: 0; }
+
+:root {
+  --logoUrl: url(/images/fabrique/logo/filesender_logo_zwart.svg);
+  --addFilesUrl: url(/images/fabrique/logo/add_files.svg);
+  --checkSmallUrl: url(/images/fabrique/logo/check-small.svg);
+  --checkUrl: url(/images/fabrique/logo/check.svg);
+  --dragDropUrl: url(/images/fabrique/logo/drag_drop_button.svg);
+  --infoIconUrl: url(/images/fabrique/logo/information-icon.svg);
+  --removeUrl: url(/images/fabrique/logo/remove_files.svg);
+  --viewMoreUrl:  url(/images/fabrique/logo/arrow_down.svg);
+  --arrowLeftUrl: url(/images/fabrique/logo/arrow.svg);
+  --arrowRightUrl: url(/images/fabrique/logo/arrow-right.svg); }
+
+@-webkit-keyframes fadeout {
+  0% {
+    opacity: 1; }
+  99% {
+    opacity: 0; }
+  100% {
+    opacity: 0;
+    display: none;
+    pointer-events: none; } }
+
+@keyframes fadeout {
+  0% {
+    opacity: 1; }
+  99% {
+    opacity: 0; }
+  100% {
+    opacity: 0;
+    display: none;
+    pointer-events: none; } }
+
+body {
+  background: #FFF3EB;
+  position: relative;
+  height: 100vh; }
+  body li, body p, body span, body div, body a {
+    font-family: "Source Sans Pro", sans-serif;
+    color: #040608; }
+  body input {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400; }
+    body input::-webkit-input-placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    body input:-ms-input-placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    body input::-ms-input-placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+    body input::placeholder {
+      font-size: 14px;
+      line-height: 18px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 400; }
+
+.upload_in_progress {
+  background: linear-gradient(180deg, #F7CC92, #F7B992);
+  background-size: 100% 0%;
+  background-repeat: no-repeat;
+  background-color: #FFF3EB;
+  transition: background-size 600ms ease-in-out;
+  position: relative;
+  width: 100%;
+  left: 0;
+  border-radius: 0 0 80px 80px; }
+
+#wrap {
+  background: inherit;
+  border: none;
+  width: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
+  padding-bottom: 0;
+  -webkit-align-items: baseline;
+          align-items: baseline; }
+

@@ -28,4 +28,7 @@
         'header' => '{tr:closed_transfers}'
     )) ?>
     <?php } ?>
+
+    <script type="text/javascript" src="{path:js/transfers_table.js}"></script>
+
 </div>
