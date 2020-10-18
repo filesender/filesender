@@ -726,6 +726,12 @@ On a Fedora based distribution you might install these with:
 dnf install python3-requests python3-urllib3
 ```
 
+On a Debian based distribution you might install these with:
+```
+apt-get install python3-requests python3-urllib3
+```
+
+
 
 
 
