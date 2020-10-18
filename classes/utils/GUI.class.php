@@ -83,13 +83,17 @@ class GUI
 
     public static function browser_is_ie11()
     {
-        return preg_match("@MSIE@i", $_SERVER['HTTP_USER_AGENT'] )
-          ||   preg_match("@Trident/@i", $_SERVER['HTTP_USER_AGENT'] );
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            return preg_match("@MSIE@i", $_SERVER['HTTP_USER_AGENT'] )
+              ||   preg_match("@Trident/@i", $_SERVER['HTTP_USER_AGENT'] );
+        }
     }
     
     public static function browser_is_edge()
     {
-        return preg_match("@ Edge/@i", $_SERVER['HTTP_USER_AGENT'] );
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            return preg_match("@ Edge/@i", $_SERVER['HTTP_USER_AGENT'] );
+        }
     }
 
     public static function use_webasm_pbkdf2_implementation()
