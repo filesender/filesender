@@ -29,17 +29,29 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import argparse
-import requests
-import time
-from collections.abc import Iterable
-from collections.abc import MutableMapping
-import hmac
-import hashlib
-import urllib3
-import os
-import json
-import configparser
-from os.path import expanduser
+try:
+  import requests
+  import time
+  from collections.abc import Iterable
+  from collections.abc import MutableMapping
+  import hmac
+  import hashlib
+  import urllib3
+  import os
+  import json
+  import configparser
+  from os.path import expanduser
+except Exception as e:
+  print(type(e))
+  print(e.args)
+  print(e)
+  print('')
+  print('ERROR: A required dependency is not installed, please check your')
+  print('distribution packages or run something like the following')
+  print('')
+  print('pip3 install requests urllib3 ')
+  exit(1)
+  
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
