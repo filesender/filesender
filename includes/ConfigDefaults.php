@@ -301,7 +301,7 @@ $default = array(
             'default' => true
         ),
         'email_recipient_when_transfer_expires' => array(
-            'available' => true,
+            'available' => false,
             'advanced' => false,
             'default' => true
         ),
