@@ -300,6 +300,11 @@ $default = array(
             'advanced' => false,
             'default' => true
         ),
+        'email_recipient_when_a_transfer_expires' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => true
+        ),
         'enable_recipient_email_download_complete' => array(
             'available' => true,
             'advanced' => true,
