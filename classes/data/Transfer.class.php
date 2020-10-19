@@ -705,11 +705,21 @@ class Transfer extends DBObject
         
         // Log action
         Logger::logActivity($manualy ? LogEventTypes::TRANSFER_CLOSED : LogEventTypes::TRANSFER_EXPIRED, $this);
-        
+
         if (!$this->getOption(TransferOptions::GET_A_LINK)) {
-            // Send notification to all recipients
-            foreach ($this->recipients as $recipient) {
-                $this->sendToRecipient($manualy ? 'transfer_deleted' : 'transfer_expired', $recipient);
+
+            $email_message_type = 'transfer_expired';
+            if( $manualy ) {
+                $email_message_type = 'transfer_deleted';
+            }
+            
+            // always email deleted transfers
+            //     or optionally notify when a transfer has expired.
+            if( $manualy || $this->getOption(TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES)) {
+                // Send notification to all recipients
+                foreach ($this->recipients as $recipient) {
+                    $this->sendToRecipient( $email_message_type, $recipient );
+                }
             }
         }
         
