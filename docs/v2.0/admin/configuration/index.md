@@ -567,7 +567,7 @@ A note about colours;
 ## Language and internationalisation
 
 ---
-FileSender includes a translation engine which allows for flexible user language detection and customisation.  For more details check the [Translating FileSender 2.0 documentation](https://www.assembla.com/spaces/file_sender/wiki/Translating_FileSender)
+FileSender includes a translation engine which allows for flexible user language detection and customisation.  For more details check the [Translating FileSender 2.0 documentation](https://docs.filesender.org/v2.0/i18n/)
 
 User language detection is done in the following order:
 

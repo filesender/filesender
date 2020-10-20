@@ -840,9 +840,9 @@ If you don't want your users to have to type `/filesender` after the hostname, y
 
 	RedirectMatch ^/(?!filesender/|simplesaml/)(.*) https://filesender.example.org/filesender/$1
 
-# Support and Feedback
 
-See [Support and Mailing
-lists](https://www.assembla.com/wiki/show/file_sender/Support_and_Mailinglists)
-and [Feature
-requests](https://www.assembla.com/wiki/show/file_sender/Feature_requests).
+## Issues and Bugs
+
+Please inspect and report bugs on the [GitHub Issue
+Tracker](https://github.com/filesender/filesender/issues)
+
