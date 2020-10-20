@@ -1,9 +1,20 @@
+
+The FileSender project uses www.poeditor.com to manage the different
+languages FileSender supports. The translations on poeditor.com are
+considered the definite master copy. Please see the documentation on
+the Web for information about how to contribute to the translations
+for FileSender. https://docs.filesender.org/v2.0/i18n/
+
+There is also a method to bring new language terms from files in the
+language directory of a pull request into poeditor. Please see the
+scripts/language/README.md file for more information about that
+process. One must be careful doing that because you do not want to clobber
+existing translations.
+
 This directory contains the distribution files for the various language
 definitions. Definitions and mappings in these files can be over-ruled
 by a corresponding file (with the same name) in the main ./config directory. 
-Local customisations should be done in the ./config files. See
-http://www.assembla.com/spaces/filesendercontrib/ on how to report errors
-in the translations or contribute new translations.
+Local customisations should be done in the ./config files. 
 
 The naming scheme of the language files in this directory and mapping of
 browser tags to language files is based on Best Current Practices as defined
