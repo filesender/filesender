@@ -66,35 +66,3 @@ https://github.com/filesender/filesender/releases/
 Cheers.
 ```
     
-
-## Debian package
-
-```
-FIXME: update for 2.0 epoch
-```
-
-Requirements: a debian system
-
-* Make sure you have all debian packaging tools installed $ sudo apt-get install devscripts
-* To sign the packages you need your the filesender-dev key in your gnupg configuration.
-* Do a clean export of the tag $ svn export http://subversion.assembla.com/svn/file_sender/filesender/tags/filesender-
-* inside the exported folder run $ dpkg-buildpackage
-* Debian packages will be in the parent
-* You can add the debian package to the stable repository by running $ reprepro -b /var/www/debian/ includedeb stable filesenderall.deb
-* You can also add the source to the source stable repo: $ reprepro -b /var/www/debian/ includedsc stable *.dsc
-
-## RPM package
-
-```
-FIXME: update for 2.0 epoch
-```
-
-* Make sure you have RPM installed: $ sudo apt-get install rpm
-* Create the required directory structure: mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS,TMP}
-* To sign the packages you need to put this in ~/.rpmmacros %signature gpg %gpg_name Filesender Development filesender-dev@filesender.org Also make sure the filesender-dev private key is in your gnupg configuration
-* Put the specs file from http://subversion.assembla.com/svn/file_sender/filesender/tags/filesender- in rpmbuild/SPECS
-* Put the source tarball, patches and extra files in rpmbuild/SOURCES. The required files are listed in the spec file and can be found in http://subversion.assembla.com/svn/file_sender/filesender/tags/filesender-
-* run rpmbuild -ba --sign rpmbuild/SPECS/*.spec
-* If everything went well the RPM's will be in rpmbuild/RPMS
-* to publish the RPM copy it to /var/www/rpm/stable
-* Update the yum repository database: $ cd /var/www/rpm/stable $ createrepo -o . .

@@ -1,7 +1,5 @@
 	/* These configuration settings should be inserted into the config.php file when
 	 * you want to try the experimental mail bounce handling feature in FileSender 1.0.1.
-	 * Details about how to activate and use this experimental feature can be found on:
-	 *   http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling
 	 */
 
 	// email bounce handling
