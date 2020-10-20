@@ -656,6 +656,11 @@ Once you are happy with the update, by using git diff for example, you
 should commit the branch and push to github to make a pull request to
 merge the changes to the main repository.
 
+The translations from poeditor can also be brought into the ./language
+directory for all languages using the scripts in scripts/language in
+particular the import-all-from-poeditor.sh script.
+
+
 ### Adding more single translation files
 
 Some translations are stored in the lang.php file and some are stored
