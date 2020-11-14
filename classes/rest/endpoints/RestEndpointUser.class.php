@@ -189,7 +189,15 @@ class RestEndpointUser extends RestEndpoint
         }
         
         if ($property == 'frequent_recipients') {
-            throw new RestUsePOSTException();
+            // Throwing an exception for this bad access case is
+            // a bit of overkill, frequent_recipients are not a
+            // critical feature so it might be better to fallback
+            // to just offering nothing if they access things via
+            // GET instead of POST.
+            return array(
+                'path' => '/user/user',
+                'data' => ''
+            );
         }
         
         if ($property == 'quota') {
