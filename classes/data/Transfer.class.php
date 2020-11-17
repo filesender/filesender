@@ -1353,7 +1353,7 @@ class Transfer extends DBObject
             $this->recipientsCache[$recipient->id] = $recipient;
         }
         
-        Logger::info($recipient.' added to '.$this);
+        Logger::info($recipient.' added to '.$this.' with token '.$recipient->token);
         
         return $recipient;
     }
