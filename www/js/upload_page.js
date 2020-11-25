@@ -782,7 +782,7 @@ filesender.ui.scheduleAutomaticResume = function(msg) {
         window.setTimeout(
             function() {
                 filesender.ui.automatic_resume_timer = 0;
-                window.clearTimeout(filesender.ui.automatic_resume_timer_countdown);
+                window.clearInterval(filesender.ui.automatic_resume_timer_countdown);
                 filesender.ui.automatic_resume_timer_countdown = 0;
 
                 window.filesender.log('scheduleAutomaticResume(calling retry) ' + msg );
@@ -792,7 +792,9 @@ filesender.ui.scheduleAutomaticResume = function(msg) {
         );
     filesender.ui.automatic_resume_timer_seconds = filesender.config.automatic_resume_delay_to_resume+1;
     var countDownFunc = function() {
-        filesender.ui.automatic_resume_timer_seconds--;
+        if (filesender.ui.automatic_resume_timer_seconds > 0) {
+            filesender.ui.automatic_resume_timer_seconds--;
+        }
         filesender.ui.nodes.auto_resume_timer.text(
             lang.tr('auto_resume_timer_seconds')
                 .r({seconds: filesender.ui.automatic_resume_timer_seconds}).out());
@@ -821,20 +823,22 @@ filesender.ui.retryingErrorHandler = function(error,callback) {
         });
     }
 
-    filesender.ui.automatic_resume_retries++;
-    if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
-        window.filesender.log("The user has run out of automatic retries so we are going to report this as a fatal error");
-        pause( true );
-        filesender.ui.errorOriginal( error, callback );
-        return;
-    }
+    if (filesender.ui.resumeScheduled === false) {
+        filesender.ui.automatic_resume_retries++;
+        if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
+            window.filesender.log("The user has run out of automatic retries so we are going to report this as a fatal error");
+            pause( true );
+            filesender.ui.errorOriginal( error, callback );
+            return;
+        }
 
-    filesender.ui.scheduleAutomaticResume( msg );
+        filesender.ui.scheduleAutomaticResume( msg );
+    }
 }
 
 filesender.ui.cancelAutomaticResume = function() {
     
-    window.clearTimeout(filesender.ui.automatic_resume_timer_countdown);
+    window.clearInterval(filesender.ui.automatic_resume_timer_countdown);
     filesender.ui.automatic_resume_timer_countdown = 0;
     window.clearTimeout(filesender.ui.automatic_resume_timer);
     filesender.ui.automatic_resume_timer = 0;
