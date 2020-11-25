@@ -13,7 +13,7 @@ subject: Rappels automatiques envoyés pour le dépôt n°{transfer.id}
 
 Madame, Monsieur,
 
-Un rappel automatique a été envoyé aux destinataires n'ayant téléchargé aucun fichiers de votre dépôt n°{transfer.id} sur {cfg:site_name} ({transfer.link}) :
+Un rappel automatique a été envoyé aux destinataires n'ayant téléchargé aucun fichier de votre dépôt n°{transfer.id} sur {cfg:site_name} ({transfer.link}) :
 
 {each:recipients as recipient}
   - {recipient.email}
@@ -29,7 +29,7 @@ Cordialement,
 </p>
 
 <p>
-    Un rappel automatique a été envoyé aux destinataires n'ayant téléchargé aucun fichiers de votre <a href="{transfer.link}">dépôt n°{transfer.id}</a> sur <a href="{cfg:site_url}">{cfg:site_name}</a> :
+    Un rappel automatique a été envoyé aux destinataires n'ayant téléchargé aucun fichier de votre <a href="{transfer.link}">dépôt n°{transfer.id}</a> sur <a href="{cfg:site_url}">{cfg:site_name}</a> :
 </p>
 
 <p>
