@@ -325,7 +325,7 @@ class StorageFilesystemChunked extends StorageFilesystem
     }
 
     /**
-     * getStream()
+     * Get a resource stream (used with the archiver to generate tar/zip files)
      *
      * @param File $file
      * @return resource
