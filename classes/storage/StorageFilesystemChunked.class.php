@@ -194,18 +194,18 @@ class StorageFilesystemChunked extends StorageFilesystem
                 $validUpload = true;
             } catch (ChunkWriteException $e) {
                 if ($isLastAttempt) {
-                    Logger::error("writeChunk() failed: {$filePath} {$e->getMessage()}");
+                    Logger::error("writeChunk() failed: {$chunkFile} {$e->getMessage()}");
                     // Re-throw any StorageFilesystemCannotWriteException so that we can add extra information
                     throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
                 } else {
-                    Logger::debug("writeChunk() failed: {$filePath} {$e->getMessage()}");
+                    Logger::debug("writeChunk() failed: {$chunkFile} {$e->getMessage()}");
                 }
             }
         }
 
         // Just in case we get through all of our attempts and don't hit the try/catch
         if ($validUpload === false && $isLastAttempt) {
-            Logger::error("writeChunk() failed: {$filePath} exceeded retry attempts");
+            Logger::error("writeChunk() failed: {$chunkFile} exceeded retry attempts");
             throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
         }
 
@@ -285,7 +285,7 @@ class StorageFilesystemChunked extends StorageFilesystem
             return true;
         }
 
-        Logger::error("verifyChecksum($chunkFile) checksums do not match. file: $fileHash stream: $streamHash");
+        Logger::error("verifyChecksum() checksums do not match. file: $path file_hash: $fileHash stream_hash: $streamHash");
         return false;
     }
 
