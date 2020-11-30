@@ -36,6 +36,11 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 /**
+ * Generic Chunk exception so we can throw a specific exception with a message on failed writes
+ */
+class ChunkWriteException extends \Exception {}
+
+/**
  *  Gives access to a file on the filesystem
  *
  *  This class stores the chunks that are sent as individual files
@@ -155,7 +160,7 @@ class StorageFilesystemChunked extends StorageFilesystem
                 // Open file, go to next try if it fails
                 $fh = \fopen($chunkFile, 'wb');
                 if ($fh === false) {
-                    throw new StorageFilesystemCannotWriteException('fopen() failed');
+                    throw new ChunkWriteException('fopen() failed');
                 }
 
                 // Write file, flush buffers then unlock
@@ -163,44 +168,45 @@ class StorageFilesystemChunked extends StorageFilesystem
 
                 // Close file and move to next iteration if it fails.
                 if (\fclose($fh) === false) {
-                    throw new StorageFilesystemCannotWriteException('fclose() failed');
+                    throw new ChunkWriteException('fclose() failed');
                 }
 
                 // Check that the right amount of data was written and move to next iteration if it fails
                 if ($chunkSize != $written) {
-                    throw new StorageFilesystemCannotWriteException('chunk_size != bytes written');
+                    throw new ChunkWriteException('chunk_size != bytes written');
                 }
 
                 // Clear cached values and check the chunk file now exists, otherwise we retry from the beginning
                 if (!self::file_exists($chunkFile)) {
-                    throw new StorageFilesystemCannotWriteException('file does not exist after write');
+                    throw new ChunkWriteException('file does not exist after write');
                 }
 
                 // Check file size
                 if ($chunkSize != self::filesize($chunkFile)) {
-                    throw new StorageFilesystemCannotWriteException('chunk_size != filesize()');
+                    throw new ChunkWriteException('chunk_size != filesize()');
                 }
 
                 // Hash the file to make sure it actually exists and matches the written data
                 if (!self::verifyChecksum('md5', $data, $chunkFile)) {
-                    throw new StorageFilesystemCannotWriteException('checksum validation failed');
+                    throw new ChunkWriteException('checksum validation failed');
                 }
 
                 $validUpload = true;
-            } catch (StorageFilesystemCannotWriteException $e) {
+            } catch (ChunkWriteException $e) {
                 if ($isLastAttempt) {
-                    Logger::error("writeChunk({$filePath}) failed: {$e->getMessage()}");
+                    Logger::error("writeChunk() failed: {$filePath} {$e->getMessage()}");
                     // Re-throw any StorageFilesystemCannotWriteException so that we can add extra information
-                    throw new StorageFilesystemCannotWriteException('writeChunk( '.$filePath.') failed: '.$e->getMessage(), $file, $data, $offset, $written);
+                    throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
                 } else {
-                    Logger::debug("writeChunk({$filePath}) failed: {$e->getMessage()}");
+                    Logger::debug("writeChunk() failed: {$filePath} {$e->getMessage()}");
                 }
             }
         }
 
         // Just in case we get through all of our attempts and don't hit the try/catch
         if ($validUpload === false && $isLastAttempt) {
-            throw new StorageFilesystemCannotWriteException('writeChunk( '.$filePath.') failed: exceeded retry attempts', $file, $data, $offset, $written);
+            Logger::error("writeChunk() failed: {$filePath} exceeded retry attempts");
+            throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
         }
 
         return array(
@@ -292,8 +298,6 @@ class StorageFilesystemChunked extends StorageFilesystem
     {
         self::setup();
         $filePath = self::buildPath($file);
-
-        // TODO(mdusher): add file integrity checks so we can trigger auto-retry
     }
 
     /**
