@@ -298,6 +298,35 @@ class StorageFilesystemChunked extends StorageFilesystem
     {
         self::setup();
         $filePath = self::buildPath($file);
+        $onDiskSize = self::calculateOnDiskFileSize($file);
+        $expectedSize = $file->size;
+        if ($file->transfer->is_encrypted) {
+            $expectedSize = $file->encrypted_size;
+        }
+
+        if ($onDiskSize != $expectedSize) {
+            Logger::error('completeFile('.$file->uid.') size mismatch. expected_size:'.$expectedSize.' ondisk_size:'.$onDiskSize);
+            throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$expectedSize.' but size on disk is '.$onDiskSize);
+        }
+    }
+
+    /**
+     * Calculates the size of a File's directory
+     *
+     * @param File $file
+     *
+     * @return int
+     */
+    public static function calculateOnDiskFileSize(File $file)
+    {
+        $path = self::buildPath($file);
+        $totalSize = 0;
+        foreach (new DirectoryIterator($path) as $fileChunk) {
+            if ($fileChunk->isFile()) {
+                $totalSize += $fileChunk->getSize();
+            }
+        }
+        return $totalSize;
     }
 
     /**
