@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -43,16 +43,16 @@ if(!('filesender' in window)) window.filesender = {};
 window.filesender.client = {
     // REST service base path
     base_path: null,
-    
+
     // Security token
     security_token: null,
-    
+
     // Webservice maintenance flag
     maintenance: false,
-    
+
     // Pending requests
     pending_requests: [],
-    
+
     // Handling authentication required
     authentication_required: false,
 
@@ -66,26 +66,26 @@ window.filesender.client = {
         }
         return "";
     },
-    
+
     updateSecurityToken: function(source) {
         if(typeof source !== 'string') {
             if(!source.getResponseHeader)
                 return;
-            
+
             source = source.getResponseHeader('X-Filesender-Security-Token');
         }
-        
+
         if(!source || source == this.security_token)
             return;
-        
+
         filesender.ui.log('Security token update');
         this.security_token = source;
         $('body').attr({'data-security-token': source});
-        
+
         if(filesender.terasender && filesender.terasender.security_token != source)
             filesender.terasender.security_token = source;
     },
-    
+
     // Send a request to the webservice
     call: function(method, resource, data, callback, options) {
         if(!this.base_path) {
@@ -95,25 +95,25 @@ window.filesender.client = {
             path = path.join('/');
             this.base_path = path + '/rest.php';
         }
-        
+
         if(this.security_token === null)
             this.security_token = $('body').attr('data-security-token');
-        
+
         if(!options) options = {};
-        
+
         var args = {};
         if(options.args) for(var k in options.args) args[k] = options.args[k];
         var urlargs = [];
         for(var k in args) urlargs.push(k + '=' + args[k]);
-        
+
         if(urlargs.length) resource += (resource.match(/\?/) ? '&' : '?') + urlargs.join('&');
-        
+
         if(data) {
             var raw = options && ('rawdata' in options) && options.rawdata;
-            
+
             if(!raw) data = JSON.stringify(data);
         }else data = undefined;
-        
+
         var errorhandler = function(error) {
             filesender.ui.error(error);
         };
@@ -121,17 +121,17 @@ window.filesender.client = {
             errorhandler = options.error;
             delete options.error;
         }
-        
+
         var headers = {};
         if(options.headers) headers = options.headers;
-        
+
         if(this.security_token /*&& (method != 'get')**/) headers['X-Filesender-Security-Token'] = this.security_token;
 
 	if (method.toLowerCase() === 'delete' || method.toLowerCase() === 'put') {
 	    // attach the token in request header
    	    headers['csrfptoken'] = filesender.client.getCSRFToken();
 	}
-        
+
         var settings = {
             cache: false,
             contentType: 'application/json;charset=utf-8',
@@ -152,28 +152,28 @@ window.filesender.client = {
             type: method.toUpperCase(),
             url: this.base_path + resource
         };
-        
+
         // Needs to be done after "var settings" because handler needs that settings variable exists
         settings.error = function(xhr, status, error) {
             var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
-            
+
             if( // Ignore 40x, 50x and timeouts if undergoing maintenance
                 (xhr.status >= 400 || status == 'timeout') &&
                 filesender.client.maintenance
             ) return;
-            
+
             try {
                 var error = JSON.parse(msg);
-                
+
                 if(error.message == 'auth_user_not_allowed') // Should have been already reported by html ui
                     return;
-                
+
                 if(
                     (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
                     (options.ignore_authentication_required || filesender.client.authentication_required)
                 )
                     return;
-                
+
                 if(
                     (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
                     (options.auth_prompt === undefined || options.auth_prompt)
@@ -217,37 +217,37 @@ window.filesender.client = {
                                         function() {} );
                     return;
                 }
-                
-                
+
+
                 if(error.message == 'undergoing_maintenance') {
                     if(filesender.client.maintenance) return;
-                    
+
                     filesender.ui.log('Webservice entered maintenance mode, keeping requests to run them when maintenance ends');
                     if(filesender.ui.transfer) filesender.ui.transfer.maintenance(true);
-                    
+
                     filesender.client.maintenance = window.setInterval(function() {
                         filesender.client.get('/info', function(info) {
                             // Got data instead of "undergoing_maintenance" exception, maintenance is over, lets restart stacked requests
                             window.clearInterval(filesender.client.maintenance);
                             filesender.client.maintenance = false;
-                            
+
                             filesender.ui.maintenance(false);
-                            
+
                             filesender.ui.log('Webservice maintenance mode ended, running pending requests');
-                            
+
                             if(filesender.ui.transfer) filesender.ui.transfer.maintenance(false);
                             for(var i=0; i<filesender.client.pending_requests.length; i++)
                                 jQuery.ajax(filesender.client.pending_requests[i]);
-                            
+
                             filesender.ui.log('Ran all pending requests from webservice maintenance period');
                         }, {maintenanceCheck: true});
                     }, 60 * 1000);
-                    
+
                     filesender.client.pending_requests.push(settings);
-                    
+
                     if(!$('#page.maintenance_page').length)
                         filesender.ui.maintenance(true);
-                    
+
                     return;
                 }
 
@@ -262,51 +262,51 @@ window.filesender.client = {
                                         function() {} );
                     return;
                 }
-                
+
                 errorhandler(error);
             } catch(e) {
                 filesender.ui.rawError(msg);
             }
         };
-        
+
         for(var k in options) settings[k] = options[k];
-        
+
         if(this.maintenance && !options.maintenanceCheck) {
             this.pending_requests.push(settings);
             return;
         }
-        
+
         return jQuery.ajax(settings);
     },
-    
+
     get: function(resource, callback, options) {
         return this.call('get', resource, undefined, callback, options);
     },
-    
+
     post: function(resource, data, callback, options) {
         return this.call('post', resource, data, function(data, status, xhr) {
             callback.call(this, xhr.getResponseHeader('Location'), data);
         }, options);
     },
-    
+
     put: function(resource, data, callback, options) {
         return this.call('put', resource, data, callback, options);
     },
-    
+
     delete: function(resource, callback, options) {
         return this.call('delete', resource, undefined, callback, options);
     },
-    
+
     /**
      * Get public info about the Filesender instance
      */
     getInfo: function(callback) {
         return this.get('/info', callback);
     },
-    
+
     /**
      * Start a transfer
-     * 
+     *
      * @param string from sender email
      * @param array files array of file objects with name, size and sha1 properties
      * @param array recipients array of recipients addresses
@@ -319,7 +319,7 @@ window.filesender.client = {
     postTransfer: function(transfer, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-            
+
         var files = [];
         for (var i = 0; i < transfer.files.length; i++) {
             //
@@ -336,7 +336,7 @@ window.filesender.client = {
                 mime_type: transfer.files[i].mime_type,
                 cid: transfer.files[i].cid,
                 iv: transfer.files[i].iv,
-                aead: aead 
+                aead: aead
             });
         }
 
@@ -358,10 +358,10 @@ window.filesender.client = {
             options: transfer.options
         }, callback, opts);
     },
-    
+
     /**
      * Get transfer info
-     * 
+     *
      * @param int id
      * @param callable callback
      * @param callable onerror
@@ -369,13 +369,13 @@ window.filesender.client = {
     getTransfer: function(id, callback, onerror, opts) {
         if(!opts) opts = {};
         if(onerror) opts.error = onerror;
-        
+
         return this.get('/transfer/' + id, callback, opts);
     },
-    
+
     /**
      * Post a file chunk
-     * 
+     *
      * @param object file
      * @param blob chunk
      * @param callable callback
@@ -390,15 +390,15 @@ window.filesender.client = {
                 'X-Filesender-Chunk-Size': blob.size
             }
         };
-        
+
         if(onerror) opts.error = onerror;
-        
+
         return this.post(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk', file), blob, callback, opts);
     },
-    
+
     /**
      * Put a file chunk
-     * 
+     *
      * @param object file
      * @param blob chunk
      * @param int offset
@@ -419,12 +419,12 @@ window.filesender.client = {
             },
             xhr: function() {
                 uxhr = $.ajaxSettings.xhr();
-                
+
                 if((typeof uxhr.upload != 'unknown') && uxhr.upload) uxhr.upload.addEventListener('progress', function(e) {
                     if(!e.lengthComputable) return;
                     if(progress) progress(e.loaded / e.total);
                 }, false);
-                
+
                 return uxhr;
             }
         };
@@ -434,7 +434,7 @@ window.filesender.client = {
         if(encrypted){
             var cryptedBlob = null;
             blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
-                // nothing todo here.. 
+                // nothing todo here..
             });
             blobReader.blobSlice = blob;
 
@@ -454,13 +454,13 @@ window.filesender.client = {
         }else{
             var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
         }
-        
+
         if(error) opts.error = error;
     },
-    
+
     /**
      * Signal file completion (along with checking data)
-     * 
+     *
      * @param object file
      * @param object data check data
      * @param callable callback
@@ -468,16 +468,16 @@ window.filesender.client = {
     fileComplete: function(file, data, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-        
+
         if(!data) data = {};
         data.complete = true;
-        
-        return this.put(file.transfer.authenticatedEndpoint('/file/' + file.id, file), {complete: true}, callback, opts);
+
+        return this.put(file.transfer.authenticatedEndpoint('/file/' + file.id, file), data, callback, opts);
     },
-    
+
     /**
      * Signal transfer completion (along with checking data)
-     * 
+     *
      * @param object transfer
      * @param object data check data
      * @param callable callback
@@ -485,36 +485,36 @@ window.filesender.client = {
     transferComplete: function(transfer, data, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-        
+
         if(!data) data = {};
         data.complete = true;
-        
+
         return this.put(transfer.authenticatedEndpoint('/transfer/' + transfer.id), data, callback, opts);
     },
-    
+
     /**
      * Remind a transfer
-     * 
+     *
      * @param mixed transfer id
      * @param callable callback
      */
     remindTransfer: function(id, callback) {
         return this.put('/transfer/' + id, {remind: true}, callback);
     },
-    
+
     /**
      * Remind a recipient
-     * 
+     *
      * @param mixed recipient id
      * @param callable callback
      */
     remindRecipient: function(id, callback) {
         return this.put('/recipient/' + id, {remind: true}, callback);
     },
-    
+
     /**
      * Extend a transfer's expiry date
-     * 
+     *
      * @param mixed transfer id
      * @param bool remind
      * @param callable callback
@@ -522,28 +522,28 @@ window.filesender.client = {
     extendTransfer: function(id, remind, callback) {
         var data = {extend_expiry_date: true};
         if(remind) data.remind = true;
-        
+
         return this.put('/transfer/' + id, data, callback);
     },
-    
+
     /**
      * Close a transfer
-     * 
+     *
      * @param object transfer
      * @param callable callback
      */
     closeTransfer: function(transfer, callback, onerror) {
         var id = (typeof transfer == 'object') ? transfer.id : transfer;
-        
+
         var opts = {};
         if(onerror) opts.error = onerror;
-        
+
         return this.put('/transfer/' + id, {closed: true}, callback, opts);
     },
-    
+
     /**
      * Delete a transfer (admin / owner if in early statuses)
-     * 
+     *
      * @param object transfer
      * @param bool nice should we notify owner/recipients about the deletion (close then delete or just delete)
      * @param callable callback
@@ -552,10 +552,10 @@ window.filesender.client = {
         var id = transfer;
         var opts = {};
         if(onerror) opts.error = onerror;
-        
+
         if(typeof transfer == 'object') {
             id = transfer.id;
-            
+
         } else {
             transfer = {
                 authenticatedEndpoint: function(res) {
@@ -563,41 +563,41 @@ window.filesender.client = {
                 }
             };
         }
-        
+
         return this.delete(transfer.authenticatedEndpoint('/transfer/' + id), callback, opts);
     },
-    
+
     /**
      * Delete a file
-     * 
+     *
      * @param object file
      * @param callable callback
      */
     deleteFile: function(file, callback, onerror) {
         var id = file;
         var opts = {};
-        
+
         if(typeof file == 'object')
             id = file.id;
-        
+
         if(onerror) opts.error = onerror;
-        
+
         return this.delete('/file/' + id, callback, opts);
     },
-    
+
     /**
      * Get recipient data
-     * 
+     *
      * @param int recipient id
      * @param callable callback
      */
     getRecipient: function(id, callback) {
         return this.get('/recipient/' + id, callback);
     },
-    
+
     /**
      * Add recipient to transfer
-     * 
+     *
      * @param int transfer id
      * @param string email
      * @param callable callback
@@ -605,43 +605,43 @@ window.filesender.client = {
     addRecipient: function(transfer_id, email, callback) {
         return this.post('/transfer/' + transfer_id + '/recipient', {recipient: email}, callback);
     },
-    
+
     /**
      * Delete a recipient
-     * 
+     *
      * @param object recipient
      * @param callable callback
      */
     deleteRecipient: function(recipient, callback, onerror) {
         var id = recipient;
         var opts = {};
-        
+
         if(typeof recipient == 'object')
             id = recipient.id;
-        
+
         if(onerror) opts.error = onerror;
-        
+
         return this.delete('/recipient/' + id, callback, opts);
     },
-    
+
     /**
      * Get a guest voucher
-     * 
+     *
      * @param mixed guest voucher object or id
      * @param callable callback
      */
     getGuest: function(voucher, callback) {
         var id = voucher;
-        
+
         if(typeof voucher == 'object')
             id = voucher.id;
-        
+
         return this.get('/guest/' + id, callback);
     },
-    
+
     /**
      * Create a guest voucher
-     * 
+     *
      * @param string from sender email
      * @param string subject optionnal subject
      * @param string message optionnal message
@@ -659,43 +659,43 @@ window.filesender.client = {
             options: options
         }, callback);
     },
-    
+
     /**
      * Remind a guest
-     * 
+     *
      * @param mixed guest id
      * @param callable callback
      */
     remindGuest: function(id, callback) {
         return this.put('/guest/' + id, {remind: true}, callback);
     },
-    
+
     /**
      * Delete a guest voucher
-     * 
+     *
      * @param mixed guest voucher object or id
      * @param callable callback
      */
     deleteGuest: function(voucher, callback) {
         var id = voucher;
-        
+
         if(typeof voucher == 'object')
             id = voucher.id;
-        
+
         return this.delete('/guest/' + id, callback);
     },
-    
+
     /**
      * Override part of the config (if allowed)
-     * 
+     *
      * @param object overrides
      * @param callable callback
      */
     overrideConfig: function(overrides, callback) {
         return this.put('/config', overrides, callback);
     },
-    
-    
+
+
     getFrequentRecipients: function(needle, callback) {
         return this.post('/user/@me',
                          {
@@ -709,11 +709,11 @@ window.filesender.client = {
         return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
 
-    
+
     getTransferAuditlog: function(id, callback) {
         return this.get('/transfer/' + id + '/auditlog', callback);
     },
-    
+
     getTransferAuditlogByEmail: function(id, filterid, callback) {
         var tailer = '';
         if( filterid ) {
@@ -721,50 +721,50 @@ window.filesender.client = {
         }
         return this.get('/transfer/' + id + '/auditlog/mail' + tailer, callback);
     },
-    
+
     getLegacyUploadProgress: function(key, callback, error) {
         return this.get('/legacyuploadprogress/' + key, callback, {error: error});
     },
-    
+
     updateUserPreferences: function(preferences, callback) {
         return this.put('/user', preferences, callback);
     },
     updateUserIDPreferences: function(id, preferences, callback) {
         return this.put('/user/' + id + '/', preferences, callback);
     },
-    
+
     getUserQuota: function(callback, onerror) {
         this.get('/user/@me/quota', callback, {ignore_authentication_required: true});
     },
 
     /**
      * Delete a user account
-     * 
+     *
      * @param userid user to delete (can be '@me')
      * @param callable callback
      */
     deleteUserAccount: function(user, callback, onerror) {
         var id = user;
         var opts = {};
-        
+
         if(typeof user == 'object')
             id = user.id;
-        
+
         if(onerror) opts.error = onerror;
-        
+
         return this.delete('/user/' + id, callback, opts);
     },
 
-    
+
     createLocalDBAuthUser: function(username,password,callback,onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-        
+
         return this.post('/user/', {username:username, password:password}, callback, opts);
     },
 
     changeLocalAuthDBPassword: function(username,callback) {
-        
+
         var prompt = window.filesender.ui.prompt('new password', function (password) {
             var pass = $(this).find('input').val();
             filesender.client.createLocalDBAuthUser( username, pass, function() {
@@ -773,7 +773,7 @@ window.filesender.client = {
                     callback(username);
                 }
             });
-            
+
         });
         // Add a field to the prompt
         var input = $('<input type="text" class="wide" />').appendTo(prompt);
@@ -783,7 +783,7 @@ window.filesender.client = {
     remindLocalAuthDBPassword: function(id, password, callback ) {
         return this.post('/user/' + id, {remind: true, username: id, password: password }, callback );
     },
-    
+
     removeTransferOption: function(id, tropt, callback) {
         return this.put('/transfer/' + id, {'optionremove':true, option: tropt}, callback);
     },
