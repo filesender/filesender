@@ -1467,7 +1467,6 @@ $(function() {
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
         password = encoded.value;
-        filesender.ui.nodes.encryption.password.attr('readonly', true);
         filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
         filesender.ui.transfer.encryption_password_version  = encoded.version;
