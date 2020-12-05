@@ -29,7 +29,7 @@ Cordialement,
 </p>
 
 <p>
-    Un rappel automatique a été envoyé aux destinataires n'ayant téléchargé aucun fichiers de votre <a href="{transfer.link}">dépôt n°{transfer.id}</a> sur <a href="{cfg:site_url}">{cfg:site_name}</a> :
+    Un rappel automatique a été envoyé aux destinataires n'ayant téléchargé aucun fichier de votre <a href="{transfer.link}">dépôt n°{transfer.id}</a> sur <a href="{cfg:site_url}">{cfg:site_name}</a> :
 </p>
 
 <p>
