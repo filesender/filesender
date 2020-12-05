@@ -1302,20 +1302,28 @@ $(function() {
     // Bind encryption password events
     filesender.ui.nodes.encryption.password.on(
         'keyup',
-        delayAndCallOnlyOnce(function(e) {
-            filesender.ui.files.checkEncryptionPassword($(this),true);
-            filesender.ui.evalUploadEnabled();
-        }, checkEncryptionPassword_delay )
-    );
-    filesender.ui.nodes.encryption.password.on('click', function() {
-        var crypto = window.filesender.crypto_app();
-        if( filesender.ui.transfer.encryption_password_version
-            == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit )
-        {
-            $(this).select();
+        function() {
+            filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
+            filesender.ui.transfer.encryption_password_encoding = 'none';
+            $('#encryption_password_show_container').show();
+
+            delayAndCallOnlyOnce(function(e) {
+                filesender.ui.files.checkEncryptionPassword($(this),true);
+                filesender.ui.evalUploadEnabled();
+            }, checkEncryptionPassword_delay );
         }
-    });
+    );
     
+    // can not really click to select now that we are not readonly in generate
+//    filesender.ui.nodes.encryption.password.on('click', function() {
+//        var crypto = window.filesender.crypto_app();
+//        if( filesender.ui.transfer.encryption_password_version
+//            == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit )
+//        {
+//            $(this).select();
+//        }
+//    });
+  
 
     // Disable readonly (some browsers ignore the autocomplete...)
     filesender.ui.nodes.encryption.password.attr('readonly', false);
@@ -1467,7 +1475,7 @@ $(function() {
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
         password = encoded.value;
-        filesender.ui.nodes.encryption.password.attr('readonly', true);
+//        filesender.ui.nodes.encryption.password.attr('readonly', true);
         filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
         filesender.ui.transfer.encryption_password_version  = encoded.version;
