@@ -76,6 +76,7 @@ A note about colours;
 * [email_return_path](#email_return_path)
 * [email_use_html](#email_use_html)
 * [email_newline](#email_newline)
+* [email_headers](#email_headers)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 
 ## General UI
@@ -714,6 +715,15 @@ User language detection is done in the following order:
 * __1.x name:__ crlf
 * __comment:__ the default value in version 1.x was "\n".
 * __comment:__ Make sure you use double quotes to configure this value in the config file.  If you use single quotes the \r and \n will NOT be interpreted!
+
+### email_headers
+
+* __description:__ specify additional RFC 822 (today RFC 5322) headers to be added to outgoing emails sent by FileSender.
+* __mandatory:__ no
+* __type:__ array of 2-tuples (header name, header value)
+* __default:__ false
+* __available:__ since version 2.x
+* __comment:__ E.g. add to your `$config['email_headers'] = array('Auto-Submitted' => 'auto-generated', 'X-Auto-Response-Suppress' => 'All');` to add these 2 headers with their respective values to all outgoing emails.
 
 ### relay_unknown_feedbacks
 

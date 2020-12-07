@@ -148,6 +148,7 @@ $default = array(
     'email_from' => 'sender',
     'email_return_path' => 'sender',
     'email_subject_prefix' => '{cfg:site_name}:',
+    'email_headers' => false,
     
     'report_bounces' => 'asap',
     'report_bounces_asap_then_daily_range' => 15 * 60,

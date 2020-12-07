@@ -312,9 +312,15 @@ class ApplicationMail extends Mail
         }
         
         // Set context in headers so that it is returned along with bounces
+        $add_headers = Config::get('email_headers');
         if ($context) {
             $this->msg_id = '<'.$context.'-'.uniqid().'@filesender>';
             $this->addHeader('X-Filesender-Context', $context);
+            if (is_array($add_headers)) {
+                foreach ($add_headers as $key => $value) {
+                    $this->addHeader($key, $value);
+                }
+            }
         }
         
         // Send email
