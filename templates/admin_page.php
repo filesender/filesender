@@ -7,9 +7,12 @@
         $sections[] = 'config';
     
     $section = 'transfers';
-    if(array_key_exists('as', $_REQUEST))
-        $section = $_REQUEST['as'];
-    
+    if(array_key_exists('as', $_REQUEST)) {
+        if( strlen($_REQUEST['as'])) {
+            $section = $_REQUEST['as'];
+        }
+    }
+
     if(!in_array($section, $sections)) throw new GUIUnknownAdminSectionException($section);
     
     ?>
