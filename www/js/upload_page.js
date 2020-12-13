@@ -495,8 +495,8 @@ filesender.ui.files = {
         input = $(input);
         var crypto = window.filesender.crypto_app();
 
-        
         var invalid = false;
+        
         if( filesender.ui.transfer.encryption_password_version == 
             crypto.crypto_password_version_constants.v2018_text_password )
         {
@@ -1302,20 +1302,22 @@ $(function() {
     // Bind encryption password events
     filesender.ui.nodes.encryption.password.on(
         'keyup',
-        function() {
+        delayAndCallOnlyOnce(function(e) {
             // plain text passwords have a specific version
             // and encoding which may be used by key generation
             // so we must reset that here if the user starts modifying the password.
             filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
             filesender.ui.transfer.encryption_password_encoding = 'none';
             $('#encryption_password_show_container').show();
-
-            delayAndCallOnlyOnce(function(e) {
-                filesender.ui.files.checkEncryptionPassword($(this),true);
-                filesender.ui.evalUploadEnabled();
-            }, checkEncryptionPassword_delay );
-        }
+            
+            filesender.ui.files.checkEncryptionPassword($(this),true);
+            filesender.ui.evalUploadEnabled();
+        }, checkEncryptionPassword_delay )
     );
+
+
+
+
     
     // Disable readonly (some browsers ignore the autocomplete...)
     filesender.ui.nodes.encryption.password.attr('readonly', false);
