@@ -1303,6 +1303,9 @@ $(function() {
     filesender.ui.nodes.encryption.password.on(
         'keyup',
         function() {
+            // plain text passwords have a specific version
+            // and encoding which may be used by key generation
+            // so we must reset that here if the user starts modifying the password.
             filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
             filesender.ui.transfer.encryption_password_encoding = 'none';
             $('#encryption_password_show_container').show();
@@ -1314,17 +1317,6 @@ $(function() {
         }
     );
     
-    // can not really click to select now that we are not readonly in generate
-//    filesender.ui.nodes.encryption.password.on('click', function() {
-//        var crypto = window.filesender.crypto_app();
-//        if( filesender.ui.transfer.encryption_password_version
-//            == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit )
-//        {
-//            $(this).select();
-//        }
-//    });
-  
-
     // Disable readonly (some browsers ignore the autocomplete...)
     filesender.ui.nodes.encryption.password.attr('readonly', false);
     
@@ -1475,7 +1467,6 @@ $(function() {
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
         password = encoded.value;
-//        filesender.ui.nodes.encryption.password.attr('readonly', true);
         filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
         filesender.ui.transfer.encryption_password_version  = encoded.version;
