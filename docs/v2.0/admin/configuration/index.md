@@ -114,6 +114,7 @@ A note about colours;
 * [user_quota](#user_quota)
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [encryption_enabled](#encryption_enabled)
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_generated_password_length](#encryption_generated_password_length)
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
@@ -1081,6 +1082,14 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
+
+### encryption_enabled
+* __description:__ set to false to disable. If set to true an option to enable file encryption of a transfer becomes available in the web-UI.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__
 
 ### encryption_min_password_length
 * __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.
