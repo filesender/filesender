@@ -1199,10 +1199,12 @@ $(function() {
         from: form.find('select[name="from"]'),
         subject: form.find('input[name="subject"]'),
         encryption: {
-                toggle: form.find('input[name="encryption"]'),
-                password: form.find('input[name="encryption_password"]'),
-                show_hide: form.find('#encryption_show_password'),
-                generate: form.find('#encryption_generate_password')
+            toggle: form.find('input[name="encryption"]'),
+            password: form.find('input[name="encryption_password"]'),
+            show_hide: form.find('#encryption_show_password'),
+            generate:      form.find('#encryption_generate_password'),
+            use_generated: form.find('#encryption_use_generated_password'),
+            generate_again: form.find('#encryption_password_container_generate_again')
         },
         uploading_actions_msg:form.find('.uploading_actions .msg'),
         auto_resume_timer:form.find('.uploading_actions .auto_resume_timer'),
@@ -1465,13 +1467,34 @@ $(function() {
         
         return false;
     });
+
+    filesender.ui.nodes.encryption.use_generated.on('change', function() {
+        var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
+        console.log("AAA v " + v );
+        if( v ) {
+            filesender.ui.nodes.encryption.generate_again.show();
+            
+            filesender.ui.nodes.encryption.password.attr('readonly', true);
+            filesender.ui.nodes.encryption.generate.click();
+        } else {
+            filesender.ui.nodes.encryption.generate_again.hide();
+            $('#encryption_password_show_container').show();
+            filesender.ui.nodes.encryption.password.attr('readonly', false);
+            
+            // plain text passwords have a specific version
+            // and encoding which may be used by key generation
+            // so we must reset that here if the user starts modifying the password.
+            filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
+            filesender.ui.transfer.encryption_password_encoding = 'none';            
+        }
+       
+    });
     
     filesender.ui.nodes.encryption.generate.on('click', function() {
 
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
         password = encoded.value;
-        filesender.ui.nodes.encryption.password.attr('readonly', true);
         filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
         filesender.ui.transfer.encryption_password_version  = encoded.version;

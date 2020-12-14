@@ -614,4 +614,4 @@ $lang['you_can_send_client_logs'] = 'In order to help your support team to find 
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
 $lang['sender_email_search'] = 'Sender email';
 $lang['search_transfer_by_sender_email_description'] = 'Search transfers by sender email address';
-
+$lang['generate_a_different_password'] = 'Generate a different password';
