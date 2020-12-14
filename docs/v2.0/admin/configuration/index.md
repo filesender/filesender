@@ -104,6 +104,7 @@ A note about colours;
 * [default_transfer_days_valid](#default_transfer_days_valid)
 * [max_transfer_days_valid](#max_transfer_days_valid)
 * [allow_transfer_expiry_date_extension](#allow_transfer_expiry_date_extension)
+* [allow_transfer_expiry_date_extension_admin](#allow_transfer_expiry_date_extension_admin)
 * [force_legacy_mode](#force_legacy_mode)
 * [legacy_upload_progress_refresh_period](#legacy_upload_progress_refresh_period)
 * [max_legacy_file_size](#max_legacy_file_size)
@@ -940,7 +941,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 ### allow_transfer_expiry_date_extension
 
-* __description:__ allows a user to extend the expiry date.
+* __description:__ allows a user to extend the expiry date. See also allow_transfer_expiry_date_extension_admin to allow admins special extension ability.
 * __mandatory:__
 * __type:__ an array of integers containing possible extensions in days.
 * __default:__ - (= not activated)
@@ -953,6 +954,18 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	$config['allow_transfer_expiry_date_extension'] = 5; // Same as above
 	$config['allow_transfer_expiry_date_extension'] = array(5, 3); // Allows 2 successive extensions, the first is by 5 days the second is by 3 days
 	$config['allow_transfer_expiry_date_extension'] = array(5, 3, 1, true); // Allows infinite extensions, the first is by 5 days the second is by 3 days, the third and above are by 1 day
+
+### allow_transfer_expiry_date_extension_admin
+
+* __description:__ allows an admin to extend the expiry date. This is similiar to allow_transfer_expiry_date_extension but is only used if you are logged in as an admin on the system. If you are an admin this schedule will overwrite the allow_transfer_expiry_date_extension for you. So you can set both and this will be used in preference if you are logged in as admin, otherwise allow_transfer_expiry_date_extension will be used if it is set. As you might only like to use this option and not allow users to extend transfers this option may offer a second UI element to allow extension, where there are two ways to extend a transfer they will both perform the same action and follow the admin configuration if you are logged in as admin.
+* __mandatory:__
+* __type:__ an array of integers containing possible extensions in days.
+* __default:__ - (= not activated)
+* __available:__ since version 2.21
+* __Examples:__
+
+        // Allows infinite extensions, the first is by 30 days then 90 days 
+	$config['allow_transfer_expiry_date_extension_admin'] = array(30, 90, true); 
 
 ## force_legacy_mode
 

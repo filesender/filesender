@@ -201,7 +201,7 @@ $(function() {
             })
         });
     }).on('click', function() {
-        extendExpires( $(this), 30 );
+        extendExpires( $(this) );
     });
     
 

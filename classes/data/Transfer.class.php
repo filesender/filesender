@@ -1651,11 +1651,10 @@ class Transfer extends DBObject
             $pattern = array($pattern);
         }
 
-       // Get nth
+        // Get nth
         $index = (int)$this->expiry_extensions;
         
-        Logger::error("admin " . Auth::isAdmin() . " index $index count-p " . count($pattern));
-         if ($index < count($pattern)) {
+        if ($index < count($pattern) && (!is_bool($pattern[$index]))) {
             $duration = (int)$pattern[$index];
         } else {
             $last = array_pop($pattern);
