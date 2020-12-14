@@ -129,7 +129,7 @@ $(function() {
     });
 
 
-    var extendExpires = function( self, durationOverride )
+    var extendExpires = function( self )
     {
         if(self.hasClass('disabled')) return;
         
@@ -139,9 +139,6 @@ $(function() {
         if(!id || isNaN(id)) return;
         
         var duration = parseInt(t.attr('data-expiry-extension'));
-        if( durationOverride ) {
-            duration = durationOverride;
-        }
         
         var extend = function(remind) {
             filesender.client.extendTransfer(id, remind, function(t) {
