@@ -245,6 +245,9 @@ class Transfer extends DBObject
     protected static $secondaryIndexMap = array(
         'userid' => array(
             'userid' => array()
+        ),
+        'user_email' => array(
+            'user_email' => array()
         )
     );
 
