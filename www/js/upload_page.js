@@ -1470,7 +1470,6 @@ $(function() {
 
     filesender.ui.nodes.encryption.use_generated.on('change', function() {
         var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
-        console.log("AAA v " + v );
         if( v ) {
             filesender.ui.nodes.encryption.generate_again.show();
             
