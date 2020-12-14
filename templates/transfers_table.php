@@ -16,6 +16,15 @@ if(!isset($trsort))  $nosort = true;
     $havePrev = 0;
 
 
+    $isAdmin = false;
+    if (Auth::isAuthenticated()) {
+        if (Auth::isAdmin()) {
+            $isAdmin = true;
+        }
+    }
+
+
+
     $cgiuid = "";
     if (Auth::isAuthenticated()) {
         if (Auth::isAdmin()) {
@@ -262,7 +271,8 @@ if (!function_exists('clickableHeader')) {
                 </div>
                 <div style="margin:3px">
                     <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                    <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                    <?php if($audit)   { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                    <?php if($isAdmin) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o" title="{tr:extend_expires}"></span><?php } ?>
                 </div>
             </td>
         </tr>
@@ -277,7 +287,8 @@ if (!function_exists('clickableHeader')) {
                     </div>
                     <div style="margin:3px">
                         <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                        <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                        <?php if($audit)   { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                        <?php if($isAdmin) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o" title="{tr:extend_expires}"></span><?php } ?>
                     </div>
                 </div>
                 

@@ -615,3 +615,4 @@ $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at:
 $lang['sender_email_search'] = 'Sender email';
 $lang['search_transfer_by_sender_email_description'] = 'Search transfers by sender email address';
 $lang['generate_a_different_password'] = 'Generate a different password';
+$lang['extend_expires'] = 'Extend expires time';
