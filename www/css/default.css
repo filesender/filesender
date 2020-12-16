@@ -1550,6 +1550,10 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
+.adminaction {
+    background: #ffeeee;
+}
+
 #encryption_password_container_too_short_message {
     color: #f00;
 }

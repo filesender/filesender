@@ -1631,7 +1631,14 @@ class Transfer extends DBObject
      */
     public function expiryDateExtension($throw = true)
     {
-        $pattern = Config::get('allow_transfer_expiry_date_extension');
+        $pattern = null;
+        
+        if( Auth::isAdmin()) {
+            $pattern = Config::get('allow_transfer_expiry_date_extension_admin');
+        }
+        if( !$pattern ) {
+            $pattern = Config::get('allow_transfer_expiry_date_extension');
+        }
         
         if (!$pattern) {
             if ($throw) {
@@ -1643,11 +1650,11 @@ class Transfer extends DBObject
         if (!is_array($pattern)) {
             $pattern = array($pattern);
         }
-        
+
         // Get nth
         $index = (int)$this->expiry_extensions;
         
-        if ($index < count($pattern)) {
+        if ($index < count($pattern) && (!is_bool($pattern[$index]))) {
             $duration = (int)$pattern[$index];
         } else {
             $last = array_pop($pattern);
