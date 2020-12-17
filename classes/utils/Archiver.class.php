@@ -144,7 +144,7 @@ class Archiver
             $file = $data['data'];
             $fileopts = array();
             $transfer = $file->transfer;
-            if( !$archivedName ) {
+            if( (!isset($archivedName)) ) {
                 $archivedName = $this->getArchivedFileName( $file );
             }
 
@@ -275,7 +275,7 @@ class Archiver
     {
         $fileopts = array();
         $transfer = $file->transfer;
-        if( !$archivedName ) {
+        if( (!isset($archivedName)) ) {
             $archivedName = $this->getArchivedFileName( $file );
         }
         

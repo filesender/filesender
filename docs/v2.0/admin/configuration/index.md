@@ -76,6 +76,7 @@ A note about colours;
 * [email_return_path](#email_return_path)
 * [email_use_html](#email_use_html)
 * [email_newline](#email_newline)
+* [email_headers](#email_headers)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 
 ## General UI
@@ -103,6 +104,7 @@ A note about colours;
 * [default_transfer_days_valid](#default_transfer_days_valid)
 * [max_transfer_days_valid](#max_transfer_days_valid)
 * [allow_transfer_expiry_date_extension](#allow_transfer_expiry_date_extension)
+* [allow_transfer_expiry_date_extension_admin](#allow_transfer_expiry_date_extension_admin)
 * [force_legacy_mode](#force_legacy_mode)
 * [legacy_upload_progress_refresh_period](#legacy_upload_progress_refresh_period)
 * [max_legacy_file_size](#max_legacy_file_size)
@@ -114,6 +116,7 @@ A note about colours;
 * [user_quota](#user_quota)
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [encryption_enabled](#encryption_enabled)
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_generated_password_length](#encryption_generated_password_length)
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
@@ -567,7 +570,7 @@ A note about colours;
 ## Language and internationalisation
 
 ---
-FileSender includes a translation engine which allows for flexible user language detection and customisation.  For more details check the [Translating FileSender 2.0 documentation](https://www.assembla.com/spaces/file_sender/wiki/Translating_FileSender)
+FileSender includes a translation engine which allows for flexible user language detection and customisation.  For more details check the [Translating FileSender 2.0 documentation](https://docs.filesender.org/v2.0/i18n/)
 
 User language detection is done in the following order:
 
@@ -714,6 +717,15 @@ User language detection is done in the following order:
 * __1.x name:__ crlf
 * __comment:__ the default value in version 1.x was "\n".
 * __comment:__ Make sure you use double quotes to configure this value in the config file.  If you use single quotes the \r and \n will NOT be interpreted!
+
+### email_headers
+
+* __description:__ specify additional RFC 822 (today RFC 5322) headers to be added to outgoing emails sent by FileSender.
+* __mandatory:__ no
+* __type:__ array of 2-tuples (header name, header value)
+* __default:__ false
+* __available:__ since version 2.x
+* __comment:__ E.g. add to your `$config['email_headers'] = array('Auto-Submitted' => 'auto-generated', 'X-Auto-Response-Suppress' => 'All');` to add these 2 headers with their respective values to all outgoing emails.
 
 ### relay_unknown_feedbacks
 
@@ -929,7 +941,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 ### allow_transfer_expiry_date_extension
 
-* __description:__ allows a user to extend the expiry date.
+* __description:__ allows a user to extend the expiry date. See also allow_transfer_expiry_date_extension_admin to allow admins special extension ability.
 * __mandatory:__
 * __type:__ an array of integers containing possible extensions in days.
 * __default:__ - (= not activated)
@@ -942,6 +954,18 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	$config['allow_transfer_expiry_date_extension'] = 5; // Same as above
 	$config['allow_transfer_expiry_date_extension'] = array(5, 3); // Allows 2 successive extensions, the first is by 5 days the second is by 3 days
 	$config['allow_transfer_expiry_date_extension'] = array(5, 3, 1, true); // Allows infinite extensions, the first is by 5 days the second is by 3 days, the third and above are by 1 day
+
+### allow_transfer_expiry_date_extension_admin
+
+* __description:__ allows an admin to extend the expiry date. This is similiar to allow_transfer_expiry_date_extension but is only used if you are logged in as an admin on the system. If you are an admin this schedule will overwrite the allow_transfer_expiry_date_extension for you. So you can set both and this will be used in preference if you are logged in as admin, otherwise allow_transfer_expiry_date_extension will be used if it is set. As you might only like to use this option and not allow users to extend transfers this option may offer a second UI element to allow extension, where there are two ways to extend a transfer they will both perform the same action and follow the admin configuration if you are logged in as admin.
+* __mandatory:__
+* __type:__ an array of integers containing possible extensions in days.
+* __default:__ - (= not activated)
+* __available:__ since version 2.21
+* __Examples:__
+
+        // Allows infinite extensions, the first is by 30 days then 90 days 
+	$config['allow_transfer_expiry_date_extension_admin'] = array(30, 90, true); 
 
 ## force_legacy_mode
 
@@ -1022,7 +1046,8 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __email\_download\_complete:__ notify the sender (owner) of a transfer that someone has downloaded it immediately after the download completes.
 	* __email\_daily\_statistics:__ send the sender an overview of all activity on that sender's transfers.  Who downloaded what when.
 	* __email\_report\_on\_closing:__ send the sender an overview of all activity on this particular transfer after that transfer is closed.  This is the audit report for that particular transfer.  When a sender receives this, the server's audit logs can (in principle) be purged for the records pertaining to this particular transfer thus reducing FileSender's privacy footprint.
-	* __enable\_recipient\_email\_download\_complete:__ this gives the downloader a tick box in the download window which in turn lets the downloader indicate they would like to receive an email once the download is finished.  If you want this option available for all downloaders and do not want to bother the uploader with it, simply configure it with 'default' => false as the only parameter. __Warning:__ if the recipient of a file is a mailinglist and someone ticks the "send me a message on download complete" box, then all members of that mailinglist will receive that message.  That might be a reason why you don't want to make this option available to your users.
+	* __email\_recipient\_when\_transfer\_expires:__ As of release 2.21 this is a global default setting to email users when a transfer expires during cron execution. The default is true to maintain the previous functionality as it was. Setting this to false will not send out emails to intended recipients as transfers are expired by the cron job. This is set here because it may be able to be adjusted by a user in the UI in the future for each transfer.
+	* __enable\_recipient\_email\_download\_complete:__ this gives the downloader a tick box in the download window which in turn lets the downloader indicate they would like to receive an email once the download is finished.  If you want this option available for all downloaders and do not want to bother the uploader with it, simply configure it with 'default' => false as the only parameter. __Warning:__ if the recipient of a file is a mailinglist and someone ticks the "send me a message on download complete" box, then all members of that mailinglist will receive that message.  That might be a reason why you don't want to make this option available to your users.        
 	* __add\_me\_to\_recipients:__ include the sender as one of the recipients.
 	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can se the download count, but not who downloaded it (obviously, as there are no recipients defined).
 	* __redirect_url_on_complete:__ When the transfer upload completes, instead of showing a success message, redirect the user to a URL. This interferes with __get\_a\_link__ in that the uploader will not see the link after the upload completes. Additionally, if the uploader is a guest, there is no way straightforward way for the uploader to learn the download link, although this must not be used as a security feature.
@@ -1080,6 +1105,14 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
+
+### encryption_enabled
+* __description:__ set to false to disable. If set to true an option to enable file encryption of a transfer becomes available in the web-UI.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__
 
 ### encryption_min_password_length
 * __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.

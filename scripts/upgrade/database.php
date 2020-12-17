@@ -612,7 +612,16 @@ try {
     
 } catch(Exception $e) {
     echo "Error, Rolling database changes back....\n";
-    echo " This should leave the database state as it was before you started the script\n";
+    $dbtype = Config::get('db_type');
+    if( $dbtype == 'mysql' ) {
+        echo " As this script changes schema items rollback is less useful on MariaDB\n";
+        echo '    " MariaDB (...) supports rollback of SQL-data change statements, but not of SQL-Schema statements."  ' . "\n";
+        echo "    --  https://mariadb.com/kb/en/rollback/ \n";
+        echo "\n";
+        echo "you should either get a full run of this script or compare the output to a backup\n";
+    } else {
+        echo " This should leave the database state as it was before you started the script\n";
+    }
     if( $majorMigrationPerformed ) {
         echo "\n";
         echo "NOTE: As this was a major database schema update you might like to compare with a backup\n";

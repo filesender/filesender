@@ -199,7 +199,14 @@ if(Auth::isGuest()) {
                             {tr:file_encryption_password_too_short}
                         </div>
                         <div class="fieldcontainer" id="encryption_password_container_generate">
-                            <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
+                            <input id="encryption_use_generated_password"  name="encryption_use_generated_password" type="checkbox">  
+                            <label for="encryption_use_generated_password" style="cursor: pointer;">{tr:file_encryption_generate_password}</label>
+                            
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container_generate_again">
+                            <a href="#" id="encryption_generate_password" class="">
+                                <span class="fa fa-refresh"></span>&nbsp;{tr:generate_a_different_password}
+                            </a>
                         </div>
                         <div class="fieldcontainer" id="encryption_password_show_container">  
                             <input id="encryption_show_password" name="encryption_show_password" type="checkbox">  

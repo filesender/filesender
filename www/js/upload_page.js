@@ -782,7 +782,7 @@ filesender.ui.scheduleAutomaticResume = function(msg) {
         window.setTimeout(
             function() {
                 filesender.ui.automatic_resume_timer = 0;
-                window.clearTimeout(filesender.ui.automatic_resume_timer_countdown);
+                window.clearInterval(filesender.ui.automatic_resume_timer_countdown);
                 filesender.ui.automatic_resume_timer_countdown = 0;
 
                 window.filesender.log('scheduleAutomaticResume(calling retry) ' + msg );
@@ -792,7 +792,9 @@ filesender.ui.scheduleAutomaticResume = function(msg) {
         );
     filesender.ui.automatic_resume_timer_seconds = filesender.config.automatic_resume_delay_to_resume+1;
     var countDownFunc = function() {
-        filesender.ui.automatic_resume_timer_seconds--;
+        if (filesender.ui.automatic_resume_timer_seconds > 0) {
+            filesender.ui.automatic_resume_timer_seconds--;
+        }
         filesender.ui.nodes.auto_resume_timer.text(
             lang.tr('auto_resume_timer_seconds')
                 .r({seconds: filesender.ui.automatic_resume_timer_seconds}).out());
@@ -821,20 +823,22 @@ filesender.ui.retryingErrorHandler = function(error,callback) {
         });
     }
 
-    filesender.ui.automatic_resume_retries++;
-    if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
-        window.filesender.log("The user has run out of automatic retries so we are going to report this as a fatal error");
-        pause( true );
-        filesender.ui.errorOriginal( error, callback );
-        return;
-    }
+    if (filesender.ui.resumeScheduled === false) {
+        filesender.ui.automatic_resume_retries++;
+        if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
+            window.filesender.log("The user has run out of automatic retries so we are going to report this as a fatal error");
+            pause( true );
+            filesender.ui.errorOriginal( error, callback );
+            return;
+        }
 
-    filesender.ui.scheduleAutomaticResume( msg );
+        filesender.ui.scheduleAutomaticResume( msg );
+    }
 }
 
 filesender.ui.cancelAutomaticResume = function() {
     
-    window.clearTimeout(filesender.ui.automatic_resume_timer_countdown);
+    window.clearInterval(filesender.ui.automatic_resume_timer_countdown);
     filesender.ui.automatic_resume_timer_countdown = 0;
     window.clearTimeout(filesender.ui.automatic_resume_timer);
     filesender.ui.automatic_resume_timer = 0;
@@ -1195,10 +1199,12 @@ $(function() {
         from: form.find('select[name="from"]'),
         subject: form.find('input[name="subject"]'),
         encryption: {
-                toggle: form.find('input[name="encryption"]'),
-                password: form.find('input[name="encryption_password"]'),
-                show_hide: form.find('#encryption_show_password'),
-                generate: form.find('#encryption_generate_password')
+            toggle: form.find('input[name="encryption"]'),
+            password: form.find('input[name="encryption_password"]'),
+            show_hide: form.find('#encryption_show_password'),
+            generate:      form.find('#encryption_generate_password'),
+            use_generated: form.find('#encryption_use_generated_password'),
+            generate_again: form.find('#encryption_password_container_generate_again')
         },
         uploading_actions_msg:form.find('.uploading_actions .msg'),
         auto_resume_timer:form.find('.uploading_actions .auto_resume_timer'),
@@ -1461,13 +1467,33 @@ $(function() {
         
         return false;
     });
+
+    filesender.ui.nodes.encryption.use_generated.on('change', function() {
+        var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
+        if( v ) {
+            filesender.ui.nodes.encryption.generate_again.show();
+            
+            filesender.ui.nodes.encryption.password.attr('readonly', true);
+            filesender.ui.nodes.encryption.generate.click();
+        } else {
+            filesender.ui.nodes.encryption.generate_again.hide();
+            $('#encryption_password_show_container').show();
+            filesender.ui.nodes.encryption.password.attr('readonly', false);
+            
+            // plain text passwords have a specific version
+            // and encoding which may be used by key generation
+            // so we must reset that here if the user starts modifying the password.
+            filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
+            filesender.ui.transfer.encryption_password_encoding = 'none';            
+        }
+       
+    });
     
     filesender.ui.nodes.encryption.generate.on('click', function() {
 
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
         password = encoded.value;
-        filesender.ui.nodes.encryption.password.attr('readonly', true);
         filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
         filesender.ui.transfer.encryption_password_version  = encoded.version;

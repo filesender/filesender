@@ -127,20 +127,13 @@ $(function() {
             });
         }
     });
-    
-    // Extend buttons
-    $('[data-expiry-extension="0"] [data-action="extend"]').addClass('disabled').attr({title: lang.tr('transfer_expiry_extension_count_exceeded')});
-    
-    $('[data-expiry-extension][data-expiry-extension!="0"] [data-action="extend"]').each(function() {
-        $(this).attr({
-            title: lang.tr('extend_expiry_date').r({
-                days: $(this).closest('[data-transfer]').attr('data-expiry-extension')
-            })
-        });
-    }).on('click', function() {
-        if($(this).hasClass('disabled')) return;
+
+
+    var extendExpires = function( self )
+    {
+        if(self.hasClass('disabled')) return;
         
-        var t = $(this).closest('[data-transfer]');
+        var t = self.closest('[data-transfer]');
         
         var id = t.attr('data-id');
         if(!id || isNaN(id)) return;
@@ -161,7 +154,7 @@ $(function() {
                 } else {
                     $('[data-transfer][data-id="' + id + '"] [data-action="extend"]').attr({
                         title: lang.tr('extend_expiry_date').r({
-                            days: $(this).closest('[data-transfer]').attr('data-expiry-extension')
+                            days: self.closest('[data-transfer]').attr('data-expiry-extension')
                         })
                     });
                 }
@@ -183,7 +176,32 @@ $(function() {
         buttons.cancel = false;
         
         filesender.ui.popup(lang.tr('confirm_dialog'), buttons).html(lang.tr('confirm_extend_expiry').r({days: duration}).out());
+    }
+    
+    // Extend buttons
+    $('[data-expiry-extension="0"] [data-action="extend"]').addClass('disabled').attr({title: lang.tr('transfer_expiry_extension_count_exceeded')});
+    
+    $('[data-expiry-extension][data-expiry-extension!="0"] [data-action="extend"]').each(function() {
+        $(this).attr({
+            title: lang.tr('extend_expiry_date').r({
+                days: $(this).closest('[data-transfer]').attr('data-expiry-extension')
+            })
+        });
+    }).on('click', function() {
+        extendExpires( $(this) );
     });
+
+    $('[data-expiry-extension][data-expiry-extension!="-1"] [data-action="extendexpires"]').each(function() {
+        $(this).attr({
+            title: lang.tr('extend_expiry_date').r({
+                days: $(this).closest('[data-transfer]').attr('data-expiry-extension')
+            })
+        });
+    }).on('click', function() {
+        extendExpires( $(this) );
+    });
+    
+
     
     // Add recipient buttons
     $('[data-recipients-enabled=""] [data-action="add_recipient"]').addClass('disabled');
