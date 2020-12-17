@@ -24,6 +24,14 @@ $transfers_page = function($status) {
             $selector .= " AND id >= $idmin AND id <= $idmax ";
         }
     }
+    $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_VALIDATE_EMAIL );
+    if( $status == 'search' ) {
+        if( $senderemail != '' && strlen($senderemail) ) {
+            // Note that we are using semi validated data from above
+            // and that this is an admin only page, so hacking is less likely.
+            $selector .= " AND user_email = '$senderemail' ";
+        }
+    }
         
     $offset = array_key_exists($status.'_tpo', $_REQUEST) ? (int)$_REQUEST[$status.'_tpo'] : 0;
     $offset = max(0, $offset);
@@ -107,6 +115,7 @@ $idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  
 if( $idmax == -1 ) {
     $idmax = '';
 }
+
 ?>
 <fieldset class="search">
     <label for="idmin" class="mandatory">{tr:minimum}</label>
@@ -114,6 +123,17 @@ if( $idmax == -1 ) {
     <label for="idmax" class="mandatory">{tr:maximum}</label>
     <input type="text" name="idmax" value="<?php echo $idmax ?>" />
     <input type="button" name="idbutton" value="{tr:search}" />
+</fieldset>
+
+
+<?php
+$senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_VALIDATE_EMAIL );
+echo "<p>{tr:search_transfer_by_sender_email_description}</p>\n";
+?>
+<fieldset class="search">
+    <label for="senderemail" class="mandatory">{tr:sender_email_search}</label>
+    <input type="text" name="senderemail" size="60" value="<?php echo $senderemail ?>" />
+    <input type="button" name="idbuttonse" value="{tr:search}" />
 </fieldset>
 <?php 
 $transfers_page('search');

@@ -1540,6 +1540,7 @@ table.guests .guest .to .errors .details {
 #encryption_password_container,
 #encryption_password_container_too_short_message,
 #encryption_password_container_generate,
+#encryption_password_container_generate_again,
 #encryption_password_show_container,
 #encryption_description_container_disabled,
 #encryption_description_not_supported,
@@ -1547,6 +1548,10 @@ table.guests .guest .to .errors .details {
 #encryption_description_disabled_container,
 #encryption_description_container {
     display: none;
+}
+
+.adminaction {
+    background: #ffeeee;
 }
 
 #encryption_password_container_too_short_message {

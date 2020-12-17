@@ -712,6 +712,29 @@ Run:
 # chmod +x /etc/cron.daily/filesender
 ```
 
+# Step 10b - Install some python dependancies if you wish to use the filesender.py command line client
+
+The filesender.py script uses some extra libraries. These can be installed either
+through your distribution packages or directly with the pip command as shown below.
+
+```
+pip3 install requests urllib3
+```
+
+On a Fedora based distribution you might install these with:
+```
+dnf install python3-requests python3-urllib3
+```
+
+On a Debian based distribution you might install these with:
+```
+apt-get install python3-requests python3-urllib3
+```
+
+
+
+
+
 # Step 11 - Optional local about, help, and landing pages
 
 FileSender has provisions to allow you to have a local page for about,
@@ -817,9 +840,9 @@ If you don't want your users to have to type `/filesender` after the hostname, y
 
 	RedirectMatch ^/(?!filesender/|simplesaml/)(.*) https://filesender.example.org/filesender/$1
 
-# Support and Feedback
 
-See [Support and Mailing
-lists](https://www.assembla.com/wiki/show/file_sender/Support_and_Mailinglists)
-and [Feature
-requests](https://www.assembla.com/wiki/show/file_sender/Feature_requests).
+## Issues and Bugs
+
+Please inspect and report bugs on the [GitHub Issue
+Tracker](https://github.com/filesender/filesender/issues)
+

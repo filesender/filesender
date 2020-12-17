@@ -16,6 +16,21 @@ if(!isset($trsort))  $nosort = true;
     $havePrev = 0;
 
 
+    $isAdmin = false;
+    $showAdminExtend = false;
+    if (Auth::isAuthenticated()) {
+        if (Auth::isAdmin()) {
+
+            $isAdmin = true;
+            
+            if(Config::get('allow_transfer_expiry_date_extension_admin')) {
+                $showAdminExtend = true;
+            }
+        }
+    }
+
+
+
     $cgiuid = "";
     if (Auth::isAuthenticated()) {
         if (Auth::isAdmin()) {
@@ -262,7 +277,8 @@ if (!function_exists('clickableHeader')) {
                 </div>
                 <div style="margin:3px">
                     <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                    <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                    <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                    <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o adminaction" title="{tr:extend_expires}"></span><?php } ?>
                 </div>
             </td>
         </tr>
@@ -277,7 +293,8 @@ if (!function_exists('clickableHeader')) {
                     </div>
                     <div style="margin:3px">
                         <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                        <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                        <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
+                        <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o" title="{tr:extend_expires}"></span><?php } ?>
                     </div>
                 </div>
                 

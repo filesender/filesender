@@ -45,6 +45,7 @@ class TransferOptions extends Enum
     const EMAIL_REPORT_ON_CLOSING                   = 'email_report_on_closing';
     const ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE  = 'enable_recipient_email_download_complete';
     const ADD_ME_TO_RECIPIENTS                      = 'add_me_to_recipients';
+    const EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES     = 'email_recipient_when_transfer_expires';
     
     const GET_A_LINK                                = 'get_a_link';
     
