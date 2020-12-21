@@ -48,9 +48,11 @@ $transfers_page = function($status) {
                 $selector .= " AND user_email LIKE '$senderemail' ";
             }
         } else {
-            // the email didn't validate so show no search results.
             if( $senderemail_full_match ) {
-                $selector .= ' and id < 0 ';
+                if( strlen(Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' ))) {
+                    // the email didn't validate so show no search results.
+                    $selector .= ' and id < 0 ';
+                }
             }
         }
     }
@@ -151,6 +153,9 @@ if( $idmax == -1 ) {
 <?php
 $senderemail_full_match = Utilities::arrayKeyOrDefault( $_GET, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
 $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' );
+if( $senderemail_full_match ) 
+    $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_VALIDATE_EMAIL );
+
 $senderemail_full_match_extra = '';
 if( $senderemail_full_match ) {
     $senderemail_full_match_extra = ' checked ';
