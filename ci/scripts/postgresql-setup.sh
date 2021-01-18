@@ -8,17 +8,18 @@ echo "postgresql-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
 # psql -c 'SELECT version();' -U postgres
-psql -c 'create database filesender;'        -U postgres
-psql -U postgres -c "alter user postgres with password 'password';"
+PSQL="-h localhost -U postgres"
+$PSQL -c 'create database filesender;'
+$PSQL -c "alter user postgres with password 'password';"
 
 if [ "$TESTSUITE" = 'dataset' ]; then 
-    psql -c 'create database filesenderdataset;' -U postgres
+    $PSQL -c 'create database filesenderdataset;' -U postgres
     bzcat ./scripts/dataset/dumps/filesender-2.2.pg.bz2 | psql -d filesenderdataset -U postgres
 fi
 
 if [ "$TESTSUITE" = 'cron' ]; then 
-    cat ./scripts/dataset/dumps/filesendercron.pg | psql -U postgres
-    cat ./scripts/dataset/dumps/filesendercron-touch.pg | psql -U postgres -d filesender
+    cat ./scripts/dataset/dumps/filesendercron.pg       | $PSQL
+    cat ./scripts/dataset/dumps/filesendercron-touch.pg | $PSQL -d filesender
     echo 'select * from files' | psql -U postgres -d filesender
 fi
 
