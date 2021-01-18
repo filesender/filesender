@@ -9,10 +9,11 @@ echo "----------------------------"
 set -ev
 
 echo "*:*:*:*:$POSTGRES_PASSWORD" > ~/.pgpass
+chmod 400 ~/.pgpass
 # psql -c 'SELECT version();' -U postgres
 PSQL="psql -h localhost -U postgres"
 $PSQL -c 'create database filesender;'
-$PSQL -c "alter user postgres with password 'password';"
+#$PSQL -c "alter user postgres with password 'password';"
 
 if [ "$TESTSUITE" = 'dataset' ]; then 
     $PSQL -c 'create database filesenderdataset;' -U postgres
