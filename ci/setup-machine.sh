@@ -51,7 +51,7 @@ sudo a2enmod rewrite actions fastcgi alias ssl headers
 sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/ports.conf
 sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
-sudo cp -f travis/apache2.conf /etc/apache2/sites-enabled/000-default.conf
+sudo cp -f ci/apache2.conf /etc/apache2/sites-enabled/000-default.conf
 sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 
 # enable php-fpm
