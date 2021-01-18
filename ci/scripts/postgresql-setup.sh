@@ -32,7 +32,7 @@ fi
 if [ "$TESTSUITE" = "cron" ]; then 
     cat ./scripts/dataset/dumps/filesendercron.pg       | $PSQL
     cat ./scripts/dataset/dumps/filesendercron-touch.pg | $PSQL -d filesender
-    echo 'select * from files' | psql -U postgres -d filesender
+    echo 'select * from files' | $PSQL -d filesender
 fi
 
 
@@ -45,4 +45,4 @@ PGVER="9.2"
 #sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/" "/etc/postgresql/$PGVER/main/pg_hba.conf"
 
 
-sudo service postgresql restart
+#sudo service postgresql restart
