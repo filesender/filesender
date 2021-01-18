@@ -151,6 +151,8 @@ if((int)$level) {
     }
 }
 
+Failhere();
+
 // Remove inactive users preferences
 User::removeInactive();
 
