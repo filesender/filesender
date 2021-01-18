@@ -17,12 +17,13 @@ fi
 sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place ./config/config.php
 chmod -R a+x ./ci/scripts
 
-./ci/scripts/simplesamlphp-setup.sh
+####miq#./ci/scripts/simplesamlphp-setup.sh
 
 ####
 #
 # handle the database
 #
+echo "Calling database specific setup script DB:$DB "
 if [ '$DB' = 'pgsql' ]; then
     ./ci/scripts/postgresql-setup.sh ;
 fi 

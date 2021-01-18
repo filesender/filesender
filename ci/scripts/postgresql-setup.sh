@@ -3,6 +3,7 @@
 # These are only the commands that are specific to postgresql which need
 # to be executed before the scripts/upgrade/database.php can be used
 #
+echo "postgresql-setup.sh DB:$DB "
 set -ev
 # psql -c 'SELECT version();' -U postgres
 psql -c 'create database filesender;'        -U postgres
