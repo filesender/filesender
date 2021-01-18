@@ -7,6 +7,8 @@ echo "----------------------------"
 echo "postgresql-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
+
+echo "*:*:*:*:$POSTGRES_PASSWORD" > ~/.pgpass
 # psql -c 'SELECT version();' -U postgres
 PSQL="psql -h localhost -U postgres"
 $PSQL -c 'create database filesender;'
