@@ -19,3 +19,11 @@ if [ "$TESTSUITE" = 'cron' ]; then
     echo 'select * from files' | psql -U postgres -d filesender
 fi
 
+
+# PGVER=(psql --version|cut -d' ' -f3);
+PGVER="9.2"
+#sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/" "/etc/postgresql/$PGVER/main/pg_hba.conf"
+#sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/" "/etc/postgresql/$PGVER/main/pg_hba.conf"
+
+
+sudo service postgresql restart

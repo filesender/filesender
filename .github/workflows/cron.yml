@@ -26,9 +26,6 @@ jobs:
       with:
         php-version: '7.2'
 
-    - name: debug setup machine for FileSender
-      run: ls -l 
-
     - name: setup machine for FileSender
       run: ci/setup-machine.sh
 
