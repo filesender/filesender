@@ -56,7 +56,13 @@ jobs:
       with:
         name: Log-file-report
         path: output/test/output1.txt
-        
+
+    - name: FileSender Log files
+      uses: actions/upload-artifact@v2
+      with:
+        name: Log-files
+        path: log
+
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
