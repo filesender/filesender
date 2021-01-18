@@ -10,6 +10,8 @@ set -ev
 
 echo "*:*:*:*:$POSTGRES_PASSWORD" > ~/.pgpass
 chmod 400 ~/.pgpass
+echo "password is "
+cat ~/.pgpass
 # psql -c 'SELECT version();' -U postgres
 PSQL="psql -h localhost -U postgres"
 $PSQL -c 'create database filesender;'
