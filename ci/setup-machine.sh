@@ -25,12 +25,13 @@ chmod -R a+x ./ci/scripts
 #
 echo "Calling database specific setup script DB:$DB "
 if [ '$DB' = 'pgsql' ]; then
-    ./ci/scripts/postgresql-setup.sh ;
+    ./ci/scripts/postgresql-setup.sh
 fi 
 if [ '$DB' = 'mysql' ]; then
-    ./ci/scripts/mariadb-setup.sh ;
+    ./ci/scripts/mariadb-setup.sh
 fi 
 
+echo "Calling upgrade/database.php on the database now"
 php scripts/upgrade/database.php
 if [ '$TESTSUITE' = 'dataset' ]; then
     php scripts/upgrade/database.php --db_database filesenderdataset ;
