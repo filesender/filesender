@@ -1,5 +1,7 @@
 name: Cronjob
-
+env:
+  DB: mysql
+  
 on:
   push:
     branches: [ 2020/jan/gha1 ]
@@ -28,6 +30,9 @@ jobs:
       run: |
         composer self-update
         composer update --no-interaction
+
+    - name: setup machine for FileSender
+      run: ci/setup-machine.sh
 
     - name: Log file
       uses: actions/upload-artifact@v2
