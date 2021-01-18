@@ -68,6 +68,7 @@ jobs:
         php scripts/task/cron.php --testing-mode
         echo "cron job complete"
 
+
     - name: Log file
       uses: actions/upload-artifact@v2
       with:
@@ -79,6 +80,17 @@ jobs:
       with:
         name: Log-files
         path: log
+
+    - name: log files open to read
+      run: sudo chmod +r /var/log/apache2/error.log /var/log/apache2/access.log
+
+    - name: Apache Log files
+      uses: actions/upload-artifact@v2
+      with:
+        name: apache-logs
+        path: |
+          /var/log/apache2/error.log
+          /var/log/apache2/access.log
 
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
