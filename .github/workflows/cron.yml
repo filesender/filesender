@@ -16,15 +16,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup PHP with selected extensions
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '7.2'
-
     - name: Make dummy artifact file
       run: |
         mkdir -p output/test
         date >   output/test/output1.txt
+
+    - name: Setup PHP with selected extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.2'
 
     - name: debug setup machine for FileSender
       run: ls -l 
