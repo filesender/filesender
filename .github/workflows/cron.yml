@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-  name: Cronjob
 
     runs-on: Ubuntu-20.04
 
