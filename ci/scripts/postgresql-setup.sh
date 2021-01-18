@@ -8,7 +8,7 @@ echo "postgresql-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
 # psql -c 'SELECT version();' -U postgres
-PSQL="-h localhost -U postgres"
+PSQL="psql -h localhost -U postgres"
 $PSQL -c 'create database filesender;'
 $PSQL -c "alter user postgres with password 'password';"
 
