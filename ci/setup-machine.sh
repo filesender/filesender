@@ -71,7 +71,9 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enable
 # - sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" /home/travis/build/filesender/filesender/vendor/sauce/sausage/src/Sauce/Sausage/SauceAPI.php
 # - sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" /home/travis/build/filesender/filesender/vendor/sauce/sausage/src/Sauce/Sausage/SauceConfig.php
 
+echo "restarting apache2..."
 sudo service apache2 restart
+
 
 # stop the database we are not planning to use
 # to catch bad configurations that might use the wrong database by mistake
