@@ -7,7 +7,7 @@ echo "----------------------------------------------------------------"
 
 mkdir -p ./log ./tmp ./files
 
-phpenv config-add ./ci/php-config.ini
+#phpenv config-add ./ci/php-config.ini
 
 cp ./ci/filesender-config.php ./config/config.php
 if [ '$DB' = 'mysql' ]; then
