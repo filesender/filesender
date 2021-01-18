@@ -24,16 +24,17 @@ chmod -R a+x ./ci/scripts
 # handle the database
 #
 echo "Calling database specific setup script DB:$DB "
-if [ '$DB' = 'pgsql' ]; then
+if [ "$DB" = "pgsql" ]; then
+    echo "PostgreSQL database type..."
     ./ci/scripts/postgresql-setup.sh
 fi 
-if [ '$DB' = 'mysql' ]; then
+if [ "$DB" = "mysql" ]; then
     ./ci/scripts/mariadb-setup.sh
 fi 
 
 echo "Calling upgrade/database.php on the database now"
 php scripts/upgrade/database.php
-if [ '$TESTSUITE' = 'dataset' ]; then
+if [ "$TESTSUITE" = "dataset" ]; then
     php scripts/upgrade/database.php --db_database filesenderdataset ;
 fi
 
@@ -79,13 +80,13 @@ sudo service apache2 restart
 
 # stop the database we are not planning to use
 # to catch bad configurations that might use the wrong database by mistake
-if [ '$DB' = 'pgsql' ]; then
+if [ "$DB" = "pgsql" ]; then
     sudo service mysql stop
 fi 
-if [ '$DB' = 'mysql' ]; then
+if [ "$DB" = "mysql" ]; then
     sudo service postgresql stop
 fi 
-if [ '$TESTSUITE' = 'cron' ]; then
+if [ "$TESTSUITE" = "cron" ]; then
     echo testing cron job ;
     php scripts/task/cron.php --testing-mode
 fi 
