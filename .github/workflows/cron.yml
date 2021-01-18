@@ -12,7 +12,6 @@ on:
 jobs:
   build:
     name: CI
-
     runs-on: Ubuntu-20.04
 
     services:
@@ -33,7 +32,8 @@ jobs:
           --health-retries 5
           
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code from github
+      uses: actions/checkout@v2
 
     - name: Make dummy artifact file
       run: |
