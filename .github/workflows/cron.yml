@@ -38,6 +38,8 @@ jobs:
       run: |
         mkdir -p output/test
         date >   output/test/output1.txt
+        BASEDIR=$(pwd)
+        export BASEDIR
 
     - name: Setup PHP with selected extensions
       uses: shivammathur/setup-php@v2
@@ -51,6 +53,18 @@ jobs:
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
+
+    - name: Install composer.json packages
+      run: |
+        composer self-update
+        composer update --no-interaction
+
+    - name: run cron job
+      run: |
+        echo testing cron job
+        echo "BASEDIR $BASEDIR"
+        pwd
+        php scripts/task/cron.php --testing-mode
 
     - name: Log file
       uses: actions/upload-artifact@v2

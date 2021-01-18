@@ -90,10 +90,6 @@ fi
 if [ "$DB" = "mysql" ]; then
     sudo service postgresql stop
 fi 
-if [ "$TESTSUITE" = "cron" ]; then
-    echo testing cron job ;
-    php scripts/task/cron.php --testing-mode
-fi 
 
 # after_failure:
 # - sudo cat /var/log/apache2/error.log
