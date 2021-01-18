@@ -65,6 +65,7 @@ jobs:
         echo "BASEDIR $BASEDIR"
         pwd
         php scripts/task/cron.php --testing-mode
+        echo "cron job complete"
 
     - name: Log file
       uses: actions/upload-artifact@v2
