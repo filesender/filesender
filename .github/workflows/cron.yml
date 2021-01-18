@@ -2,7 +2,7 @@ name: PHP Composer
 
 on:
   push:
-    branches: [ master ]
+    branches: [ 2020/jan/gha1 ]
   pull_request:
     branches: [ master ]
 
