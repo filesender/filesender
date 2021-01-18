@@ -12,17 +12,22 @@ echo "*:*:*:*:$POSTGRES_PASSWORD" > ~/.pgpass
 chmod 400 ~/.pgpass
 echo "password is "
 cat ~/.pgpass
+
+echo "database listing is..."
+$PSQL -l
+
+
 # psql -c 'SELECT version();' -U postgres
 PSQL="psql -h localhost -U postgres"
 $PSQL -c 'create database filesender;'
 #$PSQL -c "alter user postgres with password 'password';"
 
-if [ "$TESTSUITE" = 'dataset' ]; then 
-    $PSQL -c 'create database filesenderdataset;' -U postgres
-    bzcat ./scripts/dataset/dumps/filesender-2.2.pg.bz2 | psql -d filesenderdataset -U postgres
+if [ "$TESTSUITE" = "dataset" ]; then 
+    $PSQL -c 'create database filesenderdataset;'
+    bzcat ./scripts/dataset/dumps/filesender-2.2.pg.bz2 | $PSQL -d filesenderdataset
 fi
 
-if [ "$TESTSUITE" = 'cron' ]; then 
+if [ "$TESTSUITE" = "cron" ]; then 
     cat ./scripts/dataset/dumps/filesendercron.pg       | $PSQL
     cat ./scripts/dataset/dumps/filesendercron-touch.pg | $PSQL -d filesender
     echo 'select * from files' | psql -U postgres -d filesender

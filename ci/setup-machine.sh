@@ -5,6 +5,11 @@ echo "----------------------------------------------------------------"
 echo "This is the ci/setup-machine.sh script running on database $DB "
 echo "----------------------------------------------------------------"
 
+export POSTGRES_DB
+export POSTGRES_HOST
+export POSTGRES_USER
+export POSTGRES_PASSWORD
+
 mkdir -p ./log ./tmp ./files
 
 #phpenv config-add ./ci/php-config.ini
@@ -76,7 +81,6 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enable
 
 echo "restarting apache2..."
 sudo service apache2 restart
-
 
 # stop the database we are not planning to use
 # to catch bad configurations that might use the wrong database by mistake
