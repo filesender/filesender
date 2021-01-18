@@ -29,6 +29,9 @@ if [ "$TESTSUITE" = 'cron' ]; then
 fi
 
 
+echo "database creation should be done"
+$PSQL -l
+
 # PGVER=(psql --version|cut -d' ' -f3);
 PGVER="9.2"
 #sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/" "/etc/postgresql/$PGVER/main/pg_hba.conf"
