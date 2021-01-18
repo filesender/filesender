@@ -43,6 +43,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '7.2'
+        extensions: mbstring, pdo_mysql, pdo_pgsql
         ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
 
     - name: setup machine for FileSender
