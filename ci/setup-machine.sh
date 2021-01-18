@@ -41,7 +41,7 @@ fi
 #
 sudo apt-get update
 sudo apt-get install curl
-sudo apt-get install apache2 libapache2-mod-fastcgi
+sudo apt-get install apache2 #libapache2-mod-fastcgi
 
 ####
 # 

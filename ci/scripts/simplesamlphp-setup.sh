@@ -17,7 +17,7 @@ else
     echo "Hashes matched"
 fi
 
-tar xvzf simplesamlphp-$VER.tar.gz
+tar xzf simplesamlphp-$VER.tar.gz
 ln -s simplesamlphp-$VER/ simplesaml
 # Copy standard configuration files to the right places:
 cd simplesaml
