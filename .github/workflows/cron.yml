@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
+  name: Cronjob
 
-    name: Cronjob
     runs-on: Ubuntu-20.04
 
     steps:
@@ -18,7 +18,7 @@ jobs:
     - name: Setup PHP with selected extensions
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.3'
+        php-version: '7.2'
 
     - name: Make dummy artifact file
       run: |
