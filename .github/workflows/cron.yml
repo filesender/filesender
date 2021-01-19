@@ -63,7 +63,12 @@ jobs:
         BASEDIR=$(pwd)
         export BASEDIR
 
-
+    - name: Setup PHP with selected extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.2'
+        extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql
+        ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
 
     - name: setup machine for FileSender
       run: ci/setup-machine.sh
@@ -71,6 +76,24 @@ jobs:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
 
+    - name: Install composer.json packages
+      run: |
+        composer self-update
+        composer update --no-interaction
+
+    - name: run primary test job
+      run: |
+        if [ "$TESTSUITE" = "cron" ]; then
+          echo testing cron job
+          echo "BASEDIR $BASEDIR"
+          pwd
+          php scripts/task/cron.php --testing-mode
+          echo "cron job complete"
+        else
+          echo "testing $TESTSUITE on database $DB "
+          ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+          cat log/*.log
+        fi
 
 
 
