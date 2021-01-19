@@ -14,14 +14,6 @@ jobs:
     strategy:
       matrix:
        include:
-         - testsuite: "cron"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
          - testsuite: "core"
            db: "mysql"
            travis_sauce_connect: false
@@ -51,6 +43,18 @@ jobs:
     steps:
     - name: Checkout code from github
       uses: actions/checkout@v2
+
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      if: ${{ matrix.db == 'mysql' }}
+      run: sudo service mysql stop
+      
+    - name: Set up MariaDB
+      if: ${{ matrix.db == 'mysql' }}
+      uses: getong/mariadb-action@v1.1
+      with:
+        mysql user: filesender
+        mysql password: password
+        mariadb version: '10.4.10'
 
     - name: Make dummy artifact file
       run: |
