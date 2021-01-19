@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: CI
+    name: CI-${{ matrix.testsuite }}-${{ matrix.db }}
     runs-on: Ubuntu-20.04
 
     strategy:
