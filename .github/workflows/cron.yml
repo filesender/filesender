@@ -1,7 +1,7 @@
 name: Cronjob
 env:
-  DB: pgsql
-  TESTSUITE: cron
+  DB: ${{ matrix.db }}
+  TESTSUITE: ${{ matrix.testsuite }}
   
 on:
   push:
@@ -13,6 +13,18 @@ jobs:
   build:
     name: CI
     runs-on: Ubuntu-20.04
+
+    strategy:
+      matrix:
+       include:
+         - testsuite: "cron"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
+         - testsuite: "core"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
 
     services:
       postgres:
@@ -60,13 +72,18 @@ jobs:
         composer self-update
         composer update --no-interaction
 
-    - name: run cron job
+    - name: run primary test job
       run: |
-        echo testing cron job
-        echo "BASEDIR $BASEDIR"
-        pwd
-        php scripts/task/cron.php --testing-mode
-        echo "cron job complete"
+        if [ "$TESTSUITE" = "cron" ]; then
+          echo testing cron job
+          echo "BASEDIR $BASEDIR"
+          pwd
+          php scripts/task/cron.php --testing-mode
+          echo "cron job complete"
+        else
+          ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+        fi
+
 
 
     - name: Log file
