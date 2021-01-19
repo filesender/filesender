@@ -108,7 +108,6 @@ class TransferTest extends CommonUnitTestCase {
         $transfer = Transfer::fromId($transferId);
 
         $this->assertTrue($transfer->id > 0);
-        $this->assertTrue($transfer->id < 0); // make CI fail
 
         $this->displayInfo(get_class(), __FUNCTION__, ' -- Transfer got:' . $transfer->id);
 
