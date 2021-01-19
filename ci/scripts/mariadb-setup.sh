@@ -27,15 +27,15 @@ $MYSQL --execute="show databases;"
 
 
 echo "making db..."
-$MYSQL  -e "CREATE DATABASE filesender DEFAULT CHARACTER SET utf8mb4;"
+#$MYSQL  -e "CREATE DATABASE filesender DEFAULT CHARACTER SET utf8mb4;"
 echo "created db..."
 $MYSQL  -e "GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY 'password';"
 echo "grant1 done..."
 $MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE, DROP, REFERENCES ON filesender.* TO 'filesender'@'localhost';"
 
 
-$MYSQL  -e "CREATE DATABASE filesenderdataset DEFAULT CHARACTER SET utf8mb4;"
-$MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON filesenderdataset.* TO 'filesender'@'localhost';"
+#$MYSQL  -e "CREATE DATABASE filesenderdataset DEFAULT CHARACTER SET utf8mb4;"
+#$MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON filesenderdataset.* TO 'filesender'@'localhost';"
 $MYSQL  -e "FLUSH PRIVILEGES;"
 
 
