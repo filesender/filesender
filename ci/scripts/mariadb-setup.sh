@@ -9,7 +9,7 @@ echo "mariadb-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
 
-MYSQL="mysql --host=localhost -u filesender  "
+MYSQL="mysql --host=127.0.0.1 -u root  "
 
 echo "[client]"             > ~/.my.cnf
 echo "host=127.0.0.1"      >> ~/.my.cnf
@@ -20,7 +20,7 @@ echo "my.cnf is "
 cat ~/.my.cnf
 
 echo "trying to ping the database..."
-mysqladmin ping -h"localhost" -u filesender
+mysqladmin ping -h"127.0.0.1" -u root
 
 echo "database listing is..."
 $MYSQL --execute="show databases;"
@@ -29,13 +29,13 @@ $MYSQL --execute="show databases;"
 echo "making db..."
 #$MYSQL  -e "CREATE DATABASE filesender DEFAULT CHARACTER SET utf8mb4;"
 echo "created db..."
-$MYSQL  -e "GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY 'password';"
+$MYSQL  -e "GRANT USAGE ON *.* TO 'filesender'@'127.0.0.1' IDENTIFIED BY 'password';"
 echo "grant1 done..."
-$MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE, DROP, REFERENCES ON filesender.* TO 'filesender'@'localhost';"
+$MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE, DROP, REFERENCES ON filesender.* TO 'filesender'@'127.0.0.1';"
 
 
 #$MYSQL  -e "CREATE DATABASE filesenderdataset DEFAULT CHARACTER SET utf8mb4;"
-#$MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON filesenderdataset.* TO 'filesender'@'localhost';"
+#$MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON filesenderdataset.* TO 'filesender'@'127.0.0.1';"
 $MYSQL  -e "FLUSH PRIVILEGES;"
 
 
