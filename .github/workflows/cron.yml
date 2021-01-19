@@ -90,7 +90,9 @@ jobs:
           php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         else
+          echo "testing $TESTSUITE on database $DB "
           ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+          cat log/*.log
         fi
 
 
