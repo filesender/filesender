@@ -19,8 +19,6 @@ chmod 600 ~/.my.cnf
 echo "my.cnf is "
 cat ~/.my.cnf
 
-echo "debug"
-netstat -ntlp | grep 3306
 
 echo "database listing is..."
 $MYSQL --execute="show databases;"

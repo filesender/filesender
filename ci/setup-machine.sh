@@ -37,6 +37,8 @@ if [ "$DB" = "mysql" ]; then
     ./ci/scripts/mariadb-setup.sh
 fi 
 
+echo "----------"
+echo "back in setup-machine.sh script..."
 echo "Calling upgrade/database.php on the database now"
 php scripts/upgrade/database.php
 if [ "$TESTSUITE" = "dataset" ]; then
