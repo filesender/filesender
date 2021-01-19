@@ -193,6 +193,8 @@ class DBI
                 }
             }
         } catch (Exception $e) {
+            echo "db_type " . Config::get("db_type") . "\n";
+            echo "db_host " . Config::get("db_host") . "\n";
             echo "failed to connect to db, reason: " . $e->getMessage();
             throw new DBIConnexionException('DBI connect error : '.$e->getMessage());
         }
