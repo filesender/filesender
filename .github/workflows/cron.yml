@@ -1,4 +1,4 @@
-name: Cronjob
+name: CI
   
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: CI-${{ matrix.testsuite }}-${{ matrix.db }}
+    name: ${{ matrix.testsuite }}-${{ matrix.db }}
     runs-on: Ubuntu-20.04
 
     strategy:
@@ -35,6 +35,8 @@ jobs:
     env:
       DB: ${{ matrix.db }}
       TESTSUITE: ${{ matrix.testsuite }}
+      SAUCE_TUNNEL_IDENTIFIER: cisel${{ matrix.db }}
+      SAUCE_DONT_VERIFY_CERTS: 1
 
     services:
       postgres:
