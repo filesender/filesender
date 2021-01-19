@@ -9,7 +9,7 @@ echo "mariadb-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
 
-MYSQL="mysql --host=127.0.0.1 -u root  "
+MYSQL="mysql --host=127.0.0.1 -u filesender  "
 
 echo "[client]"             > ~/.my.cnf
 echo "host=127.0.0.1"      >> ~/.my.cnf
@@ -18,6 +18,9 @@ echo "#something=else"     >> ~/.my.cnf
 chmod 600 ~/.my.cnf
 echo "my.cnf is "
 cat ~/.my.cnf
+
+echo "debug"
+netstat -ntlp | grep 3306
 
 echo "database listing is..."
 $MYSQL --execute="show databases;"
