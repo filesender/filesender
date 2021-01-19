@@ -19,6 +19,8 @@ chmod 600 ~/.my.cnf
 echo "my.cnf is "
 cat ~/.my.cnf
 
+echo "trying to ping the database..."
+mysqladmin ping -h"127.0.0.1"
 
 echo "database listing is..."
 $MYSQL --execute="show databases;"
