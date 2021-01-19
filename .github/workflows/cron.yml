@@ -39,22 +39,22 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          
+
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 3306
+        env:
+          MYSQL_USER: filesender
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: test
+          MYSQL_ROOT_PASSWORD: password
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
     steps:
     - name: Checkout code from github
       uses: actions/checkout@v2
 
-    - name: Shutdown Ubuntu MySQL (SUDO)
-      if: ${{ matrix.db == 'mysql' }}
-      run: sudo service mysql stop
-      
-    - name: Set up MariaDB
-      if: ${{ matrix.db == 'mysql' }}
-      uses: getong/mariadb-action@v1.1
-      with:
-        mysql user: filesender
-        mysql password: password
-        mariadb version: '10.4.10'
 
     - name: Make dummy artifact file
       run: |
