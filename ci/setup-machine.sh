@@ -15,7 +15,7 @@ mkdir -p ./log ./tmp ./files
 #phpenv config-add ./ci/php-config.ini
 
 cp ./ci/filesender-config.php ./config/config.php
-if [ '$DB' = 'mysql' ]; then
+if [ "$DB" = "mysql" ]; then
     sed -e "s?usemysql=0?usemysql=1?g" --in-place ./config/config.php  ;
 fi
 
