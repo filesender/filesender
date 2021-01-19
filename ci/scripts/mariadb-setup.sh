@@ -9,7 +9,7 @@ echo "mariadb-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
 
-MYSQL="mysql --host=127.0.0.1 -u filesender  "
+MYSQL="mysql --host=localhost -u filesender  "
 
 echo "[client]"             > ~/.my.cnf
 echo "host=127.0.0.1"      >> ~/.my.cnf
@@ -20,7 +20,7 @@ echo "my.cnf is "
 cat ~/.my.cnf
 
 echo "trying to ping the database..."
-mysqladmin ping -h"127.0.0.1" -u filesender
+mysqladmin ping -h"localhost" -u filesender
 
 echo "database listing is..."
 $MYSQL --execute="show databases;"
