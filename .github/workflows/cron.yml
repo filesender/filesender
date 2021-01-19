@@ -52,7 +52,6 @@ jobs:
       if: ${{ matrix.db == 'mysql' }}
       uses: getong/mariadb-action@v1.1
       with:
-        mysql root password: password
         mysql user: filesender
         mysql password: password
         mariadb version: '10.4.10'
