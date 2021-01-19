@@ -9,10 +9,10 @@ echo "mariadb-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
 
-MYSQL="mysql --host=localhost -u root --protocol=TCP "
+MYSQL="mysql --host=127.0.0.1 -u root --protocol=TCP "
 
 echo "[client]"             > ~/.my.cnf
-echo "host=localhost"      >> ~/.my.cnf
+echo "host=127.0.0.1"      >> ~/.my.cnf
 echo "password=password"   >> ~/.my.cnf
 echo "#something=else"     >> ~/.my.cnf
 chmod 600 ~/.my.cnf
