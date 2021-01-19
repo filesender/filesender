@@ -85,7 +85,7 @@ jobs:
         extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql
         ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
 
-    - name: setup machine for FileSender
+    - name: Setup machine for FileSender
       run: ci/setup-machine.sh
       env:
         POSTGRES_HOST: localhost
@@ -104,8 +104,30 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
-          
 
+
+    - name: Cache SimpleSAML
+      uses: actions/cache@v2
+      id: cache-simplesaml
+      with:
+        path: "simplesaml"
+        key: cache-simplesaml
+
+    - name: Install SimpleSAML
+      env:
+        CACHE_HIT: ${{steps.cache-simplesaml.outputs.cache-hit}}
+      run: |
+        if [[ "$CACHE_HIT" == 'true' ]]; then
+          echo "cache hit has setup simplesaml directory"
+        else
+          echo "no cache hit, downloading and extracting simplesaml"
+          ./ci/scripts/simplesamlphp-download-and-extract.sh
+        fi
+
+    - name: Setup SimpleSAML
+      run: |
+        ./ci/scripts/simplesamlphp-setup.sh
+        
     - name: run primary test job
       run: |
         if [ "$TESTSUITE" = "cron" ]; then
