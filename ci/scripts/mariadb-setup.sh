@@ -9,7 +9,7 @@ echo "mariadb-setup.sh DB:$DB "
 echo "----------------------------"
 set -ev
 
-MYSQL="mysql --host=127.0.0.1 -u root --protocol=TCP "
+MYSQL="mysql --host=127.0.0.1 -u root  "
 
 echo "[client]"             > ~/.my.cnf
 echo "host=127.0.0.1"      >> ~/.my.cnf
