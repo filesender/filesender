@@ -91,10 +91,6 @@ jobs:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
 
-    - name: Install composer.json packages
-      run: |
-        composer self-update
-        composer update --no-interaction
 
     - name: Cache Composer packages
       id: composer-cache
@@ -104,6 +100,11 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
+
+    - name: Install composer.json packages
+      run: |
+        composer self-update
+        composer update --no-interaction
 
 
     - name: Cache SimpleSAML
