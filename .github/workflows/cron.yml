@@ -96,6 +96,16 @@ jobs:
         composer self-update
         composer update --no-interaction
 
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+          
+
     - name: run primary test job
       run: |
         if [ "$TESTSUITE" = "cron" ]; then
