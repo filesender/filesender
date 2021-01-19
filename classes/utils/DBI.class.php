@@ -193,6 +193,7 @@ class DBI
                 }
             }
         } catch (Exception $e) {
+            echo "failed to connect to db, reason: " . $e->getMessage();
             throw new DBIConnexionException('DBI connect error : '.$e->getMessage());
         }
     }
