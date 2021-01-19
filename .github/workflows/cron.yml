@@ -26,6 +26,11 @@ jobs:
            db: "mysql"
            travis_sauce_connect: false
            sauce_username: ""
+         - testsuite: "dataset"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
+
 
     env:
       DB: ${{ matrix.db }}
