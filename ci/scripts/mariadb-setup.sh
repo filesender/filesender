@@ -20,14 +20,17 @@ echo "my.cnf is "
 cat ~/.my.cnf
 
 echo "trying to ping the database..."
-mysqladmin ping -h"127.0.0.1"
+mysqladmin ping -h"127.0.0.1" -u filesender
 
 echo "database listing is..."
 $MYSQL --execute="show databases;"
 
 
+echo "making db..."
 $MYSQL  -e "CREATE DATABASE filesender DEFAULT CHARACTER SET utf8mb4;"
+echo "created db..."
 $MYSQL  -e "GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY 'password';"
+echo "grant1 done..."
 $MYSQL  -e "GRANT DROP, CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE, DROP, REFERENCES ON filesender.* TO 'filesender'@'localhost';"
 
 
