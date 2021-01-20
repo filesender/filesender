@@ -11,6 +11,15 @@ jobs:
     name: ${{ matrix.testsuite }}-${{ matrix.db }}
     runs-on: Ubuntu-20.04
 
+    env:
+      DB: ${{ matrix.db }}
+      TESTSUITE: ${{ matrix.testsuite }}
+      SAUCE_TUNNEL_IDENTIFIER: cisel${{ matrix.db }}
+      SAUCE_DONT_VERIFY_CERTS: 1
+      php_extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql
+      php_cache_key: cache_setup_php_key_v1
+      php_version: '7.2'
+
     strategy:
       matrix:
        include:
@@ -32,11 +41,6 @@ jobs:
            sauce_username: ""
 
 
-    env:
-      DB: ${{ matrix.db }}
-      TESTSUITE: ${{ matrix.testsuite }}
-      SAUCE_TUNNEL_IDENTIFIER: cisel${{ matrix.db }}
-      SAUCE_DONT_VERIFY_CERTS: 1
 
     services:
       postgres:
@@ -78,18 +82,38 @@ jobs:
         BASEDIR=$(pwd)
         export BASEDIR
 
+
+
+    - name: Setup setup-php cache environment
+      id: cachesetupphp
+      uses: shivammathur/cache-extensions@v1
+      with:
+        php-version: ${{ env.php_version }}
+        extensions: ${{ env.php_extensions }}
+        key: ${{ env.key }}
+
+    - name: Cache extensions
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.cachesetupphp.outputs.dir }}
+        key: ${{ steps.cachesetupphp.outputs.key }}
+        restore-keys: ${{ steps.cachesetupphp.outputs.key }}
+        
     - name: Setup PHP with selected extensions
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.2'
-        extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql
+        php-version: ${{ env.php_version }}
+        extensions: ${{ env.php_extensions }}
         ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
+
+
 
     - name: Setup machine for FileSender
       run: ci/setup-machine.sh
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
+
 
 
     - name: Cache Composer packages
