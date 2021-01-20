@@ -6,7 +6,6 @@ on:
   push:
     branches: [ 2020/jan/gha1 ]
   pull_request:
-    branches: [ master ]
 
 jobs:
   build:
