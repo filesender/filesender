@@ -97,12 +97,12 @@ jobs:
         extensions: ${{ env.php_extensions }}
         key: ${{ env.php_cache_key }}
 
-    - name: Cache extensions
-      uses: actions/cache@v2
-      with:
-        path: ${{ steps.cachesetupphp.outputs.dir }}
-        key: ${{ steps.cachesetupphp.outputs.key }}
-        restore-keys: ${{ steps.cachesetupphp.outputs.key }}
+#    - name: Cache extensions
+#      uses: actions/cache@v2
+#      with:
+#        path: ${{ steps.cachesetupphp.outputs.dir }}
+#        key: ${{ steps.cachesetupphp.outputs.key }}
+#        restore-keys: ${{ steps.cachesetupphp.outputs.key }}
         
     - name: Setup PHP with selected extensions
       uses: shivammathur/setup-php@v2
