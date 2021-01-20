@@ -173,7 +173,7 @@ jobs:
 
 
 
-    - name: Log file
+    - name: date-artifact
       uses: actions/upload-artifact@v2
       with:
         name: Log-file-report
@@ -196,9 +196,3 @@ jobs:
           /var/log/apache2/error.log
           /var/log/apache2/access.log
 
-
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
