@@ -1,0 +1,214 @@
+name: CI
+
+
+on:
+  push:
+    branches: [ 2020/jan/gha1 ]
+  pull_request:
+    branches: [ development ]
+
+    
+jobs:
+  build:
+    name: ${{ matrix.testsuite }}-${{ matrix.db }}
+    runs-on: Ubuntu-20.04
+
+    env:
+      DB: ${{ matrix.db }}
+      TESTSUITE: ${{ matrix.testsuite }}
+      SAUCE_TUNNEL_IDENTIFIER: cisel${{ matrix.db }}
+      SAUCE_DONT_VERIFY_CERTS: 1
+      php_extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql, mysqlnd
+      php_cache_key: cache_setup_php_key_v8
+      php_version: '7.2'
+
+    strategy:
+      matrix:
+       include:
+         - testsuite: "cron"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
+         - testsuite: "core"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
+         - testsuite: "core"
+           db: "mysql"
+           travis_sauce_connect: false
+           sauce_username: ""
+         - testsuite: "dataset"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
+
+
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PASSWORD: password
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      mariadb:
+        image: mariadb:10.2
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_USER: filesender
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: test
+          MYSQL_ROOT_PASSWORD: password
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+    - name: Checkout code from github
+      uses: actions/checkout@v2
+
+
+    - name: Make dummy artifact file
+      run: |
+        mkdir -p output/test
+        date >   output/test/output1.txt
+        BASEDIR=$(pwd)
+        export BASEDIR
+
+
+
+
+
+
+    - name: Setup setup-php cache environment
+      id: cachesetupphp
+      uses: shivammathur/cache-extensions@v1
+      with:
+        php-version: ${{ env.php_version }}
+        extensions: ${{ env.php_extensions }}
+        key: ${{ env.php_cache_key }}
+
+# this fails for mysql jobs when using the cache (jan 2021)
+#    - name: Cache extensions
+#      uses: actions/cache@v2
+#      with:
+#        path: ${{ steps.cachesetupphp.outputs.dir }}
+#        key: ${{ steps.cachesetupphp.outputs.key }}
+#        restore-keys: ${{ steps.cachesetupphp.outputs.key }}
+        
+    - name: Setup PHP with selected extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.php_version }}
+        extensions: ${{ env.php_extensions }}
+        ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
+
+
+
+    - name: Setup machine for FileSender
+      run: ci/setup-machine.sh
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+
+
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install composer.json packages
+      run: |
+        composer self-update
+        composer update --no-interaction
+
+
+    - name: Cache SimpleSAML
+      uses: actions/cache@v2
+      id: cache-simplesaml
+      with:
+        path: "simplesaml"
+        key: cache-simplesaml
+
+    - name: Install SimpleSAML
+      env:
+        CACHE_HIT: ${{steps.cache-simplesaml.outputs.cache-hit}}
+      run: |
+        if [[ "$CACHE_HIT" == 'true' ]]; then
+          echo "cache hit has setup simplesaml directory"
+        else
+          echo "no cache hit, downloading and extracting simplesaml"
+          ./ci/scripts/simplesamlphp-download-and-extract.sh
+        fi
+
+    - name: Setup SimpleSAML
+      run: |
+        ./ci/scripts/simplesamlphp-setup.sh
+
+
+
+    - name: Run Primary Tests (MAIN JOB)
+      run: |
+        if [ "$TESTSUITE" = "cron" ]; then
+          echo testing cron job
+          echo "BASEDIR $BASEDIR"
+          pwd
+          php scripts/task/cron.php --testing-mode
+          echo "cron job complete"
+        fi
+        echo "testing $TESTSUITE on database $DB "
+        ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+
+    - name: Debug Information
+      if: ${{ always() }}
+      run: |
+        echo "-------------------"
+        echo "FileSender logs...."
+        echo "-------------------"
+        cat log/*.log
+        echo "--------------------"
+        echo "Apache logs....     "
+        echo "--------------------"
+        cat /var/log/apache2/access.log
+        cat /var/log/apache2/error.log
+        echo "--------------------"
+        
+
+
+#    - name: date-artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Log-file-report
+#        path: output/test/output1.txt
+#
+#    - name: FileSender Log files
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Log-files
+#        path: log
+#
+#    - name: log files open to read
+#      run: sudo chmod +r /var/log/apache2/error.log /var/log/apache2/access.log
+#
+#    - name: Apache Log files
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: apache-logs
+#        path: |
+#          /var/log/apache2/error.log
+#          /var/log/apache2/access.log
+

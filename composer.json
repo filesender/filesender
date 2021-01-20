@@ -4,6 +4,6 @@
         "appium/php-client": "@dev",
         "phpunit/phpunit-selenium": "^4.1",
         "squizlabs/php_codesniffer": "3.*",
-        "friendsofphp/php-cs-fixer": "2.13.0"
+        "friendsofphp/php-cs-fixer": "^2.13.0"
     }
 }
