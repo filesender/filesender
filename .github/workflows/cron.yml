@@ -90,7 +90,7 @@ jobs:
       with:
         php-version: ${{ env.php_version }}
         extensions: ${{ env.php_extensions }}
-        key: ${{ env.key }}
+        key: ${{ env.php_cache_key }}
 
     - name: Cache extensions
       uses: actions/cache@v2
