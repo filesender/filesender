@@ -29,18 +29,6 @@ jobs:
            db: "pgsql"
            travis_sauce_connect: false
            sauce_username: ""
-         - testsuite: "core"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "mysql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "dataset"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
 
 
 
@@ -170,29 +158,44 @@ jobs:
         echo "testing $TESTSUITE on database $DB "
         ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
         cat log/*.log
+        cat file-does-not-exist
+
+    - name: Debug Information
+      if: ${{ always() }}
+      run: |
+        echo "-------------------"
+        echo "FileSender logs...."
+        echo "-------------------"
+        cat log/*.log
+        echo "--------------------"
+        echo "Apache logs....     "
+        echo "--------------------"
+        cat /var/log/apache2/access.log
+        cat /var/log/apache2/error.log
+        echo "--------------------"
+        
 
 
-
-    - name: date-artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: Log-file-report
-        path: output/test/output1.txt
-
-    - name: FileSender Log files
-      uses: actions/upload-artifact@v2
-      with:
-        name: Log-files
-        path: log
-
-    - name: log files open to read
-      run: sudo chmod +r /var/log/apache2/error.log /var/log/apache2/access.log
-
-    - name: Apache Log files
-      uses: actions/upload-artifact@v2
-      with:
-        name: apache-logs
-        path: |
-          /var/log/apache2/error.log
-          /var/log/apache2/access.log
+#    - name: date-artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Log-file-report
+#        path: output/test/output1.txt
+#
+#    - name: FileSender Log files
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Log-files
+#        path: log
+#
+#    - name: log files open to read
+#      run: sudo chmod +r /var/log/apache2/error.log /var/log/apache2/access.log
+#
+#    - name: Apache Log files
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: apache-logs
+#        path: |
+#          /var/log/apache2/error.log
+#          /var/log/apache2/access.log
 
