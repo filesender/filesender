@@ -3,10 +3,9 @@ name: CI
 
 
 on:
-  push:
-    branches: [ 2020/jan/gha1 ]
   pull_request:
-
+    types: [assigned, opened, synchronize, reopened]
+    
 jobs:
   build:
     name: ${{ matrix.testsuite }}-${{ matrix.db }}
