@@ -97,6 +97,7 @@ jobs:
         extensions: ${{ env.php_extensions }}
         key: ${{ env.php_cache_key }}
 
+# this fails for mysql jobs when using the cache (jan 2021)
 #    - name: Cache extensions
 #      uses: actions/cache@v2
 #      with:
@@ -157,8 +158,10 @@ jobs:
     - name: Setup SimpleSAML
       run: |
         ./ci/scripts/simplesamlphp-setup.sh
-        
-    - name: run primary test job
+
+
+
+    - name: Run Primary Tests (MAIN JOB)
       run: |
         if [ "$TESTSUITE" = "cron" ]; then
           echo testing cron job
