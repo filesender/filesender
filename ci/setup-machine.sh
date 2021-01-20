@@ -5,6 +5,11 @@ echo "----------------------------------------------------------------"
 echo "This is the ci/setup-machine.sh script running on database $DB "
 echo "----------------------------------------------------------------"
 
+echo "your php modules installed..."
+php -m
+echo "----------------------------------------------------------------"
+
+
 export POSTGRES_DB
 export POSTGRES_HOST
 export POSTGRES_USER
