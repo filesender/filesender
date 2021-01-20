@@ -17,7 +17,7 @@ jobs:
       SAUCE_TUNNEL_IDENTIFIER: cisel${{ matrix.db }}
       SAUCE_DONT_VERIFY_CERTS: 1
       php_extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql
-      php_cache_key: cache_setup_php_key_v1
+      php_cache_key: cache_setup_php_key_v2
       php_version: '7.2'
 
     strategy:
