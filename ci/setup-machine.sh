@@ -13,6 +13,11 @@ php -m
 echo "----------------------------------------------------------------"
 
 
+sudo apt-get install -y apache2 php7.4 php7.4-mbstring php7.4-xml php7.4-json libapache2-mod-php php-fpm php-mysql php-pgsql
+
+
+#        ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
+
 export POSTGRES_DB
 export POSTGRES_HOST
 export POSTGRES_USER
@@ -83,24 +88,34 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place /etc/apache2/s
 # - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 # - sudo cat /etc/apache2/sites-enabled/000-default.conf
 
-echo "setting up php-fpm..."
-version=7.2
-sudo a2enmod rewrite actions fastcgi alias
-ls -l /etc/php.ini
-echo "cgi.fix_pathinfo = 1" >> /etc/php.ini
-ls -l /etc/apache2/envvars
-echo "___looking at /var/lib/apache2 1"
-sudo ls -l /var/lib/apache2
-echo "___looking at /var/lib/apache2 2"
-sudo ls -l /var/lib/apache2/fastcgi
-echo "___sites enabled"
-sudo ls -l /etc/apache2/sites-enabled/
+# echo "setting up php-fpm..."
+# version=7.2
+# sudo a2enmod rewrite actions fastcgi alias
+# ls -l /etc/php.ini
+# echo "cgi.fix_pathinfo = 1" >> /etc/php.ini
+# ls -l /etc/apache2/envvars
+# echo "___looking at /var/lib/apache2 1"
+# sudo ls -l /var/lib/apache2
+# echo "___looking at /var/lib/apache2 2"
+# sudo ls -l /var/lib/apache2/fastcgi
+# echo "___sites enabled"
+# sudo ls -l /etc/apache2/sites-enabled/
 
-sudo apt-get install php$version-fpm
-sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
-sudo service php$version-fpm start
-sudo service php$version-fpm status
-php-fpm -v
+# sudo apt-get install php$version-fpm
+# sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
+# sudo service php$version-fpm start
+# sudo service php$version-fpm status
+# php-fpm -v
+
+echo "___ /etc/httpd"
+#ls -l /etc/httpd
+
+echo "___ /etc/httpd/conf.d"
+#ls -l /etc/httpd/conf.d
+
+#sudo a2dismod mpm_event
+#sudo  a2enmod mpm_prefork
+#sudo  a2enmod php7.0
 
 
 
