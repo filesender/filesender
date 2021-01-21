@@ -3,7 +3,7 @@ name: CI
 
 on:
   push:
-    branches: [ 2020/jan/gha1 ]
+    branches: [ 2021/jan/ghatest2 ]
   pull_request:
     branches: [ development ]
 
@@ -26,18 +26,6 @@ jobs:
       matrix:
        include:
          - testsuite: "cron"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "mysql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "dataset"
            db: "pgsql"
            travis_sauce_connect: false
            sauce_username: ""
@@ -162,7 +150,10 @@ jobs:
 
 
     - name: Run Primary Tests (MAIN JOB)
+      env:
+        TEST_SECRET: ${{ secrets.TestSecret }}
       run: |
+        echo "length of test secr ${#TEST_SECRET}..."
         if [ "$TESTSUITE" = "cron" ]; then
           echo testing cron job
           echo "BASEDIR $BASEDIR"
