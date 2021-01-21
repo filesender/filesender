@@ -110,8 +110,9 @@ echo "______ dpkg listing "
 dpkg -l
 
 echo "______ ... "
-a2enmod proxy_fcgi setenvif
-a2enconf php7.2-fpm
+# recommended by install script for php$version-fpm
+sudo a2enmod proxy_fcgi setenvif
+sudo a2enconf php7.2-fpm
 
 
 echo "___ /etc/httpd"
