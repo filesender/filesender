@@ -83,6 +83,26 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place /etc/apache2/s
 # - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 # - sudo cat /etc/apache2/sites-enabled/000-default.conf
 
+echo "setting up php-fpm..."
+version=7.2
+sudo a2enmod rewrite actions fastcgi alias
+ls -l /etc/php.ini
+echo "cgi.fix_pathinfo = 1" >> /etc/php.ini
+ls -l /etc/apache2/envvars
+echo "___looking at /var/lib/apache2 1"
+sudo ls -l /var/lib/apache2
+echo "___looking at /var/lib/apache2 2"
+sudo ls -l /var/lib/apache2/fastcgi
+echo "___sites enabled"
+sudo ls -l /etc/apache2/sites-enabled/
+
+sudo apt-get install php$version-fpm
+sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
+sudo service php$version-fpm start
+sudo service php$version-fpm status
+php-fpm -v
+
+
 
 
 echo "restarting apache2..."
@@ -112,6 +132,7 @@ grep -l -R SAUCE_HOST ${FILESENDERROOT}/vendor | \
     xargs -I {} -n 1 sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" "{}"
 
 
+echo "... trying to get index page to verify ..."
 curl -k https://localhost/filesender/
 
 
