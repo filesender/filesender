@@ -128,12 +128,9 @@ jobs:
 
 
     - uses: saucelabs/sauce-connect-action@v1.1.2
-      env:
-        SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
-        SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
       with:
-        username: ${SAUCE_USERNAME}
-        accessKey: ${SAUCE_ACCESS_KEY}
+        username: ${{ secrets.SAUCE_USERNAME }}
+        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
         tunnelIdentifier: github-action-tunnel
         noSSLBumpDomains: file_sender.app
 
