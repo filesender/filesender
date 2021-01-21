@@ -97,6 +97,7 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place /etc/apache2/s
 # echo "___sites enabled"
 # sudo ls -l /etc/apache2/sites-enabled/
 
+
 version=7.2
 sudo apt-get install php$version-fpm
 sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
@@ -104,7 +105,11 @@ sudo service php$version-fpm start
 sudo service php$version-fpm status
 php-fpm -v
 echo "______ dpkg listing "
-dpkg -L
+dpkg -l
+
+echo "______ ... "
+a2enmod proxy_fcgi setenvif
+a2enconf php7.2-fpm
 
 
 echo "___ /etc/httpd"
