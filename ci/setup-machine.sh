@@ -95,14 +95,17 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place /etc/apache2/s
 # echo "___looking at /var/lib/apache2 1"
 # sudo ls -l /var/lib/apache2
 # echo "___looking at /var/lib/apache2 2"
-# sudo ls -l /var/lib/apache2/fastcgi
 # echo "___sites enabled"
 # sudo ls -l /etc/apache2/sites-enabled/
+
 
 
 version=7.2
 sudo apt-get install php$version-fpm
 sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
+sudo ls -l /var/lib/apache2/fastcgi
+sudo chown -R runner:docker /var/lib/apache2/fastcgi /usr/sbin/php-fpm$version /usr/bin/php-fpm
+
 sudo service php$version-fpm start
 sudo service php$version-fpm status
 #php-fpm -v
