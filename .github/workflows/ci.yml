@@ -127,7 +127,7 @@ jobs:
         POSTGRES_PORT: 5432
 
 
-    - uses: saucelabs/sauce-connect-action@v1.1.1
+    - uses: saucelabs/sauce-connect-action@v1.1.2
       env:
         SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
         SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
