@@ -111,7 +111,9 @@ echo "cgi.fix_pathinfo = 1" >> $phpini
 
 sudo service php$version-fpm start
 sudo service php$version-fpm status
-#php-fpm -v
+echo "______ ... "
+echo "______ ... "
+php-fpm -v
 #echo "______ dpkg listing "
 #dpkg -l
 
