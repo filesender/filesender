@@ -105,9 +105,9 @@ sudo apt-get install php$version-fpm
 sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
 sudo service php$version-fpm start
 sudo service php$version-fpm status
-php-fpm -v
-echo "______ dpkg listing "
-dpkg -l
+#php-fpm -v
+#echo "______ dpkg listing "
+#dpkg -l
 
 echo "______ ... "
 # recommended by install script for php$version-fpm

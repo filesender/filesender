@@ -180,6 +180,7 @@ jobs:
     - name: Debug Information
       if: ${{ always() }}
       run: |
+        ls -l log
         echo "-------------------"
         echo "FileSender logs...."
         echo "-------------------"
