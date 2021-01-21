@@ -106,6 +106,9 @@ sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
 sudo ls -l /var/lib/apache2/fastcgi
 sudo chown -R runner:docker /var/lib/apache2/fastcgi /usr/sbin/php-fpm$version /usr/bin/php-fpm
 
+phpini=$(php -r "echo get_cfg_var('cfg_file_path');")
+echo "cgi.fix_pathinfo = 1" >> $phpini
+
 sudo service php$version-fpm start
 sudo service php$version-fpm status
 #php-fpm -v
