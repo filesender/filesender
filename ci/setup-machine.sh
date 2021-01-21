@@ -103,6 +103,8 @@ sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
 sudo service php$version-fpm start
 sudo service php$version-fpm status
 php-fpm -v
+echo "______ dpkg listing "
+dpkg -L
 
 
 echo "___ /etc/httpd"
