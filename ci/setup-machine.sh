@@ -7,6 +7,7 @@ echo "----------------------------------------------------------------"
 
 echo "current directory"
 pwd
+FILESENDERROOT=$(pwd);
 echo "your php modules installed..."
 php -m
 echo "----------------------------------------------------------------"
@@ -26,7 +27,7 @@ if [ "$DB" = "mysql" ]; then
     sed -e "s?usemysql=0?usemysql=1?g" --in-place ./config/config.php  ;
 fi
 
-sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place ./config/config.php
+sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place ./config/config.php
 chmod -R a+x ./ci/scripts
 
 ####miq#./ci/scripts/simplesamlphp-setup.sh
@@ -57,8 +58,7 @@ fi
 # Packages
 #
 sudo apt-get update
-sudo apt-get install curl
-sudo apt-get install apache2 #libapache2-mod-fastcgi
+sudo apt-get install curl wget apache2  #libapache2-mod-fastcgi
 
 ####
 # 
@@ -69,7 +69,7 @@ sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/port
 sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
 sudo cp -f ci/apache2.conf /etc/apache2/sites-enabled/000-default.conf
-sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
+sudo sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 
 # enable php-fpm
 #sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
@@ -84,9 +84,6 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enable
 # - sudo cat /etc/apache2/sites-enabled/000-default.conf
 
 
-# - echo "... making sure sauce connect doesn't redefine ..."
-# - sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" /home/travis/build/filesender/filesender/vendor/sauce/sausage/src/Sauce/Sausage/SauceAPI.php
-# - sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" /home/travis/build/filesender/filesender/vendor/sauce/sausage/src/Sauce/Sausage/SauceConfig.php
 
 echo "restarting apache2..."
 sudo service apache2 restart
@@ -110,8 +107,12 @@ echo "about to do the update to sauce...4"
 ls -l vendor/sauce/sausage/src
 
 echo "... making sure sauce connect doesn't redefine SAUCE_HOST ..."
-sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" vendor/sauce/sausage/src/Sauce/Sausage/SauceAPI.php
-sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" vendor/sauce/sausage/src/Sauce/Sausage/SauceConfig.php
+
+grep -l -R SAUCE_HOST ${FILESENDERROOT}/vendor | \
+    xargs -I {} -n 1 sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" "{}"
+
+
+curl -k https://localhost/filesender/
 
 
 # after_failure:
