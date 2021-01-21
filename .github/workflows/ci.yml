@@ -93,12 +93,12 @@ jobs:
 #        key: ${{ steps.cachesetupphp.outputs.key }}
 #        restore-keys: ${{ steps.cachesetupphp.outputs.key }}
         
-#    - name: Setup PHP with selected extensions
-#      uses: shivammathur/setup-php@v2
-#      with:
-#        php-version: ${{ env.php_version }}
-#        extensions: ${{ env.php_extensions }}
-#        ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
+    - name: Setup PHP with selected extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.php_version }}
+        extensions: ${{ env.php_extensions }}
+        ini-values: max_input_time=3600,upload_max_filesize=2047M,post_max_size=2146445312,session.cookie_secure=On,session.cookie_httponly=On
 
 
 
