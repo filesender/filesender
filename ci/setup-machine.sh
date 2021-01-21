@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -v
+
 PWD=$(pwd)
 echo "----------------------------------------------------------------"
 echo "This is the ci/setup-machine.sh script running on database $DB "
@@ -59,7 +61,7 @@ fi
 # Packages
 #
 sudo apt-get update
-sudo apt-get install curl wget apache2  #libapache2-mod-fastcgi
+sudo apt-get install curl wget apache2 
 
 ####
 # 
