@@ -100,8 +100,15 @@ if [ "$DB" = "mysql" ]; then
     sudo service postgresql stop
 fi 
 
-echo "about to do the update to sauce..."
-ls -l
+echo "about to do the update to sauce...1"
+ls -l vendor
+echo "about to do the update to sauce...2"
+ls -l vendor/sauce
+echo "about to do the update to sauce...3"
+ls -l vendor/sauce/sausage
+echo "about to do the update to sauce...4"
+ls -l vendor/sauce/sausage/src
+
 echo "... making sure sauce connect doesn't redefine SAUCE_HOST ..."
 sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" vendor/sauce/sausage/src/Sauce/Sausage/SauceAPI.php
 sudo  sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" vendor/sauce/sausage/src/Sauce/Sausage/SauceConfig.php
