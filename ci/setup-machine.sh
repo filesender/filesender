@@ -111,21 +111,28 @@ echo "cgi.fix_pathinfo = 1" >> $phpini
 
 echo "____ id ___ "
 id
-echo "____ /etc/apache2/envvars before _____"
-cat /etc/apache2/envvars
-sudo sed -i -e "s,www-data,runner,g" /etc/apache2/envvars
-echo "____ /etc/apache2/envvars after _____"
-cat /etc/apache2/envvars
+#echo "____ /etc/apache2/envvars before _____"
+#cat /etc/apache2/envvars
+#sudo sed -i -e "s,www-data,runner,g" /etc/apache2/envvars
+#echo "____ /etc/apache2/envvars after _____"
+#cat /etc/apache2/envvars
 
-echo "____ fastcgi before _____"
-ls -l /var/lib/apache2/fastcgi
-sudo chown -R runner /var/lib/apache2/fastcgi
-echo "____ fastcgi after _____"
-ls -l /var/lib/apache2/fastcgi
-sudo chown -R runner /var/lib/apache2/fastcgi
+#echo "____ fastcgi before _____"
+#ls -l /var/lib/apache2/fastcgi
+#sudo chown -R runner /var/lib/apache2/fastcgi
+#echo "____ fastcgi after _____"
+#ls -l /var/lib/apache2/fastcgi
+#sudo chown -R runner /var/lib/apache2/fastcgi
 
 echo "___ /etc/php-fpm.d ___ "
 ls -l /etc/php-fpm.d
+#export APACHE_RUN_USER=www-data
+#export APACHE_RUN_GROUP=www-data
+
+
+echo "___ changing group to www-data for $FILESENDERROOT "
+sudo chgrp -R www-data ${FILESENDERROOT}
+
 
 #- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 #- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
@@ -135,7 +142,7 @@ sudo service php$version-fpm start
 sudo service php$version-fpm status
 echo "______ ... "
 echo "______ ... "
-php-fpm -v
+#php-fpm -v
 #echo "______ dpkg listing "
 #dpkg -l
 
