@@ -132,10 +132,9 @@ ls -l /etc/php-fpm.d
 
 echo "___ changing group to www-data for $FILESENDERROOT "
 sudo chgrp -R www-data ${FILESENDERROOT}
-sudo chown -R www-data:www-data ${FILESENDERROOT}/log
-sudo chown -R www-data:www-data ${FILESENDERROOT}/files
+sudo chown -R www-data:docker   ${FILESENDERROOT}/log
+sudo chown -R www-data:docker   ${FILESENDERROOT}/files
 sudo chown -R www-data:www-data ${FILESENDERROOT}/tmp
-
 
 #- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 #- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf

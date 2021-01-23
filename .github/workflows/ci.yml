@@ -175,7 +175,8 @@ jobs:
           echo "cron job complete"
         fi
         echo "testing $TESTSUITE on database $DB "
-        sudo -U www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+        sudo -u www-data id
+        sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
 
     - name: Debug Information
       if: ${{ always() }}
