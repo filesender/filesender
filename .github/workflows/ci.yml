@@ -119,25 +119,6 @@ jobs:
         composer update --no-interaction
 
 
-
-
-    - name: Setup machine for FileSender
-      run: ci/setup-machine.sh
-      env:
-        POSTGRES_HOST: localhost
-        POSTGRES_PORT: 5432
-
-
-#    - uses: saucelabs/sauce-connect-action@v1.1.2
-#      with:
-#        username: ${{ secrets.SAUCE_USERNAME }}
-#        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
-#        tunnelIdentifier: github-action-tunnel
-#        noSSLBumpDomains: file_sender.app
-
-
-
-
     - name: Cache SimpleSAML
       uses: actions/cache@v2
       id: cache-simplesaml
@@ -159,6 +140,25 @@ jobs:
     - name: Setup SimpleSAML
       run: |
         ./ci/scripts/simplesamlphp-setup.sh
+
+
+    - name: Setup machine for FileSender
+      run: ci/setup-machine.sh
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+
+
+#    - uses: saucelabs/sauce-connect-action@v1.1.2
+#      with:
+#        username: ${{ secrets.SAUCE_USERNAME }}
+#        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
+#        tunnelIdentifier: github-action-tunnel
+#        noSSLBumpDomains: file_sender.app
+
+
+
+
 
 
 
@@ -184,7 +184,7 @@ jobs:
         echo "-------------------"
         echo "FileSender logs...."
         echo "-------------------"
-        cat log/*.log
+        sudo cat log/*.log
         echo "--------------------"
         echo "Apache logs....     "
         echo "--------------------"
