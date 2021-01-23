@@ -168,10 +168,10 @@ jobs:
       run: |
         echo "length of test secr ${#TEST_SECRET}..."
         if [ "$TESTSUITE" = "cron" ]; then
-          echo testing cron job
+          echo "testing task/cron job"
           echo "BASEDIR $BASEDIR"
           pwd
-          php scripts/task/cron.php --testing-mode
+          sudo -u www-data php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         fi
         echo "testing $TESTSUITE on database $DB "
