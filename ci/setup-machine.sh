@@ -198,6 +198,12 @@ grep -l -R SAUCE_HOST ${FILESENDERROOT}/vendor | \
 echo "... trying to get index page to verify ..."
 curl -k https://localhost/filesender/
 
+echo "--------------------"
+echo "Apache logs....     "
+echo "--------------------"
+cat /var/log/apache2/access.log
+cat /var/log/apache2/error.log
+
 
 # after_failure:
 # - sudo cat /var/log/apache2/error.log
