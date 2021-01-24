@@ -23,8 +23,6 @@ export POSTGRES_PASSWORD
 
 mkdir -p ./log ./tmp ./files
 
-#phpenv config-add ./ci/php-config.ini
-
 cp ./ci/filesender-config.php ./config/config.php
 if [ "$DB" = "mysql" ]; then
     sed -e "s?usemysql=0?usemysql=1?g" --in-place ./config/config.php  ;
@@ -32,8 +30,6 @@ fi
 
 sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place ./config/config.php
 chmod -R a+x ./ci/scripts
-
-####miq#./ci/scripts/simplesamlphp-setup.sh
 
 ####
 #
@@ -74,100 +70,26 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/
 sudo cp -f ci/apache2.conf /etc/apache2/sites-enabled/000-default.conf
 sudo sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 
-# enable php-fpm
-#sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-#sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-#sudo a2enmod rewrite actions fastcgi alias
-#echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-#sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
-#sudo chown -R travis:travis /var/lib/apache2/fastcgi
-#sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-# #- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-# - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-# - sudo cat /etc/apache2/sites-enabled/000-default.conf
-
-# echo "setting up php-fpm..."
-# version=7.2
-# sudo a2enmod rewrite actions fastcgi alias
-# ls -l /etc/php.ini
-# echo "cgi.fix_pathinfo = 1" >> /etc/php.ini
-# ls -l /etc/apache2/envvars
-# echo "___looking at /var/lib/apache2 1"
-# sudo ls -l /var/lib/apache2
-# echo "___looking at /var/lib/apache2 2"
-# echo "___sites enabled"
-# sudo ls -l /etc/apache2/sites-enabled/
-
-
-
-version=7.2
-sudo apt-get install php$version-fpm
-sudo cp /usr/sbin/php-fpm$version /usr/bin/php-fpm # copy to /usr/bin
+sudo apt-get install php${php_version}-fpm
+sudo cp /usr/sbin/php-fpm{php_version} ${php_version} /usr/bin/php-fpm # copy to /usr/bin
 sudo ls -l /var/lib/apache2/fastcgi
-sudo chown -R runner:docker /var/lib/apache2/fastcgi /usr/sbin/php-fpm$version /usr/bin/php-fpm
+sudo chown -R runner:docker /var/lib/apache2/fastcgi /usr/sbin/php-fpm${php_version} /usr/bin/php-fpm
 
 phpini=$(php -r "echo get_cfg_var('cfg_file_path');")
 echo "cgi.fix_pathinfo = 1" >> $phpini
-
-echo "____ id ___ "
-id
-#echo "____ /etc/apache2/envvars before _____"
-#cat /etc/apache2/envvars
-#sudo sed -i -e "s,www-data,runner,g" /etc/apache2/envvars
-#echo "____ /etc/apache2/envvars after _____"
-#cat /etc/apache2/envvars
-
-#echo "____ fastcgi before _____"
-#ls -l /var/lib/apache2/fastcgi
-#sudo chown -R runner /var/lib/apache2/fastcgi
-#echo "____ fastcgi after _____"
-#ls -l /var/lib/apache2/fastcgi
-#sudo chown -R runner /var/lib/apache2/fastcgi
-
-echo "___ /etc/php-fpm.d ___ "
-ls -l /etc/php-fpm.d
-#export APACHE_RUN_USER=www-data
-#export APACHE_RUN_GROUP=www-data
-
 
 echo "___ changing group to www-data for $FILESENDERROOT "
 sudo chgrp -R www-data ${FILESENDERROOT}
 sudo chown -R www-data:docker   ${FILESENDERROOT}/log
 sudo chown -R www-data:docker   ${FILESENDERROOT}/files
 sudo chown -R www-data:www-data ${FILESENDERROOT}/tmp
-
-#- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-#- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-
-
-sudo service php$version-fpm start
-sudo service php$version-fpm status
-echo "______ ... "
-echo "______ ... "
-#php-fpm -v
-#echo "______ dpkg listing "
-#dpkg -l
-
-echo "______ ... "
-# recommended by install script for php$version-fpm
+# recommended by install script for php${php_version}-fpm
 sudo a2enmod proxy_fcgi setenvif
 sudo a2enconf php7.2-fpm
 
-
-echo "___ /etc/httpd"
-#ls -l /etc/httpd
-
-echo "___ /etc/httpd/conf.d"
-#ls -l /etc/httpd/conf.d
-
-#sudo a2dismod mpm_event
-#sudo  a2enmod mpm_prefork
-#sudo  a2enmod php7.0
-
-
-
-
-echo "restarting apache2..."
+echo "restarting apache2 and php-fpm..."
+sudo service php${php_version}-fpm start
+sudo service php${php_version}-fpm status
 sudo service apache2 restart
 
 # stop the database we are not planning to use
@@ -179,20 +101,9 @@ if [ "$DB" = "mysql" ]; then
     sudo service postgresql stop
 fi 
 
-echo "about to do the update to sauce...1"
-ls -l vendor
-echo "about to do the update to sauce...2"
-ls -l vendor/sauce
-echo "about to do the update to sauce...3"
-ls -l vendor/sauce/sausage
-echo "about to do the update to sauce...4"
-ls -l vendor/sauce/sausage/src
-
 echo "... making sure sauce connect doesn't redefine SAUCE_HOST ..."
-
 grep -l -R SAUCE_HOST ${FILESENDERROOT}/vendor | \
     xargs -I {} -n 1 sed -i -e "s,define('SAUCE_HOST',if(\!defined('SAUCE_HOST')) define('SAUCE_HOST',g" "{}"
-
 
 echo "... trying to get index page to verify ..."
 curl -k https://localhost/filesender/
@@ -202,9 +113,3 @@ echo "Apache logs....     "
 echo "--------------------"
 cat /var/log/apache2/access.log
 cat /var/log/apache2/error.log
-
-
-# after_failure:
-# - sudo cat /var/log/apache2/error.log
-# - sudo cat /var/log/apache2/access.log
-# - find ./log -type f -exec cat {} +

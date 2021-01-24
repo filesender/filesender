@@ -166,7 +166,6 @@ jobs:
       env:
         TEST_SECRET: ${{ secrets.TestSecret }}
       run: |
-        echo "length of test secr ${#TEST_SECRET}..."
         if [ "$TESTSUITE" = "cron" ]; then
           echo "testing task/cron job"
           echo "BASEDIR $BASEDIR"
