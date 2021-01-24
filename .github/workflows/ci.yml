@@ -29,6 +29,18 @@ jobs:
            db: "pgsql"
            travis_sauce_connect: false
            sauce_username: ""
+         - testsuite: "core"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
+         - testsuite: "core"
+           db: "mysql"
+           travis_sauce_connect: false
+           sauce_username: ""
+         - testsuite: "dataset"
+           db: "pgsql"
+           travis_sauce_connect: false
+           sauce_username: ""
 
 
 
