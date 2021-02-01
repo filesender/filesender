@@ -3,7 +3,7 @@ name: CI
 
 on:
   push:
-    branches: [ 2020/jan/gha1 ]
+    branches: [ 2021/jan/ghatest2 ]
   pull_request:
     branches: [ development ]
 
@@ -41,6 +41,7 @@ jobs:
            db: "pgsql"
            travis_sauce_connect: false
            sauce_username: ""
+
 
 
 
@@ -114,12 +115,6 @@ jobs:
 
 
 
-    - name: Setup machine for FileSender
-      run: ci/setup-machine.sh
-      env:
-        POSTGRES_HOST: localhost
-        POSTGRES_PORT: 5432
-
 
 
     - name: Cache Composer packages
@@ -160,26 +155,49 @@ jobs:
         ./ci/scripts/simplesamlphp-setup.sh
 
 
+    - name: Setup machine for FileSender
+      run: ci/setup-machine.sh
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+
+
+#    - uses: saucelabs/sauce-connect-action@v1.1.2
+#      with:
+#        username: ${{ secrets.SAUCE_USERNAME }}
+#        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
+#        tunnelIdentifier: github-action-tunnel
+#        noSSLBumpDomains: file_sender.app
+
+
+
+
+
+
 
     - name: Run Primary Tests (MAIN JOB)
+      env:
+        TEST_SECRET: ${{ secrets.TestSecret }}
       run: |
         if [ "$TESTSUITE" = "cron" ]; then
-          echo testing cron job
+          echo "testing task/cron job"
           echo "BASEDIR $BASEDIR"
           pwd
-          php scripts/task/cron.php --testing-mode
+          sudo -u www-data php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         fi
         echo "testing $TESTSUITE on database $DB "
-        ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+        sudo -u www-data id
+        sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
 
     - name: Debug Information
       if: ${{ always() }}
       run: |
+        ls -l log
         echo "-------------------"
         echo "FileSender logs...."
         echo "-------------------"
-        cat log/*.log
+        sudo cat log/*.log
         echo "--------------------"
         echo "Apache logs....     "
         echo "--------------------"
