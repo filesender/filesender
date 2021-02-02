@@ -183,6 +183,7 @@ email_address
 email_daily_statistics
 email_download_complete
 email_feedback
+email_full_match_search
 email_guest_created
 email_guest_created_receipt
 email_guest_expired
