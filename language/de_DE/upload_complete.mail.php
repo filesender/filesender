@@ -62,7 +62,7 @@ Mit freundlichen Grüßen,
             <td>{size:transfer.size}</td>
         </tr>
         <tr>
-            <td>Weiter Informationen</td>
+            <td>Weitere Informationen</td>
             <td><a href="{transfer.link}">{transfer.link}</a></td>
         </tr>
     </tbody>

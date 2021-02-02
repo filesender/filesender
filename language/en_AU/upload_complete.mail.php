@@ -15,6 +15,9 @@ Hello,
 
 The following {if:transfer.files>1}files have{else}file has{endif} been successfully uploaded to {cfg:site_name}.
 
+These files can be downloaded using the following link: {transfer.download_link}
+
+
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
@@ -34,6 +37,10 @@ Best regards,
 
 <p>
     The following {if:transfer.files>1}files have{else}file has{endif} been successfully uploaded to <a href="{cfg:site_url}">{cfg:site_name}</a>.
+</p>
+
+<p>
+These files can be downloaded using the following link <a href="{transfer.download_link}">{transfer.download_link}</a>
 </p>
 
 <table rules="rows">
