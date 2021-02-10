@@ -617,3 +617,7 @@ $lang['you_can_report_exception'] = 'When reporting this error please give the f
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
+$lang['privacy_page_trackingevents_lifetime'] = 'Days that a log of tracking events are retained. These are primarily email bounce events.';
+$lang['clear_frequent_recipients'] = 'Clear stored email recipients from past use that is used to help you complete email fields.';
+$lang['database_updated'] = 'Database updated';
+$lang['privacy_page_frequent_recipients_text'] = 'The email addresses you send files to are stored while your account is in the system. You can delete just this specific information in your user profile at any time using the button to clear requent recipients on the My profile page. Note that the button on the my profile page will only clear part of your profile, the email address may still be in one of the above logs for the duration that those logs are kept.';
