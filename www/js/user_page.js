@@ -67,6 +67,22 @@ $(function() {
         
         return false;
     });
+
+
+    $('.clear_frequent_recipients a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var p = {};
+        p['clear_frequent_recipients'] = '1';
+        
+        filesender.client.updateUserPreferences(p, function() {
+            filesender.ui.notify('success', lang.tr('database_updated'));
+            filesender.ui.reload();
+        });
+        
+        return false;
+    });
     
 
     $('.delete_my_account a').button().on('click', function(e) {
