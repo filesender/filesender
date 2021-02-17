@@ -183,6 +183,9 @@ window.filesender.config = {
     guest_reminder_limit_per_day:  <?php echo Config::get('guest_reminder_limit_per_day') ?>,
     storage_type:  "<?php echo Config::get('storage_type') ?>",
     allow_streamsaver: <?php echo value_to_TF(Browser::instance()->allowStreamSaver) ?>,
+
+    upload_page_password_can_not_be_part_of_message_handling: "<?php echo Config::get('upload_page_password_can_not_be_part_of_message_handling') ?>",
+ 
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

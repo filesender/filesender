@@ -93,6 +93,8 @@ A note about colours;
 * [crypto_pbkdf2_delay_to_show_dialog](#crypto_pbkdf2_delay_to_show_dialog)
 * [crypto_pbkdf2_expected_secure_to_year](#crypto_pbkdf2_expected_secure_to_year)
 * [crypto_pbkdf2_dialog_custom_webasm_delay](#crypto_pbkdf2_dialog_custom_webasm_delay)
+* [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
+
 
 ## Transfers
 
@@ -850,7 +852,16 @@ User language detection is done in the following order:
 * __available:__ since version 2.14
 
 
+### upload_page_password_can_not_be_part_of_message_handling
+* __description:__ Can be one of 'none', 'warning', or 'error'. If the string does not match a known valid value it is reset to 'warning'. If this is 'warning' and the user is performing an encrypted upload and types their password into the message field then a warning message is displayed until the user removes the password from the message. If this is 'error' then a more stern message is displayed informing the user that they will not be allowed to continue until the password is removed from the message text. If this is 'none' then no checks are performed and the test is effectively disabled.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ 'warning'
+* __available:__ since version 2.22
 
+
+
+* [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
 
 
 
