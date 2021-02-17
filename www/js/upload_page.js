@@ -696,6 +696,19 @@ filesender.ui.recipients = {
     }
 };
 
+filesender.ui.doesUploadMessageContainPassword = function() {
+    if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
+        var p = filesender.ui.nodes.encryption.password.val();
+        var m = filesender.ui.nodes.message.val();
+        if( p && m ) {
+            if( m.includes(p)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 filesender.ui.evalUploadEnabled = function() {
     var ok = true;
     
@@ -725,6 +738,12 @@ filesender.ui.evalUploadEnabled = function() {
 
     if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
         ok = ok && filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password,false );
+    }
+
+    if( filesender.ui.doesUploadMessageContainPassword()) {
+        if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
+            ok = false;
+        }
     }
 
     var invalid_nodes = filesender.ui.nodes.files.list.find('.invalid');
@@ -1213,6 +1232,8 @@ $(function() {
         seconds_since_data_sent_info:form.find('#seconds_since_data_sent_info'),
         disable_terasender: form.find('input[name="disable_terasender"]'),
         message: form.find('textarea[name="message"]'),
+        message_contains_password_warning: form.find('#password_can_not_be_part_of_message_warning'),
+        message_contains_password_error:   form.find('#password_can_not_be_part_of_message_error'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
         lang: form.find('input[name="lang"]'),
         aup: form.find('input[name="aup"]'),
@@ -1358,6 +1379,33 @@ $(function() {
         $('#message_can_not_contain_urls'),
         filesender.config.message_can_not_contain_urls_regex );
 
+    // Bind encryption password events
+    var messageContainedPassword = false;
+    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning'
+        || filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' )
+    {
+        filesender.ui.nodes.message.on(
+            'keyup',
+            function(e) {
+                if( filesender.ui.doesUploadMessageContainPassword()) {
+                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning' ) {
+                        filesender.ui.nodes.message_contains_password_warning.show();
+                    }
+                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
+                        filesender.ui.nodes.message_contains_password_error.show();
+                    }
+                    filesender.ui.evalUploadEnabled();
+                    messageContainedPassword = true;
+                } else if( messageContainedPassword ) {
+                    messageContainedPassword = false;
+                    filesender.ui.nodes.message_contains_password_warning.hide();
+                    filesender.ui.nodes.message_contains_password_error.hide();
+                    filesender.ui.evalUploadEnabled();
+                }
+            }
+        );
+    }
+    
     
     // Setup date picker
     $.datepicker.setDefaults({

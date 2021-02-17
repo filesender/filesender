@@ -268,6 +268,7 @@ $default = array(
     'streamsaver_on_edge'   => true,
     'streamsaver_on_safari' => true,
 
+    'upload_page_password_can_not_be_part_of_message_handling' => 'warning',
     
     
     'transfer_options' => array(
