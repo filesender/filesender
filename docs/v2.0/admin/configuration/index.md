@@ -230,6 +230,11 @@ A note about colours;
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 
+## Data Protection
+
+* [data_protection_user_frequent_email_address_disabled](#data_protection_user_frequent_email_address_disabled)
+
+
 ---
 
 # Configuration directives
@@ -2236,6 +2241,26 @@ $config['rest_allow_jsonp'] = array(
 	In this example the "site_name_in_header" is a checkbox in the UI.  For the override "site_name", type string: displays a text field, and runs validator "is_string".  You can use existing validators or any other function. The override "terasender_start_mode" displays a dropdown in which you can choose from different predefined values.
 
 Changes are saved in config_overrides.json in the config directory.  The config.php file is NOT modified.  This keeps overrides separated from the site config.  is_string, is_numeric (standard php validators) or a function of your own which returns a boolean indicating if the value is good or not.
+
+###
+
+---
+
+## Data Protection
+
+---
+
+### data_protection_user_frequent_email_address_disabled
+
+* __description:__ if set to true then frequent email addresses are not cached for a user. These are used for example when sending files to email addresses or inviting a guest to the system. Note that the user may delete the frequent email addresses on the my profile page at any time, but with this option set to true such email addresses will not be cached in the database at all.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.22
+* __1.x name:__
+* __comment:__
+
+
 
 ###
 
