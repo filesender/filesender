@@ -687,7 +687,8 @@ class User extends DBObject
             $this->guest_preferences = $value;
         } elseif ($property == 'frequent_recipients') {
             if( Config::get('data_protection_user_frequent_email_address_disabled')) {
-                // nothing.
+                // keep nothing.
+                $this->frequent_recipients = array();
             } else {
                 $this->frequent_recipients = $value;
             }
