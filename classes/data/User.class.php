@@ -388,6 +388,10 @@ class User extends DBObject
      */
     public function getFrequentRecipients($criteria = null)
     {
+        if( Config::get('data_protection_user_frequent_email_address_disabled')) {
+            return array();
+        }
+
         // Get max number of returned recipients from config
         $size = Config::get('autocomplete');
         if (!$size || !is_int($size) || $size <= 0) {
@@ -457,6 +461,11 @@ class User extends DBObject
         }
         
         $recipients = $size ? array_slice($recipients, 0, $size) : array();
+
+        // wipe it out if that is what the admin wants.
+        if( Config::get('data_protection_user_frequent_email_address_disabled')) {
+            $recipients = array();
+        }
         
         // Save if something changed
         if ($recipients !== $this->frequent_recipients) {
@@ -677,7 +686,12 @@ class User extends DBObject
         } elseif ($property == 'guest_preferences') {
             $this->guest_preferences = $value;
         } elseif ($property == 'frequent_recipients') {
-            $this->frequent_recipients = $value;
+            if( Config::get('data_protection_user_frequent_email_address_disabled')) {
+                // keep nothing.
+                $this->frequent_recipients = array();
+            } else {
+                $this->frequent_recipients = $value;
+            }
         } elseif ($property == 'email_addresses') {
             if (!is_array($value)) {
                 $value = array($value);
@@ -722,6 +736,13 @@ class User extends DBObject
         $guests = Guest::fromUser($user);
         foreach ($guests as $g) {
             $g->delete();
+        }
+    }
+
+    public function beforeSave()
+    {
+        if( Config::get('data_protection_user_frequent_email_address_disabled')) {
+            $this->frequent_recipients = array();
         }
     }
 
