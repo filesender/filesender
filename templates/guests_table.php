@@ -32,7 +32,7 @@
             
             <td class="subject">
                 <?php if(strlen($guest->subject) > 15) { ?>
-                <span class="short"><?php echo Template::sanitizeOutput(substr($guest->subject, 0, 15)) ?></span>
+                <span class="short"><?php echo Template::sanitizeOutput(mb_substr($guest->subject, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
                 <div class="full"><?php echo Template::sanitizeOutput($guest->subject) ?></div>
                 <?php } else echo Template::sanitizeOutput($guest->subject) ?>
@@ -40,7 +40,7 @@
             
             <td class="message">
                 <?php if(strlen($guest->message) > 15) { ?>
-                <span class="short"><?php echo Template::sanitizeOutput(substr($guest->message, 0, 15)) ?></span>
+                <span class="short"><?php echo Template::sanitizeOutput(mb_substr($guest->message, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
                 <div class="full"><?php echo Template::sanitizeOutput($guest->message) ?></div>
                 <?php } else echo Template::sanitizeOutput($guest->message) ?>
