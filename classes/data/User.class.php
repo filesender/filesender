@@ -751,5 +751,72 @@ class User extends DBObject
         $user = $this;
         TranslatableEmail::quickSend('local_authdb_password_reminder', $user, array('password' => $password));
     }
-    
+
+    public function exportMyData()
+    {
+        $user = $this;
+        $ret = array();
+
+        $statement = DBI::prepare('SELECT * FROM '.User::getDBTable().' WHERE id = :id');
+        $statement->execute(array(':id' => $user->id));
+        $ret['user'] = $statement->fetch();
+
+        //
+        // My guests
+        //
+        $ret['guests'] = array();
+        $guests = Guest::fromUser($user);
+        foreach ($guests as $g) {
+            $id = $g->id;
+            $ret['guests'][$id] = $g;
+        }
+
+        //
+        // My transfers
+        //
+        $ret['transfers'] = array();
+        $statement = DBI::prepare('SELECT * FROM '.Transfer::getDBTable().' WHERE userid = :id');
+        $statement->execute(array(':id' => $user->id));
+        $records = $statement->fetchAll();
+        foreach ($records as $r) {
+            $tid = $r['id'];
+            $ret['transfers'][$tid] = $r;
+            $transfer = Transfer::fromId($tid);
+
+            //
+            // Files in this transfer
+            //
+            $files = File::fromTransfer( $transfer );
+            foreach ($files as $file) {
+                $ret['transfers'][$tid]['file'] = $file;
+            }
+
+            //
+            // AuditLogs
+            //
+            foreach (AuditLog::fromTransfer($transfer) as $log) {
+                $lid = $log->id;
+                $ret['transfers'][$tid]['log'][$lid] = $log;
+            }
+
+            //
+            // Recipients
+            //
+            foreach ($transfer->recipients as $recipient) {
+                $rid = $recipient->id;
+                $ret['transfers'][$tid]['recipient'][$rid] = $recipient;
+            }
+
+            //
+            // Emails
+            //
+            foreach (TranslatableEmail::fromContext($transfer) as $translatable_email) {
+                $id = $translatable_email->id;
+                $ret['transfers'][$tid]['translated_email'][$id] = $translatable_email;
+            }
+        }
+        
+
+        return $ret;
+    }
 }
