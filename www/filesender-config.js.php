@@ -185,7 +185,6 @@ window.filesender.config = {
     allow_streamsaver: <?php echo value_to_TF(Browser::instance()->allowStreamSaver) ?>,
 
     upload_page_password_can_not_be_part_of_message_handling: "<?php echo Config::get('upload_page_password_can_not_be_part_of_message_handling') ?>",
- 
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
