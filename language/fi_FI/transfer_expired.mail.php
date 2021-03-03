@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Tiedostojako poistettu
+subject: Tiedostojako poistunut
 
 {alternative:plain}
 
 Hei!
 
-Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+Tiedostojako #{transfer.id} on vanhentunut ja poistunut jaosta.
 
 Terveisin,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Terveisin,
 </p>
 
 <p>
-    Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+    Tiedostojako #{transfer.id} on vanhentunut ja poistunut jaosta.
 </p>
 
 <p>

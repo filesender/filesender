@@ -7,28 +7,14 @@
 // 
 // 
 ?>
-subject: Latausoikeus poistettu
+subject: käännä viestin loppuosa
 
 {alternative:plain}
 
-Hei!
-
-Oikeutesi tiedostojakoon #{transfer.id} on poistettu.
-
-Terveisin,
-{cfg:site_name}
+Käännä tämän viestin sisältö: {raw:translatableemail.link}
 
 {alternative:html}
 
 <p>
-    Hei!
-</p>
-
-<p>
-    Oikeutesi tiedostojakoon #{transfer.id} on poistettu.
-</p>
-
-<p>
-    Terveisin,<br />
-    {cfg:site_name}
+    Käännä tämän viestin sisältö: <a href="{translatableemail.link}">{translatableemail.link}</a>
 </p>
