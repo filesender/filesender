@@ -11,9 +11,9 @@ subject: Palaute lähettäjältä {if:target_type=="recipient"}recipient{endif}{
 
 {alternative:plain}
 
-Hei,
+Hei!
 
-olemme vastaanottaneet oheisen palautteen lähettäjältä {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email}, ks. liite.
+Olemme vastaanottaneet oheisen palautteen lähettäjältä {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email}, ks. liite.
 
 Terveisin,
 {cfg:site_name}
@@ -21,11 +21,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
-    olemme vastaanottaneet oheisen palautteen lähettäjältä {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email}, ks. liite.
+    Olemme vastaanottaneet oheisen palautteen lähettäjältä {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email}, ks. liite.
 </p>
 
 <p>
