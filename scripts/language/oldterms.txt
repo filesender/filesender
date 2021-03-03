@@ -75,6 +75,7 @@ cannot_open_input_file
 change_password
 clear_all
 clear_client_logs
+clear_frequent_recipients
 click_to_delete_file
 click_to_delete_recipient
 client_logs_cleared
@@ -120,6 +121,7 @@ crypto_pbkdf2_dialog
 crypto_pbkdf2_dialog_with_expected
 daily_summary
 database_access_failure
+database_updated
 date
 date_format
 datetime_format
@@ -347,6 +349,8 @@ options
 pager_has_no_more
 pager_more
 password
+password_can_not_be_part_of_message_error
+password_can_not_be_part_of_message_warning
 password_hashing_performance
 pause
 paused
@@ -356,8 +360,10 @@ privacy_page
 privacy_page_auditlog_lifetime
 privacy_page_clientlogs_lifetime
 privacy_page_days_old_table_text
+privacy_page_frequent_recipients_text
 privacy_page_guests_expired_lifetime
 privacy_page_max_transfer_days_valid
+privacy_page_trackingevents_lifetime
 privacy_page_translatable_emails_lifetime
 privacy_text
 profile_page_text_linking_to_admin_page
