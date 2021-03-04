@@ -11,9 +11,9 @@ subject: Tiedostojako poistunut
 
 {alternative:plain}
 
-Hei,
+Hei!
 
-Käyttäjä {transfer.user_email} on poistanut tiedostojaon n°{transfer.id}, eikä se ole enää noudettavissa.
+Käyttäjä {transfer.user_email} on poistanut tiedostojaon #{transfer.id}, joten se ei ole enää noudettavissa.
 
 Terveisin,
 {cfg:site_name}
@@ -21,11 +21,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
-    Käyttäjä {transfer.user_email} on poistanut tiedostojaon n°{transfer.id}, eikä se ole enää noudettavissa.
+    Käyttäjä {transfer.user_email} on poistanut tiedostojaon #{transfer.id}, joten se ei ole enää noudettavissa.
 </p>
 
 <p>
