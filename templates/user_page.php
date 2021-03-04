@@ -203,6 +203,14 @@ EOT;
         </a>
     </div>
     <br/>
+
+    <div class="clear_frequent_recipients">
+        <a href="#">
+            <span class="fa fa-lg fa-times"></span>
+            {tr:clear_frequent_recipients}
+        </a>
+    </div>
+    <br/>
     
         {tr:user_profile_delete_about_description_text}
     

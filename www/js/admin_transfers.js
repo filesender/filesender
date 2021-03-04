@@ -40,7 +40,7 @@ $(function() {
 
     var idbuttonse  = section.find('.search [name="idbuttonse"]').prop('disabled', false);
     var senderemail = section.find('.search [name="senderemail"]');
-    
+    var senderemail_full_match = section.find('.search [name="senderemail_full_match"]');
     
     var idsearch = function() {
         //alert(idmin.val());
@@ -76,9 +76,12 @@ $(function() {
 
 
     var search_senderemail = function() {
+        var full_match = senderemail_full_match.is(':checked');
+        
         filesender.ui.redirect( filesender.config.base_path
                                 + '?s=admin&as=transfers'
                                 + '&senderemail=' + senderemail.val()
+                                + '&senderemail_full_match=' + full_match
                               );
     }
     
