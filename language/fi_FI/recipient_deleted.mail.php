@@ -11,9 +11,9 @@ subject: Latausoikeus poistettu
 
 {alternative:plain}
 
-Hei,
+Hei!
 
-Oikeutesi tiedostojakoon n°{transfer.id} on poistettu.
+Oikeutesi tiedostojakoon #{transfer.id} on poistettu.
 
 Terveisin,
 {cfg:site_name}
@@ -21,11 +21,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
-    Oikeutesi tiedostojakoon n°{transfer.id} on poistettu.
+    Oikeutesi tiedostojakoon #{transfer.id} on poistettu.
 </p>
 
 <p>

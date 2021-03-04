@@ -11,9 +11,9 @@ subject: Tiedostosiirto valmistui
 
 {alternative:plain}
 
-Hei,
+Hei!
 
-seuraava tiedosto tai tiedostot on siirretty onnistuneesti palveluun {cfg:site_name}.
+Seuraava tiedosto tai tiedostot on siirretty onnistuneesti palveluun {cfg:site_name}.
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -29,11 +29,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
-    seuraava tiedosto tai tiedostot on siirretty onnistuneesti palveluun <a href="{cfg:site_url}">{cfg:site_name}</a>.
+    Seuraava tiedosto tai tiedostot on siirretty onnistuneesti palveluun <a href="{cfg:site_url}">{cfg:site_name}</a>.
 </p>
 
 <table rules="rows">

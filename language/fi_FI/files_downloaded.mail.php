@@ -11,7 +11,7 @@ subject: Ilmoitus tiedostolatauksesta
 
 {alternative:plain}
 
-Hei,
+Hei!
 
 Käyttäjä {recipient.email} on ladannut siirtämäsi {if:files>1}tiedostot {else}tiedoston{endif} palvelusta {cfg:site_name}:
 
@@ -29,7 +29,7 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
