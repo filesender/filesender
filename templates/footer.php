@@ -11,7 +11,7 @@
         </div>
         
         <?php if(!Config::get('helpURL')) { ?>
-        <div id="dialog-help" style="display:none" title="{tr:help}">
+            <div id="dialog-help" style="display:none" title="{tr:help}">
             {tr:help_text}
         </div>
         <?php } ?>
@@ -21,7 +21,7 @@
             {tr:about_text}
         </div>
         <?php } ?>
-        
-        <!-- Version <?php //echo FileSender_Version::VERSION; ?> -->
+
+        </div>
     </body>
 </html>

@@ -328,12 +328,7 @@ class Config
         if( !$v || ($v != '' && $v != 'none' && $v != 'warning' && $v != 'error' )) {
             self::$parameters['upload_page_password_can_not_be_part_of_message_handling'] = 'warning';
         }
-
-        // force to bool
-        $v = Utilities::isTrue(self::get('data_protection_user_frequent_email_address_disabled'));
-        self::$parameters['data_protection_user_frequent_email_address_disabled'] = $v;
         
-
         
         // verify classes are happy
         Guest::validateConfig();

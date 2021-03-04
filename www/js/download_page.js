@@ -252,10 +252,10 @@ $(function() {
     };
     
     // Bind archive download button
-    page.find('.archive .archive_download').button().on('click', function() {
+    page.find('.archive .archive_download').on('click', function() {
         return dlArchive( 'zip' );
     });
-    page.find('.archive .archive_tar_download').button().on('click', function() {
+    page.find('.archive .archive_tar_download').on('click', function() {
         return dlArchive( 'tar' );
     });
     
@@ -275,9 +275,9 @@ $(function() {
     button_zipdl = page.find('.archive_download_frame');
     button_tardl = page.find('.archive_tar_download_frame');
     if( macos || linuxos ) {
-        button_tardl.addClass('recommended');
+        button_tardl.addClass('btn-success');
     } else {
-        button_zipdl.addClass('recommended');
+        button_zipdl.addClass('btn-success');
     }
     
 });

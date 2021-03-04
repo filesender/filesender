@@ -47,11 +47,11 @@ $(function() {
         // Setup action buttons
         guests.find('td.actions').each(function() {
             var td = $(this);
+            var ab = td.find('.actionsblock');
+                
             
             // Delete button
-            $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(td).attr({
-                title: lang.tr('delete')
-            }).on('click', function() {
+            td.find('.delete').on('click', function() {
                 var id = $(this).closest('tr').attr('data-id');
                 if(!id || isNaN(id)) return;
                 
@@ -65,9 +65,7 @@ $(function() {
             
             if(table.is('[data-mode="user"]')) {
                 // Send reminder button
-                $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(td).attr({
-                    title: lang.tr('send_reminder')
-                }).on('click', function() {
+                td.find('.remind').on('click', function() {
                     var id = $(this).closest('tr').attr('data-id');
                     if(!id || isNaN(id)) return;
                     
@@ -79,9 +77,7 @@ $(function() {
                 });
                 
                 // Send forward button
-                $('<span class="forward clickable fa fa-lg fa-mail-forward" />').appendTo(td).attr({
-                    title: lang.tr('forward')
-                }).on('click', function() {
+                td.find('.forward').on('click', function() {
                     var id = $(this).closest('tr').attr('data-id');
                     if(!id || isNaN(id)) return;
                     
@@ -89,8 +85,7 @@ $(function() {
                          placeholder: lang.tr('enter_to_email')
                     });
                     
-                    var dialog = filesender.ui.prompt(lang.tr('forward_guest_voucher'), function() {
-                        var value = input.val();
+                    var dialog = filesender.ui.promptEmail(lang.tr('forward_guest_voucher'), function(value) {
                         var emails = value.match(/[,;\s]/) ? value.split(/[,;\s]/) : [value];
                         
                         var h = {};
@@ -145,7 +140,7 @@ $(function() {
                         });
                         
                         return true;
-                    }).append('<label for="recipients">' + lang.tr('recipients') + '</label>').append(input);
+                    });
                     
                     input.on('keydown', function(e) {
                         if(e.keyCode != 13) return;
@@ -162,6 +157,7 @@ $(function() {
             }
         });
     }
+
     
     // Errors details
     guests.find('.guest[data-errors="1"] .to .errors').each(function() {
@@ -173,6 +169,7 @@ $(function() {
             if(!id || isNaN(id)) return;
             
             filesender.client.getGuest(id, function(guest) {
+
                 var popup = filesender.ui.wideInfoPopup(lang.tr('recipient_errors'));
                 
                 for(var i=0; i<guest.errors.length; i++) {

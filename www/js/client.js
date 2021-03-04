@@ -178,18 +178,11 @@ window.filesender.client = {
                     (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
                     (options.auth_prompt === undefined || options.auth_prompt)
                 ) {
-                    filesender.client.authentication_required = filesender.ui.popup(
-                        lang.tr('authentication_required'),
-                        filesender.config.logon_url ? {
-                            logon: function() {
-                                filesender.ui.redirect(filesender.config.logon_url);
-                            }
-                        } : {
-                            ok: function() {}
-                        },
-                        {noclose: true}
-                    );
-                    filesender.client.authentication_required.text(lang.tr('authentication_required_explanation'));
+                    filesender.ui.confirmTitle(lang.tr('authentication_required'),
+                                               lang.tr('authentication_required_explanation'),
+                                               function() {
+                                                   filesender.ui.redirect(filesender.config.logon_url);
+                                               });
                     return;
                 }
 
@@ -765,8 +758,7 @@ window.filesender.client = {
 
     changeLocalAuthDBPassword: function(username,callback) {
         
-        var prompt = window.filesender.ui.prompt('new password', function (password) {
-            var pass = $(this).find('input').val();
+        var prompt = window.filesender.ui.prompt('new password', function (pass) {
             filesender.client.createLocalDBAuthUser( username, pass, function() {
                 filesender.ui.notify('success', lang.tr('password_updated'));
                 if( callback ) {
@@ -776,8 +768,8 @@ window.filesender.client = {
             
         });
         // Add a field to the prompt
-        var input = $('<input type="text" class="wide" />').appendTo(prompt);
-        input.focus();
+//        var input = $('<input type="text" class="wide" />').appendTo(prompt);
+//        input.focus();
     },
 
     remindLocalAuthDBPassword: function(id, password, callback ) {

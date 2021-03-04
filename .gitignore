@@ -19,4 +19,5 @@ git-switch-to-current-latest-development.sh
 import-all-poeditor-langs-and-push.sh
 scripts/client/test.php
 scripts/testing/test1.php
-
+simplesaml
+simplesamlphp-*

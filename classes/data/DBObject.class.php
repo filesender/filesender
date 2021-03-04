@@ -420,11 +420,6 @@ class DBObject
      */
     public function save()
     {
-        // If child class has things to do before a save run that
-        if (method_exists($this, 'beforeSave')) {
-            $this->beforeSave();
-        }
-        
         if (method_exists($this, 'customSave')) {
             // Child class has custom saver, run it
             $this->customSave();

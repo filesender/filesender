@@ -90,14 +90,17 @@ $(function() {
     $('.actions [data-action="delete"]').on('click', function() {
         var id = $(this).closest('[data-transfer]').attr('data-id');
         if(!id || isNaN(id)) return;
-        
-        if($(this).closest('table').is('[data-mode="admin"][data-status="available"]')) {
+
+        console.log("BBB delete");
+        if($(this).closest('table').is('[data-mode="user"][data-status="available"]')) {
+        console.log("BBB delete2");
             var d = filesender.ui.chooseAction(['delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
                 var done = function() {
                     $('[data-transfer][data-id="' + id + '"]').remove();
                     filesender.ui.notify('success', lang.tr('transfer_deleted'));
                 };
-                
+
+//                console.log(" chosen ", choosen );
                 switch(choosen) {
                     case 'delete_transfer_nicely' :
                         filesender.client.closeTransfer(id, function() {
@@ -163,19 +166,27 @@ $(function() {
             });
         };
         
-        var buttons = {};
+        var buttons = {
+            extend: {
+                callback: function() {
+                    extend(false);
+                }
+            }
+        }
+        if(t.attr('data-recipients-enabled')) {
+            buttons.extend_and_remind = {
+                callback: function() {
+                    extend(true);
+                }
+            };
+        }
+        buttons.cancel = {};
         
-        buttons.extend = function() {
-            extend(false);
-        };
-        
-        if(t.attr('data-recipients-enabled')) buttons.extend_and_remind = function() {
-            extend(true);
-        };
-        
-        buttons.cancel = false;
-        
-        filesender.ui.popup(lang.tr('confirm_dialog'), buttons).html(lang.tr('confirm_extend_expiry').r({days: duration}).out());
+
+        filesender.ui.dialogWithButtons( 'confirm_dialog', 'confirm',
+                                         lang.tr('confirm_extend_expiry').r({days: duration}).out(),
+                                         buttons );
+                               
     }
     
     // Extend buttons
@@ -215,11 +226,10 @@ $(function() {
             recipients.push($(this).attr('data-email'));
         });
         
-        var prompt = filesender.ui.prompt(lang.tr('enter_to_email'), function() {
-            var input = $(this).find('input');
+        var prompt = filesender.ui.promptEmail(lang.tr('enter_to_email'), function(input) {
             $('p.error', this).remove();
             
-            var raw_emails = input.val().split(/[,;]/);
+            var raw_emails = input.split(/[,;]/);
             
             var emails = [];
             var errors = [];
@@ -254,8 +264,9 @@ $(function() {
                 errors.push(lang.tr('max_email_recipients_exceeded').r({max: filesender.config.max_email_recipients}));
             
             if(errors.length) {
+                console.log(errors);
                 for(var i=0; i<errors.length; i++)
-                    $('<p class="error message" />').text(errors[i].out()).appendTo(this);
+                    $('<p class="error message" />').text(errors[i].out()).appendTo(prompt);
                 return false;
             }
             
@@ -276,8 +287,6 @@ $(function() {
         })
         
         prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
-        var input = $('<input type="text" class="wide" />').appendTo(prompt);
-        input.focus();
     });
     
     // Remind buttons
@@ -437,6 +446,7 @@ $(function() {
     // Add auditlogs triggers
     var auditlogs = function(transfer_id, filter) {
         filesender.client.getTransferAuditlog(transfer_id, function(log) {
+
             var popup = filesender.ui.wideInfoPopup(lang.tr('auditlog'));
             popup.css('overflow','hidden');
             
@@ -506,7 +516,7 @@ $(function() {
             
             var actions = $('<div class="actions" />').appendTo(popup);
             
-            var send_by_email = $('<a href="#" />').text(lang.tr('send_to_my_email')).appendTo(actions);
+            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(' ' + lang.tr('send_to_my_email')).appendTo(actions);
             $('<span class="fa fa-lg fa-envelope-o" />').prependTo(send_by_email);
             send_by_email.on('click', function(e) {
                 e.stopPropagation();
@@ -517,10 +527,11 @@ $(function() {
                 });
                 
                 return false;
-            }).button();
+            });
             
             // Reset popup position as we may have added lengthy content
             filesender.ui.relocatePopup(popup);
+            
         });
     };
     

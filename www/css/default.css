@@ -33,15 +33,23 @@
 /* Global rules */
 
 body {
-    background: #1c1c1c;
+    background: #fff3eb !important;
     color: #333;
     font-family: Verdana, Geneva, sans-serif;
     text-align: left;
-    font-size: 12px;
+}
+
+.nav-tabs-coretop,
+.nav-link-coretop {
+    background: #fff3eb !important;
 }
 
 img {
     display: block;
+}
+
+.filesender-topcontent {
+    background: #fff3eb;
 }
 
 a {
@@ -66,16 +74,22 @@ abbr {
 /* Main layout rules */
 
 #wrap {
-    background: #fff;
-    width: 900px;
+    background: #fff3eb !important;
     padding-bottom: 2em;
     margin: 0 auto;
     height: 100%;
 }
 
+.mainbox {
+    background: #FFFFFF !important;
+    padding: 0.5em;
+ }
+
+
 #header {
-    background: #666 url(../images/banner900.png) no-repeat top left;
+    background: url(../images/banner900fff3eb.png) no-repeat 60px 0px;
     height: 60px;
+    width: 100%;
     margin-bottom: 1em;
 }
 
@@ -85,32 +99,6 @@ abbr {
     margin-bottom: 1em;
 }
 
-#langmenu {
-    border-radius: 0 0 0.5em 0.5em;
-    -moz-border-radius: 0 0 0.5em 0.5em;
-    margin: 0 2em 0.5em 2em;
-    overflow: hidden;
-}
-
-#langmenu .rightlangmenu {
-    float: right;
-}
-
-#langmenu li {
-    position: relative;
-    display: inline-block;
-    float: right;
-    border-left: 1px solid rgba(255, 255, 255, 0.098);
-    border-right: 1px solid rgba(0, 0, 0, 0.35);
-    cursor: pointer;
-    font: bold 13px/17px "Helvetica Neue",Helvetica,Arial,Geneva,sans-serif;
-}
-
-#langmenu ul {
-    display: inline;
-    float: right;
-    list-style: none outside none;
-}
 
 #notifications {
     position: fixed;
@@ -121,76 +109,6 @@ abbr {
     transform: translate(-50%, -50%);
 }
 
-#menu {
-    height: 34px;
-    background: url(../images/jq-global-nav.png) repeat-x scroll 0 bottom #1B1B1B;
-    border-radius: 0.5em 0.5em 0 0;
-    -moz-border-radius: 0.5em 0.5em 0 0;
-    margin: 0 2em;
-    overflow: hidden;
-}
-
-#menu li {
-    position: relative;
-    display: inline-block;
-    float: left;
-    border-left: 1px solid rgba(255, 255, 255, 0.098);
-    border-right: 1px solid rgba(0, 0, 0, 0.35);
-    cursor: pointer;
-    font: bold 13px/17px "Helvetica Neue",Helvetica,Arial,Geneva,sans-serif;
-    text-shadow: 0 0 0.2em #000;
-    transition: all 0.2s ease 0s;
-}
-
-#menu ul .spacer {
-    width: 100%;
-}
-
-#menu .leftmenu {
-    float: left;
-}
-
-#menu .rightmenu {
-    float: right;
-}
-
-#menu .rightmenu li {
-    border-left: 1px solid rgba(0, 0, 0, 0.35);
-    border-right: 1px solid rgba(255, 255, 255, 0.098);
-}
-
-#menu ul {
-    /* [disabled]border-left: 1px solid rgba(0, 0, 0, 0.35); */
-    /* [disabled]border-right: 1px solid rgba(255, 255, 255, 0.098); */
-    display: inline;
-    float: left;
-    list-style: none outside none;
-}
-
-#menu ul li a {
-    color: #E6E6E6;
-    display: block;
-    font-style: normal;
-    font-weight: normal;
-    padding: 0.6em 1em;
-    text-decoration: none;
-}
-
-#menu a:hover, .current, #menu a:active {
-    background-color: rgb(51,51,51);
-}
-
-#menu .red {
-    background-color: rgb(151,51,51);
-}
-
-
-#menu ul li select {
-    display: block;
-    font-style: normal;
-    font-weight: normal;
-    margin: 0.6em 1em;
-}
 
 #content {
     padding: 0.5em 2em 1em 2em;
@@ -234,40 +152,20 @@ abbr {
     padding-top: 1.2em;
 }
 
-div.message, div.notification, div.exception {
-    background-position: 0.8em 50%;
-    background-repeat: no-repeat;
-    border: 1px solid;
-    border-radius: 0.5em;
+.core {
+    padding: 1em;
+    background: #ffffff;
+    border: 0px solid #aaa;
+    border-radius:0.5em;
     -moz-border-radius: 0.5em;
-    padding: 0.4em 0.4em 0.4em 32px;
-    margin: 2em 5em;
 }
 
-div.notification {
-    margin: 1em;
-}
-
-div.error.message, div.notification.error, div.exception {
-    background-color: #fcc;
-    background-image: url(../images/error.png);
-    border-color: #ebb;
-}
-
-div.info.message, div.notification.info {
-    background-color: #ccf;
-    background-image: url(../images/info.png);
-    border-color: #bbe;
-}
-
-div.success.message, div.notification.success {
-    background-color: #cfc;
-    background-image: url(../images/success.png);
-    border-color: #beb;
-}
-
-div.exception .details {
-    margin: 1em;
+.core-tabbed {
+    padding: 1em;
+    background: #ffffff;
+    border: 0px solid #aaa;
+    border-radius: 0em 0.5em 0.5em 0.5em;
+    -moz-border-radius: 0.5em;
 }
 
 .box {
@@ -275,12 +173,10 @@ div.exception .details {
     border: 1px solid #aaa;
     border-radius:0.5em;
     -moz-border-radius: 0.5em;
-    margin: 0 0.25em 0.5em 0.25em;
 }
 
 .boxnoframe {
     padding: 0.5em;
-    margin: 0 0.25em 0.5em 0.25em;
 }
 
 .clickable, [data-action] {
@@ -370,20 +266,6 @@ label.invalid {
     font-size: 1.5em;
 }
 
-table.list {
-    table-layout: fixed;
-    width: 100%;
-}
-
-table.list thead tr {
-    background-color: #ccc;
-    font-weight: bold;
-}
-
-table.list .subheader tr {
-    background-color: #edd;
-    font-weight: bold;
-}
 
 td .desc {
     text-align: right;
@@ -395,26 +277,7 @@ td .desc {
     text-align: right;
 }
 
-table.list th {
-    text-align: center;
-}
 
-table.list tbody td {
-    border-bottom: 1px solid #ccc;
-}
-
-table.list .actions {
-    width: 6em;
-    text-align: center;
-}
-
-table.list .actions span{
-    margin: 0 0.1em;
-}
-
-table.list .date {
-    width: 15em;
-}
 
 .progressbar {
     position: relative;
@@ -430,6 +293,7 @@ table.list .date {
     text-align: center;
     width: 100%;
 }
+
 
 .progressbar.quota {
     margin: 0.4em auto;
@@ -454,6 +318,9 @@ table.list .date {
     background-color: #f00;
 }
 
+.custom-control-label {
+    cursor: pointer;
+}
 
 /* JQuery UI overides */
 
@@ -562,84 +429,21 @@ table.list .date {
 
 /* Upload page */
 
-#upload_form input[type="checkbox"] {
-    float: left;
-    width: 1.2em;
-    margin: 0 1em 0 0;
-}
 
 #upload_form .file_selector {
     display: none;
     margin-bottom: 0.5em;
 }
 
-#upload_form .files {
-    width: 100%;
-    margin-bottom: 0.5em;
-    max-height: 20em;
-    overflow-y: scroll;
-}
-
-.upload_form_regular .files .file,
-.upload_form_regular .required_files .file {
-    position: relative;
-    margin: 0.2em;
-    padding: 0.5em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    background-color: #dedede;
-    line-height: 1.8em;
-    /*height: 1.8em;*/
-}
-
-.upload_form_stats .files .file,
-.upload_form_stats .required_files .file {
-    position: relative;
-    margin: 0.2em;
-    padding: 0.5em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    background-color: #dedede;
-    line-height: 5.4em;
-}
-
 #upload_form .required_files .file {
     background-color: #faa;
 }
 
-#upload_form .files .file .info,
-#upload_form .required_files .file .info {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    font-weight: bold;
-}
+
 
 #upload_form .files .file .remove {
-    float: right;
+    text-align: right;
     line-height: 1.3333em;
-}
-
-#upload_form .files .file .invalid_reason {
-    color: #f00;
-    font-style: italic;
-}
-
-#upload_form .files .file .progressbar {
-    position: relative;
-    display: none;
-    float: right;
-    margin: 0.2333em 0 0.2333em 1em;
-    width: 10em;
-    height: 1.3333em;
-}
-
-#upload_form .files .file .progressbar .progress-label {
-    position: absolute;
-    top: -0.2em;
-    font-size: 0.9em;
 }
 
 #upload_form .files .file .done_icon {
@@ -707,7 +511,7 @@ table.list .date {
     font-weight: bold;
     padding: 0.3em;
     padding-bottom: 0.4em;
-    height: 5em;
+    height: 15em;
     text-align: center;
     max-height: 300em;
     overflow-y: scroll;   
@@ -780,24 +584,12 @@ table.list .date {
 }
 
 #upload_form .files_actions {
-    display: table;
-    width: 100%;
-    margin: 0.25em 1em 0 0;
-}
-
-#upload_form .files_actions div {
-    display: table-cell;
-}
-
-.div3 {
-    width: 33%;
-}
-.div4 {
-     width: 25%;
+    margin: 0.5em -1em 0 -1em; 
 }
 
 #upload_form .files_actions div a {
     width: 45%;
+    min-width: 100px;
 }
 
 #upload_form .files_actions div+div {
@@ -832,38 +624,6 @@ table.list .date {
 #upload_form .uploading_actions .stats .uploaded,
 #upload_form .uploading_actions .stats .average_speed
 {
-    display: none;
-}
-
-#upload_form .two_columns {
-    width: 100.7%;
-    margin: 0 -0.75em 0.5em -0.25em;
-}
-
-#upload_form .recipients {
-    display: none;
-    padding: 0.5em 0;
-}
-
-#upload_form .recipients .recipient {
-    margin: 0.2em;
-    padding: 0.5em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    background-color: #dedede;
-}
-
-#upload_form .recipients .recipient .remove {
-    float: right;
-}
-
-#upload_form textarea[name="message"] {
-    width: 100%;
-    resize: vertical;
-}
-
-#upload_form .advanced_options {
     display: none;
 }
 
@@ -910,6 +670,8 @@ table.list .date {
     display: none;
 }
 
+
+
 .ui-dialog .ui-dialog-content .failed_transfer {
     margin-top: 1em;
 }
@@ -935,42 +697,15 @@ table.list .date {
     margin-right: 1em;
 }
 
+.accordion {
+    margin-top: 1.5rem;
+}
+.accordion .card-header {
+    cursor: pointer;
+}
+
 /* transfers page */
 
-.transfers_page .menu {
-    border-bottom: 1px solid #ccc;
-    overflow: hidden;
-    margin-bottom: 1em;
-}
-
-.transfers_page .menu ul {
-    display: inline;
-    float: left;
-    list-style: none outside none;
-    margin-bottom: -1px;
-}
-
-.transfers_page .menu li {
-    position: relative;
-    display: inline-block;
-    float: left;
-    margin: 0 0.3em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em 0.5em 0 0;
-    -moz-border-radius: 0.5em 0.5em 0 0;
-    cursor: pointer;
-    background-color: #ccc;
-}
-
-.transfers_page .menu li a {
-    display: block;
-    padding: 0.1em 0.5em;
-    text-decoration: none;
-}
-
-.transfers_page .menu li.current {
-    background-color: #fff;
-}
 
 
 /* transfers table */
@@ -981,32 +716,16 @@ table.transfers .collapse {
     text-align: center;
 }
 
-table.transfers .transfer_id {
-    width: 7em;
-    text-align: center;
-}
-
-table.transfers .downloads{
-    width: 10em;
-    text-align: center;
-}
-
-table.transfers .expires {
-    width: 8em;
+table.transfers .th.size,
+table.transfers td.downloads,
+table.transfers .expires,
+table.transfers .transfer_id,
+table.transfers .downloads {
     text-align: center;
 }
 
 table.transfers .size {
-    width: 6em;
     text-align: right;
-}
-
-table.transfers th.size {
-    text-align: center;
-}
-
-table.transfers td.downloads {
-    text-align: center;
 }
 
 table.transfers tbody .transfer[data-errors="1"] td {
@@ -1051,10 +770,6 @@ table.transfers .transfer_details h2 {
     margin-bottom: 0.3em;
 }
 
-table.transfers .transfer_details .recipients .recipient [data-action],
-table.transfers .transfer_details .files .file [data-action] {
-    margin: 0 0.15em;
-}
 .transfer-download {
     cursor: pointer;
 }
@@ -1100,35 +815,6 @@ table.transfers .transfer_details .download_link input {
 
 /* Guests page */
 
-#send_voucher .recipients {
-    display: none;
-    padding: 0.5em 0;
-}
-
-#send_voucher .recipients .recipient {
-    margin: 0.2em;
-    padding: 0.5em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    background-color: #dedede;
-}
-
-#send_voucher .recipients .recipient .remove {
-    float: right;
-}
-
-#send_voucher textarea[name="message"] {
-    display: block;
-    width: 100%;
-    resize: vertical;
-}
-
-#send_voucher input[type="checkbox"] {
-    float: left;
-    width: 1.2em;
-    margin: 0 1em 0 0;
-}
 
 #send_voucher .advanced_options {
     display: none;
@@ -1141,23 +827,6 @@ table.transfers .transfer_details .download_link input {
 
 /* Guests table */
 
-table.guests .from,
-table.guests .to,
-table.guests .subject {
-    width: 10em;
-    overflow: hidden;
-}
-
-table.guests .full {
-    display: none;
-}
-
-table.guests .created,
-table.guests .expires {
-    width: 7em;
-    text-align: center;
-}
-
 table.guests tbody .guest[data-errors="1"] td {
     background-color: #faa;
 }
@@ -1169,50 +838,6 @@ table.guests .guest .to .errors .details {
 
 /* Admin page */
 
-.admin_page .menu {
-    border-bottom: 1px solid #ccc;
-    overflow: hidden;
-    margin-bottom: 1em;
-}
-
-.admin_page .menu ul {
-    display: inline;
-    float: left;
-    list-style: none outside none;
-    margin-bottom: -1px;
-}
-
-.admin_page .menu li {
-    position: relative;
-    display: inline-block;
-    float: left;
-    margin: 0 0.3em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em 0.5em 0 0;
-    -moz-border-radius: 0.5em 0.5em 0 0;
-    cursor: pointer;
-    background-color: #ccc;
-}
-
-.admin_page .menu li a {
-    display: block;
-    padding: 0.1em 0.5em;
-    text-decoration: none;
-}
-
-.admin_page li a {
-    display: block;
-    padding: 0.1em 0.5em;
-    text-decoration: none;
-}
-
-.admin_page .menu li.current {
-    background-color: #fff;
-}
-
-.admin_page .progressbar.user_quota {
-    display: none;
-}
 
 
 /* Download page */
@@ -1245,29 +870,6 @@ table.guests .guest .to .errors .details {
     vertical-align: middle;
 }
 
-.download_page .files .file {
-    height: 2.5em;
-    margin: 0.25em;
-    padding: 1.2em 0.5em 0.5em 0.5em;
-}
-
-.download_page .files .file .select,
-.download_page .files .file .name,
-.download_page .files .file .size {
-}
-
-.download_page .files .file .name {
-    text-overflow: ellipsis;
-    width: 345px;
-    display: inline-block;
-    height: 1em;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.download_page .files .file .size {
-    color: #777;
-}
 
 .download_page .files .file .download {
     float: right;
@@ -1279,23 +881,6 @@ table.guests .guest .to .errors .details {
     text-align: center;
 }
 
-.download_page .archive_tar_download_frame,
-.download_page .archive_download_frame {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    -moz-border-radius: 0.5em 0.5em 0.5em 0.5em;
-    display: inline-block;
-}
-
-.download_page .archive .archive_message,
-.download_page .archive .mac_archive_message {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-.recommended {
-    border: 0.5em solid #55aa55;
-    background-color: #55aa55;
-}
 
 .download_page .files[data-count="1"] .select_all,
 .download_page .files[data-count="1"] .file .select,
@@ -1307,12 +892,6 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
-.downloadprogress {
-       float:right;
-       font-size:1.7em;
-       padding-right:20px;
-       min-width: 100px;
-}
 
 /* Admin sections */
 
@@ -1508,6 +1087,8 @@ table.guests .guest .to .errors .details {
     width: 8rem;
 }
 
+
+
     /* Popups */
 #dialog-help h4 {
     font-size: 1.2em;
@@ -1537,11 +1118,6 @@ table.guests .guest .to .errors .details {
 }
 
 /* Encryption */
-#encryption_password_container,
-#encryption_password_container_too_short_message,
-#encryption_password_container_generate,
-#encryption_password_container_generate_again,
-#encryption_password_show_container,
 #encryption_description_container_disabled,
 #encryption_description_not_supported,
 .download_decryption_disabled,
@@ -1649,3 +1225,122 @@ div.not_displayed {
     font-weight: bold;
 }
 
+
+.warning {
+    background: #eeeeff;
+}
+
+.stage1 {
+}
+
+.stage2 {
+}
+.stage3 {
+}
+.stage3only {
+    display: none;
+}
+.clearandstats {
+    display: none;
+}
+    
+.stageh {
+    display: none;
+}
+
+.transfersactionsicons {
+    margin: 3em;
+}
+
+
+.success-dialog .modal-header{
+    background-color:#CFC;
+}
+.success-dialog .modal-content {
+    overflow:hidden;
+}
+
+.warning-dialog .modal-header{
+     background-color:#fcc;
+}
+.warning-dialog .modal-content {
+    overflow:hidden;
+}
+
+.error-dialog .modal-header{
+     background-color:#faa;
+}
+.error-dialog .modal-content {
+    overflow:hidden;
+}
+
+.earl {
+    width: 90%;
+}
+
+
+.stage1 {
+}
+.stage2 {
+    display: none;
+}
+.stage3 {
+    display: none;
+}
+.stage4 {
+    display: none;
+}
+.stage3only {
+    display: none;
+}
+.clearandstats {
+    display: none;
+}
+.stageh {
+    display: none;
+}
+
+#encgroup1, #encgroup2, #encgroup3 {
+    display: none;
+}
+
+#encryption_password_container_generate_again {
+    display: none;
+}
+
+.ui-datepicker-calendar a.ui-state-default,
+.ui-datepicker-calendar span.ui-state-default
+{
+    border: 0px solid #D8D8D8 !important;
+}
+
+.nav-tabs-coretop {
+    border-bottom: 0px solid #dee2e6;
+}
+
+.filestable .tpl {
+    display: none;
+}
+.file.invalid {
+    background-color: #faa;
+}
+
+#fileslist {
+        display: none;
+}
+
+.actions .actionsblock {
+    margin:3px;
+    white-space: nowrap;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+
+.div3 {
+    width: 33%;
+}
+.div4 {
+     width: 25%;
+}

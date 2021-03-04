@@ -53,16 +53,20 @@ window.filesender.ui = {
             filesender.logger.log(message);
         }
     },
+
+    /**
+     * Close a dialog created by popup(), maintenance() etc.
+     */ 
+    closeDialog: function( dialog ) {
+        dialog.closest('.bootbox').modal('hide');
+    },
     
     /**
-     * Holder for named nodes
+     * Deprecated Jan 2021. Holder for named nodes
      */
     nodes: {},
     
-    /**
-     * Max popup width
-     */
-    popup_width: 550,
+
     
     
     /**
@@ -96,40 +100,33 @@ window.filesender.ui = {
         var btndef = [];
         for(var lid in buttons) {
             btndef.push({
-                text: lang.tr(lid).out(),
-                click: handle(lid)
+                label: lang.tr(lid).out(),
+                className: buttons[lid].className ? buttons[lid].className : 'btn-success',
+                callback: buttons[lid].callback ? buttons[lid].callback : function() {}
             });
         }
-        
-        if(!options) options = {};
-        var baseopts = {
-            resizable: false,
-            width: Math.min(this.popup_width, $('#wrap').width()),
-            modal: true
-        };
-        for(var k in baseopts)
-            if(typeof options[k] == 'undefined')
-                options[k] = baseopts[k];
-        
-        options.buttons = btndef;
-        
+
         var onclose = options.onclose ? options.onclose : null;
-        if(onclose) delete options.onclose;
+
+        var t = lang.tr(title).toString();
+        if( t.length && t[0] != '{' ) {
+            title = t;
+        }
         
-        if(options.noclose)
-            options.closeOnEscape = false;
         
-        d.dialog(options);
+        options = {
+            title: title,
+            message: ' ',
+            className: 'prompt-dialog',
+            centerVertical: true,
+            buttons: btndef,
+            onEscape: onclose,
+            closeButton: options.noclose ? false : true
+        };
         
-        if(onclose) d.on('dialogclose', function() {
-            if(!$(this).data('closed_by_button_click')) onclose.call(this);
-            $(this).data('closed_by_button_click', false);
-        });
         
-        if(options.noclose)
-            d.closest('.ui-dialog').find('.ui-dialog-titlebar-close').remove();
-        
-        return d;
+        var r = bootbox.dialog( options );
+        return r.find('.bootbox-body');
     },
     
     /**
@@ -139,7 +136,7 @@ window.filesender.ui = {
      * @param string message
      * @param callable onclose
      */
-    alert: function(type, message, onclose) {
+    alert: function(type, message, onclose, extraoptions ) {
         if(typeof message != 'string') {
             if(message.out) {
                 message = message.out();
@@ -147,11 +144,76 @@ window.filesender.ui = {
                 message = message.toString();
             }
         }
+
+        var options = {
+            title: lang.tr(type + '_dialog').toString(),
+            message: message,
+            className: type + '-dialog',
+            centerVertical: true,
+            callback: function () {
+                console.log('This was logged in the callback!');
+                if( onclose ) { onclose(); }
+            }            
+        };
         
-        var d = this.popup(lang.tr(type + '_dialog'), {close: onclose}, {onclose: onclose});
-        d.addClass(type).html(message);
-        return d;
+        // allow custom options from caller
+        if( extraoptions ) {
+            var keys = Object.keys(extraoptions);
+            for (var i = 0; i < keys.length; i++) {
+                options[keys[i]] = extraoptions[keys[i]];
+            }
+        }
+        
+        var r = bootbox.alert(options);
+        return r.find('.bootbox-body');
     },
+
+
+    /**
+     * This shows a title, message, and has a single callback with the ok button
+     */
+    confirmTitle: function(title, message, onclose, extraoptions ) {
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else if(!title.jquery) {
+                title = title.toString();
+            }
+        }
+
+        if(typeof message != 'string') {
+            if(message.out) {
+                message = message.out();
+            }else if(!message.jquery) {
+                message = message.toString();
+            }
+        }
+
+        var options = {
+            title: title,
+            message: message,
+            className: 'confirm-dialog',
+            centerVertical: true,
+            closeButton: false,
+            callback: function () {
+                console.log('This was logged in the callback!');
+                if( onclose ) { onclose(); }
+            }            
+        };
+        
+        // allow custom options from caller
+        if( extraoptions ) {
+            var keys = Object.keys(extraoptions);
+            for (var i = 0; i < keys.length; i++) {
+                options[keys[i]] = extraoptions[keys[i]];
+            }
+        }
+        
+        var r = bootbox.alert(options);
+        return r.find('.bootbox-body');
+    },
+
+    
     
     /**
      * Display a confirm box
@@ -166,11 +228,66 @@ window.filesender.ui = {
                 message = message.out();
             }else message = message.toString();
         }
-        
-        var d = this.popup(lang.tr('confirm_dialog'), yesno ? {yes: onok, no: oncancel} : {ok: onok, cancel: oncancel}, {onclose: oncancel});
-        d.html(message);
-        return d;
+
+        bootbox.confirm({
+            title: lang.tr('confirm_dialog').toString(),
+            message: message,
+            className: 'confirm-dialog',
+            centerVertical: true,
+            buttons: {
+                confirm: {
+                    label: yesno ? lang.tr('Yes').out() : lang.tr('OK').out(),
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: yesno ? lang.tr('No').out() : lang.tr('Cancel').out(),
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                console.log('This was logged in the callback!  result:' + result);
+                if( result ) {
+                    onok();
+                } else {
+                    if(oncancel) { oncancel(); }
+                }
+            }            
+        });
     },
+
+    dialogWithButtons: function(title, dialogtype, message, buttons, callback ) {
+        if(typeof message != 'string') {
+            if(message.out) {
+                message = message.out();
+            }else message = message.toString();
+        }
+
+        for(var lid in buttons) {
+            console.log("lid ", lid );
+            if( !buttons[lid].label ) {
+                buttons[lid].label = lang.tr(lid).out();
+            }
+            if( buttons[lid].callback && !buttons[lid].className ) {
+                buttons[lid].className = 'btn-success';
+            }
+            if( !buttons[lid].className ) {
+                buttons[lid].className = 'btn-danger';
+            }
+            if( !buttons[lid].callback ) {
+                buttons[lid].callback = function() { };
+            }
+        }        
+
+        bootbox.dialog({
+            title: lang.tr(title).toString(),
+            message: message,
+            className: dialogtype + '-dialog',
+            centerVertical: true,
+            buttons: buttons
+        });
+        
+    },
+    
     
     /**
      * Display a prompt box
@@ -179,7 +296,91 @@ window.filesender.ui = {
      * @param callable oncancel
      */
     prompt: function(title, onok, oncancel) {
-        return this.popup(title, {ok: onok, cancel: oncancel}, {onclose: oncancel});
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else if(!title.jquery) {
+                title = title.toString();
+            }
+        }
+        
+        var r = bootbox.prompt({
+            title: title,
+            message: ' ',
+            className: 'prompt-dialog',
+            centerVertical: true,
+            callback: function (result) {
+                console.log('This was logged in the callback!  result:' + result);
+                if( result ) {
+                    onok(result);
+                } else {
+                    if(oncancel) { oncancel(); }
+                }
+            }            
+        });
+
+        var ret = r.find('.bootbox-body');
+        return ret;
+    },
+
+    promptPassword: function(title, onok, oncancel) {
+
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else if(!title.jquery) {
+                title = title.toString();
+            }
+        }
+        
+        var r = bootbox.prompt({
+            title: title,
+            message: ' ',
+            inputType: 'password',
+            className: 'prompt-dialog',
+            centerVertical: true,
+            callback: function (result) {
+                console.log('This was logged in the callback!  result:' + result);
+                if( result ) {
+                    onok(result);
+                } else {
+                    if(oncancel) { oncancel(); }
+                }
+            }            
+        });
+        return r.find('.bootbox-body');
+        
+    },
+
+    promptEmail: function(title, onok, oncancel) {
+
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else if(!title.jquery) {
+                title = title.toString();
+            }
+        }
+        
+        var r = bootbox.prompt({
+            title: title,
+            message: ' ',
+            inputType: 'email',
+            className: 'prompt-dialog',
+            centerVertical: true,
+            callback: function (result) {
+                console.log('This was logged in the callback!  result:' + result);
+                if( result ) {
+                    var r = onok(result);
+                    if( !r )
+                        return false;
+                } else {
+                    if(oncancel) { oncancel(); }
+                }
+            }            
+        });
+        return r.find('.bootbox-body');
+        
     },
     
     /**
@@ -193,17 +394,18 @@ window.filesender.ui = {
      */
     chooseAction: function(actions, onaction, oncancel) {
         var d = this.popup(lang.tr('what_to_do'), {
-            ok: function() {
+            ok: { callback: function() {
+                console.log("ok cb");
                 return onaction($(this).find('.actions input[name="action"]:checked').val());
-            },
-            cancel: oncancel
+            }},
+            cancel: { callback: oncancel, className: 'btn-danger' }
         }, {onclose: oncancel});
         
         var list = $('<div class="actions" />').appendTo(d);
         for(var i=0; i<actions.length; i++) {
-            var action = $('<div class="action" />').appendTo(list);
-            var input = $('<input type="radio" name="action" />').attr({value: actions[i]}).appendTo(action);
-            $('<label for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
+            var action = $('<div class="custom-control custom-radio action" />').appendTo(list);
+            var input = $('<input type="radio" class="custom-control-input" name="action" />').attr({value: actions[i]}).appendTo(action);
+            $('<label class="custom-control-label" for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
             action.on('click', function() {
                 var input = $(this).find('input[name="action"]');
                 input.val([input.attr('value')]);
@@ -220,24 +422,40 @@ window.filesender.ui = {
      * @param string title lang id
      * @param callable onclose
      */
-    wideInfoPopup: function(title, onclose) {
-        return this.popup(
-            title,
-            {close: onclose},
-            {width: $('#wrap').width(), minHeight: 'auto', onclose: onclose }
-        ).addClass('wide_info');
+    wideInfoPopup: function(title, message, onclose) {
+
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else title = title.toString();
+        }
+
+        t = lang.tr(title).toString();
+        if( t.length && t[0] != '{' ) {
+            title = t;
+        }
+        
+        if( !message ) { message = ' '; }
+
+        var r = bootbox.alert({
+            title: title,
+            message: message,
+            className: 'wideinfo',
+            centerVertical: true,
+            backdrop: true,
+            size: 'xl',
+            callback: function () {
+                console.log('wideInfoPopup... this was logged in the callback!');
+                if( onclose ) { onclose(); }
+            }            
+        });
+        return r.find('.bootbox-body');
     },
     
     /**
      * Relocate a dialog
      */
     relocatePopup: function(popup) {
-        popup.dialog({
-            position: {
-                my: 'center',
-                at: 'center'
-            }
-        });
     },
     
     /**
@@ -258,8 +476,11 @@ window.filesender.ui = {
         
         var ctn = $('#notifications');
         if(!ctn.length) ctn = $('<div id="notifications" />').appendTo('body');
-        
-        var n = $('<div class="notification ' + type + '" />').html(message).appendTo(ctn);
+
+        if( type == 'error' ) {
+            type = 'danger';
+        }
+        var n = $('<div class="alert alert-' + type + '" role="alert" />').html(message).appendTo(ctn);
         
         window.setTimeout(function() {
             n.fadeOut(1500, 'linear', ondisapear);
@@ -275,23 +496,21 @@ window.filesender.ui = {
      */
     maintenance: function(state) {
         if(!state && this.maintenance_popup) {
-            this.maintenance_popup.remove();
+            this.closeDialog( this.maintenance_popup );
             this.maintenance_popup = null;
         }
         
         if(state && !this.maintenance_popup) {
             this.maintenance_popup = this.popup(lang.tr('undergoing_maintenance'), {}, {noclose: true});
+            console.log("popup ", this.maintenance_popup );
             this.maintenance_popup.text(lang.tr('maintenance_autoresume'));
         }
     },
-    
+
     /**
-     * Redirect user to other page
-     * 
-     * @param string page
-     * @param object args
+     * This is like goToPage() but returns the link instead of this.redirect()ing to it.
      */
-    goToPage: function(page, args, anchor, keep_args) {
+    createPageLink: function(page, args, anchor, keep_args) {
         var current_args = {};
         var q = window.location.search.substr(1).split('&');
         for(var i=0; i<q.length; i++) {
@@ -310,8 +529,20 @@ window.filesender.ui = {
         args = [];
         for(var k in current_args) args.push(k + '=' + current_args[k]);
         
-        this.redirect(filesender.config.base_path + '?' + args.join('&') + (anchor ? '#' + anchor : ''));
+        return(filesender.config.base_path + '?' + args.join('&') + (anchor ? '#' + anchor : ''));
     },
+    
+    /**
+     * Redirect user to other page
+     * 
+     * @param string page
+     * @param object args
+     */
+    goToPage: function(page, args, anchor, keep_args) {
+        var link = this.createPageLink( page, args, anchor, keep_args );
+        this.redirect(link);
+    },
+
     
     /**
      * Redirect user to url
@@ -339,35 +570,40 @@ window.filesender.ui = {
      */
     error: function(error,callback) {
         this.log('[error] ' + error.message);
-        
-        var d = this.alert('error', lang.tr(error.message),callback);
-        
+
+        var msgtail = '';
+
         if(error.details) {
-            var i = $('<div class="details" />').appendTo(d);
+            msgtail += '<div class="details" />';
             $.each(error.details, function(k, v) {
                 if(isNaN(k)) v = lang.tr(k) + ': ' + v;
-                $('<div class="detail" />').text(v).appendTo(i);
+                msgtail += '<div class="detail" />';
             });
         }
-        
-        var r = $('<div class="report" />').appendTo(d);
+
+        msgtail += '<div class="report" />';
         if(filesender.config.support_email) {
-            r.append(lang.tr('you_can_report_exception_by_email') + ' : ');
+            msgtail += lang.tr('you_can_report_exception_by_email') + ' : ';
             $('<a />').attr({
                 href: 'href="mailto:' + filesender.config.support_email + '?subject=Exception ' + (error.uid ? error.uid : '')
             }).text(lang.tr('report_exception')).appendTo(r);
         } else if(error.uid) {
-            r.append(lang.tr('you_can_report_exception') + ' : "' + error.uid + '"');
+            msgtail += lang.tr('you_can_report_exception') + ' : "' + error.uid + '"';
         }
 
-        r.append('<br /><br />' + lang.tr('you_can_send_client_logs') + ' ');
-        r.append($('<button class="send_client_logs" />').text(lang.tr('send_client_logs').out()).on('click', function() {
+        msgtail += '<br /><br />' + lang.tr('you_can_send_client_logs') + ' ';
+        msgtail += '<button class="send_client_logs btn btn-secondary" id="send_client_logs">' + lang.tr('send_client_logs').out() + '</button>';
+        
+        
+        var d = this.alertbs('error', lang.tr(error.message) + msgtail, callback);
+
+        $("#send_client_logs").on('click', function() {
+            alert("hi there");
             filesender.logger.send(function() {
                 filesender.ui.notify('success', lang.tr('client_logs_sent'));
             });
-        }));
-        
-        return error.message;
+        });
+
     },
     rawError: function (text) {
 	text = (text.match(/^[a-z][a-z0-9_]+$/i) ? lang.tr(text) : text).trim();

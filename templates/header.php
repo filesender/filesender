@@ -18,12 +18,14 @@
         // this is just for $headerclass if they are a superuser.
         // nothing to do on failure
     }
-
 ?>
-
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo Lang::getCode() ?>" xml:lang="<?php echo Lang::getCode() ?>">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
         
         <title><?php echo htmlspecialchars(Config::get('site_name')); ?></title>
 
@@ -43,33 +45,8 @@
     </head>
     
     <body data-security-token="<?php echo Utilities::getSecurityToken() ?>" data-auth-type="<?php echo Auth::type() ?>">
-        <div id="wrap">
-            
-            <div id="<?php echo $headerclass; ?>">
-                <a href="<?php echo GUI::path() ?>">
-                    <?php GUI::includeLogo() ?>
-                    
-                    <?php if(Config::get('site_name_in_header')) { ?>
-                    <div class="site_name"><?php echo Config::get('site_name') ?></div>
-                    <div class="site_baseline"><?php echo Config::get('site_baseline') ?></div>
-                    <?php } ?>
-                </a>
-            </div>
 
-                        <?php
-                        if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
-                            echo '<div id="langmenu">';
-                            echo '   <div class="rightlangmenu">';
-                            echo '       <ul>';
-                            $opts = array();
-                            $code = Lang::getCode();
-                            foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                                $selected = ($id == $code) ? 'selected="selected"' : '';
-                                $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
-                            }
-                        
-                            echo '<li><label>'.Lang::tr('user_lang').'</label><select id="language_selector">'.implode('', $opts).'</select></li>';
-                            echo '</ul></div></div>';
-                        }
-                        ?>
-            
+    <div class="container sticky-top filesender-topcontent ">
+        <header class="filesender-header py-3 ">
+             
+	<div class="row"><a href="<?php echo Config::get('site_url') ?>" id="header"></a></div>

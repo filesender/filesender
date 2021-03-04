@@ -1,4 +1,4 @@
-<div class="box">
+<div class="core">
     {tr:site_splash}
     
     <div class="logon">
@@ -6,7 +6,7 @@
         
         $embed = Config::get('auth_sp_embed');
         
-        if(!$embed) $embed = '<a id="btn_logon" href="'.AuthSP::logonURL().'">'.Lang::tr('logon').'</a>';
+        if(!$embed) $embed = '<a class="btn btn-primary" id="btn_logon" href="'.AuthSP::logonURL().'">'.Lang::tr('logon').'</a>';
         
         echo $embed;
         

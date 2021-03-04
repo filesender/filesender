@@ -1180,8 +1180,7 @@ window.filesender.crypto_app = function () {
                 blobSink = blobSinkStreamed;
             }
 
-            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
-                var pass = $(this).find('input').val();
+            var prompt = window.filesender.ui.promptPassword(window.filesender.config.language.file_encryption_enter_password, function (pass) {
             
                 $this.decryptDownloadToBlobSink( blobSink, pass,
                                                  link, mime, name, filesize, encrypted_filesize,
@@ -1195,18 +1194,16 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
-            var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
             var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
             prompt.append(toggleView);
             $('#showdlpass').on(
                 "click",
                 function() {
                     var v = $('#showdlpass').is(':checked');
-                    if( v ) { $('#dlpass').attr('type','text'); }
-                    else    { $('#dlpass').attr('type','password'); }
+                    if( v ) { $('.bootbox-input').attr('type','text'); }
+                    else    { $('.bootbox-input').attr('type','password'); }
                 }
             );
-            input.focus();
                 
         },
         // Note that this can not include : in the time part as that
@@ -1232,8 +1229,7 @@ window.filesender.crypto_app = function () {
                 }
             };
             
-            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
-                var pass = $(this).find('input').val();
+            var prompt = window.filesender.ui.promptPassword(window.filesender.config.language.file_encryption_enter_password, function (pass) {
 
                 var archiveName = $this.getArchiveFileName(link,selectedFiles,"zip");
                 blobSinkStreamed = window.filesender.streamsaver_sink_zip64( $this, link, archiveName, pass, selectedFiles, callbackError );
@@ -1253,15 +1249,14 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
-            var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
             var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
             prompt.append(toggleView);
             $('#showdlpass').on(
                 "click",
                 function() {
                     var v = $('#showdlpass').is(':checked');
-                    if( v ) { $('#dlpass').attr('type','text'); }
-                    else    { $('#dlpass').attr('type','password'); }
+                    if( v ) { $('.bootbox-input').attr('type','text'); }
+                    else    { $('.bootbox-input').attr('type','password'); }
                 }
             );
             input.focus();

@@ -58,7 +58,7 @@ if( $idmax >= 0 ) {
 
 if (!function_exists('clickableHeader')) {
 
-    function clickableHeader($displayName,$trsortcol,$trsort,$nosort) {
+    function clickableHeader($displayName,$trsortcol,$trsort,$nosort,$title = null) {
         
         if( $nosort ) {
             echo $displayName;
@@ -90,7 +90,11 @@ if (!function_exists('clickableHeader')) {
         }
         
         $tr_url = Utilities::http_build_query($qa);
-        echo '<a href="' . $tr_url . '">';
+        echo '<a href="' . $tr_url . '" ';
+        if( strlen($title)) {
+            echo ' title="' . $title . '" ';
+        }
+        echo ' >';
         echo $displayName;
         echo ' ' . $trsort->screenArrowHTML($trsortcol); 
         echo '</a>';
@@ -146,15 +150,15 @@ if (!function_exists('clickableHeader')) {
     }
 ?>
 
-<table class="transfers list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>" data-audit="<?php echo $audit ?>">
-    <thead>
+<div class="table-responsive">
+<table class="transfers table table-hover" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>" data-audit="<?php echo $audit ?>">
+    <thead class="thead-light">
         <tr>
             <th class="expand" title="{tr:expand_all}">
-                <span class="clickable fa fa-plus-circle fa-lg"></span>
             </th>
             
-            <th class="transfer_id">
-                <?php clickableHeader('{tr:transfer_id}',TransferQueryOrder::COLUMN_ID,$trsort,$nosort); ?>
+            <th class="transfer_id  d-none d-lg-table-cell">
+                <?php clickableHeader('{tr:transfer_id_short}',TransferQueryOrder::COLUMN_ID,$trsort,$nosort,'{tr:transfer_id}'); ?>
             </th>
             
             <?php if($show_guest) { ?>
@@ -163,7 +167,7 @@ if (!function_exists('clickableHeader')) {
             </th>
             <?php } ?>
             
-            <th class="recipients">
+            <th class="recipients d-none d-lg-table-cell">
                 <?php clickableHeader('{tr:recipients}',TransferQueryOrder::COLUMN_RECIPIENTS,$trsort,$nosort); ?>
             </th>
             
@@ -175,15 +179,15 @@ if (!function_exists('clickableHeader')) {
                 <?php clickableHeader('{tr:files}',TransferQueryOrder::COLUMN_FILE,$trsort,$nosort); ?>
             </th>
             
-            <th class="downloads">
+            <th class="downloads  d-none d-xl-table-cell">
                 <?php clickableHeader('{tr:downloads}',TransferQueryOrder::COLUMN_DOWNLOAD,$trsort,$nosort); ?>
             </th>
             
-            <th class="expires">
+            <th class="expires d-none d-lg-table-cell">
                 <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort,$nosort); ?>
             </th>
             
-            <th class="actions">
+            <th class="actions d-table-cell">
                 {tr:actions}
             </th>
         </tr>
@@ -207,8 +211,8 @@ if (!function_exists('clickableHeader')) {
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
             </td>
             
-            <td class="transfer_id">
-                <?php echo $transfer->id ?>
+            <td class="transfer_id d-none d-lg-table-cell">
+                    <?php echo $transfer->id ?>
             </td>
             
             <?php if($show_guest) { ?>
@@ -217,7 +221,7 @@ if (!function_exists('clickableHeader')) {
             </td>
             <?php } ?>
             
-            <td class="recipients">
+            <td class="recipients d-none d-lg-table-cell">
                 <?php
                 $items = array();
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
@@ -231,7 +235,7 @@ if (!function_exists('clickableHeader')) {
                 }
                 
                 if(count($transfer->recipients) > 3)
-                    $items[] = '(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->recipients) - 3)).'</span>)';
+                    $items[] = '<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->recipients) - 3)).'</span>';
                 
                 echo implode('<br />', $items);
                 ?>
@@ -243,39 +247,43 @@ if (!function_exists('clickableHeader')) {
             
             <td class="files">
                 <?php
+                $maxlen = 32;
                 $items = array();
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
                     $name = $file->path;
-                    $name_shorten_by = (int) (mb_strlen((string) count($transfer->downloads))+mb_strlen(Lang::tr('see_all'))+3)/2;
-                    if(mb_strlen($name) > 28-$name_shorten_by) {
-                        if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
-                        else $name = mb_substr($name, 0, 23).'...';
+                    if(mb_strlen($name) > $maxlen) {
+                        $name = mb_substr($name, 0, $maxlen).'...';
                     }
                     $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::sanitizeOutput($name).'</span>';
                 }
                 
                 if(count($transfer->files) > 3)
-                    $items[] = '(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>)';
+                    $items[] = '<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>';
                 
                 echo implode('<br />', $items);
                 ?>
             </td>
             
-            <td class="downloads">
-                <?php $dc = count($transfer->downloads); echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
+            <td class="downloads  d-none d-xl-table-cell">
+                <?php
+                $dc = count($transfer->downloads);
+                echo $dc;
+                if($dc) { ?>
+                    <br/><span class="clickable expand">{tr:see_all}</span>
+                <?php } ?>
             </td>
            
-            <td class="expires" data-rel="expires">
+            <td class="expires  d-none d-lg-table-cell" data-rel="expires">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
 
-            <td class="actions">
-                <div style="margin:3px">
+            <td class="actions d-table-cell">
+                <div class="actionsblock">
                     <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                     <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
                     <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
                 </div>
-                <div style="margin:3px">
+                <div class="actionsblock">
                     <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
                     <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
                     <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o adminaction" title="{tr:extend_expires}"></span><?php } ?>
@@ -286,12 +294,12 @@ if (!function_exists('clickableHeader')) {
         <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
             <td colspan="8">
                 <div class="actions">
-                    <div style="margin:3px">
+                    <div class="actionsblock">
                         <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                         <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
                         <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
                     </div>
-                    <div style="margin:3px">
+                    <div class="actionsblock">
                         <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
                         <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
                         <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o" title="{tr:extend_expires}"></span><?php } ?>
@@ -468,12 +476,12 @@ if (!function_exists('clickableHeader')) {
                                 <?php } ?>
                             <?php } ?>
                             
-                            <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                            <span data-action="delete" class="fa fa-lg fa-trash-o d-inline-block" title="{tr:delete}"></span>
                             
                             <?php if($audit) { ?>
-                            <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_file_auditlog}"></span>
+                            <span data-action="auditlog" class="fa fa-lg fa-history d-inline-block" title="{tr:open_file_auditlog}"></span>
                             <?php } ?>
-                        </div>
+                            </div>
                     <?php } ?>
                 </div>
                 <div class="fieldcontainer" id="encryption_description_not_supported">
@@ -503,7 +511,7 @@ if (!function_exists('clickableHeader')) {
 
     </tbody>
 </table>
-
+</div>
 
 
 <script type="text/javascript" src="{path:js/transfers_table.js}"></script>

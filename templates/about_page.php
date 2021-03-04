@@ -2,7 +2,7 @@
       include_once "pagemenuitem.php"
 ?>
 
-<div class="box">
+<div class="core">
 
     <div id="dialog-about" title="About">
         {tr:about_text}

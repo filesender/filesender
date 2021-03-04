@@ -235,12 +235,6 @@ class RestEndpointGuest extends RestEndpoint
                 }
             }
         }
-        // ensure that this option is explicit in the transfer options
-        // based on the guest options.
-        if( $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
-            $transfer_options[TransferOptions::GET_A_LINK] = false;
-        }
-        
         $guest->transfer_options = $transfer_options;
         
         // Set expiry date

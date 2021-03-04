@@ -379,7 +379,7 @@ window.filesender.transfer = function() {
         if( !this.checkIsValidFileSize( file, errorhandler )) {
             return false;
         }
-        
+                
         if (typeof filesender.config.ban_extension == 'string') {
             var banned = filesender.config.ban_extension.replace(/\s+/g, '');
             banned = new RegExp('^(' + banned.replace(/,/g, '|') + ')$', 'g');
@@ -468,6 +468,20 @@ window.filesender.transfer = function() {
         }
     };
 
+    /**
+     * Remove a file from list
+     * 
+     * @param int file index
+     */
+    this.fileCIDToIndex = function(cid) {
+        for (var i = 0; i < this.files.length; i++) {
+            if (this.files[i].cid == cid) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    
     /**
      * Add a recipient
      * 

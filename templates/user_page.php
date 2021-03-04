@@ -1,4 +1,4 @@
-<div class="box">
+<div class="core">
 
     
     
@@ -73,14 +73,14 @@ EOF;
 
                 echo <<<EOT
                 <div>
-                   <div class="api_secret_delete">
-                      <a href="#">
+                   <div class="api_secret_delete ">
+                      <a href="#"  class="btn btn-secondary" role="button">
                          <span class="fa fa-lg fa-times"></span>
                          {tr:api_secret_delete}
                       </a>
                    </div>
-                   <div class="api_secret_create">
-                      <a href="#">
+                   <div class="api_secret_create ">
+                      <a href="#"  class="btn btn-secondary" role="button">
                          <span class="fa fa-lg fa-plus"></span>
                          {tr:api_secret_recreate}
                       </a>
@@ -183,31 +183,23 @@ EOT;
         {tr:user_profile_send_client_logs_description_text}
     
     <div class="send_client_logs">
-        <a href="#">
+        <a href="#" class="btn btn-secondary" role="button">
             <span class="fa fa-lg fa-send"></span>
             {tr:send_client_logs}
         </a>
     </div>
 
     <div class="export_client_logs">
-        <a href="#">
+        <a href="#" class="btn btn-secondary" role="button">
             <span class="fa fa-lg fa-save"></span>
             {tr:export_client_logs}
         </a>
     </div>
     
     <div class="clear_client_logs">
-        <a href="#">
+        <a href="#" class="btn btn-secondary" role="button">
             <span class="fa fa-lg fa-times"></span>
             {tr:clear_client_logs}
-        </a>
-    </div>
-    <br/>
-
-    <div class="clear_frequent_recipients">
-        <a href="#">
-            <span class="fa fa-lg fa-times"></span>
-            {tr:clear_frequent_recipients}
         </a>
     </div>
     <br/>
@@ -215,7 +207,7 @@ EOT;
         {tr:user_profile_delete_about_description_text}
     
     <div class="delete_my_account">
-        <a href="#">
+        <a href="#" class="btn btn-secondary" role="button">
             <span class="fa fa-lg fa-times"></span>
             {tr:delete_my_account}
         </a>

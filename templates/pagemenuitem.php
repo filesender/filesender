@@ -3,14 +3,14 @@
 
 function pagelink($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
-    $class = ($page == GUI::currentPage()) ? 'current' : '';
+    $class = ($page == GUI::currentPage()) ? ' active ' : '';
     
-    echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
+//    echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
 }
 
 function pagemenuitem($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
-    $class = ($page == GUI::currentPage()) ? 'current' : '';
+    $class = ($page == GUI::currentPage()) ? ' active ' : '';
 
     $label = Lang::tr($page.'_page');
     if( $page == 'transfers' ) {
@@ -24,6 +24,31 @@ function pagemenuitem($page) {
             }
         }
     }
-    echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.$label.'</a></li>';
+    $icon = '';
+    $faicon = '';
+    if($page == 'upload') {
+        $faicon = 'fa-send';
+    }
+    if($page == 'user') {
+        $faicon = 'fa-user';
+    }
+    if($page == 'admin') {
+        $faicon = 'fa-cogs';
+    }
+    if($page == 'transfers') {
+        $faicon = 'fa-list';
+    }
+    if($page == 'help') {
+        $faicon = 'fa-question-circle';
+    }
+    
+    if($faicon) {
+        $icon = '<i class="fa '.$faicon.'"></i> ';
+    }
+    echo '<div class="nav-item">';
+    echo '<a class="p-2 nav-link  '.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.$icon.$label.'</a>';
+    echo '</div>';
+    
+    
 }
 

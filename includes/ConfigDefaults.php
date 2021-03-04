@@ -268,10 +268,10 @@ $default = array(
     'streamsaver_on_edge'   => true,
     'streamsaver_on_safari' => true,
 
+    'test_for_unreadable_files' => true,
+
     'upload_page_password_can_not_be_part_of_message_handling' => 'warning',
 
-    'data_protection_user_frequent_email_address_disabled' => false,
-    
     
     
     'transfer_options' => array(

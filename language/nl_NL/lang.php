@@ -186,7 +186,6 @@ $lang['duplicate_recipient'] = 'Eén van de ontvangers stond al op de lijst';
 $lang['email_address'] = 'E-mail adres';
 $lang['email_daily_statistics'] = 'Stuur mij dagelijks statistieken';
 $lang['email_download_complete'] = 'Informeer mij wanneer er een download voltooid is';
-$lang['email_full_match_search'] = 'Zoek naar een e-mail met een exacte overeenkomst met het e-mail adres';
 $lang['email_guest_created'] = 'Vermeld creatie aan gastgebruiker';
 $lang['email_guest_created_receipt'] = 'Stuur mij een bericht van het creëren van een gastgebruiker';
 $lang['email_guest_expired'] = 'Vermeld expiratiedatum aan gastgebruiker';

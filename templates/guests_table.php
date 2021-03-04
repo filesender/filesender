@@ -3,14 +3,16 @@
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
 ?>
-<table class="guests list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
-    <thead>
+
+<div class="table-responsive">
+<table class="guests list table table-hover " data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
+    <thead class="thead-light">
         <tr>
-            <td class="to">{tr:guest}</td>
-            <td class="subject">{tr:subject}</td>
-            <td class="message">{tr:message}</td>
-            <td class="created">{tr:created}</td>
-            <td class="expires">{tr:expires}</td>
+            <th class="to">{tr:guest}</td>
+            <th class="subject">{tr:subject}</td>
+            <th class="message d-none d-lg-table-cell">{tr:message}</td>
+            <th class="created d-none d-lg-table-cell">{tr:created}</td>
+            <th class="expires">{tr:expires}</td>
             <th class="actions">{tr:actions}</th>
         </tr>
     </thead>
@@ -38,7 +40,7 @@
                 <?php } else echo Template::sanitizeOutput($guest->subject) ?>
             </td>
             
-            <td class="message">
+            <td class="message  d-none d-lg-table-cell">
                 <?php if(strlen($guest->message) > 15) { ?>
                 <span class="short"><?php echo Template::sanitizeOutput(mb_substr($guest->message, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
@@ -46,11 +48,20 @@
                 <?php } else echo Template::sanitizeOutput($guest->message) ?>
             </td>
             
-            <td class="created"><?php echo Utilities::formatDate($guest->created) ?></td>
+            <td class="created d-none d-lg-table-cell"><?php echo Utilities::formatDate($guest->created) ?></td>
             
             <td class="expires"><?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?></td>
             
-            <td class="actions"></td>
+            <td class="actions">
+                <div class="actionsblock">
+
+                    <span class="delete clickable  fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                    <?php if( $mode == 'user' ) { ?>
+                        <span class="remind clickable fa fa-lg fa-repeat" title="{tr:send_reminder}" ></span>
+                        <span class="forward clickable fa fa-lg fa-mail-forward" title="{tr:forward}"></span>
+                    <?php } ?>
+                </div>
+            </td>
         </tr>
         <?php } ?>
         
@@ -61,5 +72,6 @@
         <?php } ?>
     </tbody>
 </table>
+</div>
 
 <script type="text/javascript" src="{path:js/guests_table.js}"></script>

@@ -43,7 +43,7 @@ Hoogachtend,{cfg:site_name}
 </ul>
 {else}
 <p>
-    Geen downloads
+    Geen dowloads
 </p>
 {endif}
 

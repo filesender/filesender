@@ -184,7 +184,10 @@ window.filesender.config = {
     storage_type:  "<?php echo Config::get('storage_type') ?>",
     allow_streamsaver: <?php echo value_to_TF(Browser::instance()->allowStreamSaver) ?>,
 
+    test_for_unreadable_files: <?php echo value_to_TF(Config::get('test_for_unreadable_files')) ?>,
+
     upload_page_password_can_not_be_part_of_message_handling: "<?php echo Config::get('upload_page_password_can_not_be_part_of_message_handling') ?>",
+
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

@@ -1,6 +1,8 @@
 <?php
 
 $packages = array(
+    'bootstrap'            => array(),
+    'bootbox'              => array(),
     'chart.js'             => array(),
     'font-awesome'         => array(),
     'jquery'               => array(),

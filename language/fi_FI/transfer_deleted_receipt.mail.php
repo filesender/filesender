@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Tiedostojako poistettu
+subject: Tiedosto(t) poistettu
 
 {alternative:plain}
 
-Hei!
+Hei,
 
-Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+Tiedostojakosi n°{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
 
 Terveisin,
 {cfg:site_name}
@@ -21,11 +21,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei!
+    Hei,
 </p>
 
 <p>
-    Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+    Tiedostojakosi n°{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
 </p>
 
 <p>

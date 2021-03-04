@@ -2,7 +2,7 @@
       include_once "pagemenuitem.php"
 ?>
 
-<div class="box">
+<div class="core">
 <h2>{tr:admin_statistics_section}</h2>
 
 <?php
@@ -14,7 +14,7 @@ if (AggregateStatistic::enabled()) {
     
 <h3>{tr:global_statistics}</h3>
 
-<table class="global_statistics">
+<table class="table global_statistics">
     <tr><th>{tr:user_count_estimate}</th><td><?php echo User::countEstimate() ?></td></tr>
     <tr><th>{tr:available_transfers}</th><td><?php echo count(Transfer::all(Transfer::AVAILABLE)) ?></td></tr>
     <tr><th>{tr:uploading_transfers}</th><td><?php echo count(Transfer::all(Transfer::UPLOADING)) ?></td></tr>
@@ -62,13 +62,13 @@ if(Config::get('show_storage_statistics_in_admin')) {
 
 <h3>{tr:storage_usage}</h3>
 
-<table class="storage_usage <?php echo $global_warning ? 'warning' : '' ?>">
+<table class="table storage_usage <?php echo $global_warning ? 'warning' : '' ?>">
     <tr data-metric="total"><th>{tr:storage_total}</th><td><?php echo Utilities::formatBytes($total_space) ?></td></tr>
     <tr data-metric="used"><th>{tr:storage_used}</th><td><?php echo Utilities::formatBytes($total_space - $free_space).' ('.sprintf('%.1d', 100 * ($total_space - $free_space) / $total_space).'%)' ?></td></tr>
     <tr data-metric="available"><th>{tr:storage_available}</th><td><?php echo Utilities::formatBytes($free_space).' ('.sprintf('%.1d', 100 * $free_space / $total_space).'%)' ?></td></tr>
 </table>
 
-<table class="list storage_usage_blocks">
+<table class="table storage_usage_blocks">
     <thead>
         <tr>
             <th>{tr:storage_block}</th>
@@ -168,8 +168,8 @@ $now=time();
 $firstTransfer=$now;
 echo '<br><br>';
 echo '<h3>Browser Stats</h3>';
-echo '<table class="list storage_usage_blocks">';
-echo '<thead><tr><th>Browser</th><th>OS</th><th>Encrypted</th><th>Average Speed</th><th>Average Speed of &gt;1GB</th><th>Min Size</th><th>Average Size</th><th>Max Size</th><th>Transfered</th><th>File Transfers</th><th>Average Transfers per Day</th></tr></thead>';
+echo '<table class="table storage_usage_blocks">';
+echo '<thead class="thead-light"><tr><th>Browser</th><th>OS</th><th>Encrypted</th><th>Average Speed</th><th>Average Speed of &gt;1GB</th><th>Min Size</th><th>Average Size</th><th>Max Size</th><th>Transfered</th><th>File Transfers</th><th>Average Transfers per Day</th></tr></thead>';
 foreach($result as $row) {
     echo '<tr>';
     if (empty($row['browser_name'])) {

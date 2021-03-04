@@ -67,22 +67,6 @@ $(function() {
         
         return false;
     });
-
-
-    $('.clear_frequent_recipients a').button().on('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        var p = {};
-        p['clear_frequent_recipients'] = '1';
-        
-        filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('database_updated'));
-            filesender.ui.reload();
-        });
-        
-        return false;
-    });
     
 
     $('.delete_my_account a').button().on('click', function(e) {
@@ -177,14 +161,10 @@ $(function() {
     }
     
     var rc = page.find('span[data-info="remote_config"]');
-    if(rc.length) $('<button />').text(lang.tr('get_full_user_remote_config')).button().on('click', function() {
-        var p = filesender.ui.popup(
-            lang.tr('copy_text'),
-            {close: null},
-            {width: $('#wrap').width()}
-        );
-        var t = $('<textarea class="wide" />').val(rc.html()).appendTo(p);
-        t.focus().select();
+    console.log(rc);
+    if(rc.length) $('<button class="btn btn-secondary" />').text(lang.tr('get_full_user_remote_config')).button().on('click', function() {
+        filesender.ui.wideInfoPopup('copy_text',
+                                    $('<textarea class="w-100 wide desctxt" />').val(rc.html()), function() {});
     }).insertAfter(rc);
     
     var rasr = page.find('[data-remote-auth-sync-request]');

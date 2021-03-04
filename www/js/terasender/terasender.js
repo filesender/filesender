@@ -30,8 +30,14 @@ window.filesender.terasender = {
         pbkdf2_all_generated: 3
     },
     crypto_pbkdf2_status: 0,
+
+    // Number of workers that have completed key generation
     crypto_pbkdf2_workers_that_have_generated: 0,
-    
+
+    // Number of workers that will generate keys
+    // will be filesender.config.terasender_worker_count
+    // or less if total chunks to upload is less than terasender_worker_count.
+    crypto_pbkdf2_workers_that_will_generate: -1,
     
     /**
      * Job allocation lock
@@ -474,16 +480,24 @@ window.filesender.terasender = {
                 }             
                 break;
             case 'onPBKDF2Ended':
+            console.log("pbkdf2 workers that have gen ", this.crypto_pbkdf2_workers_that_have_generated );
+            console.log("pbkdf2 workers that will gen ", this.crypto_pbkdf2_workers_that_will_generate );
+            console.log("pbkdf2 wc   ", filesender.config.terasender_worker_count );
                 if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_generating )
                 {
                     this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_generated;
                     this.crypto_pbkdf2_workers_that_have_generated++;
                     window.filesender.onPBKDF2Ended();
+
+                    if( this.crypto_pbkdf2_workers_that_have_generated == this.crypto_pbkdf2_workers_that_will_generate )
+                    {
+                        window.filesender.onPBKDF2AllEnded();
+                    }
                 }
                 if( this.crypto_pbkdf2_status == this.crypto_pbkdf2_states.pbkdf2_generated )
                 {
                     this.crypto_pbkdf2_workers_that_have_generated++;
-                    if( this.crypto_pbkdf2_workers_that_have_generated == filesender.config.terasender_worker_count )
+                    if( this.crypto_pbkdf2_workers_that_have_generated == this.crypto_pbkdf2_workers_that_will_generate )
                     {
                         window.filesender.onPBKDF2AllEnded();
                     }
@@ -547,6 +561,28 @@ window.filesender.terasender = {
         var wcnt = parseInt(filesender.config.terasender_worker_count);
         if(isNaN(wcnt) || wcnt < 1 || wcnt > 30)
             wcnt = 3;
+        filesender.config.terasender_worker_count = wcnt;
+        
+        // Work out if we have less chunks to upload than the wcnt value.
+        this.crypto_pbkdf2_workers_that_will_generate = filesender.config.terasender_worker_count;
+        var chunksToUpload = 0;
+        var files = this.transfer.files;
+        for(var i=0; i<files.length; i++) {
+            if(files[i].uploaded < files[i].size) {
+                var remainingBytes = files[i].size - files[i].uploaded;
+                var remainingChunks = Math.ceil( remainingBytes / filesender.config.upload_chunk_size );
+                chunksToUpload += remainingChunks;
+                if( chunksToUpload > wcnt ) {
+                    break;
+                }
+            }
+        }
+        console.log("pbkdf2 chunksToUpload", chunksToUpload );
+        console.log("pbkdf2 wcnt", wcnt );
+        // only some workers will ever try to generate a key.
+        if( chunksToUpload < wcnt ) {
+            this.crypto_pbkdf2_workers_that_will_generate = chunksToUpload;
+        }
 
         var ts = this;
         this.workers_start_monitor_id = window.setTimeout( function() { noWorkersHaveStarted(ts) },
