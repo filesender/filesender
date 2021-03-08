@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Tiedostojako poistettu
+subject: Kutsu erääntynyt
 
 {alternative:plain}
 
 Hei!
 
-Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+Kutsu käyttäjältä {guest.user_email} on erääntynyt, eikä sitä voi enää käyttää.
 
 Terveisin,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Terveisin,
 </p>
 
 <p>
-    Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+    Kutsu käyttäjältä {guest.user_email} on erääntynyt, eikä sitä voi enää käyttää.
 </p>
 
 <p>

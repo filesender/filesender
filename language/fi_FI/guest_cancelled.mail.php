@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Voucher peruttu
+subject: FileSender-kutsu peruttu
 
 {alternative:plain}
 
-Hei,
+Hei!
 
-voucher käyttäjältä {guest.user_email} on peruttu.
+Kutsu käyttäjältä {guest.user_email} on peruttu.
 
 Terveisin,
 {cfg:site_name}
@@ -21,11 +21,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
-    voucher käyttäjältä <a href="mailto:{guest.user_email}">{guest.user_email}</a> on peruttu.
+    Kutsu käyttäjältä <a href="mailto:{guest.user_email}">{guest.user_email}</a> on peruttu.
 </p>
 
 <p>

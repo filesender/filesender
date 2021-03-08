@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Tiedostojako poistettu
+subject: Kutsu lähetetty
 
 {alternative:plain}
 
 Hei!
 
-Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+Osoitteeseen {guest.email} on lähetetty kutsu palveluun {cfg:site_name}.
 
 Terveisin,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Terveisin,
 </p>
 
 <p>
-    Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+    Osoitteeseen {guest.email} on lähetetty kutsu palveluun {cfg:site_name}.
 </p>
 
 <p>
