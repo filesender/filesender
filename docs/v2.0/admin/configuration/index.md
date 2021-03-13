@@ -233,7 +233,7 @@ A note about colours;
 ## Data Protection
 
 * [data_protection_user_frequent_email_address_disabled](#data_protection_user_frequent_email_address_disabled)
-
+* [data_protection_user_transfer_preferences_disabled](#data_protection_user_transfer_preferences_disabled)
 
 ---
 
@@ -2257,6 +2257,17 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __type:__ boolean
 * __default:__ false
 * __available:__ since version 2.22
+* __1.x name:__
+* __comment:__
+
+
+### data_protection_user_transfer_preferences_disabled
+
+* __description:__ if set to true then the options a user selects when creating an upload are not stored in the database to set the same options for the next upload.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
 * __1.x name:__
 * __comment:__
 

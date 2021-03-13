@@ -744,6 +744,9 @@ class User extends DBObject
         if( Config::get('data_protection_user_frequent_email_address_disabled')) {
             $this->frequent_recipients = array();
         }
+        if( Config::get('data_protection_user_transfer_preferences_disabled')) {
+            $this->transfer_preferences = null;
+        }
     }
 
     public function remindLocalAuthDBPassword( $password )
