@@ -202,6 +202,15 @@ if(Auth::isGuest()) {
                         <div class="fieldcontainer" id="encryption_password_container_too_short_message">
                             {tr:file_encryption_password_too_short}
                         </div>
+                        <div class="fieldcontainer" id="encryption_password_container_must_have_numbers_message">
+                            {tr:file_encryption_password_must_have_numbers}
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container_must_have_upper_and_lower_case_message">
+                            {tr:file_encryption_password_must_have_upper_and_lower_case}
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container_must_have_special_characters_message">
+                            {tr:file_encryption_password_must_have_special_characters}
+                        </div>
                         <div class="fieldcontainer" id="encryption_password_container_generate">
                             <input id="encryption_use_generated_password"  name="encryption_use_generated_password" type="checkbox">  
                             <label for="encryption_use_generated_password" style="cursor: pointer;">{tr:file_encryption_generate_password}</label>
