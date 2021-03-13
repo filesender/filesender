@@ -271,6 +271,7 @@ $default = array(
     'upload_page_password_can_not_be_part_of_message_handling' => 'warning',
 
     'data_protection_user_frequent_email_address_disabled' => false,
+    'data_protection_user_transfer_preferences_disabled' => false,
     
     
     

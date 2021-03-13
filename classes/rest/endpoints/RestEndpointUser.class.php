@@ -330,6 +330,10 @@ class RestEndpointUser extends RestEndpoint
             $user->frequent_recipients = null;
             $user->save();
         }
+        if( $data->clear_user_transfer_preferences ) {
+            $user->transfer_preferences = null;
+            $user->save();
+        }
         
         return true;
     }
