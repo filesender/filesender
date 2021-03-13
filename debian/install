@@ -1,5 +1,0 @@
-config/* debian/conf/*  etc/filesender
-config-templates/filesender-php.ini etc/filesender
-www classes includes scripts cron language pages config-templates		 usr/share/filesender
-tmp files		             var/lib/filesender
-
