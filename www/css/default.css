@@ -1539,6 +1539,9 @@ table.guests .guest .to .errors .details {
 /* Encryption */
 #encryption_password_container,
 #encryption_password_container_too_short_message,
+#encryption_password_container_must_have_numbers_message,
+#encryption_password_container_must_have_upper_and_lower_case_message,
+#encryption_password_container_must_have_special_characters_message,
 #encryption_password_container_generate,
 #encryption_password_container_generate_again,
 #encryption_password_show_container,
@@ -1554,7 +1557,10 @@ table.guests .guest .to .errors .details {
     background: #ffeeee;
 }
 
-#encryption_password_container_too_short_message {
+#encryption_password_container_too_short_message,
+#encryption_password_container_must_have_numbers_message,
+#encryption_password_container_must_have_upper_and_lower_case_message,
+#encryption_password_container_must_have_special_characters_message {
     color: #f00;
 }
 
