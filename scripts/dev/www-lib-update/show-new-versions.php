@@ -12,6 +12,7 @@ $packages = array(
     'webcrypto-shim'       => array(),
     'web-streams-polyfill' => array(),
     'xregexp'              => array(),
+    'flag-icon-css'        => array(),
 );
 $json = file_get_contents(dirname(__FILE__) . '/package-lock.json');
 
