@@ -66,7 +66,8 @@ class GUI
             'lib/reset/reset.css',
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
-            'lib/bootstrap/dist/css/bootstrap.min.css',          
+            'lib/bootstrap/dist/css/bootstrap.min.css',
+            'lib/flag-icon-css/css/flag-icon.min.css',
             'css/default.css',
             'skin/styles.css'
         ));
