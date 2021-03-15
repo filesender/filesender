@@ -210,7 +210,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                     <p></p>
                 </div>
 
-<?php if(!$guest_can_only_send_to_creator) { ?>
+<?php if(!Auth::isGuest()) { ?>
                 <div class="row">
                     <div class="col-3">
                     </div>
