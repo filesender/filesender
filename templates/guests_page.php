@@ -223,10 +223,10 @@ use ( $new_guests_can_only_send_to_creator,
                                 </div>
                                 
                                 <?php if(count(Transfer::availableOptions(true))) { ?>
-                                    <div class="accordion" class="advanced_options" id="advanced_options">
+                                    <div class="accordion" class="advanced_options_tr" id="advanced_options_tr">
                                         <div class="card">
-                                            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseAdvTr">{tr:advanced_settings}</div>
-                                            <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#advanced_options">
+                                            <div class="card-header" id="headingOneTr" data-toggle="collapse" data-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseAdvTr">{tr:advanced_settings}</div>
+                                            <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOneTr" data-parent="#advanced_options_tr">
                                                 <div class="card-body">
                                                     <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
                                                 </div>
