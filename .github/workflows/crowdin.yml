@@ -16,7 +16,7 @@ jobs:
         uses: crowdin/github-action@1.0.20
         with:
           upload_translations: true
-          upload_language: 'en_AU'
+          upload_language: 'en-AU'
           download_translations: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
