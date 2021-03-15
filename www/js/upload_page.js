@@ -1477,12 +1477,13 @@ $(function() {
             form.find('.galmodelink').hide();
             form.find('.galmodeemail').show();
         }
-        
+        window.location.hash = "#stage2";
         
         return false;
     });
 
     filesender.ui.nodes.stages.back2.on('click',function() {
+        window.location.hash = "";
         // move to stage1
         filesender.ui.stage = 1;
         filesender.ui.nodes.stage3hide.hide();
@@ -1493,6 +1494,15 @@ $(function() {
 	$("#speedChart").resize();
         return false;
     });
+    
+    window.onpopstate = function(event) {
+        if( filesender.ui.lasthash == "#stage2" ) {
+            if( !document.location.hash.length || document.location.hash == "#stage1" ) {
+                filesender.ui.nodes.stages.back2.click();
+            }
+        }
+        filesender.ui.lasthash = document.location.hash;
+    }    
 
     filesender.ui.nodes.stages.continue2.on('click',function() {
         //        if($(this).button('option', 'disabled')) return;
