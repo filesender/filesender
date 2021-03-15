@@ -210,6 +210,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                     <p></p>
                 </div>
 
+<?php if(!$guest_can_only_send_to_creator) { ?>
                 <div class="row">
                     <div class="col-3">
                     </div>
@@ -219,7 +220,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                     <div class="col-3">
                     </div>
                 </div>
-              
+<?php } ?>              
             </div>
             
             <div class="files_uploadlogtop stage3">
@@ -393,6 +394,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                         <div class="text_desc_of_file_count_and_size" ><span class="value">x</span></div>
                     </td>
                 </tr>
+<?php if(!$guest_can_only_send_to_creator) { ?>
                 <tr>
                     <td colspan="2">
                         <h4>
@@ -405,6 +407,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                     <td class="">
                     </td>
                 </tr>
+<?php } ?>
             </table>
             <table class="upload stage2" width="100%" id="">
                 <tr>
