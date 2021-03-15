@@ -44,6 +44,11 @@ body {
     background: #fff3eb !important;
 }
 
+.navbar-bg {
+    background: #efe3db;
+}
+
+
 img {
     display: block;
 }

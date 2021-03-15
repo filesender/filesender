@@ -13,7 +13,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
 <div class="row">
     <div class="col-12">
-        <nav class="nav nav-pills nav-fill ">
+        <nav class="nav nav-pills nav-fill navbar-light navbar-bg navbar-fixed-top ">
 
             <?php
             
