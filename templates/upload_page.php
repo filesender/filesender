@@ -390,6 +390,11 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
             <table class="upload stage2" width="100%" id="">
                 <tr>
                     <td colspan="2">
+                        <div class="text_desc_of_file_count_and_size" ><span class="value">x</span></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
                         <h4>
                             <a               class="galmodelink  btn btn-primary">{tr:ui2_mode_link}</a>
                             <a id="galemail" class="galmodelink  btn btn-secondary" href="#">{tr:ui2_mode_mail}</a>

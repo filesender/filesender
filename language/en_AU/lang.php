@@ -630,3 +630,4 @@ $lang['password_can_not_be_part_of_message_warning'] = 'Please do not send the e
 $lang['password_can_not_be_part_of_message_error'] = 'As email transmission might not be encrypted you can not send a message with the encryption password in it. Please adjust the password or remove it from the message to continue.';
 $lang['back'] = 'Back';
 $lang['continue'] = 'Continue';
+$lang['text_desc_of_file_count_and_size'] = 'You are uploading {filecount} file(s) with a total size of {totalsize}';

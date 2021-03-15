@@ -294,6 +294,8 @@ filesender.ui.files = {
                 var iidx = filesender.ui.files.invalidFiles.indexOf(name);
                 console.log("iidx " + iidx + " name " + name );
                 if (iidx === -1){
+                    var filecount = filesender.ui.transfer.files.length;
+                    var totalsize = filesender.ui.formatBytes(size);
                     var size = 0;
                     for(var j=0; j<filesender.ui.transfer.files.length; j++)
                         size += filesender.ui.transfer.files[j].size;
@@ -301,7 +303,10 @@ filesender.ui.files = {
                     filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
                     filesender.ui.nodes.stats.filecount.text(filesender.ui.transfer.files.length);
                     filesender.ui.nodes.stats.sendingsize.text(filesender.ui.formatBytes(size));
-                    
+
+                    filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
+                        lang.tr('text_desc_of_file_count_and_size')
+                            .r({filecount: filecount, totalsize: totalsize }).out());
                     
                 } else {
                     filesender.ui.files.invalidFiles.splice(iidx, 1);
@@ -353,11 +358,19 @@ filesender.ui.files = {
             var size = 0;
             for(var j=0; j<filesender.ui.transfer.files.length; j++)
                 size += filesender.ui.transfer.files[j].size;
+
+            var filecount = filesender.ui.transfer.files.length;
+            var totalsize = filesender.ui.formatBytes(size);
             
             filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
             filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
             filesender.ui.nodes.stats.filecount.text(filesender.ui.transfer.files.length);
             filesender.ui.nodes.stats.sendingsize.text(filesender.ui.formatBytes(size));
+
+            filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
+                lang.tr('text_desc_of_file_count_and_size')
+                    .r({filecount: filecount, totalsize: totalsize }).out());
+            
             
         }
         
@@ -1424,6 +1437,7 @@ $(function() {
         upload_options_table: form.find('#upload_options_table'),
         files_actions: form.find('.files_actions'),
         uploading_actions: form.find('.uploading_actions'),
+        text_desc_of_file_count_and_size: form.find('.text_desc_of_file_count_and_size'),
         stats: {
             number_of_files: form.find('.number_of_files'),
             size:            form.find('.size'),
@@ -1478,7 +1492,7 @@ $(function() {
             form.find('.galmodeemail').show();
         }
         window.location.hash = "#stage2";
-        
+
         return false;
     });
 
@@ -1505,7 +1519,6 @@ $(function() {
     }    
 
     filesender.ui.nodes.stages.continue2.on('click',function() {
-        //        if($(this).button('option', 'disabled')) return;
 
         // move to stage3
         filesender.ui.stage = 3;
