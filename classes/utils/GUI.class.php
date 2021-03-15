@@ -127,6 +127,7 @@ class GUI
                     'lib/promise-polyfill/polyfill.min.js',
                     'lib/web-streams-polyfill/dist/ponyfill.js',
                     'lib/webcrypto-shim/webcrypto-shim.min.js',
+                    'lib/popper.js/dist/umd/popper.min.js',
                     'lib/bootstrap/dist/js/bootstrap.min.js',
                     'lib/bootbox/dist/bootbox.all.min.js',          
                     'js/filesender.js',
