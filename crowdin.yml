@@ -1,5 +1,7 @@
 api_token_env: CROWDIN_TOKEN
 project_id_env: CROWDIN_PROJECT_ID
+preserve_hierarchy: true
 files:
   - source: language/master/lang.php
     translation: /language/%locale_with_underscore%/%original_file_name%
+    skip_untranslated_strings: true
