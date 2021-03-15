@@ -191,9 +191,6 @@ use ( $new_guests_can_only_send_to_creator,
                                 </div>
                                 
                                 <?php if(count(Guest::availableOptions(true))) { ?>
-                                    <div class="fieldcontainer">
-                                        <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
-                                    </div>
                                     
                                     <div class="accordion" class="advanced_options" id="advanced_options">
                                         <div class="card">
