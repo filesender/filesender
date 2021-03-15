@@ -1,6 +1,9 @@
 <?php
 
 $guest_can_only_send_to_creator = false;
+$encryption_mandatory = Config::get('encryption_mandatory');
+$encryption_checkbox_checked = '';
+$encryption_checkbox_classes = '';
 
 $files_actions_div_extra_class = "div3";
 $upload_directory_button_enabled = false;
@@ -49,6 +52,11 @@ if(Auth::isGuest()) {
     if($guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
         $guest_can_only_send_to_creator = true;
     }
+}
+
+if( $encryption_mandatory ) {
+    $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
+    $encryption_checkbox_classes = '';
 }
 
 ?>
@@ -190,9 +198,9 @@ if(Auth::isGuest()) {
                     </div>
                     <?php } ?> <!-- closing if($allow_recipients) -->
                     
-                    <?php if(Config::get('encryption_enabled')) {  ?>
-                        <div class="fieldcontainer" id="encrypt_checkbox" data-related-to="encryption">
-                            <input id="encryption" name="encryption" type="checkbox">
+                    <?php if(Config::get('encryption_enabled')) { ?>
+                        <div class="fieldcontainer <?php echo $encryption_checkbox_classes ?>" id="encrypt_checkbox" data-related-to="encryption">
+                            <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> >
                             <label for="encryption" style="cursor: pointer;">{tr:file_encryption}</label>
                         </div>
                         <div class="fieldcontainer" id="encryption_password_container">  

@@ -97,6 +97,7 @@ $default = array(
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,
+    'encryption_mandatory' => false,
     'encryption_min_password_length' => 0,
     'encryption_password_must_have_upper_and_lower_case' => false,
     'encryption_password_must_have_numbers' => false,
@@ -275,7 +276,6 @@ $default = array(
 
     'data_protection_user_frequent_email_address_disabled' => false,
     'data_protection_user_transfer_preferences_disabled' => false,
-    
     
     
     'transfer_options' => array(
