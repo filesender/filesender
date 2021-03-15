@@ -1497,7 +1497,6 @@ $(function() {
     
     window.onpopstate = function(event) {
         if( filesender.ui.lasthash == "#stage2" ) {
-            //        alert(`location: ${document.location.hash}, state: ${JSON.stringify(event.state)}`)
             if( !document.location.hash.length || document.location.hash == "#stage1" ) {
                 filesender.ui.nodes.stages.back2.click();
             }
