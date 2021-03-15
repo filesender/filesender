@@ -18,7 +18,7 @@ Currently, the core team members are:
 
 We've been lucky to have the help of many people through the years. FileSender wouldn't have reached so far without
 them, and we want to thank them from here. Unfortunately, they are so many it is nearly impossible to mention all of
-them. [Github can offer a good summary on who has contributed to the project](https://github.com/filesender/filesender/graphs/contributors?from=2007-09-09&to=2015-09-06&type=c).
+them. [Github can offer a good summary on who has contributed to the project](https://github.com/filesender/filesender/graphs/contributors?from=2012-05-20&type=c).
 Big thanks to you all!
 
 ## First things first

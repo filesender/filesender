@@ -98,6 +98,9 @@ $default = array(
     
     'encryption_enabled' => true,
     'encryption_min_password_length' => 0,
+    'encryption_password_must_have_upper_and_lower_case' => false,
+    'encryption_password_must_have_numbers' => false,
+    'encryption_password_must_have_special_characters' => false,
     'encryption_generated_password_length' => 30,
     'encryption_generated_password_encoding' => 'base64',
     'upload_crypted_chunk_padding_size' => 16 + 16, // CONST the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
@@ -271,6 +274,7 @@ $default = array(
     'upload_page_password_can_not_be_part_of_message_handling' => 'warning',
 
     'data_protection_user_frequent_email_address_disabled' => false,
+    'data_protection_user_transfer_preferences_disabled' => false,
     
     
     

@@ -623,3 +623,7 @@ $lang['you_can_report_exception'] = 'When reporting this error please give the f
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
+$lang['clear_user_transfer_preferences'] = 'Clear stored transfer options from last upload.';
+$lang['file_encryption_password_must_have_numbers'] = 'Password must contain at least one number (0,1,3...9)';
+$lang['file_encryption_password_must_have_upper_and_lower_case'] = 'Password must contain UPPER and lower case characters';
+$lang['file_encryption_password_must_have_special_characters'] = 'Password must contain at least one special character such as !@#$%^&*()<>';
