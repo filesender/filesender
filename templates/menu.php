@@ -5,16 +5,8 @@ include_once "pagemenuitem.php";
 $maybe_display_aggregate_statistics_menu = false;
 
 $LanguageSelectorShown = false;
-$LanguageSelectorOptions = array();
-
 if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
     $LanguageSelectorShown   = true;
-    $LanguageSelectorOptions = array();
-    $code = Lang::getCode();
-    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-        $selected = ($id == $code) ? 'selected="selected"' : '';
-        $LanguageSelectorOptions[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
-    }
 }
 
 ?>
@@ -74,21 +66,45 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
             }
         ?>
 
+<?php if($LanguageSelectorShown): ?>
+            
+            <li class="nav-item dropdown">
+
+                <?php 
+                $code = Lang::getCode();
+                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                    if($id == $code) {
+                        $specificid = $dfn['specific-id'];
+                        echo '<a class="nav-link dropdown-toggle" ';
+                        echo ' href="#" ';
+                        echo ' id="toplangdropdownlabel" ';
+                        echo ' data-toggle="dropdown" ';
+                        echo ' aria-haspopup="true" ';
+                        echo ' aria-expanded="false"> ';
+                        echo '  <span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
+                    }
+                }
+                ?>
+                
+                <div class="dropdown-menu" aria-labelledby="toplangdropdownlabel" id="toplangdropdown">
+                    <?php 
+                    $code = Lang::getCode();
+                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                        $specificid = $dfn['specific-id'];
+                        $selected = ($id == $code) ? 'selected="selected"' : '';
+                        echo '<a class="dropdown-item toplangdropitem" data-id="'.$id.'"  href="#">';
+                        echo '<span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
+                        
+                    }
+                    ?>
+                </div>
+            </li>
+<?php endif; ?>
+
+            
         </nav>
     </div>
 </div>
-<?php if($LanguageSelectorShown): ?>
-    <div class="row">
-        <div class="col-12">
-            <div class="form-inline float-right">
-                <div class="form-group">
-                    <label for="language_selector" class="mr-1"><?php echo Lang::tr('user_lang') ?></label>
-                    <select class="form-control" id="language_selector"><?php echo implode('', $LanguageSelectorOptions) ?></select>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
 
 </header>
 </div>

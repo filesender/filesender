@@ -103,10 +103,13 @@ class Lang
                         $name = $dfn['name'];
                     }
                 }
+
+                $specificid = preg_replace('/[^-]*-/', '', $id);
                 
                 self::$available_languages[$id] = array(
                     'name' => $name,
-                    'path' => $path
+                    'path' => $path,
+                    'specific-id' => $specificid,
                 );
             }
         }

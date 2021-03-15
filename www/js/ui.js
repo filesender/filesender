@@ -811,10 +811,12 @@ $(function() {
     
     $('#btn_logon').button();
     
-    $('#language_selector').on('change', function() {
-        filesender.ui.goToPage(true, {lang: $(this).val()}, null, true);
+
+    $('.toplangdropitem').on('click',function() {
+        var langid = $(this).attr('data-id');
+        filesender.ui.goToPage(true, {lang: langid}, null, true);
     });
-    
+        
     filesender.ui.updateUserQuotaBar();
 
     if (!filesender.supports.crypto) {

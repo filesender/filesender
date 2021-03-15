@@ -66,7 +66,8 @@ class GUI
             'lib/reset/reset.css',
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
-            'lib/bootstrap/dist/css/bootstrap.min.css',          
+            'lib/bootstrap/dist/css/bootstrap.min.css',
+            'lib/flag-icon-css/css/flag-icon.min.css',
             'css/default.css',
             'skin/styles.css'
         ));
@@ -126,6 +127,7 @@ class GUI
                     'lib/promise-polyfill/polyfill.min.js',
                     'lib/web-streams-polyfill/dist/ponyfill.js',
                     'lib/webcrypto-shim/webcrypto-shim.min.js',
+                    'lib/popper.js/dist/umd/popper.min.js',
                     'lib/bootstrap/dist/js/bootstrap.min.js',
                     'lib/bootbox/dist/bootbox.all.min.js',          
                     'js/filesender.js',
