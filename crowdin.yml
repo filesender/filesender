@@ -1,7 +1,5 @@
-files:
-  - source: /language/master/lang.php
-    translation: /language/%locale_with_underscore%/%original_file_name%
-  - source: /language/master/lang.php
-    translation: /language/%two_letters_code%/%original_file_name%
 api_token_env: CROWDIN_TOKEN
 project_id_env: CROWDIN_PROJECT_ID
+files:
+  - source: language/master/lang.php
+    translation: /language/%locale_with_underscore%/%original_file_name%
