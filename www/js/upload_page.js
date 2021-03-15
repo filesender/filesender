@@ -1524,6 +1524,15 @@ $(function() {
         filesender.ui.evalUploadEnabled();
     });
 
+    if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
+        $('#encryption_password_container').slideToggle();
+        $('#encryption_password_container_generate').slideToggle();
+        $('#encryption_password_show_container').slideToggle();
+        $('#encryption_description_container').slideToggle();
+        filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
+        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
+    }
+
     // Bind encryption
     filesender.ui.nodes.encryption.toggle.on('change', function() {
         $('#encryption_password_container').slideToggle();

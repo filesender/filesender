@@ -627,6 +627,16 @@ class Config
             }
         }
     }
+
+    /**
+     * Check if the current user or guest must use encryption for uploads
+     *
+     */
+    public static function isEncryptionMandatoryForPrincipal()
+    {
+        return self::get('encryption_mandatory');
+    }
+    
 }
 
 /**

@@ -138,6 +138,20 @@ class TransferNoRecipientsException extends DetailedException
 }
 
 /**
+ * Mandatory encryption subversion attempt
+ */
+class TransferMustBeEncryptedException extends DetailedException
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct('transfer_must_be_encrypted');
+    }
+}
+
+/**
  * Missing too many files exception
  */
 class TransferTooManyFilesException extends DetailedException
