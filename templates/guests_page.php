@@ -195,14 +195,22 @@ use ( $new_guests_can_only_send_to_creator,
                                         <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
                                     </div>
                                     
-                                    <div class="advanced_options">
-                                        <?php
-                                        foreach(Guest::availableOptions(true) as $name => $cfg) {
-                                            if( !array_key_exists($name,$guest_options_handled)) {
-                                                $displayoption($name, $cfg, false);
-                                            }
-                                        }
-                                        ?>
+                                    <div class="accordion" class="advanced_options" id="advanced_options">
+                                        <div class="card">
+                                            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">{tr:advanced_settings}</div>
+                                            <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#advanced_options">
+                                                <div class="card-body">
+                                            
+                                                    <?php
+                                                    foreach(Guest::availableOptions(true) as $name => $cfg) {
+                                                        if( !array_key_exists($name,$guest_options_handled)) {
+                                                            $displayoption($name, $cfg, false);
+                                                        }
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>     
                                 <?php } ?>
                             </div>
@@ -215,13 +223,16 @@ use ( $new_guests_can_only_send_to_creator,
                                 </div>
                                 
                                 <?php if(count(Transfer::availableOptions(true))) { ?>
-                                    <div class="fieldcontainer">
-                                        <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
+                                    <div class="accordion" class="advanced_options_tr" id="advanced_options_tr">
+                                        <div class="card">
+                                            <div class="card-header" id="headingOneTr" data-toggle="collapse" data-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseAdvTr">{tr:advanced_settings}</div>
+                                            <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOneTr" data-parent="#advanced_options_tr">
+                                                <div class="card-body">
+                                                    <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="advanced_options">
-                                        <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
-                                    </div>     
                                 <?php } ?>
                             </div>
                         </td>
