@@ -1655,3 +1655,6 @@ div.not_displayed {
     font-weight: bold;
 }
 
+.hidden {
+    display: none;
+}

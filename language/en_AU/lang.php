@@ -627,3 +627,4 @@ $lang['clear_user_transfer_preferences'] = 'Clear stored transfer options from l
 $lang['file_encryption_password_must_have_numbers'] = 'Password must contain at least one number (0,1,3...9)';
 $lang['file_encryption_password_must_have_upper_and_lower_case'] = 'Password must contain UPPER and lower case characters';
 $lang['file_encryption_password_must_have_special_characters'] = 'Password must contain at least one special character such as !@#$%^&*()<>';
+$lang['transfer_must_be_encrypted'] = 'This transfer must be encrypted';
