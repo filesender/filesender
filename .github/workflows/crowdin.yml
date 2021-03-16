@@ -1,5 +1,4 @@
-name: Translations
-
+name: Upload new translation sources
 on:
   push:
     branches: [ development ]
@@ -18,6 +17,38 @@ jobs:
           upload_translations: true
           upload_sources: true
           download_translations: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+
+name: Download new translations
+on: workflow_dispatch
+
+jobs:
+  get-new-translations:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download translations
+        uses: crowdin/github-action@1.0.20
+        with:
+          upload_translations: false
+          upload_sources: false
+          download_translations: true
+          skip_untranslated_strings: true
+          skip_untranslated_files: true
+          export_only_approved: true
+          push_translations: true
+          commit_message: 'Automated import of new translations'
+          localization_branch_name: i10_automated_import
+          create_pull_request: true
+          pull_request_title: 'New translations from Crowdin'
+          pull_request_body: 'New translations from Crowdin'
+          pull_request_base_branch_name: development
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
