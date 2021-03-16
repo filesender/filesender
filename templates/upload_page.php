@@ -1,7 +1,7 @@
 <?php
 
 $guest_can_only_send_to_creator = false;
-$encryption_mandatory = Config::isEncryptionMandatoryForPrincipal();
+$encryption_mandatory = Principal::isEncryptionMandatory();
 $encryption_checkbox_checked = '';
 $encryption_checkbox_classes = '';
 

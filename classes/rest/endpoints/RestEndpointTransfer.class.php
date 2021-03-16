@@ -483,7 +483,7 @@ class RestEndpointTransfer extends RestEndpoint
             $options['encryption'] = $data->encryption;
 
             // check if encryption is mandatory but the user tried to disable it
-            if( Config::isEncryptionMandatoryForPrincipal()) {
+            if( Principal::isEncryptionMandatory()) {
                 if( !$data->encryption ) {
                     throw new TransferMustBeEncryptedException();
                 }
