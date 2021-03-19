@@ -1194,7 +1194,7 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
-            var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
+            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
             prompt.append(toggleView);
             $('#showdlpass').on(
                 "click",
@@ -1249,7 +1249,7 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
-            var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
+            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input" type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
             prompt.append(toggleView);
             $('#showdlpass').on(
                 "click",
