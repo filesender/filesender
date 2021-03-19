@@ -1333,6 +1333,9 @@ div.not_displayed {
 #fileslist {
         display: none;
 }
+#please_readd_files_message {
+        display: none;
+}
 
 .actions .actionsblock {
     margin:3px;

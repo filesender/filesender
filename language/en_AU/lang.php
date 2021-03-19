@@ -631,3 +631,4 @@ $lang['password_can_not_be_part_of_message_error'] = 'As email transmission migh
 $lang['back'] = 'Back';
 $lang['continue'] = 'Continue';
 $lang['text_desc_of_file_count_and_size'] = 'You are uploading {filecount} file(s) with a total size of {totalsize}';
+$lang['please_add_file_again'] = 'Please add this file again';
