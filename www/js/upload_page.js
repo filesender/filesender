@@ -2054,7 +2054,7 @@ $(function() {
                 }
                 $('.files_dragdrop').show();
                 $('.files_actions').show();
-                
+                filesender.ui.transfer.status = 'stopped';
 
                 filesender.ui.files.updateStatsAndClearAll();
                 
