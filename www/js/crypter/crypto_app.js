@@ -1059,7 +1059,7 @@ window.filesender.crypto_app = function () {
             callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
-                alert( window.filesender.config.language.file_encryption_wrong_password );
+                filesender.ui.alert("error",window.filesender.config.language.file_encryption_wrong_password);
                 if (progress){
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
@@ -1117,7 +1117,7 @@ window.filesender.crypto_app = function () {
             callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
-                alert( window.filesender.config.language.file_encryption_wrong_password );
+                filesender.ui.alert("error",window.filesender.config.language.file_encryption_wrong_password);
                 if (progress){
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
@@ -1223,7 +1223,7 @@ window.filesender.crypto_app = function () {
             callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
-                alert( window.filesender.config.language.file_encryption_wrong_password );
+                filesender.ui.alert("error",window.filesender.config.language.file_encryption_wrong_password);
                 if (progress){
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
