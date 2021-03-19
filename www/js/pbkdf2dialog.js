@@ -131,6 +131,10 @@ window.filesender.pbkdf2dialog = {
         window.filesender.log("BBB pbkdf2dialog onPBKDF2Over()");
         $this.already_complete = true;
         if( $this.dialog ) {
+            var d = $this.dialog;
+            window.setTimeout(function() {
+                filesender.ui.closeDialog( d );
+            }, 1000 );
             filesender.ui.closeDialog( $this.dialog );
             $this.dialog = null;
         }
