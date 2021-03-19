@@ -1522,9 +1522,22 @@ $(function() {
     });
     
     window.onpopstate = function(event) {
+        if( filesender.ui.lasthash == "" || filesender.ui.lasthash == "#stage1" ) {
+            if( document.location.hash == "#stage2" ) {
+                filesender.ui.nodes.stages.continue1.click();
+            }
+        }
         if( filesender.ui.lasthash == "#stage2" ) {
             if( !document.location.hash.length || document.location.hash == "#stage1" ) {
                 filesender.ui.nodes.stages.back2.click();
+            }
+        }
+        if( filesender.ui.lasthash == "#uploading" && window.location.hash == "#uploading" ) {
+            // ignore this case which is generated from the below reset.
+        } else {
+            if( filesender.ui.lasthash == "#uploading" ) {
+                filesender.ui.nodes.buttons.stop.click();
+                window.location.hash = "#uploading";
             }
         }
         filesender.ui.lasthash = document.location.hash;
@@ -1549,6 +1562,7 @@ $(function() {
         }
         filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
         
+        window.location.hash = "#uploading";
         
         return false;
     });
