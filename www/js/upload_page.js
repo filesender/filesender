@@ -292,6 +292,13 @@ filesender.ui.files = {
             tr.find('.remove').hide();
             filesender.ui.nodes.files.clear.button('disable');
 
+            var req = table.find('.required_file');
+            if(!req.length) {
+                $('#please_readd_files_message').hide();
+                $('.files_dragdrop').hide();
+                $('.files_actions').hide();
+            }
+
         } else {
 
             // Normal upload mode
@@ -2044,8 +2051,10 @@ $(function() {
                     tr.find('.remove').hide();
 
                     tr.prependTo(table.find('tbody'));
-                    
                 }
+                $('.files_dragdrop').show();
+                $('.files_actions').show();
+                
 
                 filesender.ui.files.updateStatsAndClearAll();
                 
