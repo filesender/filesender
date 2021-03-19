@@ -147,6 +147,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
             </table>
 
             <div class="stage1 stage3">
+                <div class="info message" id="please_readd_files_message">{tr:need_to_readd_files}</div>
                 <div class="files" id="fileslist">
 
                         <table class="filestable table">

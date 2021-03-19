@@ -236,6 +236,25 @@ filesender.ui.files = {
             }
         }
     },
+
+    updateTotalFileSizeAndCountStats: function() {
+
+        var filecount = filesender.ui.transfer.files.length;
+        var size = 0;
+        for(var j=0; j<filecount; j++)
+            size += filesender.ui.transfer.files[j].size;
+        var totalsize = filesender.ui.formatBytes(size);
+
+        filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filecount + '/' + filesender.config.max_transfer_files);
+        filesender.ui.nodes.stats.size.show().find('.value').text( totalsize + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+        filesender.ui.nodes.stats.filecount.text( filecount );
+        filesender.ui.nodes.stats.sendingsize.text( totalsize );
+        
+        filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
+            lang.tr('text_desc_of_file_count_and_size')
+                .r({filecount: filecount, totalsize: totalsize }).out());
+        
+    },
     
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
@@ -252,8 +271,9 @@ filesender.ui.files = {
 
         if(filesender.ui.nodes.required_files) {
             // Upload restart mode
-            var req = filesender.ui.nodes.required_files.find('.file[data-name="' + filepath + '"][data-size="' + filesize + '"]');
-            
+            var table = filesender.ui.nodes.files.filestable;
+            var req = table.find('.required_file[data-name="' + filepath + '"][data-size="' + filesize + '"]');
+
             if(!req.length) {
                 filesender.ui.alert('error', lang.tr('unexpected_file'));
                 tr.remove();
@@ -266,9 +286,12 @@ filesender.ui.files = {
             file.blob = fileblob;
             
             filesender.ui.transfer.files.push(file);
+            filesender.ui.files.updateTotalFileSizeAndCountStats();
             
             req.remove();
-            
+            tr.find('.remove').hide();
+            filesender.ui.nodes.files.clear.button('disable');
+
         } else {
 
             // Normal upload mode
@@ -293,21 +316,9 @@ filesender.ui.files = {
                 
                 var iidx = filesender.ui.files.invalidFiles.indexOf(name);
                 console.log("iidx " + iidx + " name " + name );
-                if (iidx === -1){
-                    var filecount = filesender.ui.transfer.files.length;
-                    var totalsize = filesender.ui.formatBytes(size);
-                    var size = 0;
-                    for(var j=0; j<filesender.ui.transfer.files.length; j++)
-                        size += filesender.ui.transfer.files[j].size;
-                    filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
-                    filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
-                    filesender.ui.nodes.stats.filecount.text(filesender.ui.transfer.files.length);
-                    filesender.ui.nodes.stats.sendingsize.text(filesender.ui.formatBytes(size));
-
-                    filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
-                        lang.tr('text_desc_of_file_count_and_size')
-                            .r({filecount: filecount, totalsize: totalsize }).out());
-                    
+                if (iidx === -1) {
+                    // not an invalid file name
+                    filesender.ui.files.updateTotalFileSizeAndCountStats();
                 } else {
                     filesender.ui.files.invalidFiles.splice(iidx, 1);
                 }
@@ -395,7 +406,12 @@ filesender.ui.files = {
         } else {
             filesender.ui.nodes.clearandstats.hide();
         }
-        filesender.ui.nodes.files.clear.button('enable');
+        
+        if(filesender.ui.nodes.required_files) {
+            filesender.ui.nodes.files.clear.hide();
+        } else {
+            filesender.ui.nodes.files.clear.button('enable');
+        }
     },
     
     
@@ -806,40 +822,29 @@ filesender.ui.evalUploadEnabled = function() {
     var stage1ok = true;
     var stage2ok = true;
     
-    if(filesender.ui.nodes.required_files)
-    {
-        if(filesender.ui.nodes.required_files.find('.file').length)
-        {
-            ok = false;
-            stage1ok = false;
-        }
+    // Check if there is no files with banned extension
+    if (filesender.ui.files.invalidFiles.length > 0) {
+        ok  = false;
+        stage1ok = false;
     }
-    else
-    {
-        // Check if there is no files with banned extension
-        if (filesender.ui.files.invalidFiles.length > 0) {
-            ok  = false;
-            stage1ok = false;
-        }
-        if(!filesender.ui.transfer.files.length) {
-            ok = false;
-            stage1ok = false;
-        }
-        
-        
-        var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
-        
-        var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
-        
-        if(
-            filesender.ui.nodes.need_recipients &&
+    if(!filesender.ui.transfer.files.length) {
+        ok = false;
+        stage1ok = false;
+    }
+    
+    
+    var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
+    
+    var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
+    
+    if(
+        filesender.ui.nodes.need_recipients &&
             !gal && !addme &&
             filesender.ui.nodes.recipients.list.length &&
             !filesender.ui.transfer.recipients.length
-        ) {
-            ok = false;
-            stage2ok = false;
-        }
+    ) {
+        ok = false;
+        stage2ok = false;
     }
     
     if(filesender.ui.nodes.aup.length) {
@@ -1955,7 +1960,9 @@ $(function() {
         // Put notice
         form.addClass('legacy');
         
-        $('<div class="info message" />').html(lang.tr('reader_not_supported').r({size: filesender.ui.formatBytes(filesender.config.max_legacy_file_size)}).out()).insertBefore(filesender.ui.nodes.files.list);
+        $('<div class="info message" />').html(
+            lang.tr('reader_not_supported').r({size: filesender.ui.formatBytes(filesender.config.max_legacy_file_size)}).out())
+            .insertBefore(filesender.ui.nodes.files.list);
         
         // Remove unavailable features
         filesender.ui.nodes.files.select.remove();
@@ -2021,18 +2028,26 @@ $(function() {
                 
                 // Prefill files list
                 filesender.ui.nodes.required_files = $('<div class="required_files" />').insertBefore(filesender.ui.nodes.files.list);
-                $('<div class="info message" />').text(lang.tr('need_to_readd_files')).appendTo(filesender.ui.nodes.required_files);
-                
+                $('#please_readd_files_message').show();
+                var table = filesender.ui.nodes.files.filestable;
+
                 for(var i=0; i<required_files.length; i++) {
-                    var info = required_files[i].name + ' : ' + filesender.ui.formatBytes(required_files[i].size);
-                    var node = $('<div class="file required" />').attr({
-                        'data-name': required_files[i].name,
-                        'data-size': required_files[i].size,
-                        'data-cid' : required_files[i].cid
-                    }).appendTo(filesender.ui.nodes.required_files);
-                    $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
-                    node.data('file', required_files[i]);
+
+                    var tr = table.find('.tpl').clone().removeClass('tpl').addClass('file').addClass('invalid').addClass('required_file');
+                    tr.attr('data-name', required_files[i].name);
+                    tr.attr('data-size', required_files[i].size);
+                    tr.attr('data-cid',  required_files[i].cid);
+                    tr.data('file',      required_files[i]);
+                    tr.find('.filename').text(required_files[i].name);
+                    tr.find('.filesize').text(filesender.ui.formatBytes(required_files[i].size));
+                    tr.find('.error').text(lang.tr('please_add_file_again'));
+                    tr.find('.remove').hide();
+
+                    tr.prependTo(table.find('tbody'));
+                    
                 }
+
+                filesender.ui.files.updateStatsAndClearAll();
                 
                 // Following field settings are just cosmetic
                 filesender.ui.nodes.recipients.list.show();
