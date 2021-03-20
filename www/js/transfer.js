@@ -1522,4 +1522,18 @@ window.filesender.transfer = function() {
         
         this.legacy.form.submit();
     };
+
+    /**
+     * Total size of this transfer
+     */
+    this.getTotalSize = function() {
+
+        var total_size = 0;
+        for(var j=0; j < this.files.length; j++)
+            total_size += this.files[j].size;
+        return total_size;
+    };
+    this.getFileCount = function() {
+        return this.files.length;
+    };
 };
