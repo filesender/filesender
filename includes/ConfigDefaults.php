@@ -115,6 +115,7 @@ $default = array(
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
+    'terasender_worker_max_count' => 30,
     'terasender_worker_max_chunk_retries' => 20,    
     'terasender_worker_xhr_timeout' => 3600000, // in ms, 1 hour for a chunk to complete by default.
     'terasender_worker_start_must_complete_within_ms' => 180000, // in ms, 3 minutes by default.
