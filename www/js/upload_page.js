@@ -363,10 +363,9 @@ filesender.ui.files = {
         
         if(filesender.ui.nodes.required_files) {
             if(file) {
-//                    bar.show().progressbar('value', Math.floor(1000 * file.uploaded / file.size));
             }
         } else {
-            var size = filesender.ui.transfer.getTotalSize();
+            var size      = filesender.ui.transfer.getTotalSize();
             var filecount = filesender.ui.transfer.getFileCount();
             var sizetxt   = filesender.ui.formatBytes(size);
             
@@ -390,6 +389,11 @@ filesender.ui.files = {
         return tr;
     },
 
+    /**
+     * Set the files list, stats, clear all, and clear buttons enabled
+     * and visibility based on the current files selection from the
+     * user.
+     */
     updateStatsAndClearAll: function() {
 
         if(!filesender.ui.nodes.files.list.find('.file').length) {
@@ -796,6 +800,10 @@ filesender.ui.isUserGettingALink = function() {
     var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
     return gal;
 }
+filesender.ui.isUserAddMeToRecipients = function() {
+    var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
+    return addme;
+}
 
 filesender.ui.doesUploadMessageContainPassword = function() {
 
@@ -818,6 +826,8 @@ filesender.ui.evalUploadEnabled = function() {
     var ok = true;
     var stage1ok = true;
     var stage2ok = true;
+    var gal   = filesender.ui.isUserGettingALink();
+    var addme = filesender.ui.isUserAddMeToRecipients();
     
     // Check if there is no files with banned extension
     if (filesender.ui.files.invalidFiles.length > 0) {
@@ -829,10 +839,6 @@ filesender.ui.evalUploadEnabled = function() {
         stage1ok = false;
     }
     
-    
-    var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
-    
-    var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
     
     if(
         filesender.ui.nodes.need_recipients &&
@@ -1484,7 +1490,7 @@ $(function() {
         filesender.ui.nodes.stage3hide.hide();
         filesender.ui.nodes.stage2show.show();
 
-        var get_a_link_checked = filesender.ui.nodes.options.get_a_link.is(':checked');
+        var get_a_link_checked = filesender.ui.isUserGettingALink();
         filesender.ui.handle_get_a_link_change();
         if( get_a_link_checked ) {
             form.find('.galmodelink').show();
