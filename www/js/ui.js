@@ -788,7 +788,21 @@ window.filesender.ui = {
     setDateFromEpochData: function( w ) {
         w.datepicker('setDate', new Date(w.attr('data-epoch') * 1000 ));
     },
-    
+
+    /**
+     * As there are some browser dependant nasties about getting a
+     * slicer this method was made to sweep that away and also keep it
+     * in a single place if it needs updating in the future.
+     *
+     * As of March 2021 code should migrate over to using this instead
+     * of directly doing the multiple tests.
+     * 
+     * @param file to get a slicer for
+     */
+    makeBlobSlicer: function( file ) {
+        var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
+        return slicer;
+    },
 };
 
 $(function() {
