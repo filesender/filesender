@@ -258,8 +258,6 @@ filesender.ui.files = {
     
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
-        var node = null;
-        var info = filepath + ' : ' + filesender.ui.formatBytes(filesize);
 
         var table = filesender.ui.nodes.files.filestable;
         var tr = table.find('.tpl').clone().removeClass('tpl').addClass('file');
@@ -331,7 +329,7 @@ filesender.ui.files = {
                 }
                 
                 filesender.ui.evalUploadEnabled();
-            }).appendTo(node);
+            });
             
             
             var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, function(error) {
@@ -354,7 +352,7 @@ filesender.ui.files = {
             
             filesender.ui.evalUploadEnabled();
             this.updateStatsAndClearAll();
-            if(added_cid === false) return node;
+            if(added_cid === false) return tr;
         }
         
         filesender.ui.evalUploadEnabled();
@@ -397,7 +395,7 @@ filesender.ui.files = {
         filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
         this.updateStatsAndClearAll();
 
-        return node;
+        return tr;
     },
 
     updateStatsAndClearAll: function() {
