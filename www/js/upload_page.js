@@ -208,7 +208,7 @@ filesender.ui.files = {
         return node;
     },
 
-    addFileTryToReadAByte: async function( cid) {
+    addFileTryToReadAByte: async function( cid ) {
 
         var idx = filesender.ui.transfer.fileCIDToIndex( cid );
         if( idx != -1 ) {
@@ -216,7 +216,7 @@ filesender.ui.files = {
         
             // try to read a byte
             if( file.size >= 1 ) {
-                var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
+                var slicer = filesender.ui.makeBlobSlicer( file );
                 
                 var newblob = file.blob[slicer](0,1);
                 try
