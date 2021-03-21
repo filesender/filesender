@@ -500,21 +500,44 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                             />
                         </div>
                         
-                        <?php
-                            if(Config::get('transfer_recipients_lang_selector_enabled')) {
-                                $opts = array();
-                                $code = Lang::getBaseCode();
-                                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                                    $selected = ($id == $code) ? 'selected="selected"' : '';
-                                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+
+                        <?php if(Config::get('transfer_recipients_lang_selector_enabled')) { ?>
+                        <div class="nav-item dropdown">
+
+                            <?php 
+                            echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
+                            $code = Lang::getCode();
+                            foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                if($id == $code) {
+                                    $specificid = $dfn['specific-id'];
+                                    echo '<a class="nav-link dropdown-toggle" ';
+                                    echo ' href="" ';
+                                    echo ' id="lang" name="lang" ';
+                                    echo ' data-toggle="dropdown" ';
+                                    echo ' data-id="'.$id.'" ';
+                                    echo ' aria-haspopup="true" ';
+                                    echo ' aria-expanded="false"> ';
+                                    echo '  <span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
                                 }
-                                
-                                echo '<div class="fieldcontainer">';
-                                echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
-                                echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
-                                echo '</div>';
                             }
-                        ?>
+                            ?>
+                            
+                            <div class="dropdown-menu" aria-labelledby="lang" id="rlangdropdown">
+                                <?php 
+                                $code = Lang::getCode();
+                                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                    $specificid = $dfn['specific-id'];
+                                    $selected = ($id == $code) ? 'selected="selected"' : '';
+                                    echo '<a class="dropdown-item rlangdropitem" data-id="'.$id.'" >';
+                                    echo '<span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
+                                    
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <?php } ?>
+
+
                         
 
                         <?php
