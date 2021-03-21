@@ -208,6 +208,7 @@ filesender.ui.files = {
         return node;
     },
 
+/*    
     addFileTryToReadAByte: async function( cid ) {
 
         var idx = filesender.ui.transfer.fileCIDToIndex( cid );
@@ -236,7 +237,7 @@ filesender.ui.files = {
             }
         }
     },
-
+*/
     
     updateTotalFileSizeAndCountStats: function() {
 
@@ -354,11 +355,14 @@ filesender.ui.files = {
         tr.attr('data-cid', added_cid);
 
         if( filesender.config.test_for_unreadable_files ) {
+            // IE11 has issues
+/*
             window.setTimeout(
                 function() {
                     filesender.ui.files.addFileTryToReadAByte(added_cid);
                 }, 10
             );
+*/
         }
         
         if(filesender.ui.nodes.required_files) {
