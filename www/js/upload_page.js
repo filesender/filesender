@@ -1041,7 +1041,7 @@ filesender.ui.startUpload = function() {
             this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
         }
 
-        if( filesender.ui.nodes.lang.attr('data-id')) {
+        if( filesender.ui.nodes.lang && filesender.ui.nodes.lang.attr('data-id')) {
             this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
         }
         
