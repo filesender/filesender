@@ -1014,9 +1014,6 @@ filesender.ui.startUpload = function() {
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
     this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
 
-    if( filesender.ui.nodes.lang.attr('data-id')) {
-        this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
-    }
     
     var can_use_terasender = filesender.config.terasender_enabled;
     if( this.transfer.disable_terasender ) {
@@ -1042,6 +1039,10 @@ filesender.ui.startUpload = function() {
         this.transfer.message = filesender.ui.nodes.message.val();
         if (filesender.ui.nodes.guest_token.length){
             this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
+        }
+
+        if( filesender.ui.nodes.lang.attr('data-id')) {
+            this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
         }
         
         for(var o in filesender.ui.nodes.options) {
