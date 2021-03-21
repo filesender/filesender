@@ -146,6 +146,7 @@ A note about colours;
 * [terasender_enabled](#terasender_enabled)
 * [terasender_advanced](#terasender_advanced)
 * [terasender_worker_count](#terasender_worker_count)
+* [terasender_worker_max_count](#terasender_worker_max_count)
 * [terasender_start_mode](#terasender_start_mode)
 * [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stalling_detection)
@@ -1419,6 +1420,15 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __available:__ since version 1.6
 * __1.x name:__ terasender_workerCount
 * __comment:__ <span style="background-color:orange">we need to check maximum webworker counts for standard browsers and possibly increase the default number</span>
+
+### terasender_worker_max_count
+
+* __description:__ Max value that terasender_worker_count can ever have if user set.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 30
+* __available:__ since version 2.23
+* __comment:__ 
 
 ### terasender_start_mode
 

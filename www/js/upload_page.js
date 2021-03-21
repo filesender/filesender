@@ -1213,11 +1213,15 @@ filesender.ui.startUpload = function() {
     var twc = $('#terasender_worker_count');
     if(twc.length) {
         twc = parseInt(twc.val());
-        if(!isNaN(twc) && twc > 0 && twc <= 30) {
-		if (this.transfer.encryption)
-			twc = Math.max(Math.round(twc/2),3);
-		filesender.config.terasender_worker_count = twc;
-	}
+        if(!isNaN(twc)) {
+            if( twc > filesender.config.terasender_worker_max_count ) {
+                // clamp to max value rather than ignore change
+                twc = filesender.config.terasender_worker_max_count;
+            }
+            if( twc > 0 && twc <= filesender.config.terasender_worker_max_count) {
+	        filesender.config.terasender_worker_count = twc;
+            }
+        }
     }
     
     filesender.ui.nodes.files.list.find('.file').addClass('uploading');

@@ -558,9 +558,24 @@ window.filesender.terasender = {
         this.transfer = transfer;
 
         // Safety
+        if(isNaN(parseInt(filesender.config.terasender_worker_max_count))) {
+            // clamp the max to the default
+            filesender.config.terasender_worker_max_count = 30;
+        }
         var wcnt = parseInt(filesender.config.terasender_worker_count);
-        if(isNaN(wcnt) || wcnt < 1 || wcnt > 30)
+        if(isNaN(wcnt)) {
+            // Bad setting is set to something that will work
+            // ( 3 was the previous default in this case )
             wcnt = 3;
+        }
+        if( wcnt < 1 ) {
+            // too low is set to the min
+            wcnt = 1;
+        }
+        if( wcnt > filesender.config.terasender_worker_max_count ) {
+            // clamp this to the desired max_count
+            wcnt = filesender.config.terasender_worker_max_count;
+        }
         filesender.config.terasender_worker_count = wcnt;
         
         // Work out if we have less chunks to upload than the wcnt value.
