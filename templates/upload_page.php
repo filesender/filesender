@@ -3,6 +3,7 @@
 $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
+$show_get_a_link_or_email_choice = true;
 
 // CGI to used variables
 $aupChecked = '';
@@ -63,6 +64,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 if(Auth::isGuest()) {
     if($guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
         $guest_can_only_send_to_creator = true;
+        $show_get_a_link_or_email_choice = false;
     }
 }
 
@@ -395,7 +397,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                         <div class="text_desc_of_file_count_and_size" ><span class="value">x</span></div>
                     </td>
                 </tr>
-<?php if(!$guest_can_only_send_to_creator) { ?>
+<?php if($show_get_a_link_or_email_choice) { ?>
                 <tr>
                     <td colspan="2">
                         <h4>
