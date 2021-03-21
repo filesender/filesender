@@ -1487,8 +1487,8 @@ $(function() {
     filesender.ui.nodes.stages.continue1.enable(false);
     filesender.ui.nodes.stages.continue2.enable(false);
 
+    // move to stage2
     filesender.ui.nodes.stages.continue1.on('click',function() {
-        // move to stage2
         filesender.ui.stage = 2;
         filesender.ui.nodes.stage1hide.hide();
         filesender.ui.nodes.stage3hide.hide();
@@ -1508,9 +1508,9 @@ $(function() {
         return false;
     });
 
+    // move to stage1
     filesender.ui.nodes.stages.back2.on('click',function() {
         window.location.hash = "";
-        // move to stage1
         filesender.ui.stage = 1;
         filesender.ui.nodes.stage3hide.hide();
         filesender.ui.nodes.stage2show.hide();
@@ -1520,7 +1520,8 @@ $(function() {
 	$("#speedChart").resize();
         return false;
     });
-    
+
+    // handle browser back and forward buttons as best as we can
     window.onpopstate = function(event) {
         if( filesender.ui.lasthash == "" || filesender.ui.lasthash == "#stage1" ) {
             if( document.location.hash == "#stage2" ) {
@@ -1543,9 +1544,9 @@ $(function() {
         filesender.ui.lasthash = document.location.hash;
     }    
 
+    // move to stage3
     filesender.ui.nodes.stages.continue2.on('click',function() {
 
-        // move to stage3
         filesender.ui.stage = 3;
         filesender.ui.nodes.stage1hide.hide();
         filesender.ui.nodes.stage2hide.hide();
@@ -1787,10 +1788,6 @@ $(function() {
 
     // Bind encryption
     filesender.ui.nodes.encryption.toggle.on('change', function() {
-        // $('#encryption_password_container').slideToggle();
-        // $('#encryption_password_container_generate').slideToggle();
-        // $('#encryption_password_show_container').slideToggle();
-        // $('#encryption_description_container').slideToggle();
         
         $('#encgroup1').slideToggle();
         $('#encgroup2').slideToggle();
@@ -1815,14 +1812,13 @@ $(function() {
                     node.removeClass('invalid');
                     node.find('.invalid').remove();
                     node.find('.invalid_reason').remove();
+                    node.find('.error').text('');
                 },
                 function(error) {
                     var tt = 1;
                     if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                     node.addClass('invalid');
-                    node.addClass(error.message);
-                    $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
-                    $('<div class="invalid_reason" />').text(lang.tr(error.message)).appendTo(node);
+                    node.find('.error').text(lang.tr(error.message));
                 });
         }
         filesender.ui.evalUploadEnabled();
