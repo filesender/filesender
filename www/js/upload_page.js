@@ -1013,6 +1013,7 @@ filesender.ui.startUpload = function() {
     this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
     this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
+
     
     var can_use_terasender = filesender.config.terasender_enabled;
     if( this.transfer.disable_terasender ) {
@@ -1039,9 +1040,10 @@ filesender.ui.startUpload = function() {
         if (filesender.ui.nodes.guest_token.length){
             this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
         }
-        
-        if(filesender.ui.nodes.lang.length)
-            this.transfer.lang = filesender.ui.nodes.lang.val();
+
+        if( filesender.ui.nodes.lang && filesender.ui.nodes.lang.attr('data-id')) {
+            this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
+        }
         
         for(var o in filesender.ui.nodes.options) {
             var i = filesender.ui.nodes.options[o];
@@ -1431,7 +1433,7 @@ $(function() {
         message_contains_password_warning: form.find('#password_can_not_be_part_of_message_warning'),
         message_contains_password_error:   form.find('#password_can_not_be_part_of_message_error'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
-        lang: form.find('input[name="lang"]'),
+        lang: form.find('#lang'),
         aup: form.find('input[name="aup"]'),
         aupshowhide: form.find('#aupshowhide'),
         expires: form.find('input[name="expires"]'),
@@ -1749,6 +1751,12 @@ $(function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
 
+
+    form.find('.rlangdropitem').on('click', function() {
+        form.find('#lang').html( this.innerHTML );
+        form.find('#lang').attr('data-id', this.getAttribute('data-id'));        
+    });
+    
     
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {

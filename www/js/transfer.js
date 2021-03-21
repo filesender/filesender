@@ -1138,7 +1138,7 @@ window.filesender.transfer = function() {
             errorhandler = filesender.ui.error;
         
         this.status = 'running';
-        
+
         if(this.failed_transfer_restart) {
             return this.restartFailedTransfer(errorhandler);
         }
