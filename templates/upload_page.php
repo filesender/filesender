@@ -590,22 +590,22 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
         
         <div class="buttons stage3">
             <a href="#" class="start  btn btn-primary ">
-                <span class="fa fa-cloud-upload fa-lg"></span> {tr:send}
+                <span class="fa fa-cloud-upload fa-lg"></span>&nbsp;{tr:send}
             </a>
             <a href="#" class="restart not_displayed  btn btn-secondary ">
-                <span class="fa fa-cloud-upload fa-lg"></span> {tr:restart}
+                <span class="fa fa-cloud-upload fa-lg"></span>&nbsp;{tr:restart}
             </a>
             <a href="#" class="pause not_displayed btn btn-secondary ">
-                <span class="fa fa-pause fa-lg"></span> {tr:pause}
+                <span class="fa fa-pause fa-lg"></span>&nbsp;{tr:pause}
             </a>
             <a href="#" class="resume not_displayed btn btn-secondary ">
-                <span class="fa fa-play fa-lg"></span> {tr:resume}
+                <span class="fa fa-play fa-lg"></span>&nbsp;{tr:resume}
             </a>
             <a href="#" class="stop not_displayed btn btn-secondary ">
-                <span class="fa fa-stop fa-lg"></span> {tr:stop}
+                <span class="fa fa-stop fa-lg"></span>&nbsp;{tr:stop}
             </a>
             <a href="#" class="reconnect not_displayed btn btn-secondary ">
-                <span class="fa fa-cloud-upload fa-lg"></span> {tr:reconnect_and_continue}
+                <span class="fa fa-cloud-upload fa-lg"></span>&nbsp;{tr:reconnect_and_continue}
             </a>
         </div>
     </form>
