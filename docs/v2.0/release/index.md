@@ -7,8 +7,9 @@ schedule.
 Releases are numbered incrementally with a structure of MAJOR.PATCH
 naming, where MAJOR and PATCH are both numbers. Releases are made when
 there is functionality added, removed, changed, or fixed. Releases are
-cut from the GitHub `master` branch, which have squashed commits from
-the `development` branch.
+cut from the GitHub `master` branch. Updates from the `development`
+branch are squashed into a single commit and pushed up to github as a
+pull request to `master`.
 
 ## Source packages
 
