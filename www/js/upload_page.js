@@ -65,6 +65,7 @@ function delayAndCallOnlyOnce(callback, ms) {
 }
 
 filesender.ui.stage = 1;
+filesender.ui.reuploading = false;
 
 jQuery.fn.extend({
     disable: function(state) {
@@ -1413,6 +1414,7 @@ $(function() {
             checkbox: form.find('input[name="get_a_link"]'),
             checkboxcontainer: form.find('.custom-control[data-option="get_a_link"]'),
         },
+        get_a_link_or_email_choice: form.find('#get_a_link_or_email_choice'),
         recipients: {
             input: form.find('input[name="to"]'),
             list: form.find('.recipients'),
@@ -1495,6 +1497,14 @@ $(function() {
 
     // move to stage2
     filesender.ui.nodes.stages.continue1.on('click',function() {
+
+        // The user can not change options for the transfer when they are
+        // sending the remains of the files to complete the upload.
+        if( filesender.ui.reuploading ) {
+            filesender.ui.nodes.stages.continue2.click();
+            return;
+        }
+        
         filesender.ui.stage = 2;
         filesender.ui.nodes.stage1hide.hide();
         filesender.ui.nodes.stage3hide.hide();
@@ -1542,9 +1552,11 @@ $(function() {
         if( filesender.ui.lasthash == "#uploading" && window.location.hash == "#uploading" ) {
             // ignore this case which is generated from the below reset.
         } else {
-            if( filesender.ui.lasthash == "#uploading" ) {
-                filesender.ui.nodes.buttons.stop.click();
-                window.location.hash = "#uploading";
+            if( !filesender.ui.reuploading ) {
+                if( filesender.ui.lasthash == "#uploading" ) {
+                    filesender.ui.nodes.buttons.stop.click();
+                    window.location.hash = "#uploading";
+                }
             }
         }
         filesender.ui.lasthash = document.location.hash;
@@ -2109,9 +2121,10 @@ $(function() {
                 $('#terasender_worker_count').prop('disabled', false);
                 filesender.ui.nodes.files.input.prop('disabled', false);
                 
-                // Setup restart button
-                filesender.ui.nodes.buttons.start.addClass('not_displayed');
-                filesender.ui.nodes.buttons.restart.removeClass('not_displayed');
+                // We do not show the stage2 page in this case as the options can
+                // not be changed for the transfer once it is created.
+                filesender.ui.nodes.stages.continue1.html( filesender.ui.nodes.stages.continue2.html() );
+                filesender.ui.reuploading = true;
             };
             
             var forget = function() {
