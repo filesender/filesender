@@ -59,7 +59,19 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
     
     if($name == TransferOptions::GET_A_LINK)
         $allow_recipients = false;
+
 }
+
+// If get a link is not available to the user then
+// there is no real point showing the big choice to the
+// user at the top of the page.
+foreach(Transfer::allOptions() as $name => $dfn)  {
+    if($dfn['available']) continue;
+    if($name == TransferOptions::GET_A_LINK) {
+        $show_get_a_link_or_email_choice = false;
+    }
+}
+
 
 if(Auth::isGuest()) {
     $show_get_a_link_or_email_choice = false;
