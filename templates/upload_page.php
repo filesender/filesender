@@ -399,7 +399,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                     </td>
                 </tr>
 <?php if($show_get_a_link_or_email_choice) { ?>
-                <tr>
+                <tr id="get_a_link_or_email_choice">
                     <td colspan="2">
                         <h4>
                             <a               class="galmodelink  btn btn-primary">{tr:ui2_mode_link}</a>
