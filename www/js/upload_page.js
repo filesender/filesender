@@ -489,7 +489,7 @@ filesender.ui.files = {
     },
     
     update_crust_meter: function( file ) {
-        window.filesender.log("AAAAAAAAAAA update_crust_meter(top) status " +  filesender.ui.transfer.status );
+//        window.filesender.log("AAAAAAAAAAA update_crust_meter(top) status " +  filesender.ui.transfer.status );
         if (!filesender.config.upload_display_per_file_stats) {
             return;
         }
@@ -530,7 +530,7 @@ filesender.ui.files = {
             if( i < offending.length ) {
                 b = offending[i];
             }
-            console.log("AAAAAAA file " + file + " i " + i + " v " + v + " b " + b );
+//            console.log("AAAAAAA file " + file + " i " + i + " v " + v + " b " + b );
             filesender.ui.files.update_crust_meter_for_worker( file, i, v, b );
 
             // calculate stats across all workers
@@ -588,8 +588,8 @@ filesender.ui.files = {
         filesender.ui.nodes.stats.number_of_files.hide().find('.value').text('');
         filesender.ui.nodes.stats.size.hide().find('.value').text('');
 
-        filesender.ui.nodes.stats.filecount.text('AAA');
-        filesender.ui.nodes.stats.sendingsize.text('BBB');
+        filesender.ui.nodes.stats.filecount.text('');
+        filesender.ui.nodes.stats.sendingsize.text('');
         console.log(filesender.ui.nodes.stats.filecount);
         filesender.ui.evalUploadEnabled();
         this.updateStatsAndClearAll();
