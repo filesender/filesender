@@ -619,7 +619,7 @@ window.filesender.transfer = function() {
             files: [],
             file_index: 0,
             guest_token: null,
-            download_link: null,
+            download_link: this.download_link,
             roundtriptoken: this.roundtriptoken
         };
         
@@ -700,6 +700,7 @@ window.filesender.transfer = function() {
             case 'files': break;
             default: this[prop] = tracker[prop];
         }
+        this.download_link = tracker.download_link;
         
         this.failed_transfer_restart = true;
         
