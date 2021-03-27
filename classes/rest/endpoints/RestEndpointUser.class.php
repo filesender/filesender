@@ -334,7 +334,18 @@ class RestEndpointUser extends RestEndpoint
             $user->transfer_preferences = null;
             $user->save();
         }
-        
+        if( $data->clear_user_transfer_preferences ) {
+            $user->transfer_preferences = null;
+            $user->save();
+        }
+        if( $data->exists('guest_expiry_default_days')) {
+            if (!Auth::isAdmin()) {
+                throw new RestAdminRequiredException();
+            }
+            $user->guest_expiry_default_days = $data->guest_expiry_default_days;
+            $user->save();
+            
+        }
         return true;
     }
 

@@ -109,6 +109,7 @@
 <?php if( Config::get('using_local_saml_dbauth')) : ?>
             <input type="button" data-action="set-local-authdb-password" value="{tr:change_password}" />
 <?php endif; ?>
+            <input type="button" data-action="set-default-guest-expires" value="{tr:set_default_guest_expire_days}" />
         </td>
     </tr>
 </table>

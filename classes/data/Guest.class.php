@@ -288,9 +288,13 @@ class Guest extends DBObject
      *
      * @return int timestamp
      */
-    public static function getDefaultExpire()
+    public function getDefaultExpire()
     {
-        $days = Config::get('default_guest_days_valid');
+        $days = $this->owner->guest_expiry_default_days;
+        
+        if (!$days) {
+            $days = Config::get('default_guest_days_valid');
+        }
         if (!$days) {
             $days = Config::get('default_transfer_days_valid');
         }
@@ -817,10 +821,15 @@ class Guest extends DBObject
                 if (!preg_match('`^[0-9]+$`', $value)) {
                     throw new BadExpireException($value);
                 }
-                
                 $value = (int)$value;
-                if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
-                    throw new BadExpireException($value);
+
+                // The default could be set to very high if it is
+                // set on a per user basis for their new guests
+                // so if we are at the defualt then do not clamp.
+                if( $value != $this->getDefaultExpire()) {
+                    if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
+                        throw new BadExpireException($value);
+                    }
                 }
                 $this->$property = (string)$value;
             }
