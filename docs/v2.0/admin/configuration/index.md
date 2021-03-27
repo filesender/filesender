@@ -171,6 +171,8 @@ A note about colours;
 * [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
 * [guest_create_limit_per_day](#guest_create_limit_per_day)
 * [guest_reminder_limit_per_day](#guest_reminder_limit_per_day)
+* [allow_guest_expiry_date_extension](#allow_guest_expiry_date_extension)
+* [allow_guest_expiry_date_extension_admin](#allow_guest_expiry_date_extension_admin)
 
 ## Authentication
 
@@ -1655,6 +1657,31 @@ This is only for old, existing transfers which have no roundtriptoken set.
   If the user tries to send a reminder to a specific guest more than this number of times a day then
   the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 5
   will allow 5 reminders to be sent to a guest but not 6.
+
+
+### allow_guest_expiry_date_extension
+
+* __description:__ This is an untested matching config option to allow_guest_expiry_date_extension_admin. It is best to reserve this config keyword now to allow future versions to allow some users to extend their guests if desired. Extending guest expire time is only available via the admin page as at release 2.23.
+* __mandatory:__
+* __type:__ an array of integers containing possible extensions in days.
+* __default:__ - (= not activated)
+* __available:__ since version 2.23
+* __1.x name:__
+* __comment:__
+* __Examples:__
+
+
+### allow_guest_expiry_date_extension_admin
+
+* __description:__ allows an admin to extend the expiry date of a guest. This is only used if you are logged in as an admin on the system. If you are an admin this schedule will overwrite the allow_guest_expiry_date_extension for you. 
+* __mandatory:__
+* __type:__ an array of integers containing possible extensions in days.
+* __default:__ array(31, true)
+* __available:__ since version 2.23
+* __Examples:__
+
+        // Allows infinite extensions, the first is by 30 days then 90 days 
+	$config['allow_guest_expiry_date_extension_admin'] = array(30, 90, true); 
 
 
 

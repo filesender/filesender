@@ -276,6 +276,9 @@ $default = array(
 
     'data_protection_user_frequent_email_address_disabled' => false,
     'data_protection_user_transfer_preferences_disabled' => false,
+
+    'allow_guest_expiry_date_extension' => 0,
+    'allow_guest_expiry_date_extension_admin' => array(31, true),
     
     
     'transfer_options' => array(

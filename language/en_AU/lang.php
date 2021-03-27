@@ -628,3 +628,8 @@ $lang['file_encryption_password_must_have_numbers'] = 'Password must contain at 
 $lang['file_encryption_password_must_have_upper_and_lower_case'] = 'Password must contain UPPER and lower case characters';
 $lang['file_encryption_password_must_have_special_characters'] = 'Password must contain at least one special character such as !@#$%^&*()<>';
 $lang['transfer_must_be_encrypted'] = 'This transfer must be encrypted';
+
+$lang['expiry_extension_count_exceeded'] = 'Expiry date extension maximum reached';
+$lang['expiry_extension_not_allowed'] = 'Expiry date extension is not allowed';
+$lang['extended'] = 'Expiry date extended until {expires}';
+$lang['extended_reminded'] = 'Expiry date extended until {expires}, a reminder was sent to recipients';

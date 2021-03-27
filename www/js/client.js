@@ -525,6 +525,15 @@ window.filesender.client = {
         
         return this.put('/transfer/' + id, data, callback);
     },
+
+    extendObject: function(className, id, remind, callback) {
+        var data = {extend_expiry_date: true};
+        if(remind) data.remind = true;
+        return this.put('/' + className + '/' + id, data, callback);
+    },
+    extendGuest: function( id, remind, callback ) {
+        return this.extendObject('guest',id,remind, callback);
+    },
     
     /**
      * Close a transfer
