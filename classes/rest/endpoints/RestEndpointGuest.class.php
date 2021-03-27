@@ -245,12 +245,17 @@ class RestEndpointGuest extends RestEndpoint
         $guest->transfer_options = $transfer_options;
         
         // Set expiry date
-        $expires = $data->expires ? $data->expires : Guest::getDefaultExpire();
+        $expires = $guest->getDefaultExpire();
+        if( $data->expires ) {
+            $expires = max( $expires, $data->expires );
+        }
         $guest->expires = $expires;
-        
+
         if($guest->does_not_expire) {
             $guest->expires = null;
         }
+
+
         
         // Make guest available, this saves the object and send email to the guest
         $guest->makeAvailable();

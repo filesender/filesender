@@ -633,3 +633,6 @@ $lang['expiry_extension_count_exceeded'] = 'Expiry date extension maximum reache
 $lang['expiry_extension_not_allowed'] = 'Expiry date extension is not allowed';
 $lang['extended'] = 'Expiry date extended until {expires}';
 $lang['extended_reminded'] = 'Expiry date extended until {expires}, a reminder was sent to recipients';
+$lang['set_default_guest_expire_days'] = 'Overwrite guest expire days';
+$lang['reset_per_user_guest_expire_setting'] = 'Set to 0 to disable any specific setting for this User.';
+$lang['set_user_guest_expiry_default_days'] = 'how many days new guests are live for this user';
