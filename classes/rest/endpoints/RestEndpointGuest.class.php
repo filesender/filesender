@@ -63,6 +63,7 @@ class RestEndpointGuest extends RestEndpoint
             'created' => RestUtilities::formatDate($guest->created),
             'expires' => RestUtilities::formatDate($guest->expires),
             'upload_url' => $guest->upload_link,
+            'expiry_date_extension' => $guest->expiry_date_extension,
             'errors' => array_values(array_map(function ($error) {
                 return array(
                     'type' => $error->type,
@@ -305,6 +306,16 @@ class RestEndpointGuest extends RestEndpoint
         if ($data->remind) {
             $guest->remind();
         }
+
+        // Need to extend expiry date
+        if ($data->extend_expiry_date) {
+            if( !Auth::isAdmin()) {
+                throw new RestAdminRequiredException();
+            }
+            $guest->extendObjectExpiryDate();
+            return self::cast($guest);
+        }
+        
         
         return true;
     }

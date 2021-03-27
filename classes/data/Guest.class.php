@@ -110,7 +110,12 @@ class Guest extends DBObject
         'last_reminder' => array(
             'type' => 'datetime',
             'null' => true
-        )
+        ),
+        'expiry_extensions' => array(
+            'type' => 'uint',
+            'size' => 'small',
+            'default' => 0
+        ),
     );
 
     public static function getViewMap()
@@ -128,6 +133,11 @@ class Guest extends DBObject
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
+
+    /**
+     * Config variables
+     */
+    const OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY = "allow_guest_expiry_date_extension";
 
     /**
      * Set selectors
@@ -160,6 +170,7 @@ class Guest extends DBObject
     protected $last_activity = 0;
     protected $reminder_count = 0;
     protected $last_reminder = 0;
+    protected $expiry_extensions = 0;
 
     /**
      * Cache
@@ -661,6 +672,7 @@ class Guest extends DBObject
         if (in_array($property, array(
             'id', 'user_email', 'token', 'email', 'transfer_count',
             'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity', 'userid'
+            , 'expiry_extensions'
         ))) {
             return $this->$property;
         }
@@ -713,6 +725,10 @@ class Guest extends DBObject
             return $identity[0];
         }
 
+        if ($property == 'expiry_date_extension') {
+            return $this->getObjectExpiryDateExtension(false);
+        } // No throw
+        
         //
         // Simple access to $this->options 
         //
