@@ -838,20 +838,28 @@ window.filesender.ui = {
                 filesender.ui.notify('success', lang.tr(remind ? 'extended_reminded' : 'extended').r({expires: t.expires.formatted}));
             });
         };
+
+        var buttons = {
+            extend: {
+                callback: function() {
+                    extend(false);
+                }
+            }
+        }
+        if(t.attr('data-recipients-enabled')) {
+            buttons.extend_and_remind = {
+                callback: function() {
+                    extend(true);
+                }
+            };
+        }
+        buttons.cancel = {};
         
-        var buttons = {};
         
-        buttons.extend = function() {
-            extend(false);
-        };
+        filesender.ui.dialogWithButtons( 'confirm_dialog', 'confirm',
+                                         lang.tr('confirm_extend_expiry').r({days: duration}).out(),
+                                         buttons );
         
-        if(t.attr('data-recipients-enabled')) buttons.extend_and_remind = function() {
-            extend(true);
-        };
-        
-        buttons.cancel = false;
-        
-        filesender.ui.popup(lang.tr('confirm_dialog'), buttons).html(lang.tr('confirm_extend_expiry').r({days: duration}).out());
     },
     
 };
