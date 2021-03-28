@@ -283,7 +283,7 @@ if (!function_exists('clickableHeader')) {
             </td>
         </tr>
         
-        <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
+        <tr class="transfer_details objectholder" data-id="<?php echo $transfer->id ?>">
             <td colspan="8">
                 <div class="actions">
                     <div style="margin:3px">
