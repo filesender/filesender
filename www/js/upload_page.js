@@ -596,37 +596,85 @@ filesender.ui.files = {
 
     },
 
-    checkEncryptionPassword: function(input,slideMessage) {
-        input = $(input);
-        var crypto = window.filesender.crypto_app();
-
-        
-        var invalid = false;
-        if( filesender.ui.transfer.encryption_password_version == 
-            crypto.crypto_password_version_constants.v2018_text_password )
-        {
-        
-            var pass = input.val();
-            var minLength = filesender.config.encryption_min_password_length;
-            if( minLength > 0 ) {
-                if( !pass || pass.length < minLength ) {
-                    invalid = true;
-                }
-            }
-        }
+    updatePasswordMustHaveMessage: function(slideMessage,invalid,msg) {
 
         if( slideMessage ) {
-            var msg = $('#encryption_password_container_too_short_message');
+            
             if(invalid) {
-                input.addClass('invalid');
                 if( msg.css('display')=='none') {
                     msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
                 }
             }else{
-                input.removeClass('invalid');
                 if( msg.css('display')!='none') {
                     msg.slideToggle( checkEncryptionPassword_slideToggleDelay );
                 }
+            }
+        }
+        
+    },
+    
+    checkEncryptionPassword: function(input,slideMessage) {
+        input = $(input);
+        var crypto = window.filesender.crypto_app();
+        var pass = input.val();
+        var invalid = false;
+        var msg = null;
+        
+        if( filesender.ui.transfer.encryption_password_version == 
+            crypto.crypto_password_version_constants.v2018_text_password )
+        {
+            var minLength = filesender.config.encryption_min_password_length;
+            if( minLength > 0 ) {
+                var testInvalid = false;
+                if( !pass || pass.length < minLength ) {
+                    testInvalid = true;
+                    msg = $('#encryption_password_container_too_short_message');
+                    invalid = true;
+                }
+                filesender.ui.files.updatePasswordMustHaveMessage(
+                    slideMessage, testInvalid,
+                    $('#encryption_password_container_too_short_message'));
+            }
+        }
+
+        if( filesender.config.encryption_password_must_have_upper_and_lower_case ) {
+            var testInvalid = false;
+            if(!pass.match(/[A-Z]/g) || !pass.match(/[a-z]/g)) {
+                testInvalid = true;
+                invalid = true;
+            }
+            filesender.ui.files.updatePasswordMustHaveMessage(
+                slideMessage, testInvalid,
+                $('#encryption_password_container_must_have_upper_and_lower_case_message'));
+            
+        }
+        if( filesender.config.encryption_password_must_have_numbers ) {
+            var testInvalid = false;
+            if(!pass.match(/[0-9]/g)) {
+                testInvalid = true;
+                invalid = true;
+            }
+            filesender.ui.files.updatePasswordMustHaveMessage(
+                slideMessage, testInvalid,
+                $('#encryption_password_container_must_have_numbers_message'));
+        }
+        if( filesender.config.encryption_password_must_have_special_characters ) {
+            var testInvalid = false;
+            if(!pass.match(/[@#!$%^&*()\[\]<>?\/\\]/g)) {
+                testInvalid = true;
+                invalid = true;
+            }
+            filesender.ui.files.updatePasswordMustHaveMessage(
+                slideMessage, testInvalid,
+                $('#encryption_password_container_must_have_special_characters_message'));
+        }
+        
+        if( slideMessage ) {
+            
+            if(invalid) {
+                input.addClass('invalid');
+            }else{
+                input.removeClass('invalid');
             }
         }
         return !invalid;
@@ -1809,6 +1857,15 @@ $(function() {
     filesender.ui.nodes.aup.on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
+
+    if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
+        $('#encryption_password_container').slideToggle();
+        $('#encryption_password_container_generate').slideToggle();
+        $('#encryption_password_show_container').slideToggle();
+        $('#encryption_description_container').slideToggle();
+        filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
+        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
+    }
 
     // Bind encryption
     filesender.ui.nodes.encryption.toggle.on('change', function() {

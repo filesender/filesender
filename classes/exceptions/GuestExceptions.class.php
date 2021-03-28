@@ -157,3 +157,35 @@ class GuestExpiredException extends GuestException
         parent::__construct($guest, 'expired');
     }
 }
+
+/**
+ * Expiry extension not allowed
+ */
+class GuestExpiryExtensionNotAllowedException extends GuestException
+{
+    /**
+     * Constructor
+     *
+     * @param Transfer $transfer
+     */
+    public function __construct($transfer)
+    {
+        parent::__construct($transfer, 'expiry_extension_not_allowed');
+    }
+}
+
+/**
+ * Expiry extension count exceeded
+ */
+class GuestExpiryExtensionCountExceededException extends GuestException
+{
+    /**
+     * Constructor
+     *
+     * @param Transfer $transfer
+     */
+    public function __construct($transfer)
+    {
+        parent::__construct($transfer, 'expiry_extension_count_exceeded');
+    }
+}

@@ -132,62 +132,6 @@ $(function() {
     });
 
 
-    var extendExpires = function( self )
-    {
-        if(self.hasClass('disabled')) return;
-        
-        var t = self.closest('[data-transfer]');
-        
-        var id = t.attr('data-id');
-        if(!id || isNaN(id)) return;
-        
-        var duration = parseInt(t.attr('data-expiry-extension'));
-        
-        var extend = function(remind) {
-            filesender.client.extendTransfer(id, remind, function(t) {
-                $('[data-transfer][data-id="' + id + '"]').attr('data-expiry-extension', t.expiry_date_extension);
-                
-                $('[data-transfer][data-id="' + id + '"] [data-rel="expires"]').text(t.expires.formatted);
-                
-                if(!t.expiry_date_extension) {
-                    $('[data-transfer][data-id="' + id + '"] [data-action="extend"]').addClass('disabled').attr({
-                        title: lang.tr('transfer_expiry_extension_count_exceeded')
-                    });
-                    
-                } else {
-                    $('[data-transfer][data-id="' + id + '"] [data-action="extend"]').attr({
-                        title: lang.tr('extend_expiry_date').r({
-                            days: self.closest('[data-transfer]').attr('data-expiry-extension')
-                        })
-                    });
-                }
-                
-                filesender.ui.notify('success', lang.tr(remind ? 'transfer_extended_reminded' : 'transfer_extended').r({expires: t.expires.formatted}));
-            });
-        };
-        
-        var buttons = {
-            extend: {
-                callback: function() {
-                    extend(false);
-                }
-            }
-        }
-        if(t.attr('data-recipients-enabled')) {
-            buttons.extend_and_remind = {
-                callback: function() {
-                    extend(true);
-                }
-            };
-        }
-        buttons.cancel = {};
-        
-
-        filesender.ui.dialogWithButtons( 'confirm_dialog', 'confirm',
-                                         lang.tr('confirm_extend_expiry').r({days: duration}).out(),
-                                         buttons );
-                               
-    }
     
     // Extend buttons
     $('[data-expiry-extension="0"] [data-action="extend"]').addClass('disabled').attr({title: lang.tr('transfer_expiry_extension_count_exceeded')});
@@ -199,7 +143,7 @@ $(function() {
             })
         });
     }).on('click', function() {
-        extendExpires( $(this) );
+        filesender.ui.extendExpires( $(this), 'transfer');
     });
 
     $('[data-expiry-extension][data-expiry-extension!="-1"] [data-action="extendexpires"]').each(function() {
@@ -209,7 +153,7 @@ $(function() {
             })
         });
     }).on('click', function() {
-        extendExpires( $(this) );
+        filesender.ui.extendExpires( $(this), 'transfer');
     });
     
 

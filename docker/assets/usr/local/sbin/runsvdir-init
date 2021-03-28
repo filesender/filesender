@@ -1,0 +1,3 @@
+#!/bin/bash
+export > /usr/local/etc/envvars
+exec /usr/bin/runsvdir /etc/service

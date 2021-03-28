@@ -16,6 +16,11 @@ $crustMeterCount = 1;
 if( Config::get('terasender_enabled'))
     $crustMeterCount = Config::get('terasender_worker_count');
 
+$encryption_mandatory = Principal::isEncryptionMandatory();
+$encryption_checkbox_checked = '';
+$encryption_checkbox_classes = '';
+
+
 
 $files_actions_div_extra_class = "div3";
 $upload_directory_button_enabled = false;
@@ -129,6 +134,10 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
 
 
 
+if( $encryption_mandatory ) {
+    $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
+    $encryption_checkbox_classes = '';
+}
 
 ?>
 
@@ -311,6 +320,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                                    name="encryption"
                                    class="custom-control-input"
                                    type="checkbox"
+                                   <?php echo $encryption_checkbox_checked ?>
                             />
                             <label for="encryption" class="custom-control-label">{tr:file_encryption}</label>
                         </div>
@@ -330,8 +340,22 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
                         <div class="fieldcontainer" id="encryption_password_container_too_short_message">
                             {tr:file_encryption_password_too_short}
                         </div>
+                        <div class="fieldcontainer" id="encryption_password_container_must_have_numbers_message">
+                            {tr:file_encryption_password_must_have_numbers}
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container_must_have_upper_and_lower_case_message">
+                            {tr:file_encryption_password_must_have_upper_and_lower_case}
+                        </div>
+                        <div class="fieldcontainer" id="encryption_password_container_must_have_special_characters_message">
+                            {tr:file_encryption_password_must_have_special_characters}
+                        </div>
+                        <div class="fieldcontainer" id="encryption_description_disabled_container">
+                            {tr:file_encryption_description_disabled}
+                        </div>
                     </div>
                 </div>
+
+                
                 <div id="encgroup2" class="row">
                     <div class="col">
                         <div class="custom-control custom-switch" id="encryption_password_container_generate">

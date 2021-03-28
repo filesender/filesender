@@ -110,6 +110,12 @@ class User extends DBObject
             'size' => 'big',
             'null' => true
         ),
+        'guest_expiry_default_days' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => true,
+            'default' => null
+        ),
     );
 
 
@@ -153,6 +159,7 @@ class User extends DBObject
     protected $auth_secret = null;
     protected $auth_secret_created = null;
     protected $quota = 0;
+    protected $guest_expiry_default_days = null;
 
     private $eventcount = 0;
     
@@ -618,6 +625,7 @@ class User extends DBObject
             'auth_secret_created',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
+          , 'guest_expiry_default_days'
         ))) {
             return $this->$property;
         }
@@ -694,6 +702,11 @@ class User extends DBObject
             $this->quota = (int)$value;
         } elseif ($property == 'eventcount') {
             $this->eventcount = (int)$value;
+        } elseif ($property == 'guest_expiry_default_days') {
+            $this->guest_expiry_default_days = (int)$value;
+            if( $this->guest_expiry_default_days == 0 ) {
+                $this->guest_expiry_default_days = null;
+            }
         } else {
             throw new PropertyAccessException($this, $property);
         }
@@ -722,6 +735,16 @@ class User extends DBObject
         $guests = Guest::fromUser($user);
         foreach ($guests as $g) {
             $g->delete();
+        }
+    }
+
+    public function beforeSave()
+    {
+        if( Config::get('data_protection_user_frequent_email_address_disabled')) {
+            $this->frequent_recipients = array();
+        }
+        if( Config::get('data_protection_user_transfer_preferences_disabled')) {
+            $this->transfer_preferences = null;
         }
     }
 

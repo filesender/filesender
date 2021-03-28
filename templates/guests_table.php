@@ -21,7 +21,10 @@
     
     </tbody>
         <?php foreach($guests as $guest) { ?>
-        <tr class="guest" data-id="<?php echo $guest->id ?>" data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
+            <tr class="guest objectholder"
+                data-id="<?php echo $guest->id ?>" 
+                data-expiry-extension="<?php echo $guest->expiry_date_extension ?>"
+                data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
             <td class="to">
                 <a href="mailto:<?php echo Template::sanitizeOutputEmail($guest->email) ?>"><?php echo Template::sanitizeOutputEmail($guest->email) ?></a>
                 
@@ -50,7 +53,9 @@
             
             <td class="created d-none d-lg-table-cell"><?php echo Utilities::formatDate($guest->created) ?></td>
             
-            <td class="expires"><?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?></td>
+            <td class="expires" data-rel="expires">
+                <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
+            </td>
             
             <td class="actions">
                 <div class="actionsblock">

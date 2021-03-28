@@ -195,7 +195,7 @@ if (!function_exists('clickableHeader')) {
     
     <tbody>
         <?php foreach($transfers as $transfer) { ?>
-        <tr class="transfer" id="transfer_<?php echo $transfer->id ?>"
+        <tr class="transfer objectholder" id="transfer_<?php echo $transfer->id ?>"
             data-id="<?php echo $transfer->id ?>"
             data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
             data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
@@ -291,7 +291,7 @@ if (!function_exists('clickableHeader')) {
             </td>
         </tr>
         
-        <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
+        <tr class="transfer_details objectholder" data-id="<?php echo $transfer->id ?>">
             <td colspan="8">
                 <div class="actions">
                     <div class="actionsblock">

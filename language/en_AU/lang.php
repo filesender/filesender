@@ -618,6 +618,7 @@ $lang['you_can_report_exception_by_email'] = 'You can report this error by email
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
 
+
 $lang['invite_guest'] = 'Invite someone to send a file';
 $lang['current_guest'] = 'Current guests';
 $lang['transfers_guest'] = 'Transfers from guests';
@@ -632,3 +633,16 @@ $lang['back'] = 'Back';
 $lang['continue'] = 'Continue';
 $lang['text_desc_of_file_count_and_size'] = 'You are uploading {filecount} file(s) with a total size of {totalsize}';
 $lang['please_add_file_again'] = 'Please add this file again';
+$lang['clear_user_transfer_preferences'] = 'Clear stored transfer options from last upload.';
+$lang['file_encryption_password_must_have_numbers'] = 'Password must contain at least one number (0,1,3...9)';
+$lang['file_encryption_password_must_have_upper_and_lower_case'] = 'Password must contain UPPER and lower case characters';
+$lang['file_encryption_password_must_have_special_characters'] = 'Password must contain at least one special character such as !@#$%^&*()<>';
+$lang['transfer_must_be_encrypted'] = 'This transfer must be encrypted';
+
+$lang['expiry_extension_count_exceeded'] = 'Expiry date extension maximum reached';
+$lang['expiry_extension_not_allowed'] = 'Expiry date extension is not allowed';
+$lang['extended'] = 'Expiry date extended until {expires}';
+$lang['extended_reminded'] = 'Expiry date extended until {expires}, a reminder was sent to recipients';
+$lang['set_default_guest_expire_days'] = 'Overwrite guest expire days';
+$lang['reset_per_user_guest_expire_setting'] = 'Set to 0 to disable any specific setting for this User.';
+$lang['set_user_guest_expiry_default_days'] = 'how many days new guests are live for this user';
