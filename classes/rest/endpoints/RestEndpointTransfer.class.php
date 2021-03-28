@@ -816,7 +816,7 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Need to extend expiry date
             if ($data->extend_expiry_date) {
-                $transfer->extendExpiryDate();
+                $transfer->extendObjectExpiryDate();
             }
             
             // Need to remind the transfer's availability to its recipients ?
