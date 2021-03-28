@@ -351,11 +351,9 @@ if( $encryption_mandatory ) {
                         </div>
                         <div class="fieldcontainer" id="encryption_description_disabled_container">
                             {tr:file_encryption_description_disabled}
-                        </div>
+                        </div>                        
                     </div>
                 </div>
-
-                
                 <div id="encgroup2" class="row">
                     <div class="col">
                         <div class="custom-control custom-switch" id="encryption_password_container_generate">
@@ -384,6 +382,7 @@ if( $encryption_mandatory ) {
                     </div>
                 </div>
             <?php } ?>
+            
             
             <?php if (Config::get('aup_enabled')) { ?>
                 <div class="row">

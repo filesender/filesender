@@ -1859,12 +1859,18 @@ $(function() {
     });
 
     if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
-        $('#encryption_password_container').slideToggle();
-        $('#encryption_password_container_generate').slideToggle();
-        $('#encryption_password_show_container').slideToggle();
-        $('#encryption_description_container').slideToggle();
+        $('#encryption_password_container').show();
+        $('#encryption_password_container_generate').show();
+        $('#encryption_password_show_container').show();
+        $('#encryption_description_container').show();
+        $('#encgroup1').show();
+        $('#encgroup2').show();
+        $('#encgroup3').show();
+        
         filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
         filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
+
+        
     }
 
     // Bind encryption

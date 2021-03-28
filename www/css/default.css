@@ -1123,7 +1123,6 @@ table.guests .guest .to .errors .details {
 }
 
 /* Encryption */
-#encryption_password_container,
 #encryption_password_container_too_short_message,
 #encryption_password_container_must_have_numbers_message,
 #encryption_password_container_must_have_upper_and_lower_case_message,
