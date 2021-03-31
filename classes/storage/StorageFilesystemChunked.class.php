@@ -10,12 +10,12 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * *    Redistributions of source code must retain the above copyright
+ *     Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
- * *    Redistributions in binary form must reproduce the above copyright
+ *     Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ *     Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -35,6 +35,11 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
+/**
+ * Generic Chunk exception so we can throw a specific exception with a message on failed writes
+ */
+class ChunkWriteException extends \Exception {}
+
 
 /**
  *  Gives access to a file on the filesystem
@@ -46,17 +51,36 @@ if (!defined('FILESENDER_BASE')) {
  */
 class StorageFilesystemChunked extends StorageFilesystem
 {
-    public static function getOffsetWithinChunkedFile($file_path, $offset)
+    // Time to wait between retries
+    protected static $sleepRetry = 400000; //400ms
+    // Maximum number of times to retry anything
+    protected static $maxRetry = 10;
+
+    /**
+     * getOffsetWithinChunkedFile()
+     *
+     * @param string $filePath
+     * @param int $offset
+     * @return int
+     */
+    public static function getOffsetWithinChunkedFile($filePath, $offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
         return ($offset % $file_chunk_size);
     }
-    
-    public static function getChunkFilename($file_path, $offset)
+
+    /**
+     * Generate the filename for the chunk
+     *
+     * @param string $filePath
+     * @param int $offset
+     * @return string
+     */
+    public static function getChunkFilename($filePath, $offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
         $offset = $offset - ($offset % $file_chunk_size);
-        return $file_path.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
+        return $filePath.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -73,26 +97,35 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
-        if ($file->transfer->is_encrypted) {
+        if ($file->transfer->options['encryption']) {
             $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
         }
 
-        $file_path = self::buildPath($file).$file->uid;
-
-        $chunkFile=self::getChunkFilename($file_path, $offset);
+        $filePath = self::buildPath($file);
+        $chunkFile = self::getChunkFilename($filePath, $offset);
 
         if (!file_exists($chunkFile)) {
-            throw new StorageFilesystemFileNotFoundException($file_path, $file);
+            Logger::error('readChunk() failed: '.$chunkFile.' does not exist.');
+            throw new StorageFilesystemFileNotFoundException($chunkFile, $file);
         }
 
-        $data = file_get_contents($chunkFile);
+        $data = self::file_get_contents($chunkFile);
         if ($data === false) {
-            return null;
+            Logger::error('readChunk() failed: '.$chunkFile.' failed to read file.');
+            throw new StorageFilesystemCannotReadException($filePath, $file);
         }
-
         return $data;
     }
-    
+
+    /**
+     * Return the path to the directory that holds the file chunks
+     * @param File $file
+     * @return string
+     */
+    public static function buildPath(File $file) {
+        return parent::buildPath($file) . $file->uid;
+    }
+
     /**
      * Write a chunk of data to file at offset
      *
@@ -107,46 +140,74 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function writeChunk(File $file, $data, $offset = null)
     {
-        $chunk_size = strlen($data);
+        $chunkSize = \strlen($data);
+        $filePath = self::buildPath($file);
 
-        $path = self::buildPath($file);
-
-        $free_space = disk_free_space($path);
-        if ($free_space <= $chunk_size) {
-            throw new StorageNotEnoughSpaceLeftException($chunk_size);
+        // Check that there is enough free space on the storage
+        $freeSpace = disk_free_space(self::$path);
+        if ($freeSpace <= $chunkSize) {
+            throw new StorageNotEnoughSpaceLeftException($chunkSize);
         }
 
-        $file_path = $path.$file->uid;
-
-        if (!file_exists($file_path)) {
-            mkdir($file_path, 0770, true);
+        if (self::file_exists($filePath) === false) {
+            mkdir($filePath, 0770, true);
         }
-        $chunkFile=self::getChunkFilename($file_path, $offset);
-        $i=0;
-        $pass=false;
-        while (!$pass && $i<100) {
-            $fh = fopen($chunkFile, 'wb');
-            if ($fh !== false) {
-                $written = fwrite($fh, $data, $chunk_size);
-                fclose($fh);
 
-                //at this point the file should have written, lets have a look.
-                if ($chunk_size != $written) {
-                    Logger::info('writeChunk() : '.$chunkFile.' (chunk_size!=written)');
-                } else if ($chunk_size != filesize($chunkFile)) {
-                    Logger::info('writeChunk() : '.$chunkFile.' (chunk_size!=filesize())');
+        $chunkFile = self::getChunkFilename($filePath, $offset);
+        $validUpload = false;
+        for ($attempt = 1; $attempt <= self::$maxRetry; $attempt++) {
+            $isLastAttempt = $attempt >= self::$maxRetry;
+            try {
+                // Open file, go to next try if it fails
+                $fh = \fopen($chunkFile, 'wb');
+                if ($fh === false) {
+                    throw new ChunkWriteException('fopen() failed');
+                }
+
+                // Write file, flush buffers then unlock
+                $written = \fwrite($fh, $data, $chunkSize);
+
+                // Close file and move to next iteration if it fails.
+                if (\fclose($fh) === false) {
+                    throw new ChunkWriteException('fclose() failed');
+                }
+
+                // Check that the right amount of data was written and move to next iteration if it fails
+                if ($chunkSize != $written) {
+                    throw new ChunkWriteException('chunk_size != bytes written');
+                }
+
+                // Clear cached values and check the chunk file now exists, otherwise we retry from the beginning
+                if (!self::file_exists($chunkFile)) {
+                    throw new ChunkWriteException('file does not exist after write');
+                }
+
+                // Check file size
+                if ($chunkSize != self::filesize($chunkFile)) {
+                    throw new ChunkWriteException('chunk_size != filesize()');
+                }
+
+                // Hash the file to make sure it actually exists and matches the written data
+                if (!self::verifyChecksum('md5', $data, $chunkFile)) {
+                    throw new ChunkWriteException('checksum validation failed');
+                }
+
+                $validUpload = true;
+            } catch (ChunkWriteException $e) {
+                if ($isLastAttempt) {
+                    Logger::error("writeChunk() failed: {$chunkFile} {$e->getMessage()}");
+                    // Re-throw any StorageFilesystemCannotWriteException so that we can add extra information
+                    throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
                 } else {
-                    $pass = true;
+                    Logger::debug("writeChunk() failed: {$chunkFile} {$e->getMessage()}");
                 }
             }
-            $i++;
-            if (!$pass) {
-                sleep(1);
-            }
         }
-        if (!$pass) {
-            Logger::info('writeChunk() Can not write to : '.$chunkFile);
-            throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
+
+        // Just in case we get through all of our attempts and don't hit the try/catch
+        if ($validUpload === false && $isLastAttempt) {
+            Logger::error("writeChunk() failed: {$chunkFile} exceeded retry attempts");
+            throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
         }
 
         return array(
@@ -154,7 +215,81 @@ class StorageFilesystemChunked extends StorageFilesystem
             'written' => $written
         );
     }
-    
+
+    /**
+     * Helper method for file_get_contents()
+     * @param resource $handle
+     * @param string $data
+     * @param int $size
+     * @return int
+     */
+    public static function file_get_contents($path)
+    {
+        for ($attempt = 0; $attempt < self::$maxRetry; $attempt++) {
+            $data = file_get_contents($path);
+            if ($data !== false) {
+                return $data;
+            }
+            usleep(self::$sleepRetry);
+        }
+        return false;
+    }
+
+    /**
+     * Helper method for file_exists()
+     * @param string $path
+     * @return bool
+     */
+    public static function file_exists($path)
+    {
+        \clearstatcache(true, $path);
+        return \file_exists($path);
+    }
+
+    /**
+     * Helper method for filesize()
+     * @param string $path
+     * @return int|false
+     */
+    public static function filesize($path)
+    {
+        \clearstatcache(true, $path);
+        return \filesize($path);
+    }
+
+    /**
+     * Helper method for hash_file()
+     * @param string $path
+     * @return int|false
+     */
+    public static function hash_file($algo, $path)
+    {
+        return @\hash_file($algo, $path);
+    }
+
+    /**
+     * Helper method to validate the integrity of a file vs the incoming stream
+     * @param string $algo
+     * @param string $stream
+     * @param string $path
+     * @return bool
+     */
+    public static function verifyChecksum($algo, $stream, $path)
+    {
+        $fileHash = self::hash_file($algo, $path);
+        if ($fileHash === false) {
+            return false;
+        }
+
+        $streamHash = \hash($algo, $stream);
+        if ($fileHash === $streamHash) {
+            return true;
+        }
+
+        Logger::error("verifyChecksum() checksums do not match. file: $path file_hash: $fileHash stream_hash: $streamHash");
+        return false;
+    }
+
     /**
      * Handles file completion checks
      *
@@ -163,9 +298,38 @@ class StorageFilesystemChunked extends StorageFilesystem
     public static function completeFile(File $file)
     {
         self::setup();
-        $file_path = self::buildPath($file).$file->uid;
+        $filePath = self::buildPath($file);
+        $onDiskSize = self::calculateOnDiskFileSize($file);
+        $expectedSize = $file->size;
+        if ($file->transfer->is_encrypted) {
+            $expectedSize = $file->encrypted_size;
+        }
+
+        if ($onDiskSize != $expectedSize) {
+            Logger::error('completeFile('.$file->uid.') size mismatch. expected_size:'.$expectedSize.' ondisk_size:'.$onDiskSize);
+            throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$expectedSize.' but size on disk is '.$onDiskSize);
+        }
     }
-    
+
+    /**
+     * Calculates the size of a File's directory
+     *
+     * @param File $file
+     *
+     * @return int
+     */
+    public static function calculateOnDiskFileSize(File $file)
+    {
+        $path = self::buildPath($file);
+        $totalSize = 0;
+        foreach (new DirectoryIterator($path) as $fileChunk) {
+            if ($fileChunk->isFile()) {
+                $totalSize += $fileChunk->getSize();
+            }
+        }
+        return $totalSize;
+    }
+
     /**
      * Deletes a file
      *
@@ -175,14 +339,10 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function deleteFile(File $file)
     {
-        $file_path = self::buildPath($file).$file->uid;
-
-        Filesystem::deleteTreeRecursive($file_path, $file);
+        $filePath = self::buildPath($file);
+        Filesystem::deleteTreeRecursive($filePath, $file);
     }
-    
-    
-    
-    
+
     /**
      * Store a whole file
      *
@@ -198,11 +358,18 @@ class StorageFilesystemChunked extends StorageFilesystem
         return self::writeChunk($file, file_get_contents($source_path), 0);
     }
 
+    /**
+     * Get a resource stream (used with the archiver to generate tar/zip files)
+     *
+     * @param File $file
+     * @return resource
+     */
     public static function getStream(File $file)
     {
         StorageFilesystemChunkedStream::ensureRegistered();
         $path = "StorageFilesystemChunkedStream://" . $file->uid;
-        $fp = fopen($path, "r+");
+        $fp = \fopen($path, "r+");
         return $fp;
     }
 }
+
