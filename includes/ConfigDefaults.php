@@ -104,6 +104,8 @@ $default = array(
     'encryption_password_must_have_special_characters' => false,
     'encryption_generated_password_length' => 30,
     'encryption_generated_password_encoding' => 'base64',
+    'encryption_encode_encrypted_chunks_in_base64_during_upload' => false,
+    
     'upload_crypted_chunk_padding_size' => 16 + 16, // CONST the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
