@@ -176,7 +176,7 @@ var terasender_worker = {
         xhr.setRequestHeader('csrfptoken', this.csrfptoken);
         
         try {
-            
+
 	    if (job.encryption) { //MD
 			var cryptedBlob = null;
 			var $this = this;
