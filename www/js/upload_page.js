@@ -265,7 +265,12 @@ filesender.ui.files = {
                 change: function() {
                     var bar = $(this);
                     var v = bar.progressbar('value');
-                    bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
+                    if (v === false) {
+                        // stop progress showing 0.0% when the value is false
+                        bar.find('.progress-label').text('');
+                    } else {
+                        bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
+                    }
                 },
                 complete: function() {
                     var bar = $(this);
@@ -472,7 +477,16 @@ filesender.ui.files = {
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
         
         var bar = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .progressbar');
-        bar.progressbar('value', Math.floor(1000 * (file.fine_progress ? file.fine_progress : file.uploaded) / file.size)); 
+        upload_progress = Math.floor(1000 * (file.fine_progress ? file.fine_progress : file.uploaded) / file.size);
+        // check to see if upload_progress is 100% or complete is true
+        // so that we don't mark it as complete before the
+        // upload is validated
+        if (upload_progress < 1000 || complete === true) {
+            bar.progressbar('value', upload_progress);
+        } else {
+            // Go stripey for validation
+            bar.progressbar('value', false);
+        }
     },
     
     // Clear the file box
