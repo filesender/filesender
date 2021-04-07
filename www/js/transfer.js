@@ -1070,6 +1070,7 @@ window.filesender.transfer = function() {
                         transfer.onprogress.call(transfer, file, true);
                     
                     complete();
+                }
 		, function(error) {
                     console.log("transfer encountered an error: " + JSON.stringify(error));
                     if (error.message === 'file_integrity_check_failed') {
