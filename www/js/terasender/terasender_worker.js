@@ -222,7 +222,7 @@ var terasender_worker = {
         
         this.progress_reported = now;
         
-        this.log('Job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + '] is ' + (100 * ratio).toFixed(1) + '% done');
+        this.log('Job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + '] is ' + (100 * ratio).toFixed(1) + '% done ' + loaded + '/' + total);
         if (this.job.encryption) { 
             this.job.fine_progress = Math.floor(ratio * (this.job.chunk.end - this.job.chunk.start));
         } else {
