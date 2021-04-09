@@ -1,9 +1,0 @@
-#!/usr/bin/make -f
-
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/rules/simple-patchsys.mk
-
-DEB_INSTALL_CHANGELOGS_ALL=CHANGELOG.txt
-
-binary-install/filesender::
-	install -m 0644 $(CURDIR)/scripts/filesender_db.sql $(CURDIR)/debian/filesender/usr/share/dbconfig-common/data/filesender/install/pgsql

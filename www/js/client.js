@@ -525,6 +525,15 @@ window.filesender.client = {
         
         return this.put('/transfer/' + id, data, callback);
     },
+
+    extendObject: function(className, id, remind, callback) {
+        var data = {extend_expiry_date: true};
+        if(remind) data.remind = true;
+        return this.put('/' + className + '/' + id, data, callback);
+    },
+    extendGuest: function( id, remind, callback ) {
+        return this.extendObject('guest',id,remind, callback);
+    },
     
     /**
      * Close a transfer
@@ -788,4 +797,23 @@ window.filesender.client = {
         return this.put('/transfer/' + id, {'optionremove':true, option: tropt}, callback);
     },
 
+
+    setUserSpecificExpireDaysForNewGuesst: function(id,callback) {
+
+        var $this = this;
+        var prompt = window.filesender.ui.prompt(
+            lang.tr('set_user_guest_expiry_default_days'),
+            function (obj) {
+                var expires = $(this).find('input').val();
+
+                var data = {guest_expiry_default_days: expires};
+                return $this.put('/user/' + id, data, callback);
+            });
+        
+        // Add a field to the prompt
+        var input = $('<input type="text" class="wide" />').appendTo(prompt);
+        $('<p>' + lang.tr('reset_per_user_guest_expire_setting') + '</p>').appendTo(prompt);
+        input.focus();
+    },
+    
 };

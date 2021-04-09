@@ -482,6 +482,14 @@ class RestEndpointTransfer extends RestEndpoint
             
             $options['encryption'] = $data->encryption;
 
+            // check if encryption is mandatory but the user tried to disable it
+            if( Principal::isEncryptionMandatory()) {
+                if( !$data->encryption ) {
+                    throw new TransferMustBeEncryptedException();
+                }
+            }
+
+
             Logger::info($options);
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
             if ($options[TransferOptions::GET_A_LINK]) {
@@ -808,7 +816,7 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Need to extend expiry date
             if ($data->extend_expiry_date) {
-                $transfer->extendExpiryDate();
+                $transfer->extendObjectExpiryDate();
             }
             
             // Need to remind the transfer's availability to its recipients ?
