@@ -1,0 +1,38 @@
+server {
+        add_header X-Frame-Options sameorigin always;
+        client_body_buffer_size 256k;
+        client_max_body_size 32m;
+        server_name _;
+        index index.php;
+        error_page 500 502 503 504 /50x.html;
+        root /opt/filesender/filesender/www;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+        location / {
+            try_files $uri $uri/ /index.php?args;
+        }
+        location ~ [^/]\.php(/|$) {
+            fastcgi_split_path_info  ^(.+\.php)(/.+)$;
+            fastcgi_pass  localhost:9000;
+            include       fastcgi_params;
+            fastcgi_intercept_errors on;
+            fastcgi_param PATH_INFO       $fastcgi_path_info;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+        location ^~ /simplesamlphp {
+            alias /opt/filesender/simplesamlphp/saml/www;
+            location ~ ^(?<prefix>/saml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
+                include fastcgi_params;
+                fastcgi_pass  localhost:9000;
+                fastcgi_param SCRIPT_FILENAME $document_root$phpfile;
+                fastcgi_param PATH_INFO       $pathinfo if_not_empty;
+            }
+        }
+        location ~* \.(ico|docx|doc|xls|xlsx|rar|zip|jpg|jpeg|txt|xml|pdf|gif|png|css|js)$ {
+            root   /opt/filesender/filesender/www/;
+        }
+        location ~ /\. {
+                deny all;
+        }
+}
