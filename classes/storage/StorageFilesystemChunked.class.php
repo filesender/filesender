@@ -51,19 +51,13 @@ class ChunkWriteException extends \Exception {}
  */
 class StorageFilesystemChunked extends StorageFilesystem
 {
-    // Time to wait between retries
-    protected static $sleepRetry = 400000; //400ms
-    // Maximum number of times to retry anything
-    protected static $maxRetry = 10;
-
     /**
      * getOffsetWithinChunkedFile()
      *
-     * @param string $filePath
      * @param int $offset
      * @return int
      */
-    public static function getOffsetWithinChunkedFile($filePath, $offset)
+    public static function getOffsetWithinChunkedFile($offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
         return ($offset % $file_chunk_size);
@@ -97,7 +91,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
-        if ($file->transfer->options['encryption']) {
+        if ($file->transfer->is_encrypted) {
             $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
         }
 
@@ -123,7 +117,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      * @return string
      */
     public static function buildPath(File $file) {
-        return parent::buildPath($file) . $file->uid;
+        return parent::buildPath($file).$file->uid;
     }
 
     /**
@@ -143,10 +137,14 @@ class StorageFilesystemChunked extends StorageFilesystem
         $chunkSize = \strlen($data);
         $filePath = self::buildPath($file);
 
-        // Check that there is enough free space on the storage
-        $freeSpace = disk_free_space(self::$path);
-        if ($freeSpace <= $chunkSize) {
-            throw new StorageNotEnoughSpaceLeftException($chunkSize);
+        // If the user is doing something with FUSE
+        // then they might not want to check disk space.
+        if (!Config::get('storage_filesystem_ignore_disk_full_check')) {
+	        // Check that there is enough free space on the storage
+	        $freeSpace = disk_free_space(self::$path);
+	        if ($freeSpace <= $chunkSize) {
+	            throw new StorageNotEnoughSpaceLeftException($chunkSize);
+	        }
         }
 
         if (self::file_exists($filePath) === false) {
@@ -155,8 +153,8 @@ class StorageFilesystemChunked extends StorageFilesystem
 
         $chunkFile = self::getChunkFilename($filePath, $offset);
         $validUpload = false;
-        for ($attempt = 1; $attempt <= self::$maxRetry; $attempt++) {
-            $isLastAttempt = $attempt >= self::$maxRetry;
+        for ($attempt = 1; $attempt <= Config::get('storage_filesystem_write_retry'); $attempt++) {
+            $isLastAttempt = $attempt >= Config::get('storage_filesystem_write_retry');
             try {
                 // Open file, go to next try if it fails
                 $fh = \fopen($chunkFile, 'wb');
@@ -187,12 +185,16 @@ class StorageFilesystemChunked extends StorageFilesystem
                     throw new ChunkWriteException('chunk_size != filesize()');
                 }
 
-                // Hash the file to make sure it actually exists and matches the written data
-                if (!self::verifyChecksum('md5', $data, $chunkFile)) {
-                    throw new ChunkWriteException('checksum validation failed');
+                if (Config::get('storage_filesystem_hash_check')) {
+                    // Hash the file to make sure it actually exists and matches the written data
+                    if (!self::verifyChecksum('md5', $data, $chunkFile)) {
+                        throw new ChunkWriteException('checksum validation failed');
+                    }
                 }
 
                 $validUpload = true;
+                // Passed all the validation so I guess let's get out of this loop
+                break;
             } catch (ChunkWriteException $e) {
                 if ($isLastAttempt) {
                     Logger::error("writeChunk() failed: {$chunkFile} {$e->getMessage()}");
@@ -202,11 +204,18 @@ class StorageFilesystemChunked extends StorageFilesystem
                     Logger::debug("writeChunk() failed: {$chunkFile} {$e->getMessage()}");
                 }
             }
+            usleep(Config::get('storage_filesystem_retry_sleep'));
         }
 
         // Just in case we get through all of our attempts and don't hit the try/catch
         if ($validUpload === false && $isLastAttempt) {
             Logger::error("writeChunk() failed: {$chunkFile} exceeded retry attempts");
+            throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
+        }
+
+        // Don't reach the end if the chunk is invalid.
+        if ($validUpload === false) {
+            Logger::error("writeChunk() failed: {$chunkFile} was an invalid upload");
             throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
         }
 
@@ -225,12 +234,12 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function file_get_contents($path)
     {
-        for ($attempt = 0; $attempt < self::$maxRetry; $attempt++) {
+        for ($attempt = 0; $attempt < Config::get('storage_filesystem_read_retry'); $attempt++) {
             $data = file_get_contents($path);
             if ($data !== false) {
                 return $data;
             }
-            usleep(self::$sleepRetry);
+            usleep(Config::get('storage_filesystem_retry_sleep'));
         }
         return false;
     }
@@ -278,6 +287,7 @@ class StorageFilesystemChunked extends StorageFilesystem
     {
         $fileHash = self::hash_file($algo, $path);
         if ($fileHash === false) {
+            Logger::error("verifyChecksum() unable to hash file: $path");
             return false;
         }
 
@@ -372,4 +382,3 @@ class StorageFilesystemChunked extends StorageFilesystem
         return $fp;
     }
 }
-

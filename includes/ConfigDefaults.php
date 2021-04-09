@@ -147,6 +147,10 @@ $default = array(
     'storage_filesystem_df_command' => 'df {path}',
     'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
     'storage_filesystem_ignore_disk_full_check' => false,
+    'storage_filesystem_hash_check' => false, //used by filesystemChunked
+    'storage_filesystem_read_retry' => 10, //used by filesystemChunked
+    'storage_filesystem_write_retry' => 10, //used by filesystemChunked
+    'storage_filesystem_retry_sleep' => 400000, //400ms //used by filesystemChunked
     'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
 
     'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',

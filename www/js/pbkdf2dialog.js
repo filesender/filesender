@@ -130,7 +130,7 @@ window.filesender.pbkdf2dialog = {
         $this.time_end = Date.now();
         window.filesender.log("pbkdf2dialog onPBKDF2Over()");
         $this.already_complete = true;
-        if( $this.dialog ) {
+        if( $this.dialog && $this.dialog['0'].id!="" ) {
             $this.dialog.dialog('close');
             $this.dialog.remove();
             $this.dialog = null;

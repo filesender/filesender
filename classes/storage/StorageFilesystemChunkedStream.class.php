@@ -80,7 +80,7 @@ class StorageFilesystemChunkedStream
                 return false;
             }
             
-            $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($file_path, $offset));
+            $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($offset));
             if ($rc == -1) {
                 $this->gameOver = true;
                 if ($this->fh) {
