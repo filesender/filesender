@@ -83,6 +83,22 @@ $(function() {
         
         return false;
     });
+
+
+    $('.clear_user_transfer_preferences a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var p = {};
+        p['clear_user_transfer_preferences'] = '1';
+        
+        filesender.client.updateUserPreferences(p, function() {
+            filesender.ui.notify('success', lang.tr('database_updated'));
+            filesender.ui.reload();
+        });
+        
+        return false;
+    });
     
 
     $('.delete_my_account a').button().on('click', function(e) {

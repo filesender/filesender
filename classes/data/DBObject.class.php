@@ -817,4 +817,97 @@ class DBObject
         $data = $statement->fetch();
         return $data[$datakey];
     }
+
+
+    /**
+     * Check if this object has an expiry date that can be extended
+     *
+     * Subclasses wishing to use this must: 
+     *   -- declare a const OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY = "allow_guest_expiry_date_extension";
+     *        The object or class name should replace "_guest_" in the above string.
+     *   -- have a database column expiry_extensions of type int with matching member 
+     *      variable to track the number of extensions
+     *   -- define the listed exception classes
+     *
+     * @param string OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY a config key to get
+     *                  and $configKey_admin to check what extension might be possible
+     * @param bool $throw throw on error
+     *
+     * @return int number of days the object expiry date can be extended by
+     *
+     * @throws $className . ExpiryExtensionNotAllowedException
+     * @throws $className . ExpiryExtensionCountExceededException
+     */
+    public function getObjectExpiryDateExtension($throw = true)
+    {
+        $pattern = null;
+        $configKey = get_class($this)::OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY;
+        
+        if( Auth::isAdmin()) {
+            $pattern = Config::get($configKey . '_admin');
+        }
+        if( !$pattern ) {
+            $pattern = Config::get($configKey);
+        }
+        
+        if (!$pattern) {
+            if ($throw) {
+                $exceptName = get_class($this) . "ExpiryExtensionNotAllowedException";
+                throw new $exceptName($this);
+            }
+            return 0;
+        }
+        
+        if (!is_array($pattern)) {
+            $pattern = array($pattern);
+        }
+
+        // Get nth
+        $index = (int)$this->expiry_extensions;
+        
+        if ($index < count($pattern) && (!is_bool($pattern[$index]))) {
+            $duration = (int)$pattern[$index];
+        } else {
+            $last = array_pop($pattern);
+            
+            if (count($pattern) && is_bool($last) && $last) {
+                $duration = array_pop($pattern);
+            } else {
+                if ($throw) {
+                    $exceptName = get_class($this) . "ExpiryExtensionCountExceededException";
+                    throw $exceptName($this);
+                }
+                return 0;
+            }
+        }
+        
+        if ((count($pattern) == 2) && is_bool($pattern[0]) && $pattern[0]) { // Infinite
+            return (int)$pattern[1];
+        }
+            
+        return $duration;
+    }
+
+    /**
+     * Extend expiry date (if enabled) see getObjectExpiryDateExtension for object requirements
+     *
+     * @throws $className . ExpiryExtensionNotAllowedException
+     */
+    public function extendObjectExpiryDate()
+    {
+        $configKey = get_class($this)::OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY;
+        $duration = $this->getObjectExpiryDateExtension(); // throws
+        
+        if (!$duration) { // Should not happend unless config is garbled
+            $exceptName = get_class($this) . "ExpiryExtensionNotAllowedException";
+            throw new $exceptName($this);
+        }
+        
+        $this->expires += $duration * 24 * 3600;
+        
+        $this->expiry_extensions++;
+        
+        $this->save();
+    }
+    
 }

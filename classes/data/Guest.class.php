@@ -110,7 +110,12 @@ class Guest extends DBObject
         'last_reminder' => array(
             'type' => 'datetime',
             'null' => true
-        )
+        ),
+        'expiry_extensions' => array(
+            'type' => 'uint',
+            'size' => 'small',
+            'default' => 0
+        ),
     );
 
     public static function getViewMap()
@@ -128,6 +133,11 @@ class Guest extends DBObject
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
+
+    /**
+     * Config variables
+     */
+    const OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY = "allow_guest_expiry_date_extension";
 
     /**
      * Set selectors
@@ -160,6 +170,7 @@ class Guest extends DBObject
     protected $last_activity = 0;
     protected $reminder_count = 0;
     protected $last_reminder = 0;
+    protected $expiry_extensions = 0;
 
     /**
      * Cache
@@ -277,9 +288,13 @@ class Guest extends DBObject
      *
      * @return int timestamp
      */
-    public static function getDefaultExpire()
+    public function getDefaultExpire()
     {
-        $days = Config::get('default_guest_days_valid');
+        $days = $this->owner->guest_expiry_default_days;
+        
+        if (!$days) {
+            $days = Config::get('default_guest_days_valid');
+        }
         if (!$days) {
             $days = Config::get('default_transfer_days_valid');
         }
@@ -661,6 +676,7 @@ class Guest extends DBObject
         if (in_array($property, array(
             'id', 'user_email', 'token', 'email', 'transfer_count',
             'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity', 'userid'
+            , 'expiry_extensions'
         ))) {
             return $this->$property;
         }
@@ -713,6 +729,10 @@ class Guest extends DBObject
             return $identity[0];
         }
 
+        if ($property == 'expiry_date_extension') {
+            return $this->getObjectExpiryDateExtension(false);
+        } // No throw
+        
         //
         // Simple access to $this->options 
         //
@@ -801,10 +821,15 @@ class Guest extends DBObject
                 if (!preg_match('`^[0-9]+$`', $value)) {
                     throw new BadExpireException($value);
                 }
-                
                 $value = (int)$value;
-                if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
-                    throw new BadExpireException($value);
+
+                // The default could be set to very high if it is
+                // set on a per user basis for their new guests
+                // so if we are at the defualt then do not clamp.
+                if( $value != $this->getDefaultExpire()) {
+                    if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
+                        throw new BadExpireException($value);
+                    }
                 }
                 $this->$property = (string)$value;
             }

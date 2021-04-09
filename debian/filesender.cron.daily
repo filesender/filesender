@@ -1,7 +1,0 @@
-#!/bin/sh
-
-fs_location=/usr/share/filesender
-if [ -x /usr/bin/php -a -f ${fs_location}/cron/cron.php ]
-then
-     /usr/bin/php ${fs_location}/cron/cron.php
-fi

@@ -572,14 +572,16 @@ window.filesender.crypto_app = function () {
                         
                             var joinedData = window.filesender.crypto_common().joinIvAndData(iv, new Uint8Array(result));
 
-                        // this is the base64 variant. this will result in a larger string to send
-                            var btoaData = btoa(
-                                // This string contains all kind of weird characters
-                                window.filesender.crypto_common().convertArrayBufferViewtoString(
+                            var btoaData = joinedData;
+                            if( window.filesender.config.encryption_encode_encrypted_chunks_in_base64_during_upload ) {
+                                // this is the base64 variant. this will result in a larger string to send
+                                btoaData = btoa(
+                                    // This string contains all kind of weird characters
+                                    window.filesender.crypto_common().convertArrayBufferViewtoString(
                                         joinedData
                                     )
-                            );
-
+                                );
+                            }
                             callback(btoaData);
                         },
                     function (e) {

@@ -109,6 +109,13 @@ $(function() {
 
             filesender.client.changeLocalAuthDBPassword( saml_id );
         });
+        u.find('[data-action="set-default-guest-expires"]').on('click', function() {
+            var id = $(this).closest('.user').attr('data-id');
+            filesender.client.setUserSpecificExpireDaysForNewGuesst(
+                id, function() {
+                    filesender.ui.notify('success', lang.tr('preferences_updated'));
+                });
+        });
     };
 
     section.find('[data-action="all-delete-api-secret"]').on('click', function() {

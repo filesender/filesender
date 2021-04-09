@@ -210,6 +210,12 @@ EOT;
             {tr:clear_frequent_recipients}
         </a>
     </div>
+    <div class="clear_user_transfer_preferences">
+        <a href="#">
+            <span class="fa fa-lg fa-times"></span>
+            {tr:clear_user_transfer_preferences}
+        </a>
+    </div>
     <br/>
     
         {tr:user_profile_delete_about_description_text}

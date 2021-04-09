@@ -119,11 +119,16 @@ A note about colours;
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_enabled](#encryption_enabled)
+* [encryption_mandatory](#encryption_mandatory)
 * [encryption_min_password_length](#encryption_min_password_length)
+* [encryption_password_must_have_upper_and_lower_case](#encryption_password_must_have_upper_and_lower_case)
+* [encryption_password_must_have_numbers](#encryption_password_must_have_numbers)
+* [encryption_password_must_have_special_characters](#encryption_password_must_have_special_characters)
 * [encryption_generated_password_length](#encryption_generated_password_length)
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
 * [encryption_random_password_version_new_files](#encryption_random_password_version_new_files)
 * [encryption_password_hash_iterations_new_files](#encryption_password_hash_iterations_new_files)
+* [encryption_encode_encrypted_chunks_in_base64_during_upload](#encryption_encode_encrypted_chunks_in_base64_during_upload)
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
@@ -167,6 +172,8 @@ A note about colours;
 * [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
 * [guest_create_limit_per_day](#guest_create_limit_per_day)
 * [guest_reminder_limit_per_day](#guest_reminder_limit_per_day)
+* [allow_guest_expiry_date_extension](#allow_guest_expiry_date_extension)
+* [allow_guest_expiry_date_extension_admin](#allow_guest_expiry_date_extension_admin)
 
 ## Authentication
 
@@ -233,7 +240,7 @@ A note about colours;
 ## Data Protection
 
 * [data_protection_user_frequent_email_address_disabled](#data_protection_user_frequent_email_address_disabled)
-
+* [data_protection_user_transfer_preferences_disabled](#data_protection_user_transfer_preferences_disabled)
 
 ---
 
@@ -1130,6 +1137,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__
 
+### encryption_mandatory
+* __description:__ If set to true then every file uploaded must be encrypted.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
+* __comment:__
+
+
+
 ### encryption_min_password_length
 * __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.
 * __mandatory:__ no 
@@ -1137,6 +1154,32 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ 0
 * __available:__ since version 2.0
 * __comment:__ 
+
+### encryption_password_must_have_upper_and_lower_case
+* __description:__ set to true to force a user entered password to contain uPPer and LoWer case characters.
+* __mandatory:__ no 
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
+* __comment:__ 
+
+### encryption_password_must_have_numbers
+* __description:__ set to true to force a user entered password to contain numbers 453543.
+* __mandatory:__ no 
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
+* __comment:__ 
+
+### encryption_password_must_have_special_characters
+* __description:__ set to true to force a user entered password to contain special characters (%$^@ etc).
+* __mandatory:__ no 
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
+* __comment:__ 
+
+
 
 ### encryption_generated_password_encoding
 * __description:__ which encoding to use to encode generated passwords. Since the random information obtained during password generation is completely random it is useful to encode that into text characters, for example in the range a,b,c etc. By doing this one single byte of random data (0 to 255 inclusive) will likely be encoded to more than one character of output. The base64 encoding turns x bytes of input into 1.33 times as long output. Because ascii85 uses more possible characters it turns each 4 bytes into 5 bytes. This means that for the same length of encoded string the ascii85 will have more entropy. Note that the ascii85 used is the Z85 from ZeroMQ to avoid the use of the quote character in output.
@@ -1210,6 +1253,15 @@ these iteration counts take to perform on your local machine.
 * __available:__ since version 2.9
 * __comment:__
 
+
+
+### encryption_encode_encrypted_chunks_in_base64_during_upload
+* __description:__ This allows fallback to the older base64 PUT that was used in version 2.22. The encoding is quite costly and if there are no issues this parameter together with the fallback to using base64 on the PUT contents will be removed in a future version. 
+* __mandatory:__ no 
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
+* __comment:__ This is to allow fallbacks to older code. The default should be left unless you experience issues. If this fallback is not needed it will be removed in a future release and the __default__ will become the only choice in the code.
 
 
 
@@ -1615,6 +1667,31 @@ This is only for old, existing transfers which have no roundtriptoken set.
   If the user tries to send a reminder to a specific guest more than this number of times a day then
   the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 5
   will allow 5 reminders to be sent to a guest but not 6.
+
+
+### allow_guest_expiry_date_extension
+
+* __description:__ This is an untested matching config option to allow_guest_expiry_date_extension_admin. It is best to reserve this config keyword now to allow future versions to allow some users to extend their guests if desired. Extending guest expire time is only available via the admin page as at release 2.23.
+* __mandatory:__
+* __type:__ an array of integers containing possible extensions in days.
+* __default:__ - (= not activated)
+* __available:__ since version 2.23
+* __1.x name:__
+* __comment:__
+* __Examples:__
+
+
+### allow_guest_expiry_date_extension_admin
+
+* __description:__ allows an admin to extend the expiry date of a guest. This is only used if you are logged in as an admin on the system. If you are an admin this schedule will overwrite the allow_guest_expiry_date_extension for you. 
+* __mandatory:__
+* __type:__ an array of integers containing possible extensions in days.
+* __default:__ array(31, true)
+* __available:__ since version 2.23
+* __Examples:__
+
+        // Allows infinite extensions, the first is by 30 days then 90 days 
+	$config['allow_guest_expiry_date_extension_admin'] = array(30, 90, true); 
 
 
 
@@ -2257,6 +2334,17 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __type:__ boolean
 * __default:__ false
 * __available:__ since version 2.22
+* __1.x name:__
+* __comment:__
+
+
+### data_protection_user_transfer_preferences_disabled
+
+* __description:__ if set to true then the options a user selects when creating an upload are not stored in the database to set the same options for the next upload.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
 * __1.x name:__
 * __comment:__
 

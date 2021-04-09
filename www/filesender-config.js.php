@@ -93,6 +93,7 @@ window.filesender.config = {
     encryption_key_version_new_files: '<?php echo Config::get('encryption_key_version_new_files') ?>',
     encryption_random_password_version_new_files: '<?php echo Config::get('encryption_random_password_version_new_files') ?>',
     encryption_password_hash_iterations_new_files: '<?php echo Config::get('encryption_password_hash_iterations_new_files') ?>',
+    encryption_encode_encrypted_chunks_in_base64_during_upload: <?php  echo value_to_TF(Config::get('encryption_encode_encrypted_chunks_in_base64_during_upload')) ?>,
     crypto_gcm_max_file_size: '<?php echo Config::get('crypto_gcm_max_file_size') ?>',
     crypto_gcm_max_chunk_size: '<?php echo Config::get('crypto_gcm_max_chunk_size') ?>',
     crypto_gcm_max_chunk_count: '<?php echo Config::get('crypto_gcm_max_chunk_count') ?>',
@@ -185,6 +186,12 @@ window.filesender.config = {
     allow_streamsaver: <?php echo value_to_TF(Browser::instance()->allowStreamSaver) ?>,
 
     upload_page_password_can_not_be_part_of_message_handling: "<?php echo Config::get('upload_page_password_can_not_be_part_of_message_handling') ?>",
+
+    encryption_password_must_have_upper_and_lower_case: <?php echo value_to_TF(Config::get('encryption_password_must_have_upper_and_lower_case')) ?>,
+    encryption_password_must_have_numbers: <?php echo value_to_TF(Config::get('encryption_password_must_have_numbers')) ?>,
+    encryption_password_must_have_special_characters: <?php echo value_to_TF(Config::get('encryption_password_must_have_special_characters')) ?>,
+
+
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

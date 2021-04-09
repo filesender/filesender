@@ -1070,6 +1070,20 @@ window.filesender.transfer = function() {
                         transfer.onprogress.call(transfer, file, true);
                     
                     complete();
+                }, function(error) {
+                    window.filesender.log("transfer encountered an error: " + JSON.stringify(error));
+                    if (error.message === 'file_integrity_check_failed') {
+                        // reset the file progress to make it retry the whole file
+                        file.fine_progress = 0;
+                        file.fine_progress_done = 0;
+                        file.progress_reported = 0;
+                        file.uploaded = 0;
+                        file.status = '';
+                        file.complete = false;
+                        file.min_uploaded_offset = 0;
+                        transfer.updateFileInRestartTracker(file);
+                        transfer.reportError(error);
+                    }
                 });
             }, 100);//750);
         } else if (this.onprogress) {
