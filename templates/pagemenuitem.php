@@ -26,11 +26,20 @@ function pagemenuitem($page) {
     }
     $icon = '';
     $faicon = '';
+    if($page == 'guests') {
+        $faicon = 'fa-users';
+    }
     if($page == 'upload') {
         $faicon = 'fa-send';
     }
     if($page == 'user') {
         $faicon = 'fa-user';
+    }
+    if($page == 'privacy') {
+        $faicon = 'fa-lock';
+    }
+    if($page == 'about') {
+        $faicon = 'fa-info-circle';
     }
     if($page == 'admin') {
         $faicon = 'fa-cogs';

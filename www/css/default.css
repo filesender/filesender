@@ -104,7 +104,6 @@ abbr {
     margin-bottom: 1em;
 }
 
-
 #notifications {
     position: fixed;
     left: 50%;
@@ -1361,4 +1360,11 @@ div.not_displayed {
 }
 .hidden {
     display: none;
+}
+
+.collapse.navbar-collapse {
+  flex-wrap: wrap;
+}
+.navbar-light .navbar-toggler {
+  border: 0;
 }

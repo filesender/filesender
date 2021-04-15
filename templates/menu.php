@@ -12,9 +12,12 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 ?>
 
 <div class="row">
-    <div class="col-12">
-        <nav class="nav nav-pills nav-fill navbar-light navbar-bg navbar-fixed-top ">
-
+    <div class="col-xl-12">
+        <nav class="nav nav-pills navbar-expand-md dnav-fill navbar-light navbar-bg navbar-fixed-top ">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarFilesender" aria-controls="navbarFilesender" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	    </button>
+            <div class="collapse navbar-collapse" id="navbarFilesender">
             <?php
             
             if(!Auth::isGuest()) {
@@ -100,8 +103,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                 </div>
             </li>
 <?php endif; ?>
-
-            
+          </div>  
         </nav>
     </div>
 </div>
