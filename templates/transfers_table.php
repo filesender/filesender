@@ -1,4 +1,7 @@
 <?php
+
+$user_can_only_view_guest_transfers_shared_with_them = Config::get('user_can_only_view_guest_transfers_shared_with_them');
+
 $nosort = false;
 if(!isset($trsort))  $nosort = true;
 

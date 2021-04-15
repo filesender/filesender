@@ -155,6 +155,13 @@ class Transfer extends DBObject
             'size'    => '44',
             'null'    => true,
         ),
+
+        'guest_transfer_hidden_from_user_who_invited_guest' => array(
+            'type'    => 'bool',
+            'null'    => false,
+            'default' => false,
+        ),
+        
     );
 
     /**
@@ -272,8 +279,8 @@ class Transfer extends DBObject
     const UPLOADING_NO_ORDER = "status = 'uploading' ";
     const AVAILABLE_NO_ORDER = "status = 'available' ";
     const CLOSED_NO_ORDER = "status = 'closed' ";
-    const FROM_USER_NO_ORDER = "userid = :userid AND status='available' ";
-    const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed' ";
+    const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_hidden_from_user_who_invited_guest = false ) ";
+    const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_hidden_from_user_who_invited_guest = false ) ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -302,6 +309,7 @@ class Transfer extends DBObject
     protected $password_hash_iterations = 150000;
     protected $client_entropy = '';
     protected $roundtriptoken = '';
+    protected $guest_transfer_hidden_from_user_who_invited_guest = false;
     
     /**
      * Related objects cache
@@ -981,7 +989,7 @@ class Transfer extends DBObject
             'subject', 'message', 'created', 'made_available',
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
-            , 'client_entropy', 'roundtriptoken'
+            , 'client_entropy', 'roundtriptoken', 'guest_transfer_hidden_from_user_who_invited_guest'
         ))) {
             return $this->$property;
         }
@@ -1183,6 +1191,8 @@ class Transfer extends DBObject
             $this->password_hash_iterations = $value;
         } elseif ($property == 'client_entropy') {
             $this->client_entropy = $value;
+        } elseif ($property == 'guest_transfer_hidden_from_user_who_invited_guest') {
+            $this->guest_transfer_hidden_from_user_who_invited_guest = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

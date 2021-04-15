@@ -443,6 +443,7 @@ class RestEndpointTransfer extends RestEndpoint
                     }
                 }
             }
+
             
             // Must have files ...
             if (!count($data->files)) {
@@ -594,10 +595,33 @@ class RestEndpointTransfer extends RestEndpoint
                     throw new TransferUserQuotaExceededException();
                 }
             }
+
+            // See if the user who invited this guest should be able to see
+            // this particular transfer from the guest.
+            $guest_transfer_hidden_from_user_who_invited_guest = false;
+            if (Auth::isGuest()) {
+
+                $user_can_only_view_guest_transfers_shared_with_them = Config::get('user_can_only_view_guest_transfers_shared_with_them');
+                if( $user_can_only_view_guest_transfers_shared_with_them ) {
+                    if( !$guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                        $user_who_invited_guest_in_recipients = false;
+                        foreach ($data->recipients as $email) {
+                            if( $email == $guest->user_email ) {
+                                $user_who_invited_guest_in_recipients = true;
+                                break;
+                            }
+                        }
+                        $guest_transfer_hidden_from_user_who_invited_guest = !$user_who_invited_guest_in_recipients;
+                    }
+                }
+            }
+            
             
             // Every check went well, create the transfer
             $expires = $data->expires ? $data->expires : Transfer::getDefaultExpire();
             $transfer = Transfer::create($expires, $guest ? $guest->email : $data->from);
+
+            $transfer->guest_transfer_hidden_from_user_who_invited_guest = $guest_transfer_hidden_from_user_who_invited_guest;
             
             // Set additional data
             if ($data->subject) {
