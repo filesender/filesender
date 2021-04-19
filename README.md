@@ -1,6 +1,6 @@
 # FileSender
 
-[![Build Status](https://travis-ci.org/filesender/filesender.svg?branch=master)](https://travis-ci.org/filesender/filesender)
+[![Build Status](https://github.com/filesender/filesender/actions/workflows/ci.yml/badge.svg)](https://github.com/filesender/filesender/actions/workflows/ci.yml/badge.svg)
 
 ## Introduction
 
