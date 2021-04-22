@@ -598,7 +598,7 @@ class RestEndpointTransfer extends RestEndpoint
 
             // See if the user who invited this guest should be able to see
             // this particular transfer from the guest.
-            $guest_transfer_hidden_from_user_who_invited_guest = false;
+            $guest_transfer_shown_to_user_who_invited_guest = true;
             if (Auth::isGuest()) {
 
                 $user_can_only_view_guest_transfers_shared_with_them = Config::get('user_can_only_view_guest_transfers_shared_with_them');
@@ -611,7 +611,7 @@ class RestEndpointTransfer extends RestEndpoint
                                 break;
                             }
                         }
-                        $guest_transfer_hidden_from_user_who_invited_guest = !$user_who_invited_guest_in_recipients;
+                        $guest_transfer_shown_to_user_who_invited_guest = $user_who_invited_guest_in_recipients;
                     }
                 }
             }
@@ -621,7 +621,7 @@ class RestEndpointTransfer extends RestEndpoint
             $expires = $data->expires ? $data->expires : Transfer::getDefaultExpire();
             $transfer = Transfer::create($expires, $guest ? $guest->email : $data->from);
 
-            $transfer->guest_transfer_hidden_from_user_who_invited_guest = $guest_transfer_hidden_from_user_who_invited_guest;
+            $transfer->guest_transfer_shown_to_user_who_invited_guest = $guest_transfer_shown_to_user_who_invited_guest;
             
             // Set additional data
             if ($data->subject) {

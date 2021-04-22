@@ -156,10 +156,10 @@ class Transfer extends DBObject
             'null'    => true,
         ),
 
-        'guest_transfer_hidden_from_user_who_invited_guest' => array(
+        'guest_transfer_shown_to_user_who_invited_guest' => array(
             'type'    => 'bool',
-            'null'    => false,
-            'default' => false,
+            'null'    => true,
+            'default' => true,
         ),
         
     );
@@ -279,8 +279,8 @@ class Transfer extends DBObject
     const UPLOADING_NO_ORDER = "status = 'uploading' ";
     const AVAILABLE_NO_ORDER = "status = 'available' ";
     const CLOSED_NO_ORDER = "status = 'closed' ";
-    const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_hidden_from_user_who_invited_guest = false ) ";
-    const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_hidden_from_user_who_invited_guest = false ) ";
+    const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
+    const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -309,7 +309,7 @@ class Transfer extends DBObject
     protected $password_hash_iterations = 150000;
     protected $client_entropy = '';
     protected $roundtriptoken = '';
-    protected $guest_transfer_hidden_from_user_who_invited_guest = false;
+    protected $guest_transfer_shown_to_user_who_invited_guest = true;
     
     /**
      * Related objects cache
@@ -497,13 +497,7 @@ class Transfer extends DBObject
              . " g.userid   = :userid AND (g.expires is null or g.expires > :date) AND "
              . " t.guest_id = g.id    AND t.status  = 'available' ";
         if( $user_can_only_view_guest_transfers_shared_with_them ) {
-            // filter back to only transfers that are can_only_send_to_me for the user
-            // or that the guest explicitly included the email of the user in the recipients
-            $sql .= " AND ( ";
-            $sql .= " g.options like '%". '"can_only_send_to_me":true' . "%'  ";
-            $sql .= "    or t.id in ( select transfer_id from " . Recipient::getDBTable() . " ";
-            $sql .= "                 where transfer_id = t.id and email = g.user_email ) ";
-            $sql .= " ) ";
+            $sql .= " and t.guest_transfer_shown_to_user_who_invited_guest ";
         }
         $sql .= " order by t.created desc ";
         $statement = DBI::prepare($sql);
@@ -740,8 +734,10 @@ class Transfer extends DBObject
         }
         
         // Send notification to owner
-        if ($this->getOption(TransferOptions::EMAIL_ME_ON_EXPIRE)) {
-            TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
+        if( !$this->guest_id || $this->guest_transfer_shown_to_user_who_invited_guest ) {            
+            if ($this->getOption(TransferOptions::EMAIL_ME_ON_EXPIRE)) {
+                TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
+            }
         }
       
         // Send report if needed
@@ -989,7 +985,7 @@ class Transfer extends DBObject
             'subject', 'message', 'created', 'made_available',
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
-            , 'client_entropy', 'roundtriptoken', 'guest_transfer_hidden_from_user_who_invited_guest'
+            , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
         ))) {
             return $this->$property;
         }
@@ -1191,8 +1187,8 @@ class Transfer extends DBObject
             $this->password_hash_iterations = $value;
         } elseif ($property == 'client_entropy') {
             $this->client_entropy = $value;
-        } elseif ($property == 'guest_transfer_hidden_from_user_who_invited_guest') {
-            $this->guest_transfer_hidden_from_user_who_invited_guest = $value;
+        } elseif ($property == 'guest_transfer_shown_to_user_who_invited_guest') {
+            $this->guest_transfer_shown_to_user_who_invited_guest = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
@@ -1456,10 +1452,12 @@ class Transfer extends DBObject
             $guest = AuthGuest::getGuest();
             
             $guest->transfer_count++;
-            
-            // Send notification if required
-            if ($this->getOption(TransferOptions::EMAIL_UPLOAD_COMPLETE)) {
-                TranslatableEmail::quickSend('guest_upload_complete', $guest->owner, $guest);
+
+            if( $this->guest_transfer_shown_to_user_who_invited_guest ) {
+                // Send notification if required
+                if ($this->getOption(TransferOptions::EMAIL_UPLOAD_COMPLETE)) {
+                    TranslatableEmail::quickSend('guest_upload_complete', $guest->owner, $guest);
+                }
             }
 
             // Let the guest know the upload is complete too
@@ -1585,16 +1583,26 @@ class Transfer extends DBObject
             foreach ($recipients_no_download as $recipient) {
                 $recipient->remind();
             }
-            
-            // Send receipt to owner
-            ApplicationMail::quickSend(
-                'transfer_autoreminder_receipt',
-                $transfer->owner,
-                $transfer,
-                array(
-                    'recipients' => $recipients_no_download
-                )
-            );
+
+            $send_owner_autoreminder = true;
+
+            // no not leak this transfer in a reminder if the system wants
+            // private guests
+            if( $transfer->$guest_id && !$transfer->guest_transfer_shown_to_user_who_invited_guest ) {
+                $send_owner_autoreminder = false;
+            }
+
+            if( $send_owner_autoreminder ) {
+                // Send receipt to owner
+                ApplicationMail::quickSend(
+                    'transfer_autoreminder_receipt',
+                    $transfer->owner,
+                    $transfer,
+                    array(
+                        'recipients' => $recipients_no_download
+                    )
+                );
+            }
         }
     }
     
@@ -1609,9 +1617,11 @@ class Transfer extends DBObject
         if (Auth::isGuest()) {
             // Send upload started notification if guest and guest owner required it
             $guest = AuthGuest::getGuest();
-            
-            if ($guest->getOption(GuestOptions::EMAIL_UPLOAD_STARTED)) {
-                TranslatableEmail::quickSend('guest_upload_start', $guest->owner, $guest);
+
+            if( $this->guest_transfer_shown_to_user_who_invited_guest ) {            
+                if ($guest->getOption(GuestOptions::EMAIL_UPLOAD_STARTED)) {
+                    TranslatableEmail::quickSend('guest_upload_start', $guest->owner, $guest);
+                }
             }
         }
         
