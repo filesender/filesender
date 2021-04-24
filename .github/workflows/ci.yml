@@ -73,6 +73,15 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
+      hub:
+        image: selenium/hub:3.141.59-gold
+        
+      firefox:
+        image: selenium/node-firefox:3.141.59-gold
+        env:
+          HUB_HOST: hub
+          HUB_PORT: 4444
+
     steps:
     - name: Checkout code from github
       uses: actions/checkout@v2
