@@ -12,9 +12,7 @@ jobs:
   build:
     name: ${{ matrix.testsuite }}-${{ matrix.db }}
     runs-on: Ubuntu-20.04
-    container:
-      image: node:14.4
-      options: --network-alias file_sender.app
+    options: --network-alias file_sender.app
       
     env:
       DB: ${{ matrix.db }}
