@@ -77,7 +77,7 @@ jobs:
         image: selenium/hub:3.141.59-gold
         
       firefox:
-        image: selenium/node-firefox:3.141.59-gold
+        image: selenium/node-chrome:3.141.59-gold
         env:
           HUB_HOST: hub
           HUB_PORT: 4444
