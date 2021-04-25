@@ -18,7 +18,8 @@ class HeaderMenuTest extends SeleniumTest
 
         $this->setupAuthenticated();
 
-        $this->assertEquals(3, $this->getHeaderMenuSize());
+        $this->assertGreaterThanOrEqual( 3, $this->getHeaderMenuSize(),
+                                         'authenticated user menu item count' );
 
         $this->setUserPage();
 
