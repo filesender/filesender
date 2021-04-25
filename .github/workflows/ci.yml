@@ -41,6 +41,10 @@ jobs:
            db: "pgsql"
            travis_sauce_connect: false
            sauce_username: ""
+         - testsuite: "selenium"
+           db: "mysql"
+           travis_sauce_connect: false
+           sauce_username: ""
 
 
 
