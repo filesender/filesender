@@ -46,7 +46,7 @@
 //              General settings
 // ---------------------------------------------
 // 
-$config['site_url']             =   'https://file_sender.app/filesender';                // String, URL of the application
+$config['site_url']             =   'https://localhost/filesender';                // String, URL of the application
 // 
 $config['admin']                =   '0';            // String, UID's (from  $config['saml_uid_attribute'])
                                     // that have Administrator permissions
