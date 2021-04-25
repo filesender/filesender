@@ -32,6 +32,8 @@ sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place ./config/config.php
 chmod -R a+x ./ci/scripts
 
 ls -l ./config/config.php
+sudo chown -R www-data:docker  ./config/config.php
+sudo chmod 664 ./config/config.php
 
 
 ####
