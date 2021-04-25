@@ -125,7 +125,7 @@ jobs:
 
     - name: Install composer.json packages
       run: |
-        composer self-update
+        composer self-update --1
         composer update --no-interaction
         find vendor -name "WebDriv*"
 
