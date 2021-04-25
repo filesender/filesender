@@ -86,7 +86,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
                 array(          
                     'browserName' => 'chrome',
                     'local' => true,
-                    'host' => 'hub',
+                    'host' => 'localhost',
                     'desiredCapabilities' =>         array(
                         'platform' => 'Linux',
                         'version' => '84'
