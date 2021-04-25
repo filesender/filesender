@@ -25,22 +25,6 @@ jobs:
     strategy:
       matrix:
        include:
-         - testsuite: "cron"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "mysql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "dataset"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
          - testsuite: "selenium"
            db: "mysql"
            travis_sauce_connect: false
@@ -143,7 +127,7 @@ jobs:
       run: |
         composer self-update
         composer update --no-interaction
-
+        find vendor -name "WebDriv*"
 
     - name: Cache SimpleSAML
       uses: actions/cache@v2
