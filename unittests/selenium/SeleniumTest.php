@@ -130,6 +130,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             }
         }
         $sauce_host = 'saucelabs.com';
+        $sauce_host = 'hub';
         if(getenv('SAUCE_HOST')){
             $sauce_host = getenv('SAUCE_HOST');
         }        
