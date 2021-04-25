@@ -31,6 +31,9 @@ fi
 sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place ./config/config.php
 chmod -R a+x ./ci/scripts
 
+ls -l ./config/config.php
+
+
 ####
 #
 # handle the database
