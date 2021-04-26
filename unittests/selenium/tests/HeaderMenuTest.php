@@ -23,7 +23,8 @@ class HeaderMenuTest extends SeleniumTest
 
         $this->setUserPage();
 
-        $this->assertEquals(4, $this->getHeaderMenuSize());
+        $this->assertGreaterThanOrEqual(4, $this->getHeaderMenuSize(),
+                                        'user page' );
 
         $this->setAdmin();
 
@@ -31,7 +32,7 @@ class HeaderMenuTest extends SeleniumTest
 
         $this->unsetAdmin();
 
-        $this->assertEquals(4, $this->getHeaderMenuSize());
+        $this->assertGreaterThanOrEqual( 4, $this->getHeaderMenuSize());
 
         $this->unsetUserPage();
 

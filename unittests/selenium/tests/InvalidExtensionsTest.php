@@ -52,7 +52,7 @@ class InvalidExtensionsTest extends SeleniumTest
         copy("unittests/selenium/assets/124bytes.txt", $test_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test_file);
 
-
+        sleep(1);
         $elements = $this->elements($this->using('css selector')->value('*[class="file invalid banned_extension"]'));
         $count = count($elements);
 
