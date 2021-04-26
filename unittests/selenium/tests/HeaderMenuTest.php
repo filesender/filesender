@@ -41,6 +41,9 @@ class HeaderMenuTest extends SeleniumTest
         $this->setupUnauthenticated();
 
         $this->assertEquals(0, $this->getHeaderMenuSize());
+
+        $this->setupAuthenticated();
+        sleep(1);
     }
 
     private function getHeaderMenuSize()
