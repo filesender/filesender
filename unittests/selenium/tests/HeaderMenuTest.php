@@ -13,6 +13,7 @@ class HeaderMenuTest extends SeleniumTest
         extract($this->getKeyBindings());
 
         $this->setupUnauthenticated();
+        sleep(1);
 
         $this->assertEquals(0, $this->getHeaderMenuSize());
 
@@ -39,6 +40,8 @@ class HeaderMenuTest extends SeleniumTest
         $this->assertEquals(3, $this->getHeaderMenuSize());
 
         $this->setupUnauthenticated();
+        sleep(1);
+        
 
         $this->assertEquals(0, $this->getHeaderMenuSize());
 
