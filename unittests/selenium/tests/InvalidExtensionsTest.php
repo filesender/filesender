@@ -46,6 +46,7 @@ class InvalidExtensionsTest extends SeleniumTest
 
         $this->setupAuthenticated();
 
+        sleep(1);
         ${"temp"} = $this->execute(array(  'script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args'   => array() ));
 
         $test_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'invalidextension.'.$file_extension;
