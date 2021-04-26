@@ -266,6 +266,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setKeyVersionNewFiles($v = 0)
     {
+        sleep(1);
         $this->encryption_key_version_new_files = $v;
         $this->changeConfigValue('encryption_key_version_new_files', $v);
         $this->refresh();
