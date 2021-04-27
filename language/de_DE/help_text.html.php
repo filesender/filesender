@@ -53,7 +53,7 @@
     Dateien hoch zu laden. Sie können dabei Empfänger per E-Mail automatisch
     benachrichtigen lassen oder sich einen Link geben lassen, sodass
     Sie diesen selbst z.B. per E-Mail weiter geben können.
-    Außerdeme sollten es möglich sein, dass Sie andere Personen als Gast einladen
+    Außerdem sollte es möglich sein, dass Sie andere Personen als Gast einladen
     können, Ihnen Dateien per FileSender zuzuschicken.
 </p>
 
@@ -69,7 +69,7 @@
     Wenn Ihr Browser HTML5 unterstützt, dann sollte es Ihnen möglich sein,
     Dateien bis zu einer Größe von {size:cfg:max_transfer_size} hoch zu laden.
     Aktuelle Versionen von Firefox und Chrome unter
-    Windows, Mac OS X und Linux unterstützen HTML5.
+    Windows, macOS und Linux unterstützen HTML5.
 </p>
 
 <h3>Was unterstützt Ihr Browser?</h3>
