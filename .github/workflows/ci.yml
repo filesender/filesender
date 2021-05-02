@@ -21,15 +21,12 @@ jobs:
       - name: generate matrix
         id: generate-matrix
         run: |
-
-       include:
           MATRIX_INCLUDE_JSON+="{\"testsuite\": \"cron\", \"db\": \"pgsql\", 
 \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
           MATRIX_INCLUDE_JSON="${MATRIX_INCLUDE_JSON//\}\{/\}, \{}"
           MATRIX_INCLUDE_JSON+="]"
           MATRIX_JSON="{\"include\": ${MATRIX_INCLUDE_JSON}}"
           echo "${MATRIX_JSON}"
-          
           echo "::set-output name=matrix::${MATRIX_JSON}"
 
   build:
