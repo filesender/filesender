@@ -9,9 +9,33 @@ on:
 
     
 jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: generate matrix
+        id: generate-matrix
+        run: |
+
+       include:
+          MATRIX_INCLUDE_JSON+="{\"testsuite\": \"cron\", \"db\": \"pgsql\", 
+\"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+          MATRIX_INCLUDE_JSON="${MATRIX_INCLUDE_JSON//\}\{/\}, \{}"
+          MATRIX_INCLUDE_JSON+="]"
+          MATRIX_JSON="{\"include\": ${MATRIX_INCLUDE_JSON}}"
+          echo "${MATRIX_JSON}"
+          
+          echo "::set-output name=matrix::${MATRIX_JSON}"
+
   build:
     name: ${{ matrix.testsuite }}-${{ matrix.db }}
     runs-on: Ubuntu-20.04
+    needs: metadata
 
     env:
       DB: ${{ matrix.db }}
@@ -24,29 +48,7 @@ jobs:
       TESTINGUI: 0
 
     strategy:
-      matrix:
-       include:
-         - testsuite: "cron"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "mysql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "dataset"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-           
-#         - testsuite: "selenium"
-#           db: "mysql"
-#           travis_sauce_connect: true
-
+      matrix: ${{ fromJson(needs.metadata.outputs.matrix) }}      
 
 
 
