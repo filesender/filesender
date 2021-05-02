@@ -31,6 +31,10 @@ class LanguageSelectTest extends SeleniumTest
         $this->select($this->byId("language_selector"))->selectOptionByLabel("English (US)");
 
         $this->assertContains('FileSender is a secure way to share large files with anyone!', $this->byCssSelector("#page .box p")->text());
+
+        $this->setupAuthenticated();
+        sleep(3);
+
     }
 
 }
