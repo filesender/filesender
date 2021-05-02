@@ -20,7 +20,7 @@ jobs:
           echo "repo $GITHUB_REPOSITORY "
           MATRIX_INCLUDE_JSON+="["
 
-          if [ x"$GITHUB_REPOSITORY" = "xfilesender/filesenderuici" ]; then
+          if [ x"$GITHUB_REPOSITORY" = "xfilesenderuici/filesender" ]; then
             MATRIX_INCLUDE_JSON+="{\"testsuite\": \"selenium\", \"db\": \"mysql\", \"travis_sauce_connect\": \"true\"}"
           else
             MATRIX_INCLUDE_JSON+="{\"testsuite\": \"cron\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
