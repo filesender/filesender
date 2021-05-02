@@ -166,13 +166,13 @@ jobs:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
 
-    - uses: saucelabs/sauce-connect-action@v1.1.2
-      if: ${{ env.TESTINGUI }} == "1"
-      with:
-        username: ${{ secrets.SAUCE_USERNAME }}
-        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
-        tunnelIdentifier: cisel${{ matrix.db }}
-        noSSLBumpDomains: file_sender.app
+#    - uses: saucelabs/sauce-connect-action@v1.1.2
+#      if: ${{ env.TESTINGUI }} == "1"
+#      with:
+#        username: ${{ secrets.SAUCE_USERNAME }}
+#        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
+#        tunnelIdentifier: cisel${{ matrix.db }}
+#        noSSLBumpDomains: file_sender.app
 
 
 
