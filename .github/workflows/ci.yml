@@ -19,6 +19,8 @@ jobs:
         with:
           fetch-depth: 2
       - name: generate matrix
+        with:
+          username: ${{ secrets.SAUCE_USERNAME }}
         id: generate-matrix
         run: |
           MATRIX_INCLUDE_JSON+="["
@@ -37,8 +39,6 @@ jobs:
           MATRIX_JSON="{\"include\": ${MATRIX_INCLUDE_JSON}}"
           echo "${MATRIX_JSON}"
           echo "::set-output name=matrix::${MATRIX_JSON}"
-        with:
-          username: ${{ secrets.SAUCE_USERNAME }}
 
 
   build:
