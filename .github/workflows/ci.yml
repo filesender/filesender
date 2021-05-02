@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.generate-matrix.outputs.matrix }}
+    with:
+      username: ${{ secrets.SAUCE_USERNAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
