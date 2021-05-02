@@ -49,6 +49,11 @@ class UploadAutoResumeTest extends SeleniumTest
         
         // echo "url $url \n";
         $this->assertGreaterThan( 20, strlen($url), "bad upload url" );
+
+
+       $this->setupAuthenticated();
+        sleep(5);
+	
     }
 
     public function waitForUploadCompleteDialog() {
