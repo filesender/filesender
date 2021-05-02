@@ -197,7 +197,7 @@ jobs:
         fi
 
     - name: Run Primary Selenium Tests (MAIN JOB)
-      if: ${{ env.TESTINGUI && env.TESTSUITE = "selenium" }}
+      if: ${{ env.TESTINGUI && env.TESTSUITE == "selenium" }}
       env:
         TEST_SECRET: ${{ secrets.TestSecret }}
         SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
