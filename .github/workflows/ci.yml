@@ -19,8 +19,6 @@ jobs:
         with:
           fetch-depth: 2
       - name: generate matrix
-        with:
-          username: ${{ secrets.SAUCE_USERNAME }}
         id: generate-matrix
         run: |
           MATRIX_INCLUDE_JSON+="["
