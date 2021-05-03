@@ -31,6 +31,9 @@
  */
 
 
+
+
+
 // This is a duplicate, it should be moved to a common.js file
 function isIE11()
 {
