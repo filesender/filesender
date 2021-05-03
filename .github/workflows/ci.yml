@@ -3,7 +3,9 @@ name: CI
 
 on:
   push:
-    branches: [ 2021/jan/ghatest2 ]
+    branches:
+      - '2021/jan/ghatest*'
+      - 'savage-*'
   pull_request:
     branches: [ development ]
 
