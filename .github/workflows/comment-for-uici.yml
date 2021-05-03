@@ -1,0 +1,15 @@
+name: CommentForUICI
+on: pull_request
+
+jobs:
+  add_comment_pr:
+    runs-on: ubuntu-latest
+    name: An example job to comment a PR
+    steps:
+      - name: comment PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "echo 'https://github.com/filesenderuici/filesender/tree/savage-' ${{github.event.pull_request.number }} '-' ${{github.event.pull_request.head.sha}}"
+          check_for_duplicate_msg: false  # OPTIONAL
