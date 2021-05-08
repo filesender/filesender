@@ -246,7 +246,7 @@ filesender.ui.files = {
                     node.addClass('invalid');
                     node.addClass(error.message);
                     $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
-                    $('<div class="invalid_reason" />').text(lang.tr(error.message)).appendTo(node);
+                    $('<div class="invalid_reason" />').text(lang.tr(error.message) + ' ' + lang.tr('starting_at') + ' ' + error.details.badEnding ).appendTo(node);
                 }, source_node);
                 
                 filesender.ui.nodes.files.clear.button('enable');
