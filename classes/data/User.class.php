@@ -791,7 +791,7 @@ class User extends DBObject
         // My transfers
         //
         $ret['transfers'] = array();
-        $statement = DBI::prepare('SELECT * FROM '.Transfer::getDBTable().' WHERE userid = :id');
+        $statement = DBI::prepare('SELECT * FROM '.Transfer::getDBTable().' WHERE userid = :id and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest )');
         $statement->execute(array(':id' => $user->id));
         $records = $statement->fetchAll();
         foreach ($records as $r) {
