@@ -683,6 +683,16 @@ class Transfer extends DBObject
         
         Logger::info($this.' deleted');
     }
+
+    public function userCanSeeTransfer()
+    {
+        if( !$this->guest_id )
+            return true;
+        if( $this->guest_transfer_shown_to_user_who_invited_guest ) {
+            return true;
+        }
+        return false;
+    }
     
     /**
      * Close the transfer
@@ -734,7 +744,7 @@ class Transfer extends DBObject
         }
         
         // Send notification to owner
-        if( !$this->guest_id || $this->guest_transfer_shown_to_user_who_invited_guest ) {            
+        if( $this->userCanSeeTransfer() ) {
             if ($this->getOption(TransferOptions::EMAIL_ME_ON_EXPIRE)) {
                 TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
             }
@@ -1588,7 +1598,7 @@ class Transfer extends DBObject
 
             // no not leak this transfer in a reminder if the system wants
             // private guests
-            if( $transfer->$guest_id && !$transfer->guest_transfer_shown_to_user_who_invited_guest ) {
+            if( !$transfer->userCanSeeTransfer()) {
                 $send_owner_autoreminder = false;
             }
 
