@@ -17,7 +17,7 @@
     "reset": "^0.1.0",
     "streamsaver": "^2.0.4",
     "web-streams-polyfill": "^2.1.1",
-    "webcrypto-shim": "^0.1.6",
+    "webcrypto-shim": "^0.1.7",
     "xregexp": "^4.3.0"
   }
 }
