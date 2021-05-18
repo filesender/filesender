@@ -42,6 +42,7 @@ A note about colours;
 * [storage_usage_warning](#storage_usage_warning)
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
+* [tmp_path](#tmp_path)
 
 ## Shredding
 
@@ -78,6 +79,8 @@ A note about colours;
 * [email_newline](#email_newline)
 * [email_headers](#email_headers)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
+* [report_bounces](#report_bounces)
+* [report_bounces_asap_then_daily_range](#report_bounces_asap_then_daily_range)
 
 ## General UI
 
@@ -94,6 +97,7 @@ A note about colours;
 * [crypto_pbkdf2_expected_secure_to_year](#crypto_pbkdf2_expected_secure_to_year)
 * [crypto_pbkdf2_dialog_custom_webasm_delay](#crypto_pbkdf2_dialog_custom_webasm_delay)
 * [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
+* [user_page](#user_page)
 
 
 ## Transfers
@@ -154,6 +158,7 @@ A note about colours;
 * [terasender_worker_count](#terasender_worker_count)
 * [terasender_start_mode](#terasender_start_mode)
 * [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
+* [terasender_disableable](#terasender_disableable)
 * [stalling_detection](#stalling_detection)
 
 ## Download
@@ -170,6 +175,8 @@ A note about colours;
 * [max_guest_recipients](#max_guest_recipients)
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 * [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
+* [guest_limit_per_user](#guest_limit_per_user)
+* [guest_reminder_limit](#guest_reminder_limit)
 * [guest_create_limit_per_day](#guest_create_limit_per_day)
 * [guest_reminder_limit_per_day](#guest_reminder_limit_per_day)
 * [allow_guest_expiry_date_extension](#allow_guest_expiry_date_extension)
@@ -459,11 +466,19 @@ A note about colours;
 * __mandatory:__ no
 * __type:__ **int** or **callable**.  When integer indicates number of characters used in hash.  When callable "file que l'on veit stocker et doit retourner le chemin dans le stockage"
 * __default:__ 0
-* __available:__ since version 20
+* __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ not tested
 * __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligable. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
 
+### tmp_path
+
+* __description:__ server filesystem path where temp files are stored
+* __mandatory:__ no
+* __type:__ string
+* __default:__ FILESENDER_BASEDIR/tmp
+* __available:__ since version 2.6
+* __comment:__ temp files are typically used when downloading archives instead of files/chunks
 
 ### storage_filesystem_ignore_disk_full_check
 
@@ -752,6 +767,23 @@ User language detection is done in the following order:
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">this parameter will get a different name</span>
 
+### report_bounces
+
+* __description:__ Sends a report to the support_email address, reporting received e-mail bounces. Note: Receiving of email by filesender should be enabled for this
+* __mandatory:__ no
+* __type:__ string
+* __default:__ asap
+* __available:__ since version 2.0
+* __comment:__ valid options are: null/false/0 (disable this), asap (report every bounce immediately), daily (report every bounce as part of cron), asap_then_daily (bounces in a time range (see [report_bounces_asap_then_daily_range](#report_bounces_asap_then_daily_range)) after transfer/guest creation are reported right away, bounces comming after are reported daily)
+
+### report_bounces_asap_then_daily_range
+
+* __description:__ Time range in seconds for asap_then_daily option of report_bounces
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 15 * 60
+* __available:__ since version 2.0
+
 ## General UI
 
 ### theme
@@ -871,6 +903,13 @@ User language detection is done in the following order:
 * __default:__ 'warning'
 * __available:__ since version 2.22
 
+### user_page
+
+* __description:__ array of features to enable/disable on the user profile page (my profile)
+* __mandatory:__ no
+* __type:__ array
+* __default:__ array('lang'=>true,'auth_secret'=>true,'id'=>true,'created'=>true)
+* __available:__ since version 2.0
 
 
 * [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
@@ -1503,6 +1542,15 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 <span style="background-color:orange">when set to "single" uploads don't work?  Bug?</span>
 
+### terasender_disableable
+
+* __description:__ is the terasender feature disableable by users
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.0 beta1
+* __comment:__
+
 ### stalling_detection
 
 * __description:__ detect whether an upload stalls
@@ -1643,6 +1691,24 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ if set to true a user will only see uploads for their guests where the can_only_send_to_me was set
   when the guest was invited or when the guest uploads the file and explicitly includes the user in the recipients.
   This may be updated in the future if we wish to force a 'must also send to me' option when inviting some guests.
+
+### guest_limit_per_user
+
+* __description:__ maximum of active guest vouchers a user can have simultaneously
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 50
+* __available:__ since version 2.0 beta 1
+* __comment:__ The maximum amount of active guest vouchers a single user can have
+
+### guest_reminder_limit
+
+* __description:__ maximum of active reminders a guest can receive
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 50
+* __available:__ since version 2.0 beta 1
+* __comment:__ The maximum amount of reminders that will be sent to a guest
 
 ### guest_create_limit_per_day
 
