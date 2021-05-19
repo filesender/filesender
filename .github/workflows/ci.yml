@@ -90,8 +90,10 @@ jobs:
         ports:
           - 4444:4444
 
-      firefox:
+      chrome:
         image: selenium/node-chrome:3.141.59-gold
+        ports:
+          - 443:443
         env:
           HUB_HOST: hub
           HUB_PORT: 4444
