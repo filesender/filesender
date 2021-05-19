@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - '2021/jan/ghatest*'
+      - '2021/may/selenium-in-docker-again'
       - 'savage-*'
   pull_request:
     branches: [ development ]
@@ -25,10 +26,11 @@ jobs:
           if [ x"$GITHUB_REPOSITORY" = "xfilesenderuici/filesender" ]; then
             MATRIX_INCLUDE_JSON+="{\"testsuite\": \"selenium\", \"db\": \"mysql\", \"travis_sauce_connect\": \"true\"}"
           else
-            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"cron\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
-            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
-            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"mysql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
-            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"dataset\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+#            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"cron\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+#            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+#            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"mysql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+#            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"dataset\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"mysql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"            
           fi
           
           MATRIX_INCLUDE_JSON="${MATRIX_INCLUDE_JSON//\}\{/\}, \{}"
@@ -86,6 +88,18 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
+      hub:
+        image: selenium/hub:3.141.59-gold
+        ports:
+          - 4444:4444
+
+      firefox:
+        image: selenium/node-chrome:3.141.59-gold
+        env:
+          HUB_HOST: hub
+          HUB_PORT: 4444
+
+
     steps:
     - name: Checkout code from github
       uses: actions/checkout@v2
@@ -130,14 +144,14 @@ jobs:
 
 
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+#    - name: Cache Composer packages
+#      id: composer-cache
+#      uses: actions/cache@v2
+#      with:
+#        path: vendor
+#        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+#        restore-keys: |
+#          ${{ runner.os }}-php-
 
     - name: Install composer.json packages
       run: |
@@ -205,6 +219,7 @@ jobs:
           sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
         fi
 
+
     - name: Run Primary Selenium Tests (MAIN JOB)
       if: ${{ env.TESTSUITE == 'selenium' }}
       env:
@@ -212,6 +227,7 @@ jobs:
         SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
         SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
         SAUCE_DONT_VERIFY_CERTS: 1
+        SAUCE_HOST: 'hub'
       run: |
         echo "testing $TESTSUITE on database $DB "
         sudo -u www-data --preserve-env=SAUCE_USERNAME,SAUCE_ACCESS_KEY,SAUCE_TUNNEL_IDENTIFIER,SAUCE_DONT_VERIFY_CERTS ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
