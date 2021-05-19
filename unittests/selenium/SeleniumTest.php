@@ -109,9 +109,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         {
 		echo "sauce username is not in env";
 
-            if (Config::get('sauce_username') == null || Config::get('sauce_access_key') == null) {
-                die('Sauce credentials not set!');
-            }
+//            if (Config::get('sauce_username') == null || Config::get('sauce_access_key') == null) {
+//                die('Sauce credentials not set!');
+//            }
             putenv('SAUCE_USERNAME='.Config::get('sauce_username'));
             putenv('SAUCE_ACCESS_KEY='.Config::get('sauce_access_key'));
 
@@ -140,7 +140,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         if(!defined('SAUCE_HOST')) {
             define('SAUCE_HOST', $sauce_host);
         }
-
+        echo "running using sauce host : " . $sauce_host . " \n";
         
         $this->start_url = Config::get('site_url');
 
