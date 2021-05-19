@@ -221,8 +221,6 @@ jobs:
       if: ${{ env.TESTSUITE == 'selenium' }}
       env:
         TEST_SECRET: ${{ secrets.TestSecret }}
-        SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
-        SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
         SAUCE_DONT_VERIFY_CERTS: 1
         SAUCE_HOST: 'hub'
       run: |
