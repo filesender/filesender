@@ -340,4 +340,5 @@ $config['internal_use_only_running_on_ci'] = 1;
 $config['streamsaver_enabled'] = true;
 
 
+$config['site_url']             =   'https://127.0.0.1/filesender';                // String, URL of the application
 $config['testsuite_run_locally'] = true;
