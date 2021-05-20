@@ -156,6 +156,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         parent::__construct($name, $data, $dataName);
 
 
+        define('SAUCE_ACCESS_KEY', 'x');
+        putenv('SAUCE_ACCESS_KEY=x' );
+        
     }
 
     public function setUpPage()
