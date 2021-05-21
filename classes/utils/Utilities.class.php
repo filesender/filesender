@@ -170,7 +170,7 @@ class Utilities
      */
     public static function isValidFileName($filename)
     {
-        return preg_match('/' .  Config::get('valid_filename_regex') . '/u', $filename);
+        return preg_match('/' .  Config::get('valid_filename_regex') . '$/u', $filename);
     }
 
     

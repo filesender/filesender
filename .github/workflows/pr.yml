@@ -1,0 +1,18 @@
+name: CommentForSeleniumLink
+on: [ pull_request_target ]
+
+jobs:
+  add_comment_pr:
+    runs-on: ubuntu-latest
+    name: Add link to selenium testing repo as a comment on PRs
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v3
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'If there are selenium UI results for this code they will be at https://github.com/filesenderuici/filesender/commit/${{github.event.pull_request.head.sha }} ',
+            })

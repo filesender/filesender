@@ -13,16 +13,19 @@ class HeaderMenuTest extends SeleniumTest
         extract($this->getKeyBindings());
 
         $this->setupUnauthenticated();
+        sleep(1);
 
         $this->assertEquals(0, $this->getHeaderMenuSize());
 
         $this->setupAuthenticated();
 
-        $this->assertEquals(3, $this->getHeaderMenuSize());
+        $this->assertGreaterThanOrEqual( 3, $this->getHeaderMenuSize(),
+                                         'authenticated user menu item count' );
 
         $this->setUserPage();
 
-        $this->assertEquals(4, $this->getHeaderMenuSize());
+        $this->assertGreaterThanOrEqual(4, $this->getHeaderMenuSize(),
+                                        'user page' );
 
         $this->setAdmin();
 
@@ -30,15 +33,20 @@ class HeaderMenuTest extends SeleniumTest
 
         $this->unsetAdmin();
 
-        $this->assertEquals(4, $this->getHeaderMenuSize());
+        $this->assertGreaterThanOrEqual( 4, $this->getHeaderMenuSize());
 
         $this->unsetUserPage();
 
         $this->assertEquals(3, $this->getHeaderMenuSize());
 
         $this->setupUnauthenticated();
+        sleep(1);
+        
 
         $this->assertEquals(0, $this->getHeaderMenuSize());
+
+        $this->setupAuthenticated();
+        sleep(1);
     }
 
     private function getHeaderMenuSize()

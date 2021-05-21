@@ -15,6 +15,8 @@ php -m
 echo "----------------------------------------------------------------"
 
 
+echo "127.0.0.1  file_sender.app" | sudo tee -a /etc/hosts
+
 
 export POSTGRES_DB
 export POSTGRES_HOST
@@ -30,6 +32,21 @@ fi
 
 sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place ./config/config.php
 chmod -R a+x ./ci/scripts
+
+####
+echo "looking at permissions on config.php"
+ls -l ./config/config.php
+sudo chown www-data ./config/config.php
+ls -l ./config/config.php
+echo "looking at www/skin permissions"
+ls -ld www/skin
+ls -ld www
+sudo mkdir www/skin
+sudo chown www-data www/skin
+sudo chmod u+rwx www/skin
+echo "final permissions..."
+ls -ld www/skin
+
 
 ####
 #
@@ -57,7 +74,7 @@ fi
 # Packages
 #
 sudo apt-get update
-sudo apt-get install curl wget apache2 
+sudo apt-get install curl wget apache2  libapache2-mod-fastcgi apache2-mpm-worker 
 
 ####
 # 
@@ -71,7 +88,7 @@ sudo cp -f ci/apache2.conf /etc/apache2/sites-enabled/000-default.conf
 sudo sed -e "s?%TRAVIS_BUILD_DIR%?${FILESENDERROOT}?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 
 sudo apt-get install php${php_version}-fpm
-sudo cp /usr/sbin/php-fpm{php_version} ${php_version} /usr/bin/php-fpm # copy to /usr/bin
+sudo cp /usr/sbin/php-fpm${php_version} /usr/bin/php-fpm # copy to /usr/bin
 sudo ls -l /var/lib/apache2/fastcgi
 sudo chown -R runner:docker /var/lib/apache2/fastcgi /usr/sbin/php-fpm${php_version} /usr/bin/php-fpm
 
@@ -85,7 +102,7 @@ sudo chown -R www-data:docker   ${FILESENDERROOT}/files
 sudo chown -R www-data:www-data ${FILESENDERROOT}/tmp
 # recommended by install script for php${php_version}-fpm
 sudo a2enmod proxy_fcgi setenvif
-sudo a2enconf php7.2-fpm
+sudo a2enconf php7.4-fpm
 
 echo "restarting apache2 and php-fpm..."
 sudo service php${php_version}-fpm start
@@ -107,6 +124,7 @@ grep -l -R SAUCE_HOST ${FILESENDERROOT}/vendor | \
 
 echo "... trying to get index page to verify ..."
 curl -k https://localhost/filesender/
+curl -k https://file_sender.app/filesender/
 
 echo "--------------------"
 echo "Apache logs....     "

@@ -3,15 +3,45 @@ name: CI
 
 on:
   push:
-    branches: [ 2021/jan/ghatest2 ]
+    branches:
+      - '2021/jan/ghatest*'
+      - 'savage-*'
   pull_request:
     branches: [ development ]
 
     
 jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+    steps:
+      - name: generate matrix
+        id: generate-matrix
+        run: |
+          echo "repo $GITHUB_REPOSITORY "
+          MATRIX_INCLUDE_JSON+="["
+
+          if [ x"$GITHUB_REPOSITORY" = "xfilesenderuici/filesender" ]; then
+            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"selenium\", \"db\": \"mysql\", \"travis_sauce_connect\": \"true\"}"
+          else
+            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"cron\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"mysql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"dataset\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+          fi
+          
+          MATRIX_INCLUDE_JSON="${MATRIX_INCLUDE_JSON//\}\{/\}, \{}"
+          MATRIX_INCLUDE_JSON+="]"
+          MATRIX_JSON="{\"include\": ${MATRIX_INCLUDE_JSON}}"
+          echo "${MATRIX_JSON}"
+          echo "::set-output name=matrix::${MATRIX_JSON}"
+
+
   build:
     name: ${{ matrix.testsuite }}-${{ matrix.db }}
     runs-on: Ubuntu-20.04
+    needs: metadata
 
     env:
       DB: ${{ matrix.db }}
@@ -20,28 +50,11 @@ jobs:
       SAUCE_DONT_VERIFY_CERTS: 1
       php_extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql, mysqlnd
       php_cache_key: cache_setup_php_key_v8
-      php_version: '7.2'
+      php_version: '7.4'
+      TESTINGUI: 0
 
     strategy:
-      matrix:
-       include:
-         - testsuite: "cron"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "core"
-           db: "mysql"
-           travis_sauce_connect: false
-           sauce_username: ""
-         - testsuite: "dataset"
-           db: "pgsql"
-           travis_sauce_connect: false
-           sauce_username: ""
-
+      matrix: ${{ fromJson(needs.metadata.outputs.matrix) }}      
 
 
 
@@ -128,7 +141,7 @@ jobs:
 
     - name: Install composer.json packages
       run: |
-        composer self-update
+        composer self-update --1
         composer update --no-interaction
 
 
@@ -161,13 +174,14 @@ jobs:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
 
+    - uses: saucelabs/sauce-connect-action@v1.1.2
+      if: ${{ env.TESTSUITE == 'selenium' }}
+      with:
+        username: ${{ secrets.SAUCE_USERNAME }}
+        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
+        tunnelIdentifier: cisel${{ matrix.db }}
+        noSSLBumpDomains: file_sender.app
 
-#    - uses: saucelabs/sauce-connect-action@v1.1.2
-#      with:
-#        username: ${{ secrets.SAUCE_USERNAME }}
-#        accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
-#        tunnelIdentifier: github-action-tunnel
-#        noSSLBumpDomains: file_sender.app
 
 
 
@@ -176,8 +190,7 @@ jobs:
 
 
     - name: Run Primary Tests (MAIN JOB)
-      env:
-        TEST_SECRET: ${{ secrets.TestSecret }}
+      if: ${{ env.TESTSUITE != 'selenium' }}
       run: |
         if [ "$TESTSUITE" = "cron" ]; then
           echo "testing task/cron job"
@@ -187,8 +200,23 @@ jobs:
           echo "cron job complete"
         fi
         echo "testing $TESTSUITE on database $DB "
-        sudo -u www-data id
-        sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+        if [ "$TESTSUITE" != "selenium" ]; then
+          sudo -u www-data id
+          sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+        fi
+
+    - name: Run Primary Selenium Tests (MAIN JOB)
+      if: ${{ env.TESTSUITE == 'selenium' }}
+      env:
+        TEST_SECRET: ${{ secrets.TestSecret }}
+        SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+        SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+        SAUCE_DONT_VERIFY_CERTS: 1
+      run: |
+        echo "testing $TESTSUITE on database $DB "
+        sudo -u www-data --preserve-env=SAUCE_USERNAME,SAUCE_ACCESS_KEY,SAUCE_TUNNEL_IDENTIFIER,SAUCE_DONT_VERIFY_CERTS ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+
+
 
     - name: Debug Information
       if: ${{ always() }}
