@@ -2,7 +2,7 @@
 title: Known FileSender installations
 ---
 
-# Known FileSender installalations
+# Known FileSender installations
 
 If you want to add your FileSender installation to this list, send an email to filesender-dev@filesender.org or edit the file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request.
 
@@ -43,7 +43,6 @@ If you want to add your FileSender installation to this list, send an email to f
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014|
 | Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://filesender.upo.es/](https://filesender.upo.es/)  | May 2014|
 | Switzerland  | SWITCH  | [https://filesender.switch.ch](https://filesender.switch.ch)      | Sep 2012|
-| Turkey | ULAKBİM | [https://filesender.ulakbim.gov.tr/](https://filesender.ulakbim.gov.tr/) | March 2021| 
 | UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014|
 | Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018|
 

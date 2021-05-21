@@ -407,9 +407,17 @@ window.filesender.transfer = function() {
 
         if (typeof filesender.config.valid_filename_regex == 'string') {
             var regexstr = filesender.config.valid_filename_regex;
-            if (!XRegExp(regexstr).test(file.name)) {
+            var r = XRegExp(regexstr,'g');
+            var testResult = r.test(file.name);
+            var lastIndex = r.lastIndex;
+            if (lastIndex != file.name.length) {
+                var badEnding = file.name.substring(lastIndex);
+                window.filesender.log("invalid_file_name error raised for file name " + file.name
+                                      + " with len " + file.name.length
+                                      + " got lastIndex of " + r.lastIndex 
+                                      + " badEnding will be " + badEnding );
                 errorhandler({ message: 'invalid_file_name',
-                               details: { filename: file.name }});
+                               details: { filename: file.name, badoffset: lastIndex, badEnding: badEnding }});
                 
                 return false;
             }

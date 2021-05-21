@@ -68,5 +68,6 @@ $locales  =  array(
     'sl' => 'sl_SI',
     'sl-si' => 'sl_SI',
     'sr' => 'sr_RS',
-    'ru' => 'ru_RU'
+    'ru' => 'ru_RU',
+    'tr' => array('name' => 'Turkish', 'path' => 'tr_TR')
 );

@@ -57,6 +57,7 @@ auto_resume_timer_seconds
 automatic_resume_will_happen_if_delay_reaches_x_seconds
 available_transfers
 average_speed
+back
 bad_email
 bad_expire
 bad_guest_status
@@ -66,6 +67,7 @@ bad_ip_format_ipv6
 bad_lang_code
 bad_size_format
 bad_transfer_status
+banned_extension
 bounce_report
 calculate
 can_only_send_to_me
@@ -76,6 +78,7 @@ change_password
 clear_all
 clear_client_logs
 clear_frequent_recipients
+clear_user_transfer_preferences
 click_to_delete_file
 click_to_delete_recipient
 client_logs_cleared
@@ -108,6 +111,7 @@ confirm_remind_recipient
 confirm_remind_transfer
 confirm_remove_daily_stats_transfer
 confirm_stop_upload
+continue
 copy_text
 core_class_not_found
 core_file_not_found
@@ -119,6 +123,7 @@ created
 created_transfers
 crypto_pbkdf2_dialog
 crypto_pbkdf2_dialog_with_expected
+current_guest
 daily_summary
 database_access_failure
 database_updated
@@ -180,6 +185,7 @@ dp_show_month_after_year
 dp_week_header
 dp_year_suffix
 drag_and_drop
+duplicate_file
 duplicate_recipient
 email_address
 email_daily_statistics
@@ -191,6 +197,7 @@ email_guest_created_receipt
 email_guest_expired
 email_me_copies
 email_me_on_expire
+email_recipient_when_transfer_expires
 email_report_on_closing
 email_sent
 email_separator_msg
@@ -203,6 +210,7 @@ enable_recipient_email_download_complete_warning
 encountered_exception
 encrypted_archive_download_overall_progress
 encryption
+endpoint
 enter_to_email
 epoch_day
 epoch_fifteen_minutes
@@ -218,11 +226,15 @@ event_count
 expand_all
 expires
 expiry_date
+expiry_extension_count_exceeded
+expiry_extension_not_allowed
 export_client_logs
 extend
 extend_and_remind
 extend_expires
 extend_expiry_date
+extended
+extended_reminded
 failed_to_connect_to_database
 failed_transfer_found
 failures
@@ -238,6 +250,9 @@ file_encryption_enter_password
 file_encryption_generate_password
 file_encryption_need_password
 file_encryption_password
+file_encryption_password_must_have_numbers
+file_encryption_password_must_have_special_characters
+file_encryption_password_must_have_upper_and_lower_case
 file_encryption_password_too_short
 file_encryption_show_password
 file_encryption_wrong_password
@@ -297,9 +312,11 @@ invalid_address_format
 invalid_file
 invalid_file_name
 invalid_recipient
+invite_guest
 ip
 is_default
 iterations
+job
 kb_per_second
 last_activity
 later
@@ -320,6 +337,7 @@ mb_per_second
 me
 message
 message_can_not_contain_urls
+method
 minimum
 missing_files_for_restart
 most_guest_deletion
@@ -355,6 +373,7 @@ password_hashing_performance
 pause
 paused
 perform_these_actions_on_all_users
+please_add_file_again
 preferences_updated
 privacy_page
 privacy_page_auditlog_lifetime
@@ -422,6 +441,7 @@ report_recipient_event_download_resumed
 report_recipient_event_download_started
 report_unknown_format
 report_unknown_target_type
+reset_per_user_guest_expire_setting
 rest_access_forbidden
 rest_admin_required
 rest_authentication_required
@@ -458,6 +478,7 @@ select_file
 select_files
 select_for_archive_download
 send
+send_an_entire_directory
 send_client_logs
 send_new_voucher
 send_reminder
@@ -467,6 +488,8 @@ sender_email_search
 serverlog_auth_sp_attribute_not_found
 serverlog_config_directive
 serverlog_wanted_key_in_array
+set_default_guest_expire_days
+set_user_guest_expiry_default_days
 show_client_logs
 show_details
 show_transfers
@@ -486,6 +509,7 @@ size_unit
 speed_unit_bits
 speed_unit_bytes
 stalled_transfer
+starting_at
 statevent_download_encrypted_started
 statevent_download_nocrypt_started
 statevent_download_started
@@ -522,10 +546,15 @@ system_active_setting
 tb_per_second
 template_not_found
 terasender_failed_after_many_retries
+terasender_file_integrity_check_failed
 terasender_no_workers_have_started
+terasender_rest_sanity_check_failed
+terasender_storage_filesystem_cannot_read
+terasender_storage_filesystem_cannot_write
 terasender_worker_count
 terasender_worker_failed_to_start
 testterm
+text_desc_of_file_count_and_size
 time_format
 time_to_complete_ms
 time_to_complete_s
@@ -548,8 +577,10 @@ transfer_file_name_invalid
 transfer_files_incomplete
 transfer_host_quota_exceeded
 transfer_id
+transfer_id_short
 transfer_information
 transfer_maximum_size_exceeded
+transfer_must_be_encrypted
 transfer_no_files
 transfer_no_recipients
 transfer_not_availabe
@@ -564,6 +595,7 @@ transfer_too_many_files
 transfer_too_many_recipients
 transfer_upload_stopped
 transfer_user_quota_exceeded
+transfers_guest
 transfers_page
 transfers_uid_page
 translate_email_footer
@@ -599,6 +631,7 @@ ui2_transfer_logs
 undergoing_maintenance
 unexpected_file
 unknown_page
+unreadable_file
 upload_all_terasender_workers_completed_pbkdf2
 upload_complete
 upload_log_header
