@@ -131,6 +131,7 @@ class ConfigurationOptionsTest extends SeleniumTest {
 
         $this->sendMessageToRecipients($recipients, $subject, $content);
 
+        sleep(2);
     }
 
     private function sendMessageToRecipients(array $recipients, $subject, $content) {

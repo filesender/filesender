@@ -1,9 +1,17 @@
 FROM php:7.4-fpm-buster
 
-ENV FILESENDER_VERSION=2.22 \
-    FILESENDER_SUM="ef6da83e7ac46303e5f8d620f6858565fd746d7c4b054a12439a561d79b515a2" \
-    SSP_VERSION=1.19.0 \
-    SSP_SUM="2111129787a4baf27a51e52bda660c56d069f167354800bffc72440dcacb3a6f" 
+# Accept arguments to make the build process dynamically accept different builds
+# Used for filesender CI
+
+ARG REF=2.22
+ARG REF_SUM="ef6da83e7ac46303e5f8d620f6858565fd746d7c4b054a12439a561d79b515a2"
+ARG SSP_REF=1.19.0
+ARG SSP_REF_SUM="2111129787a4baf27a51e52bda660c56d069f167354800bffc72440dcacb3a6f"
+
+ENV FILESENDER_VERSION=$REF \
+    FILESENDER_SUM=$REF_SUM \
+    SSP_VERSION=$SSP_REF \
+    SSP_SUM=$SSP_REF_SUM
 
 RUN cd /opt && mkdir filesender && \
     cd /opt/filesender && \
@@ -60,5 +68,5 @@ LABEL maintainer="Nils Vogels <n.vogels@aves-it.nl>" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/filesender/filesender.git" \
       org.label-schema.vcs-type="Git" \
-      org.label-schema.version="2.22" \
+      org.label-schema.version="${REF}" \
       org.label-schema.schema-version="1.0"

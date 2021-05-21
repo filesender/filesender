@@ -84,15 +84,26 @@ jQuery.fn.extend({
     }
 });
 
-function setFileProgress( bar, v ) {
+function setFileProgress( bar, v, complete ) {
     var origv = v;
-    v = Math.floor( 100*v );
+    var upload_progress = Math.floor(1000 * v);
     
-    bar.css('width', v+'%').attr('aria-valuenow', v);
-    if( v >= 100 ) {
-        bar.closest('.file').addClass('done');
-    }
+    v = Math.floor( 100*v );
 
+    if (upload_progress < 1000 || complete === true) {
+    
+        bar.removeClass('progress-bar-animated');
+        bar.css('width', v+'%').attr('aria-valuenow', v);
+        if( v >= 100 ) {
+            bar.closest('.file').addClass('done');
+        }
+    }
+    else
+    {
+        // Go stripey for validation
+        bar.addClass('progress-bar-animated');
+    }
+    
     var lv = Math.floor( 1000*origv );
     bar.text((lv/10).toFixed(1) + '%');
 }
@@ -570,7 +581,7 @@ filesender.ui.files = {
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
         
         var bar = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .progress-bar');
-        setFileProgress( bar, (file.fine_progress ? file.fine_progress : file.uploaded) / file.size); 
+        setFileProgress( bar, (file.fine_progress ? file.fine_progress : file.uploaded) / file.size, complete ); 
     },
     
     // Clear the file box

@@ -104,6 +104,8 @@ $default = array(
     'encryption_password_must_have_special_characters' => false,
     'encryption_generated_password_length' => 30,
     'encryption_generated_password_encoding' => 'base64',
+    'encryption_encode_encrypted_chunks_in_base64_during_upload' => false,
+    
     'upload_crypted_chunk_padding_size' => 16 + 16, // CONST the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
@@ -146,6 +148,10 @@ $default = array(
     'storage_filesystem_df_command' => 'df {path}',
     'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
     'storage_filesystem_ignore_disk_full_check' => false,
+    'storage_filesystem_hash_check' => false, //used by filesystemChunked
+    'storage_filesystem_read_retry' => 10, //used by filesystemChunked
+    'storage_filesystem_write_retry' => 10, //used by filesystemChunked
+    'storage_filesystem_retry_sleep' => 400000, //400ms //used by filesystemChunked
     'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
 
     'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',
@@ -168,7 +174,8 @@ $default = array(
     
     'report_format' => ReportFormats::INLINE,
 
-    'valid_filename_regex' => '^[ \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
+    // Note that this must not have a fixed end of string '$' as the last character in the match 
+    'valid_filename_regex' => '^[ \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+',
     'message_can_not_contain_urls_regex' => '',
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 

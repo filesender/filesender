@@ -127,6 +127,7 @@ A note about colours;
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
 * [encryption_random_password_version_new_files](#encryption_random_password_version_new_files)
 * [encryption_password_hash_iterations_new_files](#encryption_password_hash_iterations_new_files)
+* [encryption_encode_encrypted_chunks_in_base64_during_upload](#encryption_encode_encrypted_chunks_in_base64_during_upload)
 * [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
 * [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 * [transfer_options_not_available_to_export_to_client](#transfer_options_not_available_to_export_to_client)
@@ -1251,6 +1252,15 @@ these iteration counts take to perform on your local machine.
 * __available:__ since version 2.9
 * __comment:__
 
+
+
+### encryption_encode_encrypted_chunks_in_base64_during_upload
+* __description:__ This allows fallback to the older base64 PUT that was used in version 2.22. The encoding is quite costly and if there are no issues this parameter together with the fallback to using base64 on the PUT contents will be removed in a future version. 
+* __mandatory:__ no 
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.23
+* __comment:__ This is to allow fallbacks to older code. The default should be left unless you experience issues. If this fallback is not needed it will be removed in a future release and the __default__ will become the only choice in the code.
 
 
 

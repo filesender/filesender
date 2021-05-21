@@ -158,7 +158,7 @@ window.filesender.zip64handler = function() {
 
             var local_file_header_offset = $this.coffset;
             // V = 32, v = 16
-            this.writeu32( 0x04034b50 );  // sig
+            this.writeu32( 0x04034b50 );  // magic number for this header
             this.writeu16( $this.VERSION );
             this.writeu16( genb       );  // utf8 and crc and size in data descriptor following the data
             this.writeu16( 0          );  // no compression
@@ -187,7 +187,7 @@ window.filesender.zip64handler = function() {
         closeFile: function() {
             var $this = this;
 
-            $this.writeu32( 0x08074b50 );  // sig
+            $this.writeu32( 0x08074b50 );  // magic number for this header
             $this.writeu32( $this.crc );
             $this.writeu64( $this.filesize );
             $this.writeu64( $this.filesize );
@@ -200,7 +200,7 @@ window.filesender.zip64handler = function() {
             var $this = this;
 
             var startOffset = this.coffset;
-            $this.writeu32( 0x02014b50 );  // sig
+            $this.writeu32( 0x02014b50 );  // magic number for this header
             $this.writeu16( $this.VERSION );  
             $this.writeu16( $this.VERSION );  
             $this.writeu16( f.genb );  
@@ -240,7 +240,7 @@ window.filesender.zip64handler = function() {
             var cdr_ofs = 67;
 
             $this.zip64_end_of_central_directory_record_offset = $this.coffset;
-            $this.writeu32( 0x06064b50 );  // sig
+            $this.writeu32( 0x06064b50 );  // magic number for this header
             $this.writeu32( 44         );  // size
             $this.writeu32( 0          );  // size hb
             $this.writeu16( $this.VERSION );  
@@ -257,7 +257,7 @@ window.filesender.zip64handler = function() {
 	add_cdr_eof_locator_zip64: function() {
             var $this = this;
 
-            $this.writeu32( 0x07064b50 );  // sig
+            $this.writeu32( 0x07064b50 );  // magic number for this header
             $this.writeu32( 0 );           // this disk number
             $this.writeu64( $this.zip64_end_of_central_directory_record_offset );
             $this.writeu32( 1 );           // number of disks
@@ -267,7 +267,7 @@ window.filesender.zip64handler = function() {
 
             var comment = 'created by FileSender';
 
-            $this.writeu32( 0x06054b50 );  // sig
+            $this.writeu32( 0x06054b50 );  // magic number for this header
             $this.writeu16( 0xFFFF );
             $this.writeu16( 0xFFFF );
             $this.writeu16( 0xFFFF );

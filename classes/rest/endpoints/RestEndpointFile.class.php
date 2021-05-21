@@ -392,8 +392,11 @@ class RestEndpointFile extends RestEndpoint
             }
 
             if ($file->transfer->options['encryption']) {
+
                 // get rid of the base64
-                $data = base64_decode($data);
+                if(Utilities::isTrue(Config::get('encryption_encode_encrypted_chunks_in_base64_during_upload'))) {
+                    $data = base64_decode($data);
+                }
                 // Calculate the correct length
                 $chunkLength = strlen($data);
 
