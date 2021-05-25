@@ -102,6 +102,7 @@ $default = array(
     'encryption_password_must_have_upper_and_lower_case' => true,
     'encryption_password_must_have_numbers' => true,
     'encryption_password_must_have_special_characters' => true,
+    'encryption_password_text_only_min_password_length' => 40,
     'encryption_generated_password_length' => 30,
     'encryption_generated_password_encoding' => 'base64',
     'encryption_encode_encrypted_chunks_in_base64_during_upload' => false,

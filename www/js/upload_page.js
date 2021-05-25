@@ -550,36 +550,77 @@ filesender.ui.files = {
             }
         }
 
-        if( filesender.config.encryption_password_must_have_upper_and_lower_case ) {
-            var testInvalid = false;
-            if(!pass.match(/[A-Z]/g) || !pass.match(/[a-z]/g)) {
-                testInvalid = true;
-                invalid = true;
+        //
+        // Very long text passwords might be allowed by sys admin.
+        //
+        var phrasePass = false;
+        if( filesender.config.encryption_password_text_only_min_password_length > 0 ) {
+            var phraseLen = filesender.config.encryption_password_text_only_min_password_length;
+            if( pass ) {
+                var passNonRepeating = !(/^(.)\1+$/.test(pass));
+                
+                if( passNonRepeating && pass.length >= phraseLen ) {
+                    phrasePass = true;
+
+                    filesender.ui.files.updatePasswordMustHaveMessage(
+                        slideMessage, false,
+                        $('#encryption_password_container_can_have_text_only_min_password_length_message'));
+                    
+                    testInvalid = false;
+                    filesender.ui.files.updatePasswordMustHaveMessage(
+                        slideMessage, testInvalid,
+                        $('#encryption_password_container_must_have_upper_and_lower_case_message'));
+                    filesender.ui.files.updatePasswordMustHaveMessage(
+                        slideMessage, testInvalid,
+                        $('#encryption_password_container_must_have_numbers_message'));
+                    filesender.ui.files.updatePasswordMustHaveMessage(
+                        slideMessage, testInvalid,
+                        $('#encryption_password_container_must_have_special_characters_message'));
+                } else {
+                    filesender.ui.files.updatePasswordMustHaveMessage(
+                        slideMessage, true,
+                        $('#encryption_password_container_can_have_text_only_min_password_length_message'));
+                }
+            } else {
+                filesender.ui.files.updatePasswordMustHaveMessage(
+                    slideMessage, true,
+                    $('#encryption_password_container_can_have_text_only_min_password_length_message'));
             }
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, testInvalid,
-                $('#encryption_password_container_must_have_upper_and_lower_case_message'));
+        }
+
+        if( !phrasePass ) {
             
-        }
-        if( filesender.config.encryption_password_must_have_numbers ) {
-            var testInvalid = false;
-            if(!pass.match(/[0-9]/g)) {
-                testInvalid = true;
-                invalid = true;
+            if( filesender.config.encryption_password_must_have_upper_and_lower_case ) {
+                var testInvalid = false;
+                if(!pass.match(/[A-Z]/g) || !pass.match(/[a-z]/g)) {
+                    testInvalid = true;
+                    invalid = true;
+                }
+                filesender.ui.files.updatePasswordMustHaveMessage(
+                    slideMessage, testInvalid,
+                    $('#encryption_password_container_must_have_upper_and_lower_case_message'));
+                
             }
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, testInvalid,
-                $('#encryption_password_container_must_have_numbers_message'));
-        }
-        if( filesender.config.encryption_password_must_have_special_characters ) {
-            var testInvalid = false;
-            if(!pass.match(/[@#!$%^&*()\[\]<>?\/\\]/g)) {
-                testInvalid = true;
-                invalid = true;
+            if( filesender.config.encryption_password_must_have_numbers ) {
+                var testInvalid = false;
+                if(!pass.match(/[0-9]/g)) {
+                    testInvalid = true;
+                    invalid = true;
+                }
+                filesender.ui.files.updatePasswordMustHaveMessage(
+                    slideMessage, testInvalid,
+                    $('#encryption_password_container_must_have_numbers_message'));
             }
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, testInvalid,
-                $('#encryption_password_container_must_have_special_characters_message'));
+            if( filesender.config.encryption_password_must_have_special_characters ) {
+                var testInvalid = false;
+                if(!pass.match(/[@#!$%^&*()\[\]<>?\/\\]/g)) {
+                    testInvalid = true;
+                    invalid = true;
+                }
+                filesender.ui.files.updatePasswordMustHaveMessage(
+                    slideMessage, testInvalid,
+                    $('#encryption_password_container_must_have_special_characters_message'));
+            }
         }
         
         if( slideMessage ) {

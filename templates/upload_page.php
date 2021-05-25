@@ -219,6 +219,10 @@ if( $encryption_mandatory ) {
                         <div class="fieldcontainer" id="encryption_password_container_must_have_special_characters_message">
                             {tr:file_encryption_password_must_have_special_characters}
                         </div>
+                        <div class="fieldcontainer" id="encryption_password_container_can_have_text_only_min_password_length_message">
+                            {tr:encryption_password_container_can_have_text_only_min_password_length_message}
+                        </div>
+                        
                         <div class="fieldcontainer" id="encryption_password_container_generate">
                             <input id="encryption_use_generated_password"  name="encryption_use_generated_password" type="checkbox">  
                             <label for="encryption_use_generated_password" style="cursor: pointer;">{tr:file_encryption_generate_password}</label>
