@@ -1188,7 +1188,9 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ 40
 * __available:__ since version 2.26
 * __comment:__ Set to 0 to disable. Using this setting allows a passphrase that might contain all human language words without numbers, special characters etc
-     but which is still difficult enough to guess by brute force due to it's length and thus combination of words.
+     but which is still difficult enough to guess by brute force due to it's length and thus combination of words. If this setting is set to say 40 then
+     a password that is 40+ characters long will be accepted even when the encryption_password_must_have directives are in use and the password does not have
+     the must_have constraints met.
 
 
 
