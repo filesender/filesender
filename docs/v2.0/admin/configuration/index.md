@@ -221,7 +221,7 @@ A note about colours;
 
 * [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
-* [remote_applications](#remote_applications)
+* [auth_remote_applications](#auth_remote_applications)
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
 * [rest_allow_jsonp](#rest_allow_jsonp)
 
@@ -2197,7 +2197,7 @@ $config['log_facilities'] =
 * __default:__ "sha1"
 * __available:__ since version 2.0
 
-### remote_applications
+### auth_remote_applications
 
 * __description:__  list of remote applications.  This is an array where each entry includes an authentication secret, whether or not the application has admin rights and what methods the application is allowed to use:
 * __mandatory:__ no
@@ -2205,7 +2205,14 @@ $config['log_facilities'] =
 * __default:__
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ <span style="background-color:orange">needs more work.  Example: array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boolean OU array (pair de nom de méthode et de valeurs d'accès.  ex: get => TRUE, post => FALSE      Explained in more detail in API documentation page.</span>
+* __comment:__ 
+Example:
+
+`$config['auth_remote_applications'] = array (
+    'appname' => array( 'secret' => 'appsecret', 'isAdmin' => true, 'acl' => array( 'get' => TRUE, 'post' => TRUE, 'info' => TRUE, 'transfer' => TRUE))
+);`
+The array above contains the remote_application name and all the information for that is in an array under the key. 
+In this example, the application `appname` with secret `secret` has admin rights and can access the endpoint `/info` and `/transfer` by get and post. If you want it to access another endpoint it's necessary to put it in `acl` array. Without it the `info` ACL the test example would fail with permission denied.
 
 ### auth_remote_user_autogenerate_secret
 
