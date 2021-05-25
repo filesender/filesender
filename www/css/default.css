@@ -1542,6 +1542,7 @@ table.guests .guest .to .errors .details {
 #encryption_password_container_must_have_numbers_message,
 #encryption_password_container_must_have_upper_and_lower_case_message,
 #encryption_password_container_must_have_special_characters_message,
+#encryption_password_container_can_have_text_only_min_password_length_message,
 #encryption_password_container_generate,
 #encryption_password_container_generate_again,
 #encryption_password_show_container,
@@ -1563,6 +1564,10 @@ table.guests .guest .to .errors .details {
 #encryption_password_container_must_have_special_characters_message {
     color: #f00;
 }
+#encryption_password_container_can_have_text_only_min_password_length_message {
+    color: #0a0;
+}
+
 
 table.paginator .pageprev0 {
     width: 2em;

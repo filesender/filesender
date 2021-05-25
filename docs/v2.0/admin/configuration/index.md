@@ -124,6 +124,7 @@ A note about colours;
 * [encryption_password_must_have_upper_and_lower_case](#encryption_password_must_have_upper_and_lower_case)
 * [encryption_password_must_have_numbers](#encryption_password_must_have_numbers)
 * [encryption_password_must_have_special_characters](#encryption_password_must_have_special_characters)
+* [encryption_password_text_only_min_password_length](#encryption_password_text_only_min_password_length)
 * [encryption_generated_password_length](#encryption_generated_password_length)
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
 * [encryption_random_password_version_new_files](#encryption_random_password_version_new_files)
@@ -1178,6 +1179,19 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ false
 * __available:__ since version 2.23
 * __comment:__ 
+
+
+### encryption_password_text_only_min_password_length
+* __description:__ If this is set then a password can avoid the password_must_have checks if it is at least this long.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 40
+* __available:__ since version 2.26
+* __comment:__ Set to 0 to disable. Using this setting allows a passphrase that might contain all human language words without numbers, special characters etc
+     but which is still difficult enough to guess by brute force due to it's length and thus combination of words. If this setting is set to say 40 then
+     a password that is 40+ characters long will be accepted even when the encryption_password_must_have directives are in use and the password does not have
+     the must_have constraints met.
+
 
 
 
