@@ -673,11 +673,13 @@ Ensure the php temporary upload directory points to a location with enough space
 
 Turn on logging:
 
-	log_errors = on error_log = syslog
+        log_errors = on
+        error_log = syslog
 
 Enable secure cookie handling to protect sessions:
 
-	session.cookie_secure = On session.cookie_httponly = On
+        session.cookie_secure = On
+        session.cookie_httponly = On
 
 Reload your Apache server to activate the changes to your php.ini.
 
