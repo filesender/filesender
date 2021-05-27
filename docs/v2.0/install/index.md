@@ -277,7 +277,11 @@ edit config/config.php
   'showerrors' => false,
   'errorreporting' => false,
    ...
-  'session.cookie.secure' => true, // https site only!
+  'session.cookie.secure' => true,        // https site only!
+  'session.cookie.samesite' => 'Strict',  // cookie option SameSite=Strict
+  'session.phpsession.httponly' => true,  // cookie option HttpOnly
+  
+  
    ...
   'admin.protectindexpage' => true,
   'admin.protectmetadata' => true,
