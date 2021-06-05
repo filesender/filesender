@@ -179,6 +179,7 @@ A note about colours;
 ## Authentication
 
 * [auth_sp_type](#auth_sp_type)
+* [auth_sp_force_session_start_first](#auth_sp_force_session_start_first)
 * __SimpleSAMLphp__
 	* [auth_sp_saml_authentication_source](#auth_sp_saml_authentication_source)
 	* [auth_sp_saml_simplesamlphp_url](#auth_sp_saml_simplesamlphp_url)
@@ -1728,6 +1729,19 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">to use type "fake" you need ...</span>
+
+
+### auth_sp_force_session_start_first
+
+* __description:__ Call php session_start to setup the session cookie before attempting auth authentication with the auth_sp_type.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __cookies:__ depending on php env this might set PHPSESSID cookie
+* __available:__ since version 2.26
+* __comment:__ Some of the auth_sp methods may use _SESSION or perform other actions that might alter how session_start() will work. If that is the case you can set this configuration to true and session_start() will be called before authentication is performed.
+
+
 
 ### session_cookie_path
 
