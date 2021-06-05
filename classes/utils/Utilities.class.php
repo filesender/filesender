@@ -444,6 +444,12 @@ class Utilities
         }
         return 'false';
     }
+    public static function toInt($v, $def) {
+        if(!is_numeric($v)) {
+            return $def;
+        }
+        return intval($v);
+    }
 
     /**
      * This is a wrapper around the PHP http_build_query with some

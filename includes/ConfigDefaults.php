@@ -250,6 +250,7 @@ $default = array(
     ),
 
     'header_x_frame_options' => 'sameorigin',
+    'header_add_hsts_duration' => 63072000,
     'owasp_csrf_protector_enabled' => false,
 
     'theme' => '',
@@ -288,7 +289,7 @@ $default = array(
 
     'allow_guest_expiry_date_extension' => 0,
     'allow_guest_expiry_date_extension_admin' => array(31, true),
-    
+
     
     'transfer_options' => array(
         'email_me_copies' => array(

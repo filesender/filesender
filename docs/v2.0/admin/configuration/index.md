@@ -30,6 +30,7 @@ A note about colours;
 
 ## Security settings
 * [header_x_frame_options](#header_x_frame_options)
+* [header_add_hsts_duration](#header_add_hsts_duration)
 * [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
 
 ## Backend storage
@@ -376,6 +377,16 @@ A note about colours;
 * __default:__ sameorigin
 * __available:__ since version 2.7
 * __comment:__ Default should be ok. Can be 'deny' to disallow frames if you do not use them or 'none' to disable the feature (not recommended). Note that this setting will not override a setting that is already in place in your web server. This setting is mainly here as a second catch and for sites that can not configure their web server to install a site wide nominated value for X-Frame-Options.
+
+### header_add_hsts_duration
+
+* __description:__ Add Strict-Transport-Security header with the desired max-age
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 63072000
+* __available:__ since version 2.26
+* __comment:__ Set to 0 to disable. Default is 63072000 which is two years in seconds.
+
 
 
 * [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
