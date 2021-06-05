@@ -1554,6 +1554,7 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
+
 .adminaction {
     background: #ffeeee;
 }
@@ -1663,3 +1664,44 @@ div.not_displayed {
 .hidden {
     display: none;
 }
+
+#dialog-about,
+#dialog-help {
+    display:none
+}
+
+
+#senderemail_full_match_label {
+    cursor: pointer;
+}
+
+#message_can_not_contain_urls {
+    display:none;
+}
+
+#marg3 {
+    margin:3px;
+}
+
+#password_can_not_be_part_of_message_error,
+#password_can_not_be_part_of_message_warning,
+#message_can_not_contain_urls {
+    display:none
+}
+
+#graphDiv {
+    width:400px;
+    height:200px;
+    margin:0 auto
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+colorffaa00 {
+    color: #FFAA00;
+}
+
+             
+                              

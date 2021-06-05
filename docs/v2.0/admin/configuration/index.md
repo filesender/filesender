@@ -29,6 +29,7 @@ A note about colours;
 * [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
 
 ## Security settings
+* [use_strict_csp](#use_strict_csp)
 * [header_x_frame_options](#header_x_frame_options)
 * [header_add_hsts_duration](#header_add_hsts_duration)
 * [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
@@ -368,6 +369,14 @@ A note about colours;
 * __comment:__ This allows an admin to find a user with admin/users and click to see the "my transfers" page that the specific user would see. ie, the admin sees the user's transfers instead of seeing their own. The menu becomes red in this mode and "my transfers" is changed to "user transfers" to attempt to caution the administrator that they are dealing with user data rather than their own.
 
 
+### use_strict_csp
+
+* __description:__ Include a strict Content-Security-Policy (CSP) header in web page responses.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.26
+* __comment:__ Default should be ok. This adds a rather strict Content-Security-Policy (CSP) header to pages to avoid inline and eval and loading resources from other sites.
 
 ### header_x_frame_options
 

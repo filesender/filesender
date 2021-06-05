@@ -51,6 +51,7 @@ $default = array(
     'upload_considered_too_slow_if_no_progress_for_seconds' => 30, // seconds
     'force_ssl' => true,
     'client_ip_key' => 'REMOTE_ADDR',
+    'use_strict_csp' => true, // add a strict CSP header to the web pages
     
     'auth_sp_type' => 'saml',  // Authentification type
     'auth_sp_set_idp_as_user_organization' => false,
