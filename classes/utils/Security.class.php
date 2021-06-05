@@ -59,7 +59,11 @@ class Security
         if( $v != 'none' ) {
             header( 'X-Frame-Options: ' . $v, false );
         }
-        
+
+        $v = Utilities::toInt(Config::get('header_add_hsts_duration'),0);
+        if( $v > 0 ) {
+            header( 'Strict-Transport-Security: max-age=' . $v . '; includeSubDomains', false );
+        }
     }
 
     private static $filesender_csrf_protector_logger = null;
