@@ -68,8 +68,16 @@
         <input type="button" class="ab_guests_del" value="{tr:oneweek}"         data-since="604800" />
         <input type="button" class="ab_guests_del" value="{tr:twoeightdays}"    data-since="2419200" />
     </td></tr>
+    <tr><td>{tr:most_failed_decryptions}</td><td>
+        <input type="button" class="ab_decryptfailed" value="{tr:oneday}"          data-since="86400" />
+        <input type="button" class="ab_decryptfailed" value="{tr:oneweek}"         data-since="604800" />
+        <input type="button" class="ab_decryptfailed" value="{tr:twoeightdays}"    data-since="2419200" />
+    </td></tr>
+    
 </table>
 </fieldset>
+
+
 
 <h2>{tr:search_user}</h2>
 <fieldset class="search">
@@ -84,14 +92,15 @@
         <th>{tr:user_id}</th>
         <th>{tr:last_activity}</th>
         <th>{tr:event_count}</th>
+        <th>{tr:ip}</th>
         <th>&nbsp;</th>
     </tr>
     
     <tr class="searching">
-        <td colspan="4">{tr:searching}</td>
+        <td colspan="5">{tr:searching}</td>
     </tr>
     <tr class="no_results">
-        <td colspan="4">{tr:no_results}</td>
+        <td colspan="5">{tr:no_results}</td>
     </tr>
     
     <tr class="tpl">
@@ -99,6 +108,7 @@
         <td class="saml_id"></td>
         <td class="last_activity"></td>
         <td class="event_count"></td>
+        <td class="ip"></td>
         
         <td>
 <?php if( Config::get('admin_can_view_user_transfers_page')) : ?>

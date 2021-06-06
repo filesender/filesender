@@ -126,6 +126,7 @@
              data-client-entropy="<?php echo $transfer->client_entropy; ?>"
              data-fileiv="<?php echo $file->iv; ?>"
              data-fileaead="<?php echo $file->aead; ?>"
+             data-transferid="<?php echo $transfer->id ?>"
         >
             
             <?php if($canDownloadArchive) { ?>

@@ -349,6 +349,7 @@ $(function() {
             return;
         }
         
+        var transferid = $(this).attr('data-transferid');
         var id = $(this).attr('data-id');
         var encrypted = $(this).attr('data-encrypted');
         var filename = $(this).attr('data-name');
@@ -373,6 +374,7 @@ $(function() {
         
         window.filesender.crypto_app().decryptDownload(
             filesender.config.base_path + 'download.php?files_ids=' + id.join(','),
+            transferid,
             mime, filename,
             filesize, encrypted_filesize,
             key_version, salt,
