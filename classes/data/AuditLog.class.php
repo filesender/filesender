@@ -638,7 +638,8 @@ class AuditLog extends DBObject
              . ' from ' . self::getDBTable()
              . ' where '
              .   self::FROM_TARGET_TYPE_SINCE
-             . ' group by event,author_type,author_id ';
+             . ' group by event,author_type,author_id,ip '
+             . ' order by count desc ';       
         $statement = DBI::prepare($sql);
         $statement->execute(array(
             'created' => date('Y-m-d H:0:0', $created),
