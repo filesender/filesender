@@ -634,12 +634,21 @@ class AuditLog extends DBObject
         }
         $created = time() - $secondsAgo;
 
-        $sql = 'select *,count(*) as count '
-             . ' from ' . self::getDBTable()
-             . ' where '
-             .   self::FROM_TARGET_TYPE_SINCE
-             . ' group by event,author_type,author_id,ip '
-             . ' order by count desc ';       
+        $sql  = '( select *,count(*) as count ';
+        $sql .= ' from ' . self::getDBTable();
+        $sql .= ' where ';
+        $sql .=    self::FROM_TARGET_TYPE_SINCE;
+        $sql .= ' and author_id is not null ';
+        $sql .= ' group by event,author_type,author_id ) ';
+        $sql .= ' UNION ';
+        $sql .= '( select *,count(*) as count ';
+        $sql .= ' from ' . self::getDBTable();
+        $sql .= ' where ';
+        $sql .=    self::FROM_TARGET_TYPE_SINCE;
+        $sql .= ' and author_id is null and author_type is null';
+        $sql .= ' group by event,author_type,author_id,ip )';
+        $sql .= ' order by count desc ';
+
         $statement = DBI::prepare($sql);
         $statement->execute(array(
             'created' => date('Y-m-d H:0:0', $created),
@@ -650,7 +659,12 @@ class AuditLog extends DBObject
         $records = $statement->fetchAll();
         $ret = array();
         foreach ($records as $r) {
-            $u = User::fromId($r['author_id']);
+            $userid = $r['author_id'];
+            if( $userid ) {
+                $u = User::fromId($userid);
+            } else {
+                $u = User::createFactory(null);
+            }
             $u->eventcount = $r['count'];
             $u->eventip    = $r['ip'];
             $ret[] = $u;
