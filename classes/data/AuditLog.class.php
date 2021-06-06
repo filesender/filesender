@@ -634,14 +634,14 @@ class AuditLog extends DBObject
         }
         $created = time() - $secondsAgo;
 
-        $sql  = '( select *,count(*) as count ';
+        $sql  = '( select MAX(id) as id, event, MAX(target_type) as target_type, MAX(target_id) as target_id, author_type, author_id, MAX(ip) as ip, MAX(created) as created,count(*) as count ';
         $sql .= ' from ' . self::getDBTable();
         $sql .= ' where ';
         $sql .=    self::FROM_TARGET_TYPE_SINCE;
         $sql .= ' and author_id is not null ';
         $sql .= ' group by event,author_type,author_id ) ';
         $sql .= ' UNION ';
-        $sql .= '( select *,count(*) as count ';
+        $sql .= '( select MAX(id) as id, event, MAX(target_type) as target_type, MAX(target_id) as target_id, author_type, author_id, ip, MAX(created) as created,count(*) as count ';
         $sql .= ' from ' . self::getDBTable();
         $sql .= ' where ';
         $sql .=    self::FROM_TARGET_TYPE_SINCE;
