@@ -118,7 +118,7 @@ use ( $new_guests_can_only_send_to_creator,
                     <div class="fieldcontainer">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
 
-                        <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
+                        <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
                         <textarea id="message" name="message" rows="4"></textarea>
                     </div>
                 </td>
