@@ -132,6 +132,7 @@ class AuditLog extends DBObject
     const FROM_AUTHOR = 'author_type = :type AND author_id = :id ORDER BY created ASC, id ASC';
     const FROM_TARGET_AND_AUTHOR = 'event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ORDER BY created DESC limit 10 ';
     const FROM_TARGET_AND_AUTHOR_SINCE = 'created > :created AND event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ';    
+    const FROM_TARGET_TYPE_SINCE = 'created > :created AND event = :event AND target_type = :ttype  ';    
     const FIND_USERS_SINCE = array( 'select' => 'max(id) as id,target_id',
                                     'where' => 'created > :created AND event = :event AND target_type = :ttype ',
                                     'group' => 'target_id' );
@@ -494,7 +495,7 @@ class AuditLog extends DBObject
      *
      * @return array of AuditLog
      */
-    public static function fromTransfer(Transfer $transfer, $event = null)
+    public static function fromTransfer(Transfer $transfer, $event = null, $since = null )
     {
         if (
             !is_object($transfer)
@@ -534,6 +535,15 @@ class AuditLog extends DBObject
         if ($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function ($log) use ($event) {
                 return $log->event == $event;
+            });
+        }
+
+        // Filter out older events.
+        if( $since ) {
+            $cutoff = time() - $since;
+            
+            $logs = array_filter($logs, function ($log) use ($cutoff) {
+                return $log->created >= $cutoff;
             });
         }
         
@@ -615,4 +625,52 @@ class AuditLog extends DBObject
     public function createdWithinLastDay() {
         return $this->created > (time() - 24*3600);
     }
+
+
+    public static function getUsersForTargetTypeSince($logEvent, $ttype, $secondsAgo = null )
+    {
+        if(!$secondsAgo) {
+            $secondsAgo = 24*3600;
+        }
+        $created = time() - $secondsAgo;
+
+        $sql  = '( select MAX(id) as id, event, MAX(target_type) as target_type, MAX(target_id) as target_id, author_type, author_id, MAX(ip) as ip, MAX(created) as created,count(*) as count ';
+        $sql .= ' from ' . self::getDBTable();
+        $sql .= ' where ';
+        $sql .=    self::FROM_TARGET_TYPE_SINCE;
+        $sql .= ' and author_id is not null ';
+        $sql .= ' group by event,author_type,author_id ) ';
+        $sql .= ' UNION ';
+        $sql .= '( select MAX(id) as id, event, MAX(target_type) as target_type, MAX(target_id) as target_id, author_type, author_id, ip, MAX(created) as created,count(*) as count ';
+        $sql .= ' from ' . self::getDBTable();
+        $sql .= ' where ';
+        $sql .=    self::FROM_TARGET_TYPE_SINCE;
+        $sql .= ' and author_id is null and author_type is null';
+        $sql .= ' group by event,author_type,author_id,ip )';
+        $sql .= ' order by count desc ';
+
+        $statement = DBI::prepare($sql);
+        $statement->execute(array(
+            'created' => date('Y-m-d H:0:0', $created),
+            'event' => $logEvent,
+            'ttype' => $ttype
+        ));
+
+        $records = $statement->fetchAll();
+        $ret = array();
+        foreach ($records as $r) {
+            $userid = $r['author_id'];
+            if( $userid ) {
+                $u = User::fromId($userid);
+            } else {
+                $u = User::createFactory(null);
+            }
+            $u->eventcount = $r['count'];
+            $u->eventip    = $r['ip'];
+            $ret[] = $u;
+        }
+        return $ret;
+        
+    }
+
 }

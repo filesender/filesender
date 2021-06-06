@@ -94,6 +94,8 @@ window.filesender.crypto_app = function () {
         // for example, to respect a checkbox from the UI
         disable_streamsaver: false,
 
+
+
         /**
          * This turns a filesender chunkid into a 4 byte array
          * that can be used in GCM encryption. 
@@ -715,6 +717,7 @@ window.filesender.crypto_app = function () {
                         window.filesender.log(e);
                         if (!wrongPassword) {
                             wrongPassword=true;
+                            filesender.client.decryptionFailedForTransfer( encryption_details.transferid );
                             callbackError(e);
                         }
                     }
@@ -938,7 +941,7 @@ window.filesender.crypto_app = function () {
          * 
          * @param fileiv is the decoded fileiv. Decoding can be done with decodeCryptoFileIV()
          */
-        decryptDownloadToBlobSink: function (blobSink, pass,
+        decryptDownloadToBlobSink: function (blobSink, pass, transferid,
                                              link, mime, name, filesize, encrypted_filesize,
                                              key_version, salt,
                                              password_version, password_encoding, password_hash_iterations,
@@ -957,7 +960,8 @@ window.filesender.crypto_app = function () {
                                        password_hash_iterations: password_hash_iterations,
                                        client_entropy:    client_entropy,
                                        fileiv:            fileiv,
-                                       fileaead:          fileaead
+                                       fileaead:          fileaead,
+                                       transferid:        transferid
                                      };
             // For GCM this will be the fileiv (96 bits of fixed entropy).
             encryption_details.expected_fixed_chunk_iv = new Uint8Array(16);
@@ -1108,7 +1112,7 @@ window.filesender.crypto_app = function () {
                 );
  
         },
-        decryptDownload: function (link, mime, name, filesize, encrypted_filesize,
+        decryptDownload: function (link, transferid, mime, name, filesize, encrypted_filesize,
                                    key_version, salt,
                                    password_version, password_encoding, password_hash_iterations,
                                    client_entropy, fileiv, fileaead,
@@ -1185,7 +1189,7 @@ window.filesender.crypto_app = function () {
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
             
-                $this.decryptDownloadToBlobSink( blobSink, pass,
+                $this.decryptDownloadToBlobSink( blobSink, pass, transferid,
                                                  link, mime, name, filesize, encrypted_filesize,
                                                  key_version, salt,
                                                  password_version, password_encoding, password_hash_iterations,
@@ -1221,7 +1225,7 @@ window.filesender.crypto_app = function () {
                 + "." + archiveFormat;
             return archiveName;
         },
-        decryptDownloadToZip: function(link,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
+        decryptDownloadToZip: function(link,transferid,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
 
             var $this = this;
 
@@ -1238,7 +1242,7 @@ window.filesender.crypto_app = function () {
                 var pass = $(this).find('input').val();
 
                 var archiveName = $this.getArchiveFileName(link,selectedFiles,"zip");
-                blobSinkStreamed = window.filesender.streamsaver_sink_zip64( $this, link, archiveName, pass, selectedFiles, callbackError );
+                blobSinkStreamed = window.filesender.streamsaver_sink_zip64( $this, link, transferid, archiveName, pass, selectedFiles, callbackError );
                 blobSink = blobSinkStreamed;
                 blobSink.init();
                 blobSink.progress = progress;

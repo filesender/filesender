@@ -515,6 +515,17 @@ class Auth
     }
 
     /**
+     * The user or the guest current performing the action 
+     */
+    public static function actor()
+    {
+        if( self::isGuest() ) {
+            return AuthGuest::getGuest();
+        }
+        return self::User();
+    }
+
+    /**
      * Tells if a session is started.
      *
      * @return bool

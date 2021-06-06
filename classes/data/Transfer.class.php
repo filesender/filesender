@@ -1709,4 +1709,5 @@ class Transfer extends DBObject
                $this->status == TransferStatuses::STARTED ||
                $this->status == TransferStatuses::UPLOADING;
     }
+
 }

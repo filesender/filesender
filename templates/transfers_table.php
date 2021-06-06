@@ -440,6 +440,7 @@ if (!function_exists('clickableHeader')) {
                              data-client-entropy="<?php echo $transfer->client_entropy; ?>"
                              data-fileiv="<?php echo $file->iv; ?>"
                              data-fileaead="<?php echo $file->aead; ?>"
+                             data-transferid="<?php echo $transfer->id; ?>"
                         >
                             <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
@@ -460,7 +461,7 @@ if (!function_exists('clickableHeader')) {
                                         data-client-entropy="<?php echo $transfer->client_entropy; ?>"
                                         data-fileiv="<?php echo $file->iv; ?>"
                                         data-fileaead="<?php echo $file->aead; ?>"
-                                      
+                                        data-transferid="<?php echo $transfer->id; ?>"
                                 ></span>
                                         
                                 <?php } else {?>
