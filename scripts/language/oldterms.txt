@@ -55,8 +55,14 @@ authentication_required
 authentication_required_explanation
 auto_resume_timer_seconds
 automatic_resume_will_happen_if_delay_reaches_x_seconds
+av_name_always_error
+av_name_always_fail
+av_name_always_pass
+av_name_test
+av_results_description
 available_transfers
 average_speed
+avname
 back
 bad_email
 bad_expire
@@ -210,6 +216,7 @@ enable_recipient_email_download_complete_warning
 encountered_exception
 encrypted_archive_download_overall_progress
 encryption
+encryption_password_container_can_have_text_only_min_password_length_message
 endpoint
 enter_to_email
 epoch_day
@@ -218,6 +225,7 @@ epoch_hour
 epoch_month
 epoch_week
 epoch_year
+error
 error_date
 error_details
 error_dialog
@@ -235,6 +243,7 @@ extend_expires
 extend_expiry_date
 extended
 extended_reminded
+failed
 failed_to_connect_to_database
 failed_transfer_found
 failures
@@ -348,6 +357,7 @@ never
 no
 no_addresses_found
 no_auditlog
+no_av_scans_performed
 no_guests
 no_results
 no_such_property
@@ -373,6 +383,7 @@ password_hashing_performance
 pause
 paused
 perform_these_actions_on_all_users
+performed
 please_add_file_again
 preferences_updated
 privacy_page
@@ -459,6 +470,7 @@ rest_updatedsince_bad_format
 rest_xsrf_token_did_not_match
 restart
 restart_failed_transfer
+result
 resume
 retry
 retry_attempt_x
@@ -541,6 +553,7 @@ storage_usage
 storage_usage_warning
 storage_used
 subject
+succeeded
 success_dialog
 system_active_setting
 tb_per_second
