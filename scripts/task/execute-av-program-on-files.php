@@ -55,7 +55,7 @@ if( !count($avprograms)) {
 }
 
 while( true ) {
-    $limitPerIteration = 3;
+    $limitPerIteration = 50;
     if(count($inputs)) {
         $fileList = array();
         foreach( $inputs as $id ) {
