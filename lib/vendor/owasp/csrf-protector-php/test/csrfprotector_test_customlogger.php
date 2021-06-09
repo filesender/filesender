@@ -2,18 +2,10 @@
 date_default_timezone_set('UTC');
 require_once __DIR__ .'/../libs/csrf/csrfprotector.php';
 require_once __DIR__ .'/../libs/csrf/LoggerInterface.php';
+require_once __DIR__ .'/fakeLogger.php';
 
 if (intval(phpversion('tidy')) >= 7 && !class_exists('\PHPUnit_Framework_TestCase', true)) {
     class_alias('\PHPUnit\Framework\TestCase', '\PHPUnit_Framework_TestCase');
-}
-
-/**
- * Custom logger class, prints to screen
- */
-class testConsoleLogger implements LoggerInterface {
-    public function log($message, $context = array()) {
-        echo $message .PHP_EOL;
-    }
 }
 
 class csrfp_test_customLogger extends PHPUnit_Framework_TestCase
@@ -24,7 +16,7 @@ class csrfp_test_customLogger extends PHPUnit_Framework_TestCase
     protected $config = array();
 
     public function setUp() {
-        csrfprotector::$config['CSRFP_TOKEN'] = 'csrfp_token';
+        csrfprotector::$config['CSRFP_TOKEN'] = 'CSRFP-Token';
         csrfprotector::$config['cookieConfig'] = array('secure' => false);
         csrfprotector::$config['logDirectory'] = '../test/logs';
         $_SERVER['REQUEST_URI'] = 'temp';       // For logging
@@ -51,24 +43,30 @@ class csrfp_test_customLogger extends PHPUnit_Framework_TestCase
     /**
      * tearDown()
      */
-    public function tearDown()
-    {
+    public function tearDown() {
         unlink(__DIR__ .'/../libs/config.php');
-        if (is_dir(__DIR__ .'/logs'))
-            Helper::delTree(__DIR__ .'/logs');
+        ob_end_flush();
     }
 
-    /**
-     * To test a custom logger class
-     */
-    public function testCustomLogger() {
+    public function testCustomLogger_doesntThrowException() {
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $tmp = csrfProtector::$config;
         csrfProtector::$config = array();
-        csrfProtector::init(null, array('POST' => 1), new testConsoleLogger());
+        csrfProtector::init(null, array('POST' => 1), new fakeLogger());
 
         $this->assertTrue(true);
-        csrfProtector::$config = $tmp;
+    }
+
+    public function testCustomLogger_onLogAttack_loggerIsCalled() {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $fakeLogger = new fakeLogger();
+        $this->assertNull($fakeLogger->getLastMessageLogged());
+
+        $tmp = csrfProtector::$config;
+        csrfProtector::$config = array();
+        csrfProtector::init(null, array('POST' => 1), $fakeLogger);
+
+        $this->assertNotNull($fakeLogger->getLastMessageLogged());
     }
 }

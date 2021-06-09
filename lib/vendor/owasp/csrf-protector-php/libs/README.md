@@ -1,9 +1,7 @@
 CSRFProtector configuration
 ==========================================
 
- - `CSRFP_TOKEN`: name of the csrf nonce, used for cookie or posting as argument. default: `csrfp_token` (if left blank)
- - `logDirectory`: location of the directory at which log files will be saved, either **relative** to the default `config.php` file location or an **absolute** path. This is required for file based logging (default), Not needed, in case you override logging function to implement your logging logic. (View [Overriding logging function](https://github.com/mebjas/CSRF-Protector-PHP/wiki/Overriding-logging-function))
- <br>**Default value:** `../log/`
+ - `CSRFP_TOKEN`: name of the csrf nonce, used for cookie or posting as argument. default: `CSRFP-Token` (if left blank)
  - `failedAuthAction`: Action code (integer) for action to be taken in case of failed validation. Has two different values for bot `GET` and `POST`. Different action codes are specified as follows, (<br>**Default:** `0` for both `GET` & `POST`):
     *  `0` Send **403, Forbidden** Header
     *  `1` **Strip the POST/GET query** and forward the request! unset($_POST)

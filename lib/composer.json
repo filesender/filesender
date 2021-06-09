@@ -1,6 +1,7 @@
 {
     "require": {
         "barracudanetworks/archivestream-php": "^1.0",
-        "owasp/csrf-protector-php": "^1.0"
+        "owasp/csrf-protector-php": "^1.0",
+	"guzzlehttp/guzzle": "^7.0"
     }
 }

@@ -291,6 +291,9 @@ $default = array(
     'allow_guest_expiry_date_extension' => 0,
     'allow_guest_expiry_date_extension_admin' => array(31, true),
 
+    'avprogram_list' => array(),
+    'avprogram_max_size_to_scan' => 100*1024*1024,
+    
     
     'transfer_options' => array(
         'email_me_copies' => array(

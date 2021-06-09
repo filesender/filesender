@@ -483,6 +483,11 @@ class Config
         
         return $value;
     }
+
+    public static function getArray($key)
+    {
+        return Utilities::ensureArray(Config::get($key));
+    }
     
     /**
      * Get default value (without override)

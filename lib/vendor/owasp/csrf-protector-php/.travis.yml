@@ -18,6 +18,8 @@ matrix:
 
 os:
   - linux
+  
+dist: trusty
 
 install:
   # Install composer packages, will also trigger dump-autoload
