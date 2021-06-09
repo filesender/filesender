@@ -1,11 +1,11 @@
 <?php
 /**
- * CSRF Protector's Logger interface.
+ * This file has implementation for LoggerInterface interface
  */
 
-if (!defined('__CSRF_PROTECTOR_LOGGER_INTERFACE__')) {
+if (!defined('__CSRF_PROTECTOR_loggerInterface__')) {
     // to avoid multiple declaration errors
-    define('__CSRF_PROTECTOR_LOGGER_INTERFACE__', true);
+    define('__CSRF_PROTECTOR_loggerInterface__', true);
 
     /**
      * Interface for logger class

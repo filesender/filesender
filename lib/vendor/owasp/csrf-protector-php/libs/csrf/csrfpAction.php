@@ -1,14 +1,14 @@
 <?php
 /**
- * This file has implementation for csrfpAction class.
+ * This file has implementation for csrfpAction class
  */
 
-if (!defined('__CSRF_PROTECTOR_ACTION__')) {
+if (!defined('__CSRF_PROTECTOR_csrfpAction__')) {
     // to avoid multiple declaration errors
-    define('__CSRF_PROTECTOR_ACTION__', true);
+    define('__CSRF_PROTECTOR_csrfpAction__', true);
 
     /**
-     * Enumerator for actions.
+     * Enumerator for actions
      */
     abstract class csrfpAction {
         /**
