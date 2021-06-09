@@ -33,6 +33,9 @@ A note about colours;
 * [header_x_frame_options](#header_x_frame_options)
 * [header_add_hsts_duration](#header_add_hsts_duration)
 * [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
+* [avprogram_list](#avprogram_list)
+* [avprogram_max_size_to_scan](#avprogram_max_size_to_scan)
+
 
 ## Backend storage
 
@@ -409,6 +412,32 @@ A note about colours;
   [CSRF Protector php library](https://github.com/mebjas/CSRF-Protector-PHP/wiki) to also protect interactions from CSRF attack.
   Note that this option will definitely use cookies.
 
+
+* [avprogram_list](#avprogram_list)
+* __description:__ A list of anti virus and malware scanners to use.
+* __mandatory:__ no
+* __type:__ array (of array)
+* __default:__ ()
+* __available:__ since version 2.26
+* __comment:__ This is a list of the classes to use to check for bad content. They can only run on non encrypted files as the
+               server does not have access otherwise. The URL module accepts a parameter 'url' which is the url to send the
+               file content to for scanning. It is expected that the reply is JSON with a passes, error, and reason property.
+
+```
+$config['avprogram_list'] = array( 'always_pass',
+                                   'url' => array(
+                                       'name' => 'Foo',
+                                       'url' => 'http://localhost/foo/scanforfoo.php'
+                                   ));
+```
+
+* [avprogram_max_size_to_scan](#avprogram_max_size_to_scan)
+* __description:__ Do not try to scan files larger than this with the avprogram_list
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 100*1024*1024
+* __available:__ since version 2.26
+* __comment:__ 
 
 
 
