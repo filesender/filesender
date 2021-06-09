@@ -657,3 +657,18 @@ $lang['you_can_report_exception_by_email'] = 'You can report this error by email
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'If your password has more than {cfg:encryption_password_text_only_min_password_length} characters without significant repetition then there are fewer restrictions on the contents of your password.';
+
+$lang['performed'] = 'Performed';
+$lang['succeeded'] = 'Succeeded';
+$lang['error'] = 'Error';
+$lang['failed'] = 'Failed';
+$lang['result'] = 'Result';
+$lang['avname'] = 'Anti Virus/Malware test';
+$lang['no_av_scans_performed'] = "No scans performed";
+$lang['av_results_description'] = 'Anti virus and malware scanning has been configured on this server. Note that encrypted files can not be scanned as the server can not decrypt the content to scan it.';
+
+$lang['av_name_test'] = 'Test AV';
+$lang['av_name_always_pass'] = 'Always passing test';
+$lang['av_name_always_fail'] = 'Always failing test';
+$lang['av_name_always_error'] = 'Always generating an error test';
+

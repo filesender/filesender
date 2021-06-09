@@ -1253,6 +1253,7 @@ table.guests .guest .to .errors .details {
 
 .download_page .files .file .select,
 .download_page .files .file .name,
+.download_page .files .file .avresult,
 .download_page .files .file .size {
 }
 
@@ -1267,6 +1268,10 @@ table.guests .guest .to .errors .details {
 
 .download_page .files .file .size {
     color: #777;
+}
+
+.download_page .files .file .avresult {
+    text-align: right;
 }
 
 .download_page .files .file .download {
@@ -1705,3 +1710,24 @@ div.not_displayed {
 
              
                               
+.avresulterror,
+.avresultfailed {
+    color: #AA0000;
+}
+.avresultsucceeded {
+    color: #00AA00;
+}
+.avfile {
+    padding-top: 1em;
+}
+.avfile .name {
+    font-size:1.5em;    
+    padding-bottom: 1em;
+}
+
+.avheader1 {
+    color: #00AA00;
+}
+.avheader0 {
+    color: #AA0000;
+}
