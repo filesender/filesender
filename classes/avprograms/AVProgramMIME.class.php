@@ -49,7 +49,7 @@ class AVProgramMIME extends AVProgram
 
 
         $iss = $file->getStream();
-        $data = fread( $iss, 8*1024 );
+        $data = fread( $iss, $this->bytesToConsider );
         $finfo = new finfo(FILEINFO_MIME);
         $mt = $finfo->buffer($data);
         $mt = preg_replace('/;.*/', '', $mt);        

@@ -701,4 +701,11 @@ class Utilities
         return $ret;
     }
 
+    public static function clampMin( $v, $min ) 
+    {
+        $v = self::toInt($v,$min);
+        if( $v < $min ) 
+            return $min;
+        return $v;
+    }
 }
