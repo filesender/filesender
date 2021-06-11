@@ -422,9 +422,14 @@ A note about colours;
 * __comment:__ This is a list of the classes to use to check for bad content. They can only run on non encrypted files as the
                server does not have access otherwise. The URL module accepts a parameter 'url' which is the url to send the
                file content to for scanning. It is expected that the reply is JSON with a passes, error, and reason property.
+               The mime AV program takes an array of MIME types that the content MUST be in using the matchlist parameter.
 
 ```
 $config['avprogram_list'] = array( 'always_pass',
+                                   'mime' => array(
+                                       'name' => 'Check for valid MIME type',
+                                       'matchlist' => array('image/jpeg', 'text/plain')
+                                   ),
                                    'url' => array(
                                        'name' => 'Foo',
                                        'url' => 'http://localhost/foo/scanforfoo.php'
