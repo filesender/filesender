@@ -46,7 +46,8 @@ abstract class AVProgram
 
     protected $name = "";
     protected $url  = "";
-    
+    protected $matchlist = array();
+    protected $bytesToConsider = 8*1024;
 
     public static function getActiveProgramList()
     {
@@ -61,6 +62,7 @@ abstract class AVProgram
                 DBConstantAVProgram::ALWAYS_ERROR => new AVProgramAlwaysError(),
                 DBConstantAVProgram::URL          => new AVProgramURL(),
                 DBConstantAVProgram::TOOBIG       => new AVProgramTooBig(),
+                DBConstantAVProgram::MIME         => new AVProgramMIME(),
             );
         }
         if( !self::$programList ) {
@@ -77,6 +79,15 @@ abstract class AVProgram
                             if( array_key_exists('url',$a)) {
                                 $obj->url = $a['url'];
                             }
+                            if( array_key_exists('matchlist',$a)) {
+                                $obj->matchlist = $a['matchlist'];
+                            }
+                            if( array_key_exists('bytesToConsider',$a)) {
+                                // Get bytesToConsider with explicit min value.
+                                $obj->bytesToConsider = Utilities::clampMin($a['bytesToConsider'],
+                                                                            $obj->bytesToConsider);
+                            }
+                            echo " bytesToConsider  $obj->bytesToConsider \n";
                         }
                     }
                     self::$programList[] = $obj;

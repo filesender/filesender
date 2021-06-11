@@ -49,6 +49,7 @@ class DBConstantAVProgram extends DBConstant
     const ALWAYS_ERROR   = 'always_error';
     const URL            = 'url';
     const TOOBIG         = 'toobig';
+    const MIME           = 'mime';
     
     protected function getEnum()
     {
@@ -59,6 +60,7 @@ class DBConstantAVProgram extends DBConstant
             self::ALWAYS_ERROR  => 4,
             self::URL           => 5,
             self::TOOBIG        => 6,
+            self::MIME          => 7,
         );
     }
 
