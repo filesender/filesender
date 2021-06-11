@@ -130,7 +130,6 @@ A note about colours;
 * [encryption_password_must_have_numbers](#encryption_password_must_have_numbers)
 * [encryption_password_must_have_special_characters](#encryption_password_must_have_special_characters)
 * [encryption_password_text_only_min_password_length](#encryption_password_text_only_min_password_length)
-* [encryption_generated_password_length](#encryption_generated_password_length)
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
 * [encryption_random_password_version_new_files](#encryption_random_password_version_new_files)
 * [encryption_password_hash_iterations_new_files](#encryption_password_hash_iterations_new_files)
@@ -248,6 +247,9 @@ A note about colours;
 
 * [data_protection_user_frequent_email_address_disabled](#data_protection_user_frequent_email_address_disabled)
 * [data_protection_user_transfer_preferences_disabled](#data_protection_user_transfer_preferences_disabled)
+
+## Deprecated settings
+* [encryption_generated_password_length](#encryption_generated_password_length)
 
 ---
 
@@ -1261,13 +1263,6 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.1
 * __comment:__ either base64 or ascii85 
 
-### encryption_generated_password_length
-* __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
-* __mandatory:__ no 
-* __type:__ int
-* __default:__ encryption_min_password_length
-* __available:__ since version 2.0
-* __comment:__
 
 
 ### encryption_key_version_new_files
