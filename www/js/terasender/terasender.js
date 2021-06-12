@@ -411,7 +411,7 @@ window.filesender.terasender = {
                 this.log('Worker job progressed', 'worker:' + worker_id);
                 this.transfer.recordUploadProgressInWatchdog('worker:' + worker_id,data.fine_progress);
                 this.evalProgress(worker_id, data);
-                window.filesender.ensure_onPBKDF2AllEnded();
+                window.filesender.pbkdf2dialog.ensure_onPBKDF2AllEnded();
                 break;
                 
             case 'jobExecuted' :
