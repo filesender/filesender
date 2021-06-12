@@ -1058,6 +1058,7 @@ filesender.ui.startUpload = function() {
     this.transfer.oncomplete = function(time) {
 
         filesender.ui.files.clear_crust_meter_all();
+        window.filesender.pbkdf2dialog.ensure_onPBKDF2AllEnded();
         
         var redirect_url = filesender.ui.transfer.options.redirect_url_on_complete;
         if(redirect_url) {
