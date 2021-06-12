@@ -1128,6 +1128,12 @@ window.filesender.crypto_app = function () {
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
             };
+
+            // Should we use streamsaver for this download?
+            window.filesender.config.use_streamsaver = window.filesender.config.allow_streamsaver;
+            if( this.disable_streamsaver ) {
+                window.filesender.config.use_streamsaver = false;
+            }
             
             /*
              * This is a blob visitor that performs a legacy (as of mid 2020)
@@ -1149,6 +1155,7 @@ window.filesender.crypto_app = function () {
                 bytesProcessed: 0,
                 expected_size: filesize,
                 callbackError: callbackError,
+                name: function() { return "legacy"; },
                 error: function(error) {
                 },
                 visit: function(chunkid,decryptedData) {
@@ -1185,7 +1192,8 @@ window.filesender.crypto_app = function () {
                 blobSinkStreamed = window.filesender.streamsaver_sink( name, filesize, callbackError );
                 blobSink = blobSinkStreamed;
             }
-
+            window.filesender.log("Using blobSink " + blobSink.name());
+            
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
             

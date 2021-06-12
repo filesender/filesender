@@ -99,6 +99,7 @@ $(function() {
                     var streamsaverenabled = page.find('#streamsaverenabled').is(':checked');
                     crypto_app.disable_streamsaver = !streamsaverenabled;
                 }
+                console.log("download page has worked out if streamsaver should be disabled: " , crypto_app.disable_streamsaver );
 
                 if( archive_format || ids.length > 1 ) {
                     //
