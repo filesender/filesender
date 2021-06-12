@@ -14,7 +14,7 @@ window.filesender.streamsaver_sink = function ( arg_name, arg_expected_size, arg
         // keep a tally of bytes processed to make sure we get everything.
         bytesProcessed: 0,
         callbackError: arg_callbackError,
-        
+        name: function() { return "streamsaver"; },
         init: function() {
             var $this = this;
             
