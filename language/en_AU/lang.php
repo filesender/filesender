@@ -158,6 +158,7 @@ $lang['download'] = 'Download';
 $lang['download_bad_files_ids'] = 'Invalid download file IDs';
 $lang['download_bad_token_format'] = 'Invalid token format';
 $lang['download_chunk_progress'] = 'Downloading chunk {chunkid} of {chunkcount} <br/> chunk progress: {percentofchunkcomplete} %';
+$lang['download_chunk_progress'] = 'Downloading: {percentOffilecomplete} %';
 $lang['download_complete'] = 'Download complete';
 $lang['download_disclamer'] = 'Select which file(s) you wish to download.';
 $lang['download_disclamer_archive'] = 'You can download all files at once as a single compressed archive (.zip) file.  Click on the downloaded file to uncompress it and access individual files.';
