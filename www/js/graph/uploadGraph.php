@@ -4,6 +4,7 @@ require_once('../../../includes/init.php');
 
 $minSz = Config::get('upload_graph_bulk_min_file_size_to_consider');
 
+$encO = Config::get('encryption_mandatory');
 $encF = 'additional_attributes LIKE \'%\"encryption\":false%\'';
 $encT = 'additional_attributes LIKE \'%\"encryption\":true%\'';
 
@@ -18,9 +19,9 @@ $sql =
                             . DBLayer::toIntervalDays("a+b") . ' <= (select date(now())) '
   . '        ORDER BY a + b) as days LEFT '
   . ' JOIN (SELECT DATE(created) as date, '
-  . '   AVG(case WHEN time_taken > 0 AND ' . $encF . ' THEN size/time_taken ELSE null END) as speed, '
+  .($encO ? '0 as speed, ' : '   AVG(case WHEN time_taken > 0 AND ' . $encF . ' THEN size/time_taken ELSE null END) as speed, ' )
   . '   AVG(case WHEN time_taken > 0 AND ' . $encT . ' THEN size/time_taken ELSE null END) as enspeed, '
-  . '   AVG(case WHEN ' . $encF . ' THEN id ELSE null END) as count, '
+  .($encO ? '0 as count, ' : '   AVG(case WHEN ' . $encF . ' THEN id ELSE null END) as count, ' )
   . '   AVG(case WHEN ' . $encT . ' THEN id ELSE null END) as encount '
   . '       from StatLogs '
   . '      WHERE event=\'file_uploaded\' '
@@ -85,31 +86,33 @@ $lastSpeed=array(0);
 $lastEnSpeed=array(0);
 //$yMax = 0;
 foreach($result as $row) {
-
-    $row['speed']=round($row['speed']==0?(array_sum($lastSpeed)/count($lastSpeed)):($row['speed']/1048576),2);
-    $row['enspeed']=round($row['enspeed']==0?(array_sum($lastEnSpeed)/count($lastEnSpeed)):($row['enspeed']/1048576),2);
-
-    if ($row['speed']>0) { 
-	array_shift($lastSpeed);
-	$lastSpeed[]=$row['speed'];
-    }
-    if ($row['enspeed']>0) {
-	array_shift($lastEnSpeed);
-	$lastEnSpeed[]=$row['enspeed'];
-    }
-
-    if ($row['speed']<=0) $row['speed']=null;
-    if ($row['enspeed']<=0) $row['enspeed']=null;
-
     $data['data']['labels'][]=$row['date'];
+
+    if (!$encO) {
+        $row['speed']=round($row['speed']==0?(array_sum($lastSpeed)/count($lastSpeed)):($row['speed']/1048576),2);
+        if ($row['speed']>0) {
+            array_shift($lastSpeed);
+            $lastSpeed[]=$row['speed'];
+        }
+        if ($row['speed']<=0) $row['speed']=null;
+        $data['data']['datasets'][1]['data'][]=$row['speed'];
+    }
+
+    $row['enspeed']=round($row['enspeed']==0?(array_sum($lastEnSpeed)/count($lastEnSpeed)):($row['enspeed']/1048576),2);
+    if ($row['enspeed']>0) {
+        array_shift($lastEnSpeed);
+        $lastEnSpeed[]=$row['enspeed'];
+    }
+    if ($row['enspeed']<=0) $row['enspeed']=null;
     $data['data']['datasets'][0]['data'][]=$row['enspeed'];
-    $data['data']['datasets'][1]['data'][]=$row['speed'];
-    
-    //	$yMax=max($yMax,$row['EnSpeed'],$row['Speed']);
+
+    //  $yMax=max($yMax,$row['EnSpeed'],$row['Speed']);
 }
 //$yMax=round($yMax*0.12)*10;
 //$data['options']['scales']['yAxes'][0]['ticks']['max']=$yMax;
 
-echo json_encode($data/*,JSON_PRETTY_PRINT*/);
+if ($encO) {
+    unset($data['data']['datasets'][1]);
+}
 
-?>
+echo json_encode($data/*,JSON_PRETTY_PRINT*/);
