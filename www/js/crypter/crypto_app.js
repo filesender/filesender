@@ -819,11 +819,14 @@ window.filesender.crypto_app = function () {
                                       + " loaded " + evt.loaded + " of total " + evt.total );
                 if (evt.lengthComputable) {
                     var percentComplete = Math.round(evt.loaded / (1*$this.upload_crypted_chunk_size) *10000) / 100;
+                    var percentOfFileComplete = 100*((chunkid*$this.crypto_chunk_size + evt.loaded) / encryption_details.filesize );
+                    
                     if (progress) {
 
                         var msg = lang.tr('download_chunk_progress').r({chunkid: chunkid,
                                                                         chunkcount: encryption_details.chunkcount,
-                                                                        percentofchunkcomplete: percentComplete.toFixed(2)
+                                                                        percentofchunkcomplete: percentComplete.toFixed(2),
+                                                                        percentOffilecomplete: percentOfFileComplete.toFixed(2)
                                                                        }).out();
                         progress.html(msg);
                     }
