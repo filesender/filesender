@@ -146,6 +146,9 @@ class StorageFilesystem
         // Organize files by their storage path, get free space for each path
         foreach ($transfer->files as $file) {
             $path = static::buildPath($file);
+            if (!file_exists($path)) {
+                $path = dirname($path);
+            }
             $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
             
             if (!array_key_exists($filesystem, $filesystems)) {
