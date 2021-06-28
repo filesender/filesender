@@ -26,6 +26,7 @@ $SCRIPTDIR/download-language-from-poeditor.sh "fr"    "French"     $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "sr"    "Serbian"    $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "tr"    "Turkish"    $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "pt-br"    "Portuguese_Brazilian" $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "ja"    "Japanese" $dirname
 
 
 
