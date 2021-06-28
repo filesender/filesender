@@ -7,6 +7,9 @@
 // 
 // 
 ?>
-Kupon omogućuje nekome da vam pošalje datoteku.<br />
-Za izradu kupona unesite adresu e-pošte, a zatim odaberite Pošalji kupon.<br />
-Primatelju će biti poslana e-mail poruka s poveznicom za korištenje kupona.
+<h1>Dobrodošli na {cfg:site_name}</h1>
+
+<p>
+ {cfg:site_name} je siguran način dijeljenja datoteka s bilo kime !
+  Prijavite se za prijenos Vaših datoteka ili pozovite ljude da vam pošalju datoteku.
+</p>

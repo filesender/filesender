@@ -45,6 +45,7 @@ importfile sr_RS FileSender_2.0_Serbian.php
 importfile tr_TR FileSender_2.0_Turkish.php
 importfile pt_BR FileSender_2.0_Portuguese_Brazilian.php
 importfile ja_JP FileSender_2.0_Japanese.php
+importfile hr_HR FileSender_2.0_Croatian.php
 
 echo "Checking syntax of generated .php files, please wait..."
 for f in $(find ../../language -type f -name \*.php)

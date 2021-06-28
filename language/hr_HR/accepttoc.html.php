@@ -7,6 +7,4 @@
 // 
 // 
 ?>
-Kupon omogućuje nekome da vam pošalje datoteku.<br />
-Za izradu kupona unesite adresu e-pošte, a zatim odaberite Pošalji kupon.<br />
-Primatelju će biti poslana e-mail poruka s poveznicom za korištenje kupona.
+Prihvaćam uvjete i odredbe ove usluge
