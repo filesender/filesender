@@ -59,6 +59,7 @@ $locales  =  array(
     'it-it' => 'it_IT',
     'it-ch' => 'it_IT',
     'nl-nl'  => 'nl_NL',
+    'jp' => array('name' => 'Japanese', 'path' => 'ja_JP'),
     'nl' => 'nl_NL',
     'no-no' => 'no_NO',
     'no' => 'no_NO',
