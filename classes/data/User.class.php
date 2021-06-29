@@ -161,7 +161,12 @@ class User extends DBObject
     protected $quota = 0;
     protected $guest_expiry_default_days = null;
 
+    /** 
+     * These are not real properties and are used by queries in the
+     * system to return additional data about a user from the query.
+     */
     private $eventcount = 0;
+    private $eventip = 0;
     
     /**
      * From Auth if it makes sense
@@ -663,6 +668,9 @@ class User extends DBObject
         if ($property == 'eventcount') {
             return $this->eventcount;
         }
+        if ($property == 'eventip') {
+            return $this->eventip;
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -716,6 +724,8 @@ class User extends DBObject
             $this->quota = (int)$value;
         } elseif ($property == 'eventcount') {
             $this->eventcount = (int)$value;
+        } elseif ($property == 'eventip') {
+            $this->eventip = $value;
         } elseif ($property == 'guest_expiry_default_days') {
             $this->guest_expiry_default_days = (int)$value;
             if( $this->guest_expiry_default_days == 0 ) {

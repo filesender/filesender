@@ -62,6 +62,7 @@ class RestEndpointUser extends RestEndpoint
             'lang' => $user->lang,
             'frequent_recipients' => $user->frequent_recipients,
             'eventcount' => $user->eventcount,
+            'eventip' => $user->eventip
         );
     }
     
@@ -131,6 +132,7 @@ class RestEndpointUser extends RestEndpoint
         }
         
         $user = Auth::user();
+
         
         // Check ownership
         if ($id && $id != '@me') {
@@ -172,6 +174,15 @@ class RestEndpointUser extends RestEndpoint
                 return array_map(function ($user) {
                     return self::cast($user);
                 }, array_values(AuditLog::findUsersOrderedByCount($s,'User',$since)));
+            }
+            if (array_key_exists('decryptfailed', $_REQUEST)) {
+                $s = Utilities::sanitizeInput($_REQUEST['decryptfailed']);
+
+                $logs = AuditLog::getUsersForTargetTypeSince( LogEventTypes::TRANSFER_DECRYPT_FAILED, 'Transfer', $since );
+
+                return array_map(function ($user) {
+                    return self::cast($user);
+                }, array_values( $logs ));
             }
             
             if (!array_key_exists('match', $_REQUEST)) {

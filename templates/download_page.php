@@ -1,3 +1,38 @@
+<?php
+
+if (!function_exists('str_starts_with')) {
+    function str_starts_with($haystack, $needle) {
+        return (string)$needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0;
+    }
+}
+
+$have_av = !empty(Config::getArray('avprogram_list'));
+function outputBool( $v )
+{
+    if( $v ) echo "1";
+    else     echo "0";
+}
+function passErrToDesc( $p, $err )
+{
+    if( $p )   return "succeeded";
+    if( $err ) return "error";
+    return "failed";
+}
+function presentAVName( $v )
+{
+    $ret = Lang::tr("av_name_".$v);
+    if( str_starts_with($ret,"{")) {
+        $t = Lang::tr($v);
+        if( $ret != $t ) {
+            $ret = $t;
+            if( str_starts_with($ret,"{")) {
+                $ret = $v;
+            }
+        }
+    }
+    return $ret;
+}
+?>
 <div class="boxnoframe">
     <h1>{tr:download_page}</h1>
     
@@ -101,6 +136,36 @@
             </div>
         <?php } ?>
     </div>
+    <?php if($have_av) { ?>
+        <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
+            <div class="avdesc">{tr:av_results_description}
+            <?php foreach($transfer->files as $file) { ?>
+                <div class="avfile" data-avid="<?php echo $file->id ?>" >
+                    <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
+                    <?php if(!$file->have_avresults) { ?>
+                        <span class="desc">{tr:no_av_scans_performed}</span>
+                    <?php } else { ?>
+                        <table>
+                            <tr class="avresultheader">
+                                <th>{tr:performed}</th>
+                                <th>{tr:result}</th>
+                                <th>{tr:avname}</th>
+                            </tr>
+                        <?php foreach($file->scan_results as $res) { $resultdesc = passErrToDesc($res->passes,$res->error); ?>
+                            <tr class="avresult">
+                                <td class="created"><?php echo Utilities::sanitizeOutput(Utilities::formatDate($res->created)) ?></td>
+                                <td class="result avresult<?php echo $resultdesc ?>"><?php echo Lang::tr($resultdesc) ?></td>
+                                <td class="app_name"><?php echo presentAVName($res->name) ?></td>
+                            </tr>
+                        <?php } ?>
+                        </table>
+                    <?php } ?>
+                    
+                </div>
+            <?php } ?>
+            </div>
+        </div>
+    <?php } ?>
     <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($transfer->files):'1' ?>">
         <?php if($canDownloadArchive) { ?>
         <div class="select_all">
@@ -126,6 +191,7 @@
              data-client-entropy="<?php echo $transfer->client_entropy; ?>"
              data-fileiv="<?php echo $file->iv; ?>"
              data-fileaead="<?php echo $file->aead; ?>"
+             data-transferid="<?php echo $transfer->id ?>"
         >
             
             <?php if($canDownloadArchive) { ?>

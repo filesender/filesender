@@ -549,6 +549,19 @@ window.filesender.client = {
         
         return this.put('/transfer/' + id, {closed: true}, callback, opts);
     },
+
+    /**
+     * Decryption failed for a transfer, possibly by bad password
+     * 
+     * @param object transfer
+     */
+    decryptionFailedForTransfer: function(transfer) {
+        var id = (typeof transfer == 'object') ? transfer.id : transfer;
+        var opts = {};
+        var callback = function() {} ;
+        return this.put('/transfer/' + id, {decryptfailed: true}, callback, opts);
+    },
+
     
     /**
      * Delete a transfer (admin / owner if in early statuses)

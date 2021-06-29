@@ -12,7 +12,7 @@ A library for dynamically streaming dynamic tar or zip files without the need to
  *   $name          - Name of output file (optional).
  *   $opt           - Hash of archive options (optional, see "Archive Options"
  *                    below).
- *   $output_stream - Output stream for archive (optional - defaults to STDOUT)
+ *   $output_stream - Output stream for archive (optional - defaults to php://output)
  *
  * Archive Options:
  *

@@ -59,7 +59,34 @@ class Security
         if( $v != 'none' ) {
             header( 'X-Frame-Options: ' . $v, false );
         }
-        
+
+        $v = Utilities::toInt(Config::get('header_add_hsts_duration'),0);
+        if( $v > 0 ) {
+            header( 'Strict-Transport-Security: max-age=' . $v . '; includeSubDomains', false );
+        }
+
+
+        //
+        //
+        // Build a default Content-Security-Policy reply and output it if desired.
+        //
+        // avoid any use of 'unsafe-inline'
+        //
+        $csp = "default-src 'self'; "
+             . " script-src 'self'; "
+             . " object-src 'self'; "
+             . " style-src 'self' ; "
+             . " img-src 'self' data:; "
+             . " media-src 'none'; "
+             . " frame-src 'self'; "
+             . " font-src 'self'; "
+             . " connect-src 'self'";
+
+        if( Utilities::isTrue(Config::get('use_strict_csp'))) {
+            header( 'Content-Security-Policy: ' . $csp, false );
+            header( 'X-Content-Security-Policy: ' . $csp, false );
+            header( 'X-WebKit-CSP: ' . $csp, false );
+        }
     }
 
     private static $filesender_csrf_protector_logger = null;

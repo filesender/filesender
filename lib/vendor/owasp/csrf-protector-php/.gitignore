@@ -5,3 +5,4 @@ coverage/
 vendor/
 build/
 log/*.log
+.github

@@ -29,8 +29,13 @@ A note about colours;
 * [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
 
 ## Security settings
+* [use_strict_csp](#use_strict_csp)
 * [header_x_frame_options](#header_x_frame_options)
+* [header_add_hsts_duration](#header_add_hsts_duration)
 * [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
+* [avprogram_list](#avprogram_list)
+* [avprogram_max_size_to_scan](#avprogram_max_size_to_scan)
+
 
 ## Backend storage
 
@@ -124,7 +129,7 @@ A note about colours;
 * [encryption_password_must_have_upper_and_lower_case](#encryption_password_must_have_upper_and_lower_case)
 * [encryption_password_must_have_numbers](#encryption_password_must_have_numbers)
 * [encryption_password_must_have_special_characters](#encryption_password_must_have_special_characters)
-* [encryption_generated_password_length](#encryption_generated_password_length)
+* [encryption_password_text_only_min_password_length](#encryption_password_text_only_min_password_length)
 * [encryption_key_version_new_files](#encryption_key_version_new_files)
 * [encryption_random_password_version_new_files](#encryption_random_password_version_new_files)
 * [encryption_password_hash_iterations_new_files](#encryption_password_hash_iterations_new_files)
@@ -178,6 +183,7 @@ A note about colours;
 ## Authentication
 
 * [auth_sp_type](#auth_sp_type)
+* [auth_sp_force_session_start_first](#auth_sp_force_session_start_first)
 * __SimpleSAMLphp__
 	* [auth_sp_saml_authentication_source](#auth_sp_saml_authentication_source)
 	* [auth_sp_saml_simplesamlphp_url](#auth_sp_saml_simplesamlphp_url)
@@ -221,7 +227,7 @@ A note about colours;
 
 * [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
-* [remote_applications](#remote_applications)
+* [auth_remote_applications](#auth_remote_applications)
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
 * [rest_allow_jsonp](#rest_allow_jsonp)
 
@@ -241,6 +247,9 @@ A note about colours;
 
 * [data_protection_user_frequent_email_address_disabled](#data_protection_user_frequent_email_address_disabled)
 * [data_protection_user_transfer_preferences_disabled](#data_protection_user_transfer_preferences_disabled)
+
+## Deprecated settings
+* [encryption_generated_password_length](#encryption_generated_password_length)
 
 ---
 
@@ -365,6 +374,14 @@ A note about colours;
 * __comment:__ This allows an admin to find a user with admin/users and click to see the "my transfers" page that the specific user would see. ie, the admin sees the user's transfers instead of seeing their own. The menu becomes red in this mode and "my transfers" is changed to "user transfers" to attempt to caution the administrator that they are dealing with user data rather than their own.
 
 
+### use_strict_csp
+
+* __description:__ Include a strict Content-Security-Policy (CSP) header in web page responses.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.26
+* __comment:__ Default should be ok. This adds a rather strict Content-Security-Policy (CSP) header to pages to avoid inline and eval and loading resources from other sites.
 
 ### header_x_frame_options
 
@@ -374,6 +391,16 @@ A note about colours;
 * __default:__ sameorigin
 * __available:__ since version 2.7
 * __comment:__ Default should be ok. Can be 'deny' to disallow frames if you do not use them or 'none' to disable the feature (not recommended). Note that this setting will not override a setting that is already in place in your web server. This setting is mainly here as a second catch and for sites that can not configure their web server to install a site wide nominated value for X-Frame-Options.
+
+### header_add_hsts_duration
+
+* __description:__ Add Strict-Transport-Security header with the desired max-age
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 63072000
+* __available:__ since version 2.26
+* __comment:__ Set to 0 to disable. Default is 63072000 which is two years in seconds.
+
 
 
 * [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
@@ -387,6 +414,40 @@ A note about colours;
   [CSRF Protector php library](https://github.com/mebjas/CSRF-Protector-PHP/wiki) to also protect interactions from CSRF attack.
   Note that this option will definitely use cookies.
 
+
+* [avprogram_list](#avprogram_list)
+* __description:__ A list of anti virus and malware scanners to use.
+* __mandatory:__ no
+* __type:__ array (of array)
+* __default:__ ()
+* __available:__ since version 2.26
+* __comment:__ This is a list of the classes to use to check for bad content. They can only run on non encrypted files as the
+               server does not have access otherwise. The URL module accepts a parameter 'url' which is the url to send the
+               file content to for scanning. It is expected that the reply is JSON with a passes, error, and reason property.
+               The mime AV program takes an array of MIME types that the content MUST be in using the matchlist parameter.
+               The mime AV program defaults to using the first 8k of content to determine the MIME type, use bytesToConsider
+               to change this. Setting bytesToConsider to values below 8k will have no effect.
+
+```
+$config['avprogram_list'] = array( 'always_pass',
+                                   'mime' => array(
+                                       'name' => 'Check for valid MIME type',
+                                       'bytesToConsider' => 8*1024,
+                                       'matchlist' => array('image/jpeg', 'text/plain')
+                                   ),
+                                   'url' => array(
+                                       'name' => 'Foo',
+                                       'url' => 'http://localhost/foo/scanforfoo.php'
+                                   ));
+```
+
+* [avprogram_max_size_to_scan](#avprogram_max_size_to_scan)
+* __description:__ Do not try to scan files larger than this with the avprogram_list
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 100*1024*1024
+* __available:__ since version 2.26
+* __comment:__ 
 
 
 
@@ -1180,22 +1241,28 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ 
 
 
+### encryption_password_text_only_min_password_length
+* __description:__ If this is set then a password can avoid the password_must_have checks if it is at least this long.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 40
+* __available:__ since version 2.26
+* __comment:__ Set to 0 to disable. Using this setting allows a passphrase that might contain all human language words without numbers, special characters etc
+     but which is still difficult enough to guess by brute force due to it's length and thus combination of words. If this setting is set to say 40 then
+     a password that is 40+ characters long will be accepted even when the encryption_password_must_have directives are in use and the password does not have
+     the must_have constraints met.
+
+
+
 
 ### encryption_generated_password_encoding
-* __description:__ which encoding to use to encode generated passwords. Since the random information obtained during password generation is completely random it is useful to encode that into text characters, for example in the range a,b,c etc. By doing this one single byte of random data (0 to 255 inclusive) will likely be encoded to more than one character of output. The base64 encoding turns x bytes of input into 1.33 times as long output. Because ascii85 uses more possible characters it turns each 4 bytes into 5 bytes. This means that for the same length of encoded string the ascii85 will have more entropy. Note that the ascii85 used is the Z85 from ZeroMQ to avoid the use of the quote character in output.
+* __description:__ It is highly recommended to leave the default value (ie not set in your config.php). Which encoding to use to encode generated passwords. Since the random information obtained during password generation is completely random it is useful to encode that into text characters, for example in the range a,b,c etc. By doing this one single byte of random data (0 to 255 inclusive) will likely be encoded to more than one character of output. The base64 encoding turns x bytes of input into 1.33 times as long output. Because ascii85 uses more possible characters it turns each 4 bytes into 5 bytes. This means that for the same length of encoded string the ascii85 will have more entropy. Note that the ascii85 used is the Z85 from ZeroMQ to avoid the use of the quote character in output.
 * __mandatory:__ no 
 * __type:__ string
 * __default:__ base64
 * __available:__ since version 2.1
 * __comment:__ either base64 or ascii85 
 
-### encryption_generated_password_length
-* __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
-* __mandatory:__ no 
-* __type:__ int
-* __default:__ encryption_min_password_length
-* __available:__ since version 2.0
-* __comment:__
 
 
 ### encryption_key_version_new_files
@@ -1715,6 +1782,19 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">to use type "fake" you need ...</span>
 
+
+### auth_sp_force_session_start_first
+
+* __description:__ Call php session_start to setup the session cookie before attempting auth authentication with the auth_sp_type.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __cookies:__ depending on php env this might set PHPSESSID cookie
+* __available:__ since version 2.26
+* __comment:__ Some of the auth_sp methods may use _SESSION or perform other actions that might alter how session_start() will work. If that is the case you can set this configuration to true and session_start() will be called before authentication is performed.
+
+
+
 ### session_cookie_path
 
 * __description:__ Explicitly sets the session.cookie.path parameter for the authentication cookies.  You typically need this if you use SimpleSAMLphp for authentication and have multiple FileSender instances using the same SimpleSAMLphp installation.  Shibboleth has its own session identifier mechanism and you probably won't need to change the session_cookie_path when using Shibboleth.
@@ -2197,7 +2277,7 @@ $config['log_facilities'] =
 * __default:__ "sha1"
 * __available:__ since version 2.0
 
-### remote_applications
+### auth_remote_applications
 
 * __description:__  list of remote applications.  This is an array where each entry includes an authentication secret, whether or not the application has admin rights and what methods the application is allowed to use:
 * __mandatory:__ no
@@ -2205,7 +2285,14 @@ $config['log_facilities'] =
 * __default:__
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ <span style="background-color:orange">needs more work.  Example: array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boolean OU array (pair de nom de méthode et de valeurs d'accès.  ex: get => TRUE, post => FALSE      Explained in more detail in API documentation page.</span>
+* __comment:__ 
+Example:
+
+`$config['auth_remote_applications'] = array (
+    'appname' => array( 'secret' => 'appsecret', 'isAdmin' => true, 'acl' => array( 'get' => TRUE, 'post' => TRUE, 'info' => TRUE, 'transfer' => TRUE))
+);`
+The array above contains the remote_application name and all the information for that is in an array under the key. 
+In this example, the application `appname` with secret `secret` has admin rights and can access the endpoint `/info` and `/transfer` by get and post. If you want it to access another endpoint it's necessary to put it in `acl` array. Without it the `info` ACL the test example would fail with permission denied.
 
 ### auth_remote_user_autogenerate_secret
 
