@@ -66,7 +66,7 @@ $locales  =  array(
     'nb' => 'no_NO',
     'nb-no' => 'no_NO',
     'pl' => array('name' => 'Polski', 'path' => 'pl_PL'),
-    'pt-br' => array('name' => 'Brazilian Portuguese', 'path' => 'pt_BR'),
+    'pt-br' => array('name' => 'Português Brasileiro', 'path' => 'pt_BR'),
     'sl' => 'sl_SI',
     'sl-si' => 'sl_SI',
     'sr' => 'sr_RS',
