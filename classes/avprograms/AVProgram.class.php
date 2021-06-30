@@ -63,6 +63,7 @@ abstract class AVProgram
                 DBConstantAVProgram::URL          => new AVProgramURL(),
                 DBConstantAVProgram::TOOBIG       => new AVProgramTooBig(),
                 DBConstantAVProgram::MIME         => new AVProgramMIME(),
+                DBConstantAVProgram::ENCRYPTED    => new AVProgramEncrypted(),
             );
         }
         if( !self::$programList ) {
