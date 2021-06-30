@@ -207,19 +207,19 @@ if( $encryption_mandatory ) {
                             <label for="encryption_password" class="cursor" >{tr:file_encryption_password} : </label>
                             <input class="encryption_password" id="encryption_password" name="encryption_password" type="password" autocomplete="new-password" readonly />
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_too_short_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">
                             {tr:file_encryption_password_too_short}
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_must_have_numbers_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">
                             {tr:file_encryption_password_must_have_numbers}
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_must_have_upper_and_lower_case_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">
                             {tr:file_encryption_password_must_have_upper_and_lower_case}
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_must_have_special_characters_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">
                             {tr:file_encryption_password_must_have_special_characters}
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_can_have_text_only_min_password_length_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">
                             {tr:encryption_password_container_can_have_text_only_min_password_length_message}
                         </div>
                         
