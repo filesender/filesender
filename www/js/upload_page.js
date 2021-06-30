@@ -554,21 +554,11 @@ filesender.ui.files = {
         var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
         if( v ) {
             slideMessage = true;
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, false,
-                $('#encryption_password_container_can_have_text_only_min_password_length_message'));
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, false,
-                $('#encryption_password_container_too_short_message'));
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, false,
-                $('#encryption_password_container_must_have_upper_and_lower_case_message'));
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, false,
-                $('#encryption_password_container_must_have_numbers_message'));
-            filesender.ui.files.updatePasswordMustHaveMessage(
-                slideMessage, false,
-                $('#encryption_password_container_must_have_special_characters_message'));
+            $('.passwordvalidation').each(function( index ) {
+                filesender.ui.files.updatePasswordMustHaveMessage(
+                    slideMessage, false,
+                    $( this ));
+            });
             return true;
         }
   
