@@ -16,7 +16,7 @@ echo "\n";
 //
 $packages = array(
     'chart.js' => array(
-        'path' => 'chart.js/Chart.bundle.min.js',
+        'path' => 'chart.js/chart.min.js',
         'pattern' => '/Chart.js v([0-9.]+).*/m',
     ),
     'font awesome' => array(

@@ -92,7 +92,7 @@ if (!AggregateStatistic::enabled()) {
 ?>
 
 
-        <script type="text/javascript" src="lib/chart.js/Chart.bundle.min.js"></script>
+        <script type="text/javascript" src="lib/chart.js/chart.min.js"></script>
         <script type="text/javascript" src="js/graph/aggregate-statistics.js"></script>
         <script>
          $( document ).ready(function() {
