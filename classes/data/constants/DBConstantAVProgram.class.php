@@ -50,6 +50,7 @@ class DBConstantAVProgram extends DBConstant
     const URL            = 'url';
     const TOOBIG         = 'toobig';
     const MIME           = 'mime';
+    const ENCRYPTED      = 'encrypted';
     
     protected function getEnum()
     {
@@ -61,6 +62,7 @@ class DBConstantAVProgram extends DBConstant
             self::URL           => 5,
             self::TOOBIG        => 6,
             self::MIME          => 7,
+            self::ENCRYPTED     => 8,
         );
     }
 

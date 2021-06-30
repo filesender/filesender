@@ -45,6 +45,7 @@ foreach(array_slice($argv, 1) as $arg) {
 $maxsizetoscan = Config::get("avprogram_max_size_to_scan");
 $avprograms = AVProgram::getActiveProgramList();
 $toobig = new AVProgramTooBig();
+$encr = new AVProgramEncrypted();
 
 if( !count($avprograms)) {
     $emsg = "No AV programs are defined\n"
@@ -68,9 +69,15 @@ while( true ) {
     
     foreach( $fileList as $file ) {
         echo "Looking at file " . $file->id . "\n";
-        if( !$file->is_encrypted ) {
+        
+        if( $file->is_encrypted )
+        {
+            $encr->inspect( $file );
+        }
+        else
+        {
             if( $file->size > $maxsizetoscan ) {
-                $toobig->insepect( $file );
+                $toobig->inspect( $file );
             } else {
                 foreach( $avprograms as $prg ) {
                     $prg->inspect( $file );
