@@ -408,7 +408,7 @@ if( $encryption_mandatory ) {
     <?php if (Config::get('upload_graph_bulk_display')) { ?>
         <div id="graph" class="uploadbulkgraph"><div id="graphDiv"><canvas id="speedChart"></canvas></div></div>
 
-        <script type="text/javascript" src="{path:lib/chart.js/Chart.bundle.min.js}"></script>
+        <script type="text/javascript" src="{path:lib/chart.js/chart.min.js}"></script>
         <script type="text/javascript" src="{path:js/graph.js}"></script>
     <?php } ?>
     
