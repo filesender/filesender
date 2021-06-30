@@ -79,8 +79,8 @@ $(function() {
         u.find('.saml_id').text(user.saml_id);
         u.find('.last_activity').text(user.last_activity.formatted);
         u.find('.event_count').text(user.eventcount);
+        u.find('.ip').text(user.eventip);
         u.appendTo(results);
-
         u.find('[data-action="show-transfers"]').on('click', function() {
             var id = $(this).closest('.user').attr('data-id');
             filesender.ui.redirect( filesender.config.base_path
@@ -183,6 +183,24 @@ $(function() {
         });
     }
 
+    var search_decryptfailed = function( since ) {
+        results.removeClass('no_results').addClass('searching');
+
+        filesender.client.get('/user', function(matches) {
+            clean_users();
+
+            results.toggleClass('no_results', !matches.length);
+
+            for(var i=0; i<matches.length; i++)
+                add_user(matches[i]);
+
+            results.removeClass('searching');
+        }, {
+            args: { decryptfailed:true, since:since }
+        });
+    }
+
+    
     section.find('.search [class="ab_hit_create_total_limit"]').on('click', function() {
         search_potential_abuse('guest_created_lh','','User',$(this).attr('data-since'));
     });
@@ -198,6 +216,9 @@ $(function() {
     });
     section.find('.search [class="ab_guests_del"]').on('click', function() {
         search_potential_abuse('','guest_closed','User',$(this).attr('data-since'));
+    });
+    section.find('.search [class="ab_decryptfailed"]').on('click', function() {
+        search_decryptfailed($(this).attr('data-since'));
     });
 
 

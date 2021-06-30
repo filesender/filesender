@@ -275,6 +275,10 @@ class Config
         if (self::get('encryption_min_password_length') > self::get('encryption_generated_password_length')) {
             throw new ConfigBadParameterException('Generated password length must be equal or greater than encryption_min_password_length');
         }
+        if (self::get('encryption_password_text_only_min_password_length') > 0
+            && self::get('encryption_min_password_length') >= self::get('encryption_password_text_only_min_password_length') ) {
+            throw new ConfigBadParameterException('The encryption_password_text_only_min_password_length setting must be greater than encryption_min_password_length');
+        }
 
         // If the admin has very small chunks then they will have a smaller max file size.
         self::$parameters['crypto_gcm_max_file_size'] = 4294967296 * self::$parameters['upload_chunk_size'];
@@ -478,6 +482,11 @@ class Config
         self::$cached_parameters[] = $key;
         
         return $value;
+    }
+
+    public static function getArray($key)
+    {
+        return Utilities::ensureArray(Config::get($key));
     }
     
     /**

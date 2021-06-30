@@ -11,13 +11,13 @@
         </div>
         
         <?php if(!Config::get('helpURL')) { ?>
-        <div id="dialog-help" style="display:none" title="{tr:help}">
+        <div id="dialog-help" title="{tr:help}">
             {tr:help_text}
         </div>
         <?php } ?>
         
         <?php if(!Config::get('aboutURL')) { ?>
-        <div id="dialog-about" style="display:none" title="{tr:about}">
+        <div id="dialog-about" title="{tr:about}">
             {tr:about_text}
         </div>
         <?php } ?>

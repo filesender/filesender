@@ -413,13 +413,27 @@ if (!defined('__CSRF_PROTECTOR__')) {
                 self::$cookieConfig = new csrfpCookieConfig(self::$config['cookieConfig']);
             }
 
+            /* setcookie(
+             *     self::$config['CSRFP_TOKEN'], 
+             *     $token,
+             *     self::$cookieConfig->expire ? (time() + self::$cookieConfig->expire) : self::$cookieConfig->expire,
+             *     self::$cookieConfig->path,
+             *     self::$cookieConfig->domain,
+             *     (bool) self::$cookieConfig->secure);
+             */
+
+            // PHP 7.3 only. Adds SameSite = Strict.
             setcookie(
                 self::$config['CSRFP_TOKEN'], 
                 $token,
-                self::$cookieConfig->expire ? (time() + self::$cookieConfig->expire) : self::$cookieConfig->expire,
-                self::$cookieConfig->path,
-                self::$cookieConfig->domain,
-                (bool) self::$cookieConfig->secure);
+                [
+                    'expires' => self::$cookieConfig->expire ? (time() + self::$cookieConfig->expire) : self::$cookieConfig->expire,
+                    'path'    => self::$cookieConfig->path,
+                    'domain'  => self::$cookieConfig->domain,
+                    'secure'  => (bool) self::$cookieConfig->secure,
+                    'httponly' => false,
+                    'samesite' => 'Strict',
+                ]);
         }
 
         /*

@@ -51,6 +51,7 @@ $default = array(
     'upload_considered_too_slow_if_no_progress_for_seconds' => 30, // seconds
     'force_ssl' => true,
     'client_ip_key' => 'REMOTE_ADDR',
+    'use_strict_csp' => true, // add a strict CSP header to the web pages
     
     'auth_sp_type' => 'saml',  // Authentification type
     'auth_sp_set_idp_as_user_organization' => false,
@@ -61,6 +62,7 @@ $default = array(
     'auth_sp_shibboleth_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
+    'auth_sp_force_session_start_first' => false,  // maybe move session_start() forward.
     
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
@@ -98,10 +100,11 @@ $default = array(
     
     'encryption_enabled' => true,
     'encryption_mandatory' => false,
-    'encryption_min_password_length' => 0,
-    'encryption_password_must_have_upper_and_lower_case' => false,
-    'encryption_password_must_have_numbers' => false,
-    'encryption_password_must_have_special_characters' => false,
+    'encryption_min_password_length' => 12,
+    'encryption_password_must_have_upper_and_lower_case' => true,
+    'encryption_password_must_have_numbers' => true,
+    'encryption_password_must_have_special_characters' => true,
+    'encryption_password_text_only_min_password_length' => 40,
     'encryption_generated_password_length' => 30,
     'encryption_generated_password_encoding' => 'base64',
     'encryption_encode_encrypted_chunks_in_base64_during_upload' => false,
@@ -248,6 +251,7 @@ $default = array(
     ),
 
     'header_x_frame_options' => 'sameorigin',
+    'header_add_hsts_duration' => 63072000,
     'owasp_csrf_protector_enabled' => false,
 
     'theme' => '',
@@ -286,6 +290,9 @@ $default = array(
 
     'allow_guest_expiry_date_extension' => 0,
     'allow_guest_expiry_date_extension_admin' => array(31, true),
+
+    'avprogram_list' => array(),
+    'avprogram_max_size_to_scan' => 100*1024*1024,
     
     
     'transfer_options' => array(

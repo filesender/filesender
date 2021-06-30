@@ -270,12 +270,12 @@ if (!function_exists('clickableHeader')) {
             </td>
 
             <td class="actions">
-                <div style="margin:3px">
+                <div id="marg3">
                     <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                     <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
                     <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
                 </div>
-                <div style="margin:3px">
+                <div id="marg3">
                     <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
                     <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
                     <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o adminaction" title="{tr:extend_expires}"></span><?php } ?>
@@ -286,12 +286,12 @@ if (!function_exists('clickableHeader')) {
         <tr class="transfer_details objectholder" data-id="<?php echo $transfer->id ?>">
             <td colspan="8">
                 <div class="actions">
-                    <div style="margin:3px">
+                    <div id="marg3">
                         <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                         <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
                         <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
                     </div>
-                    <div style="margin:3px">
+                    <div id="marg3">
                         <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
                         <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
                         <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o" title="{tr:extend_expires}"></span><?php } ?>
@@ -440,6 +440,7 @@ if (!function_exists('clickableHeader')) {
                              data-client-entropy="<?php echo $transfer->client_entropy; ?>"
                              data-fileiv="<?php echo $file->iv; ?>"
                              data-fileaead="<?php echo $file->aead; ?>"
+                             data-transferid="<?php echo $transfer->id; ?>"
                         >
                             <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
@@ -460,7 +461,7 @@ if (!function_exists('clickableHeader')) {
                                         data-client-entropy="<?php echo $transfer->client_entropy; ?>"
                                         data-fileiv="<?php echo $file->iv; ?>"
                                         data-fileaead="<?php echo $file->aead; ?>"
-                                      
+                                        data-transferid="<?php echo $transfer->id; ?>"
                                 ></span>
                                         
                                 <?php } else {?>

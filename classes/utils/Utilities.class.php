@@ -444,6 +444,12 @@ class Utilities
         }
         return 'false';
     }
+    public static function toInt($v, $def) {
+        if(!is_numeric($v)) {
+            return $def;
+        }
+        return intval($v);
+    }
 
     /**
      * This is a wrapper around the PHP http_build_query with some
@@ -693,5 +699,13 @@ class Utilities
             $ret = $_GET[$name];
         }
         return $ret;
+    }
+
+    public static function clampMin( $v, $min ) 
+    {
+        $v = self::toInt($v,$min);
+        if( $v < $min ) 
+            return $min;
+        return $v;
     }
 }

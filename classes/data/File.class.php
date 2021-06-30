@@ -116,6 +116,12 @@ class File extends DBObject
             'type' => 'string',
             'size' => 512,
             'null' => true
+        ),
+
+        // this is a cache of which files have no avresults
+        'have_avresults' => array(
+            'type' => 'bool',
+            'default' => false
         )
     );
 
@@ -170,6 +176,7 @@ class File extends DBObject
     protected $sha1 = null;
     protected $iv = '';
     protected $aead = null;
+    protected $have_avresults = false;
    
     /**
      * Related objects cache
@@ -179,6 +186,11 @@ class File extends DBObject
     private $pathCache = null;
     private $directoryCache = null;
 
+    /**
+     * Set selectors
+     */
+    const WITHOUT_AVRESULTS = " have_avresults = false ";
+    
     /**
      * Set the name of a File, optionally creating a Path
      * object internally if pathedName contains slashes
@@ -487,7 +499,7 @@ class File extends DBObject
     {
         if (in_array($property, array(
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
-          , 'storage_class_name', 'iv', 'aead'
+          , 'storage_class_name', 'iv', 'aead', 'have_avresults'
         ))) {
             return $this->$property;
         }
@@ -545,6 +557,22 @@ class File extends DBObject
             
             return $this->upload_end - $this->upload_start;
         }
+
+        if ($property == 'is_encrypted') {
+            return $this->transfer->is_encrypted;
+        }
+        if ($property == 'scan_results') {
+            return AVResult::forFile( $this );
+        }
+        if ($property == 'av_all_good') {
+            $r = AVResult::forFile( $this );
+            foreach($r as $res) {
+                if( !$res->passes ) {
+                    return false;
+                }
+            }
+            return true;
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -581,6 +609,8 @@ class File extends DBObject
             $this->iv = $value;
         } elseif ($property == 'aead') {
             $this->aead = $value;
+        } elseif ($property == 'have_avresults') {
+            $this->have_avresults = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
@@ -599,5 +629,13 @@ class File extends DBObject
     public function getStream()
     {
         return Storage::getStream($this);
+    }
+
+    public static function findFilesWithoutAVResults( $limit = 100 )
+    {
+        return self::all( array('where' => self::WITHOUT_AVRESULTS
+                               ,'limit' => $limit
+        ));
+        
     }
 }
