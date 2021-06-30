@@ -56,7 +56,7 @@ class ZipStreamer {
 
   const ATTR_MADE_BY_VERSION = 0x032d; // made by version  (upper byte: UNIX, lower byte v4.5)
 
-  const STREAM_CHUNK_SIZE = 1048560; // 16 * 65535 = almost 1mb chunks, for best deflate performance
+  public $STREAM_CHUNK_SIZE = 1048560; // 16 * 65535 = almost 1mb chunks, for best deflate performance
 
   private $extFileAttrFile;
   private $extFileAttrDir;
@@ -400,7 +400,7 @@ class ZipStreamer {
       $compStream = DeflateStream::create($level);
     }
 
-    while (!feof($stream) && $data = fread($stream, self::STREAM_CHUNK_SIZE)) {
+    while (!feof($stream) && $data = fread($stream, $this->STREAM_CHUNK_SIZE)) {
       $dataLength->add(strlen($data));
       hash_update($hashCtx, $data);
       if (COMPR::DEFLATE === $compress) {

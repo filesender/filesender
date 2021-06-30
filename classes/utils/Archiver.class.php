@@ -221,6 +221,8 @@ class Archiver
             header("Content-Length: $contentLength");
             
             $zip = new ZipStreamer\ZipStreamer();
+            // make chunk sizes match for network IO efficiency.
+            $zip->STREAM_CHUNK_SIZE = Config::get('upload_chunk_size');
             $filename .= '.zip';
             
             $zip->sendHeaders($filename, "application/octet-stream");
