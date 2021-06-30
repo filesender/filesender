@@ -37,15 +37,14 @@ if (!defined('FILESENDER_BASE')) {
 
 /**
  */
-class AVProgramTooBig extends AVProgram
+class AVProgramEncrypted extends AVProgram
 {
-    
     public function inspect( $file )
     {
-        $appid = DBConstantAVProgram::lookup( DBConstantAVProgram::TOOBIG );
-        echo "AVProgramTooBig on file " . $file->id . "\n";
-        $passes = false;
-        $result = AVResult::create( $file, $appid, $this->name, $passes, false, $internaldesc = 'file is too large.' );
+        $appid = DBConstantAVProgram::lookup( DBConstantAVProgram::ENCRYPTED );
+        echo "AVProgramEncrypted on file " . $file->id . "\n";
+        $passes = true;
+        $result = AVResult::create( $file, $appid, $this->name, $passes, false, $internaldesc = 'file is encrypted.' );
     }
     
 };
