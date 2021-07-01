@@ -1670,10 +1670,6 @@ div.not_displayed {
     display: none;
 }
 
-#dialog-about,
-#dialog-help {
-    display:none
-}
 
 
 #senderemail_full_match_label {
