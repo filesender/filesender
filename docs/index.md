@@ -24,6 +24,14 @@ about the project [please visit our homepage](http://filesender.org).
 
 ### Which version should you choose
 
+There are 3 releases, of which 2 are maintained:
+
+- Version 1 is an archived, older version of FileSender
+- Version 2 is the current mainstream version with active feature developmet
+- Version 3 is in development, for future release. This version features a new UI
+
+With the release of FileSender 3.0, FileSender 1 will become unmaintained.
+
 The version 2.x series is the recommended choice. The latest version
 can be obtained from the [github releases
 page](https://github.com/filesender/filesender/releases). 
@@ -41,7 +49,7 @@ for those who have not upgraded to a 2.x installation: [1.6.1, released on Decem
 
 ### Documentation
 
-Please see the [documentation for versions 2.x](http://docs.filesender.org/v2.0/).
+Please see the [documentation for versions 3.x](http://docs.filesender.org/v3.0/).
 
 ### License
 
@@ -62,7 +70,7 @@ page if you have a feature you would like to see added to FileSender.
 
 ### Features
 
-For a more detailed list of version 2.x features see the [v2.0 features page](v2.0/features/).
+For a more detailed list of version 3.x features see the [v3.0 features page](v3.0/features/).
 
 * light-weight server footprint, optimized for least possible dependencies
 * share arbitrarily large files from standard desktop environments, no client-side deployment required
@@ -82,14 +90,13 @@ For a more detailed list of version 2.x features see the [v2.0 features page](v2
 * UTF8 support, supports all international character sets
 * Multi-language support. Out-of-the-box FileSender supports Czech, Croatian, Dutch, English (Australian), Finnish, French, German, Hungarian, Italian, Norwegian (Bokmål), Serbian, Slovenian and Spanish. You can easily adapt relevant language labels to your local needs in an upgrade-friendly way, for example to localise the splash screen text. You can also easily modify which languages you make available to your users
 * PDO-based multi-database support for PostgreSQL, MySQL and sqlite
-
-
+* Bootstrap based user interface
 
 ### Requirements
 
 Some storage, either MariaDB or PostgreSQL for database, either Apache
 or nginx for web server, PHP and SimpleSamlPhp. Please see the
-[installation](v2.0/install/) page for minimum version requirements
+[installation](v3.0/install/) page for minimum version requirements
 and advice.
 
 

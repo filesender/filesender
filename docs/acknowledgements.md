@@ -65,7 +65,6 @@ contributions from ARNES (Slovenia), CSC/FUNET (Finland).
 * Nakamura Motonori, NII, Japan for suggesting to include the download status of a file in MyFiles, triggering the Myfiles update in version 1.6
 * Emiel Florijn, the Netherlands, for spotting and reporting a security issue
 
-
 ### Translations
 
 Language files were contributed by: 
@@ -87,12 +86,10 @@ Language files were contributed by:
 The Dutch, English and Norwegian language files were provided by the
 FileSender core team.
 
-
 ### Did we miss someone?
 
 Despite our best efforts we might have forgotten someone. Please drop
 us a line on filesender-dev@filesender.org if you spot any omissions.
-
 
 
 ## Acknowledgements for v1-5
