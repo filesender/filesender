@@ -104,7 +104,6 @@ class Autoloader
 
         'TestDatabase*' => 'test/database/',
 
-        'PHPZipStreamer*' => '/PHPZipStreamer/src/',
 
         // Must be last
         '*' => 'utils/'
