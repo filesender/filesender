@@ -532,6 +532,7 @@ filesender.ui.files = {
         var pass = input.val();
         var invalid = false;
         var msg = null;
+
         
         if( filesender.ui.transfer.encryption_password_version == 
             crypto.crypto_password_version_constants.v2018_text_password )
@@ -550,6 +551,17 @@ filesender.ui.files = {
             }
         }
 
+        var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
+        if( v ) {
+            slideMessage = true;
+            $('.passwordvalidation').each(function( index ) {
+                filesender.ui.files.updatePasswordMustHaveMessage(
+                    slideMessage, false,
+                    $( this ));
+            });
+            return true;
+        }
+  
         //
         // Very long text passwords might be allowed by sys admin.
         //
@@ -1650,8 +1662,8 @@ $(function() {
             // so we must reset that here if the user starts modifying the password.
             filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
             filesender.ui.transfer.encryption_password_encoding = 'none';            
+            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
         }
-       
     });
     
     filesender.ui.nodes.encryption.generate.on('click', function() {
