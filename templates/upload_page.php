@@ -236,15 +236,10 @@ if( $encryption_mandatory ) {
                 </div>
 
 <?php if(!Auth::isGuest()) { ?>
-                <div class="row">
-                    <div class="col-3">
-                    </div>
-                    <div class="col-6">
-                        <a href="?s=transfers" class="btn btn-primary btn-lg btn-block mytransferslink" role="button">{tr:ui2_my_transfers}</a>
-                    </div>
-                    <div class="col-3">
-                    </div>
+                <div class="d-flex justify-content-center">
+                    <a href="?s=transfers" class="btn btn-primary btn-lg btn-block mytransferslink" role="button">{tr:ui2_my_transfers}</a>
                 </div>
+                
 <?php } ?>              
             </div>
             
@@ -417,13 +412,9 @@ if( $encryption_mandatory ) {
                     </div>
         	</div>
             <?php } ?>
-            
-            <div class="row">
-                <div class="col">
-                </div>
-                <div class="col">
-                    <a href="#" class="btn btn-primary btn-lg btn-block stage1continue" role="button">{tr:continue}&nbsp;<i class="fa fa-chevron-right"></i></a>
-                </div>
+
+            <div class="d-flex justify-content-center">
+                <a href="#" class="btn btn-primary btn-lg btn-block stage1continue" role="button">{tr:continue}&nbsp;<i class="fa fa-chevron-right"></i></a>
             </div>
         </div>
         
@@ -631,20 +622,13 @@ if( $encryption_mandatory ) {
                     
                 </td>
                 </tr>
-                <tr>
-                    <td class="right" colspan="3"> 
-                    <div class="row">
-                        <div class="col">
-                            <a href="#" class="stage2back btn btn-primary btn-lg btn-block" role="button"><i class="fa fa-chevron-left"></i>&nbsp;{tr:back}</a>
-                        </div>
-                        <div class="col">
-                            <a href="#" class="stage2continue btn btn-primary btn-lg btn-block" role="button">{tr:send}&nbsp;<i class="fa fa-chevron-right"></i></a></a>
-                        </div>
-                    </div>
-                    </td>
-                </tr>                
-                
             </table>
+
+            <div class="d-flex justify-content-between">
+                <a href="#" class="stage2back btn btn-primary btn-lg btn-block" role="button"><i class="fa fa-chevron-left"></i>&nbsp;{tr:back}</a>
+                <a href="#" class="stage2continue btn btn-primary btn-lg btn-block" role="button">{tr:send}&nbsp;<i class="fa fa-chevron-right"></i></a></a>
+            </div>
+            
             </div>
             
         </div>
