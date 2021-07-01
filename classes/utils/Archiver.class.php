@@ -30,9 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// generating zip64
-require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/ZipStreamer.php');
-require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/lib/Count64.php');
 
 // generating tar
 require_once(FILESENDER_BASE.'/lib/vendor//barracudanetworks/archivestream-php/src/Archive.php');
@@ -96,21 +93,27 @@ class Archiver
         $outstream = fopen($tfn,'w');
 
         $contentsz = 0;
-        $zip = new ZipStreamer\ZipStreamer( array( 'outstream' => $outstream ));
+        // work out the content length
+        $tfn = tempnam( Filesystem::getTempDirectory(), 'szf');
+        $outstream = fopen($tfn,'w');
+        $opts['send_http_headers'] = false;
+        $archive = new \Barracuda\ArchiveStream\ZipArchive($filename . ".zip",$opts,$filename,$outstream);
         $filename .= '.zip';
         $stream = null;
         
         // send each file
         foreach ($this->files as $k => $data) {
             $file = $data['data'];
+            $fileopts = array();
             $transfer = $file->transfer;
             $archivedName = $this->getArchivedFileName( $file );
             $contentsz += $file->size;
             
-            $zip->addFileFromStreamWithoutData($stream, $file->size, $archivedName);
+	    $archive->init_file_stream_transfer($archivedName, $file->size, $fileopts);
+	    $archive->complete_file_stream();        
         }
 
-        $zip->finalize();
+        $archive->finish();        
 
         fflush($outstream);
         $ret = $contentsz + filesize($tfn);
@@ -219,11 +222,11 @@ class Archiver
 
             $contentLength = $this->getZipSize( $filename );
             header("Content-Length: $contentLength");
+            $opts['send_http_headers'] = true;
             
-            $zip = new ZipStreamer\ZipStreamer();
-            $filename .= '.zip';
+            $outstream = fopen('php://output','w');
+            $archive = new \Barracuda\ArchiveStream\ZipArchive($filename . ".zip",$opts,$filename,$outstream);
             
-            $zip->sendHeaders($filename, "application/octet-stream");
             
             // send each file
             foreach ($this->files as $k => $data) {
@@ -236,11 +239,11 @@ class Archiver
                 $archivedName = $this->getArchivedFileName( $file );
                 
                 $stream = $file->getStream();
-                $zip->addFileFromStream($stream, $archivedName);
+                $this->addFileToArchive( $archive, $file );
                 fclose($stream);
             }
 
-            $zip->finalize();
+            $archive->finish();        
         }
 
         if ($recipient) {
@@ -281,7 +284,7 @@ class Archiver
         
 	$archive->init_file_stream_transfer($archivedName, $file->size, $fileopts);
 
-        $block_size = 1048576;
+        $block_size = Config::get('upload_chunk_size');
         $stream = $file->getStream();
 	while ($data = fread($stream, $block_size))
 	{
