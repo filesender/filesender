@@ -227,11 +227,18 @@ use ( $new_guests_can_only_send_to_creator,
                                 
                                 <?php if(count(Transfer::availableOptions(true))) { ?>
                                     <div class="accordion" class="advanced_options_tr" id="advanced_options_tr">
-                                        <div class="card">
-                                            <div class="card-header" id="headingOneTr" data-toggle="collapse" data-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseAdvTr">{tr:advanced_settings}</div>
-                                            <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOneTr" data-parent="#advanced_options_tr">
-                                                <div class="card-body">
-                                                    <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingOneTr">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseOne">
+                                                    {tr:advanced_settings}
+                                                </button>
+                                            </h2>                            
+                                            <div class="card">
+
+                                                <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOneTr" data-parent="#advanced_options_tr" data-bs-parent="#advanced_options_tr">
+                                                    <div class="card-body">
+                                                        <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
