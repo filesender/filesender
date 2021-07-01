@@ -653,9 +653,7 @@ filesender.ui.files = {
         if( v ) {
             slideMessage = true;
             $('.passwordvalidation').each(function( index ) {
-                filesender.ui.files.updatePasswordMustHaveMessage(
-                    slideMessage, false,
-                    $( this ));
+                $(this).hide();
             });
             return true;
         }

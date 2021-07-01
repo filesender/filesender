@@ -412,7 +412,7 @@ if( $encryption_mandatory ) {
                 <div class="row">
                     <div class="col-12">
                       <div id="graph" class="uploadbulkgraph"><div id="graphDiv" style="width:400px; height:200px; margin:0 auto 1.5em auto"><canvas id="speedChart"></canvas></div></div>
-                      <script type="text/javascript" src="{path:lib/chart.js/Chart.bundle.min.js}"></script>
+                      <script type="text/javascript" src="{path:lib/chart.js/chart.min.js}"></script>
                       <script type="text/javascript" src="{path:js/graph.js}"></script>
                     </div>
         	</div>
