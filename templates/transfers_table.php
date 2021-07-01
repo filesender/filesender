@@ -209,6 +209,9 @@ if (!function_exists('clickableHeader')) {
             
             <td class="transfer_id">
                 <?php echo $transfer->id ?>
+                <?php if($transfer->getOption(TransferOptions::ENCRYPTION)) { ?>
+                        <span class='right'> &#128273;</span>
+                <?php } ?>
             </td>
             
             <?php if($show_guest) { ?>
@@ -316,7 +319,11 @@ if (!function_exists('clickableHeader')) {
                     <tbody>
                         <tr>
                             <td class="desc">{tr:transfer_id}</td>
-                            <td><?php echo $transfer->id ?></td>
+                            <td><?php echo $transfer->id ?>
+                            <?php if($transfer->getOption(TransferOptions::ENCRYPTION)) { ?>
+                                <span class='right'> &#128273;</span>
+                            <?php } ?>
+                            </td>
                         </tr>
                         <tr>
                             <td class="desc">{tr:created}</td>
