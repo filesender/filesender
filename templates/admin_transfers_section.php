@@ -164,7 +164,7 @@ echo "<p>{tr:search_transfer_by_sender_email_description}</p>\n";
 ?>
 <fieldset class="search">
     <input id="senderemail_full_match" name="senderemail_full_match" type="checkbox" <?php echo $senderemail_full_match_extra ?>>  
-    <label for="senderemail_full_match" style="cursor: pointer;">{tr:email_full_match_search}</label>
+    <label id="senderemail_full_match_label" for="senderemail_full_match" >{tr:email_full_match_search}</label>
 </fieldset>
 <fieldset class="search">
     <label for="senderemail" class="mandatory">{tr:sender_email_search}</label>

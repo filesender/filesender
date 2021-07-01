@@ -82,6 +82,10 @@ class Autoloader
         'DBTestingTable*' => 'data/',
         'AggregateStatistic' => 'data/',
         'AggregateStatisticMetadata' => 'data/',
+        'AVResult' => 'data/',
+        
+        'AVProgram*' => 'avprograms/',
+        
 
         // In database constants
         'DBConstant*' => 'data/constants/',
@@ -100,7 +104,6 @@ class Autoloader
 
         'TestDatabase*' => 'test/database/',
 
-        'PHPZipStreamer*' => '/PHPZipStreamer/src/',
 
         // Must be last
         '*' => 'utils/'

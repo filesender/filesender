@@ -14,7 +14,7 @@ window.filesender.streamsaver_sink = function ( arg_name, arg_expected_size, arg
         // keep a tally of bytes processed to make sure we get everything.
         bytesProcessed: 0,
         callbackError: arg_callbackError,
-        
+        name: function() { return "streamsaver"; },
         init: function() {
             var $this = this;
             
@@ -83,7 +83,7 @@ window.filesender.streamsaver_sink = function ( arg_name, arg_expected_size, arg
 
 
 
-window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, archiveName, pass, selectedFiles, arg_callbackError ) {
+window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, transferid, archiveName, pass, selectedFiles, arg_callbackError ) {
     return {
         complete: false,
         // keep a tally of bytes processed to make sure we get everything.
@@ -94,6 +94,7 @@ window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, archiveNa
         selectedFiles: selectedFiles,
         cryptoapp: cryptoapp,
         link: link,
+        transferid: transferid,
         pass: pass,
         activeFileID: null,
         progress: null,
@@ -157,7 +158,7 @@ window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, archiveNa
                 var f = $this.selectedFiles.shift();
                 window.filesender.log("blobSinkStreamedzip64 adding next file with name " + f.filename );
                 $this.openFile(f.filename,f.fileid);
-                $this.cryptoapp.decryptDownloadToBlobSink( $this, pass,
+                $this.cryptoapp.decryptDownloadToBlobSink( $this, pass, $this.transferid,
                                                            $this.link+f.fileid,
                                                            f.mime, f.filename, f.filesize, f.encrypted_filesize,
                                                            f.key_version, f.salt,

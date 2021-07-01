@@ -124,6 +124,15 @@ window.filesender.pbkdf2dialog = {
         };
     },
 
+    /*
+     * This will call onPBKDF2AllEnded() if it has not already been called.
+     **/
+    ensure_onPBKDF2AllEnded: function() {
+        if( $this.already_complete && !$this.dialog ) {
+            return;
+        }
+        window.filesender.onPBKDF2AllEnded();
+    },
 
     onPBKDF2Over: function() {
         $this = this;

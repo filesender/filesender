@@ -193,7 +193,7 @@ class RestEndpointTransfer extends RestEndpoint
         
         // Get current user
         $user = Auth::user();
-        
+      
         if (is_numeric($id)) {
             // Getting data about a specific transfer
             $transfer = Transfer::fromId($id);
@@ -779,6 +779,13 @@ class RestEndpointTransfer extends RestEndpoint
         if (($security == 'auth') && !Auth::isAuthenticated()) {
             throw new RestAuthenticationRequiredException();
         }
+
+        $data = $this->request->input;
+        if( $data->decryptfailed ) {
+            $transfer = Transfer::fromId($id);
+            Logger::logActivity(LogEventTypes::TRANSFER_DECRYPT_FAILED, $transfer, Auth::actor());
+            return array();
+        }
         
         // Get transfer to update and current user
         $transfer = Transfer::fromId($id);
@@ -845,6 +852,7 @@ class RestEndpointTransfer extends RestEndpoint
                     $transfer->save();
                 }
             }
+
         }
         
         // Need to make the transfer available (sends email to recipients) ?

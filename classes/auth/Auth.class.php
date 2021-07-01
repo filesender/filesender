@@ -98,6 +98,20 @@ class Auth
     public static $authClassLoadingCount = 0;
 
     /**
+     * Ensure session_start is called if there is no session already.
+     * Note that self::$type must be guest or sp for this call to do anything.
+     *
+     * @return void
+     */
+    private static function ensure_php_session()
+    {
+        if ( self::isSessionStarted() === false ) {
+            session_start();
+        }
+    }
+    
+    
+    /**
      * Return current user if it exists.
      *
      * @return User instance or false
@@ -133,9 +147,20 @@ class Auth
                         }
                         self::$type = 'remote';
                     }
-                } elseif (AuthSP::isAuthenticated()) { // SP
-                    self::$attributes = AuthSP::attributes();
-                    self::$type = 'sp';
+                } else {
+                    
+                    // Note that AuthSP may use the SESSION which might start_session before we do
+                    // so we have to allow the sys admin to ensure the
+                    // session before letting AuthSP do anything in isAuthenticated().
+
+                    if( Utilities::isTrue(Config::get("auth_sp_force_session_start_first"))) {
+                        self::ensure_php_session();
+                    }
+                    
+                    if( AuthSP::isAuthenticated()) {
+                        self::$attributes = AuthSP::attributes();
+                        self::$type = 'sp';
+                    }
                 }
             } catch (Exception $e) {
                 self::$exception = $e;
@@ -144,8 +169,8 @@ class Auth
 
             // If no session has been made at this point, we make one ourselves.
             // Only types 'guest' and 'sp' are browsers.
-            if (in_array(self::$type, array('sp', 'guest')) && self::isSessionStarted() === false) {
-                session_start();
+            if (in_array(self::$type, array('sp', 'guest'))) {
+                self::ensure_php_session();
             }
             
             if (self::$attributes && array_key_exists('uid', self::$attributes)) {
@@ -487,6 +512,17 @@ class Auth
     public static function isGuest()
     {
         return self::$type == 'guest';
+    }
+
+    /**
+     * The user or the guest current performing the action 
+     */
+    public static function actor()
+    {
+        if( self::isGuest() ) {
+            return AuthGuest::getGuest();
+        }
+        return self::User();
     }
 
     /**

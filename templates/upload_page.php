@@ -337,17 +337,20 @@ if( $encryption_mandatory ) {
                                    autocomplete="new-password" readonly
                             />
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_too_short_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">
                             {tr:file_encryption_password_too_short}
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_must_have_numbers_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">
                             {tr:file_encryption_password_must_have_numbers}
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_must_have_upper_and_lower_case_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">
                             {tr:file_encryption_password_must_have_upper_and_lower_case}
                         </div>
-                        <div class="fieldcontainer" id="encryption_password_container_must_have_special_characters_message">
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">
                             {tr:file_encryption_password_must_have_special_characters}
+                        </div>
+                        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">
+                            {tr:encryption_password_container_can_have_text_only_min_password_length_message}
                         </div>
                         <div class="fieldcontainer" id="encryption_description_disabled_container">
                             {tr:file_encryption_description_disabled}
@@ -505,12 +508,11 @@ if( $encryption_mandatory ) {
                         <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
                         <label class="invalid" id="password_can_not_be_part_of_message_warning" style="display:none;">
                             {tr:password_can_not_be_part_of_message_warning}</label>                        
-                        <label class="invalid" id="password_can_not_be_part_of_message_error" style="display:none;">
+                        <label class="invalid" id="password_can_not_be_part_of_message_error">
                             {tr:password_can_not_be_part_of_message_error}</label>                        
                         <textarea id="message" name="message" class="form-control" rows="4"></textarea>
                     </div>
                     <?php } ?> <!-- closing if($allow_recipients) -->
-                    
                     
                     <div>
                         <?php if(Auth::isGuest()) { ?>
@@ -669,6 +671,7 @@ if( $encryption_mandatory ) {
         </div>
     </form>
 
+    
     <?php if (!Config::get('disable_directory_upload')) { ?>
        <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>
     <?php } ?>
