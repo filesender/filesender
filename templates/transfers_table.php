@@ -211,7 +211,7 @@ if (!function_exists('clickableHeader')) {
                 <?php
                     echo $transfer->id;
                     if( $transfer->is_encrypted ) {
-                        echo '&nbsp;<span class="fa fa-lock" title="is encrypted"></span>';
+                        echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
                     }
                 ?>
             </td>
@@ -324,7 +324,7 @@ if (!function_exists('clickableHeader')) {
                             <td><?php
                                 echo $transfer->id;
                                 if( $transfer->is_encrypted ) {
-                                    echo '&nbsp;<span class="fa fa-lock" title="is encrypted"></span>';
+                                    echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
                                 }
                                 ?>
                             </td>
