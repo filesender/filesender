@@ -1,0 +1,92 @@
+name: Release
+
+# Only run when new tags are pushed
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    name: Build release from tag
+    runs-on: ubuntu-latest
+    steps:
+      # Initialise default text for variables (overridden later if needed)
+      - id: set_env
+        run: |
+          echo "TEMPLATES_CHANGED=Templates have not changed since last release." >> $GITHUB_ENV
+          echo "DB_CHANGED=Databases have not changed since last release. Running script is not needed after upgrading." >> $GITHUB_ENV
+
+      - uses: actions/checkout@v1
+
+      # Get current date and name/branch/tag
+      - id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Branches
+        id: branches
+        run: |
+          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"
+          echo "::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}"
+          echo "::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}"
+
+      # Discover what the number was of the latest release
+      - name: Latest release
+        id: latest_release
+        uses: pozetroninc/github-action-get-latest-release@v0.5.0
+        with:
+          excludes: prerelease, draft
+          repository: ${{ github.repository }}
+
+      # Find changed files since last release
+      - name: Files changed since last release
+        id: files_changed
+        run: |
+          MY_FILES=$(git diff --name-only HEAD ${{ steps.latest_release.outputs.release }})
+          MY_FILES="${MY_FILES//'%'/'%25'}"
+          MY_FILES="${MY_FILES//$'\n'/'%0A'}"
+          MY_FILES="${MY_FILES//$'\r'/'%0D'}"
+          echo "::set-output name=filenames::$MY_FILES"
+
+      # Did any templates or db structure change?
+      - name: Templates changed.
+        if: "contains(steps.files_changed.outputs.filenames, 'templates')"
+        id: templates_changed
+        run: |
+          echo "TEMPLATES_CHANGED=Templates have changed. Make sure to update your custom theme files accordingly." >> $GITHUB_ENV
+
+      - name: Database changed.
+        if: "contains(steps.files_changed.outputs.filenames, 'classes/data')"
+        run: |
+          echo "DB changed"
+          echo "DB_CHANGED=Database layout has changed. Please run script" >> $GITHUB_ENV
+
+      # Format changelog
+      - name: Render Changelog
+        id: changelog
+        uses: jaywcjlove/changelog-generator@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Complete release body
+      - name: Render template
+        id: render_template
+        uses: chuhlomin/render-template@v1.2
+        with:
+          template: .github/workflows/release-body.md
+          vars: |
+            templates_changed: "${{ env.TEMPLATES_CHANGED }}"
+            db_changed: "${{ env.DB_CHANGED }}"
+            changelog: "${{ steps.changelog.outputs.changelog }}"
+            to_tag: "${{ steps.branches.outputs.SOURCE_TAG }}"
+            from_tag: "${{ steps.latest_release.outputs.release }}"
+            date: "${{ env.date }}"
+
+      # Create release with body from step above
+      - uses: ncipollo/release-action@v1
+        with:
+          body: ${{ steps.render_template.outputs.result }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.branches.outputs.SOURCE_TAG }}
+          name: "Release ${{ steps.branches.outputs.SOURCE_TAG }}"
+          draft: true
