@@ -160,8 +160,8 @@ if( $encryption_mandatory ) {
                             <div class="size">{tr:size} : <span class="value"></span></div>
                         </div>
                     </td>
-                    <td class="float-right">
-                        <div class="right">
+                    <td class="float-end">
+                        <div class="end">
                             <button type="button" class="clear_all btn btn-secondary">
                                 {tr:clear_all}
                             </button>
@@ -264,12 +264,12 @@ if( $encryption_mandatory ) {
             </div>
 
             <div class="files_actions stage1 row">
-                    <div class="col-6 text-left">
+                    <div class="col-6 text-start">
                         <a class="select_files btn btn-secondary  " href="#">
                             {tr:select_files}
                         </a>
                     </div>
-                    <div class="col-6 text-right">
+                    <div class="col-6 text-end">
                         <?php if ($upload_directory_button_enabled) { ?>
                             <div <?php echo $files_actions_div_extra_class ?>>
                                 <input type="file" name="selectdir" id="selectdir" class="selectdir_hidden_input_element" webkitdirectory directory multiple mozdirectory />
