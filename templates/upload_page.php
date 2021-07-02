@@ -542,7 +542,7 @@ if( $encryption_mandatory ) {
                                     echo '<a class="nav-link dropdown-toggle" ';
                                     echo ' href="" ';
                                     echo ' id="lang" name="lang" ';
-                                    echo ' data-toggle="dropdown" ';
+                                    echo ' data-bs-toggle="dropdown" ';
                                     echo ' data-id="'.$id.'" ';
                                     echo ' aria-haspopup="true" ';
                                     echo ' aria-expanded="false"> ';
