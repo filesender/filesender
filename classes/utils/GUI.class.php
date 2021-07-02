@@ -102,6 +102,7 @@ class GUI
         return Utilities::isTrue(GUI::browser_is_ie11() || GUI::browser_is_edge());
     }
     
+    
     /**
      * Get script(s)
      *
