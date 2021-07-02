@@ -95,6 +95,7 @@ class GUI
             return preg_match("@ Edge/@i", $_SERVER['HTTP_USER_AGENT'] );
         }
     }
+    
 
     public static function use_webasm_pbkdf2_implementation()
     {
