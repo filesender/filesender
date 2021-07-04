@@ -98,6 +98,7 @@ class GUI
     
 
     
+    
 
     public static function use_webasm_pbkdf2_implementation()
     {
