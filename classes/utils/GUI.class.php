@@ -71,6 +71,7 @@ class GUI
         ));
     }
     
+    
     /**
      * Include stylesheets
      */
