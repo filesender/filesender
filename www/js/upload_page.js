@@ -1618,11 +1618,7 @@ $(function() {
         $('#encryption_description_container').slideToggle();
         filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
         
-        if( filesender.ui.transfer.encryption ) {
-            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
-        } else {
-            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
-        }
+        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
         
         for(var i=0; i<filesender.ui.transfer.files.length; i++) {
             var file = filesender.ui.transfer.files[i];
