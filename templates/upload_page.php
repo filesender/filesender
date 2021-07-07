@@ -121,10 +121,10 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
     echo '<div class="custom-control custom-switch" data-option="'.$name.'" '. $extraDivAttrs .'>';
     if($text) {
         echo '    <label for="'.$name.'" class="custom-control-label">'.Lang::tr($name).'</label>';
-        echo '    <input id="'.$name.'" name="'.$name.'" class="custom-control-input" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
+        echo '    <input id="'.$name.'" name="'.$name.'" class="custom-control-input uploadoption" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
         
     } else {
-        echo '  <input id="'.$name.'" name="'.$name.'" class="custom-control-input" type="checkbox" '.$checked.' '.$disabled.' />';
+        echo '  <input id="'.$name.'" name="'.$name.'" class="custom-control-input uploadoption" type="checkbox" '.$checked.' '.$disabled.' />';
         echo '  <label for="'.$name.'" class="custom-control-label">'.Lang::tr($name).'</label>';
     }
     
