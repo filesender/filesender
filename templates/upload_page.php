@@ -86,7 +86,7 @@ if(Auth::isGuest()) {
     }
 }
 
-$displayoption = function($name, $cfg, $disable = false, $forcedOption = false) use ($guest_can_only_send_to_creator) {
+$displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$relatedTo = '') use ($guest_can_only_send_to_creator) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
 
     
@@ -114,7 +114,10 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
             return;
         }
     }
-    
+
+    if( $relatedTo != '' ) {
+        echo '<div class="fieldcontainer" data-related-to="'.$relatedTo.'">';
+    }
     echo '<div class="custom-control custom-switch" data-option="'.$name.'" '. $extraDivAttrs .'>';
     if($text) {
         echo '    <label for="'.$name.'" class="custom-control-label">'.Lang::tr($name).'</label>';
@@ -129,6 +132,9 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false) 
         echo '<div class="info warning">'.Lang::tr('enable_recipient_email_download_complete_warning').'</div>';
     
     echo '</div>';
+    if( $relatedTo != '' ) {
+        echo '</div>';
+    }
     
 };
 
@@ -492,10 +498,12 @@ if( $encryption_mandatory ) {
                     foreach(Transfer::availableOptions(false) as $name => $cfg) {
                         if( $name == 'add_me_to_recipients' ) {
                             $upload_options_handled[$name] = 1;
-                            $displayoption($name, $cfg, Auth::isGuest());
+                            $forcedOption = false;
+                            $displayoption($name, $cfg, Auth::isGuest(),$forcedOption,"message");
                         }
                     }
                     ?>
+
                     
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="subject">{tr:subject} ({tr:optional}) :</label>
