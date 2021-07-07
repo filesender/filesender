@@ -1166,7 +1166,7 @@ filesender.ui.startUpload = function() {
         if( filesender.ui.nodes.lang && filesender.ui.nodes.lang.attr('data-id')) {
             this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
         }
-        
+
         for(var o in filesender.ui.nodes.options) {
             var i = filesender.ui.nodes.options[o];
             var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
@@ -1591,6 +1591,10 @@ $(function() {
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
     form.find('.basic_options [data-option] input, .hidden_options [data-option] input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options[i.attr('name')] = i;
+    });
+    form.find('[data-related-to] [data-option] input').each(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
