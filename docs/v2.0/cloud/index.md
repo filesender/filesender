@@ -195,10 +195,13 @@ See the configuration section for Azure above for information about how
 you might setup the config.php and config-passwords.php so that you can
 avoid opening the later file.
 
+Ensure that the bucket exists
+
 ```
 $config['cloud_s3_endpoint'] = 'http://localhost:8000';
 $config['cloud_s3_key']      = 'accessKey1';
 $config['cloud_s3_secret']   = 'verySecretKey1';
+$config['cloud_s3_bucket']   = 'filesender';
 ```
 
 ### Running a test

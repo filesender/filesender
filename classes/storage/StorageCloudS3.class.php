@@ -98,8 +98,8 @@ class StorageCloudS3 extends StorageFilesystem
             $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
         }
 
-        $bucket_name = $file->uid;
-        $object_name = self::getObjectName($offset);
+        $bucket_name = Config::get('cloud_s3_bucket');
+        $object_name = $file->uid . '/' . self::getObjectName($offset);
         
         try {
             $client = self::getClient();
@@ -135,11 +135,11 @@ class StorageCloudS3 extends StorageFilesystem
      * @throws StorageFilesystemOutOfSpaceException
      * @throws StorageFilesystemCannotWriteException
      */
-    public static function writeChunk(File $file, $data, $offset = null)
+    public static function writeChunk(File $file, $data, $offset = null, $written = null)
     {
         $chunk_size     = strlen($data);
-        $bucket_name = $file->uid;
-        $object_name = self::getObjectName($offset);
+        $bucket_name = Config::get('cloud_s3_bucket');
+        $object_name = $file->uid . '/' . self::getObjectName($offset);
 
         try {
             $client = self::getClient();
@@ -186,8 +186,7 @@ class StorageCloudS3 extends StorageFilesystem
     public static function deleteFile(File $file)
     {
         $file_path = self::buildPath($file).$file->uid;
-        $bucket_name = $file->uid;
-        $object_name = self::getObjectName($offset);
+        $bucket_name = Config::get('cloud_s3_bucket');
 
         try {
             $client = self::getClient();
@@ -195,14 +194,13 @@ class StorageCloudS3 extends StorageFilesystem
             $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name));
 
             foreach ($objects as $object) {
-                $result = $client->deleteObject(array(
-                    'Bucket' => $bucket_name,
-                    'Key'    => $object['Key']
-                ));
+                if ( strpos($object['Key'], $file->uid ) !== false ){
+                    $result = $client->deleteObject(array(
+                        'Bucket' => $bucket_name,
+                        'Key'    => $object['Key']
+                    ));
+                }
             }
-            $result = $client->deleteBucket(array(
-                'Bucket' => $bucket_name,
-            ));
         } catch (Exception $e) {
             Logger::info('deleteFile() error ' . $e);
             throw new StorageFilesystemCannotDeleteException($file_path, $file);
