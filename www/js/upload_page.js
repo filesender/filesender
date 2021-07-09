@@ -631,6 +631,14 @@ filesender.ui.files = {
         var invalid = false;
         var msg = null;
 
+        var use_encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
+        if( !use_encryption ) {
+            $('.passwordvalidation').each(function( index ) {
+                $((this)).hide();
+            });
+            return true;
+        }
+        
         
         if( filesender.ui.transfer.encryption_password_version == 
             crypto.crypto_password_version_constants.v2018_text_password )
@@ -651,7 +659,6 @@ filesender.ui.files = {
 
         var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
         if( v ) {
-            slideMessage = true;
             $('.passwordvalidation').each(function( index ) {
                 $(this).hide();
             });
@@ -1159,7 +1166,7 @@ filesender.ui.startUpload = function() {
         if( filesender.ui.nodes.lang && filesender.ui.nodes.lang.attr('data-id')) {
             this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
         }
-        
+
         for(var o in filesender.ui.nodes.options) {
             var i = filesender.ui.nodes.options[o];
             var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
@@ -1587,6 +1594,10 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+    form.find('[data-related-to] [data-option] input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options[i.attr('name')] = i;
+    });
 
     
     // Bind file list clear button
@@ -1945,12 +1956,7 @@ $(function() {
         
         filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
         
-        if( filesender.ui.transfer.encryption ) {
-            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
-        } else {
-            var msg = $('#encryption_password_container_too_short_message');
-            msg.hide();
-        }
+        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
         
         for(var i=0; i<filesender.ui.transfer.getFileCount(); i++) {
             var file = filesender.ui.transfer.files[i];
