@@ -117,6 +117,7 @@ $data = array(
 	    array(
 		'data' => array(),
 		'backgroundColor' => 'rgba(10,220,10,0.6)',
+		'fill' => true,
 		'spanGaps' => false
 	    ),
 	)
