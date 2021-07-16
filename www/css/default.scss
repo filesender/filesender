@@ -68,7 +68,6 @@ $custom-colors: (
 );
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
-
 /* Global rules */
 
 .tpl {
@@ -123,6 +122,33 @@ abbr {
     border-bottom: 1px dashed #aaa;
     cursor: help;
 }
+
+/* color based classes */
+
+.adminaction {
+    background: #ffeeee;
+}
+
+.good {
+    background: #1cff1c;
+}
+
+.paused {
+    background: #6c666c;
+}
+
+.middle {
+    background: #ffff1c;
+}
+
+.slow {
+    background: #ff1c1c;
+}
+
+.bad {
+    background: #ff0000;
+}
+
 
 
 /* Main layout rules */
@@ -1146,32 +1172,6 @@ table.paginator a {
     
 
 
-.adminaction {
-    background: #ffeeee;
-}
-
-
-
-
-.good {
-    background: #1cff1c;
-}
-
-.paused {
-    background: #6c666c;
-}
-
-.middle {
-    background: #ffff1c;
-}
-
-.slow {
-    background: #ff1c1c;
-}
-
-.bad {
-    background: #ff0000;
-}
 
 
 div.not_displayed {

@@ -1999,6 +1999,31 @@ abbr {
   cursor: help;
 }
 
+/* color based classes */
+.adminaction {
+  background: #ffeeee;
+}
+
+.good {
+  background: #1cff1c;
+}
+
+.paused {
+  background: #6c666c;
+}
+
+.middle {
+  background: #ffff1c;
+}
+
+.slow {
+  background: #ff1c1c;
+}
+
+.bad {
+  background: #ff0000;
+}
+
 /* Main layout rules */
 #wrap {
   background: #fff3eb !important;
@@ -2939,30 +2964,6 @@ table.paginator a {
 
 #encryption_password {
   width: 48ch;
-}
-
-.adminaction {
-  background: #ffeeee;
-}
-
-.good {
-  background: #1cff1c;
-}
-
-.paused {
-  background: #6c666c;
-}
-
-.middle {
-  background: #ffff1c;
-}
-
-.slow {
-  background: #ff1c1c;
-}
-
-.bad {
-  background: #ff0000;
 }
 
 div.not_displayed {
