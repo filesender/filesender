@@ -3,6 +3,9 @@
 //  NOTE: default.css is generated from the SASS file default.scss
 //        please make sure you are editing default.scss
 //
+//  See the scss-start-compiler.sh script
+//  in the top level of this distribution to compile the scss file
+//
 //
 /*
  * FileSender www.filesender.org
@@ -1295,5 +1298,6 @@ table.paginator a {
      background-color:#faa;
 }
 
+@import "local-variables.scss";
              
                               

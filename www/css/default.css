@@ -2359,11 +2359,6 @@ td .desc {
   cursor: pointer;
 }
 
-/* JQuery UI overides */
-.ui-widget {
-  font-size: 1em;
-}
-
 /* Upload page */
 .selectdir_hidden_input_element {
   width: 0.1px;
@@ -3071,5 +3066,11 @@ table.paginator a {
 .error-dialog .modal-header {
   background-color: #faa;
 }
+
+/* Local Variables:    */
+/* mode: text          */
+/* comment-column: 0   */
+/* buffer-read-only: t */
+/* End:                */
 
 /*# sourceMappingURL=default.css.map */

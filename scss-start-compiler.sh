@@ -2,6 +2,20 @@
 
 watch='';
 
+which sass  > /dev/null 2>&1
+if [ $? != "0" ]; then
+    echo "No sass command found!"
+    echo ""
+    echo "    You may like to use the following to install it"
+    echo ""
+    echo " npm install sass "
+    echo ""
+    echo "    and include the node_modules/.bin/sass command in your path"
+    echo ""
+    echo "Exiting."
+    exit 1
+fi
+
 
 if [ "x$1" = "xwatch" ] || [ "x$1" = "x--watch" ]; then
 	watch='--watch';
