@@ -49,8 +49,8 @@ $(function() {
     });
     
     // Bind global selector
-    page.find('.toggle-select-all').on('click', function() {
-        var el = $(this);
+    page.find('.toggle-select-all, .select_all_text').on('mousedown', function(event) {
+        var el = page.find('.toggle-select-all');
         
         var selected = el.hasClass('fa-check-square-o');
         selected = !selected;
@@ -62,6 +62,7 @@ $(function() {
         var selectors = page.find('.file .select');
         selectors.push(el.find('.fa'));
         selectors.toggleClass('fa-square-o', !selected).toggleClass('fa-check-square-o', selected);
+        event.stopPropagation();
     });
 
     
@@ -276,7 +277,7 @@ $(function() {
     if( transfer_is_encrypted && !filesender.supports.crypto ) 
         $('.crypto_not_supported_message').show();
 
-    page.find('.toggle-select-all').trigger('click');
+    page.find('.toggle-select-all').trigger('mousedown');
 
     button_zipdl = page.find('.archive_download_frame');
     button_tardl = page.find('.archive_tar_download_frame');
