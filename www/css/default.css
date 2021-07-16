@@ -1999,7 +1999,111 @@ abbr {
   cursor: help;
 }
 
+.earl {
+  width: 90%;
+}
+
+div.not_displayed {
+  display: none;
+}
+
+.crypto_not_supported_message {
+  display: none;
+}
+
+.get_a_link_lock {
+  background: #eeeeff;
+}
+
+.number {
+  text-align: right;
+}
+
+.active {
+  font-weight: bold;
+}
+
+.warning {
+  background: #eeeeff;
+}
+
+.transfersactionsicons {
+  margin: 3em;
+}
+
+.ui-datepicker-calendar a.ui-state-default,
+.ui-datepicker-calendar span.ui-state-default {
+  border: 0px solid #D8D8D8 !important;
+}
+
+.file.invalid {
+  background-color: #faa;
+}
+
+#fileslist {
+  display: none;
+}
+
+#please_readd_files_message {
+  display: none;
+}
+
+.actions .actionsblock {
+  margin: 3px;
+  white-space: nowrap;
+}
+
+.borderless td, .borderless th {
+  border: none;
+}
+
+.div3 {
+  width: 33%;
+}
+
+.div4 {
+  width: 25%;
+}
+
+.hidden {
+  display: none;
+}
+
+.collapse.navbar-collapse {
+  flex-wrap: wrap;
+}
+
+.navbar-light .navbar-toggler {
+  border: 0;
+}
+
+#senderemail_full_match_label {
+  cursor: pointer;
+}
+
+#message_can_not_contain_urls {
+  display: none;
+}
+
+#marg3 {
+  margin: 3px;
+}
+
+#graphDiv {
+  width: 400px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
 /* color based classes */
+.colorffaa00 {
+  color: #FFAA00;
+}
+
 .adminaction {
   background: #ffeeee;
 }
@@ -2098,7 +2202,7 @@ abbr {
   padding-top: 1.2em;
 }
 
-.box, .core-tabbed, .core {
+.download_page, .box, .core-tabbed, .core {
   padding: 1em;
   background: #ffffff;
   border: 0px solid #aaa;
@@ -2257,19 +2361,19 @@ td .desc {
 
 /* JQuery UI overides */
 .ui-widget {
-  font-family: Verdana, Arial, sans-serif;
   font-size: 1em;
 }
 
-.ui-button .fa {
-  margin-right: 0.25em;
-}
-
-.buttons a.ui-button:active, .buttons a.ui-button:hover, .buttons a.ui-button:focus {
-  font-weight: bold;
-}
-
 /* Upload page */
+.selectdir_hidden_input_element {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
 .stage2,
 .stage3,
 .stage4,
@@ -2282,6 +2386,10 @@ td .desc {
 }
 
 /* Encryption */
+#encryption_password {
+  width: 48ch;
+}
+
 #encryption_password_container_too_short_message,
 #encryption_password_container_must_have_numbers_message,
 #encryption_password_container_must_have_upper_and_lower_case_message,
@@ -2654,14 +2762,6 @@ table.transfers .transfer_details .download_link input {
 }
 
 /* Guests page */
-#send_voucher .advanced_options {
-  display: none;
-}
-
-.guests_page .progressbar.user_quota {
-  display: none;
-}
-
 /* Guests table */
 table.guests tbody .guest[data-errors="1"] td {
   background-color: #faa;
@@ -2766,16 +2866,12 @@ table.guests .guest .to .errors .details {
 }
 
 /* Download page */
-.download_page {
+.download_page .archive, .download_page .disclamer {
   margin: 1em;
 }
 
-.download_page .disclamer {
-  margin: 1em;
-}
-
-.download_page .general div {
-  margin-bottom: 0.8em;
+.download_page .archive {
+  text-align: center;
 }
 
 .download_page .files .select_all {
@@ -2800,11 +2896,6 @@ table.guests .guest .to .errors .details {
   padding: 1.2em 0.5em 0.5em 0.5em;
 }
 
-.download_page .archive {
-  margin-top: 1em;
-  text-align: center;
-}
-
 .download_page .files[data-count="1"] .select_all,
 .download_page .files[data-count="1"] .file .select,
 .download_page .files[data-count="1"] .archive {
@@ -2817,11 +2908,11 @@ table.guests .guest .to .errors .details {
 
 .avresulterror,
 .avresultfailed {
-  color: #AA0000;
+  color: #900;
 }
 
 .avresultsucceeded {
-  color: #00AA00;
+  color: #090;
 }
 
 .avfile {
@@ -2834,11 +2925,11 @@ table.guests .guest .to .errors .details {
 }
 
 .avheader1 {
-  color: #00AA00;
+  color: #090;
 }
 
 .avheader0 {
-  color: #AA0000;
+  color: #900;
 }
 
 /* User profile */
@@ -2952,7 +3043,7 @@ table.paginator a {
   text-decoration: none;
 }
 
-/* Popups */
+/* help page */
 #dialog-help img {
   display: inline;
   vertical-align: middle;
@@ -2962,145 +3053,23 @@ table.paginator a {
   font-weight: bold;
 }
 
-#encryption_password {
-  width: 48ch;
-}
-
-div.not_displayed {
-  display: none;
-}
-
-.crypto_not_supported_message {
-  display: none;
-}
-
-.selectdir_hidden_input_element {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
+/* dialogs  */
+.success-dialog .modal-content,
+.warning-dialog .modal-content,
+.error-dialog .modal-content {
   overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-
-.get_a_link_lock {
-  background: #eeeeff;
-}
-
-.number {
-  text-align: right;
-}
-
-.active {
-  font-weight: bold;
-}
-
-.warning {
-  background: #eeeeff;
-}
-
-.transfersactionsicons {
-  margin: 3em;
 }
 
 .success-dialog .modal-header {
   background-color: #CFC;
 }
 
-.success-dialog .modal-content {
-  overflow: hidden;
-}
-
 .warning-dialog .modal-header {
   background-color: #fcc;
 }
 
-.warning-dialog .modal-content {
-  overflow: hidden;
-}
-
 .error-dialog .modal-header {
   background-color: #faa;
-}
-
-.error-dialog .modal-content {
-  overflow: hidden;
-}
-
-.earl {
-  width: 90%;
-}
-
-.ui-datepicker-calendar a.ui-state-default,
-.ui-datepicker-calendar span.ui-state-default {
-  border: 0px solid #D8D8D8 !important;
-}
-
-.file.invalid {
-  background-color: #faa;
-}
-
-#fileslist {
-  display: none;
-}
-
-#please_readd_files_message {
-  display: none;
-}
-
-.actions .actionsblock {
-  margin: 3px;
-  white-space: nowrap;
-}
-
-.borderless td, .borderless th {
-  border: none;
-}
-
-.div3 {
-  width: 33%;
-}
-
-.div4 {
-  width: 25%;
-}
-
-.hidden {
-  display: none;
-}
-
-.collapse.navbar-collapse {
-  flex-wrap: wrap;
-}
-
-.navbar-light .navbar-toggler {
-  border: 0;
-}
-
-#senderemail_full_match_label {
-  cursor: pointer;
-}
-
-#message_can_not_contain_urls {
-  display: none;
-}
-
-#marg3 {
-  margin: 3px;
-}
-
-#graphDiv {
-  width: 400px;
-  height: 200px;
-  margin: 0 auto;
-}
-
-.cursor {
-  cursor: pointer;
-}
-
-.colorffaa00 {
-  color: #FFAA00;
 }
 
 /*# sourceMappingURL=default.css.map */

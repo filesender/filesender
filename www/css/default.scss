@@ -1,3 +1,9 @@
+//
+//
+//  NOTE: default.css is generated from the SASS file default.scss
+//        please make sure you are editing default.scss
+//
+//
 /*
  * FileSender www.filesender.org
  * 
@@ -56,10 +62,12 @@ $body-color: #333;
 
 $invalid-color: #f00;
 $error-notice-color: #faa;
+$bad-color: #900;
+$good-color: #090;
 
 $custom-colors: (
-  "bad-color":  #900,
-  "good-color": #090,
+  "bad-color":  $bad-color,
+  "good-color": $good-color,
   "success-dialog-color":#CFC,
   "warning-dialog-color":#fcc,
   "error-dialog-color":  #faa,
@@ -123,7 +131,115 @@ abbr {
     cursor: help;
 }
 
+.earl {
+    width: 90%;
+}
+
+    
+div.not_displayed {
+    display: none;
+}
+
+.crypto_not_supported_message {
+    display: none;
+}
+
+.get_a_link_lock {
+    background: #eeeeff;
+}
+
+.number {
+    text-align: right;
+}
+.active {
+    font-weight: bold;
+}
+
+.warning {
+    background: #eeeeff;
+}
+
+
+.transfersactionsicons {
+    margin: 3em;
+}
+
+
+
+.ui-datepicker-calendar a.ui-state-default,
+.ui-datepicker-calendar span.ui-state-default
+{
+    border: 0px solid #D8D8D8 !important;
+}
+
+
+.file.invalid {
+    background-color: $error-notice-color;
+}
+
+#fileslist {
+        display: none;
+}
+#please_readd_files_message {
+        display: none;
+}
+
+.actions .actionsblock {
+    margin:3px;
+    white-space: nowrap;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+
+.div3 {
+    width: 33%;
+}
+.div4 {
+     width: 25%;
+}
+.hidden {
+    display: none;
+}
+
+.collapse.navbar-collapse {
+    flex-wrap: wrap;
+}
+.navbar-light .navbar-toggler {
+    border: 0;
+}
+
+#senderemail_full_match_label {
+    cursor: pointer;
+}
+
+#message_can_not_contain_urls {
+    display:none;
+}
+
+#marg3 {
+    margin:3px;
+}
+
+
+#graphDiv {
+    width:400px;
+    height:200px;
+    margin:0 auto
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+
+
 /* color based classes */
+
+.colorffaa00 {
+    color: #FFAA00;
+}
 
 .adminaction {
     background: #ffeeee;
@@ -401,26 +517,20 @@ td .desc {
     cursor: pointer;
 }
 
-/* JQuery UI overides */
-
-.ui-widget {
-    font-family: Verdana,Arial,sans-serif;
-    font-size: 1em;
-}
-
-
-.ui-button .fa {
-    margin-right: 0.25em;
-}
-
-.buttons a.ui-button:active, .buttons a.ui-button:hover, .buttons a.ui-button:focus {
-    font-weight: bold;
-}
-
 
 ////////////////////////////////////////////////////////////
 /* Upload page */
 ////////////////////////////////////////////////////////////
+
+.selectdir_hidden_input_element {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
 
 .stage2,
 .stage3,
@@ -434,6 +544,11 @@ td .desc {
 }
 
 /* Encryption */
+
+#encryption_password {
+    width: 48ch;
+}
+
 #encryption_password_container_too_short_message,
 #encryption_password_container_must_have_numbers_message,
 #encryption_password_container_must_have_upper_and_lower_case_message,
@@ -825,15 +940,6 @@ table.transfers .transfer_details .download_link input {
 ////////////////////////////////////////////////////////////
 
 
-#send_voucher .advanced_options {
-    display: none;
-}
-
-.guests_page .progressbar.user_quota {
-    display: none;
-}
-
-
 /* Guests table */
 
 table.guests tbody .guest[data-errors="1"] td {
@@ -955,33 +1061,38 @@ table.guests .guest .to .errors .details {
 ////////////////////////////////////////////////////////////
 
 .download_page {
+    @extend %core;
+}
+
+%download_page_section {
     margin: 1em;
 }
 
 .download_page .disclamer {
-    margin: 1em;
+    @extend %download_page_section;
+}
+.download_page .archive {
+    @extend %download_page_section;
+    text-align: center;
 }
 
-.download_page .general div {
-    margin-bottom: 0.8em;
-}
 
+// select all arrow
 .download_page .files .select_all {
     margin-left: 1.2em;
 }
-
 .download_page .files .select_all span:first-child {
     vertical-align: bottom;
 }
-
 .download_page .files .select_all .select {
     text-decoration: none;
 }
-
 .download_page .files .select_all .select span {
     vertical-align: middle;
 }
 
+
+// main file listing
 .download_page .files .file {
     height: 2.5em;
     margin: 0.25em;
@@ -989,12 +1100,10 @@ table.guests .guest .to .errors .details {
 }
 
 
-.download_page .archive {
-    margin-top: 1em;
-    text-align: center;
-}
 
-
+//
+// selecting files makes no sense if there is only one file
+// in the transfer
 .download_page .files[data-count="1"] .select_all,
 .download_page .files[data-count="1"] .file .select,
 .download_page .files[data-count="1"] .archive {
@@ -1005,12 +1114,15 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
+//
+// anti virus results
+//
 .avresulterror,
 .avresultfailed {
-    color: #AA0000;
+    color: $bad-color;
 }
 .avresultsucceeded {
-    color: #00AA00;
+    color: $good-color;
 }
 .avfile {
     padding-top: 1em;
@@ -1021,10 +1133,10 @@ table.guests .guest .to .errors .details {
 }
 
 .avheader1 {
-    color: #00AA00;
+    color: $good-color;
 }
 .avheader0 {
-    color: #AA0000;
+    color: $bad-color;
 }
 
 ////////////////////////////////////////////////////////////
@@ -1153,7 +1265,7 @@ table.paginator a {
 
 
 
-/* Popups */
+/* help page */
 
 #dialog-help img {
     display: inline;
@@ -1164,153 +1276,23 @@ table.paginator a {
     font-weight: bold;
 }
 
-#encryption_password {
-    width: 48ch;
+/* dialogs  */
+
+.success-dialog .modal-content,
+.warning-dialog .modal-content,
+.error-dialog .modal-content {
+    overflow:hidden;
 }
-
-
-    
-
-
-
-
-div.not_displayed {
-    display: none;
-}
-
-.crypto_not_supported_message {
-    display: none;
-}
-
-
-.selectdir_hidden_input_element {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-}
-
-.get_a_link_lock {
-    background: #eeeeff;
-}
-
-.number {
-    text-align: right;
-}
-.active {
-    font-weight: bold;
-}
-
-
-.warning {
-    background: #eeeeff;
-}
-
-
-.transfersactionsicons {
-    margin: 3em;
-}
-
-
 .success-dialog .modal-header{
     background-color:#CFC;
-}
-.success-dialog .modal-content {
-    overflow:hidden;
 }
 
 .warning-dialog .modal-header{
      background-color:#fcc;
 }
-.warning-dialog .modal-content {
-    overflow:hidden;
-}
 
 .error-dialog .modal-header{
      background-color:#faa;
-}
-.error-dialog .modal-content {
-    overflow:hidden;
-}
-
-.earl {
-    width: 90%;
-}
-
-
-
-
-.ui-datepicker-calendar a.ui-state-default,
-.ui-datepicker-calendar span.ui-state-default
-{
-    border: 0px solid #D8D8D8 !important;
-}
-
-
-.file.invalid {
-    background-color: $error-notice-color;
-}
-
-#fileslist {
-        display: none;
-}
-#please_readd_files_message {
-        display: none;
-}
-
-.actions .actionsblock {
-    margin:3px;
-    white-space: nowrap;
-}
-
-.borderless td, .borderless th {
-    border: none;
-}
-
-.div3 {
-    width: 33%;
-}
-.div4 {
-     width: 25%;
-}
-.hidden {
-    display: none;
-}
-
-.collapse.navbar-collapse {
-    flex-wrap: wrap;
-}
-.navbar-light .navbar-toggler {
-    border: 0;
-}
-
-#senderemail_full_match_label {
-    cursor: pointer;
-}
-
-#message_can_not_contain_urls {
-    display:none;
-}
-
-#marg3 {
-    margin:3px;
-}
-
-
-#graphDiv {
-    width:400px;
-    height:200px;
-    margin:0 auto
-}
-
-.cursor {
-    cursor: pointer;
-}
-
-.colorffaa00 {
-    color: #FFAA00;
 }
 
              
