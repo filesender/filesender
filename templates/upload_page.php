@@ -114,18 +114,19 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
             return;
         }
     }
-
+    
     if( $relatedTo != '' ) {
         echo '<div class="fieldcontainer" data-related-to="'.$relatedTo.'">';
     }
-    echo '<div class="custom-control custom-switch" data-option="'.$name.'" '. $extraDivAttrs .'>';
+    echo '<div class="form-check form-switch custom-control custom-switch" data-option="'.$name.'" '. $extraDivAttrs .'>';
+
     if($text) {
-        echo '    <label for="'.$name.'" class="custom-control-label">'.Lang::tr($name).'</label>';
-        echo '    <input id="'.$name.'" name="'.$name.'" class="custom-control-input" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
+        echo '    <label for="'.$name.'" class="form-check-label">'.Lang::tr($name).'</label>';
+        echo '    <input id="'.$name.'" name="'.$name.'" class="form-check-input" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
         
     } else {
-        echo '  <input id="'.$name.'" name="'.$name.'" class="custom-control-input" type="checkbox" '.$checked.' '.$disabled.' />';
-        echo '  <label for="'.$name.'" class="custom-control-label">'.Lang::tr($name).'</label>';
+        echo '  <input id="'.$name.'" name="'.$name.'" class="form-check-input" type="checkbox" '.$checked.' '.$disabled.' />';
+        echo '  <label for="'.$name.'" class="form-check-label">'.Lang::tr($name).'</label>';
     }
     
     if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
@@ -166,8 +167,8 @@ if( $encryption_mandatory ) {
                             <div class="size">{tr:size} : <span class="value"></span></div>
                         </div>
                     </td>
-                    <td class="float-right">
-                        <div class="right">
+                    <td class="float-end">
+                        <div class="end">
                             <button type="button" class="clear_all btn btn-secondary">
                                 {tr:clear_all}
                             </button>
@@ -242,15 +243,10 @@ if( $encryption_mandatory ) {
                 </div>
 
 <?php if(!Auth::isGuest()) { ?>
-                <div class="row">
-                    <div class="col-3">
-                    </div>
-                    <div class="col-6">
-                        <a href="?s=transfers" class="btn btn-primary btn-lg btn-block mytransferslink" role="button">{tr:ui2_my_transfers}</a>
-                    </div>
-                    <div class="col-3">
-                    </div>
+                <div class="d-flex justify-content-center">
+                    <a href="?s=transfers" class="btn btn-primary btn-lg btn-block mytransferslink" role="button">{tr:ui2_my_transfers}</a>
                 </div>
+                
 <?php } ?>              
             </div>
             
@@ -275,12 +271,12 @@ if( $encryption_mandatory ) {
             </div>
 
             <div class="files_actions stage1 row">
-                    <div class="col-6 text-left">
+                    <div class="col-6 text-start">
                         <a class="select_files btn btn-secondary  " href="#">
                             {tr:select_files}
                         </a>
                     </div>
-                    <div class="col-6 text-right">
+                    <div class="col-6 text-end">
                         <?php if ($upload_directory_button_enabled) { ?>
                             <div <?php echo $files_actions_div_extra_class ?>>
                                 <input type="file" name="selectdir" id="selectdir" class="selectdir_hidden_input_element" webkitdirectory directory multiple mozdirectory />
@@ -321,14 +317,14 @@ if( $encryption_mandatory ) {
             <?php if(Config::get('encryption_enabled')) {  ?>
                 <div class="row">
                     <div class="col">
-                        <div class="custom-control custom-switch" id="encrypt_checkbox" data-related-to="encryption">
+                        <div class="form-check form-switch custom-control custom-switch" id="encrypt_checkbox" data-related-to="encryption">
                             <input id="encryption"
                                    name="encryption"
-                                   class="custom-control-input"
+                                   class="form-check-input"
                                    type="checkbox"
                                    <?php echo $encryption_checkbox_checked ?>
                             />
-                            <label for="encryption" class="custom-control-label">{tr:file_encryption}</label>
+                            <label for="encryption" class="form-check-label">{tr:file_encryption}</label>
                         </div>
                     </div>
                 </div>
@@ -365,13 +361,13 @@ if( $encryption_mandatory ) {
                 </div>
                 <div id="encgroup2" class="row">
                     <div class="col">
-                        <div class="custom-control custom-switch" id="encryption_password_container_generate">
+                        <div class="form-check form-switch custom-control custom-switch" id="encryption_password_container_generate">
                             <input id="encryption_use_generated_password"
                                    name="encryption_use_generated_password"
-                                   class="custom-control-input"
+                                   class="form-check-input"
                                    type="checkbox"
                             />  
-                            <label for="encryption_use_generated_password" class="custom-control-label" >
+                            <label for="encryption_use_generated_password" class="form-check-label" >
                                 {tr:file_encryption_generate_password}
                             </label>
                         </div>
@@ -384,9 +380,9 @@ if( $encryption_mandatory ) {
                 </div>
                 <div id="encgroup3" class="row">
                     <div class="col">
-                        <div class="custom-control custom-switch" id="encryption_password_show_container">  
-                            <input id="encryption_show_password" name="encryption_show_password" class="custom-control-input" type="checkbox">  
-                            <label for="encryption_show_password" class="custom-control-label">{tr:file_encryption_show_password}</label>
+                        <div class="form-check form-switch custom-control custom-switch" id="encryption_password_show_container">  
+                            <input id="encryption_show_password" name="encryption_show_password" class="form-check-input" type="checkbox">  
+                            <label for="encryption_show_password" class="form-check-label">{tr:file_encryption_show_password}</label>
                         </div>
                     </div>
                 </div>
@@ -396,13 +392,13 @@ if( $encryption_mandatory ) {
             <?php if (Config::get('aup_enabled')) { ?>
                 <div class="row">
                     <div class="col">
-                        <div class="aupbox custom-control custom-switch">
+                        <div class="aupbox form-check form-switch custom-control custom-switch">
                             <input id="aup" name="aup"
                                    type="checkbox"
-                                   class="custom-control-input"
+                                   class="form-check-input"
                                    <?php echo $aupChecked; ?>  
                                    value="true" required />
-                            <label for="aup" class="custom-control-label" title="{tr:showhide}" >
+                            <label for="aup" class="form-check-label" title="{tr:showhide}" >
                                 {tr:accepttoc}
                             </label>
                             <div name="aupshowhide" id="aupshowhide" href="#">
@@ -423,13 +419,9 @@ if( $encryption_mandatory ) {
                     </div>
         	</div>
             <?php } ?>
-            
-            <div class="row">
-                <div class="col">
-                </div>
-                <div class="col">
-                    <a href="#" class="btn btn-primary btn-lg btn-block stage1continue" role="button">{tr:continue}&nbsp;<i class="fa fa-chevron-right"></i></a>
-                </div>
+
+            <div class="d-flex justify-content-center">
+                <a href="#" class="btn btn-primary btn-lg btn-block stage1continue" role="button">{tr:continue}&nbsp;<i class="fa fa-chevron-right"></i></a>
             </div>
         </div>
         
@@ -559,7 +551,7 @@ if( $encryption_mandatory ) {
                                     echo '<a class="nav-link dropdown-toggle" ';
                                     echo ' href="" ';
                                     echo ' id="lang" name="lang" ';
-                                    echo ' data-toggle="dropdown" ';
+                                    echo ' data-bs-toggle="dropdown" ';
                                     echo ' data-id="'.$id.'" ';
                                     echo ' aria-haspopup="true" ';
                                     echo ' aria-expanded="false"> ';
@@ -598,33 +590,39 @@ if( $encryption_mandatory ) {
 
                     
                     <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
-                    <div class="accordion" id="advanced_options">
-                      <div class="card">
-                        <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">{tr:advanced_settings}</div>
-                        <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#advanced_options">
-                          <div class="card-body">
-                          <?php
-                          foreach(Transfer::availableOptions(true) as $name => $cfg)  {
-                            if( !array_key_exists($name,$upload_options_handled)) {
-                                $displayoption($name, $cfg, Auth::isGuest());
-                            }
-                          }
-                          ?>
-                          <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
-                          <div class="fieldcontainer">
-                            <label for="terasender_worker_count">{tr:terasender_worker_count}</label>
-                            
-                            <input id="terasender_worker_count"
-                                   class="form-control"
-                                   type="text"
-                                   value="<?php echo Config::get('terasender_worker_count') ?>"/>
-                            <br />
-                          </div>
-                          <?php } ?>
-                          <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) $displayoption('disable_terasender', array('default'=>false), false); ?>
-                          </div>
-                        </div>
-                      </div>
+                        <div class="accordion" id="advanced_options">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        {tr:advanced_settings}
+                                    </button>
+                                </h2>                            
+                                <div class="card">
+                                    <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#advanced_options">
+                                        <div class="card-body">
+                                            <?php
+                                            foreach(Transfer::availableOptions(true) as $name => $cfg)  {
+                                                if( !array_key_exists($name,$upload_options_handled)) {
+                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                }
+                                            }
+                                            ?>
+                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
+                                                <div class="fieldcontainer">
+                                                    <label for="terasender_worker_count">{tr:terasender_worker_count}</label>
+                                                    
+                                                    <input id="terasender_worker_count"
+                                                           class="form-control"
+                                                           type="text"
+                                                           value="<?php echo Config::get('terasender_worker_count') ?>"/>
+                                                    <br />
+                                                </div>
+                                            <?php } ?>
+                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) $displayoption('disable_terasender', array('default'=>false), false); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                     <?php } /* End of advanced settings div. */ ?>
 
@@ -639,20 +637,13 @@ if( $encryption_mandatory ) {
                     
                 </td>
                 </tr>
-                <tr>
-                    <td class="right" colspan="3"> 
-                    <div class="row">
-                        <div class="col">
-                            <a href="#" class="stage2back btn btn-primary btn-lg btn-block" role="button"><i class="fa fa-chevron-left"></i>&nbsp;{tr:back}</a>
-                        </div>
-                        <div class="col">
-                            <a href="#" class="stage2continue btn btn-primary btn-lg btn-block" role="button">{tr:send}&nbsp;<i class="fa fa-chevron-right"></i></a></a>
-                        </div>
-                    </div>
-                    </td>
-                </tr>                
-                
             </table>
+
+            <div class="d-flex justify-content-between">
+                <a href="#" class="stage2back btn btn-primary btn-lg btn-block" role="button"><i class="fa fa-chevron-left"></i>&nbsp;{tr:back}</a>
+                <a href="#" class="stage2continue btn btn-primary btn-lg btn-block" role="button">{tr:send}&nbsp;<i class="fa fa-chevron-right"></i></a></a>
+            </div>
+            
             </div>
             
         </div>

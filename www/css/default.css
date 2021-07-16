@@ -48,6 +48,14 @@ body {
     background: #efe3db;
 }
 
+.nav-item a {
+    color: black !important;
+}
+
+.navbar-fixed-top .nav-item a.active {
+    background-color: #fff3f3 !important;
+}
+
 
 img {
     display: block;

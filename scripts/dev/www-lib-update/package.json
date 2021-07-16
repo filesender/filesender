@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@popperjs/core": "^2.9.1",
+    "@popperjs/core": "^2.9.2",
     "bootbox": "^5.5.2",
-    "bootstrap": "^4.6.0",
+    "bootstrap": "^5.0.2",
     "chart.js": "^3.4.0",
     "flag-icon-css": "^3.5.0",
     "font-awesome": "^4.7.0",
@@ -22,6 +22,6 @@
     "streamsaver": "^2.0.4",
     "web-streams-polyfill": "^2.1.1",
     "webcrypto-shim": "^0.1.7",
-    "xregexp": "^4.3.0"
+    "xregexp": "^5.0.2"
   }
 }
