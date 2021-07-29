@@ -35,7 +35,13 @@
 require_once(FILESENDER_BASE.'/lib/vendor//barracudanetworks/archivestream-php/src/Archive.php');
 require_once(FILESENDER_BASE.'/lib/vendor//barracudanetworks/archivestream-php/src/TarArchive.php');
 require_once(FILESENDER_BASE.'/lib/vendor//barracudanetworks/archivestream-php/src/ZipArchive.php');
-
+require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
+/* require_once(FILESENDER_BASE.'/lib/vendor/maennchen/zipstream-php/src/Option/Archive.php');
+ * require_once(FILESENDER_BASE.'/lib/vendor/maennchen/zipstream-php/src/Option/File.php');
+ * require_once(FILESENDER_BASE.'/lib/vendor/maennchen/zipstream-php/src/Option/Method.php');
+ * require_once(FILESENDER_BASE.'/lib/vendor/maennchen/zipstream-php/src/Option/Version.php');
+ * require_once(FILESENDER_BASE.'/lib/vendor/maennchen/zipstream-php/src/ZipStream.php');
+ * */
 
 /**
  * Stream multiple files at once as an uncompressed ZIP archive. The archive is created on-the-fly and does not require
@@ -87,20 +93,20 @@ class Archiver
     }
 
 
-    public function getZipSize($filename) {
+    public function getZipSize($filename,$options) {
 
         $tfn = tempnam( Filesystem::getTempDirectory(), 'szf');
         $outstream = fopen($tfn,'w');
-
         $contentsz = 0;
-        // work out the content length
-        $tfn = tempnam( Filesystem::getTempDirectory(), 'szf');
-        $outstream = fopen($tfn,'w');
-        $opts['send_http_headers'] = false;
-        $archive = new \Barracuda\ArchiveStream\ZipArchive($filename . ".zip",$opts,$filename,$outstream);
+
+        $options->setSendHttpHeaders(false);
+        $options->setOutputStream($outstream);
+
+        $archive = new ZipStream\ZipStream($filename . ".zip", $options);        
+//        $archive = new \Barracuda\ArchiveStream\ZipArchive($filename . ".zip",$opts,$filename,$outstream);
         $filename .= '.zip';
         $stream = null;
-        
+
         // send each file
         foreach ($this->files as $k => $data) {
             $file = $data['data'];
@@ -108,18 +114,35 @@ class Archiver
             $transfer = $file->transfer;
             $archivedName = $this->getArchivedFileName( $file );
             $contentsz += $file->size;
+            $sz = $file->size;
+            Logger::info("adding sz " . $file->size );
+            $fileopts = new ZipStream\Option\File();
+            $fileopts->defaultTo($options);
+            $fileopts->setMethod(ZipStream\Option\Method::STORE());
             
-	    $archive->init_file_stream_transfer($archivedName, $file->size, $fileopts);
-	    $archive->complete_file_stream();        
+            $file = new ZipStream\File($archive, $archivedName, $fileopts);
+
+            $file->bits |= ZipStream\File::BIT_ZERO_HEADER;
+
+            $file->len = new ZipStream\Bigint($sz);
+            $file->zlen = $file->len;
+            $file->addFileHeader();
+            $file->addFileFooter();
+            
+//	    $archive->init_file_stream_transfer($archivedName, $file->size, $fileopts);
+//	    $archive->complete_file_stream();        
         }
 
         $archive->finish();        
 
         fflush($outstream);
+        Logger::info("getZipSize() filesize  " . filesize($tfn) );
+        Logger::info("getZipSize() contentsz " . $contentsz );
         $ret = $contentsz + filesize($tfn);
         fclose($outstream);
         unlink($tfn);
 
+        Logger::info("getZipSize() ret " . $ret );
         return $ret;
     }
         
@@ -220,14 +243,24 @@ class Archiver
 
         } else {
 
-            $contentLength = $this->getZipSize( $filename );
+            $options = new ZipStream\Option\Archive();
+            $options->setSendHttpHeaders(false);
+            $options->setZeroHeader(true);
+            $options->setDeflateLevel(0);
+            
+            $contentLength = $this->getZipSize( $filename, $options );
+
+            Logger::info("HAVE CL " . $contentLength            );
             header("Content-Length: $contentLength");
-            $opts['send_http_headers'] = true;
             
             $outstream = fopen('php://output','w');
-            $archive = new \Barracuda\ArchiveStream\ZipArchive($filename . ".zip",$opts,$filename,$outstream);
+            $options->setSendHttpHeaders(true);
+            $options->setOutputStream($outstream);
+            $archive = new ZipStream\ZipStream($filename . ".zip", $options);        
+//            $archive = new \Barracuda\ArchiveStream\ZipArchive($filename . ".zip",$opts,$filename,$outstream);
             
             
+            Logger::info("loop...");
             // send each file
             foreach ($this->files as $k => $data) {
                 $file = $data['data'];
@@ -237,12 +270,21 @@ class Archiver
                 }
 
                 $archivedName = $this->getArchivedFileName( $file );
-                
+
                 $stream = $file->getStream();
-                $this->addFileToArchive( $archive, $file );
+                
+                $fileopts = new ZipStream\Option\File();
+                $fileopts->defaultTo($options);
+                $fileopts->setMethod(ZipStream\Option\Method::STORE());
+                $file = new ZipStream\File($archive, $archivedName, $fileopts);
+                
+                $file->processStream(new ZipStream\DeflateStream($stream));
+//                $this->addFileToArchive( $archive, $file );
+                
                 fclose($stream);
             }
 
+            Logger::info("finish...");
             $archive->finish();        
         }
 
