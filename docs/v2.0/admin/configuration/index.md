@@ -63,6 +63,7 @@ A note about colours;
 * [db_password](#db_password)
 * [db_database](#db_database)
 * [db_table_prefix](#db_table_prefix)
+* [db_driver_options](#db_driver_options)
 
 ## Language and internationalisation
 
@@ -639,6 +640,23 @@ $config['avprogram_list'] = array( 'always_pass',
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+
+### db_driver_options
+
+* __description:__ Some options to pass to the constructor of DBI objects. This can be used to enable persistent connections.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ array()
+* __available:__ since version 2.27
+* __comment:__
+  You might like to use the following in your config.php to enable persistent connections.
+
+$config['db_driver_options'] = array( PDO::ATTR_PERSISTENT => true );
+  
+  See https://www.php.net/manual/en/pdo.construct.php
+
+
 
 ---
 
