@@ -27,6 +27,9 @@ A note about colours;
 * [site_logouturl](#site_logouturl)
 * [reports_show_ip_addr](#reports_show_ip_addr)
 * [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
+* [mime_type_regex](#mime_type_regex)
+* [mime_type_default](#mime_type_default)
+
 
 ## Security settings
 * [use_strict_csp](#use_strict_csp)
@@ -373,6 +376,28 @@ A note about colours;
 * __default:__ false
 * __available:__ since version 2.18
 * __comment:__ This allows an admin to find a user with admin/users and click to see the "my transfers" page that the specific user would see. ie, the admin sees the user's transfers instead of seeing their own. The menu becomes red in this mode and "my transfers" is changed to "user transfers" to attempt to caution the administrator that they are dealing with user data rather than their own.
+
+### mime_type_regex
+
+* __description:__ A regular expression to match mime types against.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ^[-a-zA-Z0-9/; ]*$
+* __available:__ since version 2.29
+* __comment:__ This regular expression should describe "good" mime types. Note that optional parameters as shown in "Syntax of the Content-Type Header Field" of rfc2045 will have already been removed from the mime type before matching with this expression.The action taken if a string does not validate against this setting may be to refuse an action or to convert the mime type into application/octet-stream in order to ensure a known good mimetype rather than something unexpected. Failing mime types may be converted to mime_type_default instead of causing a halting error.
+
+
+### mime_type_default
+
+* __description:__ Default mime type to use if an invalid mimetype was sent by the client.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ application/octet-stream
+* __available:__ since version 2.29
+* __comment:__ Some failures are worse than others. This is the default mimetype to use if a client presents an invalid value.
+
+
+
 
 
 ### use_strict_csp

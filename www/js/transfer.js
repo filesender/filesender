@@ -358,7 +358,7 @@ window.filesender.transfer = function() {
             node: source_node,
             transfer: this
         };
-        
+
         // Look for dup
         for (var i = 0; i < this.files.length; i++) {
             if (this.files[i].name == file.name && this.files[i].size == file.size) {
