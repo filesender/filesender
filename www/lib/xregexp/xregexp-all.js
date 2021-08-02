@@ -1,9 +1,9 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.XRegExp = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
-
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
+
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -11,16 +11,16 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports["default"] = void 0;
 
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/concat"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/includes"));
+var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/reduce"));
 
 var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/map"));
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/reduce"));
+var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/index-of"));
+
+var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/concat"));
 
 /*!
- * XRegExp.build 4.4.1
+ * XRegExp.build 5.0.2
  * <xregexp.com>
  * Steven Levithan (c) 2012-present MIT License
  */
@@ -98,14 +98,17 @@ var _default = function _default(XRegExp) {
    * @returns {Function} Handler for template literals that construct regexes with XRegExp syntax.
    * @example
    *
-   * const h12 = /1[0-2]|0?[1-9]/;
-   * const h24 = /2[0-3]|[01][0-9]/;
-   * const hours = XRegExp.tag('x')`${h12} : | ${h24}`;
-   * const minutes = /^[0-5][0-9]$/;
-   * // Note that explicitly naming the 'minutes' group is required for named backreferences
-   * const time = XRegExp.tag('x')`^ ${hours} (?<minutes>${minutes}) $`;
+   * XRegExp.tag()`\b\w+\b`.test('word'); // -> true
+   *
+   * const hours = /1[0-2]|0?[1-9]/;
+   * const minutes = /(?<minutes>[0-5][0-9])/;
+   * const time = XRegExp.tag('x')`\b ${hours} : ${minutes} \b`;
    * time.test('10:59'); // -> true
-   * XRegExp.exec('10:59', time).minutes; // -> '59'
+   * XRegExp.exec('10:59', time).groups.minutes; // -> '59'
+   *
+   * const backref1 = /(a)\1/;
+   * const backref2 = /(b)\1/;
+   * XRegExp.tag()`${backref1}${backref2}`.test('aabb'); // -> true
    */
 
 
@@ -145,7 +148,7 @@ var _default = function _default(XRegExp) {
    *   minutes: /^[0-5][0-9]$/
    * });
    * time.test('10:59'); // -> true
-   * XRegExp.exec('10:59', time).minutes; // -> '59'
+   * XRegExp.exec('10:59', time).groups.minutes; // -> '59'
    */
 
 
@@ -154,7 +157,7 @@ var _default = function _default(XRegExp) {
     // some browsers convert `RegExp('\n')` to a regex that contains the literal characters `\`
     // and `n`. See more details at <https://github.com/slevithan/xregexp/pull/163>.
 
-    var addFlagX = (0, _includes["default"])(flags).call(flags, 'x');
+    var addFlagX = (0, _indexOf["default"])(flags).call(flags, 'x') !== -1;
     var inlineFlags = /^\(\?([\w$]+)\)/.exec(pattern); // Add flags within a leading mode modifier to the overall pattern's flags
 
     if (inlineFlags) {
@@ -259,12 +262,12 @@ var _default = function _default(XRegExp) {
 
 exports["default"] = _default;
 module.exports = exports.default;
-},{"@babel/runtime-corejs3/core-js-stable/instance/concat":12,"@babel/runtime-corejs3/core-js-stable/instance/includes":15,"@babel/runtime-corejs3/core-js-stable/instance/map":17,"@babel/runtime-corejs3/core-js-stable/instance/reduce":18,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],2:[function(require,module,exports){
+},{"@babel/runtime-corejs3/core-js-stable/instance/concat":11,"@babel/runtime-corejs3/core-js-stable/instance/index-of":14,"@babel/runtime-corejs3/core-js-stable/instance/map":15,"@babel/runtime-corejs3/core-js-stable/instance/reduce":16,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/helpers/interopRequireDefault":32}],2:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
-
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
+
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -272,14 +275,14 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports["default"] = void 0;
 
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/slice"));
+var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/index-of"));
 
 var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/concat"));
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/includes"));
+var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/slice"));
 
 /*!
- * XRegExp.matchRecursive 4.4.1
+ * XRegExp.matchRecursive 5.0.2
  * <xregexp.com>
  * Steven Levithan (c) 2009-present MIT License
  */
@@ -306,7 +309,7 @@ var _default = function _default(XRegExp) {
    * @param {String} str String to search.
    * @param {String} left Left delimiter as an XRegExp pattern.
    * @param {String} right Right delimiter as an XRegExp pattern.
-   * @param {String} [flags] Any native or XRegExp flags, used for the left and right delimiters.
+   * @param {String} [flags] Any combination of XRegExp flags, used for the left and right delimiters.
    * @param {Object} [options] Lets you specify `valueNames` and `escapeChar` options.
    * @returns {!Array} Array of matches, or an empty array.
    * @example
@@ -352,8 +355,8 @@ var _default = function _default(XRegExp) {
   XRegExp.matchRecursive = function (str, left, right, flags, options) {
     flags = flags || '';
     options = options || {};
-    var global = (0, _includes["default"])(flags).call(flags, 'g');
-    var sticky = (0, _includes["default"])(flags).call(flags, 'y'); // Flag `y` is controlled internally
+    var global = (0, _indexOf["default"])(flags).call(flags, 'g') !== -1;
+    var sticky = (0, _indexOf["default"])(flags).call(flags, 'y') !== -1; // Flag `y` is controlled internally
 
     var basicFlags = flags.replace(/y/g, '');
     var _options = options,
@@ -392,7 +395,7 @@ var _default = function _default(XRegExp) {
       XRegExp.union([left, right], '', {
         conjunction: 'or'
       }).source, ")[^")).call(_context, escapeChar, "])+)+"), // Flags `gy` not needed here
-      flags.replace(/[^imu]+/g, ''));
+      flags.replace(XRegExp._hasNativeFlag('s') ? /[^imsu]/g : /[^imu]/g, ''));
     }
 
     while (true) {
@@ -470,7 +473,11 @@ var _default = function _default(XRegExp) {
           }
         }
       } else {
-        throw new Error('Unbalanced delimiter found in string');
+        var _context3;
+
+        var delimSide = rightMatch ? 'right' : 'left';
+        var errorPos = rightMatch ? delimStart : outerStart;
+        throw new Error((0, _concat["default"])(_context3 = "Unbalanced ".concat(delimSide, " delimiter found in string at position ")).call(_context3, errorPos));
       } // If the delimiter matched an empty string, avoid an infinite loop
 
 
@@ -489,12 +496,24 @@ var _default = function _default(XRegExp) {
 
 exports["default"] = _default;
 module.exports = exports.default;
-},{"@babel/runtime-corejs3/core-js-stable/instance/concat":12,"@babel/runtime-corejs3/core-js-stable/instance/includes":15,"@babel/runtime-corejs3/core-js-stable/instance/slice":19,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],3:[function(require,module,exports){
+},{"@babel/runtime-corejs3/core-js-stable/instance/concat":11,"@babel/runtime-corejs3/core-js-stable/instance/index-of":14,"@babel/runtime-corejs3/core-js-stable/instance/slice":17,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/helpers/interopRequireDefault":32}],3:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
+var _sliceInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/slice");
+
+var _Array$from = require("@babel/runtime-corejs3/core-js-stable/array/from");
+
+var _Symbol = require("@babel/runtime-corejs3/core-js-stable/symbol");
+
+var _getIteratorMethod = require("@babel/runtime-corejs3/core-js/get-iterator-method");
+
+var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-array");
+
+var _getIterator = require("@babel/runtime-corejs3/core-js/get-iterator");
 
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
+
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -502,32 +521,22 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports["default"] = void 0;
 
-var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/get-iterator"));
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/array/is-array"));
-
-var _getIteratorMethod2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/get-iterator-method"));
-
-var _symbol = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/symbol"));
-
-var _from = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/array/from"));
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/slice"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/includes"));
-
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/concat"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/slicedToArray"));
 
 var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/for-each"));
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof _symbol["default"] === "undefined" || (0, _getIteratorMethod2["default"])(o) == null) { if ((0, _isArray["default"])(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = (0, _getIterator2["default"])(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/concat"));
 
-function _unsupportedIterableToArray(o, minLen) { var _context4; if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = (0, _slice["default"])(_context4 = Object.prototype.toString.call(o)).call(_context4, 8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return (0, _from["default"])(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/index-of"));
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof _Symbol === "undefined" || _getIteratorMethod(o) == null) { if (_Array$isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = _getIterator(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { var _context4; if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = _sliceInstanceProperty(_context4 = Object.prototype.toString.call(o)).call(_context4, 8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return _Array$from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /*!
- * XRegExp Unicode Base 4.4.1
+ * XRegExp Unicode Base 5.0.2
  * <xregexp.com>
  * Steven Levithan (c) 2008-present MIT License
  */
@@ -541,7 +550,7 @@ var _default = function _default(XRegExp) {
    * - Adds the `XRegExp.addUnicodeData` method used by other addons to provide character data.
    *
    * Unicode Base relies on externally provided Unicode character data. Official addons are
-   * available to provide data for Unicode categories, scripts, blocks, and properties.
+   * available to provide data for Unicode categories, scripts, and properties.
    *
    * @requires XRegExp
    */
@@ -549,7 +558,8 @@ var _default = function _default(XRegExp) {
   // Private stuff
   // ==--------------------------==
   // Storage for Unicode data
-  var unicode = {}; // Reuse utils
+  var unicode = {};
+  var unicodeTypes = {}; // Reuse utils
 
   var dec = XRegExp._dec;
   var hex = XRegExp._hex;
@@ -639,27 +649,43 @@ var _default = function _default(XRegExp) {
 
 
   XRegExp.addToken( // Use `*` instead of `+` to avoid capturing `^` as the token name in `\p{^}`
-  /\\([pP])(?:{(\^?)([^}]*)}|([A-Za-z]))/, function (match, scope, flags) {
+  /\\([pP])(?:{(\^?)(?:(\w+)=)?([^}]*)}|([A-Za-z]))/, function (match, scope, flags) {
     var ERR_DOUBLE_NEG = 'Invalid double negation ';
     var ERR_UNKNOWN_NAME = 'Unknown Unicode token ';
     var ERR_UNKNOWN_REF = 'Unicode token missing data ';
     var ERR_ASTRAL_ONLY = 'Astral mode required for Unicode token ';
-    var ERR_ASTRAL_IN_CLASS = 'Astral mode does not support Unicode tokens within character classes'; // Negated via \P{..} or \p{^..}
+    var ERR_ASTRAL_IN_CLASS = 'Astral mode does not support Unicode tokens within character classes';
 
-    var isNegated = match[1] === 'P' || !!match[2]; // Switch from BMP (0-FFFF) to astral (0-10FFFF) mode via flag A
+    var _match = (0, _slicedToArray2["default"])(match, 6),
+        fullToken = _match[0],
+        pPrefix = _match[1],
+        caretNegation = _match[2],
+        typePrefix = _match[3],
+        tokenName = _match[4],
+        tokenSingleCharName = _match[5]; // Negated via \P{..} or \p{^..}
 
-    var isAstralMode = (0, _includes["default"])(flags).call(flags, 'A'); // Token lookup name. Check `[4]` first to avoid passing `undefined` via `\p{}`
 
-    var slug = normalize(match[4] || match[3]); // Token data object
+    var isNegated = pPrefix === 'P' || !!caretNegation; // Switch from BMP (0-FFFF) to astral (0-10FFFF) mode via flag A
+
+    var isAstralMode = (0, _indexOf["default"])(flags).call(flags, 'A') !== -1; // Token lookup name. Check `tokenSingleCharName` first to avoid passing `undefined`
+    // via `\p{}`
+
+    var slug = normalize(tokenSingleCharName || tokenName); // Token data object
 
     var item = unicode[slug];
 
-    if (match[1] === 'P' && match[2]) {
-      throw new SyntaxError(ERR_DOUBLE_NEG + match[0]);
+    if (pPrefix === 'P' && caretNegation) {
+      throw new SyntaxError(ERR_DOUBLE_NEG + fullToken);
     }
 
     if (!unicode.hasOwnProperty(slug)) {
-      throw new SyntaxError(ERR_UNKNOWN_NAME + match[0]);
+      throw new SyntaxError(ERR_UNKNOWN_NAME + fullToken);
+    }
+
+    if (typePrefix) {
+      if (!(unicodeTypes[typePrefix] && unicodeTypes[typePrefix][slug])) {
+        throw new SyntaxError(ERR_UNKNOWN_NAME + fullToken);
+      }
     } // Switch to the negated form of the referenced Unicode token
 
 
@@ -669,7 +695,7 @@ var _default = function _default(XRegExp) {
       if (!unicode.hasOwnProperty(slug)) {
         var _context3;
 
-        throw new ReferenceError((0, _concat["default"])(_context3 = "".concat(ERR_UNKNOWN_REF + match[0], " -> ")).call(_context3, item.inverseOf));
+        throw new ReferenceError((0, _concat["default"])(_context3 = "".concat(ERR_UNKNOWN_REF + fullToken, " -> ")).call(_context3, item.inverseOf));
       }
 
       item = unicode[slug];
@@ -677,7 +703,7 @@ var _default = function _default(XRegExp) {
     }
 
     if (!(item.bmp || isAstralMode)) {
-      throw new SyntaxError(ERR_ASTRAL_ONLY + match[0]);
+      throw new SyntaxError(ERR_ASTRAL_ONLY + fullToken);
     }
 
     if (isAstralMode) {
@@ -712,6 +738,9 @@ var _default = function _default(XRegExp) {
    *   character classes and alternation, and should use surrogate pairs to represent astral code
    *   points. `inverseOf` can be used to avoid duplicating character data if a Unicode token is
    *   defined as the exact inverse of another token.
+   * @param {String} [typePrefix] Enables optionally using this type as a prefix for all of the
+   *   provided Unicode tokens, e.g. if given `'Type'`, then `\p{TokenName}` can also be written
+   *   as `\p{Type=TokenName}`.
    * @example
    *
    * // Basic use
@@ -723,9 +752,14 @@ var _default = function _default(XRegExp) {
    * XRegExp('\\p{XDigit}:\\p{Hexadecimal}+').test('0:3D'); // -> true
    */
 
-  XRegExp.addUnicodeData = function (data) {
+  XRegExp.addUnicodeData = function (data, typePrefix) {
     var ERR_NO_NAME = 'Unicode token requires name';
     var ERR_NO_DATA = 'Unicode token has no character data ';
+
+    if (typePrefix) {
+      // Case sensitive to match ES2018
+      unicodeTypes[typePrefix] = {};
+    }
 
     var _iterator = _createForOfIteratorHelper(data),
         _step;
@@ -742,10 +776,20 @@ var _default = function _default(XRegExp) {
           throw new Error(ERR_NO_DATA + item.name);
         }
 
-        unicode[normalize(item.name)] = item;
+        var normalizedName = normalize(item.name);
+        unicode[normalizedName] = item;
+
+        if (typePrefix) {
+          unicodeTypes[typePrefix][normalizedName] = true;
+        }
 
         if (item.alias) {
-          unicode[normalize(item.alias)] = item;
+          var normalizedAlias = normalize(item.alias);
+          unicode[normalizedAlias] = item;
+
+          if (typePrefix) {
+            unicodeTypes[typePrefix][normalizedAlias] = true;
+          }
         }
       } // Reset the pattern cache used by the `XRegExp` constructor, since the same pattern and
       // flags might now produce different results
@@ -789,52 +833,12 @@ var _default = function _default(XRegExp) {
 
 exports["default"] = _default;
 module.exports = exports.default;
-},{"@babel/runtime-corejs3/core-js-stable/array/from":10,"@babel/runtime-corejs3/core-js-stable/array/is-array":11,"@babel/runtime-corejs3/core-js-stable/instance/concat":12,"@babel/runtime-corejs3/core-js-stable/instance/for-each":14,"@babel/runtime-corejs3/core-js-stable/instance/includes":15,"@babel/runtime-corejs3/core-js-stable/instance/slice":19,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/core-js-stable/symbol":24,"@babel/runtime-corejs3/core-js/get-iterator":28,"@babel/runtime-corejs3/core-js/get-iterator-method":27,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],4:[function(require,module,exports){
+},{"@babel/runtime-corejs3/core-js-stable/array/from":9,"@babel/runtime-corejs3/core-js-stable/array/is-array":10,"@babel/runtime-corejs3/core-js-stable/instance/concat":11,"@babel/runtime-corejs3/core-js-stable/instance/for-each":13,"@babel/runtime-corejs3/core-js-stable/instance/index-of":14,"@babel/runtime-corejs3/core-js-stable/instance/slice":17,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/core-js-stable/symbol":22,"@babel/runtime-corejs3/core-js/get-iterator":26,"@babel/runtime-corejs3/core-js/get-iterator-method":25,"@babel/runtime-corejs3/helpers/interopRequireDefault":32,"@babel/runtime-corejs3/helpers/slicedToArray":35}],4:[function(require,module,exports){
 "use strict";
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
 
-_Object$defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports["default"] = void 0;
-
-var _blocks = _interopRequireDefault(require("../../tools/output/blocks"));
-
-/*!
- * XRegExp Unicode Blocks 4.4.1
- * <xregexp.com>
- * Steven Levithan (c) 2010-present MIT License
- * Unicode data by Mathias Bynens <mathiasbynens.be>
- */
-var _default = function _default(XRegExp) {
-  /**
-   * Adds support for all Unicode blocks. Block names use the prefix 'In'. E.g.,
-   * `\p{InBasicLatin}`. Token names are case insensitive, and any spaces, hyphens, and
-   * underscores are ignored.
-   *
-   * Uses Unicode 13.0.0.
-   *
-   * @requires XRegExp, Unicode Base
-   */
-  if (!XRegExp.addUnicodeData) {
-    throw new ReferenceError('Unicode Base must be loaded before Unicode Blocks');
-  }
-
-  XRegExp.addUnicodeData(_blocks["default"]);
-};
-
-exports["default"] = _default;
-module.exports = exports.default;
-},{"../../tools/output/blocks":222,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],5:[function(require,module,exports){
-"use strict";
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
-
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -845,7 +849,7 @@ exports["default"] = void 0;
 var _categories = _interopRequireDefault(require("../../tools/output/categories"));
 
 /*!
- * XRegExp Unicode Categories 4.4.1
+ * XRegExp Unicode Categories 5.0.2
  * <xregexp.com>
  * Steven Levithan (c) 2010-present MIT License
  * Unicode data by Mathias Bynens <mathiasbynens.be>
@@ -869,12 +873,12 @@ var _default = function _default(XRegExp) {
 
 exports["default"] = _default;
 module.exports = exports.default;
-},{"../../tools/output/categories":223,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],6:[function(require,module,exports){
+},{"../../tools/output/categories":211,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/helpers/interopRequireDefault":32}],5:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
-
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
+
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -885,7 +889,7 @@ exports["default"] = void 0;
 var _properties = _interopRequireDefault(require("../../tools/output/properties"));
 
 /*!
- * XRegExp Unicode Properties 4.4.1
+ * XRegExp Unicode Properties 5.0.2
  * <xregexp.com>
  * Steven Levithan (c) 2012-present MIT License
  * Unicode data by Mathias Bynens <mathiasbynens.be>
@@ -946,12 +950,12 @@ var _default = function _default(XRegExp) {
 
 exports["default"] = _default;
 module.exports = exports.default;
-},{"../../tools/output/properties":224,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],7:[function(require,module,exports){
+},{"../../tools/output/properties":212,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/helpers/interopRequireDefault":32}],6:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
-
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
+
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -962,7 +966,7 @@ exports["default"] = void 0;
 var _scripts = _interopRequireDefault(require("../../tools/output/scripts"));
 
 /*!
- * XRegExp Unicode Scripts 4.4.1
+ * XRegExp Unicode Scripts 5.0.2
  * <xregexp.com>
  * Steven Levithan (c) 2010-present MIT License
  * Unicode data by Mathias Bynens <mathiasbynens.be>
@@ -980,17 +984,17 @@ var _default = function _default(XRegExp) {
     throw new ReferenceError('Unicode Base must be loaded before Unicode Scripts');
   }
 
-  XRegExp.addUnicodeData(_scripts["default"]);
+  XRegExp.addUnicodeData(_scripts["default"], 'Script');
 };
 
 exports["default"] = _default;
 module.exports = exports.default;
-},{"../../tools/output/scripts":225,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],8:[function(require,module,exports){
+},{"../../tools/output/scripts":213,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/helpers/interopRequireDefault":32}],7:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
-
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
+
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -1006,8 +1010,6 @@ var _matchrecursive = _interopRequireDefault(require("./addons/matchrecursive"))
 
 var _unicodeBase = _interopRequireDefault(require("./addons/unicode-base"));
 
-var _unicodeBlocks = _interopRequireDefault(require("./addons/unicode-blocks"));
-
 var _unicodeCategories = _interopRequireDefault(require("./addons/unicode-categories"));
 
 var _unicodeProperties = _interopRequireDefault(require("./addons/unicode-properties"));
@@ -1017,19 +1019,30 @@ var _unicodeScripts = _interopRequireDefault(require("./addons/unicode-scripts")
 (0, _build["default"])(_xregexp["default"]);
 (0, _matchrecursive["default"])(_xregexp["default"]);
 (0, _unicodeBase["default"])(_xregexp["default"]);
-(0, _unicodeBlocks["default"])(_xregexp["default"]);
 (0, _unicodeCategories["default"])(_xregexp["default"]);
 (0, _unicodeProperties["default"])(_xregexp["default"]);
 (0, _unicodeScripts["default"])(_xregexp["default"]);
 var _default = _xregexp["default"];
 exports["default"] = _default;
 module.exports = exports.default;
-},{"./addons/build":1,"./addons/matchrecursive":2,"./addons/unicode-base":3,"./addons/unicode-blocks":4,"./addons/unicode-categories":5,"./addons/unicode-properties":6,"./addons/unicode-scripts":7,"./xregexp":9,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/helpers/interopRequireDefault":34}],9:[function(require,module,exports){
+},{"./addons/build":1,"./addons/matchrecursive":2,"./addons/unicode-base":3,"./addons/unicode-categories":4,"./addons/unicode-properties":5,"./addons/unicode-scripts":6,"./xregexp":8,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/helpers/interopRequireDefault":32}],8:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
+var _sliceInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/slice");
+
+var _Array$from = require("@babel/runtime-corejs3/core-js-stable/array/from");
+
+var _Symbol = require("@babel/runtime-corejs3/core-js-stable/symbol");
+
+var _getIteratorMethod = require("@babel/runtime-corejs3/core-js/get-iterator-method");
+
+var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-array");
+
+var _getIterator = require("@babel/runtime-corejs3/core-js/get-iterator");
 
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
+
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 _Object$defineProperty(exports, "__esModule", {
   value: true
@@ -1037,44 +1050,32 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports["default"] = void 0;
 
-var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/get-iterator"));
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/array/is-array"));
-
-var _getIteratorMethod2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/get-iterator-method"));
-
-var _symbol = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/symbol"));
-
-var _from = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/array/from"));
-
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/concat"));
-
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/index-of"));
-
-var _create = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/object/create"));
-
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/slicedToArray"));
-
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/for-each"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/includes"));
-
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/parse-int"));
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/slice"));
-
-var _sort = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/sort"));
 
 var _flags = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/flags"));
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof _symbol["default"] === "undefined" || (0, _getIteratorMethod2["default"])(o) == null) { if ((0, _isArray["default"])(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = (0, _getIterator2["default"])(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+var _sort = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/sort"));
 
-function _unsupportedIterableToArray(o, minLen) { var _context9; if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = (0, _slice["default"])(_context9 = Object.prototype.toString.call(o)).call(_context9, 8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return (0, _from["default"])(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/slice"));
+
+var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/parse-int"));
+
+var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/index-of"));
+
+var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/for-each"));
+
+var _create = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/object/create"));
+
+var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/instance/concat"));
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof _Symbol === "undefined" || _getIteratorMethod(o) == null) { if (_Array$isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = _getIterator(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { var _context9; if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = _sliceInstanceProperty2(_context9 = Object.prototype.toString.call(o)).call(_context9, 8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return _Array$from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /*!
- * XRegExp 4.4.1
+ * XRegExp 5.0.2
  * <xregexp.com>
  * Steven Levithan (c) 2007-present MIT License
  */
@@ -1093,15 +1094,7 @@ var REGEX_DATA = 'xregexp'; // Optional features that can be installed and unins
 
 var features = {
   astral: false,
-  namespacing: false
-}; // Native methods to use and restore ('native' is an ES3 reserved keyword)
-
-var nativ = {
-  exec: RegExp.prototype.exec,
-  test: RegExp.prototype.test,
-  match: String.prototype.match,
-  replace: String.prototype.replace,
-  split: String.prototype.split
+  namespacing: true
 }; // Storage for fixed/extended native methods
 
 var fixed = {}; // Storage for regexes cached by `XRegExp.cache`
@@ -1122,14 +1115,11 @@ var nativeTokens = {
   'class': /\\(?:[0-3][0-7]{0,2}|[4-7][0-7]?|x[\dA-Fa-f]{2}|u(?:[\dA-Fa-f]{4}|{[\dA-Fa-f]+})|c[A-Za-z]|[\s\S])|[\s\S]/
 }; // Any backreference or dollar-prefixed character in replacement strings
 
-var replacementToken = /\$(?:{([\w$]+)}|<([\w$]+)>|(\d\d?|[\s\S]))/g; // Check for correct `exec` handling of nonparticipating capturing groups
+var replacementToken = /\$(?:\{([^\}]+)\}|<([^>]+)>|(\d\d?|[\s\S]?))/g; // Check for correct `exec` handling of nonparticipating capturing groups
 
-var correctExecNpcg = nativ.exec.call(/()??/, '')[1] === undefined; // Check for ES6 `flags` prop support
+var correctExecNpcg = /()??/.exec('')[1] === undefined; // Check for ES6 `flags` prop support
 
-var hasFlagsProp = (0, _flags["default"])(/x/) !== undefined; // Shortcut to `Object.prototype.toString`
-
-var _ref = {},
-    toString = _ref.toString;
+var hasFlagsProp = (0, _flags["default"])(/x/) !== undefined;
 
 function hasNativeFlag(flag) {
   // Can't check based on the presence of properties/getters since browsers might support such
@@ -1160,8 +1150,10 @@ function hasNativeFlag(flag) {
   }
 
   return isSupported;
-} // Check for ES6 `u` flag support
+} // Check for ES2018 `s` flag support
 
+
+var hasNativeS = hasNativeFlag('s'); // Check for ES6 `u` flag support
 
 var hasNativeU = hasNativeFlag('u'); // Check for ES6 `y` flag support
 
@@ -1171,9 +1163,12 @@ var registeredFlags = {
   g: true,
   i: true,
   m: true,
+  s: hasNativeS,
   u: hasNativeU,
   y: hasNativeY
-};
+}; // Flags to remove when passing to native `RegExp` constructor
+
+var nonnativeFlags = hasNativeS ? /[^gimsuy]+/g : /[^gimuy]+/g;
 /**
  * Attaches extended data and `XRegExp.prototype` properties to a regex object.
  *
@@ -1226,7 +1221,7 @@ function augment(regex, captureNames, xSource, xFlags, isInternalOnly) {
 
 
 function clipDuplicates(str) {
-  return nativ.replace.call(str, /([\s\S])(?=[\s\S]*\1)/g, '');
+  return str.replace(/([\s\S])(?=[\s\S]*\1)/g, '');
 }
 /**
  * Copies a regex object while preserving extended data and augmenting with `XRegExp.prototype`
@@ -1272,7 +1267,7 @@ function copyRegex(regex, options) {
   }
 
   if (flagsToRemove) {
-    flags = nativ.replace.call(flags, new RegExp("[".concat(flagsToRemove, "]+"), 'g'), '');
+    flags = flags.replace(new RegExp("[".concat(flagsToRemove, "]+"), 'g'), '');
   }
 
   if (options.addG) {
@@ -1334,20 +1329,21 @@ function dec(hex) {
 
 
 function getContextualTokenSeparator(match, scope, flags) {
-  if ( // No need to separate tokens if at the beginning or end of a group
-  match.input[match.index - 1] === '(' || match.input[match.index + match[0].length] === ')' || // No need to separate tokens if before or after a `|`
-  match.input[match.index - 1] === '|' || match.input[match.index + match[0].length] === '|' || // No need to separate tokens if at the beginning or end of the pattern
-  match.index < 1 || match.index + match[0].length >= match.input.length || // No need to separate tokens if at the beginning of a noncapturing group or lookahead.
-  // The way this is written relies on:
-  // - The search regex matching only 3-char strings.
-  // - Although `substr` gives chars from the end of the string if given a negative index,
-  //   the resulting substring will be too short to match. Ex: `'abcd'.substr(-1, 3) === 'd'`
-  nativ.test.call(/^\(\?[:=!]/, match.input.substr(match.index - 3, 3)) || // Avoid separating tokens when the following token is a quantifier
-  isQuantifierNext(match.input, match.index + match[0].length, flags)) {
+  var matchEndPos = match.index + match[0].length;
+  var precedingChar = match.input[match.index - 1];
+  var followingChar = match.input[matchEndPos];
+
+  if ( // No need to separate tokens if at the beginning or end of a group, before or after a
+  // group, or before or after a `|`
+  /^[()|]$/.test(precedingChar) || /^[()|]$/.test(followingChar) || // No need to separate tokens if at the beginning or end of the pattern
+  match.index === 0 || matchEndPos === match.input.length || // No need to separate tokens if at the beginning of a noncapturing group or lookaround.
+  // Looks only at the last 4 chars (at most) for perf when constructing long regexes.
+  /\(\?(?:[:=!]|<[=!])$/.test(match.input.substring(match.index - 4, match.index)) || // Avoid separating tokens when the following token is a quantifier
+  isQuantifierNext(match.input, matchEndPos, flags)) {
     return '';
   } // Keep tokens separated. This avoids e.g. inadvertedly changing `\1 1` or `\1(?#)1` to `\11`.
-  // This also ensures all tokens remain as discrete atoms, e.g. it avoids converting the syntax
-  // error `(? :` into `(?:`.
+  // This also ensures all tokens remain as discrete atoms, e.g. it prevents converting the
+  // syntax error `(? :` into `(?:`.
 
 
   return '(?:)';
@@ -1365,7 +1361,7 @@ function getNativeFlags(regex) {
   return hasFlagsProp ? (0, _flags["default"])(regex) : // Explicitly using `RegExp.prototype.toString` (rather than e.g. `String` or concatenation
   // with an empty string) allows this to continue working predictably when
   // `XRegExp.proptotype.toString` is overridden
-  nativ.exec.call(/\/([a-z]*)$/i, RegExp.prototype.toString.call(regex))[1];
+  /\/([a-z]*)$/i.exec(RegExp.prototype.toString.call(regex))[1];
 }
 /**
  * Determines whether a regex has extended instance data used to track capture names.
@@ -1406,9 +1402,10 @@ function isQuantifierNext(pattern, pos, flags) {
   var inlineCommentPattern = '\\(\\?#[^)]*\\)';
   var lineCommentPattern = '#[^#\\n]*';
   var quantifierPattern = '[?*+]|{\\d+(?:,\\d*)?}';
-  return nativ.test.call((0, _includes["default"])(flags).call(flags, 'x') ? // Ignore any leading whitespace, line comments, and inline comments
+  var regex = (0, _indexOf["default"])(flags).call(flags, 'x') !== -1 ? // Ignore any leading whitespace, line comments, and inline comments
   /^(?:\s|#[^#\n]*|\(\?#[^)]*\))*(?:[?*+]|{\d+(?:,\d*)?})/ : // Ignore any leading inline comments
-  /^(?:\(\?#[^)]*\))*(?:[?*+]|{\d+(?:,\d*)?})/, (0, _slice["default"])(pattern).call(pattern, pos));
+  /^(?:\(\?#[^)]*\))*(?:[?*+]|{\d+(?:,\d*)?})/;
+  return regex.test((0, _slice["default"])(pattern).call(pattern, pos));
 }
 /**
  * Determines whether a value is of the specified type, by resolving its internal [[Class]].
@@ -1421,7 +1418,25 @@ function isQuantifierNext(pattern, pos, flags) {
 
 
 function isType(value, type) {
-  return toString.call(value) === "[object ".concat(type, "]");
+  return Object.prototype.toString.call(value) === "[object ".concat(type, "]");
+}
+/**
+ * Returns the object, or throws an error if it is `null` or `undefined`. This is used to follow
+ * the ES5 abstract operation `ToObject`.
+ *
+ * @private
+ * @param {*} value Object to check and return.
+ * @returns {*} The provided object.
+ */
+
+
+function nullThrows(value) {
+  // null or undefined
+  if (value == null) {
+    throw new TypeError('Cannot convert null or undefined to object');
+  }
+
+  return value;
 }
 /**
  * Adds leading zeros if shorter than four characters. Used for fixed-length hexadecimal values.
@@ -1457,8 +1472,8 @@ function prepareFlags(pattern, flags) {
   } // Strip and apply a leading mode modifier with any combination of flags except g or y
 
 
-  pattern = nativ.replace.call(pattern, /^\(\?([\w$]+)\)/, function ($0, $1) {
-    if (nativ.test.call(/[gy]/, $1)) {
+  pattern = pattern.replace(/^\(\?([\w$]+)\)/, function ($0, $1) {
+    if (/[gy]/.test($1)) {
       throw new SyntaxError("Cannot use flag g or y in mode modifier ".concat($0));
     } // Allow duplicate flags within the mode modifier
 
@@ -1549,7 +1564,7 @@ function runTokens(pattern, flags, pos, scope, context) {
   while (i--) {
     t = tokens[i];
 
-    if (t.leadChar && t.leadChar !== leadChar || t.scope !== scope && t.scope !== 'all' || t.flag && !(0, _includes["default"])(flags).call(flags, t.flag)) {
+    if (t.leadChar && t.leadChar !== leadChar || t.scope !== scope && t.scope !== 'all' || t.flag && !((0, _indexOf["default"])(flags).call(flags, t.flag) !== -1)) {
       continue;
     }
 
@@ -1592,24 +1607,6 @@ function setAstral(on) {
 
 function setNamespacing(on) {
   features.namespacing = on;
-}
-/**
- * Returns the object, or throws an error if it is `null` or `undefined`. This is used to follow
- * the ES5 abstract operation `ToObject`.
- *
- * @private
- * @param {*} value Object to check and return.
- * @returns {*} The provided object.
- */
-
-
-function toObject(value) {
-  // null or undefined
-  if (value == null) {
-    throw new TypeError('Cannot convert null or undefined to object');
-  }
-
-  return value;
 } // ==--------------------------==
 // Constructor
 // ==--------------------------==
@@ -1631,7 +1628,7 @@ function toObject(value) {
  *     - `y` - sticky (Firefox 3+, ES6)
  *   Additional XRegExp flags:
  *     - `n` - explicit capture
- *     - `s` - dot matches all (aka singleline)
+ *     - `s` - dot matches all (aka singleline) - works even when not natively supported
  *     - `x` - free-spacing and line comments (aka extended)
  *     - `A` - astral (requires the Unicode Base addon)
  *   Flags cannot be provided when constructing one `RegExp` from another.
@@ -1663,7 +1660,7 @@ function XRegExp(pattern, flags) {
   pattern = pattern === undefined ? '' : String(pattern);
   flags = flags === undefined ? '' : String(flags);
 
-  if (XRegExp.isInstalled('astral') && !(0, _includes["default"])(flags).call(flags, 'A')) {
+  if (XRegExp.isInstalled('astral') && !((0, _indexOf["default"])(flags).call(flags, 'A') !== -1)) {
     // This causes an error to be thrown if the Unicode Base addon is not available
     flags += 'A';
   }
@@ -1722,9 +1719,9 @@ function XRegExp(pattern, flags) {
       // Use basic cleanup to collapse repeated empty groups like `(?:)(?:)` to `(?:)`. Empty
       // groups are sometimes inserted during regex transpilation in order to keep tokens
       // separated. However, more than one empty group in a row is never needed.
-      pattern: nativ.replace.call(output, /(?:\(\?:\))+/g, '(?:)'),
+      pattern: output.replace(/(?:\(\?:\))+/g, '(?:)'),
       // Strip all but native flags
-      flags: nativ.replace.call(appliedFlags, /[^gimuy]+/g, ''),
+      flags: appliedFlags.replace(nonnativeFlags, ''),
       // `context.captureNames` has an item for each capturing group, even if unnamed
       captures: context.hasNamedCapture ? context.captureNames : null
     };
@@ -1748,7 +1745,7 @@ XRegExp.prototype = /(?:)/; // ==--------------------------==
  * @type String
  */
 
-XRegExp.version = '4.4.1'; // ==--------------------------==
+XRegExp.version = '5.0.2'; // ==--------------------------==
 // Public methods
 // ==--------------------------==
 // Intentionally undocumented; used in tests and addons
@@ -1818,7 +1815,7 @@ XRegExp.addToken = function (regex, handler, options) {
   }
 
   if (optionalFlags) {
-    optionalFlags = nativ.split.call(optionalFlags, '');
+    optionalFlags = optionalFlags.split('');
 
     var _iterator2 = _createForOfIteratorHelper(optionalFlags),
         _step2;
@@ -1862,7 +1859,8 @@ XRegExp.addToken = function (regex, handler, options) {
  * @returns {RegExp} Cached XRegExp object.
  * @example
  *
- * while (match = XRegExp.cache('.', 'gs').exec(str)) {
+ * let match;
+ * while (match = XRegExp.cache('.', 'gs').exec('abc')) {
  *   // The regex is compiled once only
  * }
  */
@@ -1888,7 +1886,7 @@ XRegExp.cache.flush = function (cacheName) {
 };
 /**
  * Escapes any regular expression metacharacters, for use when matching literal strings. The result
- * can safely be used at any point within a regex that uses any flags.
+ * can safely be used at any position within a regex that uses any flags.
  *
  * @memberOf XRegExp
  * @param {String} str String to escape.
@@ -1896,20 +1894,36 @@ XRegExp.cache.flush = function (cacheName) {
  * @example
  *
  * XRegExp.escape('Escaped? <.>');
- * // -> 'Escaped\?\ <\.>'
+ * // -> 'Escaped\?\u0020<\.>'
  */
+// Following are the contexts where each metacharacter needs to be escaped because it would
+// otherwise have a special meaning, change the meaning of surrounding characters, or cause an
+// error. Context 'default' means outside character classes only.
+// - `\` - context: all
+// - `[()*+?.$|` - context: default
+// - `]` - context: default with flag u or if forming the end of a character class
+// - `{}` - context: default with flag u or if part of a valid/complete quantifier pattern
+// - `,` - context: default if in a position that causes an unescaped `{` to turn into a quantifier.
+//   Ex: `/^a{1\,2}$/` matches `'a{1,2}'`, but `/^a{1,2}$/` matches `'a'` or `'aa'`
+// - `#` and <whitespace> - context: default with flag x
+// - `^` - context: default, and context: class if it's the first character in the class
+// - `-` - context: class if part of a valid character class range
 
 
 XRegExp.escape = function (str) {
-  return nativ.replace.call(toObject(str), /[-\[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return String(nullThrows(str)). // Escape most special chars with a backslash
+  replace(/[\\\[\]{}()*+?.^$|]/g, '\\$&'). // Convert to \uNNNN for special chars that can't be escaped when used with ES6 flag `u`
+  replace(/[\s#\-,]/g, function (match) {
+    return "\\u".concat(pad4(hex(match.charCodeAt(0))));
+  });
 };
 /**
  * Executes a regex search in a specified string. Returns a match array or `null`. If the provided
- * regex uses named capture, named backreference properties are included on the match array.
- * Optional `pos` and `sticky` arguments specify the search start position, and whether the match
- * must start at the specified position only. The `lastIndex` property of the provided regex is not
- * used, but is updated for compatibility. Also fixes browser bugs compared to the native
- * `RegExp.prototype.exec` and can be used reliably cross-browser.
+ * regex uses named capture, named capture properties are included on the match array's `groups`
+ * property. Optional `pos` and `sticky` arguments specify the search start position, and whether
+ * the match must start at the specified position only. The `lastIndex` property of the provided
+ * regex is not used, but is updated for compatibility. Also fixes browser bugs compared to the
+ * native `RegExp.prototype.exec` and can be used reliably cross-browser.
  *
  * @memberOf XRegExp
  * @param {String} str String to search.
@@ -1917,12 +1931,13 @@ XRegExp.escape = function (str) {
  * @param {Number} [pos=0] Zero-based index at which to start the search.
  * @param {Boolean|String} [sticky=false] Whether the match must start at the specified position
  *   only. The string `'sticky'` is accepted as an alternative to `true`.
- * @returns {Array} Match array with named backreference properties, or `null`.
+ * @returns {Array} Match array with named capture properties on the `groups` object, or `null`. If
+ *   the `namespacing` feature is off, named capture properties are directly on the match array.
  * @example
  *
- * // Basic use, with named backreference
+ * // Basic use, with named capturing group
  * let match = XRegExp.exec('U+2620', XRegExp('U\\+(?<hex>[0-9A-F]{4})'));
- * match.hex; // -> '2620'
+ * match.groups.hex; // -> '2620'
  *
  * // With pos and sticky, in a loop
  * let pos = 2, result = [], match;
@@ -2105,8 +2120,9 @@ XRegExp.isInstalled = function (feature) {
 
 
 XRegExp.isRegExp = function (value) {
-  return toString.call(value) === '[object RegExp]';
-}; // isType(value, 'RegExp');
+  return Object.prototype.toString.call(value) === '[object RegExp]';
+}; // Same as `isType(value, 'RegExp')`, but avoiding that function call here for perf since
+// `isRegExp` is used heavily by internals including regex construction
 
 /**
  * Returns the first matched string, or in global mode, an array containing all matched strings.
@@ -2147,7 +2163,7 @@ XRegExp.match = function (str, regex, scope) {
     removeG: scope === 'one',
     isInternalOnly: true
   }));
-  var result = nativ.match.call(toObject(str), r2);
+  var result = String(nullThrows(str)).match(r2);
 
   if (regex.global) {
     regex.lastIndex = scope === 'one' && result ? // Can't use `r2.lastIndex` since `r2` is nonglobal in this case
@@ -2176,8 +2192,8 @@ XRegExp.match = function (str, regex, scope) {
  * // -> ['2', '4', '56']
  *
  * // Passing forward and returning specific backreferences
- * html = '<a href="http://xregexp.com/api/">XRegExp</a>\
- *         <a href="http://www.google.com/">Google</a>';
+ * const html = `<a href="http://xregexp.com/api/">XRegExp</a>
+ *               <a href="http://www.google.com/">Google</a>`;
  * XRegExp.matchChain(html, [
  *   {regex: /<a href="([^"]+)">/i, backref: 1},
  *   {regex: XRegExp('(?i)^https?://(?<domain>[^/?#]+)'), backref: 'domain'}
@@ -2200,7 +2216,7 @@ XRegExp.matchChain = function (str, chain) {
 
         if (isNamedBackref && XRegExp.isInstalled('namespacing')) {
           // `groups` has `null` as prototype, so using `in` instead of `hasOwnProperty`
-          if (!(item.backref in match.groups)) {
+          if (!(match.groups && item.backref in match.groups)) {
             throw new ReferenceError(ERR_UNDEFINED_GROUP);
           }
         } else if (!match.hasOwnProperty(item.backref)) {
@@ -2235,9 +2251,9 @@ XRegExp.matchChain = function (str, chain) {
  * Returns a new string with one or all matches of a pattern replaced. The pattern can be a string
  * or regex, and the replacement can be a string or a function to be called for each match. To
  * perform a global search and replace, use the optional `scope` argument or include flag g if using
- * a regex. Replacement strings can use `${n}` or `$<n>` for named and numbered backreferences.
- * Replacement functions can use named backreferences via `arguments[0].name`. Also fixes browser
- * bugs compared to the native `String.prototype.replace` and can be used reliably cross-browser.
+ * a regex. Replacement strings can use `$<n>` or `${n}` for named and numbered backreferences.
+ * Replacement functions can use named backreferences via the last argument. Also fixes browser bugs
+ * compared to the native `String.prototype.replace` and can be used reliably cross-browser.
  *
  * @memberOf XRegExp
  * @param {String} str String to search.
@@ -2248,18 +2264,22 @@ XRegExp.matchChain = function (str, chain) {
  *     - $&, $0 - Inserts the matched substring.
  *     - $` - Inserts the string that precedes the matched substring (left context).
  *     - $' - Inserts the string that follows the matched substring (right context).
- *     - $n, $nn - Where n/nn are digits referencing an existent capturing group, inserts
+ *     - $n, $nn - Where n/nn are digits referencing an existing capturing group, inserts
  *       backreference n/nn.
- *     - ${n}, $<n> - Where n is a name or any number of digits that reference an existent capturing
+ *     - $<n>, ${n} - Where n is a name or any number of digits that reference an existing capturing
  *       group, inserts backreference n.
  *   Replacement functions are invoked with three or more arguments:
- *     - The matched substring (corresponds to $& above). Named backreferences are accessible as
- *       properties of this first argument.
- *     - 0..n arguments, one for each backreference (corresponding to $1, $2, etc. above).
- *     - The zero-based index of the match within the total search string.
- *     - The total string being searched.
- * @param {String} [scope='one'] Use 'one' to replace the first match only, or 'all'. If not
- *   explicitly specified and using a regex with flag g, `scope` is 'all'.
+ *     - args[0] - The matched substring (corresponds to `$&` above). If the `namespacing` feature
+ *       is off, named backreferences are accessible as properties of this argument.
+ *     - args[1..n] - One argument for each backreference (corresponding to `$1`, `$2`, etc. above).
+ *       If the regex has no capturing groups, no arguments appear in this position.
+ *     - args[n+1] - The zero-based index of the match within the entire search string.
+ *     - args[n+2] - The total string being searched.
+ *     - args[n+3] - If the the search pattern is a regex with named capturing groups, the last
+ *       argument is the groups object. Its keys are the backreference names and its values are the
+ *       backreference values. If the `namespacing` feature is off, this argument is not present.
+ * @param {String} [scope] Use 'one' to replace the first match only, or 'all'. Defaults to 'one'.
+ *   Defaults to 'all' if using a regex with flag g.
  * @returns {String} New string with one or all matches replaced.
  * @example
  *
@@ -2269,7 +2289,10 @@ XRegExp.matchChain = function (str, chain) {
  * // -> 'Smith, John'
  *
  * // Regex search, using named backreferences in replacement function
- * XRegExp.replace('John Smith', name, (match) => `${match.last}, ${match.first}`);
+ * XRegExp.replace('John Smith', name, (...args) => {
+ *   const groups = args[args.length - 1];
+ *   return `${groups.last}, ${groups.first}`;
+ * });
  * // -> 'Smith, John'
  *
  * // String search, with replace-all
@@ -2298,7 +2321,7 @@ XRegExp.replace = function (str, search, replacement, scope) {
   } // Fixed `replace` required for named backreferences, etc.
 
 
-  var result = fixed.replace.call(toObject(str), s2, replacement);
+  var result = fixed.replace.call(nullThrows(str), s2, replacement);
 
   if (isRegex && search.global) {
     // Fixes IE, Safari bug (last tested IE 9, Safari 5.1)
@@ -2312,8 +2335,8 @@ XRegExp.replace = function (str, search, replacement, scope) {
  * array of replacement details. Later replacements operate on the output of earlier replacements.
  * Replacement details are accepted as an array with a regex or string to search for, the
  * replacement string or function, and an optional scope of 'one' or 'all'. Uses the XRegExp
- * replacement text syntax, which supports named backreference properties via `${name}` or
- * `$<name>`.
+ * replacement text syntax, which supports named backreference properties via `$<name>` or
+ * `${name}`.
  *
  * @memberOf XRegExp
  * @param {String} str String to search.
@@ -2322,12 +2345,12 @@ XRegExp.replace = function (str, search, replacement, scope) {
  * @example
  *
  * str = XRegExp.replaceEach(str, [
- *   [XRegExp('(?<name>a)'), 'z${name}'],
+ *   [XRegExp('(?<name>a)'), 'z$<name>'],
  *   [/b/gi, 'y'],
  *   [/c/g, 'x', 'one'], // scope 'one' overrides /g
  *   [/d/, 'w', 'all'],  // scope 'all' overrides lack of /g
  *   ['e', 'v', 'all'],  // scope 'all' allows replace-all for strings
- *   [/f/g, ($0) => $0.toUpperCase()]
+ *   [/f/g, (match) => match.toUpperCase()]
  * ]);
  */
 
@@ -2378,7 +2401,7 @@ XRegExp.replaceEach = function (str, replacements) {
 
 
 XRegExp.split = function (str, separator, limit) {
-  return fixed.split.call(toObject(str), separator, limit);
+  return fixed.split.call(nullThrows(str), separator, limit);
 };
 /**
  * Executes a regex search in a specified string. Returns `true` or `false`. Optional `pos` and
@@ -2410,8 +2433,8 @@ XRegExp.test = function (str, regex, pos, sticky) {
   return !!XRegExp.exec(str, regex, pos, sticky);
 };
 /**
- * Uninstalls optional features according to the specified options. All optional features start out
- * uninstalled, so this is used to undo the actions of `XRegExp.install`.
+ * Uninstalls optional features according to the specified options. Used to undo the actions of
+ * `XRegExp.install`.
  *
  * @memberOf XRegExp
  * @param {Object|String} options Options object or string.
@@ -2419,7 +2442,7 @@ XRegExp.test = function (str, regex, pos, sticky) {
  *
  * // With an options object
  * XRegExp.uninstall({
- *   // Disables support for astral code points in Unicode addons
+ *   // Disables support for astral code points in Unicode addons (unless enabled per regex)
  *   astral: true,
  *
  *   // Don't add named capture groups to the `groups` property of matches
@@ -2509,7 +2532,7 @@ XRegExp.union = function (patterns, flags, options) {
         captureNames = pattern[REGEX_DATA] && pattern[REGEX_DATA].captureNames || []; // Rewrite backreferences. Passing to XRegExp dies on octals and ensures patterns are
         // independently valid; helps keep this simple. Named captures are put back
 
-        output.push(nativ.replace.call(XRegExp(pattern.source).source, parts, rewrite));
+        output.push(XRegExp(pattern.source).source.replace(parts, rewrite));
       } else {
         output.push(XRegExp.escape(pattern));
       }
@@ -2538,13 +2561,13 @@ XRegExp.union = function (patterns, flags, options) {
 
 fixed.exec = function (str) {
   var origLastIndex = this.lastIndex;
-  var match = nativ.exec.apply(this, arguments);
+  var match = RegExp.prototype.exec.apply(this, arguments);
 
   if (match) {
     // Fix browsers whose `exec` methods don't return `undefined` for nonparticipating capturing
     // groups. This fixes IE 5.5-8, but not IE 9's quirks mode or emulation of older IEs. IE 9
     // in standards mode follows the spec.
-    if (!correctExecNpcg && match.length > 1 && (0, _includes["default"])(match).call(match, '')) {
+    if (!correctExecNpcg && match.length > 1 && (0, _indexOf["default"])(match).call(match, '') !== -1) {
       var _context3;
 
       var r2 = copyRegex(this, {
@@ -2553,7 +2576,7 @@ fixed.exec = function (str) {
       }); // Using `str.slice(match.index)` rather than `match[0]` in case lookahead allowed
       // matching due to characters outside the match
 
-      nativ.replace.call((0, _slice["default"])(_context3 = String(str)).call(_context3, match.index), r2, function () {
+      (0, _slice["default"])(_context3 = String(str)).call(_context3, match.index).replace(r2, function () {
         var len = arguments.length; // Skip index 0 and the last 2
 
         for (var i = 1; i < len - 2; ++i) {
@@ -2565,23 +2588,26 @@ fixed.exec = function (str) {
     } // Attach named capture properties
 
 
-    var groupsObject = match;
-
-    if (XRegExp.isInstalled('namespacing')) {
-      // https://tc39.github.io/proposal-regexp-named-groups/#sec-regexpbuiltinexec
-      match.groups = (0, _create["default"])(null);
-      groupsObject = match.groups;
-    }
-
     if (this[REGEX_DATA] && this[REGEX_DATA].captureNames) {
-      // Skip index 0
+      var groupsObject = match;
+
+      if (XRegExp.isInstalled('namespacing')) {
+        // https://tc39.github.io/proposal-regexp-named-groups/#sec-regexpbuiltinexec
+        match.groups = (0, _create["default"])(null);
+        groupsObject = match.groups;
+      } // Skip index 0
+
+
       for (var i = 1; i < match.length; ++i) {
         var name = this[REGEX_DATA].captureNames[i - 1];
 
         if (name) {
           groupsObject[name] = match[i];
         }
-      }
+      } // Preserve any existing `groups` obj that came from native ES2018 named capture
+
+    } else if (!match.groups && XRegExp.isInstalled('namespacing')) {
+      match.groups = undefined;
     } // Fix browsers that increment `lastIndex` after zero-length matches
 
 
@@ -2626,13 +2652,13 @@ fixed.match = function (regex) {
     // Use the native `RegExp` rather than `XRegExp`
     regex = new RegExp(regex);
   } else if (regex.global) {
-    var result = nativ.match.apply(this, arguments); // Fixes IE bug
+    var result = String.prototype.match.apply(this, arguments); // Fixes IE bug
 
     regex.lastIndex = 0;
     return result;
   }
 
-  return fixed.exec.call(regex, toObject(this));
+  return fixed.exec.call(regex, nullThrows(this));
 };
 /**
  * Adds support for `${n}` (or `$<n>`) tokens for named and numbered backreferences in replacement
@@ -2670,7 +2696,7 @@ fixed.replace = function (search, replacement) {
   if (isType(replacement, 'Function')) {
     // Stringifying `this` fixes a bug in IE < 9 where the last argument in replacement
     // functions isn't type-converted to a string
-    result = nativ.replace.call(String(this), search, function () {
+    result = String(this).replace(search, function () {
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
@@ -2703,51 +2729,61 @@ fixed.replace = function (search, replacement) {
   } else {
     // Ensure that the last value of `args` will be a string when given nonstring `this`,
     // while still throwing on null or undefined context
-    result = nativ.replace.call(this == null ? this : String(this), search, function () {
+    result = String(nullThrows(this)).replace(search, function () {
       for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         args[_key2] = arguments[_key2];
       }
 
-      return nativ.replace.call(String(replacement), replacementToken, replacer);
+      return String(replacement).replace(replacementToken, replacer);
 
       function replacer($0, bracketed, angled, dollarToken) {
-        bracketed = bracketed || angled; // Named or numbered backreference with curly or angled braces
+        bracketed = bracketed || angled; // ES2018 added a new trailing `groups` arg that's passed to replacement functions
+        // when the search regex uses native named capture
+
+        var numNonCaptureArgs = isType(args[args.length - 1], 'Object') ? 4 : 3;
+        var numCaptures = args.length - numNonCaptureArgs; // Handle named or numbered backreference with curly or angled braces: ${n}, $<n>
 
         if (bracketed) {
-          // XRegExp behavior for `${n}` or `$<n>`:
-          // 1. Backreference to numbered capture, if `n` is an integer. Use `0` for the
-          //    entire match. Any number of leading zeros may be used.
-          // 2. Backreference to named capture `n`, if it exists and is not an integer
-          //    overridden by numbered capture. In practice, this does not overlap with
-          //    numbered capture since XRegExp does not allow named capture to use a bare
-          //    integer as the name.
-          // 3. If the name or number does not refer to an existing capturing group, it's
-          //    an error.
-          var n = +bracketed; // Type-convert; drop leading zeros
+          // Handle backreference to numbered capture, if `bracketed` is an integer. Use
+          // `0` for the entire match. Any number of leading zeros may be used.
+          if (/^\d+$/.test(bracketed)) {
+            // Type-convert and drop leading zeros
+            var _n = +bracketed;
 
-          if (n <= args.length - 3) {
-            return args[n] || '';
-          } // Groups with the same name is an error, else would need `lastIndexOf`
+            if (_n <= numCaptures) {
+              return args[_n] || '';
+            }
+          } // Handle backreference to named capture. If the name does not refer to an
+          // existing capturing group, it's an error. Also handles the error for numbered
+          // backference that does not refer to an existing group.
+          // Using `indexOf` since having groups with the same name is already an error,
+          // otherwise would need `lastIndexOf`.
 
 
-          n = captureNames ? (0, _indexOf["default"])(captureNames).call(captureNames, bracketed) : -1;
+          var n = captureNames ? (0, _indexOf["default"])(captureNames).call(captureNames, bracketed) : -1;
 
           if (n < 0) {
             throw new SyntaxError("Backreference to undefined group ".concat($0));
           }
 
           return args[n + 1] || '';
-        } // Else, special variable or numbered backreference without curly braces
+        } // Handle `$`-prefixed variable
+        // Handle space/blank first because type conversion with `+` drops space padding
+        // and converts spaces and empty strings to `0`
 
 
-        if (dollarToken === '$') {
-          // $$
-          return '$';
+        if (dollarToken === '' || dollarToken === ' ') {
+          throw new SyntaxError("Invalid token ".concat($0));
         }
 
         if (dollarToken === '&' || +dollarToken === 0) {
           // $&, $0 (not followed by 1-9), $00
           return args[0];
+        }
+
+        if (dollarToken === '$') {
+          // $$
+          return '$';
         }
 
         if (dollarToken === '`') {
@@ -2762,11 +2798,11 @@ fixed.replace = function (search, replacement) {
 
           // $' (right context)
           return (0, _slice["default"])(_context5 = args[args.length - 1]).call(_context5, args[args.length - 2] + args[0].length);
-        } // Else, numbered backreference without braces
+        } // Handle numbered backreference without braces
+        // Type-convert and drop leading zero
 
 
-        dollarToken = +dollarToken; // Type-convert; drop leading zero
-        // XRegExp behavior for `$n` and `$nn`:
+        dollarToken = +dollarToken; // XRegExp behavior for `$n` and `$nn`:
         // - Backrefs end after 1 or 2 digits. Use `${..}` or `$<..>` for more digits.
         // - `$1` is an error if no capturing groups.
         // - `$10` is an error if less than 10 capturing groups. Use `${1}0` or `$<1>0`
@@ -2781,7 +2817,7 @@ fixed.replace = function (search, replacement) {
         // - `$0` is a literal `$0`.
 
         if (!isNaN(dollarToken)) {
-          if (dollarToken > args.length - 3) {
+          if (dollarToken > numCaptures) {
             throw new SyntaxError("Backreference to undefined group ".concat($0));
           }
 
@@ -2819,7 +2855,7 @@ fixed.replace = function (search, replacement) {
 fixed.split = function (separator, limit) {
   if (!XRegExp.isRegExp(separator)) {
     // Browsers handle nonregex split correctly, so use the faster native method
-    return nativ.split.apply(this, arguments);
+    return String.prototype.split.apply(this, arguments);
   }
 
   var str = String(this);
@@ -2851,7 +2887,7 @@ fixed.split = function (separator, limit) {
   });
 
   if (lastLastIndex === str.length) {
-    if (!nativ.test.call(separator, '') || lastLength) {
+    if (!separator.test('') || lastLength) {
       output.push('');
     }
   } else {
@@ -2905,7 +2941,7 @@ XRegExp.addToken(/\\u{([\dA-Fa-f]+)}/, function (match, scope, flags) {
   } // If `code` is between 0xFFFF and 0x10FFFF, require and defer to native handling
 
 
-  if (hasNativeU && (0, _includes["default"])(flags).call(flags, 'u')) {
+  if (hasNativeU && (0, _indexOf["default"])(flags).call(flags, 'u') !== -1) {
     return match[0];
   }
 
@@ -2913,23 +2949,6 @@ XRegExp.addToken(/\\u{([\dA-Fa-f]+)}/, function (match, scope, flags) {
 }, {
   scope: 'all',
   leadChar: '\\'
-});
-/*
- * Empty character class: `[]` or `[^]`. This fixes a critical cross-browser syntax inconsistency.
- * Unless this is standardized (per the ES spec), regex syntax can't be accurately parsed because
- * character class endings can't be determined.
- */
-
-XRegExp.addToken(/\[(\^?)\]/, // For cross-browser compatibility with ES3, convert [] to \b\B and [^] to [\s\S].
-// (?!) should work like \b\B, but is unreliable in some versions of Firefox
-
-/* eslint-disable no-confusing-arrow */
-function (match) {
-  return match[1] ? '[\\s\\S]' : '\\b\\B';
-},
-/* eslint-enable no-confusing-arrow */
-{
-  leadChar: '['
 });
 /*
  * Comment pattern: `(?# )`. Inline comments are an alternative to the line comments allowed in
@@ -2947,21 +2966,24 @@ XRegExp.addToken(/\s+|#[^\n]*\n?/, getContextualTokenSeparator, {
   flag: 'x'
 });
 /*
- * Dot, in dotall mode (aka singleline mode, flag s) only.
+ * Dot, in dotAll mode (aka singleline mode, flag s) only.
  */
 
-XRegExp.addToken(/\./, function () {
-  return '[\\s\\S]';
-}, {
-  flag: 's',
-  leadChar: '.'
-});
+if (!hasNativeS) {
+  XRegExp.addToken(/\./, function () {
+    return '[\\s\\S]';
+  }, {
+    flag: 's',
+    leadChar: '.'
+  });
+}
 /*
- * Named backreference: `\k<name>`. Backreference names can use the characters A-Z, a-z, 0-9, _,
- * and $ only. Also allows numbered backreferences as `\k<n>`.
+ * Named backreference: `\k<name>`. Backreference names can use RegExpIdentifierName characters
+ * only. Also allows numbered backreferences as `\k<n>`.
  */
 
-XRegExp.addToken(/\\k<([\w$]+)>/, function (match) {
+
+XRegExp.addToken(/\\k<([^>]+)>/, function (match) {
   var _context6, _context7;
 
   // Groups with the same name is an error, else would need `lastIndexOf`
@@ -2996,26 +3018,20 @@ XRegExp.addToken(/\\(\d+)/, function (match, scope) {
 });
 /*
  * Named capturing group; match the opening delimiter only: `(?<name>`. Capture names can use the
- * characters A-Z, a-z, 0-9, _, and $ only. Names can't be integers. Supports Python-style
+ * RegExpIdentifierName characters only. Names can't be integers. Supports Python-style
  * `(?P<name>` as an alternate syntax to avoid issues in some older versions of Opera which natively
  * supported the Python-style syntax. Otherwise, XRegExp might treat numbered backreferences to
  * Python-style named capture as octals.
  */
 
-XRegExp.addToken(/\(\?P?<([\w$]+)>/, function (match) {
+XRegExp.addToken(/\(\?P?<((?:[\$A-Z_a-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u08A0-\u08B4\u08B6-\u08C7\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F8\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2118-\u211D\u2124\u2126\u2128\u212A-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u3005-\u3007\u3021-\u3029\u3031-\u3035\u3038-\u303C\u3041-\u3096\u309B-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\u9FFC\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6EF\uA717-\uA71F\uA722-\uA788\uA78B-\uA7BF\uA7C2-\uA7CA\uA7F5-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDD40-\uDD74\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF2D-\uDF4A\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF\uDFD1-\uDFD5]|\uD801[\uDC00-\uDC9D\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD23\uDE80-\uDEA9\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF45\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC03-\uDC37\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD44\uDD47\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD805[\uDC00-\uDC34\uDC47-\uDC4A\uDC5F-\uDC61\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDEB8\uDF00-\uDF1A]|\uD806[\uDC00-\uDC2B\uDCA0-\uDCDF\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD2F\uDD3F\uDD41\uDDA0-\uDDA7\uDDAA-\uDDD0\uDDE1\uDDE3\uDE00\uDE0B-\uDE32\uDE3A\uDE50\uDE5C-\uDE89\uDE9D\uDEC0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC2E\uDC40\uDC72-\uDC8F\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD30\uDD46\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD89\uDD98\uDEE0-\uDEF2\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC00-\uDC6E\uDC80-\uDD43]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2E]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF50\uDF93-\uDF9F\uDFE0\uDFE1\uDFE3]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82C[\uDC00-\uDD1E\uDD50-\uDD52\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD838[\uDD00-\uDD2C\uDD37-\uDD3D\uDD4E\uDEC0-\uDEEB]|\uD83A[\uDC00-\uDCC4\uDD00-\uDD43\uDD4B]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD869[\uDC00-\uDEDD\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A])(?:[\$0-9A-Z_a-z\xAA\xB5\xB7\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0300-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u0483-\u0487\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u05D0-\u05EA\u05EF-\u05F2\u0610-\u061A\u0620-\u0669\u066E-\u06D3\u06D5-\u06DC\u06DF-\u06E8\u06EA-\u06FC\u06FF\u0710-\u074A\u074D-\u07B1\u07C0-\u07F5\u07FA\u07FD\u0800-\u082D\u0840-\u085B\u0860-\u086A\u08A0-\u08B4\u08B6-\u08C7\u08D3-\u08E1\u08E3-\u0963\u0966-\u096F\u0971-\u0983\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BC-\u09C4\u09C7\u09C8\u09CB-\u09CE\u09D7\u09DC\u09DD\u09DF-\u09E3\u09E6-\u09F1\u09FC\u09FE\u0A01-\u0A03\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A59-\u0A5C\u0A5E\u0A66-\u0A75\u0A81-\u0A83\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABC-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AD0\u0AE0-\u0AE3\u0AE6-\u0AEF\u0AF9-\u0AFF\u0B01-\u0B03\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3C-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B55-\u0B57\u0B5C\u0B5D\u0B5F-\u0B63\u0B66-\u0B6F\u0B71\u0B82\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD0\u0BD7\u0BE6-\u0BEF\u0C00-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C58-\u0C5A\u0C60-\u0C63\u0C66-\u0C6F\u0C80-\u0C83\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBC-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CDE\u0CE0-\u0CE3\u0CE6-\u0CEF\u0CF1\u0CF2\u0D00-\u0D0C\u0D0E-\u0D10\u0D12-\u0D44\u0D46-\u0D48\u0D4A-\u0D4E\u0D54-\u0D57\u0D5F-\u0D63\u0D66-\u0D6F\u0D7A-\u0D7F\u0D81-\u0D83\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DE6-\u0DEF\u0DF2\u0DF3\u0E01-\u0E3A\u0E40-\u0E4E\u0E50-\u0E59\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EBD\u0EC0-\u0EC4\u0EC6\u0EC8-\u0ECD\u0ED0-\u0ED9\u0EDC-\u0EDF\u0F00\u0F18\u0F19\u0F20-\u0F29\u0F35\u0F37\u0F39\u0F3E-\u0F47\u0F49-\u0F6C\u0F71-\u0F84\u0F86-\u0F97\u0F99-\u0FBC\u0FC6\u1000-\u1049\u1050-\u109D\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u135D-\u135F\u1369-\u1371\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F8\u1700-\u170C\u170E-\u1714\u1720-\u1734\u1740-\u1753\u1760-\u176C\u176E-\u1770\u1772\u1773\u1780-\u17D3\u17D7\u17DC\u17DD\u17E0-\u17E9\u180B-\u180D\u1810-\u1819\u1820-\u1878\u1880-\u18AA\u18B0-\u18F5\u1900-\u191E\u1920-\u192B\u1930-\u193B\u1946-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u19D0-\u19DA\u1A00-\u1A1B\u1A20-\u1A5E\u1A60-\u1A7C\u1A7F-\u1A89\u1A90-\u1A99\u1AA7\u1AB0-\u1ABD\u1ABF\u1AC0\u1B00-\u1B4B\u1B50-\u1B59\u1B6B-\u1B73\u1B80-\u1BF3\u1C00-\u1C37\u1C40-\u1C49\u1C4D-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CD0-\u1CD2\u1CD4-\u1CFA\u1D00-\u1DF9\u1DFB-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u200C\u200D\u203F\u2040\u2054\u2071\u207F\u2090-\u209C\u20D0-\u20DC\u20E1\u20E5-\u20F0\u2102\u2107\u210A-\u2113\u2115\u2118-\u211D\u2124\u2126\u2128\u212A-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D7F-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2DE0-\u2DFF\u3005-\u3007\u3021-\u302F\u3031-\u3035\u3038-\u303C\u3041-\u3096\u3099-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\u9FFC\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA62B\uA640-\uA66F\uA674-\uA67D\uA67F-\uA6F1\uA717-\uA71F\uA722-\uA788\uA78B-\uA7BF\uA7C2-\uA7CA\uA7F5-\uA827\uA82C\uA840-\uA873\uA880-\uA8C5\uA8D0-\uA8D9\uA8E0-\uA8F7\uA8FB\uA8FD-\uA92D\uA930-\uA953\uA960-\uA97C\uA980-\uA9C0\uA9CF-\uA9D9\uA9E0-\uA9FE\uAA00-\uAA36\uAA40-\uAA4D\uAA50-\uAA59\uAA60-\uAA76\uAA7A-\uAAC2\uAADB-\uAADD\uAAE0-\uAAEF\uAAF2-\uAAF6\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABEA\uABEC\uABED\uABF0-\uABF9\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE00-\uFE0F\uFE20-\uFE2F\uFE33\uFE34\uFE4D-\uFE4F\uFE70-\uFE74\uFE76-\uFEFC\uFF10-\uFF19\uFF21-\uFF3A\uFF3F\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDD40-\uDD74\uDDFD\uDE80-\uDE9C\uDEA0-\uDED0\uDEE0\uDF00-\uDF1F\uDF2D-\uDF4A\uDF50-\uDF7A\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF\uDFD1-\uDFD5]|\uD801[\uDC00-\uDC9D\uDCA0-\uDCA9\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00-\uDE03\uDE05\uDE06\uDE0C-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE38-\uDE3A\uDE3F\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE6\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD27\uDD30-\uDD39\uDE80-\uDEA9\uDEAB\uDEAC\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF50\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC00-\uDC46\uDC66-\uDC6F\uDC7F-\uDCBA\uDCD0-\uDCE8\uDCF0-\uDCF9\uDD00-\uDD34\uDD36-\uDD3F\uDD44-\uDD47\uDD50-\uDD73\uDD76\uDD80-\uDDC4\uDDC9-\uDDCC\uDDCE-\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE37\uDE3E\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEEA\uDEF0-\uDEF9\uDF00-\uDF03\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3B-\uDF44\uDF47\uDF48\uDF4B-\uDF4D\uDF50\uDF57\uDF5D-\uDF63\uDF66-\uDF6C\uDF70-\uDF74]|\uD805[\uDC00-\uDC4A\uDC50-\uDC59\uDC5E-\uDC61\uDC80-\uDCC5\uDCC7\uDCD0-\uDCD9\uDD80-\uDDB5\uDDB8-\uDDC0\uDDD8-\uDDDD\uDE00-\uDE40\uDE44\uDE50-\uDE59\uDE80-\uDEB8\uDEC0-\uDEC9\uDF00-\uDF1A\uDF1D-\uDF2B\uDF30-\uDF39]|\uD806[\uDC00-\uDC3A\uDCA0-\uDCE9\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD35\uDD37\uDD38\uDD3B-\uDD43\uDD50-\uDD59\uDDA0-\uDDA7\uDDAA-\uDDD7\uDDDA-\uDDE1\uDDE3\uDDE4\uDE00-\uDE3E\uDE47\uDE50-\uDE99\uDE9D\uDEC0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC36\uDC38-\uDC40\uDC50-\uDC59\uDC72-\uDC8F\uDC92-\uDCA7\uDCA9-\uDCB6\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD36\uDD3A\uDD3C\uDD3D\uDD3F-\uDD47\uDD50-\uDD59\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD8E\uDD90\uDD91\uDD93-\uDD98\uDDA0-\uDDA9\uDEE0-\uDEF6\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC00-\uDC6E\uDC80-\uDD43]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2E]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDE60-\uDE69\uDED0-\uDEED\uDEF0-\uDEF4\uDF00-\uDF36\uDF40-\uDF43\uDF50-\uDF59\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF4F-\uDF87\uDF8F-\uDF9F\uDFE0\uDFE1\uDFE3\uDFE4\uDFF0\uDFF1]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82C[\uDC00-\uDD1E\uDD50-\uDD52\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99\uDC9D\uDC9E]|\uD834[\uDD65-\uDD69\uDD6D-\uDD72\uDD7B-\uDD82\uDD85-\uDD8B\uDDAA-\uDDAD\uDE42-\uDE44]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB\uDFCE-\uDFFF]|\uD836[\uDE00-\uDE36\uDE3B-\uDE6C\uDE75\uDE84\uDE9B-\uDE9F\uDEA1-\uDEAF]|\uD838[\uDC00-\uDC06\uDC08-\uDC18\uDC1B-\uDC21\uDC23\uDC24\uDC26-\uDC2A\uDD00-\uDD2C\uDD30-\uDD3D\uDD40-\uDD49\uDD4E\uDEC0-\uDEF9]|\uD83A[\uDC00-\uDCC4\uDCD0-\uDCD6\uDD00-\uDD4B\uDD50-\uDD59]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD83E[\uDFF0-\uDFF9]|\uD869[\uDC00-\uDEDD\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A]|\uDB40[\uDD00-\uDDEF])*)>/, function (match) {
   var _context8;
-
-  // Disallow bare integers as names because named backreferences are added to match arrays
-  // and therefore numeric properties may lead to incorrect lookups
-  if (!isNaN(match[1])) {
-    throw new SyntaxError("Cannot use integer as capture name ".concat(match[0]));
-  }
 
   if (!XRegExp.isInstalled('namespacing') && (match[1] === 'length' || match[1] === '__proto__')) {
     throw new SyntaxError("Cannot use reserved word as capture name ".concat(match[0]));
   }
 
-  if ((0, _includes["default"])(_context8 = this.captureNames).call(_context8, match[1])) {
+  if ((0, _indexOf["default"])(_context8 = this.captureNames).call(_context8, match[1]) !== -1) {
     throw new SyntaxError("Cannot use same name for multiple groups ".concat(match[0]));
   }
 
@@ -3031,7 +3047,7 @@ XRegExp.addToken(/\(\?P?<([\w$]+)>/, function (match) {
  */
 
 XRegExp.addToken(/\((?!\?)/, function (match, scope, flags) {
-  if ((0, _includes["default"])(flags).call(flags, 'n')) {
+  if ((0, _indexOf["default"])(flags).call(flags, 'n') !== -1) {
     return '(?:';
   }
 
@@ -3044,51 +3060,49 @@ XRegExp.addToken(/\((?!\?)/, function (match, scope, flags) {
 var _default = XRegExp;
 exports["default"] = _default;
 module.exports = exports.default;
-},{"@babel/runtime-corejs3/core-js-stable/array/from":10,"@babel/runtime-corejs3/core-js-stable/array/is-array":11,"@babel/runtime-corejs3/core-js-stable/instance/concat":12,"@babel/runtime-corejs3/core-js-stable/instance/flags":13,"@babel/runtime-corejs3/core-js-stable/instance/for-each":14,"@babel/runtime-corejs3/core-js-stable/instance/includes":15,"@babel/runtime-corejs3/core-js-stable/instance/index-of":16,"@babel/runtime-corejs3/core-js-stable/instance/slice":19,"@babel/runtime-corejs3/core-js-stable/instance/sort":20,"@babel/runtime-corejs3/core-js-stable/object/create":21,"@babel/runtime-corejs3/core-js-stable/object/define-property":22,"@babel/runtime-corejs3/core-js-stable/parse-int":23,"@babel/runtime-corejs3/core-js-stable/symbol":24,"@babel/runtime-corejs3/core-js/get-iterator":28,"@babel/runtime-corejs3/core-js/get-iterator-method":27,"@babel/runtime-corejs3/helpers/interopRequireDefault":34,"@babel/runtime-corejs3/helpers/slicedToArray":37}],10:[function(require,module,exports){
+},{"@babel/runtime-corejs3/core-js-stable/array/from":9,"@babel/runtime-corejs3/core-js-stable/array/is-array":10,"@babel/runtime-corejs3/core-js-stable/instance/concat":11,"@babel/runtime-corejs3/core-js-stable/instance/flags":12,"@babel/runtime-corejs3/core-js-stable/instance/for-each":13,"@babel/runtime-corejs3/core-js-stable/instance/index-of":14,"@babel/runtime-corejs3/core-js-stable/instance/slice":17,"@babel/runtime-corejs3/core-js-stable/instance/sort":18,"@babel/runtime-corejs3/core-js-stable/object/create":19,"@babel/runtime-corejs3/core-js-stable/object/define-property":20,"@babel/runtime-corejs3/core-js-stable/parse-int":21,"@babel/runtime-corejs3/core-js-stable/symbol":22,"@babel/runtime-corejs3/core-js/get-iterator":26,"@babel/runtime-corejs3/core-js/get-iterator-method":25,"@babel/runtime-corejs3/helpers/interopRequireDefault":32,"@babel/runtime-corejs3/helpers/slicedToArray":35}],9:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/array/from");
-},{"core-js-pure/stable/array/from":206}],11:[function(require,module,exports){
+},{"core-js-pure/stable/array/from":196}],10:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/array/is-array");
-},{"core-js-pure/stable/array/is-array":207}],12:[function(require,module,exports){
+},{"core-js-pure/stable/array/is-array":197}],11:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/concat");
-},{"core-js-pure/stable/instance/concat":209}],13:[function(require,module,exports){
+},{"core-js-pure/stable/instance/concat":199}],12:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/flags");
-},{"core-js-pure/stable/instance/flags":210}],14:[function(require,module,exports){
+},{"core-js-pure/stable/instance/flags":200}],13:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/for-each");
-},{"core-js-pure/stable/instance/for-each":211}],15:[function(require,module,exports){
-module.exports = require("core-js-pure/stable/instance/includes");
-},{"core-js-pure/stable/instance/includes":212}],16:[function(require,module,exports){
+},{"core-js-pure/stable/instance/for-each":201}],14:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/index-of");
-},{"core-js-pure/stable/instance/index-of":213}],17:[function(require,module,exports){
+},{"core-js-pure/stable/instance/index-of":202}],15:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/map");
-},{"core-js-pure/stable/instance/map":214}],18:[function(require,module,exports){
+},{"core-js-pure/stable/instance/map":203}],16:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/reduce");
-},{"core-js-pure/stable/instance/reduce":215}],19:[function(require,module,exports){
+},{"core-js-pure/stable/instance/reduce":204}],17:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/slice");
-},{"core-js-pure/stable/instance/slice":216}],20:[function(require,module,exports){
+},{"core-js-pure/stable/instance/slice":205}],18:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/instance/sort");
-},{"core-js-pure/stable/instance/sort":217}],21:[function(require,module,exports){
+},{"core-js-pure/stable/instance/sort":206}],19:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/object/create");
-},{"core-js-pure/stable/object/create":218}],22:[function(require,module,exports){
+},{"core-js-pure/stable/object/create":207}],20:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/object/define-property");
-},{"core-js-pure/stable/object/define-property":219}],23:[function(require,module,exports){
+},{"core-js-pure/stable/object/define-property":208}],21:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/parse-int");
-},{"core-js-pure/stable/parse-int":220}],24:[function(require,module,exports){
+},{"core-js-pure/stable/parse-int":209}],22:[function(require,module,exports){
 module.exports = require("core-js-pure/stable/symbol");
-},{"core-js-pure/stable/symbol":221}],25:[function(require,module,exports){
+},{"core-js-pure/stable/symbol":210}],23:[function(require,module,exports){
 module.exports = require("core-js-pure/features/array/from");
-},{"core-js-pure/features/array/from":63}],26:[function(require,module,exports){
+},{"core-js-pure/features/array/from":58}],24:[function(require,module,exports){
 module.exports = require("core-js-pure/features/array/is-array");
-},{"core-js-pure/features/array/is-array":64}],27:[function(require,module,exports){
+},{"core-js-pure/features/array/is-array":59}],25:[function(require,module,exports){
 module.exports = require("core-js-pure/features/get-iterator-method");
-},{"core-js-pure/features/get-iterator-method":65}],28:[function(require,module,exports){
+},{"core-js-pure/features/get-iterator-method":60}],26:[function(require,module,exports){
 module.exports = require("core-js-pure/features/get-iterator");
-},{"core-js-pure/features/get-iterator":66}],29:[function(require,module,exports){
+},{"core-js-pure/features/get-iterator":61}],27:[function(require,module,exports){
 module.exports = require("core-js-pure/features/instance/slice");
-},{"core-js-pure/features/instance/slice":67}],30:[function(require,module,exports){
+},{"core-js-pure/features/instance/slice":62}],28:[function(require,module,exports){
 module.exports = require("core-js-pure/features/is-iterable");
-},{"core-js-pure/features/is-iterable":68}],31:[function(require,module,exports){
+},{"core-js-pure/features/is-iterable":63}],29:[function(require,module,exports){
 module.exports = require("core-js-pure/features/symbol");
-},{"core-js-pure/features/symbol":69}],32:[function(require,module,exports){
+},{"core-js-pure/features/symbol":64}],30:[function(require,module,exports){
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -3100,7 +3114,7 @@ function _arrayLikeToArray(arr, len) {
 }
 
 module.exports = _arrayLikeToArray;
-},{}],33:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var _Array$isArray = require("@babel/runtime-corejs3/core-js/array/is-array");
 
 function _arrayWithHoles(arr) {
@@ -3108,7 +3122,7 @@ function _arrayWithHoles(arr) {
 }
 
 module.exports = _arrayWithHoles;
-},{"@babel/runtime-corejs3/core-js/array/is-array":26}],34:[function(require,module,exports){
+},{"@babel/runtime-corejs3/core-js/array/is-array":24}],32:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
@@ -3116,7 +3130,7 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-},{}],35:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var _getIterator = require("@babel/runtime-corejs3/core-js/get-iterator");
 
 var _isIterable = require("@babel/runtime-corejs3/core-js/is-iterable");
@@ -3151,13 +3165,13 @@ function _iterableToArrayLimit(arr, i) {
 }
 
 module.exports = _iterableToArrayLimit;
-},{"@babel/runtime-corejs3/core-js/get-iterator":28,"@babel/runtime-corejs3/core-js/is-iterable":30,"@babel/runtime-corejs3/core-js/symbol":31}],36:[function(require,module,exports){
+},{"@babel/runtime-corejs3/core-js/get-iterator":26,"@babel/runtime-corejs3/core-js/is-iterable":28,"@babel/runtime-corejs3/core-js/symbol":29}],34:[function(require,module,exports){
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableRest;
-},{}],37:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 var arrayWithHoles = require("./arrayWithHoles");
 
 var iterableToArrayLimit = require("./iterableToArrayLimit");
@@ -3171,7 +3185,7 @@ function _slicedToArray(arr, i) {
 }
 
 module.exports = _slicedToArray;
-},{"./arrayWithHoles":33,"./iterableToArrayLimit":35,"./nonIterableRest":36,"./unsupportedIterableToArray":38}],38:[function(require,module,exports){
+},{"./arrayWithHoles":31,"./iterableToArrayLimit":33,"./nonIterableRest":34,"./unsupportedIterableToArray":36}],36:[function(require,module,exports){
 var _Array$from = require("@babel/runtime-corejs3/core-js/array/from");
 
 var _sliceInstanceProperty = require("@babel/runtime-corejs3/core-js/instance/slice");
@@ -3192,68 +3206,62 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
-},{"./arrayLikeToArray":32,"@babel/runtime-corejs3/core-js/array/from":25,"@babel/runtime-corejs3/core-js/instance/slice":29}],39:[function(require,module,exports){
+},{"./arrayLikeToArray":30,"@babel/runtime-corejs3/core-js/array/from":23,"@babel/runtime-corejs3/core-js/instance/slice":27}],37:[function(require,module,exports){
 require('../../modules/es.string.iterator');
 require('../../modules/es.array.from');
 var path = require('../../internals/path');
 
 module.exports = path.Array.from;
 
-},{"../../internals/path":142,"../../modules/es.array.from":167,"../../modules/es.string.iterator":184}],40:[function(require,module,exports){
+},{"../../internals/path":134,"../../modules/es.array.from":159,"../../modules/es.string.iterator":174}],38:[function(require,module,exports){
 require('../../modules/es.array.is-array');
 var path = require('../../internals/path');
 
 module.exports = path.Array.isArray;
 
-},{"../../internals/path":142,"../../modules/es.array.is-array":170}],41:[function(require,module,exports){
+},{"../../internals/path":134,"../../modules/es.array.is-array":161}],39:[function(require,module,exports){
 require('../../../modules/es.array.concat');
 var entryVirtual = require('../../../internals/entry-virtual');
 
 module.exports = entryVirtual('Array').concat;
 
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.concat":165}],42:[function(require,module,exports){
+},{"../../../internals/entry-virtual":94,"../../../modules/es.array.concat":157}],40:[function(require,module,exports){
 require('../../../modules/es.array.for-each');
 var entryVirtual = require('../../../internals/entry-virtual');
 
 module.exports = entryVirtual('Array').forEach;
 
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.for-each":166}],43:[function(require,module,exports){
-require('../../../modules/es.array.includes');
-var entryVirtual = require('../../../internals/entry-virtual');
-
-module.exports = entryVirtual('Array').includes;
-
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.includes":168}],44:[function(require,module,exports){
+},{"../../../internals/entry-virtual":94,"../../../modules/es.array.for-each":158}],41:[function(require,module,exports){
 require('../../../modules/es.array.index-of');
 var entryVirtual = require('../../../internals/entry-virtual');
 
 module.exports = entryVirtual('Array').indexOf;
 
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.index-of":169}],45:[function(require,module,exports){
+},{"../../../internals/entry-virtual":94,"../../../modules/es.array.index-of":160}],42:[function(require,module,exports){
 require('../../../modules/es.array.map');
 var entryVirtual = require('../../../internals/entry-virtual');
 
 module.exports = entryVirtual('Array').map;
 
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.map":172}],46:[function(require,module,exports){
+},{"../../../internals/entry-virtual":94,"../../../modules/es.array.map":163}],43:[function(require,module,exports){
 require('../../../modules/es.array.reduce');
 var entryVirtual = require('../../../internals/entry-virtual');
 
 module.exports = entryVirtual('Array').reduce;
 
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.reduce":173}],47:[function(require,module,exports){
+},{"../../../internals/entry-virtual":94,"../../../modules/es.array.reduce":164}],44:[function(require,module,exports){
 require('../../../modules/es.array.slice');
 var entryVirtual = require('../../../internals/entry-virtual');
 
 module.exports = entryVirtual('Array').slice;
 
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.slice":174}],48:[function(require,module,exports){
+},{"../../../internals/entry-virtual":94,"../../../modules/es.array.slice":165}],45:[function(require,module,exports){
 require('../../../modules/es.array.sort');
 var entryVirtual = require('../../../internals/entry-virtual');
 
 module.exports = entryVirtual('Array').sort;
 
-},{"../../../internals/entry-virtual":100,"../../../modules/es.array.sort":175}],49:[function(require,module,exports){
+},{"../../../internals/entry-virtual":94,"../../../modules/es.array.sort":166}],46:[function(require,module,exports){
 var concat = require('../array/virtual/concat');
 
 var ArrayPrototype = Array.prototype;
@@ -3263,7 +3271,7 @@ module.exports = function (it) {
   return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.concat) ? concat : own;
 };
 
-},{"../array/virtual/concat":41}],50:[function(require,module,exports){
+},{"../array/virtual/concat":39}],47:[function(require,module,exports){
 var flags = require('../regexp/flags');
 
 var RegExpPrototype = RegExp.prototype;
@@ -3272,22 +3280,7 @@ module.exports = function (it) {
   return (it === RegExpPrototype || it instanceof RegExp) && !('flags' in it) ? flags(it) : it.flags;
 };
 
-},{"../regexp/flags":60}],51:[function(require,module,exports){
-var arrayIncludes = require('../array/virtual/includes');
-var stringIncludes = require('../string/virtual/includes');
-
-var ArrayPrototype = Array.prototype;
-var StringPrototype = String.prototype;
-
-module.exports = function (it) {
-  var own = it.includes;
-  if (it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.includes)) return arrayIncludes;
-  if (typeof it === 'string' || it === StringPrototype || (it instanceof String && own === StringPrototype.includes)) {
-    return stringIncludes;
-  } return own;
-};
-
-},{"../array/virtual/includes":43,"../string/virtual/includes":61}],52:[function(require,module,exports){
+},{"../regexp/flags":56}],48:[function(require,module,exports){
 var indexOf = require('../array/virtual/index-of');
 
 var ArrayPrototype = Array.prototype;
@@ -3297,7 +3290,7 @@ module.exports = function (it) {
   return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.indexOf) ? indexOf : own;
 };
 
-},{"../array/virtual/index-of":44}],53:[function(require,module,exports){
+},{"../array/virtual/index-of":41}],49:[function(require,module,exports){
 var map = require('../array/virtual/map');
 
 var ArrayPrototype = Array.prototype;
@@ -3307,7 +3300,7 @@ module.exports = function (it) {
   return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.map) ? map : own;
 };
 
-},{"../array/virtual/map":45}],54:[function(require,module,exports){
+},{"../array/virtual/map":42}],50:[function(require,module,exports){
 var reduce = require('../array/virtual/reduce');
 
 var ArrayPrototype = Array.prototype;
@@ -3317,7 +3310,7 @@ module.exports = function (it) {
   return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.reduce) ? reduce : own;
 };
 
-},{"../array/virtual/reduce":46}],55:[function(require,module,exports){
+},{"../array/virtual/reduce":43}],51:[function(require,module,exports){
 var slice = require('../array/virtual/slice');
 
 var ArrayPrototype = Array.prototype;
@@ -3327,7 +3320,7 @@ module.exports = function (it) {
   return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.slice) ? slice : own;
 };
 
-},{"../array/virtual/slice":47}],56:[function(require,module,exports){
+},{"../array/virtual/slice":44}],52:[function(require,module,exports){
 var sort = require('../array/virtual/sort');
 
 var ArrayPrototype = Array.prototype;
@@ -3337,7 +3330,7 @@ module.exports = function (it) {
   return it === ArrayPrototype || (it instanceof Array && own === ArrayPrototype.sort) ? sort : own;
 };
 
-},{"../array/virtual/sort":48}],57:[function(require,module,exports){
+},{"../array/virtual/sort":45}],53:[function(require,module,exports){
 require('../../modules/es.object.create');
 var path = require('../../internals/path');
 
@@ -3347,7 +3340,7 @@ module.exports = function create(P, D) {
   return Object.create(P, D);
 };
 
-},{"../../internals/path":142,"../../modules/es.object.create":178}],58:[function(require,module,exports){
+},{"../../internals/path":134,"../../modules/es.object.create":169}],54:[function(require,module,exports){
 require('../../modules/es.object.define-property');
 var path = require('../../internals/path');
 
@@ -3359,13 +3352,13 @@ var defineProperty = module.exports = function defineProperty(it, key, desc) {
 
 if (Object.defineProperty.sham) defineProperty.sham = true;
 
-},{"../../internals/path":142,"../../modules/es.object.define-property":179}],59:[function(require,module,exports){
+},{"../../internals/path":134,"../../modules/es.object.define-property":170}],55:[function(require,module,exports){
 require('../modules/es.parse-int');
 var path = require('../internals/path');
 
 module.exports = path.parseInt;
 
-},{"../internals/path":142,"../modules/es.parse-int":181}],60:[function(require,module,exports){
+},{"../internals/path":134,"../modules/es.parse-int":172}],56:[function(require,module,exports){
 require('../../modules/es.regexp.flags');
 var flags = require('../../internals/regexp-flags');
 
@@ -3373,13 +3366,7 @@ module.exports = function (it) {
   return flags.call(it);
 };
 
-},{"../../internals/regexp-flags":144,"../../modules/es.regexp.flags":182}],61:[function(require,module,exports){
-require('../../../modules/es.string.includes');
-var entryVirtual = require('../../../internals/entry-virtual');
-
-module.exports = entryVirtual('String').includes;
-
-},{"../../../internals/entry-virtual":100,"../../../modules/es.string.includes":183}],62:[function(require,module,exports){
+},{"../../internals/regexp-flags":136,"../../modules/es.regexp.flags":173}],57:[function(require,module,exports){
 require('../../modules/es.array.concat');
 require('../../modules/es.object.to-string');
 require('../../modules/es.symbol');
@@ -3403,43 +3390,43 @@ var path = require('../../internals/path');
 
 module.exports = path.Symbol;
 
-},{"../../internals/path":142,"../../modules/es.array.concat":165,"../../modules/es.json.to-string-tag":176,"../../modules/es.math.to-string-tag":177,"../../modules/es.object.to-string":180,"../../modules/es.symbol":190,"../../modules/es.symbol.async-iterator":185,"../../modules/es.symbol.description":186,"../../modules/es.symbol.has-instance":187,"../../modules/es.symbol.is-concat-spreadable":188,"../../modules/es.symbol.iterator":189,"../../modules/es.symbol.match":192,"../../modules/es.symbol.match-all":191,"../../modules/es.symbol.replace":193,"../../modules/es.symbol.search":194,"../../modules/es.symbol.species":195,"../../modules/es.symbol.split":196,"../../modules/es.symbol.to-primitive":197,"../../modules/es.symbol.to-string-tag":198,"../../modules/es.symbol.unscopables":199}],63:[function(require,module,exports){
+},{"../../internals/path":134,"../../modules/es.array.concat":157,"../../modules/es.json.to-string-tag":167,"../../modules/es.math.to-string-tag":168,"../../modules/es.object.to-string":171,"../../modules/es.symbol":180,"../../modules/es.symbol.async-iterator":175,"../../modules/es.symbol.description":176,"../../modules/es.symbol.has-instance":177,"../../modules/es.symbol.is-concat-spreadable":178,"../../modules/es.symbol.iterator":179,"../../modules/es.symbol.match":182,"../../modules/es.symbol.match-all":181,"../../modules/es.symbol.replace":183,"../../modules/es.symbol.search":184,"../../modules/es.symbol.species":185,"../../modules/es.symbol.split":186,"../../modules/es.symbol.to-primitive":187,"../../modules/es.symbol.to-string-tag":188,"../../modules/es.symbol.unscopables":189}],58:[function(require,module,exports){
 var parent = require('../../es/array/from');
 
 module.exports = parent;
 
-},{"../../es/array/from":39}],64:[function(require,module,exports){
+},{"../../es/array/from":37}],59:[function(require,module,exports){
 var parent = require('../../es/array/is-array');
 
 module.exports = parent;
 
-},{"../../es/array/is-array":40}],65:[function(require,module,exports){
+},{"../../es/array/is-array":38}],60:[function(require,module,exports){
 require('../modules/web.dom-collections.iterator');
 require('../modules/es.string.iterator');
 var getIteratorMethod = require('../internals/get-iterator-method');
 
 module.exports = getIteratorMethod;
 
-},{"../internals/get-iterator-method":106,"../modules/es.string.iterator":184,"../modules/web.dom-collections.iterator":205}],66:[function(require,module,exports){
+},{"../internals/get-iterator-method":100,"../modules/es.string.iterator":174,"../modules/web.dom-collections.iterator":195}],61:[function(require,module,exports){
 require('../modules/web.dom-collections.iterator');
 require('../modules/es.string.iterator');
 var getIterator = require('../internals/get-iterator');
 
 module.exports = getIterator;
 
-},{"../internals/get-iterator":107,"../modules/es.string.iterator":184,"../modules/web.dom-collections.iterator":205}],67:[function(require,module,exports){
+},{"../internals/get-iterator":101,"../modules/es.string.iterator":174,"../modules/web.dom-collections.iterator":195}],62:[function(require,module,exports){
 var parent = require('../../es/instance/slice');
 
 module.exports = parent;
 
-},{"../../es/instance/slice":55}],68:[function(require,module,exports){
+},{"../../es/instance/slice":51}],63:[function(require,module,exports){
 require('../modules/web.dom-collections.iterator');
 require('../modules/es.string.iterator');
 var isIterable = require('../internals/is-iterable');
 
 module.exports = isIterable;
 
-},{"../internals/is-iterable":119,"../modules/es.string.iterator":184,"../modules/web.dom-collections.iterator":205}],69:[function(require,module,exports){
+},{"../internals/is-iterable":113,"../modules/es.string.iterator":174,"../modules/web.dom-collections.iterator":195}],64:[function(require,module,exports){
 var parent = require('../../es/symbol');
 require('../../modules/esnext.symbol.async-dispose');
 require('../../modules/esnext.symbol.dispose');
@@ -3450,14 +3437,14 @@ require('../../modules/esnext.symbol.replace-all');
 
 module.exports = parent;
 
-},{"../../es/symbol":62,"../../modules/esnext.symbol.async-dispose":200,"../../modules/esnext.symbol.dispose":201,"../../modules/esnext.symbol.observable":202,"../../modules/esnext.symbol.pattern-match":203,"../../modules/esnext.symbol.replace-all":204}],70:[function(require,module,exports){
+},{"../../es/symbol":57,"../../modules/esnext.symbol.async-dispose":190,"../../modules/esnext.symbol.dispose":191,"../../modules/esnext.symbol.observable":192,"../../modules/esnext.symbol.pattern-match":193,"../../modules/esnext.symbol.replace-all":194}],65:[function(require,module,exports){
 module.exports = function (it) {
   if (typeof it != 'function') {
     throw TypeError(String(it) + ' is not a function');
   } return it;
 };
 
-},{}],71:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 var isObject = require('../internals/is-object');
 
 module.exports = function (it) {
@@ -3466,10 +3453,10 @@ module.exports = function (it) {
   } return it;
 };
 
-},{"../internals/is-object":120}],72:[function(require,module,exports){
+},{"../internals/is-object":114}],67:[function(require,module,exports){
 module.exports = function () { /* empty */ };
 
-},{}],73:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 var isObject = require('../internals/is-object');
 
 module.exports = function (it) {
@@ -3478,7 +3465,7 @@ module.exports = function (it) {
   } return it;
 };
 
-},{"../internals/is-object":120}],74:[function(require,module,exports){
+},{"../internals/is-object":114}],69:[function(require,module,exports){
 'use strict';
 var $forEach = require('../internals/array-iteration').forEach;
 var arrayMethodIsStrict = require('../internals/array-method-is-strict');
@@ -3493,7 +3480,7 @@ module.exports = (!STRICT_METHOD || !USES_TO_LENGTH) ? function forEach(callback
   return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
 } : [].forEach;
 
-},{"../internals/array-iteration":77,"../internals/array-method-is-strict":79,"../internals/array-method-uses-to-length":80}],75:[function(require,module,exports){
+},{"../internals/array-iteration":72,"../internals/array-method-is-strict":74,"../internals/array-method-uses-to-length":75}],70:[function(require,module,exports){
 'use strict';
 var bind = require('../internals/function-bind-context');
 var toObject = require('../internals/to-object');
@@ -3536,7 +3523,7 @@ module.exports = function from(arrayLike /* , mapfn = undefined, thisArg = undef
   return result;
 };
 
-},{"../internals/call-with-safe-iteration-closing":83,"../internals/create-property":92,"../internals/function-bind-context":104,"../internals/get-iterator-method":106,"../internals/is-array-iterator-method":116,"../internals/to-length":156,"../internals/to-object":157}],76:[function(require,module,exports){
+},{"../internals/call-with-safe-iteration-closing":78,"../internals/create-property":86,"../internals/function-bind-context":98,"../internals/get-iterator-method":100,"../internals/is-array-iterator-method":110,"../internals/to-length":148,"../internals/to-object":149}],71:[function(require,module,exports){
 var toIndexedObject = require('../internals/to-indexed-object');
 var toLength = require('../internals/to-length');
 var toAbsoluteIndex = require('../internals/to-absolute-index');
@@ -3570,7 +3557,7 @@ module.exports = {
   indexOf: createMethod(false)
 };
 
-},{"../internals/to-absolute-index":153,"../internals/to-indexed-object":154,"../internals/to-length":156}],77:[function(require,module,exports){
+},{"../internals/to-absolute-index":145,"../internals/to-indexed-object":146,"../internals/to-length":148}],72:[function(require,module,exports){
 var bind = require('../internals/function-bind-context');
 var IndexedObject = require('../internals/indexed-object');
 var toObject = require('../internals/to-object');
@@ -3637,7 +3624,7 @@ module.exports = {
   findIndex: createMethod(6)
 };
 
-},{"../internals/array-species-create":82,"../internals/function-bind-context":104,"../internals/indexed-object":113,"../internals/to-length":156,"../internals/to-object":157}],78:[function(require,module,exports){
+},{"../internals/array-species-create":77,"../internals/function-bind-context":98,"../internals/indexed-object":107,"../internals/to-length":148,"../internals/to-object":149}],73:[function(require,module,exports){
 var fails = require('../internals/fails');
 var wellKnownSymbol = require('../internals/well-known-symbol');
 var V8_VERSION = require('../internals/engine-v8-version');
@@ -3658,7 +3645,7 @@ module.exports = function (METHOD_NAME) {
   });
 };
 
-},{"../internals/engine-v8-version":99,"../internals/fails":103,"../internals/well-known-symbol":163}],79:[function(require,module,exports){
+},{"../internals/engine-v8-version":93,"../internals/fails":97,"../internals/well-known-symbol":155}],74:[function(require,module,exports){
 'use strict';
 var fails = require('../internals/fails');
 
@@ -3670,7 +3657,7 @@ module.exports = function (METHOD_NAME, argument) {
   });
 };
 
-},{"../internals/fails":103}],80:[function(require,module,exports){
+},{"../internals/fails":97}],75:[function(require,module,exports){
 var DESCRIPTORS = require('../internals/descriptors');
 var fails = require('../internals/fails');
 var has = require('../internals/has');
@@ -3699,7 +3686,7 @@ module.exports = function (METHOD_NAME, options) {
   });
 };
 
-},{"../internals/descriptors":95,"../internals/fails":103,"../internals/has":109}],81:[function(require,module,exports){
+},{"../internals/descriptors":89,"../internals/fails":97,"../internals/has":103}],76:[function(require,module,exports){
 var aFunction = require('../internals/a-function');
 var toObject = require('../internals/to-object');
 var IndexedObject = require('../internals/indexed-object');
@@ -3741,7 +3728,7 @@ module.exports = {
   right: createMethod(true)
 };
 
-},{"../internals/a-function":70,"../internals/indexed-object":113,"../internals/to-length":156,"../internals/to-object":157}],82:[function(require,module,exports){
+},{"../internals/a-function":65,"../internals/indexed-object":107,"../internals/to-length":148,"../internals/to-object":149}],77:[function(require,module,exports){
 var isObject = require('../internals/is-object');
 var isArray = require('../internals/is-array');
 var wellKnownSymbol = require('../internals/well-known-symbol');
@@ -3763,7 +3750,7 @@ module.exports = function (originalArray, length) {
   } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
 };
 
-},{"../internals/is-array":117,"../internals/is-object":120,"../internals/well-known-symbol":163}],83:[function(require,module,exports){
+},{"../internals/is-array":111,"../internals/is-object":114,"../internals/well-known-symbol":155}],78:[function(require,module,exports){
 var anObject = require('../internals/an-object');
 
 // call something on iterator step with safe closing on error
@@ -3778,7 +3765,7 @@ module.exports = function (iterator, fn, value, ENTRIES) {
   }
 };
 
-},{"../internals/an-object":73}],84:[function(require,module,exports){
+},{"../internals/an-object":68}],79:[function(require,module,exports){
 var wellKnownSymbol = require('../internals/well-known-symbol');
 
 var ITERATOR = wellKnownSymbol('iterator');
@@ -3818,14 +3805,14 @@ module.exports = function (exec, SKIP_CLOSING) {
   return ITERATION_SUPPORT;
 };
 
-},{"../internals/well-known-symbol":163}],85:[function(require,module,exports){
+},{"../internals/well-known-symbol":155}],80:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = function (it) {
   return toString.call(it).slice(8, -1);
 };
 
-},{}],86:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 var TO_STRING_TAG_SUPPORT = require('../internals/to-string-tag-support');
 var classofRaw = require('../internals/classof-raw');
 var wellKnownSymbol = require('../internals/well-known-symbol');
@@ -3853,24 +3840,7 @@ module.exports = TO_STRING_TAG_SUPPORT ? classofRaw : function (it) {
     : (result = classofRaw(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : result;
 };
 
-},{"../internals/classof-raw":85,"../internals/to-string-tag-support":159,"../internals/well-known-symbol":163}],87:[function(require,module,exports){
-var wellKnownSymbol = require('../internals/well-known-symbol');
-
-var MATCH = wellKnownSymbol('match');
-
-module.exports = function (METHOD_NAME) {
-  var regexp = /./;
-  try {
-    '/./'[METHOD_NAME](regexp);
-  } catch (e) {
-    try {
-      regexp[MATCH] = false;
-      return '/./'[METHOD_NAME](regexp);
-    } catch (f) { /* empty */ }
-  } return false;
-};
-
-},{"../internals/well-known-symbol":163}],88:[function(require,module,exports){
+},{"../internals/classof-raw":80,"../internals/to-string-tag-support":151,"../internals/well-known-symbol":155}],82:[function(require,module,exports){
 var fails = require('../internals/fails');
 
 module.exports = !fails(function () {
@@ -3879,7 +3849,7 @@ module.exports = !fails(function () {
   return Object.getPrototypeOf(new F()) !== F.prototype;
 });
 
-},{"../internals/fails":103}],89:[function(require,module,exports){
+},{"../internals/fails":97}],83:[function(require,module,exports){
 'use strict';
 var IteratorPrototype = require('../internals/iterators-core').IteratorPrototype;
 var create = require('../internals/object-create');
@@ -3897,7 +3867,7 @@ module.exports = function (IteratorConstructor, NAME, next) {
   return IteratorConstructor;
 };
 
-},{"../internals/create-property-descriptor":91,"../internals/iterators":124,"../internals/iterators-core":123,"../internals/object-create":129,"../internals/set-to-string-tag":147}],90:[function(require,module,exports){
+},{"../internals/create-property-descriptor":85,"../internals/iterators":117,"../internals/iterators-core":116,"../internals/object-create":121,"../internals/set-to-string-tag":139}],84:[function(require,module,exports){
 var DESCRIPTORS = require('../internals/descriptors');
 var definePropertyModule = require('../internals/object-define-property');
 var createPropertyDescriptor = require('../internals/create-property-descriptor');
@@ -3909,7 +3879,7 @@ module.exports = DESCRIPTORS ? function (object, key, value) {
   return object;
 };
 
-},{"../internals/create-property-descriptor":91,"../internals/descriptors":95,"../internals/object-define-property":131}],91:[function(require,module,exports){
+},{"../internals/create-property-descriptor":85,"../internals/descriptors":89,"../internals/object-define-property":123}],85:[function(require,module,exports){
 module.exports = function (bitmap, value) {
   return {
     enumerable: !(bitmap & 1),
@@ -3919,7 +3889,7 @@ module.exports = function (bitmap, value) {
   };
 };
 
-},{}],92:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 var toPrimitive = require('../internals/to-primitive');
 var definePropertyModule = require('../internals/object-define-property');
@@ -3931,7 +3901,7 @@ module.exports = function (object, key, value) {
   else object[propertyKey] = value;
 };
 
-},{"../internals/create-property-descriptor":91,"../internals/object-define-property":131,"../internals/to-primitive":158}],93:[function(require,module,exports){
+},{"../internals/create-property-descriptor":85,"../internals/object-define-property":123,"../internals/to-primitive":150}],87:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var createIteratorConstructor = require('../internals/create-iterator-constructor');
@@ -4023,7 +3993,7 @@ module.exports = function (Iterable, NAME, IteratorConstructor, next, DEFAULT, I
   return methods;
 };
 
-},{"../internals/create-iterator-constructor":89,"../internals/create-non-enumerable-property":90,"../internals/export":102,"../internals/is-pure":121,"../internals/iterators":124,"../internals/iterators-core":123,"../internals/object-get-prototype-of":136,"../internals/object-set-prototype-of":140,"../internals/redefine":143,"../internals/set-to-string-tag":147,"../internals/well-known-symbol":163}],94:[function(require,module,exports){
+},{"../internals/create-iterator-constructor":83,"../internals/create-non-enumerable-property":84,"../internals/export":96,"../internals/is-pure":115,"../internals/iterators":117,"../internals/iterators-core":116,"../internals/object-get-prototype-of":128,"../internals/object-set-prototype-of":132,"../internals/redefine":135,"../internals/set-to-string-tag":139,"../internals/well-known-symbol":155}],88:[function(require,module,exports){
 var path = require('../internals/path');
 var has = require('../internals/has');
 var wrappedWellKnownSymbolModule = require('../internals/well-known-symbol-wrapped');
@@ -4036,7 +4006,7 @@ module.exports = function (NAME) {
   });
 };
 
-},{"../internals/has":109,"../internals/object-define-property":131,"../internals/path":142,"../internals/well-known-symbol-wrapped":162}],95:[function(require,module,exports){
+},{"../internals/has":103,"../internals/object-define-property":123,"../internals/path":134,"../internals/well-known-symbol-wrapped":154}],89:[function(require,module,exports){
 var fails = require('../internals/fails');
 
 // Thank's IE8 for his funny defineProperty
@@ -4044,7 +4014,7 @@ module.exports = !fails(function () {
   return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
 });
 
-},{"../internals/fails":103}],96:[function(require,module,exports){
+},{"../internals/fails":97}],90:[function(require,module,exports){
 var global = require('../internals/global');
 var isObject = require('../internals/is-object');
 
@@ -4056,7 +4026,7 @@ module.exports = function (it) {
   return EXISTS ? document.createElement(it) : {};
 };
 
-},{"../internals/global":108,"../internals/is-object":120}],97:[function(require,module,exports){
+},{"../internals/global":102,"../internals/is-object":114}],91:[function(require,module,exports){
 // iterable DOM collections
 // flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods
 module.exports = {
@@ -4093,12 +4063,12 @@ module.exports = {
   TouchList: 0
 };
 
-},{}],98:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 var getBuiltIn = require('../internals/get-built-in');
 
 module.exports = getBuiltIn('navigator', 'userAgent') || '';
 
-},{"../internals/get-built-in":105}],99:[function(require,module,exports){
+},{"../internals/get-built-in":99}],93:[function(require,module,exports){
 var global = require('../internals/global');
 var userAgent = require('../internals/engine-user-agent');
 
@@ -4120,14 +4090,14 @@ if (v8) {
 
 module.exports = version && +version;
 
-},{"../internals/engine-user-agent":98,"../internals/global":108}],100:[function(require,module,exports){
+},{"../internals/engine-user-agent":92,"../internals/global":102}],94:[function(require,module,exports){
 var path = require('../internals/path');
 
 module.exports = function (CONSTRUCTOR) {
   return path[CONSTRUCTOR + 'Prototype'];
 };
 
-},{"../internals/path":142}],101:[function(require,module,exports){
+},{"../internals/path":134}],95:[function(require,module,exports){
 // IE8- don't enum bug keys
 module.exports = [
   'constructor',
@@ -4139,7 +4109,7 @@ module.exports = [
   'valueOf'
 ];
 
-},{}],102:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 'use strict';
 var global = require('../internals/global');
 var getOwnPropertyDescriptor = require('../internals/object-get-own-property-descriptor').f;
@@ -4239,7 +4209,7 @@ module.exports = function (options, source) {
   }
 };
 
-},{"../internals/create-non-enumerable-property":90,"../internals/function-bind-context":104,"../internals/global":108,"../internals/has":109,"../internals/is-forced":118,"../internals/object-get-own-property-descriptor":132,"../internals/path":142}],103:[function(require,module,exports){
+},{"../internals/create-non-enumerable-property":84,"../internals/function-bind-context":98,"../internals/global":102,"../internals/has":103,"../internals/is-forced":112,"../internals/object-get-own-property-descriptor":124,"../internals/path":134}],97:[function(require,module,exports){
 module.exports = function (exec) {
   try {
     return !!exec();
@@ -4248,7 +4218,7 @@ module.exports = function (exec) {
   }
 };
 
-},{}],104:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 var aFunction = require('../internals/a-function');
 
 // optional / simple context binding
@@ -4274,7 +4244,7 @@ module.exports = function (fn, that, length) {
   };
 };
 
-},{"../internals/a-function":70}],105:[function(require,module,exports){
+},{"../internals/a-function":65}],99:[function(require,module,exports){
 var path = require('../internals/path');
 var global = require('../internals/global');
 
@@ -4287,7 +4257,7 @@ module.exports = function (namespace, method) {
     : path[namespace] && path[namespace][method] || global[namespace] && global[namespace][method];
 };
 
-},{"../internals/global":108,"../internals/path":142}],106:[function(require,module,exports){
+},{"../internals/global":102,"../internals/path":134}],100:[function(require,module,exports){
 var classof = require('../internals/classof');
 var Iterators = require('../internals/iterators');
 var wellKnownSymbol = require('../internals/well-known-symbol');
@@ -4300,7 +4270,7 @@ module.exports = function (it) {
     || Iterators[classof(it)];
 };
 
-},{"../internals/classof":86,"../internals/iterators":124,"../internals/well-known-symbol":163}],107:[function(require,module,exports){
+},{"../internals/classof":81,"../internals/iterators":117,"../internals/well-known-symbol":155}],101:[function(require,module,exports){
 var anObject = require('../internals/an-object');
 var getIteratorMethod = require('../internals/get-iterator-method');
 
@@ -4311,7 +4281,7 @@ module.exports = function (it) {
   } return anObject(iteratorMethod.call(it));
 };
 
-},{"../internals/an-object":73,"../internals/get-iterator-method":106}],108:[function(require,module,exports){
+},{"../internals/an-object":68,"../internals/get-iterator-method":100}],102:[function(require,module,exports){
 (function (global){(function (){
 var check = function (it) {
   return it && it.Math == Math && it;
@@ -4328,22 +4298,22 @@ module.exports =
   Function('return this')();
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],109:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 var hasOwnProperty = {}.hasOwnProperty;
 
 module.exports = function (it, key) {
   return hasOwnProperty.call(it, key);
 };
 
-},{}],110:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 module.exports = {};
 
-},{}],111:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 var getBuiltIn = require('../internals/get-built-in');
 
 module.exports = getBuiltIn('document', 'documentElement');
 
-},{"../internals/get-built-in":105}],112:[function(require,module,exports){
+},{"../internals/get-built-in":99}],106:[function(require,module,exports){
 var DESCRIPTORS = require('../internals/descriptors');
 var fails = require('../internals/fails');
 var createElement = require('../internals/document-create-element');
@@ -4355,7 +4325,7 @@ module.exports = !DESCRIPTORS && !fails(function () {
   }).a != 7;
 });
 
-},{"../internals/descriptors":95,"../internals/document-create-element":96,"../internals/fails":103}],113:[function(require,module,exports){
+},{"../internals/descriptors":89,"../internals/document-create-element":90,"../internals/fails":97}],107:[function(require,module,exports){
 var fails = require('../internals/fails');
 var classof = require('../internals/classof-raw');
 
@@ -4370,7 +4340,7 @@ module.exports = fails(function () {
   return classof(it) == 'String' ? split.call(it, '') : Object(it);
 } : Object;
 
-},{"../internals/classof-raw":85,"../internals/fails":103}],114:[function(require,module,exports){
+},{"../internals/classof-raw":80,"../internals/fails":97}],108:[function(require,module,exports){
 var store = require('../internals/shared-store');
 
 var functionToString = Function.toString;
@@ -4384,7 +4354,7 @@ if (typeof store.inspectSource != 'function') {
 
 module.exports = store.inspectSource;
 
-},{"../internals/shared-store":149}],115:[function(require,module,exports){
+},{"../internals/shared-store":141}],109:[function(require,module,exports){
 var NATIVE_WEAK_MAP = require('../internals/native-weak-map');
 var global = require('../internals/global');
 var isObject = require('../internals/is-object');
@@ -4447,7 +4417,7 @@ module.exports = {
   getterFor: getterFor
 };
 
-},{"../internals/create-non-enumerable-property":90,"../internals/global":108,"../internals/has":109,"../internals/hidden-keys":110,"../internals/is-object":120,"../internals/native-weak-map":126,"../internals/shared-key":148}],116:[function(require,module,exports){
+},{"../internals/create-non-enumerable-property":84,"../internals/global":102,"../internals/has":103,"../internals/hidden-keys":104,"../internals/is-object":114,"../internals/native-weak-map":119,"../internals/shared-key":140}],110:[function(require,module,exports){
 var wellKnownSymbol = require('../internals/well-known-symbol');
 var Iterators = require('../internals/iterators');
 
@@ -4459,7 +4429,7 @@ module.exports = function (it) {
   return it !== undefined && (Iterators.Array === it || ArrayPrototype[ITERATOR] === it);
 };
 
-},{"../internals/iterators":124,"../internals/well-known-symbol":163}],117:[function(require,module,exports){
+},{"../internals/iterators":117,"../internals/well-known-symbol":155}],111:[function(require,module,exports){
 var classof = require('../internals/classof-raw');
 
 // `IsArray` abstract operation
@@ -4468,7 +4438,7 @@ module.exports = Array.isArray || function isArray(arg) {
   return classof(arg) == 'Array';
 };
 
-},{"../internals/classof-raw":85}],118:[function(require,module,exports){
+},{"../internals/classof-raw":80}],112:[function(require,module,exports){
 var fails = require('../internals/fails');
 
 var replacement = /#|\.prototype\./;
@@ -4491,7 +4461,7 @@ var POLYFILL = isForced.POLYFILL = 'P';
 
 module.exports = isForced;
 
-},{"../internals/fails":103}],119:[function(require,module,exports){
+},{"../internals/fails":97}],113:[function(require,module,exports){
 var classof = require('../internals/classof');
 var wellKnownSymbol = require('../internals/well-known-symbol');
 var Iterators = require('../internals/iterators');
@@ -4506,29 +4476,15 @@ module.exports = function (it) {
     || Iterators.hasOwnProperty(classof(O));
 };
 
-},{"../internals/classof":86,"../internals/iterators":124,"../internals/well-known-symbol":163}],120:[function(require,module,exports){
+},{"../internals/classof":81,"../internals/iterators":117,"../internals/well-known-symbol":155}],114:[function(require,module,exports){
 module.exports = function (it) {
   return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
 
-},{}],121:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 module.exports = true;
 
-},{}],122:[function(require,module,exports){
-var isObject = require('../internals/is-object');
-var classof = require('../internals/classof-raw');
-var wellKnownSymbol = require('../internals/well-known-symbol');
-
-var MATCH = wellKnownSymbol('match');
-
-// `IsRegExp` abstract operation
-// https://tc39.github.io/ecma262/#sec-isregexp
-module.exports = function (it) {
-  var isRegExp;
-  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : classof(it) == 'RegExp');
-};
-
-},{"../internals/classof-raw":85,"../internals/is-object":120,"../internals/well-known-symbol":163}],123:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 'use strict';
 var getPrototypeOf = require('../internals/object-get-prototype-of');
 var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
@@ -4567,9 +4523,9 @@ module.exports = {
   BUGGY_SAFARI_ITERATORS: BUGGY_SAFARI_ITERATORS
 };
 
-},{"../internals/create-non-enumerable-property":90,"../internals/has":109,"../internals/is-pure":121,"../internals/object-get-prototype-of":136,"../internals/well-known-symbol":163}],124:[function(require,module,exports){
-arguments[4][110][0].apply(exports,arguments)
-},{"dup":110}],125:[function(require,module,exports){
+},{"../internals/create-non-enumerable-property":84,"../internals/has":103,"../internals/is-pure":115,"../internals/object-get-prototype-of":128,"../internals/well-known-symbol":155}],117:[function(require,module,exports){
+arguments[4][104][0].apply(exports,arguments)
+},{"dup":104}],118:[function(require,module,exports){
 var fails = require('../internals/fails');
 
 module.exports = !!Object.getOwnPropertySymbols && !fails(function () {
@@ -4578,7 +4534,7 @@ module.exports = !!Object.getOwnPropertySymbols && !fails(function () {
   return !String(Symbol());
 });
 
-},{"../internals/fails":103}],126:[function(require,module,exports){
+},{"../internals/fails":97}],119:[function(require,module,exports){
 var global = require('../internals/global');
 var inspectSource = require('../internals/inspect-source');
 
@@ -4586,16 +4542,7 @@ var WeakMap = global.WeakMap;
 
 module.exports = typeof WeakMap === 'function' && /native code/.test(inspectSource(WeakMap));
 
-},{"../internals/global":108,"../internals/inspect-source":114}],127:[function(require,module,exports){
-var isRegExp = require('../internals/is-regexp');
-
-module.exports = function (it) {
-  if (isRegExp(it)) {
-    throw TypeError("The method doesn't accept regular expressions");
-  } return it;
-};
-
-},{"../internals/is-regexp":122}],128:[function(require,module,exports){
+},{"../internals/global":102,"../internals/inspect-source":108}],120:[function(require,module,exports){
 var global = require('../internals/global');
 var trim = require('../internals/string-trim').trim;
 var whitespaces = require('../internals/whitespaces');
@@ -4611,7 +4558,7 @@ module.exports = FORCED ? function parseInt(string, radix) {
   return $parseInt(S, (radix >>> 0) || (hex.test(S) ? 16 : 10));
 } : $parseInt;
 
-},{"../internals/global":108,"../internals/string-trim":152,"../internals/whitespaces":164}],129:[function(require,module,exports){
+},{"../internals/global":102,"../internals/string-trim":144,"../internals/whitespaces":156}],121:[function(require,module,exports){
 var anObject = require('../internals/an-object');
 var defineProperties = require('../internals/object-define-properties');
 var enumBugKeys = require('../internals/enum-bug-keys');
@@ -4691,7 +4638,7 @@ module.exports = Object.create || function create(O, Properties) {
   return Properties === undefined ? result : defineProperties(result, Properties);
 };
 
-},{"../internals/an-object":73,"../internals/document-create-element":96,"../internals/enum-bug-keys":101,"../internals/hidden-keys":110,"../internals/html":111,"../internals/object-define-properties":130,"../internals/shared-key":148}],130:[function(require,module,exports){
+},{"../internals/an-object":68,"../internals/document-create-element":90,"../internals/enum-bug-keys":95,"../internals/hidden-keys":104,"../internals/html":105,"../internals/object-define-properties":122,"../internals/shared-key":140}],122:[function(require,module,exports){
 var DESCRIPTORS = require('../internals/descriptors');
 var definePropertyModule = require('../internals/object-define-property');
 var anObject = require('../internals/an-object');
@@ -4709,7 +4656,7 @@ module.exports = DESCRIPTORS ? Object.defineProperties : function defineProperti
   return O;
 };
 
-},{"../internals/an-object":73,"../internals/descriptors":95,"../internals/object-define-property":131,"../internals/object-keys":138}],131:[function(require,module,exports){
+},{"../internals/an-object":68,"../internals/descriptors":89,"../internals/object-define-property":123,"../internals/object-keys":130}],123:[function(require,module,exports){
 var DESCRIPTORS = require('../internals/descriptors');
 var IE8_DOM_DEFINE = require('../internals/ie8-dom-define');
 var anObject = require('../internals/an-object');
@@ -4731,7 +4678,7 @@ exports.f = DESCRIPTORS ? nativeDefineProperty : function defineProperty(O, P, A
   return O;
 };
 
-},{"../internals/an-object":73,"../internals/descriptors":95,"../internals/ie8-dom-define":112,"../internals/to-primitive":158}],132:[function(require,module,exports){
+},{"../internals/an-object":68,"../internals/descriptors":89,"../internals/ie8-dom-define":106,"../internals/to-primitive":150}],124:[function(require,module,exports){
 var DESCRIPTORS = require('../internals/descriptors');
 var propertyIsEnumerableModule = require('../internals/object-property-is-enumerable');
 var createPropertyDescriptor = require('../internals/create-property-descriptor');
@@ -4753,7 +4700,7 @@ exports.f = DESCRIPTORS ? nativeGetOwnPropertyDescriptor : function getOwnProper
   if (has(O, P)) return createPropertyDescriptor(!propertyIsEnumerableModule.f.call(O, P), O[P]);
 };
 
-},{"../internals/create-property-descriptor":91,"../internals/descriptors":95,"../internals/has":109,"../internals/ie8-dom-define":112,"../internals/object-property-is-enumerable":139,"../internals/to-indexed-object":154,"../internals/to-primitive":158}],133:[function(require,module,exports){
+},{"../internals/create-property-descriptor":85,"../internals/descriptors":89,"../internals/has":103,"../internals/ie8-dom-define":106,"../internals/object-property-is-enumerable":131,"../internals/to-indexed-object":146,"../internals/to-primitive":150}],125:[function(require,module,exports){
 var toIndexedObject = require('../internals/to-indexed-object');
 var nativeGetOwnPropertyNames = require('../internals/object-get-own-property-names').f;
 
@@ -4777,7 +4724,7 @@ module.exports.f = function getOwnPropertyNames(it) {
     : nativeGetOwnPropertyNames(toIndexedObject(it));
 };
 
-},{"../internals/object-get-own-property-names":134,"../internals/to-indexed-object":154}],134:[function(require,module,exports){
+},{"../internals/object-get-own-property-names":126,"../internals/to-indexed-object":146}],126:[function(require,module,exports){
 var internalObjectKeys = require('../internals/object-keys-internal');
 var enumBugKeys = require('../internals/enum-bug-keys');
 
@@ -4789,10 +4736,10 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
   return internalObjectKeys(O, hiddenKeys);
 };
 
-},{"../internals/enum-bug-keys":101,"../internals/object-keys-internal":137}],135:[function(require,module,exports){
+},{"../internals/enum-bug-keys":95,"../internals/object-keys-internal":129}],127:[function(require,module,exports){
 exports.f = Object.getOwnPropertySymbols;
 
-},{}],136:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 var has = require('../internals/has');
 var toObject = require('../internals/to-object');
 var sharedKey = require('../internals/shared-key');
@@ -4811,7 +4758,7 @@ module.exports = CORRECT_PROTOTYPE_GETTER ? Object.getPrototypeOf : function (O)
   } return O instanceof Object ? ObjectPrototype : null;
 };
 
-},{"../internals/correct-prototype-getter":88,"../internals/has":109,"../internals/shared-key":148,"../internals/to-object":157}],137:[function(require,module,exports){
+},{"../internals/correct-prototype-getter":82,"../internals/has":103,"../internals/shared-key":140,"../internals/to-object":149}],129:[function(require,module,exports){
 var has = require('../internals/has');
 var toIndexedObject = require('../internals/to-indexed-object');
 var indexOf = require('../internals/array-includes').indexOf;
@@ -4830,7 +4777,7 @@ module.exports = function (object, names) {
   return result;
 };
 
-},{"../internals/array-includes":76,"../internals/has":109,"../internals/hidden-keys":110,"../internals/to-indexed-object":154}],138:[function(require,module,exports){
+},{"../internals/array-includes":71,"../internals/has":103,"../internals/hidden-keys":104,"../internals/to-indexed-object":146}],130:[function(require,module,exports){
 var internalObjectKeys = require('../internals/object-keys-internal');
 var enumBugKeys = require('../internals/enum-bug-keys');
 
@@ -4840,7 +4787,7 @@ module.exports = Object.keys || function keys(O) {
   return internalObjectKeys(O, enumBugKeys);
 };
 
-},{"../internals/enum-bug-keys":101,"../internals/object-keys-internal":137}],139:[function(require,module,exports){
+},{"../internals/enum-bug-keys":95,"../internals/object-keys-internal":129}],131:[function(require,module,exports){
 'use strict';
 var nativePropertyIsEnumerable = {}.propertyIsEnumerable;
 var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
@@ -4855,7 +4802,7 @@ exports.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
   return !!descriptor && descriptor.enumerable;
 } : nativePropertyIsEnumerable;
 
-},{}],140:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 var anObject = require('../internals/an-object');
 var aPossiblePrototype = require('../internals/a-possible-prototype');
 
@@ -4881,7 +4828,7 @@ module.exports = Object.setPrototypeOf || ('__proto__' in {} ? function () {
   };
 }() : undefined);
 
-},{"../internals/a-possible-prototype":71,"../internals/an-object":73}],141:[function(require,module,exports){
+},{"../internals/a-possible-prototype":66,"../internals/an-object":68}],133:[function(require,module,exports){
 'use strict';
 var TO_STRING_TAG_SUPPORT = require('../internals/to-string-tag-support');
 var classof = require('../internals/classof');
@@ -4892,9 +4839,9 @@ module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
   return '[object ' + classof(this) + ']';
 };
 
-},{"../internals/classof":86,"../internals/to-string-tag-support":159}],142:[function(require,module,exports){
-arguments[4][110][0].apply(exports,arguments)
-},{"dup":110}],143:[function(require,module,exports){
+},{"../internals/classof":81,"../internals/to-string-tag-support":151}],134:[function(require,module,exports){
+arguments[4][104][0].apply(exports,arguments)
+},{"dup":104}],135:[function(require,module,exports){
 var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
 
 module.exports = function (target, key, value, options) {
@@ -4902,7 +4849,7 @@ module.exports = function (target, key, value, options) {
   else createNonEnumerableProperty(target, key, value);
 };
 
-},{"../internals/create-non-enumerable-property":90}],144:[function(require,module,exports){
+},{"../internals/create-non-enumerable-property":84}],136:[function(require,module,exports){
 'use strict';
 var anObject = require('../internals/an-object');
 
@@ -4920,7 +4867,7 @@ module.exports = function () {
   return result;
 };
 
-},{"../internals/an-object":73}],145:[function(require,module,exports){
+},{"../internals/an-object":68}],137:[function(require,module,exports){
 // `RequireObjectCoercible` abstract operation
 // https://tc39.github.io/ecma262/#sec-requireobjectcoercible
 module.exports = function (it) {
@@ -4928,7 +4875,7 @@ module.exports = function (it) {
   return it;
 };
 
-},{}],146:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 var global = require('../internals/global');
 var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
 
@@ -4940,7 +4887,7 @@ module.exports = function (key, value) {
   } return value;
 };
 
-},{"../internals/create-non-enumerable-property":90,"../internals/global":108}],147:[function(require,module,exports){
+},{"../internals/create-non-enumerable-property":84,"../internals/global":102}],139:[function(require,module,exports){
 var TO_STRING_TAG_SUPPORT = require('../internals/to-string-tag-support');
 var defineProperty = require('../internals/object-define-property').f;
 var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
@@ -4962,7 +4909,7 @@ module.exports = function (it, TAG, STATIC, SET_METHOD) {
   }
 };
 
-},{"../internals/create-non-enumerable-property":90,"../internals/has":109,"../internals/object-define-property":131,"../internals/object-to-string":141,"../internals/to-string-tag-support":159,"../internals/well-known-symbol":163}],148:[function(require,module,exports){
+},{"../internals/create-non-enumerable-property":84,"../internals/has":103,"../internals/object-define-property":123,"../internals/object-to-string":133,"../internals/to-string-tag-support":151,"../internals/well-known-symbol":155}],140:[function(require,module,exports){
 var shared = require('../internals/shared');
 var uid = require('../internals/uid');
 
@@ -4972,7 +4919,7 @@ module.exports = function (key) {
   return keys[key] || (keys[key] = uid(key));
 };
 
-},{"../internals/shared":150,"../internals/uid":160}],149:[function(require,module,exports){
+},{"../internals/shared":142,"../internals/uid":152}],141:[function(require,module,exports){
 var global = require('../internals/global');
 var setGlobal = require('../internals/set-global');
 
@@ -4981,7 +4928,7 @@ var store = global[SHARED] || setGlobal(SHARED, {});
 
 module.exports = store;
 
-},{"../internals/global":108,"../internals/set-global":146}],150:[function(require,module,exports){
+},{"../internals/global":102,"../internals/set-global":138}],142:[function(require,module,exports){
 var IS_PURE = require('../internals/is-pure');
 var store = require('../internals/shared-store');
 
@@ -4993,7 +4940,7 @@ var store = require('../internals/shared-store');
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
 
-},{"../internals/is-pure":121,"../internals/shared-store":149}],151:[function(require,module,exports){
+},{"../internals/is-pure":115,"../internals/shared-store":141}],143:[function(require,module,exports){
 var toInteger = require('../internals/to-integer');
 var requireObjectCoercible = require('../internals/require-object-coercible');
 
@@ -5022,7 +4969,7 @@ module.exports = {
   charAt: createMethod(true)
 };
 
-},{"../internals/require-object-coercible":145,"../internals/to-integer":155}],152:[function(require,module,exports){
+},{"../internals/require-object-coercible":137,"../internals/to-integer":147}],144:[function(require,module,exports){
 var requireObjectCoercible = require('../internals/require-object-coercible');
 var whitespaces = require('../internals/whitespaces');
 
@@ -5052,7 +4999,7 @@ module.exports = {
   trim: createMethod(3)
 };
 
-},{"../internals/require-object-coercible":145,"../internals/whitespaces":164}],153:[function(require,module,exports){
+},{"../internals/require-object-coercible":137,"../internals/whitespaces":156}],145:[function(require,module,exports){
 var toInteger = require('../internals/to-integer');
 
 var max = Math.max;
@@ -5066,7 +5013,7 @@ module.exports = function (index, length) {
   return integer < 0 ? max(integer + length, 0) : min(integer, length);
 };
 
-},{"../internals/to-integer":155}],154:[function(require,module,exports){
+},{"../internals/to-integer":147}],146:[function(require,module,exports){
 // toObject with fallback for non-array-like ES3 strings
 var IndexedObject = require('../internals/indexed-object');
 var requireObjectCoercible = require('../internals/require-object-coercible');
@@ -5075,7 +5022,7 @@ module.exports = function (it) {
   return IndexedObject(requireObjectCoercible(it));
 };
 
-},{"../internals/indexed-object":113,"../internals/require-object-coercible":145}],155:[function(require,module,exports){
+},{"../internals/indexed-object":107,"../internals/require-object-coercible":137}],147:[function(require,module,exports){
 var ceil = Math.ceil;
 var floor = Math.floor;
 
@@ -5085,7 +5032,7 @@ module.exports = function (argument) {
   return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor : ceil)(argument);
 };
 
-},{}],156:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 var toInteger = require('../internals/to-integer');
 
 var min = Math.min;
@@ -5096,7 +5043,7 @@ module.exports = function (argument) {
   return argument > 0 ? min(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
 };
 
-},{"../internals/to-integer":155}],157:[function(require,module,exports){
+},{"../internals/to-integer":147}],149:[function(require,module,exports){
 var requireObjectCoercible = require('../internals/require-object-coercible');
 
 // `ToObject` abstract operation
@@ -5105,7 +5052,7 @@ module.exports = function (argument) {
   return Object(requireObjectCoercible(argument));
 };
 
-},{"../internals/require-object-coercible":145}],158:[function(require,module,exports){
+},{"../internals/require-object-coercible":137}],150:[function(require,module,exports){
 var isObject = require('../internals/is-object');
 
 // `ToPrimitive` abstract operation
@@ -5121,7 +5068,7 @@ module.exports = function (input, PREFERRED_STRING) {
   throw TypeError("Can't convert object to primitive value");
 };
 
-},{"../internals/is-object":120}],159:[function(require,module,exports){
+},{"../internals/is-object":114}],151:[function(require,module,exports){
 var wellKnownSymbol = require('../internals/well-known-symbol');
 
 var TO_STRING_TAG = wellKnownSymbol('toStringTag');
@@ -5131,7 +5078,7 @@ test[TO_STRING_TAG] = 'z';
 
 module.exports = String(test) === '[object z]';
 
-},{"../internals/well-known-symbol":163}],160:[function(require,module,exports){
+},{"../internals/well-known-symbol":155}],152:[function(require,module,exports){
 var id = 0;
 var postfix = Math.random();
 
@@ -5139,7 +5086,7 @@ module.exports = function (key) {
   return 'Symbol(' + String(key === undefined ? '' : key) + ')_' + (++id + postfix).toString(36);
 };
 
-},{}],161:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 var NATIVE_SYMBOL = require('../internals/native-symbol');
 
 module.exports = NATIVE_SYMBOL
@@ -5148,12 +5095,12 @@ module.exports = NATIVE_SYMBOL
   // eslint-disable-next-line no-undef
   && typeof Symbol.iterator == 'symbol';
 
-},{"../internals/native-symbol":125}],162:[function(require,module,exports){
+},{"../internals/native-symbol":118}],154:[function(require,module,exports){
 var wellKnownSymbol = require('../internals/well-known-symbol');
 
 exports.f = wellKnownSymbol;
 
-},{"../internals/well-known-symbol":163}],163:[function(require,module,exports){
+},{"../internals/well-known-symbol":155}],155:[function(require,module,exports){
 var global = require('../internals/global');
 var shared = require('../internals/shared');
 var has = require('../internals/has');
@@ -5172,12 +5119,12 @@ module.exports = function (name) {
   } return WellKnownSymbolsStore[name];
 };
 
-},{"../internals/global":108,"../internals/has":109,"../internals/native-symbol":125,"../internals/shared":150,"../internals/uid":160,"../internals/use-symbol-as-uid":161}],164:[function(require,module,exports){
+},{"../internals/global":102,"../internals/has":103,"../internals/native-symbol":118,"../internals/shared":142,"../internals/uid":152,"../internals/use-symbol-as-uid":153}],156:[function(require,module,exports){
 // a string of all valid unicode whitespaces
 // eslint-disable-next-line max-len
 module.exports = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
 
-},{}],165:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var fails = require('../internals/fails');
@@ -5239,7 +5186,7 @@ $({ target: 'Array', proto: true, forced: FORCED }, {
   }
 });
 
-},{"../internals/array-method-has-species-support":78,"../internals/array-species-create":82,"../internals/create-property":92,"../internals/engine-v8-version":99,"../internals/export":102,"../internals/fails":103,"../internals/is-array":117,"../internals/is-object":120,"../internals/to-length":156,"../internals/to-object":157,"../internals/well-known-symbol":163}],166:[function(require,module,exports){
+},{"../internals/array-method-has-species-support":73,"../internals/array-species-create":77,"../internals/create-property":86,"../internals/engine-v8-version":93,"../internals/export":96,"../internals/fails":97,"../internals/is-array":111,"../internals/is-object":114,"../internals/to-length":148,"../internals/to-object":149,"../internals/well-known-symbol":155}],158:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var forEach = require('../internals/array-for-each');
@@ -5250,7 +5197,7 @@ $({ target: 'Array', proto: true, forced: [].forEach != forEach }, {
   forEach: forEach
 });
 
-},{"../internals/array-for-each":74,"../internals/export":102}],167:[function(require,module,exports){
+},{"../internals/array-for-each":69,"../internals/export":96}],159:[function(require,module,exports){
 var $ = require('../internals/export');
 var from = require('../internals/array-from');
 var checkCorrectnessOfIteration = require('../internals/check-correctness-of-iteration');
@@ -5265,27 +5212,7 @@ $({ target: 'Array', stat: true, forced: INCORRECT_ITERATION }, {
   from: from
 });
 
-},{"../internals/array-from":75,"../internals/check-correctness-of-iteration":84,"../internals/export":102}],168:[function(require,module,exports){
-'use strict';
-var $ = require('../internals/export');
-var $includes = require('../internals/array-includes').includes;
-var addToUnscopables = require('../internals/add-to-unscopables');
-var arrayMethodUsesToLength = require('../internals/array-method-uses-to-length');
-
-var USES_TO_LENGTH = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
-
-// `Array.prototype.includes` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.includes
-$({ target: 'Array', proto: true, forced: !USES_TO_LENGTH }, {
-  includes: function includes(el /* , fromIndex = 0 */) {
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables('includes');
-
-},{"../internals/add-to-unscopables":72,"../internals/array-includes":76,"../internals/array-method-uses-to-length":80,"../internals/export":102}],169:[function(require,module,exports){
+},{"../internals/array-from":70,"../internals/check-correctness-of-iteration":79,"../internals/export":96}],160:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var $indexOf = require('../internals/array-includes').indexOf;
@@ -5309,7 +5236,7 @@ $({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD || !US
   }
 });
 
-},{"../internals/array-includes":76,"../internals/array-method-is-strict":79,"../internals/array-method-uses-to-length":80,"../internals/export":102}],170:[function(require,module,exports){
+},{"../internals/array-includes":71,"../internals/array-method-is-strict":74,"../internals/array-method-uses-to-length":75,"../internals/export":96}],161:[function(require,module,exports){
 var $ = require('../internals/export');
 var isArray = require('../internals/is-array');
 
@@ -5319,7 +5246,7 @@ $({ target: 'Array', stat: true }, {
   isArray: isArray
 });
 
-},{"../internals/export":102,"../internals/is-array":117}],171:[function(require,module,exports){
+},{"../internals/export":96,"../internals/is-array":111}],162:[function(require,module,exports){
 'use strict';
 var toIndexedObject = require('../internals/to-indexed-object');
 var addToUnscopables = require('../internals/add-to-unscopables');
@@ -5374,7 +5301,7 @@ addToUnscopables('keys');
 addToUnscopables('values');
 addToUnscopables('entries');
 
-},{"../internals/add-to-unscopables":72,"../internals/define-iterator":93,"../internals/internal-state":115,"../internals/iterators":124,"../internals/to-indexed-object":154}],172:[function(require,module,exports){
+},{"../internals/add-to-unscopables":67,"../internals/define-iterator":87,"../internals/internal-state":109,"../internals/iterators":117,"../internals/to-indexed-object":146}],163:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var $map = require('../internals/array-iteration').map;
@@ -5394,7 +5321,7 @@ $({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGT
   }
 });
 
-},{"../internals/array-iteration":77,"../internals/array-method-has-species-support":78,"../internals/array-method-uses-to-length":80,"../internals/export":102}],173:[function(require,module,exports){
+},{"../internals/array-iteration":72,"../internals/array-method-has-species-support":73,"../internals/array-method-uses-to-length":75,"../internals/export":96}],164:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var $reduce = require('../internals/array-reduce').left;
@@ -5412,7 +5339,7 @@ $({ target: 'Array', proto: true, forced: !STRICT_METHOD || !USES_TO_LENGTH }, {
   }
 });
 
-},{"../internals/array-method-is-strict":79,"../internals/array-method-uses-to-length":80,"../internals/array-reduce":81,"../internals/export":102}],174:[function(require,module,exports){
+},{"../internals/array-method-is-strict":74,"../internals/array-method-uses-to-length":75,"../internals/array-reduce":76,"../internals/export":96}],165:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var isObject = require('../internals/is-object');
@@ -5463,7 +5390,7 @@ $({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGT
   }
 });
 
-},{"../internals/array-method-has-species-support":78,"../internals/array-method-uses-to-length":80,"../internals/create-property":92,"../internals/export":102,"../internals/is-array":117,"../internals/is-object":120,"../internals/to-absolute-index":153,"../internals/to-indexed-object":154,"../internals/to-length":156,"../internals/well-known-symbol":163}],175:[function(require,module,exports){
+},{"../internals/array-method-has-species-support":73,"../internals/array-method-uses-to-length":75,"../internals/create-property":86,"../internals/export":96,"../internals/is-array":111,"../internals/is-object":114,"../internals/to-absolute-index":145,"../internals/to-indexed-object":146,"../internals/to-length":148,"../internals/well-known-symbol":155}],166:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var aFunction = require('../internals/a-function');
@@ -5497,7 +5424,7 @@ $({ target: 'Array', proto: true, forced: FORCED }, {
   }
 });
 
-},{"../internals/a-function":70,"../internals/array-method-is-strict":79,"../internals/export":102,"../internals/fails":103,"../internals/to-object":157}],176:[function(require,module,exports){
+},{"../internals/a-function":65,"../internals/array-method-is-strict":74,"../internals/export":96,"../internals/fails":97,"../internals/to-object":149}],167:[function(require,module,exports){
 var global = require('../internals/global');
 var setToStringTag = require('../internals/set-to-string-tag');
 
@@ -5505,14 +5432,14 @@ var setToStringTag = require('../internals/set-to-string-tag');
 // https://tc39.github.io/ecma262/#sec-json-@@tostringtag
 setToStringTag(global.JSON, 'JSON', true);
 
-},{"../internals/global":108,"../internals/set-to-string-tag":147}],177:[function(require,module,exports){
+},{"../internals/global":102,"../internals/set-to-string-tag":139}],168:[function(require,module,exports){
 var setToStringTag = require('../internals/set-to-string-tag');
 
 // Math[@@toStringTag] property
 // https://tc39.github.io/ecma262/#sec-math-@@tostringtag
 setToStringTag(Math, 'Math', true);
 
-},{"../internals/set-to-string-tag":147}],178:[function(require,module,exports){
+},{"../internals/set-to-string-tag":139}],169:[function(require,module,exports){
 var $ = require('../internals/export');
 var DESCRIPTORS = require('../internals/descriptors');
 var create = require('../internals/object-create');
@@ -5523,7 +5450,7 @@ $({ target: 'Object', stat: true, sham: !DESCRIPTORS }, {
   create: create
 });
 
-},{"../internals/descriptors":95,"../internals/export":102,"../internals/object-create":129}],179:[function(require,module,exports){
+},{"../internals/descriptors":89,"../internals/export":96,"../internals/object-create":121}],170:[function(require,module,exports){
 var $ = require('../internals/export');
 var DESCRIPTORS = require('../internals/descriptors');
 var objectDefinePropertyModile = require('../internals/object-define-property');
@@ -5534,10 +5461,10 @@ $({ target: 'Object', stat: true, forced: !DESCRIPTORS, sham: !DESCRIPTORS }, {
   defineProperty: objectDefinePropertyModile.f
 });
 
-},{"../internals/descriptors":95,"../internals/export":102,"../internals/object-define-property":131}],180:[function(require,module,exports){
+},{"../internals/descriptors":89,"../internals/export":96,"../internals/object-define-property":123}],171:[function(require,module,exports){
 // empty
 
-},{}],181:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 var $ = require('../internals/export');
 var parseIntImplementation = require('../internals/number-parse-int');
 
@@ -5547,25 +5474,9 @@ $({ global: true, forced: parseInt != parseIntImplementation }, {
   parseInt: parseIntImplementation
 });
 
-},{"../internals/export":102,"../internals/number-parse-int":128}],182:[function(require,module,exports){
-arguments[4][180][0].apply(exports,arguments)
-},{"dup":180}],183:[function(require,module,exports){
-'use strict';
-var $ = require('../internals/export');
-var notARegExp = require('../internals/not-a-regexp');
-var requireObjectCoercible = require('../internals/require-object-coercible');
-var correctIsRegExpLogic = require('../internals/correct-is-regexp-logic');
-
-// `String.prototype.includes` method
-// https://tc39.github.io/ecma262/#sec-string.prototype.includes
-$({ target: 'String', proto: true, forced: !correctIsRegExpLogic('includes') }, {
-  includes: function includes(searchString /* , position = 0 */) {
-    return !!~String(requireObjectCoercible(this))
-      .indexOf(notARegExp(searchString), arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-},{"../internals/correct-is-regexp-logic":87,"../internals/export":102,"../internals/not-a-regexp":127,"../internals/require-object-coercible":145}],184:[function(require,module,exports){
+},{"../internals/export":96,"../internals/number-parse-int":120}],173:[function(require,module,exports){
+arguments[4][171][0].apply(exports,arguments)
+},{"dup":171}],174:[function(require,module,exports){
 'use strict';
 var charAt = require('../internals/string-multibyte').charAt;
 var InternalStateModule = require('../internals/internal-state');
@@ -5596,37 +5507,37 @@ defineIterator(String, 'String', function (iterated) {
   return { value: point, done: false };
 });
 
-},{"../internals/define-iterator":93,"../internals/internal-state":115,"../internals/string-multibyte":151}],185:[function(require,module,exports){
+},{"../internals/define-iterator":87,"../internals/internal-state":109,"../internals/string-multibyte":143}],175:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.asyncIterator` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.asynciterator
 defineWellKnownSymbol('asyncIterator');
 
-},{"../internals/define-well-known-symbol":94}],186:[function(require,module,exports){
-arguments[4][180][0].apply(exports,arguments)
-},{"dup":180}],187:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],176:[function(require,module,exports){
+arguments[4][171][0].apply(exports,arguments)
+},{"dup":171}],177:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.hasInstance` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.hasinstance
 defineWellKnownSymbol('hasInstance');
 
-},{"../internals/define-well-known-symbol":94}],188:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],178:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.isConcatSpreadable` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.isconcatspreadable
 defineWellKnownSymbol('isConcatSpreadable');
 
-},{"../internals/define-well-known-symbol":94}],189:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],179:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.iterator` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.iterator
 defineWellKnownSymbol('iterator');
 
-},{"../internals/define-well-known-symbol":94}],190:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],180:[function(require,module,exports){
 'use strict';
 var $ = require('../internals/export');
 var global = require('../internals/global');
@@ -5939,103 +5850,103 @@ setToStringTag($Symbol, SYMBOL);
 
 hiddenKeys[HIDDEN] = true;
 
-},{"../internals/an-object":73,"../internals/array-iteration":77,"../internals/create-non-enumerable-property":90,"../internals/create-property-descriptor":91,"../internals/define-well-known-symbol":94,"../internals/descriptors":95,"../internals/export":102,"../internals/fails":103,"../internals/get-built-in":105,"../internals/global":108,"../internals/has":109,"../internals/hidden-keys":110,"../internals/internal-state":115,"../internals/is-array":117,"../internals/is-object":120,"../internals/is-pure":121,"../internals/native-symbol":125,"../internals/object-create":129,"../internals/object-define-property":131,"../internals/object-get-own-property-descriptor":132,"../internals/object-get-own-property-names":134,"../internals/object-get-own-property-names-external":133,"../internals/object-get-own-property-symbols":135,"../internals/object-keys":138,"../internals/object-property-is-enumerable":139,"../internals/redefine":143,"../internals/set-to-string-tag":147,"../internals/shared":150,"../internals/shared-key":148,"../internals/to-indexed-object":154,"../internals/to-object":157,"../internals/to-primitive":158,"../internals/uid":160,"../internals/use-symbol-as-uid":161,"../internals/well-known-symbol":163,"../internals/well-known-symbol-wrapped":162}],191:[function(require,module,exports){
+},{"../internals/an-object":68,"../internals/array-iteration":72,"../internals/create-non-enumerable-property":84,"../internals/create-property-descriptor":85,"../internals/define-well-known-symbol":88,"../internals/descriptors":89,"../internals/export":96,"../internals/fails":97,"../internals/get-built-in":99,"../internals/global":102,"../internals/has":103,"../internals/hidden-keys":104,"../internals/internal-state":109,"../internals/is-array":111,"../internals/is-object":114,"../internals/is-pure":115,"../internals/native-symbol":118,"../internals/object-create":121,"../internals/object-define-property":123,"../internals/object-get-own-property-descriptor":124,"../internals/object-get-own-property-names":126,"../internals/object-get-own-property-names-external":125,"../internals/object-get-own-property-symbols":127,"../internals/object-keys":130,"../internals/object-property-is-enumerable":131,"../internals/redefine":135,"../internals/set-to-string-tag":139,"../internals/shared":142,"../internals/shared-key":140,"../internals/to-indexed-object":146,"../internals/to-object":149,"../internals/to-primitive":150,"../internals/uid":152,"../internals/use-symbol-as-uid":153,"../internals/well-known-symbol":155,"../internals/well-known-symbol-wrapped":154}],181:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.matchAll` well-known symbol
 defineWellKnownSymbol('matchAll');
 
-},{"../internals/define-well-known-symbol":94}],192:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],182:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.match` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.match
 defineWellKnownSymbol('match');
 
-},{"../internals/define-well-known-symbol":94}],193:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],183:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.replace` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.replace
 defineWellKnownSymbol('replace');
 
-},{"../internals/define-well-known-symbol":94}],194:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],184:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.search` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.search
 defineWellKnownSymbol('search');
 
-},{"../internals/define-well-known-symbol":94}],195:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],185:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.species` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.species
 defineWellKnownSymbol('species');
 
-},{"../internals/define-well-known-symbol":94}],196:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],186:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.split` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.split
 defineWellKnownSymbol('split');
 
-},{"../internals/define-well-known-symbol":94}],197:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],187:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.toPrimitive` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.toprimitive
 defineWellKnownSymbol('toPrimitive');
 
-},{"../internals/define-well-known-symbol":94}],198:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],188:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.toStringTag` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.tostringtag
 defineWellKnownSymbol('toStringTag');
 
-},{"../internals/define-well-known-symbol":94}],199:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],189:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.unscopables` well-known symbol
 // https://tc39.github.io/ecma262/#sec-symbol.unscopables
 defineWellKnownSymbol('unscopables');
 
-},{"../internals/define-well-known-symbol":94}],200:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],190:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.asyncDispose` well-known symbol
 // https://github.com/tc39/proposal-using-statement
 defineWellKnownSymbol('asyncDispose');
 
-},{"../internals/define-well-known-symbol":94}],201:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],191:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.dispose` well-known symbol
 // https://github.com/tc39/proposal-using-statement
 defineWellKnownSymbol('dispose');
 
-},{"../internals/define-well-known-symbol":94}],202:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],192:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.observable` well-known symbol
 // https://github.com/tc39/proposal-observable
 defineWellKnownSymbol('observable');
 
-},{"../internals/define-well-known-symbol":94}],203:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],193:[function(require,module,exports){
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 // `Symbol.patternMatch` well-known symbol
 // https://github.com/tc39/proposal-pattern-matching
 defineWellKnownSymbol('patternMatch');
 
-},{"../internals/define-well-known-symbol":94}],204:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],194:[function(require,module,exports){
 // TODO: remove from `core-js@4`
 var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
 defineWellKnownSymbol('replaceAll');
 
-},{"../internals/define-well-known-symbol":94}],205:[function(require,module,exports){
+},{"../internals/define-well-known-symbol":88}],195:[function(require,module,exports){
 require('./es.array.iterator');
 var DOMIterables = require('../internals/dom-iterables');
 var global = require('../internals/global');
@@ -6055,26 +5966,26 @@ for (var COLLECTION_NAME in DOMIterables) {
   Iterators[COLLECTION_NAME] = Iterators.Array;
 }
 
-},{"../internals/classof":86,"../internals/create-non-enumerable-property":90,"../internals/dom-iterables":97,"../internals/global":108,"../internals/iterators":124,"../internals/well-known-symbol":163,"./es.array.iterator":171}],206:[function(require,module,exports){
-arguments[4][63][0].apply(exports,arguments)
-},{"../../es/array/from":39,"dup":63}],207:[function(require,module,exports){
-arguments[4][64][0].apply(exports,arguments)
-},{"../../es/array/is-array":40,"dup":64}],208:[function(require,module,exports){
+},{"../internals/classof":81,"../internals/create-non-enumerable-property":84,"../internals/dom-iterables":91,"../internals/global":102,"../internals/iterators":117,"../internals/well-known-symbol":155,"./es.array.iterator":162}],196:[function(require,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"../../es/array/from":37,"dup":58}],197:[function(require,module,exports){
+arguments[4][59][0].apply(exports,arguments)
+},{"../../es/array/is-array":38,"dup":59}],198:[function(require,module,exports){
 var parent = require('../../../es/array/virtual/for-each');
 
 module.exports = parent;
 
-},{"../../../es/array/virtual/for-each":42}],209:[function(require,module,exports){
+},{"../../../es/array/virtual/for-each":40}],199:[function(require,module,exports){
 var parent = require('../../es/instance/concat');
 
 module.exports = parent;
 
-},{"../../es/instance/concat":49}],210:[function(require,module,exports){
+},{"../../es/instance/concat":46}],200:[function(require,module,exports){
 var parent = require('../../es/instance/flags');
 
 module.exports = parent;
 
-},{"../../es/instance/flags":50}],211:[function(require,module,exports){
+},{"../../es/instance/flags":47}],201:[function(require,module,exports){
 require('../../modules/web.dom-collections.iterator');
 var forEach = require('../array/virtual/for-each');
 var classof = require('../../internals/classof');
@@ -6092,1226 +6003,49 @@ module.exports = function (it) {
     || DOMIterables.hasOwnProperty(classof(it)) ? forEach : own;
 };
 
-},{"../../internals/classof":86,"../../modules/web.dom-collections.iterator":205,"../array/virtual/for-each":208}],212:[function(require,module,exports){
-var parent = require('../../es/instance/includes');
-
-module.exports = parent;
-
-},{"../../es/instance/includes":51}],213:[function(require,module,exports){
+},{"../../internals/classof":81,"../../modules/web.dom-collections.iterator":195,"../array/virtual/for-each":198}],202:[function(require,module,exports){
 var parent = require('../../es/instance/index-of');
 
 module.exports = parent;
 
-},{"../../es/instance/index-of":52}],214:[function(require,module,exports){
+},{"../../es/instance/index-of":48}],203:[function(require,module,exports){
 var parent = require('../../es/instance/map');
 
 module.exports = parent;
 
-},{"../../es/instance/map":53}],215:[function(require,module,exports){
+},{"../../es/instance/map":49}],204:[function(require,module,exports){
 var parent = require('../../es/instance/reduce');
 
 module.exports = parent;
 
-},{"../../es/instance/reduce":54}],216:[function(require,module,exports){
-arguments[4][67][0].apply(exports,arguments)
-},{"../../es/instance/slice":55,"dup":67}],217:[function(require,module,exports){
+},{"../../es/instance/reduce":50}],205:[function(require,module,exports){
+arguments[4][62][0].apply(exports,arguments)
+},{"../../es/instance/slice":51,"dup":62}],206:[function(require,module,exports){
 var parent = require('../../es/instance/sort');
 
 module.exports = parent;
 
-},{"../../es/instance/sort":56}],218:[function(require,module,exports){
+},{"../../es/instance/sort":52}],207:[function(require,module,exports){
 var parent = require('../../es/object/create');
 
 module.exports = parent;
 
-},{"../../es/object/create":57}],219:[function(require,module,exports){
+},{"../../es/object/create":53}],208:[function(require,module,exports){
 var parent = require('../../es/object/define-property');
 
 module.exports = parent;
 
-},{"../../es/object/define-property":58}],220:[function(require,module,exports){
+},{"../../es/object/define-property":54}],209:[function(require,module,exports){
 var parent = require('../es/parse-int');
 
 module.exports = parent;
 
-},{"../es/parse-int":59}],221:[function(require,module,exports){
+},{"../es/parse-int":55}],210:[function(require,module,exports){
 var parent = require('../../es/symbol');
 
 module.exports = parent;
 
-},{"../../es/symbol":62}],222:[function(require,module,exports){
-module.exports = [
-    {
-        'name': 'InAdlam',
-        'astral': '\uD83A[\uDD00-\uDD5F]'
-    },
-    {
-        'name': 'InAegean_Numbers',
-        'astral': '\uD800[\uDD00-\uDD3F]'
-    },
-    {
-        'name': 'InAhom',
-        'astral': '\uD805[\uDF00-\uDF3F]'
-    },
-    {
-        'name': 'InAlchemical_Symbols',
-        'astral': '\uD83D[\uDF00-\uDF7F]'
-    },
-    {
-        'name': 'InAlphabetic_Presentation_Forms',
-        'bmp': '\uFB00-\uFB4F'
-    },
-    {
-        'name': 'InAnatolian_Hieroglyphs',
-        'astral': '\uD811[\uDC00-\uDE7F]'
-    },
-    {
-        'name': 'InAncient_Greek_Musical_Notation',
-        'astral': '\uD834[\uDE00-\uDE4F]'
-    },
-    {
-        'name': 'InAncient_Greek_Numbers',
-        'astral': '\uD800[\uDD40-\uDD8F]'
-    },
-    {
-        'name': 'InAncient_Symbols',
-        'astral': '\uD800[\uDD90-\uDDCF]'
-    },
-    {
-        'name': 'InArabic',
-        'bmp': '\u0600-\u06FF'
-    },
-    {
-        'name': 'InArabic_Extended_A',
-        'bmp': '\u08A0-\u08FF'
-    },
-    {
-        'name': 'InArabic_Mathematical_Alphabetic_Symbols',
-        'astral': '\uD83B[\uDE00-\uDEFF]'
-    },
-    {
-        'name': 'InArabic_Presentation_Forms_A',
-        'bmp': '\uFB50-\uFDFF'
-    },
-    {
-        'name': 'InArabic_Presentation_Forms_B',
-        'bmp': '\uFE70-\uFEFF'
-    },
-    {
-        'name': 'InArabic_Supplement',
-        'bmp': '\u0750-\u077F'
-    },
-    {
-        'name': 'InArmenian',
-        'bmp': '\u0530-\u058F'
-    },
-    {
-        'name': 'InArrows',
-        'bmp': '\u2190-\u21FF'
-    },
-    {
-        'name': 'InAvestan',
-        'astral': '\uD802[\uDF00-\uDF3F]'
-    },
-    {
-        'name': 'InBalinese',
-        'bmp': '\u1B00-\u1B7F'
-    },
-    {
-        'name': 'InBamum',
-        'bmp': '\uA6A0-\uA6FF'
-    },
-    {
-        'name': 'InBamum_Supplement',
-        'astral': '\uD81A[\uDC00-\uDE3F]'
-    },
-    {
-        'name': 'InBasic_Latin',
-        'bmp': '\0-\x7F'
-    },
-    {
-        'name': 'InBassa_Vah',
-        'astral': '\uD81A[\uDED0-\uDEFF]'
-    },
-    {
-        'name': 'InBatak',
-        'bmp': '\u1BC0-\u1BFF'
-    },
-    {
-        'name': 'InBengali',
-        'bmp': '\u0980-\u09FF'
-    },
-    {
-        'name': 'InBhaiksuki',
-        'astral': '\uD807[\uDC00-\uDC6F]'
-    },
-    {
-        'name': 'InBlock_Elements',
-        'bmp': '\u2580-\u259F'
-    },
-    {
-        'name': 'InBopomofo',
-        'bmp': '\u3100-\u312F'
-    },
-    {
-        'name': 'InBopomofo_Extended',
-        'bmp': '\u31A0-\u31BF'
-    },
-    {
-        'name': 'InBox_Drawing',
-        'bmp': '\u2500-\u257F'
-    },
-    {
-        'name': 'InBrahmi',
-        'astral': '\uD804[\uDC00-\uDC7F]'
-    },
-    {
-        'name': 'InBraille_Patterns',
-        'bmp': '\u2800-\u28FF'
-    },
-    {
-        'name': 'InBuginese',
-        'bmp': '\u1A00-\u1A1F'
-    },
-    {
-        'name': 'InBuhid',
-        'bmp': '\u1740-\u175F'
-    },
-    {
-        'name': 'InByzantine_Musical_Symbols',
-        'astral': '\uD834[\uDC00-\uDCFF]'
-    },
-    {
-        'name': 'InCJK_Compatibility',
-        'bmp': '\u3300-\u33FF'
-    },
-    {
-        'name': 'InCJK_Compatibility_Forms',
-        'bmp': '\uFE30-\uFE4F'
-    },
-    {
-        'name': 'InCJK_Compatibility_Ideographs',
-        'bmp': '\uF900-\uFAFF'
-    },
-    {
-        'name': 'InCJK_Compatibility_Ideographs_Supplement',
-        'astral': '\uD87E[\uDC00-\uDE1F]'
-    },
-    {
-        'name': 'InCJK_Radicals_Supplement',
-        'bmp': '\u2E80-\u2EFF'
-    },
-    {
-        'name': 'InCJK_Strokes',
-        'bmp': '\u31C0-\u31EF'
-    },
-    {
-        'name': 'InCJK_Symbols_And_Punctuation',
-        'bmp': '\u3000-\u303F'
-    },
-    {
-        'name': 'InCJK_Unified_Ideographs',
-        'bmp': '\u4E00-\u9FFF'
-    },
-    {
-        'name': 'InCJK_Unified_Ideographs_Extension_A',
-        'bmp': '\u3400-\u4DBF'
-    },
-    {
-        'name': 'InCJK_Unified_Ideographs_Extension_B',
-        'astral': '[\uD840-\uD868][\uDC00-\uDFFF]|\uD869[\uDC00-\uDEDF]'
-    },
-    {
-        'name': 'InCJK_Unified_Ideographs_Extension_C',
-        'astral': '\uD869[\uDF00-\uDFFF]|[\uD86A-\uD86C][\uDC00-\uDFFF]|\uD86D[\uDC00-\uDF3F]'
-    },
-    {
-        'name': 'InCJK_Unified_Ideographs_Extension_D',
-        'astral': '\uD86D[\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1F]'
-    },
-    {
-        'name': 'InCJK_Unified_Ideographs_Extension_E',
-        'astral': '\uD86E[\uDC20-\uDFFF]|[\uD86F-\uD872][\uDC00-\uDFFF]|\uD873[\uDC00-\uDEAF]'
-    },
-    {
-        'name': 'InCJK_Unified_Ideographs_Extension_F',
-        'astral': '\uD873[\uDEB0-\uDFFF]|[\uD874-\uD879][\uDC00-\uDFFF]|\uD87A[\uDC00-\uDFEF]'
-    },
-    {
-        'name': 'InCarian',
-        'astral': '\uD800[\uDEA0-\uDEDF]'
-    },
-    {
-        'name': 'InCaucasian_Albanian',
-        'astral': '\uD801[\uDD30-\uDD6F]'
-    },
-    {
-        'name': 'InChakma',
-        'astral': '\uD804[\uDD00-\uDD4F]'
-    },
-    {
-        'name': 'InCham',
-        'bmp': '\uAA00-\uAA5F'
-    },
-    {
-        'name': 'InCherokee',
-        'bmp': '\u13A0-\u13FF'
-    },
-    {
-        'name': 'InCherokee_Supplement',
-        'bmp': '\uAB70-\uABBF'
-    },
-    {
-        'name': 'InChess_Symbols',
-        'astral': '\uD83E[\uDE00-\uDE6F]'
-    },
-    {
-        'name': 'InCombining_Diacritical_Marks',
-        'bmp': '\u0300-\u036F'
-    },
-    {
-        'name': 'InCombining_Diacritical_Marks_Extended',
-        'bmp': '\u1AB0-\u1AFF'
-    },
-    {
-        'name': 'InCombining_Diacritical_Marks_For_Symbols',
-        'bmp': '\u20D0-\u20FF'
-    },
-    {
-        'name': 'InCombining_Diacritical_Marks_Supplement',
-        'bmp': '\u1DC0-\u1DFF'
-    },
-    {
-        'name': 'InCombining_Half_Marks',
-        'bmp': '\uFE20-\uFE2F'
-    },
-    {
-        'name': 'InCommon_Indic_Number_Forms',
-        'bmp': '\uA830-\uA83F'
-    },
-    {
-        'name': 'InControl_Pictures',
-        'bmp': '\u2400-\u243F'
-    },
-    {
-        'name': 'InCoptic',
-        'bmp': '\u2C80-\u2CFF'
-    },
-    {
-        'name': 'InCoptic_Epact_Numbers',
-        'astral': '\uD800[\uDEE0-\uDEFF]'
-    },
-    {
-        'name': 'InCounting_Rod_Numerals',
-        'astral': '\uD834[\uDF60-\uDF7F]'
-    },
-    {
-        'name': 'InCuneiform',
-        'astral': '\uD808[\uDC00-\uDFFF]'
-    },
-    {
-        'name': 'InCuneiform_Numbers_And_Punctuation',
-        'astral': '\uD809[\uDC00-\uDC7F]'
-    },
-    {
-        'name': 'InCurrency_Symbols',
-        'bmp': '\u20A0-\u20CF'
-    },
-    {
-        'name': 'InCypriot_Syllabary',
-        'astral': '\uD802[\uDC00-\uDC3F]'
-    },
-    {
-        'name': 'InCyrillic',
-        'bmp': '\u0400-\u04FF'
-    },
-    {
-        'name': 'InCyrillic_Extended_A',
-        'bmp': '\u2DE0-\u2DFF'
-    },
-    {
-        'name': 'InCyrillic_Extended_B',
-        'bmp': '\uA640-\uA69F'
-    },
-    {
-        'name': 'InCyrillic_Extended_C',
-        'bmp': '\u1C80-\u1C8F'
-    },
-    {
-        'name': 'InCyrillic_Supplement',
-        'bmp': '\u0500-\u052F'
-    },
-    {
-        'name': 'InDeseret',
-        'astral': '\uD801[\uDC00-\uDC4F]'
-    },
-    {
-        'name': 'InDevanagari',
-        'bmp': '\u0900-\u097F'
-    },
-    {
-        'name': 'InDevanagari_Extended',
-        'bmp': '\uA8E0-\uA8FF'
-    },
-    {
-        'name': 'InDingbats',
-        'bmp': '\u2700-\u27BF'
-    },
-    {
-        'name': 'InDogra',
-        'astral': '\uD806[\uDC00-\uDC4F]'
-    },
-    {
-        'name': 'InDomino_Tiles',
-        'astral': '\uD83C[\uDC30-\uDC9F]'
-    },
-    {
-        'name': 'InDuployan',
-        'astral': '\uD82F[\uDC00-\uDC9F]'
-    },
-    {
-        'name': 'InEarly_Dynastic_Cuneiform',
-        'astral': '\uD809[\uDC80-\uDD4F]'
-    },
-    {
-        'name': 'InEgyptian_Hieroglyphs',
-        'astral': '\uD80C[\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F]'
-    },
-    {
-        'name': 'InElbasan',
-        'astral': '\uD801[\uDD00-\uDD2F]'
-    },
-    {
-        'name': 'InEmoticons',
-        'astral': '\uD83D[\uDE00-\uDE4F]'
-    },
-    {
-        'name': 'InEnclosed_Alphanumeric_Supplement',
-        'astral': '\uD83C[\uDD00-\uDDFF]'
-    },
-    {
-        'name': 'InEnclosed_Alphanumerics',
-        'bmp': '\u2460-\u24FF'
-    },
-    {
-        'name': 'InEnclosed_CJK_Letters_And_Months',
-        'bmp': '\u3200-\u32FF'
-    },
-    {
-        'name': 'InEnclosed_Ideographic_Supplement',
-        'astral': '\uD83C[\uDE00-\uDEFF]'
-    },
-    {
-        'name': 'InEthiopic',
-        'bmp': '\u1200-\u137F'
-    },
-    {
-        'name': 'InEthiopic_Extended',
-        'bmp': '\u2D80-\u2DDF'
-    },
-    {
-        'name': 'InEthiopic_Extended_A',
-        'bmp': '\uAB00-\uAB2F'
-    },
-    {
-        'name': 'InEthiopic_Supplement',
-        'bmp': '\u1380-\u139F'
-    },
-    {
-        'name': 'InGeneral_Punctuation',
-        'bmp': '\u2000-\u206F'
-    },
-    {
-        'name': 'InGeometric_Shapes',
-        'bmp': '\u25A0-\u25FF'
-    },
-    {
-        'name': 'InGeometric_Shapes_Extended',
-        'astral': '\uD83D[\uDF80-\uDFFF]'
-    },
-    {
-        'name': 'InGeorgian',
-        'bmp': '\u10A0-\u10FF'
-    },
-    {
-        'name': 'InGeorgian_Extended',
-        'bmp': '\u1C90-\u1CBF'
-    },
-    {
-        'name': 'InGeorgian_Supplement',
-        'bmp': '\u2D00-\u2D2F'
-    },
-    {
-        'name': 'InGlagolitic',
-        'bmp': '\u2C00-\u2C5F'
-    },
-    {
-        'name': 'InGlagolitic_Supplement',
-        'astral': '\uD838[\uDC00-\uDC2F]'
-    },
-    {
-        'name': 'InGothic',
-        'astral': '\uD800[\uDF30-\uDF4F]'
-    },
-    {
-        'name': 'InGrantha',
-        'astral': '\uD804[\uDF00-\uDF7F]'
-    },
-    {
-        'name': 'InGreek_And_Coptic',
-        'bmp': '\u0370-\u03FF'
-    },
-    {
-        'name': 'InGreek_Extended',
-        'bmp': '\u1F00-\u1FFF'
-    },
-    {
-        'name': 'InGujarati',
-        'bmp': '\u0A80-\u0AFF'
-    },
-    {
-        'name': 'InGunjala_Gondi',
-        'astral': '\uD807[\uDD60-\uDDAF]'
-    },
-    {
-        'name': 'InGurmukhi',
-        'bmp': '\u0A00-\u0A7F'
-    },
-    {
-        'name': 'InHalfwidth_And_Fullwidth_Forms',
-        'bmp': '\uFF00-\uFFEF'
-    },
-    {
-        'name': 'InHangul_Compatibility_Jamo',
-        'bmp': '\u3130-\u318F'
-    },
-    {
-        'name': 'InHangul_Jamo',
-        'bmp': '\u1100-\u11FF'
-    },
-    {
-        'name': 'InHangul_Jamo_Extended_A',
-        'bmp': '\uA960-\uA97F'
-    },
-    {
-        'name': 'InHangul_Jamo_Extended_B',
-        'bmp': '\uD7B0-\uD7FF'
-    },
-    {
-        'name': 'InHangul_Syllables',
-        'bmp': '\uAC00-\uD7AF'
-    },
-    {
-        'name': 'InHanifi_Rohingya',
-        'astral': '\uD803[\uDD00-\uDD3F]'
-    },
-    {
-        'name': 'InHanunoo',
-        'bmp': '\u1720-\u173F'
-    },
-    {
-        'name': 'InHatran',
-        'astral': '\uD802[\uDCE0-\uDCFF]'
-    },
-    {
-        'name': 'InHebrew',
-        'bmp': '\u0590-\u05FF'
-    },
-    {
-        'name': 'InHigh_Private_Use_Surrogates',
-        'bmp': '\uDB80-\uDBFF'
-    },
-    {
-        'name': 'InHigh_Surrogates',
-        'bmp': '\uD800-\uDB7F'
-    },
-    {
-        'name': 'InHiragana',
-        'bmp': '\u3040-\u309F'
-    },
-    {
-        'name': 'InIPA_Extensions',
-        'bmp': '\u0250-\u02AF'
-    },
-    {
-        'name': 'InIdeographic_Description_Characters',
-        'bmp': '\u2FF0-\u2FFF'
-    },
-    {
-        'name': 'InIdeographic_Symbols_And_Punctuation',
-        'astral': '\uD81B[\uDFE0-\uDFFF]'
-    },
-    {
-        'name': 'InImperial_Aramaic',
-        'astral': '\uD802[\uDC40-\uDC5F]'
-    },
-    {
-        'name': 'InIndic_Siyaq_Numbers',
-        'astral': '\uD83B[\uDC70-\uDCBF]'
-    },
-    {
-        'name': 'InInscriptional_Pahlavi',
-        'astral': '\uD802[\uDF60-\uDF7F]'
-    },
-    {
-        'name': 'InInscriptional_Parthian',
-        'astral': '\uD802[\uDF40-\uDF5F]'
-    },
-    {
-        'name': 'InJavanese',
-        'bmp': '\uA980-\uA9DF'
-    },
-    {
-        'name': 'InKaithi',
-        'astral': '\uD804[\uDC80-\uDCCF]'
-    },
-    {
-        'name': 'InKana_Extended_A',
-        'astral': '\uD82C[\uDD00-\uDD2F]'
-    },
-    {
-        'name': 'InKana_Supplement',
-        'astral': '\uD82C[\uDC00-\uDCFF]'
-    },
-    {
-        'name': 'InKanbun',
-        'bmp': '\u3190-\u319F'
-    },
-    {
-        'name': 'InKangxi_Radicals',
-        'bmp': '\u2F00-\u2FDF'
-    },
-    {
-        'name': 'InKannada',
-        'bmp': '\u0C80-\u0CFF'
-    },
-    {
-        'name': 'InKatakana',
-        'bmp': '\u30A0-\u30FF'
-    },
-    {
-        'name': 'InKatakana_Phonetic_Extensions',
-        'bmp': '\u31F0-\u31FF'
-    },
-    {
-        'name': 'InKayah_Li',
-        'bmp': '\uA900-\uA92F'
-    },
-    {
-        'name': 'InKharoshthi',
-        'astral': '\uD802[\uDE00-\uDE5F]'
-    },
-    {
-        'name': 'InKhmer',
-        'bmp': '\u1780-\u17FF'
-    },
-    {
-        'name': 'InKhmer_Symbols',
-        'bmp': '\u19E0-\u19FF'
-    },
-    {
-        'name': 'InKhojki',
-        'astral': '\uD804[\uDE00-\uDE4F]'
-    },
-    {
-        'name': 'InKhudawadi',
-        'astral': '\uD804[\uDEB0-\uDEFF]'
-    },
-    {
-        'name': 'InLao',
-        'bmp': '\u0E80-\u0EFF'
-    },
-    {
-        'name': 'InLatin_1_Supplement',
-        'bmp': '\x80-\xFF'
-    },
-    {
-        'name': 'InLatin_Extended_A',
-        'bmp': '\u0100-\u017F'
-    },
-    {
-        'name': 'InLatin_Extended_Additional',
-        'bmp': '\u1E00-\u1EFF'
-    },
-    {
-        'name': 'InLatin_Extended_B',
-        'bmp': '\u0180-\u024F'
-    },
-    {
-        'name': 'InLatin_Extended_C',
-        'bmp': '\u2C60-\u2C7F'
-    },
-    {
-        'name': 'InLatin_Extended_D',
-        'bmp': '\uA720-\uA7FF'
-    },
-    {
-        'name': 'InLatin_Extended_E',
-        'bmp': '\uAB30-\uAB6F'
-    },
-    {
-        'name': 'InLepcha',
-        'bmp': '\u1C00-\u1C4F'
-    },
-    {
-        'name': 'InLetterlike_Symbols',
-        'bmp': '\u2100-\u214F'
-    },
-    {
-        'name': 'InLimbu',
-        'bmp': '\u1900-\u194F'
-    },
-    {
-        'name': 'InLinear_A',
-        'astral': '\uD801[\uDE00-\uDF7F]'
-    },
-    {
-        'name': 'InLinear_B_Ideograms',
-        'astral': '\uD800[\uDC80-\uDCFF]'
-    },
-    {
-        'name': 'InLinear_B_Syllabary',
-        'astral': '\uD800[\uDC00-\uDC7F]'
-    },
-    {
-        'name': 'InLisu',
-        'bmp': '\uA4D0-\uA4FF'
-    },
-    {
-        'name': 'InLow_Surrogates',
-        'bmp': '\uDC00-\uDFFF'
-    },
-    {
-        'name': 'InLycian',
-        'astral': '\uD800[\uDE80-\uDE9F]'
-    },
-    {
-        'name': 'InLydian',
-        'astral': '\uD802[\uDD20-\uDD3F]'
-    },
-    {
-        'name': 'InMahajani',
-        'astral': '\uD804[\uDD50-\uDD7F]'
-    },
-    {
-        'name': 'InMahjong_Tiles',
-        'astral': '\uD83C[\uDC00-\uDC2F]'
-    },
-    {
-        'name': 'InMakasar',
-        'astral': '\uD807[\uDEE0-\uDEFF]'
-    },
-    {
-        'name': 'InMalayalam',
-        'bmp': '\u0D00-\u0D7F'
-    },
-    {
-        'name': 'InMandaic',
-        'bmp': '\u0840-\u085F'
-    },
-    {
-        'name': 'InManichaean',
-        'astral': '\uD802[\uDEC0-\uDEFF]'
-    },
-    {
-        'name': 'InMarchen',
-        'astral': '\uD807[\uDC70-\uDCBF]'
-    },
-    {
-        'name': 'InMasaram_Gondi',
-        'astral': '\uD807[\uDD00-\uDD5F]'
-    },
-    {
-        'name': 'InMathematical_Alphanumeric_Symbols',
-        'astral': '\uD835[\uDC00-\uDFFF]'
-    },
-    {
-        'name': 'InMathematical_Operators',
-        'bmp': '\u2200-\u22FF'
-    },
-    {
-        'name': 'InMayan_Numerals',
-        'astral': '\uD834[\uDEE0-\uDEFF]'
-    },
-    {
-        'name': 'InMedefaidrin',
-        'astral': '\uD81B[\uDE40-\uDE9F]'
-    },
-    {
-        'name': 'InMeetei_Mayek',
-        'bmp': '\uABC0-\uABFF'
-    },
-    {
-        'name': 'InMeetei_Mayek_Extensions',
-        'bmp': '\uAAE0-\uAAFF'
-    },
-    {
-        'name': 'InMende_Kikakui',
-        'astral': '\uD83A[\uDC00-\uDCDF]'
-    },
-    {
-        'name': 'InMeroitic_Cursive',
-        'astral': '\uD802[\uDDA0-\uDDFF]'
-    },
-    {
-        'name': 'InMeroitic_Hieroglyphs',
-        'astral': '\uD802[\uDD80-\uDD9F]'
-    },
-    {
-        'name': 'InMiao',
-        'astral': '\uD81B[\uDF00-\uDF9F]'
-    },
-    {
-        'name': 'InMiscellaneous_Mathematical_Symbols_A',
-        'bmp': '\u27C0-\u27EF'
-    },
-    {
-        'name': 'InMiscellaneous_Mathematical_Symbols_B',
-        'bmp': '\u2980-\u29FF'
-    },
-    {
-        'name': 'InMiscellaneous_Symbols',
-        'bmp': '\u2600-\u26FF'
-    },
-    {
-        'name': 'InMiscellaneous_Symbols_And_Arrows',
-        'bmp': '\u2B00-\u2BFF'
-    },
-    {
-        'name': 'InMiscellaneous_Symbols_And_Pictographs',
-        'astral': '\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF]'
-    },
-    {
-        'name': 'InMiscellaneous_Technical',
-        'bmp': '\u2300-\u23FF'
-    },
-    {
-        'name': 'InModi',
-        'astral': '\uD805[\uDE00-\uDE5F]'
-    },
-    {
-        'name': 'InModifier_Tone_Letters',
-        'bmp': '\uA700-\uA71F'
-    },
-    {
-        'name': 'InMongolian',
-        'bmp': '\u1800-\u18AF'
-    },
-    {
-        'name': 'InMongolian_Supplement',
-        'astral': '\uD805[\uDE60-\uDE7F]'
-    },
-    {
-        'name': 'InMro',
-        'astral': '\uD81A[\uDE40-\uDE6F]'
-    },
-    {
-        'name': 'InMultani',
-        'astral': '\uD804[\uDE80-\uDEAF]'
-    },
-    {
-        'name': 'InMusical_Symbols',
-        'astral': '\uD834[\uDD00-\uDDFF]'
-    },
-    {
-        'name': 'InMyanmar',
-        'bmp': '\u1000-\u109F'
-    },
-    {
-        'name': 'InMyanmar_Extended_A',
-        'bmp': '\uAA60-\uAA7F'
-    },
-    {
-        'name': 'InMyanmar_Extended_B',
-        'bmp': '\uA9E0-\uA9FF'
-    },
-    {
-        'name': 'InNKo',
-        'bmp': '\u07C0-\u07FF'
-    },
-    {
-        'name': 'InNabataean',
-        'astral': '\uD802[\uDC80-\uDCAF]'
-    },
-    {
-        'name': 'InNew_Tai_Lue',
-        'bmp': '\u1980-\u19DF'
-    },
-    {
-        'name': 'InNewa',
-        'astral': '\uD805[\uDC00-\uDC7F]'
-    },
-    {
-        'name': 'InNumber_Forms',
-        'bmp': '\u2150-\u218F'
-    },
-    {
-        'name': 'InNushu',
-        'astral': '\uD82C[\uDD70-\uDEFF]'
-    },
-    {
-        'name': 'InOgham',
-        'bmp': '\u1680-\u169F'
-    },
-    {
-        'name': 'InOl_Chiki',
-        'bmp': '\u1C50-\u1C7F'
-    },
-    {
-        'name': 'InOld_Hungarian',
-        'astral': '\uD803[\uDC80-\uDCFF]'
-    },
-    {
-        'name': 'InOld_Italic',
-        'astral': '\uD800[\uDF00-\uDF2F]'
-    },
-    {
-        'name': 'InOld_North_Arabian',
-        'astral': '\uD802[\uDE80-\uDE9F]'
-    },
-    {
-        'name': 'InOld_Permic',
-        'astral': '\uD800[\uDF50-\uDF7F]'
-    },
-    {
-        'name': 'InOld_Persian',
-        'astral': '\uD800[\uDFA0-\uDFDF]'
-    },
-    {
-        'name': 'InOld_Sogdian',
-        'astral': '\uD803[\uDF00-\uDF2F]'
-    },
-    {
-        'name': 'InOld_South_Arabian',
-        'astral': '\uD802[\uDE60-\uDE7F]'
-    },
-    {
-        'name': 'InOld_Turkic',
-        'astral': '\uD803[\uDC00-\uDC4F]'
-    },
-    {
-        'name': 'InOptical_Character_Recognition',
-        'bmp': '\u2440-\u245F'
-    },
-    {
-        'name': 'InOriya',
-        'bmp': '\u0B00-\u0B7F'
-    },
-    {
-        'name': 'InOrnamental_Dingbats',
-        'astral': '\uD83D[\uDE50-\uDE7F]'
-    },
-    {
-        'name': 'InOsage',
-        'astral': '\uD801[\uDCB0-\uDCFF]'
-    },
-    {
-        'name': 'InOsmanya',
-        'astral': '\uD801[\uDC80-\uDCAF]'
-    },
-    {
-        'name': 'InPahawh_Hmong',
-        'astral': '\uD81A[\uDF00-\uDF8F]'
-    },
-    {
-        'name': 'InPalmyrene',
-        'astral': '\uD802[\uDC60-\uDC7F]'
-    },
-    {
-        'name': 'InPau_Cin_Hau',
-        'astral': '\uD806[\uDEC0-\uDEFF]'
-    },
-    {
-        'name': 'InPhags_Pa',
-        'bmp': '\uA840-\uA87F'
-    },
-    {
-        'name': 'InPhaistos_Disc',
-        'astral': '\uD800[\uDDD0-\uDDFF]'
-    },
-    {
-        'name': 'InPhoenician',
-        'astral': '\uD802[\uDD00-\uDD1F]'
-    },
-    {
-        'name': 'InPhonetic_Extensions',
-        'bmp': '\u1D00-\u1D7F'
-    },
-    {
-        'name': 'InPhonetic_Extensions_Supplement',
-        'bmp': '\u1D80-\u1DBF'
-    },
-    {
-        'name': 'InPlaying_Cards',
-        'astral': '\uD83C[\uDCA0-\uDCFF]'
-    },
-    {
-        'name': 'InPrivate_Use_Area',
-        'bmp': '\uE000-\uF8FF'
-    },
-    {
-        'name': 'InPsalter_Pahlavi',
-        'astral': '\uD802[\uDF80-\uDFAF]'
-    },
-    {
-        'name': 'InRejang',
-        'bmp': '\uA930-\uA95F'
-    },
-    {
-        'name': 'InRumi_Numeral_Symbols',
-        'astral': '\uD803[\uDE60-\uDE7F]'
-    },
-    {
-        'name': 'InRunic',
-        'bmp': '\u16A0-\u16FF'
-    },
-    {
-        'name': 'InSamaritan',
-        'bmp': '\u0800-\u083F'
-    },
-    {
-        'name': 'InSaurashtra',
-        'bmp': '\uA880-\uA8DF'
-    },
-    {
-        'name': 'InSharada',
-        'astral': '\uD804[\uDD80-\uDDDF]'
-    },
-    {
-        'name': 'InShavian',
-        'astral': '\uD801[\uDC50-\uDC7F]'
-    },
-    {
-        'name': 'InShorthand_Format_Controls',
-        'astral': '\uD82F[\uDCA0-\uDCAF]'
-    },
-    {
-        'name': 'InSiddham',
-        'astral': '\uD805[\uDD80-\uDDFF]'
-    },
-    {
-        'name': 'InSinhala',
-        'bmp': '\u0D80-\u0DFF'
-    },
-    {
-        'name': 'InSinhala_Archaic_Numbers',
-        'astral': '\uD804[\uDDE0-\uDDFF]'
-    },
-    {
-        'name': 'InSmall_Form_Variants',
-        'bmp': '\uFE50-\uFE6F'
-    },
-    {
-        'name': 'InSogdian',
-        'astral': '\uD803[\uDF30-\uDF6F]'
-    },
-    {
-        'name': 'InSora_Sompeng',
-        'astral': '\uD804[\uDCD0-\uDCFF]'
-    },
-    {
-        'name': 'InSoyombo',
-        'astral': '\uD806[\uDE50-\uDEAF]'
-    },
-    {
-        'name': 'InSpacing_Modifier_Letters',
-        'bmp': '\u02B0-\u02FF'
-    },
-    {
-        'name': 'InSpecials',
-        'bmp': '\uFFF0-\uFFFF'
-    },
-    {
-        'name': 'InSundanese',
-        'bmp': '\u1B80-\u1BBF'
-    },
-    {
-        'name': 'InSundanese_Supplement',
-        'bmp': '\u1CC0-\u1CCF'
-    },
-    {
-        'name': 'InSuperscripts_And_Subscripts',
-        'bmp': '\u2070-\u209F'
-    },
-    {
-        'name': 'InSupplemental_Arrows_A',
-        'bmp': '\u27F0-\u27FF'
-    },
-    {
-        'name': 'InSupplemental_Arrows_B',
-        'bmp': '\u2900-\u297F'
-    },
-    {
-        'name': 'InSupplemental_Arrows_C',
-        'astral': '\uD83E[\uDC00-\uDCFF]'
-    },
-    {
-        'name': 'InSupplemental_Mathematical_Operators',
-        'bmp': '\u2A00-\u2AFF'
-    },
-    {
-        'name': 'InSupplemental_Punctuation',
-        'bmp': '\u2E00-\u2E7F'
-    },
-    {
-        'name': 'InSupplemental_Symbols_And_Pictographs',
-        'astral': '\uD83E[\uDD00-\uDDFF]'
-    },
-    {
-        'name': 'InSupplementary_Private_Use_Area_A',
-        'astral': '[\uDB80-\uDBBF][\uDC00-\uDFFF]'
-    },
-    {
-        'name': 'InSupplementary_Private_Use_Area_B',
-        'astral': '[\uDBC0-\uDBFF][\uDC00-\uDFFF]'
-    },
-    {
-        'name': 'InSutton_SignWriting',
-        'astral': '\uD836[\uDC00-\uDEAF]'
-    },
-    {
-        'name': 'InSyloti_Nagri',
-        'bmp': '\uA800-\uA82F'
-    },
-    {
-        'name': 'InSyriac',
-        'bmp': '\u0700-\u074F'
-    },
-    {
-        'name': 'InSyriac_Supplement',
-        'bmp': '\u0860-\u086F'
-    },
-    {
-        'name': 'InTagalog',
-        'bmp': '\u1700-\u171F'
-    },
-    {
-        'name': 'InTagbanwa',
-        'bmp': '\u1760-\u177F'
-    },
-    {
-        'name': 'InTags',
-        'astral': '\uDB40[\uDC00-\uDC7F]'
-    },
-    {
-        'name': 'InTai_Le',
-        'bmp': '\u1950-\u197F'
-    },
-    {
-        'name': 'InTai_Tham',
-        'bmp': '\u1A20-\u1AAF'
-    },
-    {
-        'name': 'InTai_Viet',
-        'bmp': '\uAA80-\uAADF'
-    },
-    {
-        'name': 'InTai_Xuan_Jing_Symbols',
-        'astral': '\uD834[\uDF00-\uDF5F]'
-    },
-    {
-        'name': 'InTakri',
-        'astral': '\uD805[\uDE80-\uDECF]'
-    },
-    {
-        'name': 'InTamil',
-        'bmp': '\u0B80-\u0BFF'
-    },
-    {
-        'name': 'InTangut',
-        'astral': '[\uD81C-\uD821][\uDC00-\uDFFF]'
-    },
-    {
-        'name': 'InTangut_Components',
-        'astral': '\uD822[\uDC00-\uDEFF]'
-    },
-    {
-        'name': 'InTelugu',
-        'bmp': '\u0C00-\u0C7F'
-    },
-    {
-        'name': 'InThaana',
-        'bmp': '\u0780-\u07BF'
-    },
-    {
-        'name': 'InThai',
-        'bmp': '\u0E00-\u0E7F'
-    },
-    {
-        'name': 'InTibetan',
-        'bmp': '\u0F00-\u0FFF'
-    },
-    {
-        'name': 'InTifinagh',
-        'bmp': '\u2D30-\u2D7F'
-    },
-    {
-        'name': 'InTirhuta',
-        'astral': '\uD805[\uDC80-\uDCDF]'
-    },
-    {
-        'name': 'InTransport_And_Map_Symbols',
-        'astral': '\uD83D[\uDE80-\uDEFF]'
-    },
-    {
-        'name': 'InUgaritic',
-        'astral': '\uD800[\uDF80-\uDF9F]'
-    },
-    {
-        'name': 'InUnified_Canadian_Aboriginal_Syllabics',
-        'bmp': '\u1400-\u167F'
-    },
-    {
-        'name': 'InUnified_Canadian_Aboriginal_Syllabics_Extended',
-        'bmp': '\u18B0-\u18FF'
-    },
-    {
-        'name': 'InVai',
-        'bmp': '\uA500-\uA63F'
-    },
-    {
-        'name': 'InVariation_Selectors',
-        'bmp': '\uFE00-\uFE0F'
-    },
-    {
-        'name': 'InVariation_Selectors_Supplement',
-        'astral': '\uDB40[\uDD00-\uDDEF]'
-    },
-    {
-        'name': 'InVedic_Extensions',
-        'bmp': '\u1CD0-\u1CFF'
-    },
-    {
-        'name': 'InVertical_Forms',
-        'bmp': '\uFE10-\uFE1F'
-    },
-    {
-        'name': 'InWarang_Citi',
-        'astral': '\uD806[\uDCA0-\uDCFF]'
-    },
-    {
-        'name': 'InYi_Radicals',
-        'bmp': '\uA490-\uA4CF'
-    },
-    {
-        'name': 'InYi_Syllables',
-        'bmp': '\uA000-\uA48F'
-    },
-    {
-        'name': 'InYijing_Hexagram_Symbols',
-        'bmp': '\u4DC0-\u4DFF'
-    },
-    {
-        'name': 'InZanabazar_Square',
-        'astral': '\uD806[\uDE00-\uDE4F]'
-    },
-    {
-        'name': 'Inundefined',
-        'astral': '\uD803[\uDE80-\uDEBF\uDFB0-\uDFFF]|\uD806[\uDD00-\uDD5F\uDDA0-\uDDFF]|\uD807[\uDFB0-\uDFFF]|\uD80D[\uDC30-\uDC3F]|\uD822[\uDF00-\uDFFF]|\uD823[\uDC00-\uDD8F]|\uD82C[\uDD30-\uDD6F]|\uD838[\uDD00-\uDD4F\uDEC0-\uDEFF]|\uD83B[\uDD00-\uDD4F]|\uD83E[\uDE70-\uDFFF]|[\uD880-\uD883][\uDC00-\uDFFF]|\uD884[\uDC00-\uDF4F]'
-    }
-];
-
-},{}],223:[function(require,module,exports){
+},{"../../es/symbol":57}],211:[function(require,module,exports){
 module.exports = [
     {
         'name': 'C',
@@ -7531,7 +6265,7 @@ module.exports = [
     }
 ];
 
-},{}],224:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 module.exports = [
     {
         'name': 'ASCII',
@@ -7574,7 +6308,7 @@ module.exports = [
     }
 ];
 
-},{}],225:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 module.exports = [
     {
         'name': 'Adlam',
@@ -8215,5 +6949,5 @@ module.exports = [
     }
 ];
 
-},{}]},{},[8])(8)
+},{}]},{},[7])(7)
 });

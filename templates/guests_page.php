@@ -61,9 +61,9 @@ use ( $new_guests_can_only_send_to_creator,
     $extraDivAttrs = '';
     $hidden = '';
     if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
-        echo '<div class="custom-control custom-switch" data-option="'.$name.'" '. $extraDivAttrs .'>';
+        echo '<div class="form-check form-switch custom-control custom-switch" data-option="'.$name.'" '. $extraDivAttrs .'>';
         echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
-        echo '    <input id="'.$name.'" class="custom-control-input" name="'.$name.'" type="text">';
+        echo '    <input id="'.$name.'" class="form-check-input" name="'.$name.'" type="text">';
         echo '    <br/>';
         echo '</div>';
         
@@ -73,9 +73,9 @@ use ( $new_guests_can_only_send_to_creator,
         if($name == 'get_a_link' || $name == 'can_only_send_to_me') {
             $lockClass = 'get_a_link_lock';
         }
-        echo '<div class="custom-control custom-switch '.$lockClass.'" '. $extraDivAttrs .'>';
-        echo '  <input id="'.$name.'" class="custom-control-input" name="'.$name.'" type="checkbox" '.$checked.' />';
-        echo '  <label for="'.$name.'" class="custom-control-label '.$lockClassLabel.'">'.Lang::tr($name).'</label>';
+        echo '<div class="form-check form-switch custom-control custom-switch '.$lockClass.'" '. $extraDivAttrs .'>';
+        echo '  <input id="'.$name.'" class="form-check-input" name="'.$name.'" type="checkbox" '.$checked.' />';
+        echo '  <label for="'.$name.'" class="form-check-label '.$lockClassLabel.'">'.Lang::tr($name).'</label>';
         echo '</div>';
     }
 };
@@ -191,20 +191,26 @@ use ( $new_guests_can_only_send_to_creator,
                                 </div>
                                 
                                 <?php if(count(Guest::availableOptions(true))) { ?>
-                                    
+
                                     <div class="accordion" class="advanced_options" id="advanced_options">
-                                        <div class="card">
-                                            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">{tr:advanced_settings}</div>
-                                            <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#advanced_options">
-                                                <div class="card-body">
-                                            
-                                                    <?php
-                                                    foreach(Guest::availableOptions(true) as $name => $cfg) {
-                                                        if( !array_key_exists($name,$guest_options_handled)) {
-                                                            $displayoption($name, $cfg, false);
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    {tr:advanced_settings}
+                                                </button>
+                                            </h2>                            
+                                            <div class="card">
+                                                    <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#advanced_options" data-bs-parent="#advanced_options">
+                                                    <div class="card-body">
+                                                        
+                                                        <?php
+                                                        foreach(Guest::availableOptions(true) as $name => $cfg) {
+                                                            if( !array_key_exists($name,$guest_options_handled)) {
+                                                                $displayoption($name, $cfg, false);
+                                                            }
                                                         }
-                                                    }
-                                                    ?>
+                                                        ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -221,11 +227,18 @@ use ( $new_guests_can_only_send_to_creator,
                                 
                                 <?php if(count(Transfer::availableOptions(true))) { ?>
                                     <div class="accordion" class="advanced_options_tr" id="advanced_options_tr">
-                                        <div class="card">
-                                            <div class="card-header" id="headingOneTr" data-toggle="collapse" data-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseAdvTr">{tr:advanced_settings}</div>
-                                            <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOneTr" data-parent="#advanced_options_tr">
-                                                <div class="card-body">
-                                                    <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingOneTr">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseOne">
+                                                    {tr:advanced_settings}
+                                                </button>
+                                            </h2>                            
+                                            <div class="card">
+
+                                                <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOneTr" data-parent="#advanced_options_tr" data-bs-parent="#advanced_options_tr">
+                                                    <div class="card-body">
+                                                        <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
