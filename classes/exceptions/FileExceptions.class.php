@@ -73,6 +73,27 @@ class FileExtensionNotAllowedException extends DetailedException
 }
 
 /**
+ * Bad mime type exception
+ */
+class FileInvalidMimeTypeException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $selector column used to select file
+     */
+    public function __construct($selector)
+    {
+        parent::__construct(
+            'invalid_mime_type', // Message to give to the user
+            array('selector' => $selector) // Real message to log
+        );
+    }
+}
+
+
+
+/**
  * Generic identified file exception
  */
 class FileException extends DetailedException

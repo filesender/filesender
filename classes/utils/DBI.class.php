@@ -106,7 +106,7 @@ class DBI
         if (!$config['password']) {
             throw new DBIConnexionMissingParameterException('password');
         }
-        
+
         if (!$config['driver_options']) {
             $config['driver_options'] = array();
         }
