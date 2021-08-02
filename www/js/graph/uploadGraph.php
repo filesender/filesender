@@ -43,12 +43,14 @@ $data = array(
                 'label' => Lang::tr('upload_page_graph_encryption_in_transit_and_rest')->out(),
 		'data' => array(),
 		'backgroundColor' => 'rgba(10,220,10,0.6)',
+		'fill' => true,
 		'spanGaps' => true
 	    ),
 	    array(
                 'label' => Lang::tr('upload_page_graph_encryption_in_transit')->out(),
 		'data' => array(),
 		'backgroundColor' => 'rgba(255,147,02,0.6)',
+		'fill' => true,
 		'spanGaps' => true
 	    )
 	)

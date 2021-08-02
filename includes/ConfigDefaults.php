@@ -77,6 +77,9 @@ $default = array(
     'ban_extension' => 'exe,bat',
     'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
     'internal_use_only_running_on_ci' => false,
+
+    'mime_type_regex' => '^[-a-zA-Z0-9/; ]*$',
+    'mime_type_default' => 'application/octet-stream',
     
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,

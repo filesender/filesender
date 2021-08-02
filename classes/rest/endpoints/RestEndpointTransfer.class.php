@@ -689,6 +689,14 @@ class RestEndpointTransfer extends RestEndpoint
                     throw new FileExtensionNotAllowedException($ext);
                 }
 
+                // trim off optional rfc2045 *(";" parameter) blocks
+                $filedata->mime_type = preg_replace('/^([^;]*).*/','$1',$filedata->mime_type);
+
+                $filedata->mime_type = Utilities::valuePassesConfigRegexOrDefault( $filedata->mime_type,
+                                                                                   'mime_type_regex',
+                                                                                   Config::get('mime_type_default'));
+                
+
                 $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
                                            $filedata->iv, $filedata->aead );
                 $files_cids[$file->id] = $filedata->cid;
