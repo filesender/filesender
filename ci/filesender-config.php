@@ -339,3 +339,8 @@ $config['internal_use_only_running_on_ci'] = 1;
 
 $config['streamsaver_enabled'] = true;
 
+
+$config['encryption_min_password_length'] = 3;
+$config['encryption_password_must_have_upper_and_lower_case'] = false;
+$config['encryption_password_must_have_numbers'] = false;
+$config['encryption_password_must_have_special_characters'] = false;

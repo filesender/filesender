@@ -50,7 +50,7 @@
     
     <dl>
         <dt data-property="subject">{tr:subject} :</dt>
-        <dd data-property="subject"><?php echo Template::sanitize(array_pop($subject)) ?></dd>
+        <dd data-property="subject"><?php echo Template::sanitizeOutput(array_pop($subject)) ?></dd>
         
         <dt data-property="message">{tr:message}</dt>
         <dd data-property="message"><?php echo Template::sanitize($translation->html) ?></dd>
