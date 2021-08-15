@@ -184,6 +184,7 @@ $default = array(
     'message_can_not_contain_urls_regex' => '',
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
+    'guest_support_enabled' => true,
     'guest_limit_per_user' => 50,
     'guest_create_limit_per_day' => 0,
     'guest_reminder_limit' => 50,
