@@ -166,7 +166,7 @@ class RestEndpointGuest extends RestEndpoint
         // User who is creating the new guest
         $user = Auth::user();
 
-        if(Utilities::isFalse(Config::get('guest_support_enabled'))) {
+        if(!Config::get('guest_support_enabled')) {
             throw new GuestSystemDisabledException($user);
         }
 

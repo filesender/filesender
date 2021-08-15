@@ -3,7 +3,7 @@
     
     $sections = array('transfers', 'guests', 'users', 'testing' );
 
-    if(Utilities::isFalse(Config::get('guest_support_enabled'))) {
+    if(!Config::get('guest_support_enabled')) {
         $sections = array_diff($sections,['guests']);
     }
     

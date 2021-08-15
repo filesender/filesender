@@ -336,7 +336,8 @@ class Config
         // force to bool
         $v = Utilities::isTrue(self::get('data_protection_user_frequent_email_address_disabled'));
         self::$parameters['data_protection_user_frequent_email_address_disabled'] = $v;
-        
+
+        self::forceLoadedToBool('guest_support_enabled');
 
         
         // verify classes are happy
@@ -344,6 +345,11 @@ class Config
         ClientLog::validateConfig();
     }
 
+    private static function forceLoadedToBool($k)
+    {
+        $v = Config::get($k);
+        self::$parameters[$k] = Utilities::isTrue($v);
+    }
     
     public static function performLongerValidation()
     {
