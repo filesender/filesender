@@ -345,10 +345,17 @@ class Config
         ClientLog::validateConfig();
     }
 
+   /**
+    * This makes sure the value for $k is a boolean using isTrue() to coerce.
+    *
+    * @return the updated value for Config::get($k) which is also assigned internally.
+    */
     private static function forceLoadedToBool($k)
     {
         $v = Config::get($k);
-        self::$parameters[$k] = Utilities::isTrue($v);
+        $v = Utilities::isTrue($v);
+        self::$parameters[$k] = $v;
+        return $v;
     }
     
     public static function performLongerValidation()
