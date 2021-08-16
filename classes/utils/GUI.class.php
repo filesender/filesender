@@ -417,6 +417,12 @@ class GUI
         if (!GUIPages::isValidValue($page)) {
             throw new GUIUnknownPageException($page);
         }
+
+        // no guests page if disabled
+        if(!Config::get('guest_support_enabled') && $page == 'guests') {
+            throw new GUIUnknownPageException($page);
+        }
+        
         
         return in_array($page, self::allowedPages());
     }

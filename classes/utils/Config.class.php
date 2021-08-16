@@ -336,7 +336,8 @@ class Config
         // force to bool
         $v = Utilities::isTrue(self::get('data_protection_user_frequent_email_address_disabled'));
         self::$parameters['data_protection_user_frequent_email_address_disabled'] = $v;
-        
+
+        self::forceLoadedToBool('guest_support_enabled');
 
         
         // verify classes are happy
@@ -344,6 +345,18 @@ class Config
         ClientLog::validateConfig();
     }
 
+   /**
+    * This makes sure the value for $k is a boolean using isTrue() to coerce.
+    *
+    * @return the updated value for Config::get($k) which is also assigned internally.
+    */
+    private static function forceLoadedToBool($k)
+    {
+        $v = Config::get($k);
+        $v = Utilities::isTrue($v);
+        self::$parameters[$k] = $v;
+        return $v;
+    }
     
     public static function performLongerValidation()
     {

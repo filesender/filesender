@@ -437,6 +437,10 @@ class Utilities
     {
         return $v == '1' || $v == 'true';
     }
+    public static function isFalse($v)
+    {
+        return !self::isTrue($v);
+    }
     public static function boolToString($v)
     {
         if( $v == '1' || $v == 'true' ) {

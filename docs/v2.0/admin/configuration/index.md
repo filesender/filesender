@@ -173,6 +173,7 @@ A note about colours;
 
 ## Guest use
 
+* [guest_support_enabled](#guest_support_enabled)
 * [guest_options](#guest_options)
 * [default_guest_days_valid](#default_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
@@ -1663,6 +1664,19 @@ This is only for old, existing transfers which have no roundtriptoken set.
 ## Guest use
 
 ---
+
+
+### guest_support_enabled
+
+* __description:__ Allow users to create guests.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.30
+* __1.x name:__
+* __comment:__ Setting this to false will disable the guest system and fail on attempts to create a guest if they are directly attempted.
+
+
 
 ### guest_options
 
