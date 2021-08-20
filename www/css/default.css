@@ -184,6 +184,14 @@ abbr {
     background-color: rgb(151,51,51);
 }
 
+.must_login_message {
+    background-color: rgb(251,201,201);
+    border: 1px solid;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.4em 0.4em 0.4em 32px;
+    margin: 2em 5em;
+}
 
 #menu ul li select {
     display: block;
@@ -1278,6 +1286,7 @@ table.guests .guest .to .errors .details {
     float: right;
     margin-top: -0.5em;
 }
+
 
 .download_page .archive {
     margin-top: 1em;

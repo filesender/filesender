@@ -1162,7 +1162,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ For current defaults see https://github.com/filesender/filesender/search?q=transfer_options+in%3Afile+path%3Aincludes
 * __*Standard parameters for all options:*__
 	* __available__(boolean): if set to true then this option shown in the upload form
 	* __advanced__ (boolean): if set to true the option is hidden under an "Advanced options" click-out.  The user must click "Advanced" to make the option visible.
@@ -1179,6 +1179,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __add\_me\_to\_recipients:__ include the sender as one of the recipients.
 	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can se the download count, but not who downloaded it (obviously, as there are no recipients defined).
 	* __redirect_url_on_complete:__ When the transfer upload completes, instead of showing a success message, redirect the user to a URL. This interferes with __get\_a\_link__ in that the uploader will not see the link after the upload completes. Additionally, if the uploader is a guest, there is no way straightforward way for the uploader to learn the download link, although this must not be used as a security feature.
+        * __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
 
 * __*Configuration example:*__
 

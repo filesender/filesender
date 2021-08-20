@@ -355,6 +355,11 @@ $default = array(
             'advanced' => true,
             'default' => ''
         ),
+        'must_be_logged_in_to_download' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
     ),
 
     'guest_upload_page_hide_unchangable_options' => false,
