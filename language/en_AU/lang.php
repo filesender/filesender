@@ -670,3 +670,5 @@ $lang['you_can_report_exception_by_email'] = 'You can report this error by email
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
 $lang['guest_create_attempted_while_system_disabled'] = 'Guest system is disabled, you should not have been offered the choice to make a guest';
+$lang['must_be_logged_in_to_download'] = 'User must login to FileSender to download file(s)';
+$lang['must_be_logged_in_to_download_first_person'] = 'The person who uploaded this file requires that you must be logged in to FileSender in order to download files from this transfer.';

@@ -3,13 +3,7 @@
     
     <div class="logon">
         <?php
-        
-        $embed = Config::get('auth_sp_embed');
-        
-        if(!$embed) $embed = '<a id="btn_logon" href="'.AuthSP::logonURL().'">'.Lang::tr('logon').'</a>';
-        
-        echo $embed;
-        
+        echo GUI::getLoginButton();
         ?>
     </div>
 </div>

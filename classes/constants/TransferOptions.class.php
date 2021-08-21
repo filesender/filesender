@@ -53,4 +53,5 @@ class TransferOptions extends Enum
 
     const ENCRYPTION                                = 'encryption';
     const COLLECTION                                = 'collection';
+    const MUST_BE_LOGGED_IN_TO_DOWNLOAD             = 'must_be_logged_in_to_download';
 }
