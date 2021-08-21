@@ -226,6 +226,7 @@ A note about colours;
 * [exception_additional_logging_regex](#exception_additional_logging_regex)
 * [clientlogs_stashsize](#clientlogs_stashsize)
 * [clientlogs_lifetime](#clientlogs_lifetime)
+* [logs_limit_messages_from_same_ip_address](#logs_limit_messages_from_same_ip_address)
 
 
 ## Webservices API
@@ -2309,6 +2310,23 @@ $config['log_facilities'] =
 * __default:__ 10
 * __available:__ since version 2.0
 * __comment:__ Number of days after which collected client logs are automatically deleted.
+
+
+### logs_limit_messages_from_same_ip_address
+
+* __description:__ An option to limit how frequently transfers from the same IP address are logged
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.30
+* __comment:__ In version 2.30 the default action of not logging frequent items from the same IP address was turned off.
+        This option allows that throttle limit to be turned back on again if not have it causes major problems. If this
+        setting with the default of false works ok for people then the option may be removed and the default of not
+        limiting logs will be the only option. So in short, you may not ever need to know about or set this option. It
+        is here as a fallback if there are issues with it being turned off.
+
+
+
 
 
 ---
