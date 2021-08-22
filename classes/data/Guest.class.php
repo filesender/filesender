@@ -184,7 +184,7 @@ class Guest extends DBObject
     protected $reminder_count = 0;
     protected $last_reminder = 0;
     protected $expiry_extensions = 0;
-    protected $service_aup_accepted_version = null;
+    protected $service_aup_accepted_version = 0;
     protected $service_aup_accepted_time = null;
 
     /**

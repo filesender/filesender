@@ -173,7 +173,7 @@ class User extends DBObject
     protected $auth_secret_created = null;
     protected $quota = 0;
     protected $guest_expiry_default_days = null;
-    protected $service_aup_accepted_version = null;
+    protected $service_aup_accepted_version = 0;
     protected $service_aup_accepted_time = null;
 
     
