@@ -255,6 +255,9 @@ class Transfer extends DBObject
         ),
         'user_email' => array(
             'user_email' => array()
+        ),
+        'expires' => array(
+            'expires' => array()
         )
     );
 
