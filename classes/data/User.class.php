@@ -116,6 +116,18 @@ class User extends DBObject
             'null' => true,
             'default' => null
         ),
+
+        // Shared guest/user Principal options
+        'service_aup_accepted_version' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => false,
+            'default' => 0
+        ),
+        'service_aup_accepted_time' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
     );
 
 
@@ -129,6 +141,7 @@ class User extends DBObject
                         . DBView::columnDefinition_is_encrypted('transfer_preferences', 'prefers_enceyption')
                         . DBView::columnDefinition_age($dbtype, 'last_activity', 'last_activity_days_ago')
                         . DBView::columnDefinition_age($dbtype, 'aup_last_ticked_date', 'aup_last_ticked_days_ago')
+                        . DBView::columnDefinition_age($dbtype, 'service_aup_accepted_time', 'service_aup_accepted_time_days_ago')
                         . ' , id as email_address '
                         . ' , id is not null as is_active '
                                 . '  from ' . self::getDBTable();
@@ -160,7 +173,10 @@ class User extends DBObject
     protected $auth_secret_created = null;
     protected $quota = 0;
     protected $guest_expiry_default_days = null;
+    protected $service_aup_accepted_version = 0;
+    protected $service_aup_accepted_time = null;
 
+    
     /** 
      * These are not real properties and are used by queries in the
      * system to return additional data about a user from the query.
@@ -639,7 +655,7 @@ class User extends DBObject
             'auth_secret_created',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
-          , 'guest_expiry_default_days'
+          , 'guest_expiry_default_days', 'service_aup_accepted_version', 'service_aup_accepted_time'
         ))) {
             return $this->$property;
         }
@@ -731,6 +747,10 @@ class User extends DBObject
             if( $this->guest_expiry_default_days == 0 ) {
                 $this->guest_expiry_default_days = null;
             }
+        } elseif ($property == 'service_aup_accepted_version') {
+            $this->service_aup_accepted_version = $value;
+        } elseif ($property == 'service_aup_accepted_time') {
+            $this->service_aup_accepted_time = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

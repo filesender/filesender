@@ -1736,3 +1736,12 @@ div.not_displayed {
 .avheader0 {
     color: #AA0000;
 }
+
+.serviceaup ul {
+    margin-bottom: 2em;
+}
+
+.serviceaup ul li {
+    margin-bottom: 0.3em;
+    line-height: 1.1em;
+}
