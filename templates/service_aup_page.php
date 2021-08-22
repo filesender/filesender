@@ -6,7 +6,7 @@ $ver = Config::get('service_aup_min_required_version');
 
     <h1>{tr:service_aup_header}</h1>
 
-    <p><?php echo Lang::tr('service_aup_body_version_' . $ver ) ?></p>
+    <?php echo Lang::tr('service_aup_body_version_' . $ver ) ?>
     
     <div class="service_aup_accept">
         <a href="#">
