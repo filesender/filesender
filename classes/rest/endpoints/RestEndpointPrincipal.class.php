@@ -81,6 +81,9 @@ class RestEndpointPrincipal extends RestEndpoint
         
         if( $data->service_aup_version ) {
 
+            if( $data->service_aup_version != Config::get('service_aup_min_required_version')) {
+                throw new RestBadParameterException('service_aup_version');
+            }
             $principal->service_aup_accepted_version = $data->service_aup_version;
             $principal->service_aup_accepted_time = time();
             $principal->save();
