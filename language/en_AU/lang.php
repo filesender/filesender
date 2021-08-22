@@ -672,3 +672,10 @@ $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at:
 $lang['guest_create_attempted_while_system_disabled'] = 'Guest system is disabled, you should not have been offered the choice to make a guest';
 $lang['must_be_logged_in_to_download'] = 'User must login to FileSender to download file(s)';
 $lang['must_be_logged_in_to_download_first_person'] = 'The person who uploaded this file requires that you must be logged in to FileSender in order to download files from this transfer.';
+$lang['service_aup_text_version_1'] = 'Do not try to hack the site. Do not upload stuff that you know is not correct to do';
+$lang['service_aup_header'] = 'FileSender service Acceptable User Terms';
+$lang['service_aup_body_version_1'] = 'To keep everybody happy the use of this FileSender service has some terms which you must accept.</p><p>These terms include:</p><ul><li>Do not try to hack into the site</li><li>Do not upload content which would violate copyright</li></ul> v1 <p>';
+$lang['service_aup_body_version_2'] = 'To keep everybody happy the use of this FileSender service has some terms which you must accept.</p><p>These terms include:</p><ul><li>Do not try to hack into the site</li><li>Do not upload content which would violate copyright</li></ul> v2 <p>';
+$lang['service_aup_body_version_3'] = 'To keep everybody happy the use of this FileSender service has some terms which you must accept.</p><p>These terms include:</p><ul><li>Do not try to hack into the site</li><li>Do not upload content which would violate copyright</li></ul> v3 <p>';
+
+

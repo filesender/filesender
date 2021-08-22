@@ -754,6 +754,17 @@ window.filesender.client = {
     updateUserIDPreferences: function(id, preferences, callback) {
         return this.put('/user/' + id + '/', preferences, callback);
     },
+    serviceAUPAccept: function(version, callback) {
+        var p = {};
+        p['service_aup_version'] = version;
+        
+        var url = new URL(location);
+        var tailer = '';
+        if( url.searchParams.get("vid")) {
+            tailer = '?vid=' + url.searchParams.get("vid");
+        }
+        return this.put('/principal'+tailer, p, callback );
+    },
     
     getUserQuota: function(callback, onerror) {
         this.get('/user/@me/quota', callback, {ignore_authentication_required: true});

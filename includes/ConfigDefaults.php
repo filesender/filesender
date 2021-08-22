@@ -299,6 +299,9 @@ $default = array(
     'avprogram_max_size_to_scan' => 100*1024*1024,
     
     'logs_limit_messages_from_same_ip_address' => false,
+
+
+    'service_aup_min_required_version' => 0,
     
     'transfer_options' => array(
         'email_me_copies' => array(

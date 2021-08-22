@@ -69,6 +69,23 @@ try {
             if(Config::get('auth_sp_autotrigger')) AuthSP::trigger();
         }
 
+        // Service level AUP
+        if( Config::get('service_aup_min_required_version') > 0 ) {
+
+            $principal = Auth::getPrincipal();
+
+            // If the user just "got a link" they are neither a guest
+            // or a user of the system so we can't really ask them to
+            // accept a service wide AUP because they have no account
+            // to record that information into.
+            if( $principal &&
+                $principal->service_aup_accepted_version < Config::get('service_aup_min_required_version'))
+            {
+                // new service wide AUP to accept for this user/guest
+                GUI::currentPage('service_aup');
+            }
+        }
+        
         if(!in_array($page, array('download', 'maintenance')))
             Template::display('menu');
 

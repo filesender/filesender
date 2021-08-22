@@ -29,7 +29,7 @@ A note about colours;
 * [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
 * [mime_type_regex](#mime_type_regex)
 * [mime_type_default](#mime_type_default)
-
+* [service_aup_min_required_version](#service_aup_min_required_version)
 
 ## Security settings
 * [use_strict_csp](#use_strict_csp)
@@ -397,6 +397,17 @@ A note about colours;
 * __default:__ application/octet-stream
 * __available:__ since version 2.29
 * __comment:__ Some failures are worse than others. This is the default mimetype to use if a client presents an invalid value.
+
+
+### service_aup_min_required_version
+
+* __description:__ If the site uses a service level AUP this is the current minimum version a user must have accepted to continue to upload files.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.30
+* __comment:__ A setting of 0 disables the site wide AUP. Setting to 1 will enable AUP and force the user to accept the text from the language translation service_aup_text_version_1. If you were on level 1 and change service_aup_min_required_version=2 anyone who has not accepted or has only accepted service_aup_text_version_1 will be prompted to accept service_aup_text_version_2 after loading the next page. This continues onward allowing new AUP text and terms to be introduced and explicitly seeking user acceptance before they can continue to upload to the service.
+
 
 
 
