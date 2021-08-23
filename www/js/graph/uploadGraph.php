@@ -43,12 +43,14 @@ $data = array(
                 'label' => Lang::tr('upload_page_graph_encryption_in_transit_and_rest')->out(),
 		'data' => array(),
 		'backgroundColor' => 'rgba(10,220,10,0.6)',
+		'fill' => true,
 		'spanGaps' => true
 	    ),
 	    array(
                 'label' => Lang::tr('upload_page_graph_encryption_in_transit')->out(),
 		'data' => array(),
 		'backgroundColor' => 'rgba(255,147,02,0.6)',
+		'fill' => true,
 		'spanGaps' => true
 	    )
 	)
@@ -56,25 +58,30 @@ $data = array(
     'options' => array (
 	'responsive' => true,
 	'maintainAspectRatio' => false,
-	'title' => array(
-	    'display' => true,
-	    'text' => Lang::tr('upload_page_graph_title_upload_speed_of_files_over')->r('size',Utilities::formatBytes($minSz))->out()
-	),
-	'legend' => array(
-	    'position' => 'bottom'
-	),
-	'scales' => array(
-	    'yAxes' => array(
-		array(
-		    'ticks' => array( 'min' => 0 ),
-                    'scaleLabel' => array( 'display' => true,
-                                            'labelString' => Lang::tr('upload_page_graph_mb_per_second')->out()
-                                         ),
-		),
+        'plugins' => array( 
+	    'title' => array(
+	        'display' => true,
+	        'text' => Lang::tr('upload_page_graph_title_upload_speed_of_files_over')->r('size',Utilities::formatBytes($minSz))->out()
 	    ),
-            'xAxes' => array(
+	    'legend' => array(
+	        'position' => 'bottom'
+	    ),
+        ),
+	'scales' => array(
+	    'y' => array(
+                'display' => true,
+                'title' => array (
+                    'display' => true,
+                    'text' => Lang::tr('upload_page_graph_mb_per_second')->out()
+                ),
+		'ticks' => array( 'min' => 0 ),
+	    ),
+            'x' => array(
                 array(
                     'type' => 'time',
+                    'time' => array(
+                        'tooltipFormat' => 'DD',
+                    ),
 		    'ticks' => array( 'min' => 0 ),
                 ),
             ),
@@ -86,8 +93,10 @@ $lastSpeed=array(0);
 $lastEnSpeed=array(0);
 //$yMax = 0;
 foreach($result as $row) {
-    $data['data']['labels'][]=$row['date'];
-
+    $label = $row['date'];
+    $label = preg_replace('/ 00:00:00/','',$label);
+    $data['data']['labels'][]=$label;
+    
     if (!$encO) {
         $row['speed']=round($row['speed']==0?(array_sum($lastSpeed)/count($lastSpeed)):($row['speed']/1048576),2);
         if ($row['speed']>0) {
@@ -115,4 +124,5 @@ if ($encO) {
     unset($data['data']['datasets'][1]);
 }
 
-echo json_encode($data/*,JSON_PRETTY_PRINT*/);
+echo json_encode($data);
+//echo json_encode($data,JSON_PRETTY_PRINT);

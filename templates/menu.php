@@ -14,7 +14,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 <div class="row">
     <div class="col-xl-12">
         <nav class="nav nav-pills navbar-expand-md dnav-fill navbar-light navbar-bg navbar-fixed-top ">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarFilesender" aria-controls="navbarFilesender" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFilesender" aria-controls="navbarFilesender" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	    </button>
             <div class="collapse navbar-collapse" id="navbarFilesender">
@@ -69,6 +69,8 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
             }
         ?>
 
+
+                
 <?php if($LanguageSelectorShown): ?>
             
             <li class="nav-item dropdown">
@@ -81,7 +83,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                         echo '<a class="nav-link dropdown-toggle" ';
                         echo ' href="#" ';
                         echo ' id="toplangdropdownlabel" ';
-                        echo ' data-toggle="dropdown" ';
+                        echo ' data-bs-toggle="dropdown" ';
                         echo ' aria-haspopup="true" ';
                         echo ' aria-expanded="false"> ';
                         echo '  <span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';

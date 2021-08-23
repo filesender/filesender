@@ -107,9 +107,9 @@ function presentAVName( $v )
 
     <?php if( Browser::instance()->allowStreamSaver ) { ?>
 
-        <div class="fieldcontainer" data-option="options">
-            <input id="streamsaverenabled" name="streamsaverenabled" type="checkbox" checked="checked" />
-            <label for="streamsaverenabled">{tr:use_streamsaver_for_download}</label>
+        <div class="form-check form-switch custom-control custom-switch" data-option="options">
+            <input id="streamsaverenabled" class="form-check-input" name="streamsaverenabled" type="checkbox" checked="checked" />
+            <label for="streamsaverenabled" class="form-check-label">{tr:use_streamsaver_for_download}</label>
         </div>
     <?php } ?>
                             
@@ -171,7 +171,7 @@ function presentAVName( $v )
                 <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
                 <span class="select clickable">
                     <span class="fa fa-2x fa-square-o toggle-select-all" title="{tr:select_all_for_archive_download}"></span>
-                    <span>{tr:select_all_for_archive_download}</span>
+                    <span class="select_all_text">{tr:select_all_for_archive_download}</span>
                 </span>
             </div>
         <?php } ?>
