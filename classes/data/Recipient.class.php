@@ -236,7 +236,7 @@ class Recipient extends DBObject
     {
     
         // Limit reminders
-        if ($this->reminder_count >= Config::get('guest_reminder_limit')) {
+        if ($this->reminder_count >= Config::get('recipient_reminder_limit')) {
             throw new GuestReminderLimitReachedException();
         }
         $this->reminder_count++;
