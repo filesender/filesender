@@ -417,7 +417,34 @@ class GUI
         if (!GUIPages::isValidValue($page)) {
             throw new GUIUnknownPageException($page);
         }
+
+        // no guests page if disabled
+        if(!Config::get('guest_support_enabled') && $page == 'guests') {
+            throw new GUIUnknownPageException($page);
+        }
+        
         
         return in_array($page, self::allowedPages());
+    }
+
+    /**
+     * Make a login button with css class $addedClass. If present, the $target
+     * should be the result of a call to Utilities::http_build_query()
+     * which may wish to use the 's' parameter to set the page to use after login
+     * as well as any other state that page might want.
+     */
+    public static function getLoginButton($target = null,$addedClass=null)
+    {
+        if(!$addedClass) {
+            $addedClass = '';
+        }
+        
+        $embed = Config::get('auth_sp_embed');
+        
+        if(!$embed) {
+            $embed = '<a class="'.$addedClass.'" id="btn_logon" href="'.AuthSP::logonURL($target).'">'.Lang::tr('logon').'</a>';
+        }
+        
+        return $embed;
     }
 }

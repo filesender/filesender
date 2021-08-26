@@ -105,7 +105,11 @@ try {
     session_write_close();
     
     // Check if file set has already been downloaded over the last hour
-    $recently_downloaded = $recipient ? AuditLog::clientRecentlyDownloaded($recipient, $files_ids) : false;
+    if( Config::get('logs_limit_messages_from_same_ip_address')) {
+        $recently_downloaded = $recipient ? AuditLog::clientRecentlyDownloaded($recipient, $files_ids) : false;
+    } else {
+        $recently_downloaded = false;
+    }
 
     $archive_format_selected = false;
     $archive_format = "zip";

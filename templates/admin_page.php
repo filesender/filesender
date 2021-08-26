@@ -2,6 +2,10 @@
     <?php
     
     $sections = array('transfers', 'guests', 'users', 'testing' );
+
+    if(!Config::get('guest_support_enabled')) {
+        $sections = array_diff($sections,['guests']);
+    }
     
     if(Config::get('config_overrides'))
         $sections[] = 'config';

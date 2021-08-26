@@ -14,7 +14,7 @@ subject: {guest.subject}
 
 Sehr geehrte Damen und Herren,
 
-unterhalb finde Sie eine Einladung, die den Zugang auf {cfg:site_name} gewährt. Sie können die Einladung verwenden um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen. 
+unterhalb finden Sie eine Einladung, die den Zugang auf {cfg:site_name} gewährt. Sie können die Einladung verwenden, um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen. 
 
 Aussteller/in: {guest.user_email}
 Link Einladung: {guest.upload_link}
@@ -33,7 +33,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-   unterhalb finde Sie eine Einladung, die den Zugang auf <a href="{cfg:site_url}">{cfg:site_name}</a> gewährt. Sie können die Einladung verwenden um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen.
+   unterhalb finden Sie eine Einladung, die den Zugang auf <a href="{cfg:site_url}">{cfg:site_name}</a> gewährt. Sie können die Einladung verwenden um, einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen.
 </p>
 
 <table rules="rows">
