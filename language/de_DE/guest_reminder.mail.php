@@ -14,7 +14,7 @@ subject: (Erinnerung) {guest.subject}
 
 Sehr geehrte Damen und Herren,
 
-dies ist eine Erinnerung, für eine Einladung die den Zugang auf {cfg:site_name} gewährt. Sie können die Einladung verwenden um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung zu stellen.
+dies ist eine Erinnerung für eine Einladung, die den Zugang auf {cfg:site_name} gewährt. Sie können die Einladung verwenden, um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung zu stellen.
 
 Aussteller/in: {guest.user_email}
 Link Einladung: {guest.upload_link}
@@ -34,7 +34,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    dies ist eine Erinnerung, für eine Einladung die den Zugang auf <a href="{cfg:site_url}">{cfg:site_name}</a> gewährt. Sie können die Einladung verwenden um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen.
+    dies ist eine Erinnerung für eine Einladung, die den Zugang auf <a href="{cfg:site_url}">{cfg:site_name}</a> gewährt. Sie können die Einladung verwenden, um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen.
 </p>
 
 <table rules="rows">

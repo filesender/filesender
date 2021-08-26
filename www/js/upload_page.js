@@ -1172,6 +1172,8 @@ filesender.ui.startUpload = function() {
             var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
             this.transfer.options[o] = v;
         }
+//        console.log("Transfer options ");
+//        console.log(this.transfer.options);
     }
     var crypto = window.filesender.crypto_app();
     this.transfer.encryption_key_version = filesender.config.encryption_key_version_new_files;
@@ -1594,7 +1596,7 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
-    form.find('[data-related-to] [data-option] input').each(function() {
+    form.find('.uploadoption').each(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });

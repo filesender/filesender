@@ -1298,6 +1298,36 @@ table.paginator a {
      background-color:#faa;
 }
 
+.must_login_message {
+    background-color: rgb(251,201,201);
+    border: 1px solid;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.4em 0.4em 0.4em 32px;
+    margin: 2em 5em;
+}
+
+#menu ul li select {
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    margin: 0.6em 1em;
+}
+
+.download_page .archive {
+    margin-top: 1em;
+    text-align: center;
+}
+
+.serviceaup ul {
+    margin-bottom: 2em;
+}
+
+.serviceaup ul li {
+    margin-bottom: 0.3em;
+    line-height: 1.1em;
+}
+
 @import "local-variables.scss";
              
                               
