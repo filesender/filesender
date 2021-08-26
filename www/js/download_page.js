@@ -229,11 +229,10 @@ $(function() {
 
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
             dl(id, dl_complete_enabled, encrypted, progress );
-        });
-        
+        });        
         return false;
     });
-
+    
     var dlArchive = function( archive_format ) {
         var ids = [];
         page.find('.file[data-selected="1"]').each(function() {

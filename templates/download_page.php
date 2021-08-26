@@ -1,5 +1,7 @@
 <?php
 
+$canDownload = true;
+
 if (!function_exists('str_starts_with')) {
     function str_starts_with($haystack, $needle) {
         return (string)$needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0;
@@ -37,6 +39,7 @@ function presentAVName( $v )
     <h1>{tr:download_page}</h1>
     
     <?php
+
     
     if(!array_key_exists('token', $_REQUEST))
         throw new TokenIsMissingException();
@@ -86,6 +89,28 @@ function presentAVName( $v )
             $canDownloadArchive = true;
         }
     }
+
+
+    
+    if( $transfer->must_be_logged_in_to_download ) {
+        $user = Auth::user();
+        if( !$user ) {
+
+            $loginToDownload = GUI::getLoginButton(Utilities::http_build_query(array('token' => $token, 's' => 'download')));
+            echo '<div class="must_login_message">';
+            echo Lang::tr('must_be_logged_in_to_download_first_person');
+            echo '<br/>' . $loginToDownload;
+            echo '</div>';
+            
+            $canDownload = false;
+            $canDownloadAsTar = false;
+            $canDownloadAsZip = false;
+            // close page
+            echo "</div>";
+            return;
+        }
+    } 
+    
     ?>
     
     <div class="disclamer">

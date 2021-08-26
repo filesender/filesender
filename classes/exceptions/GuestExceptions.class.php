@@ -189,3 +189,20 @@ class GuestExpiryExtensionCountExceededException extends GuestException
         parent::__construct($transfer, 'expiry_extension_count_exceeded');
     }
 }
+
+
+/**
+ * Guest system disabled and creation attempt made
+ */
+class GuestSystemDisabledException extends GuestException
+{
+    /**
+     * Constructor
+     *
+     * @param Transfer $transfer
+     */
+    public function __construct($user)
+    {
+        parent::__construct($user,'guest_create_attempted_while_system_disabled');
+    }
+}

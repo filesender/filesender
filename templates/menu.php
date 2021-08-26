@@ -16,8 +16,10 @@ $maybe_display_aggregate_statistics_menu = false;
             
             if(!Auth::isGuest()) {
                 pagemenuitem('upload');
-                
-                pagemenuitem('guests');
+
+                if(Config::get('guest_support_enabled')) {
+                    pagemenuitem('guests');
+                }
                 
                 pagemenuitem('transfers');
                 

@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Políticas de uso
+<a href="https://ajuda.rnp.br/filesender/politicas-de-uso" target="_blank" title="Clique aqui" draggable="false">Termo de uso</a>

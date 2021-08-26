@@ -29,7 +29,8 @@ A note about colours;
 * [admin_can_view_user_transfers_page](#admin_can_view_user_transfers_page)
 * [mime_type_regex](#mime_type_regex)
 * [mime_type_default](#mime_type_default)
-
+* [service_aup_min_required_version](#service_aup_min_required_version)
+* [tmp_path](#tmp_path)
 
 ## Security settings
 * [use_strict_csp](#use_strict_csp)
@@ -38,6 +39,12 @@ A note about colours;
 * [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
 * [avprogram_list](#avprogram_list)
 * [avprogram_max_size_to_scan](#avprogram_max_size_to_scan)
+* [crypto_iv_len](#crypto_iv_len)
+* [crypto_gcm_max_file_size](#crypto_gcm_max_file_size)
+* [crypto_gcm_max_chunk_size](#crypto_gcm_max_chunk_size)
+* [crypto_gcm_max_chunk_count](#crypto_gcm_max_chunk_count)
+* [upload_crypted_chunk_padding_size](#upload_crypted_chunk_padding_size)
+* [upload_crypted_chunk_size](#upload_crypted_chunk_size)
 
 
 ## Backend storage
@@ -50,6 +57,7 @@ A note about colours;
 * [storage_usage_warning](#storage_usage_warning)
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
+* [storage_filesystem_external_script](#storage_filesystem_external_script)
 
 ## Shredding
 
@@ -87,6 +95,7 @@ A note about colours;
 * [email_newline](#email_newline)
 * [email_headers](#email_headers)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
+* [translatable_emails_lifetime](#translatable_emails_lifetime)
 
 ## General UI
 
@@ -103,7 +112,7 @@ A note about colours;
 * [crypto_pbkdf2_expected_secure_to_year](#crypto_pbkdf2_expected_secure_to_year)
 * [crypto_pbkdf2_dialog_custom_webasm_delay](#crypto_pbkdf2_dialog_custom_webasm_delay)
 * [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
-
+* [user_page](#user_page)
 
 ## Transfers
 
@@ -149,7 +158,7 @@ A note about colours;
 * [streamsaver_on_chrome](#streamsaver_on_chrome)
 * [streamsaver_on_edge](#streamsaver_edge)
 * [streamsaver_on_safari](#streamsaver_safari)
-
+* [recipient_reminder_limit](#recipient_reminder_limit)
 
 ## Graphs
 
@@ -173,6 +182,7 @@ A note about colours;
 
 ## Guest use
 
+* [guest_support_enabled](#guest_support_enabled)
 * [guest_options](#guest_options)
 * [default_guest_days_valid](#default_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
@@ -180,9 +190,13 @@ A note about colours;
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 * [user_can_only_view_guest_transfers_shared_with_them](#user_can_only_view_guest_transfers_shared_with_them)
 * [guest_create_limit_per_day](#guest_create_limit_per_day)
+* [guest_reminder_limit](#guest_reminder_limit)
 * [guest_reminder_limit_per_day](#guest_reminder_limit_per_day)
 * [allow_guest_expiry_date_extension](#allow_guest_expiry_date_extension)
 * [allow_guest_expiry_date_extension_admin](#allow_guest_expiry_date_extension_admin)
+* [guest_limit_per_user](#guest_limit_per_user)
+* [guests_expired_lifetime](#guests_expired_lifetime)
+* [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 
 ## Authentication
 
@@ -225,7 +239,8 @@ A note about colours;
 * [exception_additional_logging_regex](#exception_additional_logging_regex)
 * [clientlogs_stashsize](#clientlogs_stashsize)
 * [clientlogs_lifetime](#clientlogs_lifetime)
-
+* [logs_limit_messages_from_same_ip_address](#logs_limit_messages_from_same_ip_address)
+* [trackingevents_lifetime](#trackingevents_lifetime)
 
 ## Webservices API
 
@@ -397,6 +412,26 @@ A note about colours;
 * __comment:__ Some failures are worse than others. This is the default mimetype to use if a client presents an invalid value.
 
 
+### service_aup_min_required_version
+
+* __description:__ If the site uses a service level AUP this is the current minimum version a user must have accepted to continue to upload files.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.30
+* __comment:__ A setting of 0 disables the site wide AUP. Setting to 1 will enable AUP and force the user to accept the text from the language translation service_aup_text_version_1. If you were on level 1 and change service_aup_min_required_version=2 anyone who has not accepted or has only accepted service_aup_text_version_1 will be prompted to accept service_aup_text_version_2 after loading the next page. This continues onward allowing new AUP text and terms to be introduced and explicitly seeking user acceptance before they can continue to upload to the service.
+
+### tmp_path
+
+* __description:__ The location to store temporary scratch files
+* __mandatory:__ no
+* __type:__ string
+* __default:__ FILESENDER_BASE.'/tmp/',
+* __available:__ since before version 2.30
+* __comment:__ Only some code has been migrated to using this configuration setting. It is intended to be a location that files might be temporarily stored while processing is happening.
+
+
+
 
 
 
@@ -428,8 +463,8 @@ A note about colours;
 * __comment:__ Set to 0 to disable. Default is 63072000 which is two years in seconds.
 
 
+### owasp_csrf_protector_enabled
 
-* [owasp_csrf_protector_enabled](#owasp_csrf_protector_enabled)
 * __description:__ Use the OWASP csrf protector as well as internal CSRF tokens
 * __mandatory:__ no
 * __type:__ boolean
@@ -440,8 +475,8 @@ A note about colours;
   [CSRF Protector php library](https://github.com/mebjas/CSRF-Protector-PHP/wiki) to also protect interactions from CSRF attack.
   Note that this option will definitely use cookies.
 
+### avprogram_list
 
-* [avprogram_list](#avprogram_list)
 * __description:__ A list of anti virus and malware scanners to use.
 * __mandatory:__ no
 * __type:__ array (of array)
@@ -467,13 +502,88 @@ $config['avprogram_list'] = array( 'always_pass',
                                    ));
 ```
 
-* [avprogram_max_size_to_scan](#avprogram_max_size_to_scan)
+### avprogram_max_size_to_scan
 * __description:__ Do not try to scan files larger than this with the avprogram_list
 * __mandatory:__ no
 * __type:__ int
 * __default:__ 100*1024*1024
 * __available:__ since version 2.26
 * __comment:__ 
+
+
+### crypto_iv_len
+* __description:__ Internal use only
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 16
+* __available:__ since before version 2.30
+* __comment:__ This is an internal setting, please do not change it.
+
+
+### crypto_gcm_max_file_size
+* __description:__ This is the largest file that should be sent using GCM encryption with the default chunk size.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 4294967296 * 5 * 1024 * 1024
+* __available:__ since before version 2.30
+* __comment:__ The default is roughly 16384 tb so is more of a double check than anything. This is to protect
+     against wrap around of GCM cryptography using the same xor stream.
+     It is recommended that you leave this setting as the default value and do not change the
+     upload_chunk_size when using GCM cryptography. You may wish to lower this setting if you have to use
+     smaller upload_chunk_size values and will lower this setting commensurate with the chunk size being
+     smaller than the default.
+
+### crypto_gcm_max_file_size
+* __description:__ This is the largest file that should be sent using GCM encryption with the default chunk size.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 4294967296 * 5 * 1024 * 1024
+* __available:__ since before version 2.30
+* __comment:__ It is recommended that you leave this setting as the default value and do not change the
+     upload_chunk_size when using GCM cryptography. The default is roughly 16384 tb so is more of a double check than anything. This is to protect
+     against wrap around of GCM cryptography using the same xor stream.
+     You may wish to lower this setting if you have to use
+     smaller upload_chunk_size values and will lower this setting commensurate with the chunk size being
+     smaller than the default.
+
+### crypto_gcm_max_chunk_size
+* __description:__ This is the largest size of a single chunk that should be sent using GCM encryption.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 4294967295 * 16
+* __available:__ since before version 2.30
+* __comment:__ It is recommended that you leave this setting as the default value and do not change the
+     upload_chunk_size when using GCM cryptography. The default is 2^32-1 AES blocks of 16 bytes.
+
+
+### crypto_gcm_max_chunk_count
+* __description:__ This is the maximum total number of chunks that should be sent for a file when using GCM encryption.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 4294967295
+* __available:__ since before version 2.30
+* __comment:__ It is recommended that you leave this setting as the default value and do not change the
+     upload_chunk_size when using GCM cryptography. The default is 2^32-1.
+
+
+### upload_crypted_chunk_size
+* __description:__ Internal only setting. This is the entire size of an encrypted chunk, including any padding for per chunk IV
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 5 * 1024 * 1024 + 16 + 16
+* __available:__ since before version 2.30
+* __comment:__ It is highly recommended that you leave this setting as the default value. This is the size, including any IV and padding
+           needed for an encrypted chunk that is uploaded.
+
+### upload_crypted_chunk_padding_size
+* __description:__ Internal only setting. This is the size of padding and IV for an encrypted chunk
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 16 + 16
+* __available:__ since before version 2.30
+* __comment:__ It is highly recommended that you leave this setting as the default value. This is the size of just the IV and padding
+           needed for an encrypted chunk that is uploaded (not the encrypted content itself).
+
 
 
 
@@ -487,10 +597,11 @@ $config['avprogram_list'] = array( 'always_pass',
 
 * __description:__  type of storage you used for storing files uploaded to FileSender.
 * __mandatory:__ no
-* __type:__ string.  Permissible values: **filesystem**.
+* __type:__ string
+* __permissible values__ filesystem, filesystemChunked, CloudAzure, CloudS3, filesystemExternal
 * __default:__ filesystem
 * __available:__ since version 2.0
-* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage types are filesystem and filesystemChunked. Note that you need to respect the non leading capital letters in the class name such as the "C" in filesystemChunked. Future storage types could include e.g. **object**, **amazon_s3** and others.
+* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. The primary choices for value are filesystem and filesystemChunked. Note that you need to respect the non leading capital letters in the class name such as the "C" in filesystemChunked. Future storage types could include e.g. **object**, **amazon_s3** and others.
 
 ### storage_filesystem_path
 
@@ -560,6 +671,18 @@ $config['avprogram_list'] = array( 'always_pass',
 * __default:__ false
 * __available:__ since version 2.0
 * __comment:__ If you are using FUSE to interface with some other storage such as EOS then you might like to set this to true to avoid having to do a distributed search to find out of there is storage for each upload
+
+
+### storage_filesystem_external_script
+
+* __description:__ When using the storage_type of filesystemExternal this is the path to the script that can read/write data to external storage.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py'
+* __available:__ since before version 2.30
+* __comment:__ The script at the given path should perform similar read/write operations as the example external.py script to maintain the storage.
+
+
 
 
 ---
@@ -856,6 +979,25 @@ User language detection is done in the following order:
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">this parameter will get a different name</span>
 
+
+### translatable_emails_lifetime
+
+* __description:__ This is the number of days to retain translatable emails in the database.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 30
+* __available:__ since before version 2.30
+
+
+### trackingevents_lifetime
+
+* __description:__ This is the number of days to retain tracking events in the database. 
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 90
+* __available:__ since before version 2.30
+* __comment:__ See classes/constants/TrackingEventTypes.class.php for types of tracking events. As of 2.30 they are limited to email bounces.
+
 ## General UI
 
 ### theme
@@ -976,8 +1118,15 @@ User language detection is done in the following order:
 * __available:__ since version 2.22
 
 
+### user_page
+* __description:__ This is an array describing which features should be offered on the user "my profile" page.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ array('lang'=>true,'auth_secret'=>true,'id'=>true,'created'=>true)
+* __available:__ since before version 2.30
+* __comment:__ To show an item set the value for the name of the item to true.
+     For more possible values to include in the array see the second level keys in $infos on the templates/user_page.php file.
 
-* [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
 
 
 
@@ -1161,7 +1310,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ For current defaults see https://github.com/filesender/filesender/search?q=transfer_options+in%3Afile+path%3Aincludes
 * __*Standard parameters for all options:*__
 	* __available__(boolean): if set to true then this option shown in the upload form
 	* __advanced__ (boolean): if set to true the option is hidden under an "Advanced options" click-out.  The user must click "Advanced" to make the option visible.
@@ -1178,6 +1327,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __add\_me\_to\_recipients:__ include the sender as one of the recipients.
 	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can se the download count, but not who downloaded it (obviously, as there are no recipients defined).
 	* __redirect_url_on_complete:__ When the transfer upload completes, instead of showing a success message, redirect the user to a URL. This interferes with __get\_a\_link__ in that the uploader will not see the link after the upload completes. Additionally, if the uploader is a guest, there is no way straightforward way for the uploader to learn the download link, although this must not be used as a security feature.
+        * __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
 
 * __*Configuration example:*__
 
@@ -1517,6 +1667,21 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __available:__ since version 2.19
 * __comment:__ 
 
+### recipient_reminder_limit
+
+* __description:__ The number of reminders that a user can send to a recipient
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 50
+* __available:__ since before version 2.30
+* __comment:__ Each time a user sends a reminder to a recipient they use up one of these reminders for that recipient.
+    This option stops a user from flooding a recipient with an infinite supply of reminders.
+
+    Note: Before version 2.30 this was limited by guest_reminder_limit
+    instead of being limited by recipient_reminder_limit. Both
+    defaulted to 50 so the default configuration will effectively
+    remain the same as before 2.30 but now these settings can be
+    changed independently.
 
 
 
@@ -1664,6 +1829,19 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ---
 
+
+### guest_support_enabled
+
+* __description:__ Allow users to create guests.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.30
+* __1.x name:__
+* __comment:__ Setting this to false will disable the guest system and fail on attempts to create a guest if they are directly attempted.
+
+
+
 ### guest_options
 
 * __description:__ <span style="background-color:orange">are transfer options for guest invitations inherited from transfer_options?</span>this parameter controls which options a user has available in the Guest form to control the behaviour of guest invitations.  Options show up in the right hand side block in the Guest form. Options appear in the order they are specified in the config file. See below for details.
@@ -1766,6 +1944,17 @@ This is only for old, existing transfers which have no roundtriptoken set.
   the action will be denied and logged. Note that this is an inclusive value, for example, a setting of 2
   will allow creation of 2 guests but not 3.
 
+### guest_reminder_limit
+
+* __description:__ The number of reminders that a user can send to a guest
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 50
+* __available:__ since before version 2.0
+* __comment:__ Each time a user sends a reminder to a guest they use up one of these reminders for that guest.
+    This option stops a user from flooding a guest with an infinite supply of reminders.
+
+
 ### guest_reminder_limit_per_day
 
 * __description:__ The number of reminders to each guest that user can send per day
@@ -1804,6 +1993,31 @@ This is only for old, existing transfers which have no roundtriptoken set.
 	$config['allow_guest_expiry_date_extension_admin'] = array(30, 90, true); 
 
 
+### guest_limit_per_user
+
+* __description:__ The maximum number of active guests a user can have. Once a user has this many active guests they can not make a new guest until they delete an active guest.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 50
+* __available:__ since before version 2.0
+
+
+### guests_expired_lifetime
+
+* __description:__ For an expired guest, this is the number of days to retain information about the guest in the database before deleting it.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since before version 2.30
+
+
+### guest_upload_page_hide_unchangable_options
+
+* __description:__ When a guest is on the upload page any options that can not be changed will be hidden from view. This can reduce UI clutter.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since before version 2.30
 
 
 
@@ -2294,6 +2508,23 @@ $config['log_facilities'] =
 * __default:__ 10
 * __available:__ since version 2.0
 * __comment:__ Number of days after which collected client logs are automatically deleted.
+
+
+### logs_limit_messages_from_same_ip_address
+
+* __description:__ An option to limit how frequently transfers from the same IP address are logged
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.30
+* __comment:__ In version 2.30 the default action of not logging frequent items from the same IP address was turned off.
+        This option allows that throttle limit to be turned back on again if not have it causes major problems. If this
+        setting with the default of false works ok for people then the option may be removed and the default of not
+        limiting logs will be the only option. So in short, you may not ever need to know about or set this option. It
+        is here as a fallback if there are issues with it being turned off.
+
+
+
 
 
 ---

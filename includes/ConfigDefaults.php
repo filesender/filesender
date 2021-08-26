@@ -184,6 +184,7 @@ $default = array(
     'message_can_not_contain_urls_regex' => '',
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
+    'guest_support_enabled' => true,
     'guest_limit_per_user' => 50,
     'guest_create_limit_per_day' => 0,
     'guest_reminder_limit' => 50,
@@ -297,6 +298,10 @@ $default = array(
     'avprogram_list' => array(),
     'avprogram_max_size_to_scan' => 100*1024*1024,
     
+    'logs_limit_messages_from_same_ip_address' => false,
+
+
+    'service_aup_min_required_version' => 0,
     
     'transfer_options' => array(
         'email_me_copies' => array(
@@ -353,6 +358,11 @@ $default = array(
             'available' => false,
             'advanced' => true,
             'default' => ''
+        ),
+        'must_be_logged_in_to_download' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
         ),
     ),
 

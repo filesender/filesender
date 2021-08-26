@@ -262,3 +262,19 @@ class RestCannotAddDataToCompleteTransferException extends RestException
         parent::__construct('cannot_add_data_to_complete_transfer', 400, array('target_type' => $target_type, 'target_id' => $target_id));
     }
 }
+
+/**
+ * REST error if the user or guest can not be found.
+ */
+class RestUnknownPrincipalException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param string $name name of the missing parameter
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_unknown_principal', 404, array());
+    }
+}

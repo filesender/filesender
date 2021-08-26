@@ -277,6 +277,22 @@ class Auth
     }
 
     /**
+     * Return current user or guest if it exists.
+     */
+    public static function getPrincipal()
+    {
+        $principal = null;
+        
+        if (Auth::isGuest()) {
+            $principal = AuthGuest::getGuest();
+        }
+        if( !$principal ) {
+            $principal = Auth::user();
+        }
+        return $principal;
+    }
+
+    /**
      * Reset the current user to the given data, creating database records if needed.
      * This function should only be called from testing code that is executed locally.
      *
