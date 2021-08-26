@@ -1,14 +1,14 @@
-<?php
+// JavaScript Document
 
 /*
  * FileSender www.filesender.org
- *
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * 
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,8 +17,8 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -30,28 +30,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+$(function() {
+    var page = $('.service_aup_page');
+    if(!page.length) return;
 
-/**
- * Class containing upload options
- */
+    $('.service_aup_accept a').button().on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-class TransferOptions extends Enum
-{
-    const EMAIL_ME_COPIES                           = 'email_me_copies';
-    const EMAIL_ME_ON_EXPIRE                        = 'email_me_on_expire';
-    const EMAIL_UPLOAD_COMPLETE                     = 'email_upload_complete';
-    const EMAIL_DOWNLOAD_COMPLETE                   = 'email_download_complete';
-    const EMAIL_DAILY_STATISTICS                    = 'email_daily_statistics';
-    const EMAIL_REPORT_ON_CLOSING                   = 'email_report_on_closing';
-    const ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE  = 'enable_recipient_email_download_complete';
-    const ADD_ME_TO_RECIPIENTS                      = 'add_me_to_recipients';
-    const EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES     = 'email_recipient_when_transfer_expires';
-    
-    const GET_A_LINK                                = 'get_a_link';
-    
-    const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
 
-    const ENCRYPTION                                = 'encryption';
-    const COLLECTION                                = 'collection';
-    const MUST_BE_LOGGED_IN_TO_DOWNLOAD             = 'must_be_logged_in_to_download';
-}
+        var aup_version = page.find(".serviceaup").attr('data-service-aup-version');
+        window.filesender.log("Principal has accepted service AUP version " + aup_version );
+
+        filesender.client.serviceAUPAccept(aup_version, function() {
+            filesender.ui.notify('success', lang.tr('terms_accepted'));
+
+            var url = new URL(location);
+            var page = url.searchParams.get("s");
+            if( !page ) {
+                page = 'upload';
+            }
+            var args = {};
+            if( url.searchParams.get("vid") ) {
+                args = {
+                    vid: url.searchParams.get("vid")
+                };
+            }
+            if( url.searchParams.get("token") ) {
+                args = {
+                    token: url.searchParams.get("token")
+                };
+            }
+            filesender.ui.goToPage( page, args, null );
+        });
+        
+        return false;
+    });
+
+    window.filesender.log("window.filesender.log() from service aup page ");    
+});

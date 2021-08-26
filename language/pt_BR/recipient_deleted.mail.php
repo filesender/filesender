@@ -20,6 +20,12 @@ Atenciosamente,
 
 {alternative:html}
 
+<div class="header-icons-filesender">
+	<p>
+		<img src="{cfg:site_url}/images/banner-996px.png" alt="RNP - FileSender" title="RNP - FileSender" draggable="false" style="margin: auto; height: 90px;">
+	</p>
+</div>
+
 <p>
     Prezado senhor(a),
 </p>

@@ -22,8 +22,10 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
             
             if(!Auth::isGuest()) {
                 pagemenuitem('upload');
-                
-                pagemenuitem('guests');
+
+                if(Config::get('guest_support_enabled')) {
+                    pagemenuitem('guests');
+                }
                 
                 pagemenuitem('transfers');
                 

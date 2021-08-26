@@ -255,6 +255,9 @@ class Transfer extends DBObject
         ),
         'user_email' => array(
             'user_email' => array()
+        ),
+        'expires' => array(
+            'expires' => array()
         )
     );
 
@@ -1029,6 +1032,9 @@ class Transfer extends DBObject
         }
         if ($property == "get_a_link") {
             return $this->getOption(TransferOptions::GET_A_LINK);
+        }
+        if ($property == "must_be_logged_in_to_download") {
+            return $this->getOption(TransferOptions::MUST_BE_LOGGED_IN_TO_DOWNLOAD);
         }
         
         if ($property == 'size') {
