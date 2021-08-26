@@ -116,6 +116,18 @@ class Guest extends DBObject
             'size' => 'small',
             'default' => 0
         ),
+
+        // Shared guest/user Principal options
+        'service_aup_accepted_version' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => false,
+            'default' => 0
+        ),
+        'service_aup_accepted_time' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
     );
 
     public static function getViewMap()
@@ -127,6 +139,7 @@ class Guest extends DBObject
                         . DBView::columnDefinition_age($dbtype, 'expires')
                         . DBView::columnDefinition_age($dbtype, 'last_activity', 'last_activity_days_ago')
                         . DBView::columnDefinition_age($dbtype, 'last_reminder', 'last_reminder_days_ago')
+                        . DBView::columnDefinition_age($dbtype, 'service_aup_accepted_time', 'service_aup_accepted_time_days_ago')
                         . ' , expires < now() as expired '
                         . " , status = 'available' as is_available "
                         . '  from ' . self::getDBTable();
@@ -171,6 +184,8 @@ class Guest extends DBObject
     protected $reminder_count = 0;
     protected $last_reminder = 0;
     protected $expiry_extensions = 0;
+    protected $service_aup_accepted_version = 0;
+    protected $service_aup_accepted_time = null;
 
     /**
      * Cache
@@ -676,7 +691,7 @@ class Guest extends DBObject
         if (in_array($property, array(
             'id', 'user_email', 'token', 'email', 'transfer_count',
             'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity', 'userid'
-            , 'expiry_extensions'
+            , 'expiry_extensions', 'service_aup_accepted_version', 'service_aup_accepted_time'
         ))) {
             return $this->$property;
         }
@@ -833,6 +848,10 @@ class Guest extends DBObject
                 }
                 $this->$property = (string)$value;
             }
+        } elseif ($property == 'service_aup_accepted_version') {
+            $this->service_aup_accepted_version = $value;
+        } elseif ($property == 'service_aup_accepted_time') {
+            $this->service_aup_accepted_time = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

@@ -292,7 +292,7 @@ class RestEndpointUser extends RestEndpoint
             if (!Auth::user()->is($user) && !Auth::isAdmin()) {
                 throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
             }
-        } else {
+        } else {        
             $user = Auth::user();
         }
         

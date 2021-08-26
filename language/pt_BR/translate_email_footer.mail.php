@@ -11,10 +11,10 @@ subject: traduzir o rodapé do email, compartilhado por todos os idiomas
 
 {alternative:plain}
 
-Traduza este email : {raw:translatableemail.link}
-
 {alternative:html}
 
-<p>
-    Traduza este email  : <a href="{translatableemail.link}">{translatableemail.link}</a>
-</p>
+<div class="footer-icons-ministerios">
+	<p>
+		<img src="https://www.rnp.br/arquivos/reguas/generico/rnp_regua_ministerios.png" alt="RNP - FileSender" title="RNP - FileSender" draggable="false" style="margin: auto; height: 65px;">
+	</p>
+</div>
