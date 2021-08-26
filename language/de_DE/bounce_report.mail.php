@@ -13,7 +13,7 @@ subject: Nachrichtenübermittlungsfehler
 
 Sehr geehrte Damen und Herren,
 
-eine oder mehrere Ihrer Empfänger haben Ihre Nachricht(en) nicht erhalten:
+ein oder mehrere Ihrer Empfänger haben Ihre Nachricht(en) nicht erhalten:
 
 {each:bounces as bounce}
 {if:bounce.target_type=="Recipient"}
@@ -35,7 +35,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    eine oder mehrere Ihrer Empfänger haben Ihre Nachricht(en) nicht erhalten:
+    ein oder mehrere Ihrer Empfänger haben Ihre Nachricht(en) nicht erhalten:
 </p>
 
 <ul>

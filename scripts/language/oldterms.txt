@@ -285,6 +285,7 @@ global_statistics
 guest
 guest_access_upload_page
 guest_cancelled
+guest_create_attempted_while_system_disabled
 guest_created
 guest_created_receipt
 guest_deleted
@@ -351,6 +352,8 @@ minimum
 missing_files_for_restart
 most_guest_deletion
 most_user_deleted_guests_that_did_not_send_a_single_file
+must_be_logged_in_to_download
+must_be_logged_in_to_download_first_person
 n_more
 need_to_readd_files
 never
@@ -500,6 +503,10 @@ sender_email_search
 serverlog_auth_sp_attribute_not_found
 serverlog_config_directive
 serverlog_wanted_key_in_array
+service_aup_body_version_1
+service_aup_body_version_2
+service_aup_body_version_3
+service_aup_header
 set_default_guest_expire_days
 set_user_guest_expiry_default_days
 show_client_logs
