@@ -9,14 +9,12 @@ $ver = Config::get('service_aup_min_required_version');
     <?php echo Lang::tr('service_aup_body_version_' . $ver ) ?>
     
     <div class="service_aup_accept">
-        <a href="#">
+        <a href="#"  class="btn btn-primary" role="button">
             <span class="fa fa-lg fa-check"></span>
             {tr:ui2_accept_aup_1}
         </a>
     </div>
 
-    
-    
 </div>
 
 <script type="text/javascript" src="{path:js/service_aup_page.js}"></script>
