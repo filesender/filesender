@@ -122,10 +122,10 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
 
     if($text) {
         echo '    <label for="'.$name.'" class="form-check-label">'.Lang::tr($name).'</label>';
-        echo '    <input id="'.$name.'" name="'.$name.'" class="form-check-input" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
+        echo '    <input id="'.$name.'" name="'.$name.'" class="form-check-input uploadoption" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
         
     } else {
-        echo '  <input id="'.$name.'" name="'.$name.'" class="form-check-input" type="checkbox" '.$checked.' '.$disabled.' />';
+        echo '  <input id="'.$name.'" name="'.$name.'" class="form-check-input uploadoption" type="checkbox" '.$checked.' '.$disabled.' />';
         echo '  <label for="'.$name.'" class="form-check-label">'.Lang::tr($name).'</label>';
     }
     
