@@ -367,7 +367,8 @@ window.filesender.transfer = function() {
             }
         }
         
-        if (this.files.length >= filesender.config.max_transfer_files) {
+        if (filesender.config.max_transfer_files > 0 &&
+            this.files.length >= filesender.config.max_transfer_files) {
             errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
@@ -1152,7 +1153,8 @@ window.filesender.transfer = function() {
         }
         
         // Redo sanity checks
-        if (this.files.length > filesender.config.max_transfer_files) {
+        if (filesender.config.max_transfer_files > 0 &&
+            this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
         for (var i = 0; i < this.files.length; i++) {
