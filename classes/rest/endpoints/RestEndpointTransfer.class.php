@@ -701,6 +701,18 @@ class RestEndpointTransfer extends RestEndpoint
                                            $filedata->iv, $filedata->aead );
                 $files_cids[$file->id] = $filedata->cid;
             }
+
+            // recheck that get_a_link is not being attempted
+            // if the guest can_only_send_to_me.
+            if ($transfer->getOption(TransferOptions::GET_A_LINK)) {
+                if($guest && $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                    
+                    Logger::warn("nefarious activity suspected: A guest with id " . $guest->id
+                               . " has sent a request without get_a_link=true and they"
+                               . " are only allowed to send to the user who invited them.");
+                    throw new TransferRejectedException('{invalid_options}');
+                }
+            }
             
             // Add recipient(s) depending on options
             if ($transfer->getOption(TransferOptions::GET_A_LINK)) {
