@@ -32,6 +32,13 @@ function config_VisString( $k, $specialv, $specialret ) {
             <tr><td><?php echo Config::get('auditlog_lifetime') ?></td>
                 <td><?php echo Lang::tr('privacy_page_auditlog_lifetime')?> </td>
             </tr>
+            <tr><td><?php echo Config::get('trackingevents_lifetime') ?></td>
+                <td><?php echo Lang::tr('privacy_page_trackingevents_lifetime')?> </td>
+            </tr>
+            <tr><td></td>
+                <td><?php echo Lang::tr('privacy_page_frequent_recipients_text')?> </td>
+            </tr>
+            
 
         </table>
     </div>
