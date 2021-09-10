@@ -32,7 +32,7 @@ class BasisTest extends  \PHPUnit_Extensions_Selenium2TestCase
     public function setUp() :void
     {
         $caps = $this->getDesiredCapabilities();
-        $this->setBrowserUrl('localhost/filesender');
+        $this->setBrowserUrl(Config::get('site_url'));
         if (!isset($caps['name'])) {
             $caps['name'] = get_called_class().'::'.$this->getName();
             $this->setDesiredCapabilities($caps);
@@ -80,7 +80,7 @@ class BasisTest extends  \PHPUnit_Extensions_Selenium2TestCase
         require_once('includes/init.php');
 
         
-        $this->start_url = 'https://localhost/filesender/' ;//Config::get('site_url');
+        $this->start_url = Config::get('site_url');
 
         if($this->start_url_path != '') {
             $this->start_url = Config::get('site_url') . '/' . $this->start_url_path;
