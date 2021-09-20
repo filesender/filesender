@@ -1459,11 +1459,29 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 
 ### encryption_key_version_new_files
-* __description:__ The way encryption keys are derived from the supplied or generated password may change over time. Generally this is done to improve security, though it may also exclude certain older web browsers due to some features being missing in the older browser. This setting is the default key version to use for new files. The key version used to encrypt a file is stored in the database for each transfer and sent to allow anybody downloading the file to use the correct key version to properly decrypt the file. This way, new improved code can be issued and existing files which use older key versions can still be downloaded and decrypted. This allows migration to newer code as new FileSender releeases are made while allowing users to still download older encyrpted content. It is expected that this configuration option may be ignored by a system administrator unless you wish to support older web browsers and thus force a specific older key version to be used for all files. You will want version 0 if you wish to support IE11 clients. As of late 2018 the default is version 1.
+* __description:__ Select which user password hashing is performed and which AES mode is used for encryption.
+    Some mores have versions with and without key hashing because some browsers do not support the key hashing.
+    The choices in order of newest to oldest are: 3 is v2019_gcm_importKey_deriveKey
+     which is AES-GCM mode for encryption and using PBKDF2 to derive a key from user supplied passwords.
+     A PBKDF2 related configuration setting is crypto_pbkdf2_expected_secure_to_year.
+     The setting 3 is the recommended setting unless you have to support older browsers which can not
+     work with this level of security.
+
+     The setting 2 is v2019_gcm_digest_importKey which uses AES-GCM for encryption but almost directly imports the user password without any key hashing.
+     The setting 1 is v2018_importKey_deriveKey which uses AES-CBC mode for encryption and PBKDF2 for hashing the password.
+     The setting 0 is v2017_digest_importKey which uses AES-CBC mode for encryption and directly imports the password without hashing.
+     Notice that version 0 is like 1 but without key hashing and version 2 is like 3 but without key hashing.
+
+     It is expected that this configuration option may be ignored by a system administrator unless you wish to support older web browsers and thus force a specific older key version to be used for all files. You will want version 0 if you wish to support IE11 clients. From late 2018 through to 2021 the default is version 1. It is likely that the default will be version 3 for FileSender 3.x.
+     
+     The way encryption keys are derived from the supplied or generated password may change over time. Generally this is done to improve security, though it may also exclude certain older web browsers due to some features being missing in the older browser.
+
+     This setting is the default key version to use for new files. The key version used to encrypt a file is stored in the database for each transfer and sent to allow anybody downloading the file to use the correct key version to properly decrypt the file. This way, new improved code can be issued and existing files which use older key versions can still be downloaded and decrypted. This allows migration to newer code as new FileSender releeases are made while allowing users to still download older encyrpted content. 
+
 * __recommend_leaving_at_default:__ true
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ latest version that the code supports.
+* __default:__ 1
 * __available:__ since version 2.6
 * __comment:__
 
