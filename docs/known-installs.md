@@ -10,6 +10,7 @@ If you want to add your FileSender installation to this list, send an email to f
 
 | Country/Region|NREN/Org  | Service URL          | Known since|
 | --- | --- | --- |---|
+| Albania  | RASH     | [https://filesender.rash.al/](https://filesender.rash.al/) | Oct 2021 |
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016|
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012|
 | Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014|
