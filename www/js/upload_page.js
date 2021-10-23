@@ -1509,26 +1509,26 @@ $(function() {
     if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning'
         || filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' )
     {
-        filesender.ui.nodes.message.on(
-            'keyup',
-            function(e) {
-                if( filesender.ui.doesUploadMessageContainPassword()) {
-                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning' ) {
-                        filesender.ui.nodes.message_contains_password_warning.show();
-                    }
-                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
-                        filesender.ui.nodes.message_contains_password_error.show();
-                    }
-                    filesender.ui.evalUploadEnabled();
-                    messageContainedPassword = true;
-                } else if( messageContainedPassword ) {
-                    messageContainedPassword = false;
-                    filesender.ui.nodes.message_contains_password_warning.hide();
-                    filesender.ui.nodes.message_contains_password_error.hide();
-                    filesender.ui.evalUploadEnabled();
+        var checkThatPasswordIsNotInMessage = function(e) {
+            if( filesender.ui.doesUploadMessageContainPassword()) {
+                if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning' ) {
+                    filesender.ui.nodes.message_contains_password_warning.show();
                 }
+                if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
+                    filesender.ui.nodes.message_contains_password_error.show();
+                }
+                filesender.ui.evalUploadEnabled();
+                messageContainedPassword = true;
+            } else if( messageContainedPassword ) {
+                messageContainedPassword = false;
+                filesender.ui.nodes.message_contains_password_warning.hide();
+                filesender.ui.nodes.message_contains_password_error.hide();
+                filesender.ui.evalUploadEnabled();
             }
-        );
+        }
+
+        filesender.ui.nodes.message.on(             'keyup', checkThatPasswordIsNotInMessage );
+        filesender.ui.nodes.encryption.password.on( 'keyup', checkThatPasswordIsNotInMessage );        
     }
     
     
