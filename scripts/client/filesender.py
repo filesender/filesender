@@ -315,7 +315,7 @@ try:
     if debug:
       print('putChunks: '+path)
     with open(path, mode='rb', buffering=0) as fin:
-      for offset in range(0,size+1,upload_chunk_size):
+      for offset in range(0,size,upload_chunk_size):
         if progress:
           print('Uploading: '+path+' '+str(offset)+'-'+str(min(offset+upload_chunk_size, size))+' '+str(round(offset/size*100))+'%')
         data = fin.read(upload_chunk_size)
