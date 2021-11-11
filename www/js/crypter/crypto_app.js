@@ -678,7 +678,19 @@ window.filesender.crypto_app = function () {
             var key_version = encryption_details.key_version;
             var blobArray = [];
 	    var wrongPassword = false;
+            var nonStreamedTeraRecv = false;
 
+            var transfer = new filesender.transfer();
+            if (transfer.canUseTeraReceiver()) {
+                window.filesender.log("decryptBlob() can use TR");
+                if( chunkid==0 ) {
+                    if( !window.filesender.config.use_streamsaver ) {
+                        window.filesender.log("decryptBlob() first chunk of non streamed download");
+                        nonStreamedTeraRecv = true;
+                    }
+                }
+            }
+            
             try {
                     
                 var value = encryptedChunk;
@@ -692,7 +704,7 @@ window.filesender.crypto_app = function () {
                                                             decryptParams,
                                                             callbackError );
 
-                window.filesender.log("decryptBlob()" );
+                window.filesender.log("decryptBlob() about to really decrypt() nonStreamedTeraRecv " + nonStreamedTeraRecv );
                 
                 crypto.subtle.decrypt(decryptParams, key, value.data).then(
                     function (result) {
@@ -713,10 +725,15 @@ window.filesender.crypto_app = function () {
                         }
                     },
                     function (e) {
-                        window.filesender.log("decrypt(e)");
+                        window.filesender.log("decrypt(e) nonStreamedTeraRecv " + nonStreamedTeraRecv );
                         window.filesender.log(e);
+                        if(nonStreamedTeraRecv) {
+                            e = new Error();
+                        }
                         if (!wrongPassword) {
                             wrongPassword=true;
+                            window.filesender.log("decrypt(e5) nonStreamedTeraRecv " + nonStreamedTeraRecv );
+                            window.filesender.log("decrypt(e5) msg " + e.message );
                             filesender.client.decryptionFailedForTransfer( encryption_details.transferid );
                             callbackError(e);
                         }
