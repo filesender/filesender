@@ -339,8 +339,13 @@ window.filesender.ui = {
      */
     error: function(error,callback) {
         this.log('[error] ' + error.message);
-        
-        var d = this.alert('error', lang.tr(error.message),callback);
+        this.log(error);
+
+        var msg = lang.tr(error.message);
+        if( error.messageTranslated ) {
+            msg = error.messageTranslated;
+        }
+        var d = this.alert('error', msg, callback);
         
         if(error.details) {
             var i = $('<div class="details" />').appendTo(d);

@@ -229,6 +229,12 @@ window.filesender.transfer = function() {
         enable &= !this.disable_terasender;
         return enable;
     };
+    this.canUseTeraReceiver = function() {
+        var enable = filesender.config.terareceiver_enabled && filesender.supports.workers;
+        enable &= !this.encryption || filesender.supports.workerCrypto;
+        enable &= !this.disable_terasender;
+        return enable;
+    }
 
     this.getExtention = function(file) {
         var fileSplit = file.name.split('.');
