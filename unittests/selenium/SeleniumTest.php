@@ -9,6 +9,8 @@ if (!function_exists('str_contains')) {
     }
 }
 
+use PHPUnit_Extensions_Selenium2TestCase_Keys as Keys;
+
 class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 {
     protected $start_url_path = '';
@@ -840,6 +842,12 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $expected = $disabled_expected > 0;
         $this->assertEquals( $expected, str_contains( $v, 'disabled' ),
                              "stage 1 continue disabled state not what is expected" );
+    }
+
+    public function scrollToTop()
+    {
+        $this->sendKeys($this->byCssSelector(".core"), Keys::HOME);
+        sleep(2);
     }
     
 }
