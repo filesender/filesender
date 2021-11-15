@@ -30,6 +30,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+if(!('filesender' in window)) window.filesender = {};
+window.filesender.pageLoaded = false;
+
 
 // This is a duplicate, it should be moved to a common.js file
 function isIE11()
@@ -1251,14 +1254,10 @@ filesender.ui.startUpload = function() {
         
         // show the completed stage.
         filesender.ui.stage = 4;
-        filesender.ui.nodes.stage1hide.hide();
-        filesender.ui.nodes.stage2hide.hide();
-        filesender.ui.nodes.stage3hide.hide();
-        filesender.ui.nodes.stage4show.show();
-        filesender.ui.nodes.form.find('.stage4').show(); 
 
         filesender.ui.nodes.form.find('.downloadlink').html(filesender.ui.transfer.download_link);
         filesender.ui.nodes.form.find('.downloadlink').attr('href',filesender.ui.transfer.download_link);
+        filesender.ui.nodes.form.find('.downloadlink').attr('data-link',filesender.ui.transfer.download_link);
 
         var link = filesender.ui.createPageLink(
             filesender.ui.transfer.guest_token ? 'home' : 'transfers',
@@ -1266,6 +1265,12 @@ filesender.ui.startUpload = function() {
             filesender.ui.transfer.guest_token ? null : 'transfer_' + filesender.ui.transfer.id
         );
         filesender.ui.nodes.form.find('.mytransferslink').attr('href',link);
+
+        filesender.ui.nodes.stage1hide.hide();
+        filesender.ui.nodes.stage2hide.hide();
+        filesender.ui.nodes.stage3hide.hide();
+        filesender.ui.nodes.stage4show.show();
+        filesender.ui.nodes.form.find('.stage4').show();         
     };
     
     var errorHandler = function(error) {
@@ -2356,6 +2361,11 @@ $(function() {
             }
         }, {auth_prompt: false});
     }
+
+    window.setTimeout(
+        function() {
+            window.filesender.pageLoaded = true;
+        }, 500 );
 });
 
 $('.instructions').on('click', function(){
