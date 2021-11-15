@@ -55,7 +55,13 @@
         </testsuite>
 
         <testsuite name="selenium">
-            <directory>./selenium/tests</directory>
+<!--          <directory>./selenium/tests</directory> -->
+
+          <file>./selenium/tests/UploadAutoResumeTest.php</file>
+          <file>./selenium/tests/EncryptionTest.php</file>
+          <file>./selenium/tests/ConfigurationOptionsTest.php</file>
+          <file>./selenium/tests/TransferExpiredTest.php</file>
+          
         </testsuite>
 
         <testsuite name="dataset" >
