@@ -18,6 +18,7 @@ class TransferExpiredTest extends SeleniumTest
         $fp1 = $this->addFile( "124bytes.txt" );
         $fp1 = $this->addFile( "125bytes.txt" );
         $this->stageXContinue(1);
+        $this->scrollToTop();
         $this->ensureTransferGetALink();
         $this->stageXContinue(2);
         $url = $this->waitForUploadCompleteDialog();
