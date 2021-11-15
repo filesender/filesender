@@ -4,7 +4,7 @@ require_once 'unittests/selenium/SeleniumTest.php';
 
 class MaxUploadSizeTest extends SeleniumTest
 {
-
+/*
     protected $start_url_path = '';
     
 
@@ -87,6 +87,7 @@ class MaxUploadSizeTest extends SeleniumTest
         $this->assertEquals( ($error_expected?2:0), $count+$count_button);
     }
 
-
+ */
+    
 
 }
