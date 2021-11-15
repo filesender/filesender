@@ -6,4 +6,6 @@
         echo GUI::getLoginButton();
         ?>
     </div>
+    <script type="text/javascript" src="{path:js/logon_page.js}"></script>
+    
 </div>
