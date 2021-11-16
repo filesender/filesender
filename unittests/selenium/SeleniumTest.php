@@ -582,7 +582,13 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         $this->waitUntil(function() use ($test,$stage) {
 
-            $e = $test->elements($test->using('css selector')->value('.stage'.$stage));
+            $selector = '.stage'.$stage;
+            if( $stage >= 3 ) {
+                // if we are uploading we might finish before the code
+                // can wait for that page.
+                $selector = '.stage'.$stage.',.stage4';
+            }
+            $e = $test->elements($test->using('css selector')->value($selector));
             if( !count($e)) {
                 Logger::info( "stage ".$stage."element can not be found ");
                 return null;
