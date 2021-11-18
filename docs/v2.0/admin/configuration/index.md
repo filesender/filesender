@@ -58,6 +58,7 @@ A note about colours;
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
+* [cloud_s3_bucket](#cloud_s3_bucket)
 
 ## Shredding
 
@@ -681,6 +682,17 @@ $config['avprogram_list'] = array( 'always_pass',
 * __default:__ FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py'
 * __available:__ since before version 2.30
 * __comment:__ The script at the given path should perform similar read/write operations as the example external.py script to maintain the storage.
+
+
+### cloud_s3_bucket
+
+* __description:__ Optional name of a single bucket to use for storing all files in on S3.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.31
+* __comment:__ If you wish to store all files in a single bucket set it's name in this configuration option.
+Ensure that the named bucket already exists if you use this setting.
 
 
 
