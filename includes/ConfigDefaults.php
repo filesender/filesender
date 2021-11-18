@@ -225,6 +225,7 @@ $default = array(
     'cloud_s3_use_path_style_endpoint' => true,
     'cloud_s3_key'    => 'accessKey1',
     'cloud_s3_secret' => 'verySecretKey1',
+    'cloud_s3_bucket' => '',
 
     'disable_directory_upload' => true,
     'directory_upload_button_enabled' => true,
