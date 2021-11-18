@@ -73,11 +73,13 @@ class StorageCloudS3 extends StorageFilesystem
         return ($offset % $file_chunk_size);
     }
 
-    public static function usingCustomBucketName()
+    public static function usingCustomBucketName( File $file )
     {
-        $v = Config::get('cloud_s3_bucket');
-        if( $v && $v != '' ) {
-            return true;
+        if ($file && $file->transfer && $file->transfer->getOption(TransferOptions::STORAGE_CLOUD_S3_BUCKET)) {
+            $v = $file->transfer->options[TransferOptions::STORAGE_CLOUD_S3_BUCKET];
+            if( $v && $v != '' ) {
+                return true;
+            }
         }
         return false;
     }
@@ -88,7 +90,7 @@ class StorageCloudS3 extends StorageFilesystem
         $offset = $offset - ($offset % $file_chunk_size);
         $object_name = str_pad($offset, 24, '0', STR_PAD_LEFT);
 
-        if( self::usingCustomBucketName() ) {
+        if( self::usingCustomBucketName( $file ) ) {
             return $file->uid . '/' . $object_name;
         }
         return $object_name;
@@ -96,8 +98,8 @@ class StorageCloudS3 extends StorageFilesystem
 
     public static function getBucketName(File $file)
     {
-        if( self::usingCustomBucketName() ) {
-            return Config::get('cloud_s3_bucket');
+        if( self::usingCustomBucketName( $file ) ) {
+            return $file->transfer->options[TransferOptions::STORAGE_CLOUD_S3_BUCKET];
         }
         return $file->uid;
     }
@@ -123,7 +125,7 @@ class StorageCloudS3 extends StorageFilesystem
 
         $bucket_name = self::getBucketName( $file );
         $object_name = self::getObjectName( $file, $offset );
-        
+
         try {
             $client = self::getClient();
 
@@ -226,7 +228,7 @@ class StorageCloudS3 extends StorageFilesystem
                 ));
             }
             
-            if( !self::usingCustomBucketName() ) {
+            if( !self::usingCustomBucketName( $file ) ) {
                 $result = $client->deleteBucket(array(
                     'Bucket' => $bucket_name,
                 ));
