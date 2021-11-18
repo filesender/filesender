@@ -342,6 +342,8 @@ class Config
         $kv = self::get('encryption_key_version_new_files');
         if( $kv == 2 || $kv == 3 ) {
             self::$parameters['crypto_crypt_name'] = "AES-GCM";
+        } else {
+            self::$parameters['crypto_crypt_name'] = "AES-CBC";
         }
 
         
