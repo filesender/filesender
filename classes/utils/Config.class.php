@@ -339,6 +339,11 @@ class Config
 
         self::forceLoadedToBool('guest_support_enabled');
 
+        $kv = self::get('encryption_key_version_new_files');
+        if( $kv == 2 || $kv == 3 ) {
+            self::$parameters['crypto_crypt_name'] = "AES-GCM";
+        }
+
         
         // verify classes are happy
         Guest::validateConfig();
