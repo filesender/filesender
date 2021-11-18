@@ -170,9 +170,11 @@ class StorageCloudS3 extends StorageFilesystem
         try {
             $client = self::getClient();
 
-            $client->createBucket(array(
-                'Bucket' => $bucket_name,
-            ));
+            if( !self::usingCustomBucketName( $file )) {
+                $client->createBucket(array(
+                    'Bucket' => $bucket_name,
+                ));
+            }
 
             $result = $client->putObject(array(
                 'Bucket' => $bucket_name,
