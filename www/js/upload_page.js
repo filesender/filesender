@@ -100,6 +100,7 @@ function pause( changeTextElements )
     if( changeTextElements ) {
         filesender.ui.nodes.seconds_since_data_sent_info.text('');
         filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+        filesender.ui.nodes.stats.estimated_completion.find('.value').text(lang.tr(''));
         filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
     }
 }
@@ -471,6 +472,14 @@ filesender.ui.files = {
         }
         
         var speed = uploaded / (time / 1000);
+
+        var remaining = size - uploaded;
+        var eta = 0;
+        if( remaining && speed ) {
+            eta = remaining / speed;
+        }
+        filesender.ui.nodes.stats.estimated_completion.find('.value').text(filesender.ui.formatETA(eta));
+
         
         if (filesender.config.upload_display_bits_per_sec)
             speed *= 8;
@@ -1212,7 +1221,8 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.stats.size.hide();
     filesender.ui.nodes.stats.uploaded.show();
     filesender.ui.nodes.stats.average_speed.show();
-    
+    filesender.ui.nodes.stats.estimated_completion.show();
+
     filesender.ui.nodes.form.find(':input:not(.file input[type="file"])').prop('disabled', true);
 
     // Report and possibly resume the upload
@@ -1379,7 +1389,8 @@ $(function() {
             number_of_files: form.find('.files_actions .stats .number_of_files'),
             size: form.find('.files_actions .stats .size'),
             uploaded: form.find('.uploading_actions .stats .uploaded'),
-            average_speed: form.find('.uploading_actions .stats .average_speed')
+            average_speed: form.find('.uploading_actions .stats .average_speed'),
+            estimated_completion: form.find('.uploading_actions .stats .estimated_completion')
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };
@@ -1717,6 +1728,7 @@ $(function() {
 
             pause( true );
             filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+            filesender.ui.nodes.stats.estimated_completion.find('.value').text(lang.tr(''));
             filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
             return false;
         }).button();
