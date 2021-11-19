@@ -100,7 +100,7 @@ function pause( changeTextElements )
     if( changeTextElements ) {
         filesender.ui.nodes.seconds_since_data_sent_info.text('');
         filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
-        filesender.ui.nodes.stats.estimated_completion.find('.value').text(lang.tr(''));
+        filesender.ui.nodes.stats.estimated_completion.find('.value').text('');
         filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
     }
 }
@@ -138,6 +138,36 @@ function resume( force, resetResumeCount )
  */
 var checkEncryptionPassword_slideToggleDelay = 200;
 var checkEncryptionPassword_delay = 300;
+
+if(!('filesender' in window)) window.filesender = {};
+if(!('ui'         in window.filesender)) window.filesender.ui = {};
+if(!('elements'   in window.filesender.ui)) window.filesender.ui.elements = {};
+
+/**
+ * Update the UI element at uielement only once every delayMS time interval.
+ * While the first delayMS interval is passing show the string initString.
+ */
+filesender.ui.elements.nonBusyUpdater = function( uielement, delayMS, initString ) {
+    return {
+        e: uielement,
+        lastUpdate: null,
+        update: function( v ) {
+            var $this = this;
+            t = (new Date()).getTime();
+            if( $this.lastUpdate && ($this.lastUpdate + delayMS < t )) {
+                $this.e.text( v );
+            }
+            if( !$this.lastUpdate ) {
+                $this.e.text( initString );
+            }
+            if( !$this.lastUpdate || ($this.lastUpdate + delayMS < t )) {
+                $this.lastUpdate = t;
+            }
+        }
+    }
+};
+
+
 
 // Manage files
 filesender.ui.files = {
@@ -478,7 +508,7 @@ filesender.ui.files = {
         if( remaining && speed ) {
             eta = remaining / speed;
         }
-        filesender.ui.nodes.stats.estimated_completion.find('.value').text(filesender.ui.formatETA(eta));
+        filesender.ui.nodes.stats.estimated_completion_updater.update( filesender.ui.formatETA(eta));
 
         
         if (filesender.config.upload_display_bits_per_sec)
@@ -1402,6 +1432,11 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+    
+    filesender.ui.nodes.stats.estimated_completion_updater = filesender.ui.elements.nonBusyUpdater(
+        filesender.ui.nodes.stats.estimated_completion.find('.value'),
+        2000,
+        lang.tr('initializing'));
 
     
     // Bind file list clear button
@@ -1728,7 +1763,7 @@ $(function() {
 
             pause( true );
             filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
-            filesender.ui.nodes.stats.estimated_completion.find('.value').text(lang.tr(''));
+            filesender.ui.nodes.stats.estimated_completion.find('.value').text('');
             filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
             return false;
         }).button();

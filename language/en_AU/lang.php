@@ -682,4 +682,5 @@ $lang['epoch_minutes'] = 'Minutes';
 $lang['epoch_seconds'] = 'Seconds';
 $lang['no_estimate'] = 'No estimate';
 $lang['soon'] = 'Soon';
+$lang['initializing'] = 'Initializing';
 
