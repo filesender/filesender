@@ -168,6 +168,19 @@ filesender.ui.elements.nonBusyUpdater = function( uielement, delayMS, initString
 };
 
 
+// prevent the element from having an empty string.
+filesender.ui.elements.preventEmpty = function(el) {
+    var originalValue = '';
+    el.on( 'focus', function(e) { originalValue = e.target.value; } );
+    el.on( 'blur',  function(e) {
+        if( e.target.value == '' ) {
+            e.target.value = originalValue;
+        }
+    });
+    return this;
+}
+
+
 
 // Manage files
 filesender.ui.files = {
@@ -1610,6 +1623,11 @@ $(function() {
     filesender.ui.nodes.expires.on('change', function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
+
+    // prevent the datepicker from having an empty string.
+    filesender.ui.nodes.expires.preventEmpty = filesender.ui.elements.preventEmpty(
+        filesender.ui.nodes.expires);
+    
 
     
     // Bind advanced options display toggle
