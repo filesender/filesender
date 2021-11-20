@@ -434,6 +434,35 @@ window.filesender.ui = {
         
         return bytes.toFixed(precision).replace(/\.0+$/g, '') + ' ' + multipliers[pow];
     },
+
+
+    /**
+     * Format a number of seconds in the future to a readable string
+     * 
+     * @param int v
+     * 
+     * @return string
+     */
+    formatETA : function (v) {
+        if( v==-1 ) {
+            return lang.tr('no_estimate');
+        }
+        if( !v ) {
+            return lang.tr('soon');
+        }
+        if( v > 3600 ) {
+            v = v / 3600; // epoch_hours
+            return (v).toFixed(1) + ' ' + lang.tr('epoch_hours');
+        }
+        if( v > 5*60 ) {
+            v = v / 60;
+            return (v).toFixed(0) + ' ' + lang.tr('epoch_minutes');
+        }
+        if( v < 5 ) {
+            return lang.tr('soon');
+        }
+        return ''+ (v).toFixed(0) + ' ' + lang.tr('epoch_seconds');
+    },
     
     /**
      * Pending transfer check

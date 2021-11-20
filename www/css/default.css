@@ -838,7 +838,8 @@ table.list .date {
 
 #upload_form .uploading_actions .msg,
 #upload_form .uploading_actions .stats .uploaded,
-#upload_form .uploading_actions .stats .average_speed
+#upload_form .uploading_actions .stats .average_speed,
+#upload_form .uploading_actions .stats .estimated_completion
 {
     display: none;
 }
