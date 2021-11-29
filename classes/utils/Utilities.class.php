@@ -87,8 +87,8 @@ class Utilities
         // Generate 16 bytes of random data (128 bits)
         $bytes = random_bytes(16);
         // Set bits required for a valid UUIDv4
-        $bytes{8} = chr((ord($bytes{8}) & 0x3F) | 0x80); // Eat 2 bits of entropy
-        $bytes{6} = chr((ord($bytes{6}) & 0x4F) | 0x40); // Eat 4 bits of entropy
+        $bytes[8] = chr((ord($bytes[8]) & 0x3F) | 0x80); // Eat 2 bits of entropy
+        $bytes[6] = chr((ord($bytes[6]) & 0x4F) | 0x40); // Eat 4 bits of entropy
         // $bytes has now 122 bits of entropy
 
         // Convert bytes to hex and split in 4-char strings (hex, so 2 bytes per string)
