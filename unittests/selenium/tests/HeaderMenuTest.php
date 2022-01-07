@@ -14,11 +14,10 @@ class HeaderMenuTest extends SeleniumTest
 
         $this->setupUnauthenticated();
         sleep(1);
-
-        $this->assertEquals(0, $this->getHeaderMenuSize());
+        $this->assertEquals(4, $this->getHeaderMenuSize());
 
         $this->setupAuthenticated();
-
+        sleep(1);
         $this->assertGreaterThanOrEqual( 3, $this->getHeaderMenuSize(),
                                          'authenticated user menu item count' );
 
@@ -29,32 +28,34 @@ class HeaderMenuTest extends SeleniumTest
 
         $this->setAdmin();
 
-        $this->assertEquals(5, $this->getHeaderMenuSize());
+        $this->assertEquals(10, $this->getHeaderMenuSize());
 
         $this->unsetAdmin();
 
         $this->assertGreaterThanOrEqual( 4, $this->getHeaderMenuSize());
 
         $this->unsetUserPage();
-
-        $this->assertEquals(3, $this->getHeaderMenuSize());
-
-        $this->setupUnauthenticated();
-        sleep(1);
         
+        $this->assertEquals(8, $this->getHeaderMenuSize());
 
-        $this->assertEquals(0, $this->getHeaderMenuSize());
+        
+        $this->setupUnauthenticated();
+        $this->assertEquals(4, $this->getHeaderMenuSize());
 
-        $this->setupAuthenticated();
-        sleep(1);
+        
     }
 
     private function getHeaderMenuSize()
     {
-        $elements = $this->elements($this->using('css selector')->value('.leftmenu ul li'));
+        $elements = $this->elements($this->using('css selector')->value('#navbarFilesender > .nav-item'));
         $count = count($elements);
-
         return $count;
     }
 
+    public function tearDown()
+    {
+        $this->setupAuthenticated();
+        sleep(1);
+    }
+    
 }

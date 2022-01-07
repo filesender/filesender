@@ -862,5 +862,11 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $this->sendKeys($this->byCssSelector(".core"), Keys::HOME);
         sleep(2);
     }
+
+    public function removeUploadStage1( $name )
+    {
+        $element = $this->waitForCSS("tr[data-name='".$name."'] .removebutton");
+        $element->click();
+    }
     
 }
