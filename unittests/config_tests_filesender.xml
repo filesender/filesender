@@ -63,8 +63,8 @@
 
 -->
           <file>./selenium/tests/HeaderMenuTest.php</file>
-<file>./selenium/tests/InvalidExtensionsTest.php</file>
 <!--
+<file>./selenium/tests/InvalidExtensionsTest.php</file>
           <file>./selenium/tests/LanguageSelectTest.php</file>
           <file>./selenium/tests/MaxFilesTest.php</file>
           <file>./selenium/tests/MaxUploadSizeTest.php</file>
