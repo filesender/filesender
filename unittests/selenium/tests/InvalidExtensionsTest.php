@@ -10,11 +10,15 @@ class InvalidExtensionsTest extends SeleniumTest
 
     public function testBat()
     {
+        extract($this->getKeyBindings());
+        $this->setupAuthenticated();
         $this->extensionTest('extensiontest.bat', true);
     }
 
     public function testExe()
     {
+        extract($this->getKeyBindings());
+        $this->setupAuthenticated();
         $this->extensionTest('extensiontest.exe', true);
     }
  
