@@ -6,18 +6,6 @@ class HeaderMenuTest extends SeleniumTest
 {
 
     protected $start_url_path = '';
-    
-
-    public function testHeaderMenuUnauthenticated()
-    {
-        extract($this->getKeyBindings());
-        $this->setupUnauthenticated();
-        sleep(1);
-        $this->assertEquals(4, $this->getHeaderMenuSize());
-
-        $this->setupAuthenticated();
-        sleep(1);
-    }
 
     public function testHeaderMenuAuthenticated()
     {
@@ -36,28 +24,37 @@ class HeaderMenuTest extends SeleniumTest
                                         'user page' );
 
         $this->setAdmin();
-        sleep(1);
     }
 
     
     public function testHeaderMenuAdminPage()
     {
         extract($this->getKeyBindings());
+        $this->setupAuthenticated();
+        sleep(3);
+        
         $this->assertEquals(10, $this->getHeaderMenuSize());
+        
         $this->unsetAdmin();
     }
     
     public function testHeaderMenuNoAdminPage()
     {
         extract($this->getKeyBindings());
+        $this->setupAuthenticated();
+        
         $this->assertGreaterThanOrEqual( 4, $this->getHeaderMenuSize());
+        
         $this->unsetUserPage();
     }
     
     public function testNormalHeader()
     {
         extract($this->getKeyBindings());
+        $this->setupAuthenticated();
+
         $this->assertEquals(8, $this->getHeaderMenuSize());
+        
         $this->setupUnauthenticated();
     }
     
@@ -68,6 +65,7 @@ class HeaderMenuTest extends SeleniumTest
         $this->setupAuthenticated();
         sleep(1);
     }
+
 
     private function getHeaderMenuSize()
     {
