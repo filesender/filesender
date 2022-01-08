@@ -31,12 +31,6 @@ class LanguageSelectTest extends SeleniumTest
         $this->assertContains( 'FileSender is a secure way to share large files with anyone!',
                                $this->pageText());
 
-        
     }
 
-    public function tearDown()
-    {
-        $this->setupAuthenticated();
-        sleep(3);
-    }
 }

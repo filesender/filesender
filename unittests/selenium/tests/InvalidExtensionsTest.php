@@ -7,7 +7,14 @@ class InvalidExtensionsTest extends SeleniumTest
     protected $lastTest = false;
     protected $start_url_path = '';
     
-
+    public function testSetup()
+    {
+        extract($this->getKeyBindings());
+        $this->setupAuthenticated();
+        sleep(4);
+        $this->assertEquals(1,1,'ok');
+    }
+    
     public function testBat()
     {
         extract($this->getKeyBindings());
