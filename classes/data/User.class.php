@@ -30,6 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 // Require environment (fatal)
 if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
