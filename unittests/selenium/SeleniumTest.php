@@ -863,6 +863,20 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         sleep(2);
     }
 
+    public function scrollToBottom()
+    {
+        $this->sendKeys($this->byCssSelector(".core"), Keys::END);
+        sleep(2);
+        $this->sendKeys($this->byCssSelector(".core"), Keys::END);
+        sleep(2);
+    }
+
+    public function scrollIntoView( $selector )
+    {
+        $this->execute(array('script' => "document.querySelector(\"".$selector."\").scrollIntoView(true);",
+                             'args' => array()));
+    }
+    
     public function removeUploadStage1( $name )
     {
         $element = $this->waitForCSS("tr[data-name='".$name."'] .removebutton");

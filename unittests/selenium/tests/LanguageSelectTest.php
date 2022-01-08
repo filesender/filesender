@@ -8,9 +8,15 @@ class LanguageSelectTest extends SeleniumTest
     
     private function selectLangauge( $lang )
     {
-        sleep(1);
+        sleep(10);
+        
         $this->waitForCSS(".language-dropdown-toggle")->click();
         sleep(2);
+        $this->scrollIntoView( "#toplangdropdown > a[data-id='".$lang."']" );
+//        $this->execute(array('script' => "document.querySelector(\"#toplangdropdown > a[data-id='".$lang."']\").scrollIntoView(true);",
+//                             'args' => array()));
+        sleep(5);
+        
         $this->waitForCSS("#toplangdropdown > a[data-id='".$lang."']")->click();
     }
 
