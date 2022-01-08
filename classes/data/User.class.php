@@ -31,6 +31,7 @@
  */
 
 
+
 // Require environment (fatal)
 if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
