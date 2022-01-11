@@ -55,13 +55,12 @@
         </testsuite>
 
         <testsuite name="selenium">
-<!--
+
           <file>./selenium/tests/UploadAutoResumeTest.php</file>
           <file>./selenium/tests/EncryptionTest.php</file>
           <file>./selenium/tests/ConfigurationOptionsTest.php</file>
           <file>./selenium/tests/TransferExpiredTest.php</file>
 
--->
           <file>./selenium/tests/InvalidExtensionsTest.php</file>
           <file>./selenium/tests/MaxFilesTest.php</file>
           <file>./selenium/tests/MaxUploadSizeTest.php</file>
