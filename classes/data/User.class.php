@@ -35,6 +35,7 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
+
 /**
  * Represents an user in database
  */
