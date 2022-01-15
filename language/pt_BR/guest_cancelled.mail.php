@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Voucher de convidado cancelado
+subject: Voucher de visitante cancelado
 
 {alternative:plain}
 

@@ -13,7 +13,7 @@ subject: Tiedostojako poistunut
 
 Hei!
 
-Tiedostojako #{transfer.id} on vanhentunut ja poistunut jaosta.
+Tiedostojako #{transfer.id} on erääntynyt ja poistunut jaosta.
 
 Terveisin,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Terveisin,
 </p>
 
 <p>
-    Tiedostojako #{transfer.id} on vanhentunut ja poistunut jaosta.
+    Tiedostojako #{transfer.id} on erääntynyt ja poistunut jaosta.
 </p>
 
 <p>

@@ -60,12 +60,6 @@ if(!session_id()) {
 // Ensure HTTPS if needed
 GUI::forceHTTPS();
 
-// Handle magic quoting (TODO maybe deprecated now ?)
-if(get_magic_quotes_gpc()) {
-    $_POST = array_map('stripslashes', $_POST);
-    $_GET = array_map('stripslashes', $_GET);
-};
-
 // Sanitize all input variables
 $_GET = Utilities::sanitizeInput($_GET);
 $_POST = Utilities::sanitizeInput($_POST);

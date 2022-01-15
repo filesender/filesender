@@ -123,6 +123,7 @@ $default = array(
     'crypto_gcm_max_chunk_count' => 4294967295,                   // 2^32-1
 
     'terasender_enabled' => true,
+    'terareceiver_enabled' => false,
     'terasender_advanced' => false,
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
@@ -224,6 +225,7 @@ $default = array(
     'cloud_s3_use_path_style_endpoint' => true,
     'cloud_s3_key'    => 'accessKey1',
     'cloud_s3_secret' => 'verySecretKey1',
+    'cloud_s3_bucket' => '',
 
     'disable_directory_upload' => true,
     'directory_upload_button_enabled' => true,

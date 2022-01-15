@@ -339,6 +339,18 @@ class Config
 
         self::forceLoadedToBool('guest_support_enabled');
 
+        $kv = self::get('encryption_key_version_new_files');
+        // these are crypto_app.js / crypto_key_version_constants
+        //   v2019_gcm_importKey_deriveKey: 3, // AES-GCM otherwise same as v2018_importKey_deriveKey
+        //   v2019_gcm_digest_importKey:    2, // AES-GCM otherwise same as v2017_digest_importKey
+        //   v2018_importKey_deriveKey:     1, // AES-CBC
+        //   v2017_digest_importKey:        0  // AES-CBC
+        if( $kv == 2 || $kv == 3 ) {
+            self::$parameters['crypto_crypt_name'] = "AES-GCM";
+        } else {
+            self::$parameters['crypto_crypt_name'] = "AES-CBC";
+        }
+
         
         // verify classes are happy
         Guest::validateConfig();

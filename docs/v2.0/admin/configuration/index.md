@@ -43,6 +43,7 @@ A note about colours;
 * [crypto_gcm_max_file_size](#crypto_gcm_max_file_size)
 * [crypto_gcm_max_chunk_size](#crypto_gcm_max_chunk_size)
 * [crypto_gcm_max_chunk_count](#crypto_gcm_max_chunk_count)
+* [crypto_crypt_name](#crypto_crypt_name)
 * [upload_crypted_chunk_padding_size](#upload_crypted_chunk_padding_size)
 * [upload_crypted_chunk_size](#upload_crypted_chunk_size)
 
@@ -58,6 +59,7 @@ A note about colours;
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
+* [cloud_s3_bucket](#cloud_s3_bucket)
 
 ## Shredding
 
@@ -565,6 +567,15 @@ $config['avprogram_list'] = array( 'always_pass',
 * __comment:__ It is recommended that you leave this setting as the default value and do not change the
      upload_chunk_size when using GCM cryptography. The default is 2^32-1.
 
+### crypto_crypt_name
+* __description:__ Internal use. The name of the cipher currently used. This is set from encryption_key_version_new_files for new transfers or the key version that was used for an existing transfer.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ calculated
+* __available:__ since before version 2.30
+* __comment:__ This is an internal setting. It will be overridden in crypto_app based on the key version to be used for a transfer. The key version in that was set in encryption_key_version_new_files
+is stored as part of the metadata for each transfer when it is created. When a transfer is to be downloaded the key version used for that transfer will be used to set the crypto_crypt_name.
+This way the encryption_key_version_new_files can be updated and existing uploads will continue to be able to be downloaded.
 
 ### upload_crypted_chunk_size
 * __description:__ Internal only setting. This is the entire size of an encrypted chunk, including any padding for per chunk IV
@@ -681,6 +692,17 @@ $config['avprogram_list'] = array( 'always_pass',
 * __default:__ FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py'
 * __available:__ since before version 2.30
 * __comment:__ The script at the given path should perform similar read/write operations as the example external.py script to maintain the storage.
+
+
+### cloud_s3_bucket
+
+* __description:__ Optional name of a single bucket to use for storing all files in on S3.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.31
+* __comment:__ If you wish to store all files in a single bucket set it's name in this configuration option.
+Ensure that the named bucket already exists if you use this setting.
 
 
 
@@ -1459,11 +1481,29 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 
 ### encryption_key_version_new_files
-* __description:__ The way encryption keys are derived from the supplied or generated password may change over time. Generally this is done to improve security, though it may also exclude certain older web browsers due to some features being missing in the older browser. This setting is the default key version to use for new files. The key version used to encrypt a file is stored in the database for each transfer and sent to allow anybody downloading the file to use the correct key version to properly decrypt the file. This way, new improved code can be issued and existing files which use older key versions can still be downloaded and decrypted. This allows migration to newer code as new FileSender releeases are made while allowing users to still download older encyrpted content. It is expected that this configuration option may be ignored by a system administrator unless you wish to support older web browsers and thus force a specific older key version to be used for all files. You will want version 0 if you wish to support IE11 clients. As of late 2018 the default is version 1.
+* __description:__ Select which user password hashing is performed and which AES mode is used for encryption.
+    Some mores have versions with and without key hashing because some browsers do not support the key hashing.
+    The choices in order of newest to oldest are: 3 is v2019_gcm_importKey_deriveKey
+     which is AES-GCM mode for encryption and using PBKDF2 to derive a key from user supplied passwords.
+     A PBKDF2 related configuration setting is crypto_pbkdf2_expected_secure_to_year.
+     The setting 3 is the recommended setting unless you have to support older browsers which can not
+     work with this level of security.
+
+     The setting 2 is v2019_gcm_digest_importKey which uses AES-GCM for encryption but almost directly imports the user password without any key hashing.
+     The setting 1 is v2018_importKey_deriveKey which uses AES-CBC mode for encryption and PBKDF2 for hashing the password.
+     The setting 0 is v2017_digest_importKey which uses AES-CBC mode for encryption and directly imports the password without hashing.
+     Notice that version 0 is like 1 but without key hashing and version 2 is like 3 but without key hashing.
+
+     It is expected that this configuration option may be ignored by a system administrator unless you wish to support older web browsers and thus force a specific older key version to be used for all files. You will want version 0 if you wish to support IE11 clients. From late 2018 through to 2021 the default is version 1. It is likely that the default will be version 3 for FileSender 3.x.
+     
+     The way encryption keys are derived from the supplied or generated password may change over time. Generally this is done to improve security, though it may also exclude certain older web browsers due to some features being missing in the older browser.
+
+     This setting is the default key version to use for new files. The key version used to encrypt a file is stored in the database for each transfer and sent to allow anybody downloading the file to use the correct key version to properly decrypt the file. This way, new improved code can be issued and existing files which use older key versions can still be downloaded and decrypted. This allows migration to newer code as new FileSender releeases are made while allowing users to still download older encyrpted content. 
+
 * __recommend_leaving_at_default:__ true
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ latest version that the code supports.
+* __default:__ 1
 * __available:__ since version 2.6
 * __comment:__
 
