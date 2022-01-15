@@ -9,7 +9,7 @@
 ?>
 <h3>Sisäänkirjautuminen</h3>
 <ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i>Kirjaudu sisään käyttämällä listatun kotiorganisaatiosi tarjoamia käyttäjätunnuksia. Mikäli organisaatiotasi ei ole listattu, tai sisäänkirjautumisessa esiintyy ongelmia, ota yhteyttä oman kotiorganisaatiosi IT-tukeen</li>
+    <li><i class="fa-li fa fa-caret-right"></i>Kirjaudu palveluun käyttämällä listatun kotiorganisaatiosi tarjoamia käyttäjätunnuksia. Mikäli organisaatiotasi ei ole listattu, tai sisäänkirjautumisessa esiintyy ongelmia, ota yhteyttä oman kotiorganisaatiosi IT-tukeen.</li>
 </ul>
 
 <h3>Selaimesi ominaisuudet</h3>
@@ -20,24 +20,24 @@
 
 <h3>HTML5 suurten tiedostojen siirtoon</h3>
 <ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i>Voit käyttää tätä tiedonsiirtomenetelmää mikäli näet yläpuolella <img src="images/html5_installed.png" alt="HTML5-tiedonsiirto tuettu" />-ikonin selaintuen merkiksi</li>
-    <li><i class="fa-li fa fa-caret-right"></i>Pystyt hyödyntämään palvelun HTML5-tukea käyttämällä riittävän nykyaikaista selainta.</li>
+    <li><i class="fa-li fa fa-caret-right"></i>Voit käyttää HTML5-tiedonsiirtomenetelmää mikäli näet yläpuolella <img src="images/html5_installed.png" alt="HTML5-tiedonsiirto tuettu" />-ikonin selaintuen merkiksi</li>
+    <li><i class="fa-li fa fa-caret-right"></i>Pystyt hyödyntämään palvelun HTML5-tukea käyttämällä nykyaikaista selainta.</li>
     <li><i class="fa-li fa fa-caret-right"></i>Esimerkiksi Firefoxin ja Chromen nykyversiot Windowsilla, Mac OS:lla ja Linuxilla toimivat.</li>
     <li><i class="fa-li fa fa-caret-right"></i>
-        Voit <strong>jatkaa</strong> keskeytynyttä tiedonsiirtoa. Jos tiedoston lähetys palveluun jostain syystä katkeaa, voit jatkaa siirtoa uudelleenkäynnistää siirron jakamalla <strong>saman tiedoston samalla nimellä uudelleen</strong>. an interrupted or cancelled upload.
-        Kun siirto jälleen alkaa, etenemispalkin pitäisi jatkua siitä mihin viimeksi jäit.
+        Voit <strong>jatkaa</strong> keskeytynyttä tiedonsiirtoa. Jos tiedoston lähetys palveluun jostain syystä katkeaa, voit jatkaa siirtoa jakamalla <strong>saman tiedoston samalla nimellä uudelleen</strong>.
+        Kun siirto jälleen alkaa, siirron pitäisi jatkua kohdasta, johon viimeksi jäit.
     </li>
 </ul>
 
 <h3>Yli {size:cfg:max_legacy_file_size} kokoisten tiedostojen siirtäminen palveluun ilman HTML5-tukea</h3>
 <ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i>{cfg:site_name} varoittaa mikäli yrität siirtää liian suurta tiedostoa ilman selaimen HTML5-tukea.</li>
+    <li><i class="fa-li fa fa-caret-right"></i>{cfg:site_name} varoittaa, mikäli yrität siirtää liian suurta tiedostoa ilman selaimen HTML5-tukea.</li>
     <li><i class="fa-li fa fa-caret-right"></i>Keskeytyneiden siirtojen jatkaminen ei ole mahdollista ilman HTML5-tukea. Suosittelemme nykyaikaisempaa selainta.</li>
 </ul>
 
 <h3>Tiedostojen lataaminen palvelusta</h3>
 <ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i>Download-suuntaiseen siirtoon eli jaetun tiedoston lataamiseen palvelusta ei ole erityisiä selainvaatimuksia. Tiedoston koosta riippumatta HTML5-tukea ei vaadita.</li>
+    <li><i class="fa-li fa fa-caret-right"></i>Tiedoston lataamiseen palvelusta ei ole erityisiä selainvaatimuksia. Tiedoston koosta riippumatta HTML5-tukea ei vaadita. Voit käyttää myös esim. wget-komentorivityökalua.</li>
 </ul>
 
 <h3>Palveluun asetettut käyttörajat</h3>
