@@ -33,7 +33,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-   unterhalb finden Sie eine Einladung, die den Zugang auf <a href="{cfg:site_url}">{cfg:site_name}</a> gewährt. Sie können die Einladung verwenden um, einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen.
+   unterhalb finden Sie eine Einladung, die den Zugang auf <a href="{cfg:site_url}">{cfg:site_name}</a> gewährt. Sie können die Einladung verwenden, um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen.
 </p>
 
 <table rules="rows">
