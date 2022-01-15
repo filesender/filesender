@@ -9,7 +9,7 @@
 ?>
 <h1>Tervetuloa palveluun {cfg:site_name}</h1>
 <p>
-    Toimiakseen suunnitellulla tavalla palvelu säilyttää tietoja jaetuista tiedostoista, palvelun käyttäjistä sekä suoritetuista toimenpiteistä. Tiedostot ja niihin liittyvät tiedot poistetaan palvelusta automaattisesti tiedostojaon eräännyttyä. Tiedostoista ei oteta varmuuskopioita, eikä palvelua ole tarkoitettu tiedostojen pysyväissäilytykseen. Tällä sivulla on lisätietoja tallennetuista tiedoista.
+    Toimiakseen suunnitellulla tavalla palvelu säilyttää tietoja jaetuista tiedostoista, palvelun käyttäjistä sekä suoritetuista toimenpiteistä. Tiedostot ja niihin liittyvät tiedot poistetaan palvelusta automaattisesti tiedostojaon erääntymisen jälkeen. Palveluun siirretyistä tiedostoista ei oteta varmuuskopioita, eikä palvelua ole tarkoitettu tiedostojen pysyväissäilytykseen. Tällä sivulla on lisätietoja tallennetuista tiedoista.
 </p>
 <?php
 if( ShredFile::shouldUseShredFile()) {

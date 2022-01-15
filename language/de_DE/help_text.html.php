@@ -7,15 +7,14 @@
 // 
 // 
 ?>
-<h3>Willkommen beim FileSender</h3>
+<h3>Willkommen bei FileSender</h3>
 
 <p>
     FileSender ist eine webbasierte Applikation, die es authentifizierten Benutzern
     erlaubt, sicher und einfach große Dateien an andere zu verschicken.
     Benutzern ohne Login kann von einem authentifizierten Benutzer eine Einladung
     geschickt werden, sodass diese dann ebenfalls Dateien verschicken können.
-    FileSender wurde für die Anforderungen von Hochschulen und Forschungseinrichtungen
-    entwickelt.
+    FileSender wurde für die Anforderungen von Hochschulen und Forschungseinrichtungen entwickelt.
 </p>
 
 <h4>Für Gäste...</h4>
@@ -23,38 +22,37 @@
 <p>
     Wenn Sie eine Einladung von dieser Website bekommen haben,
     können Sie ein- oder mehrmals Dateien verschicken.
-    Alle notwendigen Informationen sind der Einladungs-E-Mail enthalten.
+    Alle notwendigen Informationen sind in der Einladungs-E-Mail enthalten.
     Wenn Sie als Gast eine Datei hochladen, vergewissern Sie sich,
-    dass Sie den Einladungs-Link von einer Institution aus erhalten haben,
+    dass Sie den Einladungs-Link von einer Institution erhalten haben,
     der Sie vertrauen. Wenn Sie keine Einladung zum Upload von Dateien
     von dieser Institution erwarten, handelt es sich möglicherweise
     um eine nicht legitimierte E-Mail.
-</p
+</p>
 <p>
-    Der Benutzer, der Sie eingeladen hat dieses System zu nutzen,
+    Der Benutzer, der Sie eingeladen hat, dieses System zu nutzen,
     hat dies getan, um Ihnen das Hochladen von Dateien zu ermöglichen.
     Dadurch können die Empfänger per Link diese Dateien herunterladen.
     Die Empfänger können ggf. durch Angabe der jeweiligen E-Mail-Adresssen
     selbst bestimmt werden.
 </p>
 
-<h4>Für registriert Benutzuer...</h4>
+<h4>Für registrierte Benutzer...</h4>
 
 <p>
-    Wenn sich diese Installation von FileSender in Ihrer Instituttion
+    Wenn sich diese Installation von FileSender in Ihrer Institution
     befindet, sollten Sie sich über den Login-Button oben rechts
     mit Ihren Standard-Account-Daten anmelden können.
-    Sollten Sie unsicher sein, welche Login-Daten Sie verwenden müssen
-    setzten Sie sich bitte mit Ihrem IT-Support in Verbindung.
+    Sollten Sie unsicher sein, welche Login-Daten Sie verwenden müssen,
+    setzen Sie sich bitte mit Ihrem IT-Support in Verbindung.
 </p>
 
 <p>
     Als registrierter Benutzer sollten Sie die Möglichkeit haben,
-    Dateien hoch zu laden. Sie können dabei Empfänger per E-Mail automatisch
-    benachrichtigen lassen oder sich einen Link geben lassen, sodass
+    Dateien hochzuladen. Sie können dabei Empfänger per E-Mail automatisch
+    benachrichtigen oder sich einen Link geben lassen, sodass
     Sie diesen selbst z.B. per E-Mail weiter geben können.
-    Außerdem sollte es möglich sein, dass Sie andere Personen als Gast einladen
-    können, Ihnen Dateien per FileSender zuzuschicken.
+    Außerdem sollte es möglich sein, dass Sie andere Personen als Gast einladen können oder Ihnen Dateien per FileSender zu schicken.
 </p>
 
 <h3>Mögliche Limitierungen beim Herunterladen von Dateien</h3>

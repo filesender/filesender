@@ -229,6 +229,12 @@ window.filesender.transfer = function() {
         enable &= !this.disable_terasender;
         return enable;
     };
+    this.canUseTeraReceiver = function() {
+        var enable = filesender.config.terareceiver_enabled && filesender.supports.workers;
+        enable &= !this.encryption || filesender.supports.workerCrypto;
+        enable &= !this.disable_terasender;
+        return enable;
+    }
 
     this.getExtention = function(file) {
         var fileSplit = file.name.split('.');
@@ -367,7 +373,8 @@ window.filesender.transfer = function() {
             }
         }
         
-        if (this.files.length >= filesender.config.max_transfer_files) {
+        if (filesender.config.max_transfer_files > 0 &&
+            this.files.length >= filesender.config.max_transfer_files) {
             errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
@@ -1152,7 +1159,8 @@ window.filesender.transfer = function() {
         }
         
         // Redo sanity checks
-        if (this.files.length > filesender.config.max_transfer_files) {
+        if (filesender.config.max_transfer_files > 0 &&
+            this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
         for (var i = 0; i < this.files.length; i++) {

@@ -144,6 +144,7 @@ if( $encryption_mandatory ) {
                 <div class="stats">
                     <div class="uploaded">{tr:uploaded} : <span class="value"></span></div>
                     <div class="average_speed">{tr:average_speed} : <span class="value"></span></div>
+                    <div class="estimated_completion">{tr:estimated_completion} : <span class="value"></span></div>
                 </div>
             </div>
             

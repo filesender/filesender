@@ -555,7 +555,7 @@ class Transfer extends DBObject
         $transfer->created = time();
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
-        
+
         return $transfer;
     }
     
@@ -972,6 +972,8 @@ class Transfer extends DBObject
                 } else {
                     $value = null;
                 }
+            } elseif ($name == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
+                // no validation as this is only set server side.
             } else {
                 $value = (bool)$value;
             }

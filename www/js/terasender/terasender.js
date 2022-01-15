@@ -59,6 +59,30 @@ window.filesender.terasender = {
     security_token: null,
 
     /**
+     * upload/download mode
+     */
+    mode_values: {
+        sender:   1,
+        receiver: 2
+    },
+    mode: 1, // default to a sender
+    isSender: function() {
+        return this.mode == this.mode_values.sender;
+    },
+    isReceiver: function() {
+        return this.mode == this.mode_values.receiver;
+    },
+
+    /**
+     * This can be set to an object with callbacks for errors,
+     * progress, a copy of the sink to write to etc when
+     * mode==receiver.
+     *
+     */ 
+    receiver: null,
+    crypto_app: null,
+
+    /**
      * Send command to worker
      * 
      * @param worker workerinterface
@@ -79,6 +103,48 @@ window.filesender.terasender = {
         var file = null;
         
         var files = this.transfer.files;
+
+        this.log('allocateJob(top) mode:' + this.mode );
+        
+        if( this.isReceiver()) {
+
+            var encryption_details = this.receiver.encryption_details;
+            var chunkid = this.receiver.chunkid;
+            this.receiver.chunkid++;
+            this.log('allocateJob(recv) chunkid:' + chunkid );
+            
+            if( chunkid > encryption_details.chunkcount ) {
+                this.log("allocateJob(recv) we have downloaded all the chunks!");
+                return null;
+            }
+            
+            var job = {
+                mode: this.mode,
+                chunkid: chunkid,
+                chunk: {
+                    id: chunkid,
+                    start: 0,
+                    end: 1
+                },
+                file: {
+                    id: -1
+                },
+                encryption:         this.transfer.encryption,
+                encryption_details: this.receiver.encryption_details,
+                roundtriptoken:     this.transfer.roundtriptoken,
+                link:               this.receiver.link,
+                security_token:     this.security_token,
+                csrfptoken:         filesender.client.getCSRFToken()
+            };
+
+            this.log('allocateJob(recv) chunk:' + chunkid + ' giving job to worker');
+            
+            worker.file_id = 1;
+            worker.fine_progress = 0;
+            worker.offset = 0;
+
+            return job;
+        }
         
         if(worker.file_id !== null) { // Worker already has file
             for(var i=0; i<files.length && !file; i++)
@@ -134,6 +200,7 @@ window.filesender.terasender = {
         
 	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=file.uploaded; //missing from file
         var job = {
+            mode: this.mode,
             chunk: {
                 id: chunkid,
                 start: file.uploaded,
@@ -230,6 +297,11 @@ window.filesender.terasender = {
             if(error.details) window.filesender.log(error.details); // Whatever type it is ...
         }
         
+
+        if( this.receiver && this.receiver.onError ) {
+            this.receiver.onError( error );
+        }
+        error.messageTranslated = error.message;
         error.message = 'terasender_' + error.message;
         
         // Trigger global error
@@ -257,6 +329,52 @@ window.filesender.terasender = {
      * @param object data progress data
      */
     evalProgress: function(worker_id, job, ratio) {
+
+        if( this.isReceiver()) {
+            var t = this;
+            var encryption_details = t.receiver.encryption_details;
+            
+            this.log('evalProgress(recv) job chunkid ' + job.chunkid );
+            this.log('evalProgress(recv) job cc      ' + encryption_details.chunkcount );
+            this.log('evalProgress(recv) job   ec ' + job.encryptedChunk );
+            if( job.encryptedChunk ) {
+                this.log('evalProgress(recv) job   iv.len ' + job.encryptedChunk.iv.length );
+                this.log('evalProgress(recv) job data.len ' + job.encryptedChunk.data.length );
+            }
+            
+            if(ratio >= 1) {
+                // completion message
+                this.receiver.onChunkSuccess( job );
+            
+                if( job.chunkid >= encryption_details.chunkcount ) {
+                    this.log("evalProgress(recv) we have downloaded all the chunks!");
+                    this.status = 'done';
+                }
+            } else {
+                // progress message
+                this.crypto_app = window.filesender.crypto_app();
+                this.log('evalProgress(recv) progress loaded ' + job.progress.loaded );
+                this.log('evalProgress(recv) progress total  ' + job.progress.total );
+                this.log('evalProgress(recv) progress esz    ' + encryption_details.encrypted_filesize );
+                this.log('evalProgress(recv) ca    ' + this.crypto_app );
+                this.log('evalProgress(recv) ccs1  ' + this.crypto_app.crypto_chunk_size );
+                this.workers[worker_id].progress = { loaded:job.progress.loaded, total:job.progress.total };
+                var chunkid     = this.receiver.chunkid;
+                var chunksz     = 1 * this.crypto_app.crypto_chunk_size;
+                var startoffset = 1 * (chunkid * chunksz);
+                var totalrecv = startoffset;
+                var loaded = job.progress.loaded;
+
+                var percentComplete = Math.round(loaded / (1*this.crypto_app.upload_crypted_chunk_size) *10000) / 100;
+                var percentOfFileComplete = 100*(((chunkid-1)*this.crypto_app.crypto_chunk_size + loaded) / encryption_details.encrypted_filesize );
+
+                if( this.receiver.onProgress ) {
+                    this.receiver.onProgress( this, chunkid, totalrecv, percentComplete, percentOfFileComplete );
+                }
+            }
+            return;
+        }
+        
         var file = null;
         for(var i=0; i<this.transfer.files.length; i++)
             if(this.transfer.files[i].id == job.file.id) {
@@ -463,7 +581,7 @@ window.filesender.terasender = {
             case 'error' :
                 this.error(data, 'worker:' + worker_id);
                 
-                // Worker can't continue, upload is broken, stop everyone
+                // Worker can't continue, transfer is broken, stop everyone
                 this.stop();
                 break;
             
@@ -521,44 +639,62 @@ window.filesender.terasender = {
     
     
     /**
-     * Start upload
+     * Start upload/download
      * 
      * @return bool indicating wether the transfer started (true) or that driver is already buzy (false)
      */
-    start: function(transfer) {
+    startMode: function(transfer,mode) {
+        this.log('terasender.start(top)   mode ' + mode );
+        this.log('terasender.start(top) status ' + this.status );
+
         if(this.status != '' && this.status != 'done') return false;
-        
+
         if(!transfer) {
             this.error({message: 'no_transfer'});
             return;
         }
+
+        if( mode == '' || mode < 1 ) {
+            mode = this.mode_values.sender;
+        }
+        this.mode = mode;
         
         this.security_token = filesender.client.security_token;
         
         this.log('Starting transfer ' + transfer.id + ' with ' + transfer.files.length + ' files (' + transfer.size + ' bytes)');
         
         this.status = 'running';
-        this.workers = [];
-        this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_nokey;
-        this.crypto_pbkdf2_workers_that_have_generated = 0;
-        
         this.transfer = transfer;
+        var ts = this;
 
         // Safety
         var wcnt = parseInt(filesender.config.terasender_worker_count);
         if(isNaN(wcnt) || wcnt < 1 || wcnt > 30)
             wcnt = 3;
+        if( this.isReceiver()) {
+            // this will be expanded in a future PR
+            wcnt = 1;
+        }
 
-        var ts = this;
+        this.workers = [];
+        this.crypto_pbkdf2_status = this.crypto_pbkdf2_states.pbkdf2_nokey;
+        this.crypto_pbkdf2_workers_that_have_generated = 0;
+        
         this.workers_start_monitor_id = window.setTimeout( function() { noWorkersHaveStarted(ts) },
                                                            filesender.config.terasender_worker_start_must_complete_within_ms );
         
-        for(i=0; i<filesender.config.terasender_worker_count; i++)
+        for(i=0; i<wcnt; i++)
             this.createWorker();
         
         return true;
     },
 
+    start: function(transfer) {
+        this.startMode(transfer,this.mode_values.sender);
+    },
+    startReceiver: function(transfer) {
+        this.startMode(transfer,this.mode_values.receiver);
+    },
     
     /**
      * Retry upload
