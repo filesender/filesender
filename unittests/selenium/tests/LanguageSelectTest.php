@@ -5,35 +5,33 @@ require_once 'unittests/selenium/SeleniumTest.php';
 class LanguageSelectTest extends SeleniumTest
 {
 
-    protected $start_url_path = '';
     
+    private function selectLangauge( $lang )
+    {
+        $this->waitForCSS(".language-dropdown-toggle")->click();
+        sleep(2);
+        $this->scrollIntoView( "#toplangdropdown > a[data-id='".$lang."']" );
+        sleep(2);
+        $this->waitForCSS("#toplangdropdown > a[data-id='".$lang."']")->click();
+    }
 
+    private function pageText()
+    {
+        return $this->byCssSelector("#page .core p")->text();
+    }
+        
     public function testLanguageSelect()
     {
         extract($this->getKeyBindings());
-
         $this->setupUnauthenticated();
 
-        for ($second = 0; ; $second++) {
-            if ($second >= 60) $this->fail("timeout");
-            try {
-                if ($this->byId("language_selector")!=null  ? true : false) break;
+        $this->selectLangauge( 'nl-nl' );
+        $this->assertContains( 'FileSender is een veilige manier om bestanden te delen met iedereen!',
+                               $this->pageText());
 
-            } catch (Exception $e) {}
-            sleep(1);
-        }
-
-        $this->select($this->byId("language_selector"))->selectOptionByLabel("nl-nl");
-
-        $this->assertContains('FileSender is een veilige manier om bestanden te delen met iedereen!', $this->byCssSelector("#page .box")->text());
-
-
-        $this->select($this->byId("language_selector"))->selectOptionByLabel("English (US)");
-
-        $this->assertContains('FileSender is a secure way to share large files with anyone!', $this->byCssSelector("#page .box p")->text());
-
-        $this->setupAuthenticated();
-        sleep(3);
+        $this->selectLangauge( 'en-us' );
+        $this->assertContains( 'FileSender is a secure way to share large files with anyone!',
+                               $this->pageText());
 
     }
 

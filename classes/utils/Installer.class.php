@@ -44,7 +44,7 @@ class Installer
     {
         echo 'Starting install'."\n";
         
-        $running = Upgrader::runningVersion();
+        $running = Version::running();
         if ($running > 1) {
             throw new Exception('Already installed (maybe you wanted to run the upgrader ?), exiting');
         }

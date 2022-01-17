@@ -75,14 +75,14 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                 
 <?php if($LanguageSelectorShown): ?>
             
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown language-selector">
 
                 <?php 
                 $code = Lang::getCode();
                 foreach(Lang::getAvailableLanguages() as $id => $dfn) {
                     if($id == $code) {
                         $specificid = $dfn['specific-id'];
-                        echo '<a class="nav-link dropdown-toggle" ';
+                        echo '<a class="nav-link dropdown-toggle language-dropdown-toggle" ';
                         echo ' href="#" ';
                         echo ' id="toplangdropdownlabel" ';
                         echo ' data-bs-toggle="dropdown" ';

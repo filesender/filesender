@@ -6,55 +6,73 @@ class HeaderMenuTest extends SeleniumTest
 {
 
     protected $start_url_path = '';
-    
 
-    public function testHeaderMenu()
+    public function testHeaderMenuAuthenticated()
     {
         extract($this->getKeyBindings());
-
-        $this->setupUnauthenticated();
-        sleep(1);
-
-        $this->assertEquals(0, $this->getHeaderMenuSize());
-
         $this->setupAuthenticated();
-
         $this->assertGreaterThanOrEqual( 3, $this->getHeaderMenuSize(),
                                          'authenticated user menu item count' );
 
         $this->setUserPage();
-
+    }
+    
+    public function testHeaderMenuAuthenticatedUserPage()
+    {
+        extract($this->getKeyBindings());
         $this->assertGreaterThanOrEqual(4, $this->getHeaderMenuSize(),
                                         'user page' );
 
         $this->setAdmin();
+    }
 
-        $this->assertEquals(5, $this->getHeaderMenuSize());
-
-        $this->unsetAdmin();
-
-        $this->assertGreaterThanOrEqual( 4, $this->getHeaderMenuSize());
-
-        $this->unsetUserPage();
-
-        $this->assertEquals(3, $this->getHeaderMenuSize());
-
-        $this->setupUnauthenticated();
-        sleep(1);
+    
+    public function testHeaderMenuAdminPage()
+    {
+        extract($this->getKeyBindings());
+        $this->setupAuthenticated();
+        sleep(3);
         
+        $this->assertEquals(10, $this->getHeaderMenuSize());
+        
+        $this->unsetAdmin();
+    }
+    
+    public function testHeaderMenuNoAdminPage()
+    {
+        extract($this->getKeyBindings());
+        $this->setupAuthenticated();
+        
+        $this->assertGreaterThanOrEqual( 4, $this->getHeaderMenuSize());
+        
+        $this->unsetUserPage();
+    }
+    
+    public function testNormalHeader()
+    {
+        extract($this->getKeyBindings());
+        $this->setupAuthenticated();
 
-        $this->assertEquals(0, $this->getHeaderMenuSize());
-
+        $this->assertEquals(8, $this->getHeaderMenuSize());
+        
+        $this->setupUnauthenticated();
+    }
+    
+    public function testNormalUnauthenticated()
+    {
+        extract($this->getKeyBindings());
+        $this->assertEquals(4, $this->getHeaderMenuSize());
         $this->setupAuthenticated();
         sleep(1);
     }
 
+
     private function getHeaderMenuSize()
     {
-        $elements = $this->elements($this->using('css selector')->value('.leftmenu ul li'));
+        $elements = $this->elements($this->using('css selector')->value('#navbarFilesender > .nav-item'));
         $count = count($elements);
-
         return $count;
     }
 
+    
 }

@@ -51,6 +51,14 @@ class RestEndpointTransfer extends RestEndpoint
      */
     public static function cast(Transfer $transfer, $files_cids = null, $creatingTransfer = false )
     {
+        $options = $transfer->options;
+
+        // The client never needs to know the bucket name used.
+        $v = Config::get('cloud_s3_bucket');
+        if( $v && $v != '' ) {
+            $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = '';
+        }
+        
         return array(
             'id' => $transfer->id,
             'userid' => $transfer->userid,
@@ -60,7 +68,7 @@ class RestEndpointTransfer extends RestEndpoint
             'created' => RestUtilities::formatDate($transfer->created),
             'expires' => RestUtilities::formatDate($transfer->expires),
             'expiry_date_extension' => $transfer->expiry_date_extension,
-            'options' => $transfer->options,
+            'options' => $options,
             'salt' => $transfer->salt,
             'roundtriptoken' => $creatingTransfer ? $transfer->roundtriptoken : '',
             
@@ -490,6 +498,12 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
 
+            if( Config::get('storage_type') == 'CloudS3' ) {
+                $v = Config::get('cloud_s3_bucket');
+                if( $v && $v != '' ) {
+                    $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
+                }
+            }
 
             Logger::info($options);
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
@@ -700,6 +714,18 @@ class RestEndpointTransfer extends RestEndpoint
                 $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
                                            $filedata->iv, $filedata->aead );
                 $files_cids[$file->id] = $filedata->cid;
+            }
+
+            // recheck that get_a_link is not being attempted
+            // if the guest can_only_send_to_me.
+            if ($transfer->getOption(TransferOptions::GET_A_LINK)) {
+                if($guest && $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                    
+                    Logger::warn("nefarious activity suspected: A guest with id " . $guest->id
+                               . " has sent a request without get_a_link=true and they"
+                               . " are only allowed to send to the user who invited them.");
+                    throw new TransferRejectedException('{invalid_options}');
+                }
             }
             
             // Add recipient(s) depending on options

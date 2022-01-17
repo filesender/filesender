@@ -229,6 +229,12 @@ window.filesender.transfer = function() {
         enable &= !this.disable_terasender;
         return enable;
     };
+    this.canUseTeraReceiver = function() {
+        var enable = filesender.config.terareceiver_enabled && filesender.supports.workers;
+        enable &= !this.encryption || filesender.supports.workerCrypto;
+        enable &= !this.disable_terasender;
+        return enable;
+    }
 
     this.getExtention = function(file) {
         var fileSplit = file.name.split('.');
@@ -367,7 +373,8 @@ window.filesender.transfer = function() {
             }
         }
         
-        if (this.files.length >= filesender.config.max_transfer_files) {
+        if (filesender.config.max_transfer_files > 0 &&
+            this.files.length >= filesender.config.max_transfer_files) {
             errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
@@ -380,8 +387,10 @@ window.filesender.transfer = function() {
             return false;
         }
                 
-        if (typeof filesender.config.ban_extension == 'string') {
-            var banned = filesender.config.ban_extension.replace(/\s+/g, '');
+        if (typeof window.filesender.config.ban_extension == 'string') {
+            filesender.ui.log("TESTING WITH ban_extension  " + window.filesender.config.ban_extension);
+            filesender.ui.log("TESTING WITH test2  " + window.filesender.config.test2);
+            var banned = window.filesender.config.ban_extension.replace(/\s+/g, '');
             banned = new RegExp('^(' + banned.replace(/,/g, '|') + ')$', 'g');
             var extension = this.getExtention(file);
             if (extension.match(banned)) {
@@ -1167,7 +1176,8 @@ window.filesender.transfer = function() {
         }
         
         // Redo sanity checks
-        if (this.files.length > filesender.config.max_transfer_files) {
+        if (filesender.config.max_transfer_files > 0 &&
+            this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
         for (var i = 0; i < this.files.length; i++) {

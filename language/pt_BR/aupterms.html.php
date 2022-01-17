@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-<a href="https://ajuda.rnp.br/filesender/politicas-de-uso" target="_blank" title="Clique aqui" draggable="false">Termo de uso</a>
+<a href="https://ajuda.rnp.br/filesender/termos-de-uso" target="_blank" title="Clique aqui" draggable="false">Termo de uso</a>

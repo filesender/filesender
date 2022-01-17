@@ -7,7 +7,6 @@ class EncryptionTest extends SeleniumTest {
     private function uploadEncrypted() {
         extract($this->getKeyBindings());
         $test = $this;
-
         $this->setupAuthenticated();
 
 
@@ -18,34 +17,23 @@ class EncryptionTest extends SeleniumTest {
         // Turn on encrption
         $this->byId("encryption")->click();
 
-        
-        sleep(3);
         // Set encryption password
+        $this->waitForCSS(".encryption_password");
         $this->byName("encryption_password")->clear();
         $this->byName("encryption_password")->value("123123");
         
-        // Upload files
-        $this->uploadFiles();
-
-            
-        sleep(1);
-        $this->byCssSelector('.start.ui-button')->click();
-
-        // wait for the dialog
-        $this->waitUntil(function() use ($test){
-            $elements = $test->elements($test->using('css selector')->value('.ui-dialog-title'));
-            $count = count($elements);
-            if($count > 0)
-            {
-                return true;
-            }
-        }, 30000);
-        // the popup is not instant.. sleep a bit
-        sleep(1);
+        // add files to upload
+        $filename = "124bytes.txt";
+        $this->showFileUploader();
+        $originalFilePath = $this->addFile($filename);
         
-        // check for success
-        $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
-        
+        $this->stageXContinue(1);
+        $this->stageXContinue(2);
+
+        // wait for dialog asserts that we have a link to the download page
+        // already
+        $url = $this->waitForUploadCompleteDialog();
+
         // check db for encryption
         $filesTable = call_user_func('File::getDBTable');
         $statement = DBI::prepare('SELECT * FROM ' . $filesTable . ' ORDER BY id DESC LIMIT 1');
@@ -59,38 +47,11 @@ class EncryptionTest extends SeleniumTest {
         $this->assertTrue($encrypted_succes);
     }
 
-    private function uploadFiles()
-    {
-        ${"temp"} = $this->execute(array('script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args' => array()));
-
-        $test1_file = "unittests/selenium/assets/124bytes.txt";
-        $test1_file_data = file_get_contents($test1_file);
-        $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test1_file);
-
-        return array($test1_file_data);
-    }
-
-    private function waitForCssElement($selector) {
-        $test = $this;
-        
-        $rv = $this->waitUntil(function() use ($test,$selector){
-            $elements = $test->elements($test->using('css selector')->value($selector));
-            if( count($elements)) {
-                return true;
-            }
-        }, 30000);
-        return $rv;
-    }
 
     private function waitForAndEnsureCssElementContains($selector,$needle) {
         $test = $this;
         
 
-//        $v = $this->byCss($selector)->text();
-//        $this->assertTrue( false,'waitForAndEnsureCssElementContains(invalid response) v ' . $v . ' selector ' . $selector );
-
-        
-        
         $rv = $this->waitUntil(function() use ($test,$selector,$needle){
             try {
                 $v = $this->byCss($selector)->text();
@@ -106,71 +67,57 @@ class EncryptionTest extends SeleniumTest {
         }
         return $rv;
     }
-    
-    protected function waitForAlert() {
-        $test = $this;
-        sleep(1);
-        $this->waitUntil(function () use ($test) { return $test->alertIsPresent(); }, 30000 );
-    }
+
     
     /**
      */
     private function downloadEncrypted() {
         extract($this->getKeyBindings());
         $test = $this;
-
         $this->setupAuthenticated();
         
         // Turn on encrption
         $this->url(Config::get('site_url') . '?s=transfers');
 
-        $this->waitForCssElement('.expand');        
-        $this->byCss(".expand")->click();
+        $this->waitForCss('.expand');        
+        $this->byCss(".expand > .clickable")->click();
 
-        $this->waitForCssElement('.transfer-download');
-        sleep(1);
-
+        $this->waitForCss('.transfer-download');
         $this->byCss(".download_href")->click();
-        sleep(2);
 
         
         // click download
+        $this->waitForCss('.download_page');        
         $this->byCss(".download")->click();
-        sleep(5);
         
         // set password
-        $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("1231223");
-        
-        // click ok
-        $this->byCss(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button")->click();
-        //        sleep(20);
-        $this->waitForAlert();
-        //
+        $this->waitForBootbox();        
+        $this->byCss(".bootbox-input-password")->value("1231223");
+        $this->byCss(".bootbox-accept")->click();
+        // seems you have to give _some_ time here
+        sleep(1);
+        $this->waitForCss('.bootbox.error-dialog', false );
+        $this->waitForCss('.bootbox-body');
+
+        // check that the system noticed the bad password we tried
         try{
-            $this->assertContains("Incorrect", $this->alertText());
+            $msg = $this->byCss(".bootbox-body")->text();
+            $this->assertContains("Incorrect", $msg);
             
-            $this->acceptAlert();
-            
-            $this->assertTrue(true);
+            $this->byCss(".bootbox-accept")->click();
         }
         catch(PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e){
             $this->assertTrue(false);
         }
 
 
-        
-        sleep(5);
-         // click download
+        // now download it using the correct password
         $this->byCss(".download")->click();
-        sleep(5);
+        $this->waitForBootbox();        
+        $this->byCss(".bootbox-input-password")->value("123123");
+        $this->byCss(".bootbox-accept")->click();
         
-        // set password
-        $this->byCss(".ui-dialog-content.ui-widget-content .wide")->value("123123");
-        
-        // click ok
-        $this->byCss(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button")->click();
         $this->waitForAndEnsureCssElementContains(".downloadprogress", 'Download complete');
-        
         
     }
     
@@ -179,13 +126,11 @@ class EncryptionTest extends SeleniumTest {
      * upload a file using key_version = 0
      * @test 
      */
-    
     public function testEncryptionKeyVerZeroTest() {
         extract($this->getKeyBindings());
         $this->setKeyVersionNewFiles( 0 );        
         $this->uploadEncrypted();
     }
-
     /**
      * Method testDecryptionTest 
      * @test 
@@ -202,12 +147,11 @@ class EncryptionTest extends SeleniumTest {
         $this->downloadEncrypted();
     }
 
-
     /**
      * Method testEncryptionTest 
      * upload a file using key_version = 1
      * @test 
-     */
+     */   
     public function testEncryptionKeyVerOneTest() {
         extract($this->getKeyBindings());
         $this->setKeyVersionNewFiles( 1 );        
@@ -239,7 +183,7 @@ class EncryptionTest extends SeleniumTest {
         $this->setKeyVersionNewFiles( 0 );
         // force a page refresh on my transfers.
         $this->url(Config::get('site_url') . '?s=upload');
-        sleep(5);
+        $this->waitForStage(1);
         $this->downloadEncrypted();
     }
     public function testDecryptionKeyVerThreeOneTest() {

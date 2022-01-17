@@ -5,53 +5,62 @@ require_once 'unittests/selenium/SeleniumTest.php';
 // requires a config
 // Config::set( 'max_transfer_files', 30 );
 
+
 class MaxFilesTest extends SeleniumTest
 {
 
     protected $start_url_path = '';
+    const MAXFILECOUNT = 30;
     
 
     public function testEnoughFiles()
     {
-        $this->fileQuantityTest(30, false);
+        $this->fileQuantityTest(self::MAXFILECOUNT, false);
 
     }
 
 
     public function testTooMuchFiles()
     {
-        $this->fileQuantityTest(31, true);
+        $this->fileQuantityTest(self::MAXFILECOUNT+1, true);
     }
 
     private function fileQuantityTest($number_of_files, $error_expected)
     {
+        $test = $this;
         extract($this->getKeyBindings());
+        $this->setMaxTransferFileCount(self::MAXFILECOUNT);
 
         $this->setupAuthenticated();
-
-        ${"temp"} = $this->execute(array(  'script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args'   => array() ));
-
-        $test_files_created = array();
+        $this->showFileUploader();
+        
+        $testfiles = array();
         for($i = 0; $i < $number_of_files; $i++)
         {
-            $test_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'no'.($i+1).'.txt';
-            $test_files_created[] = $test_file;
-            copy("unittests/selenium/assets/124bytes.txt", $test_file);
-            $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test_file);
+            $fp = $this->addFile( "testseries".$i.".txt" );
+            $testfiles[] = $fp;
         }
+        sleep(2);
 
-
-        $elements = $this->elements($this->using('css selector')->value('*[class="file invalid transfer_too_many_files"]'));
-        $count = count($elements);
-
-        $this->assertEquals($error_expected?1:0, $count);
-
-        foreach($test_files_created as $test_file)
-        {
-            unlink($test_file);
+        if( $error_expected ) {
+            $this->assertEquals( true,
+                                 $this->waitForElementCount('.file.invalid.transfer_too_many_files', 1 ),
+                                 "too many files message must be shown for a file" );
+        } else {
+            $this->assertEquals( true,
+                                 $this->waitForElementCount('.file',$number_of_files),
+                                 "all the files are shown in a list" );
+            $this->assertEquals( true,
+                                 $this->waitForElementCount('.file.invalid.transfer_too_many_files', 0 ),
+                                 "no files have shown as being too many files" );
         }
     }
 
 
+    public function tearDown()
+    {
+        $this->setMaxTransferFileCount();
+        $this->setMaxTransferFileSize();
+    }
 
 }

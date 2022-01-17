@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-<h1>Bem-vindo ao {cfg:site_name}</h1>
+<h1>Um modo seguro de compartilhar arquivos</h1>
 
 <p>
- {cfg:site_name} é um modo seguro de compartilhar arquivos. Acesse o sistema para enviar arquivos ou para convidar pessoas para enviar arquivos.
+ Acesse o sistema para compartilhar ou convidar pessoas para que também enviem arquivos.
 </p>

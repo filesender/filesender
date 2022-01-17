@@ -337,11 +337,11 @@ class RestEndpointUser extends RestEndpoint
                 $user->authSecretDelete();
             }
         }
-        
         if( $data->clear_frequent_recipients ) {
             $user->frequent_recipients = null;
             $user->save();
         }
+        
         if( $data->clear_user_transfer_preferences ) {
             $user->transfer_preferences = null;
             $user->save();
