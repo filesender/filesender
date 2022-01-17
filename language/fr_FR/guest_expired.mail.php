@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Une invitation a expirée
+subject: Une invitation a expiré
 
 {alternative:plain}
 
 Madame, Monsieur,
 
-Une invitation à déposer des fichiers de la part de {guest.user_email} a expirée.
+Une invitation à déposer des fichiers de la part de {guest.user_email} a expiré.
 
 Cordialement,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Cordialement,
 </p>
 
 <p>
-    Une invitation à déposer des fichiers de la part de <a href="mailto:{guest.user_email}">{guest.user_email}</a> a expirée.
+    Une invitation à déposer des fichiers de la part de <a href="mailto:{guest.user_email}">{guest.user_email}</a> a expiré.
 </p>
 
 <p>

@@ -37,7 +37,15 @@ require_once dirname(__FILE__).'/../../../optional-dependencies/s3/vendor/autolo
 use Aws\S3\S3Client;
 
 $bucket_name = '5b264219-57e2-447d-c9c6-0a8d602f1ba5';
+$folder_name = '';
 $object_name = '000000000000000000';
+
+$v = Config::get('cloud_s3_bucket');
+if( $v && $v != '' ) {
+    // include the slash here so it works if set or not set in the below code.
+    $folder_name = $bucket_name . '/';
+    $bucket_name = $v;
+}
 
 $client = S3Client::factory([
     'region'   => Config::get('cloud_s3_region'),
@@ -56,7 +64,7 @@ $client->createBucket(array(
 
 $result = $client->putObject(array(
     'Bucket' => $bucket_name,
-    'Key'    => $object_name,
+    'Key'    => $folder_name . $object_name,
     'Body'   => 'Hello, world!'     
 ));
      
@@ -64,7 +72,7 @@ echo 'uploaded url is at ' . $result['ObjectURL'] . "\n";
 
 $result = $client->getObject(array(
     'Bucket' => $bucket_name,
-    'Key'    => $object_name,
+    'Key'    => $folder_name . $object_name,
 ));
 
 echo 'downloaded result: ' . $result['Body'];

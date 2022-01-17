@@ -133,4 +133,12 @@ class TestSuiteSupport
             rmdir($dir);
         }
     }
+
+    public static function evalOverride($key)
+    {
+        $v = Config::get($key);
+        if( strlen($v) ) {
+            eval($v);
+        }
+    }
 }

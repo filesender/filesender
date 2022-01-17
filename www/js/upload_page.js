@@ -144,6 +144,7 @@ function pause( changeTextElements )
     if( changeTextElements ) {
         filesender.ui.nodes.seconds_since_data_sent_info.text('');
         filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+        filesender.ui.nodes.stats.estimated_completion.find('.value').text('');
         filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
     }
 }
@@ -181,6 +182,49 @@ function resume( force, resetResumeCount )
  */
 var checkEncryptionPassword_slideToggleDelay = 200;
 var checkEncryptionPassword_delay = 300;
+
+if(!('filesender' in window)) window.filesender = {};
+if(!('ui'         in window.filesender)) window.filesender.ui = {};
+if(!('elements'   in window.filesender.ui)) window.filesender.ui.elements = {};
+
+/**
+ * Update the UI element at uielement only once every delayMS time interval.
+ * While the first delayMS interval is passing show the string initString.
+ */
+filesender.ui.elements.nonBusyUpdater = function( uielement, delayMS, initString ) {
+    return {
+        e: uielement,
+        lastUpdate: null,
+        update: function( v ) {
+            var $this = this;
+            t = (new Date()).getTime();
+            if( $this.lastUpdate && ($this.lastUpdate + delayMS < t )) {
+                $this.e.text( v );
+            }
+            if( !$this.lastUpdate ) {
+                $this.e.text( initString );
+            }
+            if( !$this.lastUpdate || ($this.lastUpdate + delayMS < t )) {
+                $this.lastUpdate = t;
+            }
+        }
+    }
+};
+
+
+// prevent the element from having an empty string.
+filesender.ui.elements.preventEmpty = function(el) {
+    var originalValue = '';
+    el.on( 'focus', function(e) { originalValue = e.target.value; } );
+    el.on( 'blur',  function(e) {
+        if( e.target.value == '' ) {
+            e.target.value = originalValue;
+        }
+    });
+    return this;
+}
+
+
 
 // Manage files
 filesender.ui.files = {
@@ -571,6 +615,14 @@ filesender.ui.files = {
         }
         
         var speed = uploaded / (time / 1000);
+
+        var remaining = size - uploaded;
+        var eta = 0;
+        if( remaining && speed ) {
+            eta = remaining / speed;
+        }
+        filesender.ui.nodes.stats.estimated_completion_updater.update( filesender.ui.formatETA(eta));
+
         
         if (filesender.config.upload_display_bits_per_sec)
             speed *= 8;
@@ -1369,7 +1421,8 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.stats.size.hide();
     filesender.ui.nodes.stats.uploaded.show();
     filesender.ui.nodes.stats.average_speed.show();
-    
+    filesender.ui.nodes.stats.estimated_completion.show();
+
     filesender.ui.nodes.form.find(':input:not(.file input[type="file"])').prop('disabled', true);
 
     // Report and possibly resume the upload
@@ -1584,7 +1637,8 @@ $(function() {
             filecount:       form.find('.filecount'),
             sendingsize:     form.find('.sendingsize'),
             uploaded:        form.find('.uploading_actions .stats .uploaded'),
-            average_speed:   form.find('.uploading_actions .stats .average_speed')
+            average_speed:   form.find('.uploading_actions .stats .average_speed'),
+            estimated_completion: form.find('.uploading_actions .stats .estimated_completion')
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };
@@ -1596,10 +1650,16 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+
     form.find('.uploadoption').each(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+    
+    filesender.ui.nodes.stats.estimated_completion_updater = filesender.ui.elements.nonBusyUpdater(
+        filesender.ui.nodes.stats.estimated_completion.find('.value'),
+        2000,
+        lang.tr('initializing'));
 
     
     // Bind file list clear button
@@ -1835,26 +1895,26 @@ $(function() {
     if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning'
         || filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' )
     {
-        filesender.ui.nodes.message.on(
-            'keyup',
-            function(e) {
-                if( filesender.ui.doesUploadMessageContainPassword()) {
-                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning' ) {
-                        filesender.ui.nodes.message_contains_password_warning.show();
-                    }
-                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
-                        filesender.ui.nodes.message_contains_password_error.show();
-                    }
-                    filesender.ui.evalUploadEnabled();
-                    messageContainedPassword = true;
-                } else if( messageContainedPassword ) {
-                    messageContainedPassword = false;
-                    filesender.ui.nodes.message_contains_password_warning.hide();
-                    filesender.ui.nodes.message_contains_password_error.hide();
-                    filesender.ui.evalUploadEnabled();
+        var checkThatPasswordIsNotInMessage = function(e) {
+            if( filesender.ui.doesUploadMessageContainPassword()) {
+                if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning' ) {
+                    filesender.ui.nodes.message_contains_password_warning.show();
                 }
+                if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
+                    filesender.ui.nodes.message_contains_password_error.show();
+                }
+                filesender.ui.evalUploadEnabled();
+                messageContainedPassword = true;
+            } else if( messageContainedPassword ) {
+                messageContainedPassword = false;
+                filesender.ui.nodes.message_contains_password_warning.hide();
+                filesender.ui.nodes.message_contains_password_error.hide();
+                filesender.ui.evalUploadEnabled();
             }
-        );
+        }
+
+        filesender.ui.nodes.message.on(             'keyup', checkThatPasswordIsNotInMessage );
+        filesender.ui.nodes.encryption.password.on( 'keyup', checkThatPasswordIsNotInMessage );        
     }
 
     
@@ -1897,6 +1957,11 @@ $(function() {
         form.find('#lang').attr('data-id', this.getAttribute('data-id'));        
     });
     
+    // prevent the datepicker from having an empty string.
+    filesender.ui.nodes.expires.preventEmpty = filesender.ui.elements.preventEmpty(
+        filesender.ui.nodes.expires);
+    
+
     
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {
@@ -2056,6 +2121,7 @@ $(function() {
 
             pause( true );
             filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+            filesender.ui.nodes.stats.estimated_completion.find('.value').text('');
             filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
             return false;
         }).button();

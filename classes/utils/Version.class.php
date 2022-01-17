@@ -43,7 +43,7 @@ class Version
     /**
      * Code version
      */
-    const CODE_VERSION = '2.5';
+    const CODE_VERSION = '2.30';
     
     /**
      * Version file path
@@ -122,8 +122,8 @@ class Version
      */
     public static function compare()
     {
-        $code = strtolower(self::codeVersion());
-        $running = strtolower(self::runningVersion());
+        $code = strtolower(self::code());
+        $running = strtolower(self::running());
         
         return version_compare($running, $code);
     }

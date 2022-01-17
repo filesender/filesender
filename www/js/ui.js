@@ -570,9 +570,13 @@ window.filesender.ui = {
      */
     error: function(error,callback) {
         this.log('[error] ' + error.message);
-
         var msgtail = '';
 
+        var msg = lang.tr(error.message);
+        if( error.messageTranslated ) {
+            msg = error.messageTranslated;
+        }
+        
         if(error.details) {
             msgtail += '<div class="details" />';
             $.each(error.details, function(k, v) {
@@ -595,7 +599,7 @@ window.filesender.ui = {
         msgtail += '<button class="send_client_logs btn btn-secondary" id="send_client_logs">' + lang.tr('send_client_logs').out() + '</button>';
         
         
-        var d = this.alertbs('error', lang.tr(error.message) + msgtail, callback);
+        var d = this.alertbs('error', msg + msgtail, callback);
 
         $("#send_client_logs").on('click', function() {
             alert("hi there");
@@ -664,6 +668,35 @@ window.filesender.ui = {
         bytes /= Math.pow(1024, pow);
         
         return bytes.toFixed(precision).replace(/\.0+$/g, '') + ' ' + multipliers[pow];
+    },
+
+
+    /**
+     * Format a number of seconds in the future to a readable string
+     * 
+     * @param int v
+     * 
+     * @return string
+     */
+    formatETA : function (v) {
+        if( v==-1 ) {
+            return lang.tr('no_estimate');
+        }
+        if( !v ) {
+            return lang.tr('soon');
+        }
+        if( v > 3600 ) {
+            v = v / 3600; // epoch_hours
+            return (v).toFixed(1) + ' ' + lang.tr('epoch_hours');
+        }
+        if( v > 5*60 ) {
+            v = v / 60;
+            return (v).toFixed(0) + ' ' + lang.tr('epoch_minutes');
+        }
+        if( v < 5 ) {
+            return lang.tr('soon');
+        }
+        return ''+ (v).toFixed(0) + ' ' + lang.tr('epoch_seconds');
     },
     
     /**
