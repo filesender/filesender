@@ -599,7 +599,7 @@ window.filesender.ui = {
         msgtail += '<button class="send_client_logs btn btn-secondary" id="send_client_logs">' + lang.tr('send_client_logs').out() + '</button>';
         
         
-        var d = this.alertbs('error', msg + msgtail, callback);
+        var d = this.alert('error', msg + msgtail, callback);
 
         $("#send_client_logs").on('click', function() {
             alert("hi there");

@@ -387,8 +387,10 @@ window.filesender.transfer = function() {
             return false;
         }
                 
-        if (typeof filesender.config.ban_extension == 'string') {
-            var banned = filesender.config.ban_extension.replace(/\s+/g, '');
+        if (typeof window.filesender.config.ban_extension == 'string') {
+            filesender.ui.log("TESTING WITH ban_extension  " + window.filesender.config.ban_extension);
+            filesender.ui.log("TESTING WITH test2  " + window.filesender.config.test2);
+            var banned = window.filesender.config.ban_extension.replace(/\s+/g, '');
             banned = new RegExp('^(' + banned.replace(/,/g, '|') + ')$', 'g');
             var extension = this.getExtention(file);
             if (extension.match(banned)) {

@@ -113,6 +113,8 @@ class TestSuiteSupport
 
         //write the entire string
         file_put_contents('config/config.php', $str);
+
+        sleep(2);
     }
 
     public static function deleteDirectory($dir)

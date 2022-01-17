@@ -30,6 +30,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+if(!('filesender' in window)) window.filesender = {};
+window.filesender.pageLoaded = false;
+
 
 // This is a duplicate, it should be moved to a common.js file
 function isIE11()
@@ -1048,6 +1051,12 @@ filesender.ui.evalUploadEnabled = function() {
         filesender.ui.nodes.encryption.password.focus();
     }
 
+    if( filesender.ui.doesUploadMessageContainPassword()) {
+        if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
+            ok = false;
+        }
+    }
+
     var invalid_nodes = filesender.ui.nodes.files.list.find('.invalid');
     if( invalid_nodes.length ) {
         ok = false;
@@ -1297,14 +1306,10 @@ filesender.ui.startUpload = function() {
         
         // show the completed stage.
         filesender.ui.stage = 4;
-        filesender.ui.nodes.stage1hide.hide();
-        filesender.ui.nodes.stage2hide.hide();
-        filesender.ui.nodes.stage3hide.hide();
-        filesender.ui.nodes.stage4show.show();
-        filesender.ui.nodes.form.find('.stage4').show(); 
 
         filesender.ui.nodes.form.find('.downloadlink').html(filesender.ui.transfer.download_link);
         filesender.ui.nodes.form.find('.downloadlink').attr('href',filesender.ui.transfer.download_link);
+        filesender.ui.nodes.form.find('.downloadlink').attr('data-link',filesender.ui.transfer.download_link);
 
         var link = filesender.ui.createPageLink(
             filesender.ui.transfer.guest_token ? 'home' : 'transfers',
@@ -1312,6 +1317,12 @@ filesender.ui.startUpload = function() {
             filesender.ui.transfer.guest_token ? null : 'transfer_' + filesender.ui.transfer.id
         );
         filesender.ui.nodes.form.find('.mytransferslink').attr('href',link);
+
+        filesender.ui.nodes.stage1hide.hide();
+        filesender.ui.nodes.stage2hide.hide();
+        filesender.ui.nodes.stage3hide.hide();
+        filesender.ui.nodes.stage4show.show();
+        filesender.ui.nodes.form.find('.stage4').show();         
     };
     
     var errorHandler = function(error) {
@@ -1916,6 +1927,34 @@ $(function() {
         filesender.ui.nodes.message.on(             'keyup', checkThatPasswordIsNotInMessage );
         filesender.ui.nodes.encryption.password.on( 'keyup', checkThatPasswordIsNotInMessage );        
     }
+    
+    
+    // Bind encryption password events
+    var messageContainedPassword = false;
+    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning'
+        || filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' )
+    {
+        filesender.ui.nodes.message.on(
+            'keyup',
+            function(e) {
+                if( filesender.ui.doesUploadMessageContainPassword()) {
+                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'warning' ) {
+                        filesender.ui.nodes.message_contains_password_warning.show();
+                    }
+                    if( filesender.config.upload_page_password_can_not_be_part_of_message_handling == 'error' ) {
+                        filesender.ui.nodes.message_contains_password_error.show();
+                    }
+                    filesender.ui.evalUploadEnabled();
+                    messageContainedPassword = true;
+                } else if( messageContainedPassword ) {
+                    messageContainedPassword = false;
+                    filesender.ui.nodes.message_contains_password_warning.hide();
+                    filesender.ui.nodes.message_contains_password_error.hide();
+                    filesender.ui.evalUploadEnabled();
+                }
+            }
+        );
+    }
 
     
     // Setup date picker
@@ -2388,6 +2427,11 @@ $(function() {
             }
         }, {auth_prompt: false});
     }
+
+    window.setTimeout(
+        function() {
+            window.filesender.pageLoaded = true;
+        }, 500 );
 });
 
 $('.instructions').on('click', function(){

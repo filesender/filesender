@@ -230,7 +230,7 @@ function presentAVName( $v )
                         <td><p class="download_decryption_disabled">{tr:file_encryption_disabled}</p></td>
                         <td class="downloadprogress" ></td>
                         <td>
-                            <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">
+                            <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="btn btn-primary download" title="{tr:download_file}">
                                 <span class="fa fa-2x fa-download"></span>
                                 {tr:download}
                             </a>
