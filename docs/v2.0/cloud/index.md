@@ -199,6 +199,10 @@ avoid opening the later file.
 $config['cloud_s3_endpoint'] = 'http://localhost:8000';
 $config['cloud_s3_key']      = 'accessKey1';
 $config['cloud_s3_secret']   = 'verySecretKey1';
+
+// optional, Ensure that the bucket exists if you want to use a
+// single bucket. 
+// $config['cloud_s3_bucket']   = 'filesender';
 ```
 
 ### Running a test

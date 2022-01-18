@@ -344,3 +344,6 @@ $config['encryption_min_password_length'] = 3;
 $config['encryption_password_must_have_upper_and_lower_case'] = false;
 $config['encryption_password_must_have_numbers'] = false;
 $config['encryption_password_must_have_special_characters'] = false;
+
+$config['max_transfer_files'] = 30;
+

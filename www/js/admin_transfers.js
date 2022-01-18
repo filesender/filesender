@@ -80,7 +80,7 @@ $(function() {
         
         filesender.ui.redirect( filesender.config.base_path
                                 + '?s=admin&as=transfers'
-                                + '&senderemail=' + senderemail.val()
+                                + '&senderemail=' + encodeURIComponent(senderemail.val())
                                 + '&senderemail_full_match=' + full_match
                               );
     }

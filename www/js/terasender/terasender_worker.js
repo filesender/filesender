@@ -89,6 +89,17 @@ var terasender_worker = {
         this.log('Requesting job');
         this.sendCommand('requestJob');
     },
+
+    mode_values: {
+        sender: 1,
+        receiver: 2
+    },
+    mode: 1,
+    isReceiver: function(job) {
+        return this.mode == this.mode_values.receiver;
+    },
+    crypto_app: null,
+    
     
     /**
      * Execute a given job
@@ -96,6 +107,155 @@ var terasender_worker = {
      * @param object job job to execute
      */
     executeJob: function(job) {
+
+        if(job) {
+            var worker = this;
+            worker.mode = job.mode;
+            
+            if(job.mode == this.mode_values.receiver ) {
+
+                this.job = job;
+                var $this = this;
+                var chunkid            = job.chunkid;
+                var encryption_details = job.encryption_details;
+                if( !this.crypto_app ) {
+                    this.crypto_app = window.filesender.crypto_app();
+                }
+
+                this.log('ts.worker(1) Starting receiver job for chunkid:' + chunkid + " of " + encryption_details.chunkcount );
+                
+                // Decrypt the contents of the file
+                var oReq = this.createXhr();
+                
+                oReq.open("GET", job.link, true);
+                oReq.responseType = "arraybuffer";
+                var chunksz     = 1 * this.crypto_app.crypto_chunk_size;
+                var startoffset = 1 * (chunkid * chunksz);
+                var endoffset   = 1 * (chunkid * chunksz + (1*this.crypto_app.upload_crypted_chunk_size)-1);
+                var legacyChunkPadding = 0;
+
+                //
+                // There are some extra things to do for streaming legacy type files
+                //
+                if( encryption_details.key_version == this.crypto_app.crypto_key_version_constants.v2018_importKey_deriveKey ||
+                    encryption_details.key_version == this.crypto_app.crypto_key_version_constants.v2017_digest_importKey )
+                {
+                    legacyChunkPadding = 1;
+                }
+
+                //
+                // Handle last chunk details, some offsets might need to change slightly
+                //
+                if( chunkid == encryption_details.chunkcount ) {
+                    var padding = (1*this.crypto_app.upload_crypted_chunk_size) - (1* this.crypto_app.crypto_chunk_size);
+                    var blockPad = 32;
+
+                    this.log("ts.worker executeJob(last chunk offset adjustment) "
+                             + " legacyPadding " + legacyChunkPadding
+                             + " ccs "  + this.crypto_app.crypto_chunk_size
+                             + " uccs " + this.crypto_app.upload_crypted_chunk_size
+                             + " soffset " + startoffset
+                             + " soffsetcc " + (1 * (chunkid * this.crypto_app.upload_crypted_chunk_size))
+                            );
+                    this.log("ts.worker executeJob(last chunk offset adjustment) "
+                             + " eoffset " + endoffset
+                             + " fs " + encryption_details.filesize
+                             + " efs " + encryption_details.encrypted_filesize
+                            );
+                    
+                    endoffset = (1*encryption_details.filesize) + blockPad - 1;
+                    if( encryption_details.key_version < 2 ) {
+                        endoffset -= 4;
+                    }
+                    if( !chunkid ) {
+                        endoffset = encryption_details.encrypted_filesize - 1;
+                    }
+                    if( chunkid > 0 && legacyChunkPadding ) {
+
+                        var fs = (1*encryption_details.filesize);
+                        fs = fs % chunksz;
+                        if( fs == 0 ) {
+                            fs = chunksz;
+                        }
+                        
+                        endoffset = 1 * (chunkid * chunksz + fs + blockPad - (fs%16)) -1;
+                        this.log("ts.worker executeJob(legacyPadding) new eoffset " + endoffset );
+                        
+                    }
+
+                    this.log("ts.worker executeJob(adjustments done) "
+                             + " eoffset " + endoffset
+                             + " padding " + padding );
+                }
+                
+                var brange = 'bytes=' + startoffset + '-' + endoffset;
+                oReq.setRequestHeader('Range', brange);
+
+                
+                //Download progress
+                oReq.addEventListener("progress", function(evt) {
+                    $this.log( "ts.worker(progress) chunkid " + chunkid
+                               + " loaded " + evt.loaded
+                               + " of total " + evt.total );
+                    worker.reportProgress(evt.loaded, evt.total);
+                }, false );
+
+                var transferError = function (error) {
+                    this.error({message: error.message, details: {job: this.job}});
+                };
+
+                //
+                // When bad things happen
+                //
+                oReq.addEventListener("error", function(evt) {
+                    $this.log("worker error");
+                    this.log("oReq error: " + evt.toString());
+                    transferError(lang.tr('download_error').out());
+                    return;
+                });
+                oReq.addEventListener("abort", function(evt) {
+                    $this.log("worker abort");
+                    transferError(lang.tr('download_error_abort').out());
+                    return;
+                });
+
+                window.alert = function(msg) {
+                    $this.error({message: msg, details: {job: $this.job}});
+                }
+                $this.crypto_app.alertcb = window.alert;
+
+                //
+                // Primary path
+                // When we get the chunk data (or an XHR error)
+                //
+                oReq.onload = function (oEvent) {
+                    
+                    // check for a redirect containing and error and halt if so
+                    if( $this.crypto_app.handleXHRError( oReq, job.link, 'file_encryption_wrong_password' )) {
+                        return;
+                    }
+
+                    //
+                    // call decryptBlob to handle this chunk and pass a "next"
+                    // function to decryptBlob which will call us for the next chunk.
+                    var arrayBuffer = new Uint8Array(oReq.response);
+                    setTimeout(function(){
+
+                        var sliced = window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer);
+                        var encryptedChunk = window.filesender.crypto_common().separateIvFromData(sliced[0]);
+
+                        $this.job.encryptedChunk = encryptedChunk;
+                        worker.uploadRequestChange(oReq);
+                        
+                    }, 20);
+                };
+                
+                // start downloading this chunk
+                oReq.send();
+                return;
+            }
+        }
+        
         if(job) {
             if('file' in job) { // Switch files
                 this.job.file = job.file;
@@ -225,6 +385,10 @@ var terasender_worker = {
         this.log('Job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + '] is ' + (100 * ratio).toFixed(1) + '% done ' + loaded + '/' + total);
         if (this.job.encryption) { 
             this.job.fine_progress = Math.floor(ratio * (this.job.chunk.end - this.job.chunk.start));
+            this.job.progress = {
+                loaded: loaded,
+                total: total
+            };
         } else {
             this.job.fine_progress = loaded;
         }
@@ -304,7 +468,7 @@ var terasender_worker = {
 
         var worker = this;
         
-        if(status == 200) { // All went well
+        if(status == 200 || (this.isReceiver() && status == 206)) { // All went well
             if(this.maintenance) {
                 this.log('Webservice maintenance mode ended, pending chunk has been uploaded');
                 clearTimeout(this.maintenance);

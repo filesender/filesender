@@ -113,6 +113,8 @@ class TestSuiteSupport
 
         //write the entire string
         file_put_contents('config/config.php', $str);
+
+        sleep(2);
     }
 
     public static function deleteDirectory($dir)
@@ -131,6 +133,14 @@ class TestSuiteSupport
                 }
             }
             rmdir($dir);
+        }
+    }
+
+    public static function evalOverride($key)
+    {
+        $v = Config::get($key);
+        if( strlen($v) ) {
+            eval($v);
         }
     }
 }
