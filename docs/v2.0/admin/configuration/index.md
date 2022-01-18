@@ -187,6 +187,7 @@ A note about colours;
 * [guest_support_enabled](#guest_support_enabled)
 * [guest_options](#guest_options)
 * [default_guest_days_valid](#default_guest_days_valid)
+* [min_guest_days_valid](#min_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
 * [max_guest_recipients](#max_guest_recipients)
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
@@ -1930,6 +1931,16 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__
 
+### min_guest_days_valid
+
+* __description:__ specifies the minimum expiry date for a guest invitation.  This is the number of days from today (0). The default of 1 will result in an effective minimum expire time of tomorrow. You might like to make this something like 5 or 7 to ensure guest vouchers are not accidentally created with very short life spans.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 1
+* __available:__ since version 2.32
+* __1.x name:__
+* __comment:__
+
 ### max_guest_days_valid
 
 * __description:__ specifies the maximum expiry date for a guest invitation.  A user can not choose a larger value than this.
@@ -1939,6 +1950,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
 
 ### max_guest_recipients
 

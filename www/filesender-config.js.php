@@ -81,6 +81,7 @@ window.filesender.config = {
     
     max_transfer_days_valid: <?php echo Config::get('max_transfer_days_valid') ?>,
     default_transfer_days_valid: <?php echo Config::get('default_transfer_days_valid') ?>,
+    min_guest_days_valid: <?php echo Config::get('min_guest_days_valid') ?>,
     max_guest_days_valid: <?php echo Config::get('max_guest_days_valid') ?>,
     default_guest_days_valid: <?php echo Config::get('default_guest_days_valid') ?>,
     

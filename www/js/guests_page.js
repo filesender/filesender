@@ -320,7 +320,7 @@ $(function() {
     
     // Bind picker
     filesender.ui.nodes.expires.datepicker({
-        minDate: 1,
+        minDate: filesender.config.min_guest_days_valid,
         maxDate: filesender.config.max_guest_days_valid
     });
     // set value from epoch time
