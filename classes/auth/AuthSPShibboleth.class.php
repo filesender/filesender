@@ -85,7 +85,7 @@ class AuthSPShibboleth
             
             self::load();
             
-            $attributes = array('idp' => getenv('Shib-Identity-Provider'));
+            $attributes = array('idp' => Env::getenv('Shib-Identity-Provider'));
             
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
@@ -97,7 +97,7 @@ class AuthSPShibboleth
                 
                 $values = array();
                 foreach ($keys as $key) { // For all possible keys for attribute
-                    $value = explode(';', getenv($key));
+                    $value = explode(';', Env::getenv($key));
                     foreach ($value as $v) {
                         $values[] = $v;
                     } // Gather values of all successive possible keys as array
