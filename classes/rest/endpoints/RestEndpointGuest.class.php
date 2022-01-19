@@ -251,8 +251,9 @@ class RestEndpointGuest extends RestEndpoint
         // Set expiry date
         $expires = $guest->getDefaultExpire();
         if( $data->expires ) {
-            $expires = max( $expires, $data->expires );
+            $expires = $data->expires;
         }
+        $expires = Utilities::clamp( $expires, $guest->getMinExpire(), $guest->getMaxExpire());
         $guest->expires = $expires;
 
         if($guest->does_not_expire) {
