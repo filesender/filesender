@@ -1946,7 +1946,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __description:__ specifies the maximum expiry date for a guest invitation.  A user can not choose a larger value than this.
 * __mandatory:__ no
 * __type:__ int
-* __default:__ same as max_transfer_days_valid
+* __default:__ 20
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
