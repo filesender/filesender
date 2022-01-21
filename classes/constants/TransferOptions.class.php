@@ -58,4 +58,6 @@ class TransferOptions extends Enum
     // Optional options specific to S3 storage
     const STORAGE_CLOUD_S3_BUCKET                   = 'storage_cloud_s3_bucket';
     
+    const WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE  = 'web_notification_when_upload_is_complete';
+    
 }
