@@ -217,8 +217,7 @@ $lang['file_encryption_show_password'] = 'Mostra / Nascondi password';
 $lang['file_encryption_wrong_password'] = 'Password errata';
 $lang['file_extension_not_allowed'] = 'Estensione del file non consentita';
 $lang['file_integrity_check_failed'] = 'Controllo integrità file fallito';
-$lang['file_not_found'] = 'File non trovato
-';
+$lang['file_not_found'] = 'File non trovato';
 $lang['file_size_does_not_match'] = 'La dimensione del file non corrisponde';
 $lang['files'] = 'File';
 $lang['filtered_transfer_log'] = 'Questa è una vista filtrata dei registri di trasferimento.';
