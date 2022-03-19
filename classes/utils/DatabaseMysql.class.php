@@ -230,7 +230,15 @@ class DatabaseMysql
                 if (!$size) {
                     $size = 'medium';
                 }
-                $typematcher = $size.'int(?:\([0-9]+\))';
+                if( $size == 'medium' ) {
+                    // 4 bytes for alignment 2022 march.
+                    $typematcher = 'int(?:\(11\))';
+                    if( $definition['type'] == 'uint' ) {
+                        $typematcher = 'int(?:\(10\))';
+                    }
+                } else {
+                    $typematcher = $size.'int(?:\([0-9]+\))';
+                }
                 if ($definition['type'] == 'uint') {
                     $typematcher .= ' unsigned';
                 }
@@ -272,6 +280,7 @@ class DatabaseMysql
         // Check type
         if (!preg_match('`'.$typematcher.'`i', $column_dfn['Type'])) {
             $logger($column.' type does not match '.$typematcher);
+            $logger("  ... found " . $column_dfn['Type']);
             $non_respected[] = 'type';
         }
         
@@ -386,7 +395,12 @@ class DatabaseMysql
                 if (!$size) {
                     $size = 'medium';
                 }
-                $mysql = strtoupper($size).'INT';
+                if( $size == 'medium' ) {
+                    // 4 bytes for alignment 2022 march.
+                    $mysql = 'INTEGER';
+                } else {
+                    $mysql = strtoupper($size).'INT';
+                }
                 if ($definition['type'] == 'uint') {
                     $mysql .= ' UNSIGNED';
                 }
