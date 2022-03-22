@@ -217,7 +217,9 @@ filesender.ui.files = {
         var node = null;
         for(var i=0; i<files.length; i++) {
             var file_name = files[i].name;
-            if(typeof files[i].webkitRelativePath === "string") {
+            if(typeof files[i].webkitRelativePath === "string"
+               && files[i].webkitRelativePath != "" )
+            {
                 file_name = files[i].webkitRelativePath;
             }
             
