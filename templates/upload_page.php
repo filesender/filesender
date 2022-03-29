@@ -556,7 +556,7 @@ if( $encryption_mandatory ) {
                                     echo ' data-id="'.$id.'" ';
                                     echo ' aria-haspopup="true" ';
                                     echo ' aria-expanded="false"> ';
-                                    echo '  <span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
+                                    echo '  <span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
                                 }
                             }
                             ?>
@@ -568,7 +568,7 @@ if( $encryption_mandatory ) {
                                     $specificid = $dfn['specific-id'];
                                     $selected = ($id == $code) ? 'selected="selected"' : '';
                                     echo '<a class="dropdown-item rlangdropitem" data-id="'.$id.'" >';
-                                    echo '<span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
+                                    echo '<span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
                                     
                                 }
                                 ?>
