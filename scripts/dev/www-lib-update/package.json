@@ -9,6 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@popperjs/core": "^2.11.2",
+    "bootstrap": "^5.1.0",
+    "bootbox": "^5.5.2",
+    "chart.js": "^3.7.0",
+    "flag-icons": "^6.1.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.6.0",
     "jquery-ui-dist": "^1.13.0",
