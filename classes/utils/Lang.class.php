@@ -241,7 +241,9 @@ class Lang
             }
             
             // Absolute default
-            $stack[] = 'en';
+            if (!in_array('en', $stack)) {
+                $stack[] = 'en';
+            }
             
             // Add to cached stack (most significant first)
             $main = array_shift($stack);
@@ -458,13 +460,15 @@ class Lang
             $stack = self::getCodeStack();
             Logger::warn('No translation found for '.$id.' in '.$stack['main'].' language');
             
-            if (array_key_exists($id, self::$translations['fallback'])) {
-                Logger::warn('No fallback translation found for '.$id.' in '.implode(', ', $stack['fallback']).' languages');
+            foreach (self::$translations['fallback'] as $fallback_lang) { 
+                if (array_key_exists($id, $fallback_lang)) {
+                    Logger::warn('No fallback translation found for '.$id.' in '.$fallback_lang);
             
-                $tr = self::$translations['fallback'][$id];
-                $src = 'fallback';
-            } else {
-                return new Translation('{'.$id.'}', false);
+                    $tr = $fallback_lang[$id];
+                    $src = 'fallback';
+                } else {
+                    return new Translation('{'.$id.'}', false);
+                }
             }
         }
         
