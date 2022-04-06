@@ -187,7 +187,13 @@ class RestServer
             }
 
             // if configured, ensure no nasty CSRF is going on
-            Security::validateAgainstCSRF( true );
+            if (
+                !AuthRemote::isAuthenticated() &&
+                in_array($method, array('post', 'put', 'delete')) &&
+                $handler->requireSecurityTokenMatch($method, $path)
+            ) {
+                       Security::validateAgainstCSRF( true );
+            }
             
             // JSONP specifics
             if (array_key_exists('callback', $_GET)) {
