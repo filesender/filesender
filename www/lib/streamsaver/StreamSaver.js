@@ -1,3 +1,5 @@
+/*! streamsaver. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
+
 /* global chrome location ReadableStream define MessageChannel TransformStream */
 
 ;((name, definition) => {
@@ -99,7 +101,7 @@
   }
 
   test(() => {
-    // Transfariable stream was first enabled in chrome v73 behind a flag
+    // Transferable stream was first enabled in chrome v73 behind a flag
     const { readable } = new TransformStream()
     const mc = new MessageChannel()
     mc.port1.postMessage(readable, [readable])
@@ -125,7 +127,7 @@
   /**
    * @param  {string} filename filename that should be used
    * @param  {object} options  [description]
-   * @param  {number} size     depricated
+   * @param  {number} size     deprecated
    * @return {WritableStream<Uint8Array>}
    */
   function createWriteStream (filename, options, size) {
@@ -144,11 +146,11 @@
     // normalize arguments
     if (Number.isFinite(options)) {
       [ size, options ] = [ options, size ]
-      console.warn('[StreamSaver] Depricated pass an object as 2nd argument when creating a write stream')
+      console.warn('[StreamSaver] Deprecated pass an object as 2nd argument when creating a write stream')
       opts.size = size
       opts.writableStrategy = options
     } else if (options && options.highWaterMark) {
-      console.warn('[StreamSaver] Depricated pass an object as 2nd argument when creating a write stream')
+      console.warn('[StreamSaver] Deprecated pass an object as 2nd argument when creating a write stream')
       opts.size = size
       opts.writableStrategy = options
     } else {
@@ -184,7 +186,7 @@
           // This transformer & flush method is only used by insecure context.
           transform (chunk, controller) {
             if (!(chunk instanceof Uint8Array)) {
-              throw new TypeError('Can only wirte Uint8Arrays')
+              throw new TypeError('Can only write Uint8Arrays')
             }
             bytesWritten += chunk.length
             controller.enqueue(chunk)
@@ -235,6 +237,13 @@
             // We never remove this iframes b/c it can interrupt saving
             makeIframe(evt.data.download)
           }
+        } else if (evt.data.abort) {
+          chunks = []
+          channel.port1.postMessage('abort') //send back so controller is aborted
+          channel.port1.onmessage = null
+          channel.port1.close()
+          channel.port2.close()
+          channel = null
         }
       }
 
@@ -252,13 +261,13 @@
     return (!useBlobFallback && ts && ts.writable) || new streamSaver.WritableStream({
       write (chunk) {
         if (!(chunk instanceof Uint8Array)) {
-          throw new TypeError('Can only wirte Uint8Arrays')
+          throw new TypeError('Can only write Uint8Arrays')
         }
         if (useBlobFallback) {
           // Safari... The new IE6
           // https://github.com/jimmywarting/StreamSaver.js/issues/69
           //
-          // even doe it has everything it fails to download anything
+          // even though it has everything it fails to download anything
           // that comes from the service worker..!
           chunks.push(chunk)
           return
@@ -273,7 +282,7 @@
 
         // TODO: Kind of important that service worker respond back when
         // it has been written. Otherwise we can't handle backpressure
-        // EDIT: Transfarable streams solvs this...
+        // EDIT: Transferable streams solves this...
         channel.port1.postMessage(chunk)
         bytesWritten += chunk.length
 
