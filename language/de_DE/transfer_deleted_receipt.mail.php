@@ -15,7 +15,7 @@ Sehr geehrte Damen und Herren,
 
 Ihre Dateiübertragung Nr. {transfer.id} wurde von {cfg:site_name} gelöscht und steht nicht mehr zum Download bereit ({transfer.link}).
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -29,6 +29,6 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>

@@ -21,7 +21,7 @@ Ihr Download von {if:files>1}files{else}file{endif} ist beendet:
 {files.first().path} ({size:files.first().size})
 {endif}
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -47,6 +47,6 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Mit freundliche Grüßen,<br />
+    Mit freundliche Grüßen<br />
     {cfg:site_name}
 </p>

@@ -20,7 +20,7 @@ Einladungslink: {cfg:site_url}?s=upload&vid={guest.token}
 
 Die Einladung ist bis zum {date:guest.expires} verfügbar. Danach wird sie automatisch gelöscht.
 
-Mit freundlichen Größen,
+Mit freundlichen Größen
 {cfg:site_name}
 
 {alternative:html}
@@ -56,7 +56,7 @@ Der folgende Gast hat den Upload von Dateien durch Verwendung einer Einladung ab
 </table>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>
 ',
