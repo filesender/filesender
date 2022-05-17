@@ -15,7 +15,7 @@ Sehr geehrte Damen und Herren,
 
 in der Anlage dieser E-Mail finden Sie den Bericht der Dateiübertragung [{target.type}] Nr. {target.id}.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -28,5 +28,5 @@ Mit freundlichen Grüßen,
     in der Anlage dieser E-Mail finden Sie den Bericht der Dateiübertragung [{target.type}] Nr. {target.id}.
 </p>
 
-<p>Mit freundlichen Grüßen,<br/>
+<p>Mit freundlichen Grüßen<br/>
 {cfg:site_name}</p>

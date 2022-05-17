@@ -20,7 +20,7 @@ Link Einladung: {cfg:site_url}?s=upload&vid={guest.token}
 
 Die Einladung ist bis zum {date:guest.expires} gültig. Nach Ablauf des Datums wird er automatisch gelöscht.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -56,6 +56,6 @@ Mit freundlichen Grüßen,
 </table>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>

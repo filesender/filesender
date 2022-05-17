@@ -25,7 +25,7 @@ ein oder mehrere Ihrer Empfänger haben Ihre Nachricht(en) nicht erhalten:
 
 Weitere Details finden Sie unter {cfg:site_url}
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -55,6 +55,6 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>
