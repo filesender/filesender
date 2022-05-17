@@ -64,6 +64,12 @@ function delayAndCallOnlyOnce(callback, ms) {
     };
 }
 
+function useWebNotifications()
+{
+    var ret = ('web_notification_when_upload_is_complete' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.web_notification_when_upload_is_complete.is(':checked') : false;
+    return ret;
+}
+
 
 /**
  * apply a 'bad' class to the obj if b==true
@@ -1142,6 +1148,7 @@ filesender.ui.startUpload = function() {
         }
         
         var close = function() {
+            window.filesender.notification.clear();
             filesender.ui.goToPage(
                 filesender.ui.transfer.guest_token ? 'home' : 'transfers',
                 null,
@@ -1163,8 +1170,16 @@ filesender.ui.startUpload = function() {
         }
         
         if(t) t.on('click', function() {
+            window.filesender.notification.clear();
             $(this).focus().select();
         });
+
+        if( useWebNotifications()) {
+            window.filesender.notification.notify(lang.tr('web_notification_upload_complete_title'),
+                                                  lang.tr('web_notification_upload_complete'),
+                                                  window.filesender.notification.image_success);
+        }
+        
     };
     
     var errorHandler = function(error) {
@@ -1665,6 +1680,22 @@ $(function() {
         filesender.ui.evalUploadEnabled();
     });
 
+
+    if('web_notification_when_upload_is_complete' in filesender.ui.nodes.options) {
+        filesender.ui.nodes.options.web_notification_when_upload_is_complete.on('change', function() {
+            var v = filesender.ui.nodes.options.web_notification_when_upload_is_complete.is(':checked');
+            if(v) {
+                window.filesender.notification.ask();
+            }
+        });
+        if(filesender.ui.nodes.options.web_notification_when_upload_is_complete.is(':checked')) {
+            window.filesender.notification.ask();
+        }
+        form.find('.enable_web_notifications').on('click', function() {
+            window.filesender.notification.ask( true );
+        });
+    }
+    
     if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
         $('#encryption_password_container').slideToggle();
         $('#encryption_password_container_generate').slideToggle();
@@ -1852,7 +1883,6 @@ $(function() {
     };
 
     filesender.ui.nodes.auto_resume_timer_top.hide();
-
     
     if(!filesender.supports.reader) {
         // Legacy uploader
