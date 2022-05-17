@@ -9,5 +9,8 @@
 ?>
 <h1> Este servicio está en mantenimiento </h1>
 <p>
-     Por favor regrese más tarde.
+      Por favor, inténtelo transcurrido un tiempo.
+</p>
+<p>
+      Rogamos perdone las molestias
 </p>

@@ -23,7 +23,7 @@ die {if:transfer.files>1}folgenden Dateien wurden{else}folgende Datei wurde{endi
 
 Weitere Informationen: {transfer.link}
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -69,6 +69,6 @@ Mit freundlichen Grüßen,
 </table>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>
