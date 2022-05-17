@@ -90,7 +90,10 @@ $default = array(
     'transfer_recipients_lang_selector_enabled' => false,
     'max_transfer_file_size' => 0,
     'max_transfer_encrypted_file_size' => 0,
-    
+
+    'default_guest_days_valid' => 20,
+    'min_guest_days_valid' =>  1,
+    'max_guest_days_valid' => 20,
     'max_guest_recipients' => 50,
     
     'max_legacy_file_size' => 2147483648,

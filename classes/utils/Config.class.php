@@ -255,6 +255,9 @@ class Config
         if (!self::get('max_guest_days_valid')) {
             self::$parameters['max_guest_days_valid'] = self::get('max_transfer_days_valid');
         }
+        if (!self::get('min_guest_days_valid') || self::get('min_guest_days_valid') < 0) {
+            self::$parameters['min_guest_days_valid'] = 1;
+        }
         
         if (!self::get('default_guest_days_valid')) {
             self::$parameters['default_guest_days_valid'] = self::get('max_guest_days_valid');
