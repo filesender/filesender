@@ -15,7 +15,7 @@ Sehr geehrte Damen und Herren,
 
 Wir erhielten eine Feedback E-Mail von Ihrem {if:target_type=="recipient"}Empfänger{endif}{if:target_type=="guest"}Gast{endif} {target.email}, diese finden Sie in der Anlage.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -29,6 +29,6 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>

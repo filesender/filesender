@@ -86,6 +86,8 @@ if(Auth::isGuest()) {
     }
 }
 
+
+
 $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$relatedTo = '') use ($guest_can_only_send_to_creator) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
 
@@ -131,6 +133,8 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
     
     if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
         echo '<div class="info warning">'.Lang::tr('enable_recipient_email_download_complete_warning').'</div>';
+    if($name == TransferOptions::WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE && Browser::instance()->isFirefox)
+        echo '<div class="info message"><a class="enable_web_notifications" href="#">'.Lang::tr('click_to_enable_web_notifications').'</a></div>';
     
     echo '</div>';
     if( $relatedTo != '' ) {

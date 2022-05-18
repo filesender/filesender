@@ -715,6 +715,17 @@ class Utilities
 
 
     /**
+     * ensure $v is between the min and max values.
+     */
+    public static function clamp( $v, $minv, $maxv ) 
+    {
+        $v = max( $v, $minv );
+        $v = min( $v, $maxv );
+        return $v;
+    }
+
+
+    /**
      * Ensure that $v passes the regex from $config_key_for_regex 
      * or throw the $excep exception
      *

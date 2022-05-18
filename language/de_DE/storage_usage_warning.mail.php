@@ -21,7 +21,7 @@ dies ist eine Warnung für die Speicherbelegung von {cfg:site_name} :
 
 Weitere Details finden Sie unter {cfg:site_url}
 
-Mit freundliche Grüßen,
+Mit freundliche Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -45,6 +45,6 @@ Mit freundliche Grüßen,
 </p>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>
