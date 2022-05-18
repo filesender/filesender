@@ -15,7 +15,7 @@ Sehr geehrte Damen und Herren,
 
 eine Einladung die den Zugang zu {cfg:site_name} ermöglicht wurde an {guest.email} gesendet.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -29,6 +29,6 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>
