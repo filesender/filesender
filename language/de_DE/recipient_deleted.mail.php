@@ -15,7 +15,7 @@ Sehr geehrte Damen und Herren,
 
 Ihre Erlaubnis, Dateien der Dateiübertragung Nr. {transfer.id} zu downloaden wurde entfernt.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -29,6 +29,6 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>

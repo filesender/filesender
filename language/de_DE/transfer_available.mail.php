@@ -32,7 +32,7 @@ Persönliche Nachricht von {transfer.user_email}: {transfer.subject}
 {transfer.message}
 {endif}
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -93,6 +93,6 @@ Mit freundlichen Grüßen,
 {endif}
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>

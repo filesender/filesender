@@ -23,7 +23,7 @@ Sehr geehrte Damen und Herren,
 
 Sie können auf Ihre Dateien zugreifen und sich eine detaillierte Download-Statistik auf der Dateiübertragungsseite anzeigen lassen {files.first().transfer.link}.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -53,6 +53,6 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Mit freundlichen Grüßen,<br />
+    Mit freundlichen Grüßen<br />
     {cfg:site_name}
 </p>

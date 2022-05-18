@@ -35,7 +35,7 @@ Hier ist das vollständige Protokoll zu dieser Dateiübertragung:
 
 {raw:content.plain}
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
 {cfg:site_name}
 
 {alternative:html}
@@ -79,5 +79,5 @@ Dieser E-Mail-Adresse des Empfängers lautet {recipient.email} und ist/war gült
     </table>
 </p>
 
-<p> Mit freundlichen Grüßen, <br/>
+<p> Mit freundlichen Grüßen<br/>
 {cfg:site_name}</p>
