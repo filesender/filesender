@@ -46,6 +46,7 @@ A note about colours;
 * [crypto_crypt_name](#crypto_crypt_name)
 * [upload_crypted_chunk_padding_size](#upload_crypted_chunk_padding_size)
 * [upload_crypted_chunk_size](#upload_crypted_chunk_size)
+* [cookie_domain](#cookie_domain)
 
 
 ## Backend storage
@@ -597,6 +598,13 @@ This way the encryption_key_version_new_files can be updated and existing upload
            needed for an encrypted chunk that is uploaded (not the encrypted content itself).
 
 
+### cookie_domain
+* __description:__ Optionally allow the cookie_domain to be set for new cookies.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.33
+* __comment:__ It is highly recommended that you leave this setting as the default value which will be unset. The default will mean "If omitted, this attribute defaults to the host of the current document URL, not including subdomains.". This setting is here to allow a deployment to set a value like filesender.example.com to allow all subdomains from that domain to also see the cookie if desired.   https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
 
 
 ---

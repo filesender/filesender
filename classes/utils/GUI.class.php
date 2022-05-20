@@ -284,7 +284,7 @@ class GUI
                         '',
                         time() - 42000,
                         $params['path'],
-                        $params['domain'],
+                        Config::get('cookie_domain'),
                         $params['secure'],
                         $params['httponly']
                     );
