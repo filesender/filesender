@@ -307,6 +307,8 @@ $default = array(
 
 
     'service_aup_min_required_version' => 0,
+
+    'cookie_domain' => '',
     
     'transfer_options' => array(
         'email_me_copies' => array(
