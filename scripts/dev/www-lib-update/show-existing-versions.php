@@ -39,10 +39,6 @@ $packages = array(
         'path' => 'jquery-ui/jquery-ui.min.js',
         'pattern' => '/jQuery UI - v([0-9.]+) -/m',
     ),
-    'reset' => array(
-        'path' => 'reset/reset.css',
-        'pattern' => '/v([0-9.]+) | 20/m',
-    ),
     'popperjs' => array(
         'path' => 'popper.js/dist/umd/popper.min.js',
         'pattern' => '|popperjs/core v([0-9.]+)|m',
