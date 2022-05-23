@@ -216,7 +216,14 @@ filesender.ui.files = {
     addList: function(files, source_node) {
         var node = null;
         for(var i=0; i<files.length; i++) {
-            var latest_node = filesender.ui.files.addFile(files[i].name, files[i], source_node);
+            var file_name = files[i].name;
+            if(typeof files[i].webkitRelativePath === "string"
+               && files[i].webkitRelativePath != "" )
+            {
+                file_name = files[i].webkitRelativePath;
+            }
+            
+            var latest_node = filesender.ui.files.addFile(file_name, files[i], source_node);
             if (latest_node) {
                 node = latest_node;
             }
