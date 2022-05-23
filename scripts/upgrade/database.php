@@ -395,6 +395,18 @@ try {
         echo 'Done removing views for table '.$table."\n";
     }
 
+
+    
+    DBI::exec( 'alter table AggregateStatistics  drop foreign key IF EXISTS AggregateStatistic_epochtype  ' );
+    DBI::exec( 'alter table AggregateStatistics  drop foreign key IF EXISTS AggregateStatistic_eventtype  ' );
+    DBI::exec( 'alter table StatLogs  drop foreign key IF EXISTS statlogs_browsertype  ' );
+    DBI::exec( 'alter table StatLogs  drop foreign key IF EXISTS statlogs_operatingsystem  ' );
+    DBI::exec( 'alter table Transfers drop foreign key IF EXISTS transfer_passwordencoding  ' );
+    DBI::exec( 'alter table FileChunkDigests drop foreign key IF EXISTS FileChunkDigest_digestnameid' );
+    DBI::exec( 'alter table FileChunkDigests drop foreign key IF EXISTS FileChunkDigest_fileid' );
+
+    
+
     
 
     echo "checking for major schema migrations\n";
