@@ -35,6 +35,10 @@ $packages = array(
         'path' => 'reset/reset.css',
         'pattern' => '/v([0-9.]+) | 20/m',
     ),
+    'popperjs' => array(
+        'path' => 'popper.js/dist/umd/popper.min.js',
+        'pattern' => '|popperjs/core v([0-9.]+)|m',
+    ),    
     'promise-polyfill' => array(
         'path' => 'promise-polyfill/polyfill.min.js',
         'pattern' => '/v([0-9.]+)/m',
