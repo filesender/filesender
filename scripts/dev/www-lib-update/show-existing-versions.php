@@ -15,6 +15,14 @@ echo "\n";
 // out the version into the first () match.
 //
 $packages = array(
+   'bootstrap' => array(
+        'path' => 'bootstrap/dist/css/bootstrap.min.css',
+        'pattern' => '/Bootstrap v([0-9.]+).*/m',
+    ),
+    'bootbox' => array(
+        'path' => 'bootbox/dist/bootbox.all.min.js',
+        'pattern' => '/bootbox.js ([0-9.]+).*/m',
+    ),    
     'chart.js' => array(
         'path' => 'chart.js/chart.min.js',
         'pattern' => '/Chart.js v([0-9.]+).*/m',
