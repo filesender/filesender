@@ -3,10 +3,10 @@ FROM php:7.4-fpm-buster
 # Accept arguments to make the build process dynamically accept different builds
 # Used for filesender CI
 
-ARG REF=2.22
-ARG REF_SUM="ef6da83e7ac46303e5f8d620f6858565fd746d7c4b054a12439a561d79b515a2"
-ARG SSP_REF=1.19.0
-ARG SSP_REF_SUM="2111129787a4baf27a51e52bda660c56d069f167354800bffc72440dcacb3a6f"
+ARG REF=2.31
+ARG REF_SUM="b885e83eaecec1827860933d45e0537215b67a961feb54c5c27f842fd873c07c"
+ARG SSP_REF=1.19.5
+ARG SSP_REF_SUM="ab1a71a4eed2c086774829d47ce72137e4d1a7bd6b8a2535b4a1ddfd6e7da51f"
 
 ENV FILESENDER_VERSION=$REF \
     FILESENDER_SUM=$REF_SUM \
