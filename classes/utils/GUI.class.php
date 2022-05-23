@@ -63,7 +63,6 @@ class GUI
     public static function stylesheets()
     {
         return self::filterSources(array(
-            'lib/reset/reset.css',
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'lib/bootstrap/dist/css/bootstrap.min.css',
