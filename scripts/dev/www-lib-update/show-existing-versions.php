@@ -2,7 +2,7 @@
 
 chdir( dirname(__FILE__) . '/../../../www/lib' );
 
-echo "This script will inspect the software in www/lib in the current reposiroty\n";
+echo "This script will inspect the software in www/lib in the current repository\n";
 echo "and show you the current versions in use.\n";
 echo "\n";
 echo "Working in directory " . getcwd() . "\n";
@@ -27,6 +27,10 @@ $packages = array(
         'path' => 'chart.js/chart.min.js',
         'pattern' => '/Chart.js v([0-9.]+).*/m',
     ),
+   'flag-icons' => array(
+        'path' => 'flag-icons/css/flag-icons.min.css',
+        'pattern' => '/v([0-9.]+)/m',
+    ),   
     'font awesome' => array(
         'path' => 'font-awesome/css/font-awesome.css',
         'pattern' => '/Font Awesome ([0-9.]+) by/m',

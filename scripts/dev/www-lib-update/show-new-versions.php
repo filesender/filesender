@@ -4,16 +4,16 @@ $packages = array(
     'bootstrap'            => array(),
     'bootbox'              => array(),
     'chart.js'             => array(),
+    'flag-icons'           => array(),
     'font-awesome'         => array(),
     'jquery'               => array(),
     'jquery-ui-dist'       => array(),
+    '@popperjs/core'       => array(),
     'promise-polyfill'     => array(),
     'streamsaver'          => array(),
     'webcrypto-shim'       => array(),
     'web-streams-polyfill' => array(),
     'xregexp'              => array(),
-    'flag-icon-css'        => array(),    
-    '@popperjs/core'       => array(),
 );
 $json = file_get_contents(dirname(__FILE__) . '/package-lock.json');
 
