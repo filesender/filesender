@@ -1,8 +1,8 @@
 ---
-title: Documentation v2.0
+title: Reporting security issues
 ---
 
-# Reporting sensitive issues
+# Reporting security issues
 
 If you have found a bug or issue that might be security sensitive you
 can report that bug directly to the maintainer. You might like to
