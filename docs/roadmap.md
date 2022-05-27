@@ -2,9 +2,8 @@
 title: FileSender Roadmap
 ---
 
-## FileSender Roadmap 
+## FileSender Roadmap
 
-  
 
 Filesender has seen dozens of stable [releases](https://github.com/filesender/filesender/releases) of the v2 software.
 
@@ -157,7 +156,7 @@ Add more selenium tests.
 Which PHP versions are in stock Debian + Red Hat?
 ```
   Fedora 24 is php 5.6.31
-  Fedora 26 is php 7.1 
+  Fedora 26 is php 7.1
   Debian Stretch is php 7.0 https://packages.debian.org/stretch/php
 ```
 
@@ -176,14 +175,14 @@ emailfeedback.php. The emailfeedback.php script is looking at incoming
 emails and acting on content type message/delivery-status containing
 'failed' as bounces.
 
-At any rate the documentation shouldn't be leaving folks in a place that they 
+At any rate the documentation shouldn't be leaving folks in a place that they
 have to search around to work out where the bounce related script is.
 
-So to the the ball rolling there needs to be a new "email handling" page to 
-document things we want bounce handling on there and SPF so that folks do not 
+So to the the ball rolling there needs to be a new "email handling" page to
+document things we want bounce handling on there and SPF so that folks do not
 have to get to this thread for that.
 
-What are the other email related things that are the most important for 
+What are the other email related things that are the most important for
 FileSender to start doing? From previous email we have: DMARC, SPF, SRS.
 
 ### Command line tools
