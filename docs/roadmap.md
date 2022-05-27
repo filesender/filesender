@@ -1,14 +1,14 @@
 ---
-title: FileSender Documentation
+title: FileSender Roadmap
 ---
 
 ## FileSender Roadmap 
 
   
 
-Filesender is currently available as a v2 Beta release and the team is working towards a final stable release of the v2 software.  A full set of the features being developed or implemented in the v2 software is available [here](http://docs.filesender.org/v2.0/). 
+Filesender has seen dozens of stable [releases](https://github.com/filesender/filesender/releases) of the v2 software.
 
-The Filesender team is starting to collate items for roadmap development beyond Filesenderv2.0. Further features are entirely dependent on the funding that the project can attract.  To find out more about how you can donate to the project visit the Filesender Programme pages at the [Commons Conservancy](https://commonsconservancy.org/programmes/). 
+The Filesender team is starting to collate items for roadmap development beyond Filesenderv2.0. Further features are entirely dependent on the funding that the project can attract.  To find out more about how you can donate to the project visit the Filesender pages at the [nlnet Foundation](https://nlnet.nl/project/filesender/).
 
 Current priorities for the post 2.0 Filesender Roadmap are:
 
@@ -143,7 +143,7 @@ For FileSender 2.0 we should consider PHP 7.2 to be the minimum
 version. This will mean the CI can be moved to that version and use
 the more recent Ubuntu operating system to run the CI. This is
 starting to become a problem as travis CI has moved to more recent
-operaitng systems that no longer offer php 5.3. Some of the current
+operating systems that no longer offer php 5.3. Some of the current
 selenium tests fail when executed in php 5.6 and must be updated.
 
 Currently the CI executes exclusively on a postgresql database. It
@@ -168,9 +168,8 @@ Selenium tests, More selenium tests!
 
 Clearly documentation is an issue for this. It seems that the bounce
 handling is a great example of an area that documentation can still
-improve. The current http://docs.filesender.org/v2.0/
-admin/configuration/ page still has much orange "to be checked" areas
-relating to email.
+improve. The current [admin configuration](v2.0/admin/configuration/)
+still has much orange "to be checked" areas relating to email.
 
 It seems that the cited bounce script is this one scripts/task/
 emailfeedback.php. The emailfeedback.php script is looking at incoming
