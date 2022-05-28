@@ -145,6 +145,7 @@ class RestEndpointRecipient extends RestEndpoint
         
         // Need to remind the transfer's availability to its recipients ?
         if ($data->remind) {
+            TranslatableEmail::rateLimit( false, 'transfer_reminder', $recipient->transfer );
             $recipient->remind();
         }
 

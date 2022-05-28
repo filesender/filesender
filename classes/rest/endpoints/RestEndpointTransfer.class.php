@@ -223,8 +223,18 @@ class RestEndpointTransfer extends RestEndpoint
 
             // Want auditlog data ...
             if ($property == 'auditlog') {
+
+                // ... to be sent by email
                 if ($property_id == 'mail') {
-                    // ... to be sent by email
+                    // Check rate limit
+                    $format = Config::get('report_format');
+                    if (!$format) {
+                        $format = ReportFormats::INLINE;
+                    }
+                    $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
+                    TranslatableEmail::rateLimit( false, 'report_'.$lid, $transfer );
+
+                    
                     $report = new Report($transfer);
                     if( $filtertype && $filterid ) {
                         $files = $transfer->files;
