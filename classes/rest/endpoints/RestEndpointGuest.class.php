@@ -185,9 +185,12 @@ class RestEndpointGuest extends RestEndpoint
                                         'guest_create_limit_per_day',
                                         LogEventTypes::GUEST_CREATED_RATE, $user );
 
+        
         // Create new guest object
         $guest = Guest::create($data->recipient, $data->from);
 
+        // Check rate limit
+        TranslatableEmail::rateLimit( false, 'guest_created', $guest );
         
         // Set provided metadata
         if ($data->subject) {
@@ -367,7 +370,7 @@ class RestEndpointGuest extends RestEndpoint
         if (!$guest->isOwner($user) && !Auth::isAdmin()) {
             throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
         }
-        
+
         // Remove guest access rights
         $guest->close();
     }
