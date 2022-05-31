@@ -190,7 +190,7 @@ experience will be improved if the date_format and dp_date_format
 both present dates in the same way for a locale. 
 For the datepicker jquery item the dp_date_format is used. The format
 for dp_date_format follows the information for the
-[jquery datepicker widget](http://api.jqueryui.com/datepicker/#utility-formatDate).
+[jquery datepicker widget](https://api.jqueryui.com/datepicker/#utility-formatDate).
 
 ```
 $lang['date_format'] = '%d/%m/%Y';

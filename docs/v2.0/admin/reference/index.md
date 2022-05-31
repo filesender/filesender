@@ -163,7 +163,7 @@ Related config parameter is "relay_unknown_feedbacks" (string, defaults to "send
 
 - "support" : relay to support_email (which itself must then be set to a valid email address)
 
-- "someaddress@domain.tld" : choosen email address
+- "someaddress@example.org" : choosen email address
 
 Received feedback is forwarded as a message/rfc822 attachment.
 
