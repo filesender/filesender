@@ -231,7 +231,7 @@ class AuthSPSaml
         $url = Utilities::http_build_query(array(
             'AuthId' => self::$config['authentication_source'],
             'ReturnTo' => $target,
-        ), Config::get('site_url').'/saml_logout.php?');
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?');
         
         return $url;
     }
@@ -239,7 +239,7 @@ class AuthSPSaml
     /**
      * Load SimpleSAML class
      */
-    public static function loadSimpleSAML()
+    private static function loadSimpleSAML()
     {
         if (is_null(self::$config)) {
             self::$config = Config::get('auth_sp_saml_*');
