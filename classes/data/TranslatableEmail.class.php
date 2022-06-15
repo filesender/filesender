@@ -361,7 +361,7 @@ class TranslatableEmail extends DBObject
             self::rateLimit( true, $translation_id, $context, ...$vars );
         }
         catch ( RateLimitException $e ) {
-            Logger::info("rate limiting action $action");
+            Logger::info("rate limiting action");
             $mail->setReallySend( false );
         }
         

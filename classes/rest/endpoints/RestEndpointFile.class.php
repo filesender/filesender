@@ -387,6 +387,20 @@ class RestEndpointFile extends RestEndpoint
             }
         }
 
+        //
+        // If the transfer was created by a guest then check that the uploading
+        // principal is in fact that guest
+        // Note that getGuest() forces a guest lookup from vid
+        //
+        if( $file->transfer->guest_id > 0 ) {
+            $g = AuthGuest::getGuest();
+            if( !$g ) {
+                throw new RestUnknownPrincipalException();
+            }
+            if( $g->id != $file->transfer->guest_id ) {
+                throw new RestUnknownPrincipalException();
+            }
+        }
         self::testRoundTripToken( $file, Utilities::getGETparam('roundtriptoken'));
         
 
