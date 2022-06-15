@@ -362,7 +362,7 @@ class GUI
             // Authenticated users have access to lots ...
             if (Auth::isAuthenticated(false)) {
                 if (Auth::isGuest()) {
-                    self::$allowed_pages = array('upload',
+                    self::$allowed_pages = array('home', 'upload',
                                                  GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY, GUIPages::APISECRETAUP );
                 } else {
                     self::$allowed_pages = array('home', 'upload', 'transfers', 'guests', 'download',
