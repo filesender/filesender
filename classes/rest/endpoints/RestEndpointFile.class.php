@@ -150,17 +150,42 @@ class RestEndpointFile extends RestEndpoint
      */
     private function testRoundTripToken( $file, $userrtt )
     {
-        if( Utilities::isTrue(Config::get('chunk_upload_roundtriptoken_check_enabled'))) {
+        // should we check the RTT by default
+        $checkRTT = Utilities::isTrue(Config::get('chunk_upload_roundtriptoken_check_enabled'));
 
-            // To allow old transfers to complete we allow this test to pass
-            // with a warning if there is no roundtriptoken in the database
-            // and the transfer was already 'created' before the server was upgraded
+        // Always check the RTT if we are dealing with a guest
+        if (Auth::isGuest()) {
+            $checkRTT = true;
+            // make sure there is a guest for the supplied vid
+            AuthGuest::getGuest();
+            
+            //
+            // We might as well just fail right here for a guest upload
+            // if the stored roundtriptoken is not valid. We assume that
+            // guests are not continuing an upload over a FileSender version upgrade.
+            //
             if( strlen($file->transfer->roundtriptoken) < 5 ) {
-                $accept_before = Config::get('chunk_upload_roundtriptoken_accept_empty_before');
-                if( $accept_before > 0 ) {
-                    if( $file->transfer->created < $accept_before ) {
-                        Logger::warn('Allowing a transfer roundtriptoken_check to pass because the transfer is older than accept_empty_before.');
-                        return;
+                throw new RestRoundTripTokensInvalidException();
+            }
+        }
+        
+        if( $checkRTT ) {
+
+            //
+            // Do not allow old transfer grace perioud for guests
+            //
+            if (!Auth::isGuest()) {
+            
+                // To allow old transfers to complete we allow this test to pass
+                // with a warning if there is no roundtriptoken in the database
+                // and the transfer was already 'created' before the server was upgraded
+                if( strlen($file->transfer->roundtriptoken) < 5 ) {
+                    $accept_before = Config::get('chunk_upload_roundtriptoken_accept_empty_before');
+                    if( $accept_before > 0 ) {
+                        if( $file->transfer->created < $accept_before ) {
+                            Logger::warn('Allowing a transfer roundtriptoken_check to pass because the transfer is older than accept_empty_before.');
+                            return;
+                        }
                     }
                 }
             }
@@ -341,6 +366,7 @@ class RestEndpointFile extends RestEndpoint
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
         if (Auth::isAuthenticated()) {
+            // We will get here for guests as well as authenticated users.
             $security = 'auth';
         }
         if (($security == 'auth') && !Auth::isAuthenticated()) {
@@ -361,6 +387,20 @@ class RestEndpointFile extends RestEndpoint
             }
         }
 
+        //
+        // If the transfer was created by a guest then check that the uploading
+        // principal is in fact that guest
+        // Note that getGuest() forces a guest lookup from vid
+        //
+        if( $file->transfer->guest_id > 0 ) {
+            $g = AuthGuest::getGuest();
+            if( !$g ) {
+                throw new RestUnknownPrincipalException();
+            }
+            if( $g->id != $file->transfer->guest_id ) {
+                throw new RestUnknownPrincipalException();
+            }
+        }
         self::testRoundTripToken( $file, Utilities::getGETparam('roundtriptoken'));
         
 

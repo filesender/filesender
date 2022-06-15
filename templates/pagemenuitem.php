@@ -1,5 +1,6 @@
 <?php
 
+include_once "vidattr.php";
 
 function pagelink($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
@@ -9,6 +10,8 @@ function pagelink($page) {
 }
 
 function pagemenuitem($page) {
+    global $vidattr;
+    
     if(!GUI::isUserAllowedToAccessPage($page)) return;
     $class = ($page == GUI::currentPage()) ? 'current' : '';
 
@@ -24,6 +27,6 @@ function pagemenuitem($page) {
             }
         }
     }
-    echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.$label.'</a></li>';
+    echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$label.'</a></li>';
 }
 
