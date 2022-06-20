@@ -61,6 +61,12 @@ A note about colours;
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
+* [cloud_s3_region](#cloud_s3_region)
+* [cloud_s3_version](#cloud_s3_version)
+* [cloud_s3_endpoint](#cloud_s3_endpoint)
+* [cloud_s3_key](#cloud_s3_key)
+* [cloud_s3_secret](#cloud_s3_secret)
+* [cloud_s3_use_path_style_endpoint](#cloud_s3_use_path_style_endpoint)
 * [cloud_s3_bucket](#cloud_s3_bucket)
 
 ## Shredding
@@ -140,6 +146,8 @@ A note about colours;
 * [user_quota](#user_quota)
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [disable_directory_upload](#disable_directory_upload)
+* [directory_upload_button_enabled](#directory_button_upload_enabled)
 * [encryption_enabled](#encryption_enabled)
 * [encryption_mandatory](#encryption_mandatory)
 * [encryption_min_password_length](#encryption_min_password_length)
@@ -246,6 +254,7 @@ A note about colours;
 * [clientlogs_lifetime](#clientlogs_lifetime)
 * [logs_limit_messages_from_same_ip_address](#logs_limit_messages_from_same_ip_address)
 * [trackingevents_lifetime](#trackingevents_lifetime)
+* [client_ip_key](#client_ip_key)
 
 ## Webservices API
 
@@ -738,6 +747,59 @@ $config['rate_limits'] = array(
 * __available:__ since before version 2.30
 * __comment:__ The script at the given path should perform similar read/write operations as the example external.py script to maintain the storage.
 
+### cloud_s3_region
+
+* __description:__ Optional name of the region configuration for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-region)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'us-east-1'
+* __available:__ since version 2
+* __comment:__ If you use a different s3 region from default, make sure to set this. Non-AWS implementations usually have this set to default.
+
+### cloud_s3_version
+
+* __description:__ Optional API version for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-version)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'latest' 
+* __available:__ since version 2 
+* __comment:__ If you use a different s3 API version from default, make sure to set this. AWS usually has this set to default.  
+
+### cloud_s3_endpoint
+
+* __description:__ Optional API endpoint for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-endpoint)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'http://localhost:8000'
+* __available:__ since version 2
+* __comment:__ The API endpoint that your S3 service can be reached at. For default AWS endpoints check [here](https://docs.aws.amazon.com/general/latest/gr/s3.html)
+
+### cloud_s3_key
+
+* __description:__ Authentication key ID for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_hardcoded.html)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'accessKey1'
+* __available:__ since version 2
+* __comment:__ The key ID associated with the [cloud_s3_secret](#cloud_s3_secret)
+
+### cloud_s3_secret
+
+* __description:__ Authentication secret key ID for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_hardcoded.html)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'verySecretKey1'
+* __available:__ since version 2
+* __comment:__ The secret key ID associated with the [cloud_s3_key](#cloud_s3_key)
+
+### cloud_s3_use_path_style_endpoint
+
+* __description:__ Choose to use a path style endpoint for the [s3 storage backend](https://docs.aws.amazon.com/aws-sdk-php/v3/api/class-Aws.S3.S3Client.html#__construct)
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2
+* __comment:__ Set to true to send requests to an S3 path style endpoint. 
 
 ### cloud_s3_bucket
 
@@ -748,8 +810,6 @@ $config['rate_limits'] = array(
 * __available:__ since version 2.31
 * __comment:__ If you wish to store all files in a single bucket set it's name in this configuration option.
 Ensure that the named bucket already exists if you use this setting.
-
-
 
 
 ---
@@ -1450,6 +1510,21 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
+### disable_directory_upload
+* __description:__ Disables the functionality to upload entire directories from the UI
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ Set this to false to enable the directory upload functionality
+
+### directory_upload_button_enabled]
+* __description:__ Enables a button for directory upload on supported browsers
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.6
+* __comment:__ Only on Firefox and Chrome in default templates
 
 ### encryption_enabled
 * __description:__ set to false to disable. If set to true an option to enable file encryption of a transfer becomes available in the web-UI.
@@ -2606,6 +2681,15 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __comment:__ Number of days after which collected client logs are automatically deleted.
 
+### client_ip_key
+
+* __description:__ PHP key to use as client identifier
+* __mandatory:__ no
+* __type:__ string
+* __default__: REMOTE_ADDR
+* __available:__ v2.2
+* __comment:__ Client identifier. Usually the default is fine, however when you have reverse proxy setups, you may need to change this to HTTP_CLIENT_IP, HTTP_X_REAL_IP, HTTP_X_FORWARDED_FOR, depending on your setup.
+
 
 ### logs_limit_messages_from_same_ip_address
 
@@ -2619,9 +2703,6 @@ $config['log_facilities'] =
         setting with the default of false works ok for people then the option may be removed and the default of not
         limiting logs will be the only option. So in short, you may not ever need to know about or set this option. It
         is here as a fallback if there are issues with it being turned off.
-
-
-
 
 
 ---
