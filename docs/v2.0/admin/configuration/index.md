@@ -146,6 +146,8 @@ A note about colours;
 * [user_quota](#user_quota)
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [disable_directory_upload](#disable_directory_upload)
+* [directory_upload_button_enabled](#directory_button_upload_enabled)
 * [encryption_enabled](#encryption_enabled)
 * [encryption_mandatory](#encryption_mandatory)
 * [encryption_min_password_length](#encryption_min_password_length)
@@ -1508,6 +1510,21 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
+### disable_directory_upload
+* __description:__ Disables the functionality to upload entire directories from the UI
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ Set this to false to enable the directory upload functionality
+
+### directory_upload_button_enabled]
+* __description:__ Enables a button for directory upload on supported browsers
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.6
+* __comment:__ Only on Firefox and Chrome in default templates
 
 ### encryption_enabled
 * __description:__ set to false to disable. If set to true an option to enable file encryption of a transfer becomes available in the web-UI.
