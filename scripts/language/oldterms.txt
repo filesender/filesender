@@ -87,6 +87,7 @@ clear_frequent_recipients
 clear_user_transfer_preferences
 click_to_delete_file
 click_to_delete_recipient
+click_to_enable_web_notifications
 client_logs_cleared
 client_logs_sent
 close
@@ -222,7 +223,10 @@ enter_to_email
 epoch_day
 epoch_fifteen_minutes
 epoch_hour
+epoch_hours
+epoch_minutes
 epoch_month
+epoch_seconds
 epoch_week
 epoch_year
 error
@@ -230,6 +234,7 @@ error_date
 error_details
 error_dialog
 error_type
+estimated_completion
 event_count
 expand_all
 expires
@@ -318,6 +323,7 @@ host_quota_usage
 ignore
 incomplete
 info_dialog
+initializing
 invalid_address_format
 invalid_file
 invalid_file_name
@@ -361,6 +367,7 @@ no
 no_addresses_found
 no_auditlog
 no_av_scans_performed
+no_estimate
 no_guests
 no_results
 no_such_property
@@ -403,6 +410,7 @@ profile_page_text_linking_to_admin_page
 profile_page_text_linking_to_privacy_page
 python_cli_client_setup_information
 quota_usage
+rate_limit_exceeded
 reader_not_supported
 reason
 recipient_added
@@ -507,6 +515,7 @@ service_aup_body_version_1
 service_aup_body_version_2
 service_aup_body_version_3
 service_aup_header
+service_aup_terms_accepted
 set_default_guest_expire_days
 set_user_guest_expiry_default_days
 show_client_logs
@@ -525,6 +534,7 @@ size_shown_is_totals_per_interval
 size_tb
 size_total
 size_unit
+soon
 speed_unit_bits
 speed_unit_bytes
 stalled_transfer
@@ -696,6 +706,9 @@ valid_only_one_time
 value
 view_full_log
 waiting_for_upload_to_stabilize
+web_notification_upload_complete
+web_notification_upload_complete_title
+web_notification_when_upload_is_complete
 what_to_do
 with_identity
 yes
