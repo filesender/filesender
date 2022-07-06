@@ -45,12 +45,12 @@ contributions from ARNES (Slovenia), CSC/FUNET (Finland).
 
 ### New TeraSender upload module
 
-* René Klomp and Edwin Schaap for their work on the FileSender
-  TeraByte Challenge as part of their master in system and network
+* René Klomp and Edwin Schaap for their work on [the FileSender
+  TeraByte Challenge](https://rp.os3.nl/2012-2013/p08/presentation.pdf) as part of their master in system and network
   engineering at Amsterdam University (UvA). This work resulted in a
-  research report documenting how to increase the upload speed of
+  [research report](https://rp.os3.nl/2012-2013/p08/report.pdf) documenting how to increase the upload speed of
   FileSender and in the new TeraSender upload module in version 1.6.
-  See the blog articles for details.
+  See the [blog articles](https://filesender.wordpress.com/category/terabyte-challenge/) for details.
 
 ### Significant contributions
 

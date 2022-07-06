@@ -345,8 +345,8 @@ A note about colours;
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ Testing, ticket #1198
-* __comment:__ Be careful to include the entire URL path, like `http://yourdomain.dom/`!
-* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: `http://yourdomain.dom/filesender-beta` and `http://yourdomain.dom/simplesamlphp`.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example `http://yourdomain.dom/`.  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.
+* __comment:__ Be careful to include the entire URL path, like `https://example.org/`!
+* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one staging) sharing the same SimpleSAMLphp installation. For example: `https://example.org/filesender-staging` and `https://example.org/simplesamlphp`.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example `https://example.org/`.  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra configuration work and an extra package and process to manage on your server.
 
 ### default_timezone
 
@@ -836,7 +836,7 @@ Ensure that the named bucket already exists if you use this setting.
 * __type:__ string
 * __default:__ nothing
 * __available:__ since version 2.0 beta 4
-* __comment:__ If this is set then file shredding will be enabled. See the [shredding page](http://docs.filesender.org/v2.0/shredding) for more information.
+* __comment:__ If this is set then file shredding will be enabled. See the [shredding page](https://docs.filesender.org/filesender/v2.0/shredding/) for more information.
 
 
 ---
@@ -1013,11 +1013,11 @@ User language detection is done in the following order:
 * __default:__ -
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@yourdomain.dom" and use the bounce-handler script to deal with email bounces.
+* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@example.org" and use the bounce-handler script to deal with email bounces.
 
 ### email_from_name
 
-* __description:__ pretty name for the email_from address.  Use when you explicitly set email_from to an email address like "no-reply@domain.dom".
+* __description:__ pretty name for the email_from address.  Use when you explicitly set email_from to an email address like "no-reply@example.org".
 * __mandatory:__ no
 * __type:__ string
 * __default:__ -
@@ -1037,7 +1037,7 @@ User language detection is done in the following order:
 
 ### email_reply_to_name
 
-* __description:__  pretty name for the email_reply_to address.  Use when you explicitly set email_reply_to to an email address like "no-reply@domain.dom".
+* __description:__  pretty name for the email_reply_to address.  Use when you explicitly set email_reply_to to an email address like "no-reply@example.org".
 * __mandatory:__ no
 * __type:__ string
 * __default:__ -
@@ -1053,7 +1053,7 @@ User language detection is done in the following order:
 * __default:__ -
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@yourdomain.dom" and use the bounce-handler script to deal with email bounces.
+* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@example.org" and use the bounce-handler script to deal with email bounces.
 
 ### email_subject_prefix
 
@@ -1100,7 +1100,7 @@ User language detection is done in the following order:
 * __description:__ tells the bounce handler where to forward those messages it can not identify as email bounces but can be related to a specific target (recipient, guest). The received message is forwarded as message/rfc822 attachment. Updated in 2.6.
 * __mandatory:__ no
 * __type:__ string or keyword
-* __permissible values:__ "sender": relay to recipient's transfer owner or guest owner. "admin": relay to admin email address. "support": relay to support_email (setting to this means that support_email must also be set), or "someaddress@domain.tld": an explicit email address to forward these types of mails to.
+* __permissible values:__ "sender": relay to recipient's transfer owner or guest owner. "admin": relay to admin email address. "support": relay to support_email (setting to this means that support_email must also be set), or "someaddress@example.org": an explicit email address to forward these types of mails to.
 * __default:__ "sender"
 * __available:__ since version 2.0
 * __1.x name:__
@@ -2223,17 +2223,6 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Some of the auth_sp methods may use _SESSION or perform other actions that might alter how session_start() will work. If that is the case you can set this configuration to true and session_start() will be called before authentication is performed.
 
 
-
-### session_cookie_path
-
-* __description:__ Explicitly sets the session.cookie.path parameter for the authentication cookies.  You typically need this if you use SimpleSAMLphp for authentication and have multiple FileSender instances using the same SimpleSAMLphp installation.  Shibboleth has its own session identifier mechanism and you probably won't need to change the session_cookie_path when using Shibboleth.
-* __mandatory:__ no
-* __type:__ string
-* __default:__ if(!$session_cookie_path) $session_cookie_path = $site_url_parts['path'];
-* __available:__ since version 2.0
-* __1.x name:__
-* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: `http://yourdomain.dom/filesender-beta` and `http://yourdomain.dom/simplesamlphp`.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example `http://yourdomain.dom/`.  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.
-
 ### auth_sp_set_idp_as_user_organization
 
 * __description:__ saml_sp_idp (simplesaml), shib: (shib_identity_provider environment variable) takes sp identifier from sp if provided and save it in user preferences as organisation property.
@@ -2266,7 +2255,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __default:__ -
 * __available:__ since version 1.0
 * __1.x name:__ site_simplesamlurl
-* __comment:__ You will usually have something like `http://<your-filesender-server>/simplesaml` here where 'simplesaml' is an alias defined as `Alias /simplesaml /usr/local/filesender/simplesaml/www` in your web server config.
+* __comment:__ You will usually have something like `https://filesender.example.org/simplesaml` here where 'simplesaml' is an alias defined as `Alias /simplesaml /usr/local/simplesaml/www` in your web server config.
 
 ### auth_sp_saml_simplesamlphp_location
 

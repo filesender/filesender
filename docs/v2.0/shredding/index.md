@@ -1,5 +1,5 @@
 ---
-title: Documentation v2.0-beta
+title: FileSender Shredding deleted files
 ---
 
 # FileSender Shredding deleted files
