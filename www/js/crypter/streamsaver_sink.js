@@ -119,9 +119,6 @@ window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, transferi
                 $this.cryptoapp.setDownloadFileidlist( $this.selectedFiles );
                 $this.crypto_encrypted_archive_download_fileidlist = window.filesender.crypto_encrypted_archive_download_fileidlist;
                 window.filesender.crypto_encrypted_archive_download_fileidlist = '';
-                
-                window.filesender.log("blobSinkStreamedzip64 init AAA fileidlist " + $this.crypto_encrypted_archive_download_fileidlist );
-                
             }
 
             
@@ -169,10 +166,9 @@ window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, transferi
                 window.filesender.log("blobSinkStreamedzip64 adding next file with name " + f.filename );
                 $this.openFile(f.filename,f.fileid);
 
-                window.filesender.log("blobSinkStreamedzip64 AAA selfiles length " + $this.selectedFiles.length );
+                // last file in selection, tell server we are almost done.
                 if( $this.selectedFiles.length == 1 ) {
                     window.filesender.crypto_encrypted_archive_download_fileidlist = $this.crypto_encrypted_archive_download_fileidlist;
-                    window.filesender.log("blobSinkStreamedzip64 AAA fileidlist " + $this.crypto_encrypted_archive_download_fileidlist );
                 }
                 
                 $this.cryptoapp.decryptDownloadToBlobSink( $this, pass, $this.transferid,

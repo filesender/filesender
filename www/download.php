@@ -409,14 +409,12 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
     if( $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] ) {
     
         $archiveList = $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_CONTENTS'];
-        Logger::error("AAA archiveList1 $archiveList ");
         if( $transfer && 
             $transfer->is_encrypted &&
             strlen($archiveList))
         {
             // user data MUST be list of numbers only
             if (preg_match("/^[0-9,]+$/", $archiveList)) {        
-                Logger::error("AAA archiveList2 $archiveList ");
 
                 $files = array();
                 $files_ids = array_filter(array_map('trim', explode(',', $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_CONTENTS'])));
@@ -436,18 +434,21 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
         }
         else
         {
-            Logger::error("AAA not first file...");
+            if( !$transfer || !$transfer->is_encrypted ) {
+                Logger::nefarious("attempt to set a ENCRYPTED_ARCHIVE_DOWNLOAD on a normal transfer");
+            }
+                
+            // not last file of encrypted archive.
             return;
         }
     }
-    Logger::error("AAA ret " . json_encode( $ret ));
     
     if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
 
             try {
                 // do not email too often
-//                TranslatableEmail::rateLimit( true, 'download_complete', $recipient, $transfer );
+                TranslatableEmail::rateLimit( true, 'download_complete', $recipient, $transfer );
 
                 // Notify file download
                 ApplicationMail::quickSend('download_complete', $recipient, $ret);
@@ -464,7 +465,7 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
     if ($transfer->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE) && !$recently_downloaded) {
         try {
             // do not email too often
-//            TranslatableEmail::rateLimit( true, 'files_downloaded', $transfer->owner, $transfer);
+            TranslatableEmail::rateLimit( true, 'files_downloaded', $transfer->owner, $transfer);
             ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, array('recipient' => $recipient));
         }
         catch ( RateLimitException $e ) {

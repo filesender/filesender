@@ -774,7 +774,6 @@ window.filesender.crypto_app = function () {
             var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
             var legacyChunkPadding = 0;
             oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', '1' );
-            console.log("AAA downloadAndDecryptChunk fileidlist " + window.filesender.crypto_encrypted_archive_download_fileidlist );
 
             
             //
@@ -1338,7 +1337,6 @@ window.filesender.crypto_app = function () {
                 fileidlist += ',';
             }
             window.filesender.crypto_encrypted_archive_download_fileidlist = fileidlist;
-            console.log("AAA setDownloadFileidlist fileidlist " + fileidlist );
         },
         decryptDownloadToZip: function(link,transferid,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
 
@@ -1353,8 +1351,6 @@ window.filesender.crypto_app = function () {
                 }
             };
 
-//            $this.setDownloadFileidlist(selectedFiles);
-            
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
 
