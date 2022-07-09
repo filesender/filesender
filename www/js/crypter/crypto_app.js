@@ -776,8 +776,6 @@ window.filesender.crypto_app = function () {
             oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', '1' );
             console.log("AAA downloadAndDecryptChunk fileidlist " + window.filesender.crypto_encrypted_archive_download_fileidlist );
 
-            oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Contents', window.filesender.crypto_encrypted_archive_download_fileidlist );
-            window.filesender.crypto_encrypted_archive_download_fileidlist = '';
             
             //
             // There are some extra things to do for streaming legacy type files
@@ -831,6 +829,10 @@ window.filesender.crypto_app = function () {
                 window.filesender.log("downloadAndDecryptChunk(adjustments done) "
                                       + " eoffset " + endoffset
                                       + " padding " + padding );
+
+                oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Contents', window.filesender.crypto_encrypted_archive_download_fileidlist );
+                window.filesender.crypto_encrypted_archive_download_fileidlist = '';
+                
             }
             
             var brange = 'bytes=' + startoffset + '-' + endoffset;
@@ -1328,6 +1330,16 @@ window.filesender.crypto_app = function () {
                 + "." + archiveFormat;
             return archiveName;
         },
+        setDownloadFileidlist: function( selectedFiles ) {
+            var fileidlist = '';
+            for(var i=0; i<selectedFiles.length; i++) {
+                var f = selectedFiles[i];
+                fileidlist += f.fileid;
+                fileidlist += ',';
+            }
+            window.filesender.crypto_encrypted_archive_download_fileidlist = fileidlist;
+            console.log("AAA setDownloadFileidlist fileidlist " + fileidlist );
+        },
         decryptDownloadToZip: function(link,transferid,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
 
             var $this = this;
@@ -1341,14 +1353,7 @@ window.filesender.crypto_app = function () {
                 }
             };
 
-            var fileidlist = '';
-            for(var i=0; i<selectedFiles.length; i++) {
-                var f = selectedFiles[i];
-                fileidlist += f.fileid;
-                fileidlist += ',';
-            }
-            window.filesender.crypto_encrypted_archive_download_fileidlist = fileidlist;
-            console.log("AAA decryptDownloadToZip fileidlist " + fileidlist );
+//            $this.setDownloadFileidlist(selectedFiles);
             
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
