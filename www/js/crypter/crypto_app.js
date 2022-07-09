@@ -40,6 +40,11 @@ if (!('onPBKDF2AllEnded' in window.filesender)) {
 
 window.filesender.crypto_app_downloading = false;
 
+// list of fileid for this encrypted download
+window.filesender.crypto_encrypted_archive_download_fileidlist = '';
+
+
+
 /*
  * Main entry points
  *   decryptDownload()
@@ -768,7 +773,12 @@ window.filesender.crypto_app = function () {
             var startoffset = 1 * (chunkid * chunksz);
             var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
             var legacyChunkPadding = 0;
+            oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', '1' );
+            console.log("AAA downloadAndDecryptChunk fileidlist " + window.filesender.crypto_encrypted_archive_download_fileidlist );
 
+            oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Contents', window.filesender.crypto_encrypted_archive_download_fileidlist );
+            window.filesender.crypto_encrypted_archive_download_fileidlist = '';
+            
             //
             // There are some extra things to do for streaming legacy type files
             //
@@ -1330,6 +1340,15 @@ window.filesender.crypto_app = function () {
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
             };
+
+            var fileidlist = '';
+            for(var i=0; i<selectedFiles.length; i++) {
+                var f = selectedFiles[i];
+                fileidlist += f.fileid;
+                fileidlist += ',';
+            }
+            window.filesender.crypto_encrypted_archive_download_fileidlist = fileidlist;
+            console.log("AAA decryptDownloadToZip fileidlist " + fileidlist );
             
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
