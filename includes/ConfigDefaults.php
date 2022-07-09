@@ -309,6 +309,24 @@ $default = array(
     'service_aup_min_required_version' => 0,
 
     'cookie_domain' => '',
+
+    'allow_pages_core' => array(
+        GUIPages::DOWNLOAD, GUIPages::TRANSLATE_EMAIL,
+        GUIPages::LOGOUT, GUIPages::EXCEPTION,
+        GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY ),
+
+    'allow_pages_add_for_guest' => array( GUIPages::HOME,
+                                          GUIPages::UPLOAD,
+                                          GUIPages::APISECRETAUP ),
+    'allow_pages_add_for_user' => array( GUIPages::HOME,
+                                         GUIPages::USER,
+                                         GUIPages::UPLOAD,
+                                         GUIPages::TRANSFERS,
+                                         GUIPages::GUESTS,
+                                         GUIPages::DOWNLOAD,
+                                         GUIPages::APISECRETAUP ),
+    'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
+    
     
     'transfer_options' => array(
         'email_me_copies' => array(
