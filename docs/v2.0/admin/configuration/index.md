@@ -123,6 +123,11 @@ A note about colours;
 * [crypto_pbkdf2_dialog_custom_webasm_delay](#crypto_pbkdf2_dialog_custom_webasm_delay)
 * [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
 * [user_page](#user_page)
+* [allow_pages_core](#allow_pages_core)
+* [allow_pages_add_for_guest](#allow_pages_add_for_guest)
+* [allow_pages_add_for_user](#allow_pages_add_for_user)
+* [allow_pages_add_for_admin](#allow_pages_add_for_admin)
+
 
 ## Transfers
 
@@ -1254,6 +1259,43 @@ User language detection is done in the following order:
 * __comment:__ To show an item set the value for the name of the item to true.
      For more possible values to include in the array see the second level keys in $infos on the templates/user_page.php file.
 
+
+### allow_pages_core
+* __description:__ The pages that should be available to all visitors before logging in. Note that if you include some pages such as transfers
+                   and the system requires the user to be logged in to view the page they will be redirected to login to view the page. The default
+                   value should be acceptable to most sites.
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::DOWNLOAD, GUIPages::TRANSLATE_EMAIL, GUIPages::LOGOUT, GUIPages::EXCEPTION, GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_add_for_guest and allow_pages_add_for_user
+
+
+### allow_pages_add_for_guest
+* __description:__ These values will be added to the allow_pages_core pages if the principal is a guest
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::HOME, GUIPages::UPLOAD, GUIPages::APISECRETAUP )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_core
+
+### allow_pages_add_for_user
+* __description:__ These values will be added to the allow_pages_core pages if the principal is an authenticated user (normal or admin). Note that GUIPages::USER will be removed if
+                you have set $config['user_page'] = null.
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::HOME, GUIPages::USER, GUIPages::UPLOAD, GUIPages::TRANSFERS, GUIPages::GUESTS, GUIPages::DOWNLOAD, GUIPages::APISECRETAUP )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_core
+
+
+### allow_pages_add_for_admin
+* __description:__ These values will be added to the allow_pages_core pages if the principal is an authenticated admin. This will be in addition to the values from allow_pages_add_for_user.
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::ADMIN )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_core
 
 
 
