@@ -152,7 +152,7 @@ window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, transferi
 
         downloadNext: function() {
             var $this = this;
-
+            
             if( $this.selectedFiles.length == 0 ) {
                 window.filesender.log("blobSinkStreamedzip64 no more files to add to archive... done");
                 $this.complete = true;
@@ -167,8 +167,20 @@ window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, transferi
                 $this.openFile(f.filename,f.fileid);
 
                 // last file in selection, tell server we are almost done.
-                if( $this.selectedFiles.length == 1 ) {
+                if( $this.selectedFiles.length == 0 ) {
+                    window.filesender.log("aaa blobSinkStreamedzip64 downloadNext(sel==1?) selfiles.len " + $this.selectedFiles.length );
                     window.filesender.crypto_encrypted_archive_download_fileidlist = $this.crypto_encrypted_archive_download_fileidlist;
+
+                    var transfer = new filesender.transfer();
+                    if (transfer.canUseTeraReceiver()) {
+                        window.filesender.crypto_encrypted_archive_download_fileidlist = '';
+                        if( window.filesender.terasender  ) {
+                            window.filesender.terasender.crypto_encrypted_archive_download_fileidlist = $this.crypto_encrypted_archive_download_fileidlist;
+                        }
+                        
+                    }
+
+                    
                 }
                 
                 $this.cryptoapp.decryptDownloadToBlobSink( $this, pass, $this.transferid,

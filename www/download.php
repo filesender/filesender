@@ -406,7 +406,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
 function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false) {
 
-    if( $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] ) {
+    if( $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] && $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] == 'true' ) {
     
         $archiveList = $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_CONTENTS'];
         if( $transfer && 
@@ -442,13 +442,13 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
             return;
         }
     }
-    
+
     if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
 
             try {
                 // do not email too often
-                TranslatableEmail::rateLimit( true, 'download_complete', $recipient, $transfer );
+//                TranslatableEmail::rateLimit( true, 'download_complete', $recipient, $transfer );
 
                 // Notify file download
                 ApplicationMail::quickSend('download_complete', $recipient, $ret);
@@ -465,7 +465,7 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
     if ($transfer->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE) && !$recently_downloaded) {
         try {
             // do not email too often
-            TranslatableEmail::rateLimit( true, 'files_downloaded', $transfer->owner, $transfer);
+//            TranslatableEmail::rateLimit( true, 'files_downloaded', $transfer->owner, $transfer);
             ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, array('recipient' => $recipient));
         }
         catch ( RateLimitException $e ) {
