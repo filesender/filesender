@@ -1,5 +1,6 @@
 <?php
 
+include_once "vidattr.php";
 
 function pagelink($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
@@ -9,6 +10,8 @@ function pagelink($page) {
 }
 
 function pagemenuitem($page) {
+    global $vidattr;
+    
     if(!GUI::isUserAllowedToAccessPage($page)) return;
     $class = ($page == GUI::currentPage()) ? ' active ' : '';
 
@@ -55,9 +58,7 @@ function pagemenuitem($page) {
         $icon = '<i class="fa '.$faicon.'"></i> ';
     }
     echo '<div class="nav-item">';
-    echo '<a class="p-2 nav-link  '.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.$icon.$label.'</a>';
+    echo '<a class="p-2 nav-link  '.$class.'" id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$icon.$label.'</a>';
     echo '</div>';
-    
-    
 }
 

@@ -43,7 +43,7 @@ $(function() {
         window.filesender.log("Principal has accepted service AUP version " + aup_version );
 
         filesender.client.serviceAUPAccept(aup_version, function() {
-            filesender.ui.notify('success', lang.tr('terms_accepted'));
+            filesender.ui.notify('success', lang.tr('service_aup_terms_accepted'));
 
             var url = new URL(location);
             var page = url.searchParams.get("s");

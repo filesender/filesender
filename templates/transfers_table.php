@@ -120,7 +120,7 @@ if (!function_exists('clickableHeader')) {
     $showPager = $havePrev || $haveNext;
     
     if( $havePrev || $haveNext ) {
-        echo '<table class="paginator" border="1"><tr>';
+        echo '<table class="paginator" border="0"><tr>';
         $base = '?s=' . $_GET['s'];
         $cgioffset = $pagerprefix . 'offset';
         $cgilimit  = $pagerprefix . 'limit';

@@ -336,7 +336,7 @@ if( $encryption_mandatory ) {
                 <div id="encgroup1" class="row">
                     <div class="col">
                         <div class="fieldcontainer" id="encryption_password_container">  
-                            <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
+                            <label for="encryption_password">{tr:file_encryption_password} : </label>
                             <input class="encryption_password"
                                    id="encryption_password"
                                    name="encryption_password"
@@ -418,7 +418,7 @@ if( $encryption_mandatory ) {
             <?php if (Config::get('upload_graph_bulk_display')) { ?>
                 <div class="row">
                     <div class="col-12">
-                      <div id="graph" class="uploadbulkgraph"><div id="graphDiv" style="width:400px; height:200px; margin:0 auto 1.5em auto"><canvas id="speedChart"></canvas></div></div>
+                      <div id="graph" class="uploadbulkgraph"><div id="graphDiv"><canvas id="speedChart"></canvas></div></div>
                       <script type="text/javascript" src="{path:lib/chart.js/chart.min.js}"></script>
                       <script type="text/javascript" src="{path:js/graph.js}"></script>
                     </div>
@@ -510,8 +510,8 @@ if( $encryption_mandatory ) {
                     
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
-                        <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
-                        <label class="invalid" id="password_can_not_be_part_of_message_warning" style="display:none;">
+                        <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
+                        <label class="invalid" id="password_can_not_be_part_of_message_warning">
                             {tr:password_can_not_be_part_of_message_warning}</label>                        
                         <label class="invalid" id="password_can_not_be_part_of_message_error">
                             {tr:password_can_not_be_part_of_message_error}</label>                        
@@ -560,7 +560,7 @@ if( $encryption_mandatory ) {
                                     echo ' data-id="'.$id.'" ';
                                     echo ' aria-haspopup="true" ';
                                     echo ' aria-expanded="false"> ';
-                                    echo '  <span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
+                                    echo '  <span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
                                 }
                             }
                             ?>
@@ -572,7 +572,7 @@ if( $encryption_mandatory ) {
                                     $specificid = $dfn['specific-id'];
                                     $selected = ($id == $code) ? 'selected="selected"' : '';
                                     echo '<a class="dropdown-item rlangdropitem" data-id="'.$id.'" >';
-                                    echo '<span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
+                                    echo '<span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
                                     
                                 }
                                 ?>
