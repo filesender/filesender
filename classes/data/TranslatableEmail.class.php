@@ -220,6 +220,53 @@ class TranslatableEmail extends DBObject
         
         return $email;
     }
+
+    public static function getContext($translation_id, DBObject $to, $vars )
+    {
+        // Extract context info from arguments
+        $context = null;
+        switch (get_class($to)) {
+            case 'Recipient': // Recipient context is it's transfer
+                $context = $to->transfer;
+                break;
+                
+            case 'Guest': // Guest is a context by itself
+                $context = $to;
+                break;
+
+            case 'Transfer': // Transfer
+                $context = $to;
+                break;
+                
+            case 'User': // If recipient is user try to find Transfer, File or Guest in variables
+                foreach ($vars as $v) {
+                    if (!is_object($v)) {
+                        continue;
+                    }
+                    
+                    if (in_array(get_class($v), array('Transfer', 'Guest'))) {
+                        $context = $v;
+                    }
+                    
+                    if ('File' == get_class($v)) {
+                        $context = $v->transfer;
+                    }
+                }
+                if ($context) {
+                    break;
+                }
+                if( $translation_id == 'local_authdb_password_reminder' ) {
+                    $context = $to;
+                    break;
+                } 
+                
+                // no break
+            default:
+                Logger::debug("getContext bad to ", $to );
+                throw new TranslatableEmailUnknownContextException(get_class($to));
+        }
+        return $context;
+    }
     
     /**
      * Prepare mail to be sent to recipient (be it Guest, Recipient ...)
@@ -232,6 +279,7 @@ class TranslatableEmail extends DBObject
      */
     public static function prepare($translation_id, DBObject $to)
     {
+        $original_to = $to;
         $vars = array_slice(func_get_args(), 2);
         array_unshift($vars, $to);
         
@@ -301,17 +349,69 @@ class TranslatableEmail extends DBObject
             $plain .= "\n\n".$footer_translation->plain->out();
             $html .= "\n\n".$footer_translation->html->out();
         }
+
         
         $mail = new ApplicationMail(new Translation(array(
             'subject' => $email_translation->subject->out(),
             'plain' => $plain,
             'html' => $html,
         )));
+
+        try {
+            self::rateLimit( true, $translation_id, $context, ...$vars );
+        }
+        catch ( RateLimitException $e ) {
+            Logger::info("rate limiting action");
+            $mail->setReallySend( false );
+        }
         
         // Add recipient
         $mail->to($to);
         
         return $mail;
+    }
+
+    /**
+     * There are two cases for a rateLimit():
+     * A) Calling early before an action is performed to see if the limit is reached and
+     *    if so then throwing an error rather than doing anything
+     * B) Calling once an action has been performed and a resulting email is about to be sent.
+     *    In this case we may wish to limit email creation but can not stop the action as it has already been performed.
+     *
+     * For case (B) you should catch RateLimitException and avoid sending the email.
+     * It is useful for the exception to be thrown from this method so that the exception
+     * can access all the state that would have been used for the ratelimit record. For example,
+     * event type, sender class and id etc.
+     *
+     */
+    public static function rateLimit( $updateDatabase, $translation_id, DBObject $to )
+    {
+        $vars = array_slice(func_get_args(), 2);
+        array_unshift($vars, $to);
+
+        $action = 'email';
+        $event  = $translation_id;
+        $author = null;
+        if( Auth::isGuest() ) {
+            $author = AuthGuest::getGuest();
+        }
+        if( Auth::isAuthenticated()) {
+            $author = Auth::user();
+        }
+        $author_context_type = 'unknown';
+        $author_context_id   = 'unknown';
+        if( $author ) {
+            $author_context_type = get_class($author);
+            $author_context_id   = $author->id;
+        }
+        $target = self::getContext($translation_id, $to, $vars );
+        $target_context_type = get_class($target);
+        $target_context_id   = $target->id;
+
+        RateLimitHistory::rateLimit( $updateDatabase
+                                   , $author_context_type, $author_context_id
+                                   , $action, $event
+                                   , $target_context_type, $target_context_id );
     }
     
     /**
@@ -326,7 +426,7 @@ class TranslatableEmail extends DBObject
         $mail = call_user_func_array(get_called_class().'::prepare', func_get_args());
         
         $mail->setDebugTemplate($translation_id);
-
+      
         $mail->send();
     }
     

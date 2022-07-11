@@ -5,7 +5,7 @@ title: F.A.Q/troubleshooting for version 2.0
 ## Frequently Asked Questions for version 2.0
 
 
-### Table of contents
+### No session after logging in via SimpleSAMLphp
 
 
 Problem: after logging on a user is simply redirected to the logon page. Logging of SimpleSAMLphp seems to indicate the user is not logged on, no authenticated session is created.

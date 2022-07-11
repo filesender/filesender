@@ -8,7 +8,7 @@ FileSender is a web based application that allows authenticated users
 to securely and easily send arbitrarily large files to other users.
 Authentication of users is provided through [SimpleSAMLphp, supporting
 SAML2, LDAP and RADIUS and
-more](http://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
+more](https://simplesamlphp.org/).
 Users without an account can be sent an upload voucher by an
 authenticated user. FileSender is developed to the requirements of the
 higher education and research community.
@@ -20,7 +20,7 @@ the file. The software is not intended as a permanent file publishing
 platform.
 
 This is the home for Filesender documentation. For more information
-about the project [please visit our homepage](http://filesender.org).
+about the project [please visit our homepage](https://filesender.org).
 
 ### Which version should you choose
 
@@ -53,8 +53,9 @@ release in the 2.x series will describe if database updates are needed
 updated in case you customize those on your site. If is intended that
 you can migrate an active site to new releases with very minimal downtime.
 
-The 1.6.x series is considered deprecated. It is still available
-for those who have not upgraded to a 2.x installation: [1.6.1, released on December 30th 2015](https://downloads.filesender.org/filesender-1.6.1.tar.gz).
+The 1.6.x series (with its latest release `1.6.1` from 2015 CE) is considered deprecated. It is still
+[available](https://github.com/filesender/filesender/releases/tag/1.6.1)
+(see "Assets" at the very end of that page for source code download links).
 
 ### Documentation
 
@@ -68,12 +69,12 @@ file uploads and all the information in the database.
 Perhaps in 2022 FileSender 3.x will become the major release at which
 point the documentation for 2.x will be cloned to a 3.x series.
 
-Please see the [documentation for versions 2.x](http://docs.filesender.org/v2.0/).
+Please see the [documentation for versions 2.x](v2.0/).
 
 ### License
 
 FileSender is released under the [BSD
-license](http://opensource.org/licenses/BSD-3-Clause). It is open
+license](https://opensource.org/licenses/BSD-3-Clause). It is open
 source software and available for free.
 
 ### Availability and download

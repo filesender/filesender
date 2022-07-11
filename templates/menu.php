@@ -1,6 +1,7 @@
 <?php
 
 include_once "pagemenuitem.php";
+include_once "vidattr.php";
 
 $maybe_display_aggregate_statistics_menu = false;
 
@@ -28,7 +29,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                 }
                 
                 pagemenuitem('transfers');
-                
+               
                 if(Config::get('user_page'))
                     pagemenuitem('user');
                 
@@ -88,7 +89,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                         echo ' data-bs-toggle="dropdown" ';
                         echo ' aria-haspopup="true" ';
                         echo ' aria-expanded="false"> ';
-                        echo '  <span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
+                        echo '  <span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
                     }
                 }
                 ?>
@@ -100,7 +101,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                         $specificid = $dfn['specific-id'];
                         $selected = ($id == $code) ? 'selected="selected"' : '';
                         echo '<a class="dropdown-item toplangdropitem" data-id="'.$id.'"  href="#">';
-                        echo '<span class="flag-icon flag-icon-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
+                        echo '<span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
                         
                     }
                     ?>

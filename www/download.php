@@ -407,14 +407,31 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false) {
     if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
-            // Notify file download
-            ApplicationMail::quickSend('download_complete', $recipient, $ret);
+
+            try {
+                // do not email too often
+                TranslatableEmail::rateLimit( true, 'download_complete', $recipient, $transfer );
+
+                // Notify file download
+                ApplicationMail::quickSend('download_complete', $recipient, $ret);
+            }
+            catch ( RateLimitException $e ) {
+                // we hit a rate limit so do not email this time
+            }
+            
         }
     }
     
     // Only notify owner if client did not download the same set of files over the last
     // period to avoid multiple notifications in case of multiple resume from dumb downloader
     if ($transfer->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE) && !$recently_downloaded) {
-        ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, array('recipient' => $recipient));
+        try {
+            // do not email too often
+            TranslatableEmail::rateLimit( true, 'files_downloaded', $transfer->owner, $transfer);
+            ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, array('recipient' => $recipient));
+        }
+        catch ( RateLimitException $e ) {
+            // we hit a rate limit so do not email this time
+        }
     }
 }

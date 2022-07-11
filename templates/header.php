@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <?php
-    $headerclass = "header";
+include_once "vidattr.php";
+
+$headerclass = "header";
 
     try {
         if (Auth::isAuthenticated()) {
@@ -37,7 +39,7 @@
         
         <script type="text/javascript" src="{path:filesender-config.js.php}"></script>
         
-        <script type="text/javascript" src="{path:rest.php/lang?callback=lang.setTranslations}"></script>
+        <script type="text/javascript" src="{path:rest.php/lang?callback=lang.setTranslations<?php echo $vidattr ?>}"></script>
         
         <meta name="robots" content="noindex, nofollow" />
         
