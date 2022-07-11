@@ -114,7 +114,7 @@ if( $encryption_mandatory ) {
                 <?php if ($upload_directory_button_enabled) { ?>
                 <div class="<?php echo $files_actions_div_extra_class ?>">
                     <input type="file" name="selectdir" id="selectdir" class="selectdir_hidden_input_element" webkitdirectory directory multiple mozdirectory />
-                    <label for="selectdir" class="select_directory  ">{tr:select_directory}</label>                    
+                    <label for="selectdir" class="select_directory  ">{tr:select_directory}</label>
                 </div>
                 <?php } ?>
                 

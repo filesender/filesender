@@ -106,7 +106,9 @@ class Auth
     private static function ensure_php_session()
     {
         if ( self::isSessionStarted() === false ) {
-            session_start();
+            $opts = array();
+            $opts['cookie_domain'] = Config::get('cookie_domain');
+            session_start($opts);
         }
     }
     

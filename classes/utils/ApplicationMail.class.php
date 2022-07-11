@@ -38,6 +38,7 @@ if (!defined('FILESENDER_BASE')) {
 class ApplicationMail extends Mail
 {
     private $to = array('email' => null, 'name' => null, 'object' => null);
+    private $reallySend = true;
     
     /**
      * Constructor
@@ -86,6 +87,10 @@ class ApplicationMail extends Mail
                 $this->writeHTML($content->html);
             }
         }
+    }
+
+    public function setReallySend( $v ) {
+        $this->reallySend = $v;
     }
     
     /**
@@ -322,7 +327,11 @@ class ApplicationMail extends Mail
                 }
             }
         }
-        
+
+        if( !$this->reallySend ) {
+            Logger::info("ApplicationMail mail is rejected due to over threshold. From: $from");
+            return;
+        }
         // Send email
         return parent::send();
     }

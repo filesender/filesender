@@ -66,28 +66,38 @@ class AuthGuest
     {
         if (is_null(self::$isAuthenticated)) {
             self::$isAuthenticated = false;
-            
+
             // Do we have a valid guest token in the query ?
+            // This can not be forced because this method can be called for a
+            // regular user to see if they are a guest. The stronger check is
+            // done in getGuest() which makes sure there is a vid too
+            // normal code should do something like the below to ensure they
+            // are talking to a guest and that the guest has a vid provided.
+            //
+            //  if (Auth::isGuest()) {
+            //     $guest = AuthGuest::getGuest();
+            //  ...
+            //
             if (array_key_exists('vid', $_REQUEST)) {
                 $vid = $_REQUEST['vid'];
-                if (
-                    Utilities::isValidUID($vid)
-                ) {
-                    $guest = Guest::fromToken($vid);
-                    
-                    if ($guest->status != GuestStatuses::AVAILABLE || $guest->isExpired()) {
-                        throw new GuestExpiredException($guest);
-                    }
-                    
-                    self::$isAuthenticated = true;
-                    self::$guest = $guest;
-                    
-                    // Update last guest activity
-                    self::$guest->last_activity = time();
-                    self::$guest->save();
-                } else {
+
+                // stop here if the vid is invalid
+                if ( !Utilities::isValidUID($vid)) {
                     throw new TokenHasBadFormatException($vid);
                 }
+                
+                $guest = Guest::fromToken($vid);
+                    
+                if ($guest->status != GuestStatuses::AVAILABLE || $guest->isExpired()) {
+                    throw new GuestExpiredException($guest);
+                }
+                    
+                self::$isAuthenticated = true;
+                self::$guest = $guest;
+                
+                // Update last guest activity
+                self::$guest->last_activity = time();
+                self::$guest->save();
             }
         }
         
@@ -118,12 +128,19 @@ class AuthGuest
     }
     
     /**
-     * Retreive guest
+     * Retreive guest. This method requires a 'vid' is present in the request and 
+     * that vid has a matching guest entry in the database.
      *
      * @return Guest object
      */
     public static function getGuest()
     {
+        if (!array_key_exists('vid', $_REQUEST)) {
+            throw new TokenHasBadFormatException('');
+        }
+
+        // we know there is a vid to lookup so from here we either get a guest
+        // or we will throw.
         return self::isAuthenticated() ? self::$guest : null;
     }
 }

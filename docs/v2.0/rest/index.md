@@ -654,7 +654,7 @@ Response example :
     {
         "id": "foo@bar.org",
         "additional_attributes": { // Depends on configured additional attributes
-            "idp": "https://idp.domain.tld/",
+            "idp": "https://idp.example.org/",
             "other_attribute": "value"
         },
         "aup_ticked": true,
@@ -670,7 +670,7 @@ Response example :
         },
         "lang": "en",
         "frequent_recipients": [],
-        "remote_config": "https://filesender.domain.tld/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
+        "remote_config": "https://filesender.example.org/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
     }
 
 
@@ -691,7 +691,7 @@ Response example :
     {
         "id": "foo@bar.org",
         "additional_attributes": { // Depends on configured additional attributes
-            "idp": "https://idp.domain.tld/",
+            "idp": "https://idp.example.org/",
             "other_attribute": "value"
         },
         "aup_ticked": true,
@@ -707,7 +707,7 @@ Response example :
         },
         "lang": "en",
         "frequent_recipients": [],
-        "remote_config": "https://filesender.domain.tld/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
+        "remote_config": "https://filesender.example.org/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
     }
 
 
@@ -1009,7 +1009,7 @@ Sample PHP code :
 
 	$data = array(
 		'recipient' => 'foo@bar.tld',
-		'from' => 'user_email@domain.tld',
+		'from' => 'user_email@example.org',
 		'subject' => 'For the project report',
 		'message' => 'Come ! Send me the file !',
 		'options' => array('can_only_send_to_me'),

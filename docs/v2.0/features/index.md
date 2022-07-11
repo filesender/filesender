@@ -6,9 +6,9 @@ title: Detailed feature list
 
 This document lists most of the features currently implemented in the 2.0-beta1 code.  Please note that while most of the features are stable, some features may disappear or change.
 
-# User visible features
+## User visible features
 
-## Multi-file transfer of any size
+### Multi-file transfer of any size
 
 * Multi-file select using either the select button or drag & drop anywhere on the tab
 * Multi-file upload in one single transfer.  Server-side it can be specified whether files are uploaded serially or in parallel (TeraSender upload module only)
@@ -23,7 +23,7 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 * Automatic deletion of transfers
 
 
-## Easy to use UI
+### Easy to use UI
 
 * Default and Max days valid
 * Auto-complete
@@ -31,7 +31,7 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 	* Can save preferred language
 * Service configurable speed units (bits or bytes per second)
 
-## Email receipts with full control
+### Email receipts with full control
 
 * Email receipt options:
 	* No emails at all, just present a download link in the UI after uploading the transfer
@@ -39,7 +39,7 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 * Translation URL included in emails, when user clicks on it the email is shown in another language on the FileSender service URL
 * The transfer sender can specify an optional subject and/or message for inclusion with the transfer available email sent to the transfer recipient
 
-## My Transfers
+### My Transfers
 
 * Overview of transfers, both in flight and closed
 * For each transfer:
@@ -49,14 +49,14 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 	* Extend availability period
 	* Access audit trail
 
-## Audit trail for each transfer
+### Audit trail for each transfer
 
 * Each significant action (transfer complete, download etc.) for a transfer is logged in a per-transfer audit trail
 * The audit trail for a transfer can be accessed via My Transfers
 * The audit trail can be received by email as HTML email or PDF.
 * The audit trail email can be sent automatically on transfer expiry or accessed manually via My Files (is this true?).
 
-## Guest access
+### Guest access
 
 * Guest access vouchers can now be made available for:
 	* Valid only one time
@@ -66,7 +66,7 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 * The user creating the guest access voucher can specify which transfer options the guest has available
 * The user can include an optional subject and/or message with the guest access voucher
 
-## Language and internationalisation
+### Language and internationalisation
 
 * Full UTF8 support, supports all international character sets
 * User language selection options:
@@ -78,9 +78,9 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 * Translated emails
 	* Each email has a link which when clicked directs the user to a translation page on the FileSender service instance where another language can be chosen for displaying the email.
 
-# Under the hood
+## Under the hood
 
-## Privacy by design
+### Privacy by design
 
 * Logging to database separated in audit logging per transfer and anonymised logging for statistical purposes
 * Configurable lifetime for audit logging
@@ -88,7 +88,7 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 * Support for logging additional user account parameters in the statlog, e.g. an organisation identifier allowing statistics per customer
 * Configurable enforcing of in-flight encryption of transfers (SSL)
 
-## Transfers
+### Transfers
 
 * Generalised transfer option mechanism
 	* For each option you can configure whether that option is:
@@ -106,27 +106,27 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 	* Ticked by default
 	* Absent from UI
 
-## TeraSender high speed upload module
+### TeraSender high speed upload module
 
 * Improved robustness (needs details)
 * Can be switched on and off (default on)
 * Server-side configurable worker count
 * Server-side configurable whether the user can specify the worker count in the upload form.  This is useful for those specific frequent very large file use cases where you really want to optimise the upload speed.  The user('s organisation) can then figure out what the best worker count for that particular setting is without burdening the FileSender service staff.
 
-## Authentication
+### Authentication
 
 * Externalised authentication
 * Built-in support for Shibboleth and SimpleSAMLphp authentication libraries
 * In practice this means SAML2, LDAP, RADIUS, Active Directory, Facebook, etc.
 
-## Multi-database support
+### Multi-database support
 
 * PDO-based multi-database support
 * Supports MySQL and PostgreSQL
 * Database upgrade script: database definitions generated from what the classes specify is needed
 * Configurable database prefix, useful when running multiple FileSender instances on the same database
 
-## RESTful Webservice API
+### RESTful Webservice API
 
 * System administration support
 * Force legacy upload mode for testing purposes
@@ -136,7 +136,7 @@ This document lists most of the features currently implemented in the 2.0-beta1 
 * Configurable storage usage warning by email
 * Configurable file deletion command
 
-## Email handling
+### Email handling
 
 * Configurable email_from, email_from_name, email_reply_to, email_reply_to_name, email_return_path
 * Automatic email bounce handling (note: field tested by RENATER in production, not tested elsewhere)

@@ -317,8 +317,21 @@ window.filesender.ui = {
      * Redirect user to url
      * 
      * @param string url
+     * @param object args optional cgi key=value settings to send as args to the server
      */
-    redirect: function(url) {
+    redirect: function(url,args) {
+        if(args) {
+            var current_args = {};
+            for(var k in args) {
+                current_args[k] = args[k];
+            }
+            args = [];
+            for(var k in current_args) {
+                args.push(k + '=' + current_args[k]);
+            }
+            url = url + '&' + args.join('&');
+        }
+        
         window.location.href = url;
     },
     

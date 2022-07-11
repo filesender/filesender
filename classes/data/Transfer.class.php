@@ -787,6 +787,8 @@ class Transfer extends DBObject
     /**
      * Check that the user has read/write permission 
      * for this transfer.
+     *
+     * If the user is a guest then a valid 'vid' must be provided.
      * 
      * @return true if they are allowed or false if access should be forbidden
      */
@@ -800,6 +802,7 @@ class Transfer extends DBObject
         }
         
         if (Auth::isGuest()) {
+            // this will throw if there is no vid
             $guest = AuthGuest::getGuest();
             if( !$guest ) {
                 return FALSE;

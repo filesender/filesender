@@ -19,7 +19,7 @@ to use to quickly see if this is the software that you are looking for.
 While efforts have been made to make sure this documentation does not
 contain mistakes and is as clear as possible if you see an issue
 please report it so we can improve this page for everybody. Please see
-[Documentation update page](/patchdocs) for more information about how
+[Documentation update page](/filesender/patchdocs) for more information about how
 you can report issues with and update the documentation.
 
 
@@ -34,7 +34,7 @@ you can report issues with and update the documentation.
 * Apache (or nginx) and PHP version 7.3 or later.
 * A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
-* [SimpleSamlPhp](https://simplesamlphp.org/download) 1.17.1 or newer.
+* [SimpleSamlPhp](https://simplesamlphp.org/download/) 1.17.1 or newer.
 
 Note that older versions of PHP may work, but they are not supported
 by the PHP project so it is recommended to avoid them in production. Likewise,
@@ -106,7 +106,7 @@ drwxrwxr-x. 10 root   root    4096 May 21 12:17 classes
 
 Download the source archive into a directory, for example ~/src. Lets
 assume you have downloaded a release and have a file at
-/root/src/filesender-2.0.tar.gz. The tarball will include the release
+/tmp/filesender-2.0.tar.gz. The tarball will include the release
 tags in the directory name which might make for longer URLs than you
 might like. So in the below the filesender directory is renamed.
 
@@ -115,7 +115,7 @@ might like. So in the below the filesender directory is renamed.
 su -l
 mkdir -p /opt/filesender
 cd       /opt/filesender
-tar xzvf /root/src/filesender-2.0.tar.gz
+tar xzvf /tmp/filesender-2.0.tar.gz
 mv filesender-filesender-2.0  filesender
 ```
 
@@ -232,28 +232,28 @@ authentication for development and testing. When you move to a
 production service you probably want to change that to only support
 authentication sources of your choice.
 
-[Download SimpleSAMLphp](https://simplesamlphp.org/download). Other
-[(later or older) versions](https://simplesamlphp.org/archive) will
-probably work. The continuious integration in FileSender has an
+[Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
+[(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
+probably work. The continuous integration in FileSender has an
 installation of SimpleSAMLphp the [setup
-script](https://github.com/filesender/filesender/blob/master/travis/scripts/simplesamlphp-setup.sh)
+script](https://github.com/filesender/filesender/blob/master/ci/scripts/simplesamlphp-setup.sh)
 shows the version currently used there. For the FileSender 2.0 release
 we tested with version 1.17.1. In the below I will assume you have
 downloaded SimpleSAMLphp to a file at
-/root/src/simplesamlphp-1.17.1.tar.gz.
+/tmp/simplesamlphp-1.17.1.tar.gz.
 
-* **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://simplesamlphp.org/archive), right?
+* **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://github.com/simplesamlphp/simplesamlphp/releases), right?
 
 Extract SimpleSAMLphp in a suitable directory and create symlink:
 
 ```
 mkdir -p /opt/filesender
 cd /opt/filesender
-tar xvzf /root/src/simplesamlphp-1.15.4.tar.gz
-ln -s simplesamlphp-1.15.4 simplesaml
+tar xvzf /tmp/simplesamlphp-1.17.1.tar.gz
+ln -s simplesamlphp-1.17.1 simplesaml
 ```
 
-* **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web root with a web server alias.
+* **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web directory with a web server alias.
 
 Copy standard configuration files to the right places:
 
@@ -336,9 +336,9 @@ rm -f login-admin.php
 
 ```
 
-To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation
+To tailor your [SimpleSAMLphp](https://simplesamlphp.org/) installation
 to match your local site's needs please check the SimpleSAMLphp [installation and
-configuration documentation](http://simplesamlphp.org/docs). When
+configuration documentation](https://simplesamlphp.org/docs). When
 connecting to an Identity provider make sure all the required
 attributes are sent by the identity provider. See the section on [IdP
 attributes](../admin/reference/#idp_attributes) in the Reference
@@ -457,7 +457,7 @@ server {
         add_header X-Frame-Options sameorigin always;
         client_body_buffer_size 256k;
         client_max_body_size 32m;
-        server_name filesender.domain.tld;
+        server_name filesender.example.org;
         index index.php;
         error_page 500 502 503 504 /50x.html;
         root /opt/filesender/www;

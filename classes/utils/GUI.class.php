@@ -284,7 +284,7 @@ class GUI
                         '',
                         time() - 42000,
                         $params['path'],
-                        $params['domain'],
+                        Config::get('cookie_domain'),
                         $params['secure'],
                         $params['httponly']
                     );
@@ -357,44 +357,46 @@ class GUI
     {
         // Already cached ?
         if (is_null(self::$allowed_pages)) {
-            self::$allowed_pages = array();
+
+            self::$allowed_pages = Config::get('allow_pages_core');
             
             // Authenticated users have access to lots ...
             if (Auth::isAuthenticated(false)) {
                 if (Auth::isGuest()) {
-                    self::$allowed_pages = array('upload',
-                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY, GUIPages::APISECRETAUP );
+                    self::$allowed_pages = array_merge( self::$allowed_pages,
+                                                        Config::get('allow_pages_add_for_guest'));
                 } else {
-                    self::$allowed_pages = array('home', 'upload', 'transfers', 'guests', 'download',
-                                                 GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY, GUIPages::APISECRETAUP );
+                    self::$allowed_pages = array_merge( self::$allowed_pages,
+                                                        Config::get('allow_pages_add_for_user'));
                     
                     // ... and admin to even more !
                     if (Auth::isAdmin()) {
-                        self::$allowed_pages[] = 'admin';
+                        self::$allowed_pages = array_merge( self::$allowed_pages,
+                                                            Config::get('allow_pages_add_for_admin'));
                     }
 
                     if (Auth::canViewAggregateStatistics()) {
-                        self::$allowed_pages[] = 'aggregate_statistics';
+                        self::$allowed_pages[] = GUIPages::AGGREGATE_STATISTICS;
                     }
 
                     if (Auth::canViewStatistics()) {
-                        self::$allowed_pages[] = 'statistics';
+                        self::$allowed_pages[] = GUIPages::STATISTICS;
                     }
                     
-                    // Is user page enabled ?
-                    if (Config::get('user_page')) {
-                        self::$allowed_pages[] = 'user';
+                    // Is user page disabled?
+                    if (!Config::get('user_page')) {
+                        self::$allowed_pages = array_diff( self::$allowed_pages,
+                                                           array(GUIPages::USER));
                     }
                 }
             }
             
-            // Always accessible pages
-            foreach (array('download', 'translate_email', 'logout', 'exception', GUIPages::HELP, GUIPages::ABOUT) as $p) {
-                self::$allowed_pages[] = $p;
-            }
-            
+
+            //
+            // the above doesn't matter if we are not allowing use right now.
+            //
             if (Config::get('maintenance')) {
-                self::$allowed_pages = array('maintenance');
+                self::$allowed_pages = array(GUIPages::MAINTENANCE);
             }
         }
         
