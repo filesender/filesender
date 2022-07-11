@@ -1,22 +1,21 @@
 FROM php:7.4-fpm-buster
+LABEL version="0.1.0" \
+      license="BSD3" \
+      maintainer="Nils Vogels <n.vogels@aves-it.nl>" \
+      description="Filesender and simplesamlphp based on php7-fpm" \
+      documentation="https://docs.filesender.org"
 
-# Accept arguments to make the build process dynamically accept different builds
-# Used for filesender CI
-
-ARG REF=3.0alpha3
-ARG REF_SUM="b885e83eaecec1827860933d45e0537215b67a961feb54c5c27f842fd873c07c"
-ARG SSP_REF=1.19.5
-ARG SSP_REF_SUM="ab1a71a4eed2c086774829d47ce72137e4d1a7bd6b8a2535b4a1ddfd6e7da51f"
-
-ENV FILESENDER_VERSION=$REF \
-    FILESENDER_SUM=$REF_SUM \
-    SSP_VERSION=$SSP_REF \
-    SSP_SUM=$SSP_REF_SUM
+ENV FILESENDER_VERSION=3.0a4 \
+    FILESENDER_BRANCH=master3-filesender-3.0alpha4 \
+    FILESENDER_SUM="ef6da83e7ac46303e5f8d620f6858565fd746d7c4b054a12439a561d79b515a2" \
+    SSP_REF=1.19.5
+    SSP_REF_SUM="ab1a71a4eed2c086774829d47ce72137e4d1a7bd6b8a2535b4a1ddfd6e7da51f"
 
 RUN cd /opt && mkdir filesender && \
     cd /opt/filesender && \
-    curl -kL https://github.com/filesender/filesender/archive/master3-filesender-${FILESENDER_VERSION}.tar.gz | tar xz && \
-    ln -s filesender-master3-filesender-${FILESENDER_VERSION} filesender && \
+    curl -kL https://github.com/filesender/filesender/archive/${FILESENDER_BRANCH}.tar.gz | tar xz && \
+    FS_DEST=`ls -1` && \
+    ln -s ${FS_DEST} filesender && \
     curl -L https://github.com/simplesamlphp/simplesamlphp/releases/download/v${SSP_VERSION}/simplesamlphp-${SSP_VERSION}.tar.gz | tar xz && \
     ln -s simplesamlphp-${SSP_VERSION} simplesamlphp
 
@@ -55,18 +54,3 @@ VOLUME ["/opt/filesender", "/config/fpm", "/config/filesender", "/config/simples
 EXPOSE 80 443
 
 CMD ["/usr/local/sbin/runsvdir-init"]
-
-ARG BUILD_DATE
-ARG VCS_REF
-LABEL maintainer="Nils Vogels <n.vogels@aves-it.nl>" \
-      org.label-schema.build-date="${BUILD_DATE}" \
-      org.label-schema.docker.dockerfile="/docker/Dockerfile" \
-      org.label-schema.license="BSD3" \
-      org.label-schema.name="ALPHA BUILD: Filesender3 and SimpleSamlPHP on php7-fpm" \
-      org.label-schema.vendor="filesender" \
-      org.label-schema.url="https://filesender.org" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/filesender/filesender.git" \
-      org.label-schema.vcs-type="Git" \
-      org.label-schema.version="${REF}" \
-      org.label-schema.schema-version="1.0"

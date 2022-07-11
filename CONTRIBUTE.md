@@ -8,17 +8,10 @@ quality standards and making it easier for your contributions to make through.
 
 ## Team members
 
-Currently, the core team members are:
-
-* Chris Richter
-* [Guido Aben](https://github.com/guidoaben)
-* [Jan Meijer](https://github.com/meijer)
-* Wendy Mason
-* Xander Jansen
-
 We've been lucky to have the help of many people through the years. FileSender wouldn't have reached so far without
-them, and we want to thank them from here. Unfortunately, they are so many it is nearly impossible to mention all of
-them. [Github can offer a good summary on who has contributed to the project](https://github.com/filesender/filesender/graphs/contributors?from=2012-05-20&type=c).
+them, and [we want to thank them from here](https://docs.filesender.org/filesender/acknowledgements). Unfortunately,
+they are so many it is nearly impossible to mention all of them.
+[Github can offer a good summary on who has contributed to the project](https://github.com/filesender/filesender/graphs/contributors?from=2012-05-20&type=c).
 Big thanks to you all!
 
 ## First things first

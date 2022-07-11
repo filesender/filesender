@@ -216,7 +216,14 @@ filesender.ui.files = {
     addList: function(files, source_node) {
         var node = null;
         for(var i=0; i<files.length; i++) {
-            var latest_node = filesender.ui.files.addFile(files[i].name, files[i], source_node);
+            var file_name = files[i].name;
+            if(typeof files[i].webkitRelativePath === "string"
+               && files[i].webkitRelativePath != "" )
+            {
+                file_name = files[i].webkitRelativePath;
+            }
+            
+            var latest_node = filesender.ui.files.addFile(file_name, files[i], source_node);
             if (latest_node) {
                 node = latest_node;
             }
@@ -1134,13 +1141,19 @@ filesender.ui.startUpload = function() {
 
         filesender.ui.files.clear_crust_meter_all();
         window.filesender.pbkdf2dialog.ensure_onPBKDF2AllEnded();
-        
+
+        var usp = new URLSearchParams(window.location.search);
+        var reditectargs = [];
+        if( usp.has('vid')) {
+            reditectargs['vid'] = usp.get('vid');
+        }
         var redirect_url = filesender.ui.transfer.options.redirect_url_on_complete;
+        
         if(redirect_url) {
-            filesender.ui.redirect(redirect_url);
+            filesender.ui.redirect(redirect_url,reditectargs);
             
             window.setTimeout(function(f) {
-                filesender.ui.redirect(redirect_url);
+                filesender.ui.redirect(redirect_url,reditectargs);
                 filesender.ui.alert('success', lang.tr('done_uploading_redirect').replace({url: redirect_url}));
             }, 5000);
                     
@@ -1151,7 +1164,7 @@ filesender.ui.startUpload = function() {
             window.filesender.notification.clear();
             filesender.ui.goToPage(
                 filesender.ui.transfer.guest_token ? 'home' : 'transfers',
-                null,
+                reditectargs,
                 filesender.ui.transfer.guest_token ? null : 'transfer_' + filesender.ui.transfer.id
             );
         };

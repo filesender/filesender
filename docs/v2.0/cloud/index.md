@@ -1,8 +1,8 @@
 ---
-title: Documentation v2.0-beta
+title: FileSender Cloud Storage Backends
 ---
 
-# FileSender Could Backends
+# FileSender Cloud Could Backends
 
 FileSender 2.0 can store the uploaded file data in the cloud. Support
 is currently being developed for storing data in Azure blobs and
@@ -34,7 +34,7 @@ php composer.phar install
 ### Azurite: a local Azure server
 
 You may wish to test against the free and open source
-[Azurite](https://github.com/arafato/azurite) server clone. This can
+[Azurite](https://github.com/azure/azurite) server clone. This can
 be useful not only for development and CI but also for many other
 reasons. Having a local Azure server can let you test if FileSender is
 working with your PHP libraries and allowing upload and downloads etc
@@ -161,14 +161,14 @@ cd optional-dependencies/s3
 php composer.phar install
 ```
 
-For more information on installing these bindings see (Amazon's page)[https://docs.aws.amazon.com/aws-sdk-php/v3/guide/getting-started/installation.html#installing-via-composer].
+For more information on installing these bindings see [Amazon's page](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/getting-started_installation.html).
 
 
 ### Zenko CloudServer: your local S3 server
 
-(Zenko CloudServer)[https://github.com/scality/S3] is an open source
+[Zenko CloudServer](https://github.com/scality/cloudserver) is an open source
 S3 server implementation. This can be useful for testing and to see
-that the FileSender code is working as you expect. (Installation)[http://s3-server.readthedocs.io/en/latest/GETTING_STARTED/#installation] of CloudServer is fairly simple and is also
+that the FileSender code is working as you expect. [Installation](https://s3-server.readthedocs.io/en/latest/GETTING_STARTED.html#installation) of CloudServer is fairly simple and is also
 shown below.
 
 ```

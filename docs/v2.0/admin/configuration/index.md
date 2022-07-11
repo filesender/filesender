@@ -46,6 +46,8 @@ A note about colours;
 * [crypto_crypt_name](#crypto_crypt_name)
 * [upload_crypted_chunk_padding_size](#upload_crypted_chunk_padding_size)
 * [upload_crypted_chunk_size](#upload_crypted_chunk_size)
+* [cookie_domain](#cookie_domain)
+* [rate_limits](#rate_limits) (rate limits for some actions)
 
 
 ## Backend storage
@@ -59,6 +61,12 @@ A note about colours;
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
+* [cloud_s3_region](#cloud_s3_region)
+* [cloud_s3_version](#cloud_s3_version)
+* [cloud_s3_endpoint](#cloud_s3_endpoint)
+* [cloud_s3_key](#cloud_s3_key)
+* [cloud_s3_secret](#cloud_s3_secret)
+* [cloud_s3_use_path_style_endpoint](#cloud_s3_use_path_style_endpoint)
 * [cloud_s3_bucket](#cloud_s3_bucket)
 
 ## Shredding
@@ -115,6 +123,11 @@ A note about colours;
 * [crypto_pbkdf2_dialog_custom_webasm_delay](#crypto_pbkdf2_dialog_custom_webasm_delay)
 * [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
 * [user_page](#user_page)
+* [allow_pages_core](#allow_pages_core)
+* [allow_pages_add_for_guest](#allow_pages_add_for_guest)
+* [allow_pages_add_for_user](#allow_pages_add_for_user)
+* [allow_pages_add_for_admin](#allow_pages_add_for_admin)
+
 
 ## Transfers
 
@@ -138,6 +151,8 @@ A note about colours;
 * [user_quota](#user_quota)
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [disable_directory_upload](#disable_directory_upload)
+* [directory_upload_button_enabled](#directory_button_upload_enabled)
 * [encryption_enabled](#encryption_enabled)
 * [encryption_mandatory](#encryption_mandatory)
 * [encryption_min_password_length](#encryption_min_password_length)
@@ -244,6 +259,7 @@ A note about colours;
 * [clientlogs_lifetime](#clientlogs_lifetime)
 * [logs_limit_messages_from_same_ip_address](#logs_limit_messages_from_same_ip_address)
 * [trackingevents_lifetime](#trackingevents_lifetime)
+* [client_ip_key](#client_ip_key)
 
 ## Webservices API
 
@@ -334,8 +350,8 @@ A note about colours;
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ Testing, ticket #1198
-* __comment:__ Be careful to include the entire URL path, like `http://yourdomain.dom/`!
-* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: `http://yourdomain.dom/filesender-beta` and `http://yourdomain.dom/simplesamlphp`.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example `http://yourdomain.dom/`.  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.
+* __comment:__ Be careful to include the entire URL path, like `https://example.org/`!
+* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one staging) sharing the same SimpleSAMLphp installation. For example: `https://example.org/filesender-staging` and `https://example.org/simplesamlphp`.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example `https://example.org/`.  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra configuration work and an extra package and process to manage on your server.
 
 ### default_timezone
 
@@ -597,6 +613,48 @@ This way the encryption_key_version_new_files can be updated and existing upload
            needed for an encrypted chunk that is uploaded (not the encrypted content itself).
 
 
+### cookie_domain
+* __description:__ Optionally allow the cookie_domain to be set for new cookies.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.33
+* __comment:__ It is highly recommended that you leave this setting as the default value which will be unset. The default will mean "If omitted, this attribute defaults to the host of the current document URL, not including subdomains.". This setting is here to allow a deployment to set a value like filesender.example.com to allow all subdomains from that domain to also see the cookie if desired.   https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
+
+
+### rate_limits
+* __description:__ Some actions have hard or soft limits that can be applied. For example, actions that result in sending an email may have a soft limit that will perform the action but not send an email after the nominated number of actions is performed per time period. This allows for the system to prevent a nefarious guest from sending too many emails. The database table ratelimithistorys is used to track the information needed for this option. The time period for actions performed used for the initial implementation is 24 hours. For example, with the right setting you can not create more than 200 guests in a 24 hour block of time. There are two types of limits, hard and soft. A hard limit will be checked before performing an action and if the limit is already reached the action will not be performed. For example, creating a guest or sending a transfer_reminder is a hard limit. This is because creating a guest may require sending an email to be performed so it is not useful to try to perform the action if the rate limit is already reached. Some actions are soft limits such as guest_upload_start and will only effect the sending of an email. For the guest_upload_start example, if the limit is 30 per day then a guest may start an upload 1000 times and you will only receive emails for the first 30 attempts. This way the system remains functional but does not try to produce excessive emails while it is performing that function. In general a soft limit is to protect against excessive email but not to limit the use of the system itself.
+* __mandatory:__ no
+* __type:__ array
+* __default:__
+* __available:__ since version 2.33
+* __1.x name:__
+* __comment:__ For current defaults see https://github.com/filesender/filesender/search?q=rate_limits+in%3Afile+path%3Aincludes
+* __*Standard parameters for all options:*__
+	* __day__(integer): The number of times this action can be performed per day.
+ed off by the user.
+* __*Available options:*__
+	* __guest\_created:__ hard limit
+	* __report\_inline:__ hard limit
+	* __transfer\_reminder:__ hard limit
+	* __download\_complete:__ soft limit
+	* __files\_downloaded:__ soft limit
+	* __guest\_upload\_start:__ soft limit
+	* __transfer\_available:__ soft limit
+
+* __*Configuration example:*__
+
+$config['rate_limits'] = array(
+        'email' => array(
+            'guest_created'      => array( 'day' => 30 ),
+            'report_inline'      => array( 'day' => 20 ),
+            'transfer_reminder'  => array( 'day' => 15 ),
+            'download_complete'  => array( 'day' => 300 ),
+            'files_downloaded'   => array( 'day' => 100 ),
+            'guest_upload_start' => array( 'day' => 50 ),
+            'transfer_available' => array( 'day' => 200 ),
+        ),
+);
 
 
 ---
@@ -694,6 +752,59 @@ This way the encryption_key_version_new_files can be updated and existing upload
 * __available:__ since before version 2.30
 * __comment:__ The script at the given path should perform similar read/write operations as the example external.py script to maintain the storage.
 
+### cloud_s3_region
+
+* __description:__ Optional name of the region configuration for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-region)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'us-east-1'
+* __available:__ since version 2
+* __comment:__ If you use a different s3 region from default, make sure to set this. Non-AWS implementations usually have this set to default.
+
+### cloud_s3_version
+
+* __description:__ Optional API version for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-version)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'latest' 
+* __available:__ since version 2 
+* __comment:__ If you use a different s3 API version from default, make sure to set this. AWS usually has this set to default.  
+
+### cloud_s3_endpoint
+
+* __description:__ Optional API endpoint for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-endpoint)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'http://localhost:8000'
+* __available:__ since version 2
+* __comment:__ The API endpoint that your S3 service can be reached at. For default AWS endpoints check [here](https://docs.aws.amazon.com/general/latest/gr/s3.html)
+
+### cloud_s3_key
+
+* __description:__ Authentication key ID for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_hardcoded.html)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'accessKey1'
+* __available:__ since version 2
+* __comment:__ The key ID associated with the [cloud_s3_secret](#cloud_s3_secret)
+
+### cloud_s3_secret
+
+* __description:__ Authentication secret key ID for the [s3 storage backend](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_hardcoded.html)
+* __mandatory:__ no.
+* __type:__ string
+* __default:__ 'verySecretKey1'
+* __available:__ since version 2
+* __comment:__ The secret key ID associated with the [cloud_s3_key](#cloud_s3_key)
+
+### cloud_s3_use_path_style_endpoint
+
+* __description:__ Choose to use a path style endpoint for the [s3 storage backend](https://docs.aws.amazon.com/aws-sdk-php/v3/api/class-Aws.S3.S3Client.html#__construct)
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2
+* __comment:__ Set to true to send requests to an S3 path style endpoint. 
 
 ### cloud_s3_bucket
 
@@ -704,8 +815,6 @@ This way the encryption_key_version_new_files can be updated and existing upload
 * __available:__ since version 2.31
 * __comment:__ If you wish to store all files in a single bucket set it's name in this configuration option.
 Ensure that the named bucket already exists if you use this setting.
-
-
 
 
 ---
@@ -732,7 +841,7 @@ Ensure that the named bucket already exists if you use this setting.
 * __type:__ string
 * __default:__ nothing
 * __available:__ since version 2.0 beta 4
-* __comment:__ If this is set then file shredding will be enabled. See the [shredding page](http://docs.filesender.org/v2.0/shredding) for more information.
+* __comment:__ If this is set then file shredding will be enabled. See the [shredding page](https://docs.filesender.org/filesender/v2.0/shredding/) for more information.
 
 
 ---
@@ -909,11 +1018,11 @@ User language detection is done in the following order:
 * __default:__ -
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@yourdomain.dom" and use the bounce-handler script to deal with email bounces.
+* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@example.org" and use the bounce-handler script to deal with email bounces.
 
 ### email_from_name
 
-* __description:__ pretty name for the email_from address.  Use when you explicitly set email_from to an email address like "no-reply@domain.dom".
+* __description:__ pretty name for the email_from address.  Use when you explicitly set email_from to an email address like "no-reply@example.org".
 * __mandatory:__ no
 * __type:__ string
 * __default:__ -
@@ -933,7 +1042,7 @@ User language detection is done in the following order:
 
 ### email_reply_to_name
 
-* __description:__  pretty name for the email_reply_to address.  Use when you explicitly set email_reply_to to an email address like "no-reply@domain.dom".
+* __description:__  pretty name for the email_reply_to address.  Use when you explicitly set email_reply_to to an email address like "no-reply@example.org".
 * __mandatory:__ no
 * __type:__ string
 * __default:__ -
@@ -949,7 +1058,7 @@ User language detection is done in the following order:
 * __default:__ -
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@yourdomain.dom" and use the bounce-handler script to deal with email bounces.
+* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@example.org" and use the bounce-handler script to deal with email bounces.
 
 ### email_subject_prefix
 
@@ -996,7 +1105,7 @@ User language detection is done in the following order:
 * __description:__ tells the bounce handler where to forward those messages it can not identify as email bounces but can be related to a specific target (recipient, guest). The received message is forwarded as message/rfc822 attachment. Updated in 2.6.
 * __mandatory:__ no
 * __type:__ string or keyword
-* __permissible values:__ "sender": relay to recipient's transfer owner or guest owner. "admin": relay to admin email address. "support": relay to support_email (setting to this means that support_email must also be set), or "someaddress@domain.tld": an explicit email address to forward these types of mails to.
+* __permissible values:__ "sender": relay to recipient's transfer owner or guest owner. "admin": relay to admin email address. "support": relay to support_email (setting to this means that support_email must also be set), or "someaddress@example.org": an explicit email address to forward these types of mails to.
 * __default:__ "sender"
 * __available:__ since version 2.0
 * __1.x name:__
@@ -1150,6 +1259,43 @@ User language detection is done in the following order:
 * __comment:__ To show an item set the value for the name of the item to true.
      For more possible values to include in the array see the second level keys in $infos on the templates/user_page.php file.
 
+
+### allow_pages_core
+* __description:__ The pages that should be available to all visitors before logging in. Note that if you include some pages such as transfers
+                   and the system requires the user to be logged in to view the page they will be redirected to login to view the page. The default
+                   value should be acceptable to most sites.
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::DOWNLOAD, GUIPages::TRANSLATE_EMAIL, GUIPages::LOGOUT, GUIPages::EXCEPTION, GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_add_for_guest and allow_pages_add_for_user
+
+
+### allow_pages_add_for_guest
+* __description:__ These values will be added to the allow_pages_core pages if the principal is a guest
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::HOME, GUIPages::UPLOAD, GUIPages::APISECRETAUP )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_core
+
+### allow_pages_add_for_user
+* __description:__ These values will be added to the allow_pages_core pages if the principal is an authenticated user (normal or admin). Note that GUIPages::USER will be removed if
+                you have set $config['user_page'] = null.
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::HOME, GUIPages::USER, GUIPages::UPLOAD, GUIPages::TRANSFERS, GUIPages::GUESTS, GUIPages::DOWNLOAD, GUIPages::APISECRETAUP )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_core
+
+
+### allow_pages_add_for_admin
+* __description:__ These values will be added to the allow_pages_core pages if the principal is an authenticated admin. This will be in addition to the values from allow_pages_add_for_user.
+* __mandatory:__ no
+* __type:__ array of values from GUIPages constants
+* __default:__ array( GUIPages::ADMIN )
+* __available:__ since version 2.33
+* __comment:__ See also allow_pages_core
 
 
 
@@ -1406,6 +1552,21 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
+### disable_directory_upload
+* __description:__ Disables the functionality to upload entire directories from the UI
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ Set this to false to enable the directory upload functionality
+
+### directory_upload_button_enabled]
+* __description:__ Enables a button for directory upload on supported browsers
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.6
+* __comment:__ Only on Firefox and Chrome in default templates
 
 ### encryption_enabled
 * __description:__ set to false to disable. If set to true an option to enable file encryption of a transfer becomes available in the web-UI.
@@ -2104,17 +2265,6 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Some of the auth_sp methods may use _SESSION or perform other actions that might alter how session_start() will work. If that is the case you can set this configuration to true and session_start() will be called before authentication is performed.
 
 
-
-### session_cookie_path
-
-* __description:__ Explicitly sets the session.cookie.path parameter for the authentication cookies.  You typically need this if you use SimpleSAMLphp for authentication and have multiple FileSender instances using the same SimpleSAMLphp installation.  Shibboleth has its own session identifier mechanism and you probably won't need to change the session_cookie_path when using Shibboleth.
-* __mandatory:__ no
-* __type:__ string
-* __default:__ if(!$session_cookie_path) $session_cookie_path = $site_url_parts['path'];
-* __available:__ since version 2.0
-* __1.x name:__
-* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: `http://yourdomain.dom/filesender-beta` and `http://yourdomain.dom/simplesamlphp`.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example `http://yourdomain.dom/`.  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.
-
 ### auth_sp_set_idp_as_user_organization
 
 * __description:__ saml_sp_idp (simplesaml), shib: (shib_identity_provider environment variable) takes sp identifier from sp if provided and save it in user preferences as organisation property.
@@ -2147,7 +2297,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __default:__ -
 * __available:__ since version 1.0
 * __1.x name:__ site_simplesamlurl
-* __comment:__ You will usually have something like `http://<your-filesender-server>/simplesaml` here where 'simplesaml' is an alias defined as `Alias /simplesaml /usr/local/filesender/simplesaml/www` in your web server config.
+* __comment:__ You will usually have something like `https://filesender.example.org/simplesaml` here where 'simplesaml' is an alias defined as `Alias /simplesaml /usr/local/simplesaml/www` in your web server config.
 
 ### auth_sp_saml_simplesamlphp_location
 
@@ -2562,6 +2712,15 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __comment:__ Number of days after which collected client logs are automatically deleted.
 
+### client_ip_key
+
+* __description:__ PHP key to use as client identifier
+* __mandatory:__ no
+* __type:__ string
+* __default__: REMOTE_ADDR
+* __available:__ v2.2
+* __comment:__ Client identifier. Usually the default is fine, however when you have reverse proxy setups, you may need to change this to HTTP_CLIENT_IP, HTTP_X_REAL_IP, HTTP_X_FORWARDED_FOR, depending on your setup.
+
 
 ### logs_limit_messages_from_same_ip_address
 
@@ -2575,9 +2734,6 @@ $config['log_facilities'] =
         setting with the default of false works ok for people then the option may be removed and the default of not
         limiting logs will be the only option. So in short, you may not ever need to know about or set this option. It
         is here as a fallback if there are issues with it being turned off.
-
-
-
 
 
 ---

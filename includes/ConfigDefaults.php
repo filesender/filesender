@@ -307,6 +307,26 @@ $default = array(
 
 
     'service_aup_min_required_version' => 0,
+
+    'cookie_domain' => '',
+
+    'allow_pages_core' => array(
+        GUIPages::DOWNLOAD, GUIPages::TRANSLATE_EMAIL,
+        GUIPages::LOGOUT, GUIPages::EXCEPTION,
+        GUIPages::HELP, GUIPages::ABOUT, GUIPages::PRIVACY ),
+
+    'allow_pages_add_for_guest' => array( GUIPages::HOME,
+                                          GUIPages::UPLOAD,
+                                          GUIPages::APISECRETAUP ),
+    'allow_pages_add_for_user' => array( GUIPages::HOME,
+                                         GUIPages::USER,
+                                         GUIPages::UPLOAD,
+                                         GUIPages::TRANSFERS,
+                                         GUIPages::GUESTS,
+                                         GUIPages::DOWNLOAD,
+                                         GUIPages::APISECRETAUP ),
+    'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
+    
     
     'transfer_options' => array(
         'email_me_copies' => array(
@@ -415,4 +435,18 @@ $default = array(
             'default' => true
         ),
     ),
+
+
+    'rate_limits' => array(
+        'email' => array(
+            'guest_created'      => array( 'day' => 100 ),
+            'report_inline'      => array( 'day' => 100 ),
+            'transfer_reminder'  => array( 'day' => 100 ),
+            'download_complete'  => array( 'day' => 500 ),
+            'files_downloaded'   => array( 'day' => 500 ),
+            'guest_upload_start' => array( 'day' => 100 ),
+            'transfer_available' => array( 'day' => 500 ),
+        ),
+    ),
+
 );

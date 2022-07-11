@@ -37,6 +37,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Norway  | UNINETT  | [https://filesender.uninett.no/](https://filesender.uninett.no/)    | 2009|
 | Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013|
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011|
+| Romania | RoEduNet | [https://fisiere.roedu.net/](https://fisiere.roedu.net/) | 2013 |
 | Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018|
 | Serbia  | AMRES    | [https://filesender.amres.ac.rs/](https://filesender.amres.ac.rs/)    | Jul 2014|
 | Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011|
@@ -73,7 +74,9 @@ If you want to add your FileSender installation to this list, send an email to f
 | Country/Region|NREN  | Service URL | Known since|
 | --- | --- | --- |---|
 | East Africa | UBUNTUNET | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | March 2018|
+| Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 |
 | Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015|
+| Somalia | SomaliREN | [https://filesender.somaliren.org.so/filesender/](https://filesender.somaliren.org.so/filesender/) | May 2022 |
 | South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014|
 | Uganda | RENU | [https://filesender.renu.ac.ug/](https://filesender.renu.ac.ug/) | Mar 2018|
 

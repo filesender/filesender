@@ -3,8 +3,8 @@ FROM php:7.4-fpm-buster
 # Accept arguments to make the build process dynamically accept different builds
 # Used for filesender CI
 
-ARG REF=2.31
-ARG REF_SUM="b885e83eaecec1827860933d45e0537215b67a961feb54c5c27f842fd873c07c"
+ARG REF=2.32
+ARG REF_SUM="d4fa90a5fa33db53009b782956dc8145b3a8b92a5a260f318017724f8a1978b1"
 ARG SSP_REF=1.19.5
 ARG SSP_REF_SUM="ab1a71a4eed2c086774829d47ce72137e4d1a7bd6b8a2535b4a1ddfd6e7da51f"
 
