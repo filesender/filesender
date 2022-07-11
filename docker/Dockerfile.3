@@ -5,11 +5,11 @@ LABEL version="0.1.0" \
       description="Filesender and simplesamlphp based on php7-fpm" \
       documentation="https://docs.filesender.org"
 
-ENV FILESENDER_VERSION=bootstrap \
-    FILESENDER_BRANCH=2021/bootstrap \
+ENV FILESENDER_VERSION=3.0a4 \
+    FILESENDER_BRANCH=master3-filesender-3.0alpha4 \
     FILESENDER_SUM="ef6da83e7ac46303e5f8d620f6858565fd746d7c4b054a12439a561d79b515a2" \
-    SSP_VERSION=1.19.0 \
-    SSP_SUM="2111129787a4baf27a51e52bda660c56d069f167354800bffc72440dcacb3a6f" 
+    SSP_REF=1.19.5
+    SSP_REF_SUM="ab1a71a4eed2c086774829d47ce72137e4d1a7bd6b8a2535b4a1ddfd6e7da51f"
 
 RUN cd /opt && mkdir filesender && \
     cd /opt/filesender && \

@@ -83,6 +83,7 @@ class Autoloader
         'AggregateStatistic' => 'data/',
         'AggregateStatisticMetadata' => 'data/',
         'AVResult' => 'data/',
+        'RateLimitHistory' => 'data/',
         
         'AVProgram*' => 'avprograms/',
         

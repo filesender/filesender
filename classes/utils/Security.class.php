@@ -96,7 +96,13 @@ class Security
      */
     public static function validateAgainstCSRF( $canReturnJSON = false )
     {
-        if( Config::get('owasp_csrf_protector_enabled') ) {
+        $checkToken = Utilities::isTrue(Config::get('owasp_csrf_protector_enabled'));
+
+        if (Auth::isGuest()) {
+            $checkToken = true;
+        }
+        
+        if( $checkToken ) {
             include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
             if( !self::$filesender_csrf_protector_logger ) {
                 self::$filesender_csrf_protector_logger = new FileSendercsrfProtectorLogger();

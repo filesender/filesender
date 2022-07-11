@@ -1,6 +1,7 @@
 <?php
 
 include_once "pagemenuitem.php";
+include_once "vidattr.php";
 
 $maybe_display_aggregate_statistics_menu = false;
 
@@ -28,7 +29,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                 }
                 
                 pagemenuitem('transfers');
-                
+               
                 if(Config::get('user_page'))
                     pagemenuitem('user');
                 
