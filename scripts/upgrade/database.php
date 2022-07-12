@@ -221,6 +221,64 @@ function ensureAllTables()
 }
 
 
+function verifyTableCharacterSetForTable( $class )
+{
+    echo 'verifyTableCharacterSetForTable class '.$class."\n";
+    
+    $datamap = call_user_func($class.'::getDataMap');
+    $viewmap = call_user_func($class.'::getViewMap');
+    $secindexmap = call_user_func($class.'::getSecondaryIndexMap');
+    $table = call_user_func($class.'::getDBTable');
+    
+    // Check if table exists
+    echo 'Working on table '.$table."\n";
+
+    $sql = "SELECT column_name as col,character_set_name as charset FROM information_schema.`COLUMNS` ";
+    $sql .= " WHERE table_schema = \"" . Config::get('db_database') . "\" ";
+    $sql .= " AND table_name = \"$table\" ";
+
+    $s = DBI::prepare($sql);
+    $s->execute(array());
+    $records = $s->fetchAll();
+    foreach ($records as $r) {
+        echo " " . $r['col'] . ' = ' . $r['charset'] . "\n";
+        $datamap[$r['col']]['db_charset'] = $r['charset'];
+    }
+
+    $dmcols = array_keys($datamap);
+    
+    foreach( $dmcols as $column ) {
+        $d = $datamap[$column];
+        $dt = $d['type'];
+        if( $dt == 'string' || $dt == 'text'  ) {
+            echo " column $column is a string! \n";
+            echo "    database has it as " . $d['db_charset'] . "\n";
+            if( $d['db_charset'] != 'utf8mb4' ) {
+                echo "WARNING The database table $table has a string/text column with an incorrect character set!\n";
+                echo "WARNING   please update column $column to use utf8mb4 \n";
+            }
+        }
+    }
+    
+}
+
+//
+// For mariadb we make sure that the character encoding is utf8mb4
+//
+function verifyTableCharacterSets()
+{
+    $dbtype = Config::get('db_type');
+    
+    if( $dbtype == 'mysql' ) {
+
+        $classes = array_merge(getConstantClasses(), getClasses());
+        foreach($classes as $class) {
+            verifyTableCharacterSetForTable( $class );
+        }
+    }
+}
+
+
 function renameColumn( $tableName, $oldname, $newname, $mysqltypestring  )
 {
     $dbtype = Config::get('db_type');
@@ -609,6 +667,8 @@ try {
         echo 'Done updating views for table '.$table."\n";
     }
 
+    verifyTableCharacterSets();
+    
     
 } catch(Exception $e) {
     echo "Error, Rolling database changes back....\n";
