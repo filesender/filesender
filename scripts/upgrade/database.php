@@ -256,6 +256,12 @@ function verifyTableCharacterSetForTable( $class )
             if( $d['db_charset'] != 'utf8mb4' ) {
                 echo "WARNING The database table $table has a string/text column with an incorrect character set!\n";
                 echo "WARNING   please update column $column to use utf8mb4 \n";
+
+                $coldef = Database::columnDefinition($d);
+                $query = 'ALTER TABLE '.$table.' MODIFY '.$column.' '.$coldef. ' COLLATE utf8mb4 ';
+                echo "SQL : " . $query . "\n";
+                //DBI::exec($query);
+                
             }
         }
     }
