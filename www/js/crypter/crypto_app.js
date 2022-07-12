@@ -1216,6 +1216,8 @@ window.filesender.crypto_app = function () {
         {
             var $this = this;
 
+            filesender.terasender.crypto_encrypted_archive_download = false;
+            
             callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
