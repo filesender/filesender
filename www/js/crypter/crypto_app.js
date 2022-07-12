@@ -40,6 +40,11 @@ if (!('onPBKDF2AllEnded' in window.filesender)) {
 
 window.filesender.crypto_app_downloading = false;
 
+// list of fileid for this encrypted download
+window.filesender.crypto_encrypted_archive_download_fileidlist = '';
+
+
+
 /*
  * Main entry points
  *   decryptDownload()
@@ -768,7 +773,9 @@ window.filesender.crypto_app = function () {
             var startoffset = 1 * (chunkid * chunksz);
             var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
             var legacyChunkPadding = 0;
+            oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', filesender.terasender.crypto_encrypted_archive_download );
 
+            
             //
             // There are some extra things to do for streaming legacy type files
             //
@@ -821,6 +828,10 @@ window.filesender.crypto_app = function () {
                 window.filesender.log("downloadAndDecryptChunk(adjustments done) "
                                       + " eoffset " + endoffset
                                       + " padding " + padding );
+
+                oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Contents', window.filesender.crypto_encrypted_archive_download_fileidlist );
+                window.filesender.crypto_encrypted_archive_download_fileidlist = '';
+                
             }
             
             var brange = 'bytes=' + startoffset + '-' + endoffset;
@@ -1205,6 +1216,8 @@ window.filesender.crypto_app = function () {
         {
             var $this = this;
 
+            filesender.terasender.crypto_encrypted_archive_download = false;
+            
             callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
@@ -1318,6 +1331,15 @@ window.filesender.crypto_app = function () {
                 + "." + archiveFormat;
             return archiveName;
         },
+        setDownloadFileidlist: function( selectedFiles ) {
+            var fileidlist = '';
+            for(var i=0; i<selectedFiles.length; i++) {
+                var f = selectedFiles[i];
+                fileidlist += f.fileid;
+                fileidlist += ',';
+            }
+            window.filesender.crypto_encrypted_archive_download_fileidlist = fileidlist;
+        },
         decryptDownloadToZip: function(link,transferid,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
 
             var $this = this;
@@ -1330,7 +1352,8 @@ window.filesender.crypto_app = function () {
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
             };
-            
+            filesender.terasender.crypto_encrypted_archive_download = true;
+
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
 
