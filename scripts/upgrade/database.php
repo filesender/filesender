@@ -50,6 +50,7 @@ $args = new Args(
     array(
         'h' => 'help',
         'd:' => 'db_database:',
+        'm' => 'mariadb_skip_text_character_set_check'
     ));
 
 $args->getopts();
@@ -57,9 +58,14 @@ $args->maybeDisplayHelpAndExit(
     'Create or upgrade the database schema for FileSender....'."\n\n" .
     'Usage '.basename(__FILE__).' [-d|--db_database=<name>] '."\n" .
     "\t".'-d|--db_database Name of the database to connect to'."\n" .
+    "\t".'-m|--mariadb_skip_text_character_set_check Skip checking the text character encoding for columns'."\n" .
     "\t\n"
 );
 $args->MergeShortToLong();
+$arg_mariadb_skip_text_character_set_check = $args->getArg('mariadb_skip_text_character_set_check', false, false );
+if( $arg_mariadb_skip_text_character_set_check == '1' ) {
+    $arg_mariadb_skip_text_character_set_check = true;
+}
 $db_database = $args->getArg('db_database', false, null );
 if( $db_database ) {
     echo "originally set db_database is " . Config::get('db_database') . "\n";
@@ -233,6 +239,9 @@ function verifyTableCharacterSetForTable( $class )
     // Check if table exists
     echo 'Working on table '.$table."\n";
 
+
+    
+    
     $sql = "SELECT column_name as col,character_set_name as charset FROM information_schema.`COLUMNS` ";
     $sql .= " WHERE table_schema = \"" . Config::get('db_database') . "\" ";
     $sql .= " AND table_name = \"$table\" ";
@@ -254,14 +263,36 @@ function verifyTableCharacterSetForTable( $class )
             echo " column $column is a string! \n";
             echo "    database has it as " . $d['db_charset'] . "\n";
             if( $d['db_charset'] != 'utf8mb4' ) {
+                echo "\n";
+                echo "-----------------------------------------------------------------------\n";
+                echo "\n";
+                echo "ERROR When using mysql or mariadb the database and tables should use \n";
+                echo " the utf8mb4 TEXT CHARACTER SET.\n";
+                echo "\n";
                 echo "WARNING The database table $table has a string/text column with an incorrect character set!\n";
+                echo "        expecting utf8mb4 \n";
+                echo "        found     " . $d['db_charset'] . " \n";
                 echo "WARNING   please update column $column to use utf8mb4 \n";
-
-                $coldef = Database::columnDefinition($d);
-                $query = 'ALTER TABLE '.$table.' MODIFY '.$column.' '.$coldef. ' COLLATE utf8mb4 ';
-                echo "SQL : " . $query . "\n";
-                //DBI::exec($query);
-                
+                echo "\n";
+                echo "Because columns, tables, and databases might derive their TEXT CHARACTER SET\n";
+                echo "automatic changes have not been added to the script to fix this issue.\n";
+                echo "\n";
+                echo "You can use:\n";
+                echo "  SHOW create table $table\n";
+                echo "in a mysql console to see if specific columns have TEXT CHARACTER SET explicitly set\n";
+                echo "otherwise please create a backup and test the following SQL:\n";
+                echo "  ALTER table $table CONVERT TO CHARACTER SET utf8mb4\n";
+                echo "\n";
+                echo "-----------------------------------------------------------------------\n";
+                echo "\n";
+                echo "ERROR When using mysql or mariadb the database and tables should use \n";
+                echo "ERROR  the utf8mb4 TEXT CHARACTER SET.\n";
+                echo "\n";
+                echo "ERROR See above for details \n";
+                echo "ERROR if you wish to ignore this check please use:\n";
+                echo "php database.php --mariadb_skip_text_character_set_check \n";
+                echo "-----------------------------------------------------------------------\n";
+exit;
             }
         }
     }
@@ -273,10 +304,16 @@ function verifyTableCharacterSetForTable( $class )
 //
 function verifyTableCharacterSets()
 {
+    global $arg_mariadb_skip_text_character_set_check;
     $dbtype = Config::get('db_type');
     
     if( $dbtype == 'mysql' ) {
-
+        
+        if( $arg_mariadb_skip_text_character_set_check ) {
+            echo "verifyTableCharacterSets() explicitly told to not test database schema character sets... skipping.\n";
+            return;
+        }
+        
         $classes = array_merge(getConstantClasses(), getClasses());
         foreach($classes as $class) {
             verifyTableCharacterSetForTable( $class );
