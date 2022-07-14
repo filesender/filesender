@@ -180,7 +180,7 @@ filesender.ui.elements.preventEmpty = function(el) {
     el.on( 'focus', function(e) { originalValue = e.target.value; } );
     el.on( 'blur',  function(e) {
         if( e.target.value == '' ) {
-            e.target.value = originalValue;
+            filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
         }
     });
     return this;
@@ -1076,7 +1076,7 @@ filesender.ui.startUpload = function() {
     }
     window.filesender.pbkdf2dialog.setup(!can_use_terasender);
     window.filesender.pbkdf2dialog.reset();
-    
+
     if(!filesender.ui.nodes.required_files) {
         this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
         
