@@ -496,6 +496,9 @@ try {
         echo 'Done removing views for table '.$table."\n";
     }
 
+
+    
+
     
 
     echo "checking for major schema migrations\n";
