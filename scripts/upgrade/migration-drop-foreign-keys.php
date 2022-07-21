@@ -34,6 +34,7 @@ require_once dirname(__FILE__).'/../../includes/init.php';
 
 Logger::setProcess(ProcessTypes::UPGRADE);
 
+DBI::beginTransaction();
 
 DBI::exec( 'alter table AggregateStatistics  drop foreign key IF EXISTS AggregateStatistic_epochtype  ' );
 DBI::exec( 'alter table AggregateStatistics  drop foreign key IF EXISTS AggregateStatistic_eventtype  ' );
@@ -42,5 +43,6 @@ DBI::exec( 'alter table StatLogs  drop foreign key IF EXISTS statlogs_operatings
 DBI::exec( 'alter table Transfers drop foreign key IF EXISTS transfer_passwordencoding  ' );
 DBI::exec( 'alter table FileChunkDigests drop foreign key IF EXISTS FileChunkDigest_digestnameid' );
 DBI::exec( 'alter table FileChunkDigests drop foreign key IF EXISTS FileChunkDigest_fileid' );
+
 
     
