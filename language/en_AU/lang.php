@@ -399,6 +399,7 @@ $lang['profile_page_text_linking_to_admin_page'] = 'You are allowed to visit the
 $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender values your privacy. Please <a href="{cfg:site_url}/?s=privacy">click to see</a> how long information is retained by this installation';
 $lang['python_cli_client_setup_information'] = 'To use the Python CLI Client configuration, create a directory ~/.filesender and copy the configuration file filesender.py.ini to the directory ~/.filesender. The configuration file is optional but is recommended as it means you do not always have to specify all parameters on the command line. The python CLI Client can be downloaded to any location and requires Python version 3 to execute.<p>With the configuration file in place you can upload a file using <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>';
 $lang['quota_usage'] = '{size:used} out of {size:total} used, {size:available} remaining';
+$lang['rate_limit_exceeded'] = 'You have attempted to perform this operation more frequently than is allowed in a 24 hour period.';
 $lang['reader_not_supported'] = 'You are using an older browser without support for HTML5.<br /><br />Drag & drop for selecting files is not available.<br /><br />You can upload files up to {size}.';
 $lang['reason'] = 'Reason';
 $lang['recipient_added'] = 'Recipient added';
@@ -498,6 +499,7 @@ $lang['service_aup_body_version_1'] = '<p>To keep everybody happy the use of thi
 $lang['service_aup_body_version_2'] = '<p>To keep everybody happy the use of this FileSender service has some terms which you must accept.</p><p>These terms include:</p><ul><li>Do not try to hack into the site</li><li>Do not upload content which would violate copyright</li></ul> v2 </p>';
 $lang['service_aup_body_version_3'] = '<p>To keep everybody happy the use of this FileSender service has some terms which you must accept.</p><p>These terms include:</p><ul><li>Do not try to hack into the site</li><li>Do not upload content which would violate copyright</li></ul> v3 </p>';
 $lang['service_aup_header'] = 'FileSender service Acceptable User Terms';
+$lang['service_aup_terms_accepted'] = 'Service level Acceptable User Terms have been accepted';
 $lang['set_default_guest_expire_days'] = 'Overwrite guest expire days';
 $lang['set_user_guest_expiry_default_days'] = 'how many days new guests are live for this user';
 $lang['show_client_logs'] = 'Show client logs';
@@ -687,6 +689,3 @@ $lang['you_can_report_exception'] = 'When reporting this error please give the f
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
-$lang['rate_limit_exceeded'] = 'You have attempted to perform this operation more frequently than is allowed in a 24 hour period.';
-$lang['service_aup_terms_accepted'] = 'Service level Acceptable User Terms have been accepted';
-

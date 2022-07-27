@@ -1195,7 +1195,7 @@ window.filesender.transfer = function() {
         if (this.size > filesender.config.max_transfer_size) {
             return errorhandler({message: 'transfer_maximum_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
         }
-         
+        
         var today = Math.floor((new Date()).getTime() / (24 * 3600 * 1000));
         var minexpires = today - 1;
         var maxexpires = today + filesender.config.max_transfer_days_valid + 1;
