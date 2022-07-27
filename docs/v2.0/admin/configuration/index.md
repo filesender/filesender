@@ -2184,14 +2184,17 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ### allow_guest_expiry_date_extension
 
-* __description:__ This is an untested matching config option to allow_guest_expiry_date_extension_admin. It is best to reserve this config keyword now to allow future versions to allow some users to extend their guests if desired. Extending guest expire time is only available via the admin page as at release 2.23.
-* __mandatory:__
+* __description:__ Setting this option will allow normal users to extend their guest vouchers. This can be useful for example when a user has sent a guest voucher and receives an out of office reply email. The user might like to return to the guest page and click "extend" to make the the guest voucher valid for a longer period of time to be valid after the guest has returned to the office.
+* __mandatory:__ no
 * __type:__ an array of integers containing possible extensions in days.
-* __default:__ - (= not activated)
-* __available:__ since version 2.23
+* __default:__ 0 (= not activated)
+* __available:__ since version 2.34
 * __1.x name:__
 * __comment:__
 * __Examples:__
+
+        // Allows infinite extensions, the first is by 30 days then 90 days 
+        $config['allow_guest_expiry_date_extension'] = array(30, 90, true); 
 
 
 ### allow_guest_expiry_date_extension_admin
