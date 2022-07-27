@@ -20,6 +20,7 @@ fwrite($fp, " \$LANG = array ( \n");
 foreach ($j as $key => $value) {
     $term = $value['term'];
     $definition = $value['definition'];
+    $context = $value['context'];
 
     if( $term == "serverlog_config_directive" ) {
         echo "DEF $definition\n";
@@ -28,6 +29,7 @@ foreach ($j as $key => $value) {
     fwrite($fp, "$key => \n");
     fwrite($fp, "array (\n");
     fwrite($fp, "  'term' => '".$term."',\n");
+    fwrite($fp, "  'context' => '".$context."',\n");
     fwrite($fp, "  'definition' => ".quotedef($definition).",\n");
     fwrite($fp, "), \n");
 }

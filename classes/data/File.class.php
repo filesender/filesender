@@ -47,13 +47,13 @@ class File extends DBObject
         //file id, as in the database
         'id' => array(
             'type' => 'uint',   //data type of 'id'
-            'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
+            'size' => 'big',    //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
             'autoinc' => true,   //indicates that 'id' is auto-incremented
         ),
         'transfer_id' => array(
             'type' => 'uint',
-            'size' => 'medium',
+            'size' => 'big',
         ),
         'uid' => array(
             'type' => 'string',

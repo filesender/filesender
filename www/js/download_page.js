@@ -196,7 +196,8 @@ $(function() {
                     if( fileaead.length ) {
                         fileaead = atob(fileaead);
                     }
-                    
+
+                    filesender.terasender.crypto_encrypted_archive_download = false;
                     crypto_app.decryptDownload( filesender.config.base_path
                                                 + 'download.php?token=' + token
                                                 + '&files_ids=' + ids.join(','),

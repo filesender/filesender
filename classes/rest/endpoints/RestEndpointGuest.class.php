@@ -323,7 +323,9 @@ class RestEndpointGuest extends RestEndpoint
         // Need to extend expiry date
         if ($data->extend_expiry_date) {
             if( !Auth::isAdmin()) {
-                throw new RestAdminRequiredException();
+                if( Config::get("allow_guest_expiry_date_extension") == 0 ) {
+                    throw new RestAdminRequiredException();
+                }
             }
             $guest->extendObjectExpiryDate();
             return self::cast($guest);
