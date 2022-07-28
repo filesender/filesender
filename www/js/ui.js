@@ -859,7 +859,7 @@ window.filesender.ui = {
         if(!id || isNaN(id)) return;
         
         var duration = parseInt(t.attr('data-expiry-extension'));
-        
+
         var extend = function(remind) {
             filesender.client.extendObject(className,id, remind, function(t) {
                 $('.objectholder[data-id="' + id + '"]').attr('data-expiry-extension', t.expiry_date_extension);
