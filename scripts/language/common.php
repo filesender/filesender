@@ -41,6 +41,10 @@ function loadLang( $code ) {
     return $keys;
 }
 
+function LangFilePath( $code ) {
+    global $BASE;
+    return "$BASE/language/$code/lang.php";
+}
 
 //
 //
@@ -133,17 +137,12 @@ function write_translation_lang_file( $code, $lang ) {
 }
 
 
-function write_translation_term_file( $code, $term, $data ) {
+function write_translation_term_file( $code, $term, $data, $context ) {
     global $BASE;
     global $warningAboutChangingFile;
     $p = "$BASE/language/$code/";
-    $fn = '';
-    foreach( array('html','mail','text') as $type ) {
-        if( file_exists( "$BASE/language/master/$term.$type.php" )) {
-            $fn = "$p/$term.$type.php";
-        }
-    }
-    echo "translation file for $term at $fn \n";
+    $fn = "$p/$term.$context.php";
+//    echo "translation file for $term at $fn \n";
     file_put_contents( $fn, $warningAboutChangingFile . $data );
 }
 

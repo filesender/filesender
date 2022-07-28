@@ -278,6 +278,11 @@ class Logger
         self::log(LogLevels::WARN, $message);
     }
 
+    public static function nefarious($message)
+    {
+        self::log(LogLevels::WARN, "nefarious activity suspected: " . $message);
+    }
+    
     /**
      * Log info
      *

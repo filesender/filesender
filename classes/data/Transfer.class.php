@@ -50,7 +50,7 @@ class Transfer extends DBObject
     protected static $dataMap = array(
         'id' => array(
             'type' => 'uint',
-            'size' => 'medium',
+            'size' => 'big',
             'primary' => true,
             'autoinc' => true
         ),
@@ -64,7 +64,7 @@ class Transfer extends DBObject
         ),
         'guest_id' => array(
             'type' => 'uint',
-            'size' => 'medium',
+            'size' => 'big',
             'null' => true
         ),
         'lang' => array(

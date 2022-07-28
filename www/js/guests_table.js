@@ -63,6 +63,21 @@ $(function() {
                 });
             });
 
+            if(table.is('[data-mode!="admin"]')) {
+                var days = $(this).closest('.objectholder').attr('data-expiry-extension');
+                if( days > 0 ) {
+                    var extend = $('<span data-action="extendguestexpires" class="extend clickable fa fa-lg fa-clock-o" />');
+                    extend.appendTo(td).attr({
+                        title: lang.tr('extend_expiry_date').r({
+                            days: $(this).closest('.objectholder').attr('data-expiry-extension')
+                        })
+                        
+                    }).on('click', function() {
+                        filesender.ui.extendExpires( extend, 'guest' );
+                    });
+                }
+            }
+            
             if(table.is('[data-mode="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 if( days > 0 ) {
