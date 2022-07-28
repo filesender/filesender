@@ -46,13 +46,13 @@ class FileCollection extends DBObject
         //primary key pair <collection_id,file_id>
         'collection_id' => array(
             'type' => 'uint',   //data type of 'id'
-            'size' => 'medium',
+            'size' => 'big',
             'primary' => true,
         ),
         'file_id' => array(
             'type' => 'uint',   //data type of 'id'
-            'size' => 'medium',
-                        'primary' => true,
+            'size' => 'big',
+            'primary' => true,
         ),
     );
 

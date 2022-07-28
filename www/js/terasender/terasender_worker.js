@@ -133,7 +133,8 @@ var terasender_worker = {
                 var startoffset = 1 * (chunkid * chunksz);
                 var endoffset   = 1 * (chunkid * chunksz + (1*this.crypto_app.upload_crypted_chunk_size)-1);
                 var legacyChunkPadding = 0;
-
+                oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', job.crypto_encrypted_archive_download );
+                
                 //
                 // There are some extra things to do for streaming legacy type files
                 //
@@ -186,6 +187,11 @@ var terasender_worker = {
                     this.log("ts.worker executeJob(adjustments done) "
                              + " eoffset " + endoffset
                              + " padding " + padding );
+
+                    if( job.crypto_encrypted_archive_download_fileidlist ) {
+                        oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Contents', job.crypto_encrypted_archive_download_fileidlist );
+                        job.crypto_encrypted_archive_download_fileidlist = '';
+                    }
                 }
                 
                 var brange = 'bytes=' + startoffset + '-' + endoffset;

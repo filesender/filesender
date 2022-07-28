@@ -65,22 +65,51 @@ echo "lang dir size ", count($langdir), "\n";
 
 
 
-
+$existingTerms = $lang;
 
 
 
 foreach($LANG as $ti => $t) {
     $term = $t['term'];
     $data = $t['definition'];
-    
-    if( array_key_exists( $term, $langdir )) {
-        write_translation_term_file( $code, $term, $data );
+
+    // split the terms into mail context (to file) or into lang.php directly
+    if( $t['context'] == 'mail' || $t['context'] == 'html' ) {
+        write_translation_term_file( $code, $term, $data, $t['context'] );
     } else {
         $lang[$term] = $data;
+        unset($existingTerms[$term]);
     }
 }
 
 write_translation_lang_file( $code, $lang );
+
+if(count($existingTerms) > 0 ) {
+    echo "------------------------------------------------------------\n";
+    echo "WARNING some terms are only in local $code/lang.php file!\n";
+    echo "------------------------------------------------------------\n";
+
+    $grepRex = "/";
+    echo "terms in local language translation but not in poeditor import " . count($existingTerms) . "\n";
+    foreach($existingTerms as $idx => $t) {
+//        echo "idx $idx term $t \n";
+        if( $grepRex == "/" ) {
+            $grepRex .= "('" . $idx . "'";
+        } else {
+            $grepRex .= "|'" . $idx . "'";
+        }
+    }
+    $grepRex .= ")/";
+    
+    echo "\n The following entries exist only in the local lang.php file...\n\n";
+    $mat = preg_grep( $grepRex, file(LangFilePath( $code )));
+    $mat = implode( "", $mat );
+    echo $mat;
+
+    echo "------------------------------------------------------------\n";
+    echo "WARNING some terms are only in local $code/lang.php file!\n";
+    echo "------------------------------------------------------------\n";
+}
 
 
 
