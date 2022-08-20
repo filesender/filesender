@@ -61,7 +61,7 @@ window.filesender.client = {
     specificErrorHandler: function(error) { return false; },
 
     getCSRFToken: function() {
-        if( filesender.config.owasp_csrf_protector_enabled ) {
+        if (typeof CSRFP != "undefined") {
             return CSRFP._getAuthKey();
         }
         return "";
