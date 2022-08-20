@@ -61,7 +61,10 @@ window.filesender.client = {
     specificErrorHandler: function(error) { return false; },
 
     getCSRFToken: function() {
-        return CSRFP._getAuthKey();
+        if (typeof CSRFP != "undefined") {
+            return CSRFP._getAuthKey();
+        }
+        return "";
     },
     
     updateSecurityToken: function(source) {
