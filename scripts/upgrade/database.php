@@ -75,7 +75,10 @@ if( $db_database ) {
 echo "current db_database is " . Config::get('db_database') . "\n";
 
 $currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
-DBI::beginTransaction();
+$dbtype = Config::get('db_type');
+if( $dbtype != 'mysql' ) {
+    DBI::beginTransaction();
+}
 
 
 // Get data classes
@@ -724,16 +727,17 @@ try {
         echo '    " MariaDB (...) supports rollback of SQL-data change statements, but not of SQL-Schema statements."  ' . "\n";
         echo "    --  https://mariadb.com/kb/en/rollback/ \n";
         echo "\n";
+        echo "as this script performs mostly DDL statements transactions are not used for mariadb\n";
         echo "you should either get a full run of this script or compare the output to a backup\n";
     } else {
         echo " This should leave the database state as it was before you started the script\n";
+        DBI::rollBack();
     }
     if( $majorMigrationPerformed ) {
         echo "\n";
         echo "NOTE: As this was a major database schema update you might like to compare with a backup\n";
         echo "\n";
     }        
-    DBI::rollBack();
     $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
     echo 'Encountered exception : ' . $e->getMessage() . ', see logs for details (uid: '.$uid.') ...\n';
     exit(1);
@@ -741,7 +745,10 @@ try {
 
 echo "\n\n";
 echo "All core code worked (leaving foreign keys), commit to database starting...\n";
-DBI::commit();
+$dbtype = Config::get('db_type');
+if( $dbtype != 'mysql' ) {
+    DBI::commit();
+}
 echo "Commit went well, those changes are now permanent\n";
 
 
