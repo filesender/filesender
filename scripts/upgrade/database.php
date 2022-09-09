@@ -75,6 +75,7 @@ if( $db_database ) {
 echo "current db_database is " . Config::get('db_database') . "\n";
 
 $currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
+$dbtype = Config::get('db_type');
 if( $dbtype != 'mysql' ) {
     DBI::beginTransaction();
 }
@@ -744,6 +745,7 @@ try {
 
 echo "\n\n";
 echo "All core code worked (leaving foreign keys), commit to database starting...\n";
+$dbtype = Config::get('db_type');
 if( $dbtype != 'mysql' ) {
     DBI::commit();
 }
