@@ -179,7 +179,7 @@ class DatabaseMysql
         }
 
         // Get current definition
-        $s = DBI::prepare('SHOW INDEX FROM '.$table.'');
+        $s = DBI::prepare('SHOW INDEX FROM '.$table.'  WHERE Key_Name = :key_name');
         $s->execute(array(':key_name' => $index));
 
         $existingCols = array();
