@@ -135,9 +135,11 @@ $data = array(
 	    'text' => Lang::tr('aggregate_stats_graph_title_per_time_interval')
                           ->r('eventtype',$eventtypetr)->r('epochtype',$epochtypetr)->out()
 	),
-	'legend' => array(
-            'position' => 'none'
-	),
+        'plugins' => array(
+                'legend' => array(
+                    'position' => 'none'
+                ),
+        ),
 	'scales' => array(
             'yAxes' => array(
                 'display' => true,
