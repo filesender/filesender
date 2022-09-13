@@ -139,19 +139,13 @@ $data = array(
             'position' => 'none'
 	),
 	'scales' => array(
-	    'yAxes' => array(
-		array(
-		    'ticks' => array( 'min' => 0 ),
-                    'scaleLabel' => array( 'display' => true,
-                                            'labelString' => $ylabel,
-                                         ),
-		),
-	    ),
-            'xAxes' => array(
-                array(
-                    'type' => 'time',
-		    'ticks' => array( 'min' => 0 ),
+            'yAxes' => array(
+                'display' => true,
+                'title' => array (
+                    'display' => true,
+                    'text' => $ylabel
                 ),
+                'ticks' => array( 'min' => 0 ),
             ),
 	)
     )
