@@ -53,7 +53,11 @@ S pozdravem,
         </tr>
         <tr>
             <td>Platná do</td>
+{if:guest.does_not_expire}
+            <td>nikdy</td>
+{else}
             <td>{date:guest.expires}</td>
+{endif}
         </tr>
     </tbody>
 </table>
