@@ -53,7 +53,11 @@ Lugupidamisega,
         </tr>
         <tr>
             <td>Vautšer kehtib kuni</td>
+{if:guest.does_not_expire}
+            <td>iial</td>
+{else}
             <td>{date:guest.expires}</td>
+{endif}
         </tr>
     </tbody>
 </table>
