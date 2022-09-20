@@ -266,6 +266,7 @@ A note about colours;
 * [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
 * [auth_remote_applications](#auth_remote_applications)
+* [auth_remote_user_enabled](#auth_remote_user_enabled)
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
 * [rest_allow_jsonp](#rest_allow_jsonp)
 
@@ -2780,9 +2781,19 @@ Example:
 The array above contains the remote_application name and all the information for that is in an array under the key. 
 In this example, the application `appname` with secret `secret` has admin rights and can access the endpoint `/info` and `/transfer` by get and post. If you want it to access another endpoint it's necessary to put it in `acl` array. Without it the `info` ACL the test example would fail with permission denied.
 
+### auth_remote_user_enabled
+
+* __description:__ Enable API authentication of remote users. Users can authenticate if they have generated an API key in their user profile.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
 ### auth_remote_user_autogenerate_secret
 
-* __description:__ <span style="background-color:orange">ask etienne how this works</span>
+* __description:__ Automatically generate the user API key upon login, so they dont have to do it themselves
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ false
