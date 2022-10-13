@@ -315,7 +315,7 @@ class Recipient extends DBObject
         }
         
         if ($property == 'identity') {
-            return $this->email ? $this->email : Lang::tr('anonymous');
+            return $this->email ? $this->email : (string)Lang::tr('anonymous');
         }
         
         if ($property == 'name') {
