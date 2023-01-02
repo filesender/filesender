@@ -351,6 +351,10 @@ class StorableException
     {
         $exception = (array)json_decode(base64_decode($serialized));
         
+        array_walk_recursive($exception, function(&$value) {
+            $value = preg_replace('`\{(tr:)*(cfg|conf|config):([^}]+)\}`', '', $value);
+        });
+
         if (!array_key_exists('message', $exception)) {
             throw new DetailedException('not_an_exception', $exception);
         }
