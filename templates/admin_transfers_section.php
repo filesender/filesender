@@ -24,8 +24,10 @@ $transfers_page = function($status) {
             $selector .= " AND id >= $idmin AND id <= $idmax ";
         }
     }
+    $placeholders=array();
     $senderemail_full_match = Utilities::arrayKeyOrDefault( $_GET, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
-    $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' );
+    $senderemailUnsanitized = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' );
+    $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_SANITIZE_EMAIL );
     // if this is a full match then we can filter the email string.
     if( $senderemail_full_match ) 
         $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_VALIDATE_EMAIL );
@@ -36,20 +38,21 @@ $transfers_page = function($status) {
             // Note that we are using semi validated data from above
             // and that this is an admin only page, so hacking is less likely.
             if( $senderemail_full_match ) {
-                $selector .= " AND user_email = '$senderemail' ";
+                $selector .= " AND LOWER(user_email) = :senderemail ";
             } else {
-                if( substr_compare($senderemail, '%', 0, 1 )) {
+                if( substr_compare($senderemailUnsanitized, '%', 0, 1 )) {
                     $senderemail = '%'.$senderemail;
                 }
-                if( substr_compare($senderemail, '%', -1, 1 )) {
+                if( substr_compare($senderemailUnsanitized, '%', -1, 1 )) {
                     $senderemail = $senderemail.'%';
                 }
                 
-                $selector .= " AND user_email LIKE '$senderemail' ";
+                $selector .= " AND LOWER(user_email) LIKE :senderemail ";
             }
+            $placeholders[":senderemail"] = mb_strtolower($senderemail);
         } else {
             if( $senderemail_full_match ) {
-                if( strlen(Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' ))) {
+                if( strlen(Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_SANITIZE_EMAIL ))) {
                     // the email didn't validate so show no search results.
                     $selector .= ' and id < 0 ';
                 }
@@ -70,7 +73,7 @@ $transfers_page = function($status) {
         'order'  => $trsort->getOrderByClause(),
         'count'  => $page_size,
         'offset' => $offset
-    ));
+    ), $placeholders);
     
     $navigation = '<div class="transfers_list_page_navigation">'."\n";
     $transfersort = Utilities::getGETparam('transfersort','');
@@ -152,10 +155,7 @@ if( $idmax == -1 ) {
 
 <?php
 $senderemail_full_match = Utilities::arrayKeyOrDefault( $_GET, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
-$senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' );
-if( $senderemail_full_match ) 
-    $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_VALIDATE_EMAIL );
-
+$senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' ); // we don't want to FILTER_SANITIZE_EMAIL here
 $senderemail_full_match_extra = '';
 if( $senderemail_full_match ) {
     $senderemail_full_match_extra = ' checked ';
