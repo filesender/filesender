@@ -64,7 +64,11 @@ Atenciosamente,
         </tr>
         <tr>
             <td>Válido até</td>
+{if:guest.does_not_expire}
+            <td>Nunca</td>
+{else}
             <td>{date:guest.expires}</td>
+{endif}
         </tr>
     </tbody>
 </table>
