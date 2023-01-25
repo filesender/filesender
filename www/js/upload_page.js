@@ -1162,11 +1162,12 @@ filesender.ui.startUpload = function() {
         
         var close = function() {
             window.filesender.notification.clear();
-            filesender.ui.goToPage(
-                filesender.ui.transfer.guest_token ? 'home' : 'transfers',
-                reditectargs,
-                filesender.ui.transfer.guest_token ? null : 'transfer_' + filesender.ui.transfer.id
-            );
+            if( filesender.ui.transfer.guest_token ) {
+                filesender.ui.goToPage( 'home', null, null );
+            } else {
+                filesender.ui.goToPage( 'transfers', reditectargs,
+                                        'transfer_' + filesender.ui.transfer.id );
+            }
         };
 
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), close);
