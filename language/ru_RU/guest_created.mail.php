@@ -55,7 +55,11 @@ subject: {guest.subject}
         </tr>
         <tr>
             <td>Срок истечения ваучера</td>
+{if:guest.does_not_expire}
+            <td>Никогда</td>
+{else}
             <td>{date:guest.expires}</td>
+{endif}
         </tr>
     </tbody>
 </table>

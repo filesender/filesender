@@ -53,7 +53,11 @@ Mit freundlichen Grüßen
         </tr>
         <tr>
             <td>Gültig bis</td>
+{if:guest.does_not_expire}
+            <td>niemals</td>
+{else}
             <td>{date:guest.expires}</td>
+{endif}
         </tr>
     </tbody>
 </table>
