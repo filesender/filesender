@@ -7,54 +7,53 @@
 // 
 // 
 ?>
-subject: Teile on loodud vautšer
-subject: {guest.subject}
+subject: Kutsu vastaanotettu
 
 {alternative:plain}
 
-Tere,
+Hei!
 
-Teile on loodud vautšer veebisaidis {cfg:site_name}. Saate seda kasutada failide jagamiseks.
+Sinulle on lähetetty palveluun {cfg:site_name} kutsu, jolla pääset jakamaan tiedostosi valitsemillesi vastaanottajille.
 
-Vautšeri looja: {guest.user_email}
-Vautšeri link: {guest.upload_link}
+Lähettäjä: {guest.user_email}
+Kutsulinkki: {guest.upload_link}
 
-Vautšer kehtib kuni {date:guest.expires} peale mida see kustutatakse automaatselt.
+Kutsu on käytettävissä {date:guest.expires} asti, minkä jälkeen se poistetaan automaattisesti.
 
-{if:guest.message}Personaalne sõnum aadressilt {guest.user_email}: {guest.message}{endif}
+{if:guest.message}Käyttäjän {guest.user_email} viesti sinulle: {guest.message}{endif}
 
-Lugupidamisega,
+Terveisin,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Tere,
+   Hei!
 </p>
 
 <p>
-    Teile on loodud vautšer veebisaidis <a href="{cfg:site_url}">{cfg:site_name}</a>. Saate seda kasutada failide jagamiseks.
+   Sinulle on lähetetty palveluun <a href="{cfg:site_url}">{cfg:site_name}</a> kutsu, jolla pääset jakamaan tiedostosi valitsemillesi vastaanottajille.
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Vautšeri üksikasjad</th>
+            <th colspan="2">Kutsun tiedot</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Vautšeri looja</td>
+            <td>Lähettäjä</td>
             <td><a href="mailto:{guest.user_email}">{guest.user_email}</a></td>
         </tr>
         <tr>
-            <td>Vautšeri link</td>
+            <td>Kutsulinkki</td>
             <td><a href="{guest.upload_link}">{guest.upload_link}</a></td>
         </tr>
         <tr>
-            <td>Vautšer kehtib kuni</td>
+            <td>Voimassa</td>
 {if:guest.does_not_expire}
-            <td>iial</td>
+            <td>ei koskaan</td>
 {else}
             <td>{date:guest.expires}</td>
 {endif}
@@ -64,7 +63,7 @@ Lugupidamisega,
 
 {if:guest.message}
 <p>
-    Personaalne teade aadressilt {guest.user_email}:
+    Käyttäjän {guest.user_email} viesti sinulle:
 </p>
 <p class="message">
     {guest.message}
@@ -72,6 +71,6 @@ Lugupidamisega,
 {endif}
 
 <p>
-    Lugupidamisega,<br />
+    Terveisin,<br />
     {cfg:site_name}
 </p>

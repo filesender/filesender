@@ -53,7 +53,11 @@ Hoogachtend,
         </tr>
         <tr>
             <td>Geldig tot</td>
+{if:guest.does_not_expire}
+            <td>Nooit</td>
+{else}
             <td>{date:guest.expires}</td>
+{endif}
         </tr>
     </tbody>
 </table>
