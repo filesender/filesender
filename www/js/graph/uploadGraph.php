@@ -76,15 +76,6 @@ $data = array(
                 ),
 		'ticks' => array( 'min' => 0 ),
 	    ),
-            'x' => array(
-                array(
-                    'type' => 'time',
-                    'time' => array(
-                        'tooltipFormat' => 'DD',
-                    ),
-		    'ticks' => array( 'min' => 0 ),
-                ),
-            ),
 	)
     )
 );
