@@ -406,7 +406,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
 function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false) {
 
-    if( $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] && $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] == 'true' ) {
+    if( !empty($_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD']) && $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] == 'true' ) {
     
         $archiveList = $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_CONTENTS'];
         if( $transfer && 
@@ -417,7 +417,7 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
             if (preg_match("/^[0-9,]+$/", $archiveList)) {        
 
                 $files = array();
-                $files_ids = array_filter(array_map('trim', explode(',', $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_CONTENTS'])));
+                $files_ids = array_filter(array_map('trim', explode(',', $archiveList)));
                 
                 foreach ($files_ids as $fileId) {
                     $file = File::fromId($fileId);
