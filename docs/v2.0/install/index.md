@@ -668,13 +668,6 @@ On **Debian**, run:
 
 ## Manual
 
-Ensure the php temporary upload directory points to a location with enough space:
-
-	upload_tmp_dir = /tmp
-
-* **NOTE**: You probably want to point this to the same directory you will use as your HTML5 upload temp directory (`$config['site_temp_filestore']`).
-* **NOTE**: that this setting is for all PHP-apps, not only for filesender.
-
 Turn on logging:
 
         log_errors = on
