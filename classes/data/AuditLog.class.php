@@ -279,7 +279,8 @@ class AuditLog extends DBObject
                     'upload_time' => 1,
                     'name' => 'unknown',
                     'size' => 1,
-                    'email' => 'unknown'
+                    'email' => 'unknown',
+                    'id' => -1
                 );
             }
         }
@@ -294,7 +295,8 @@ class AuditLog extends DBObject
             } catch (Exception $e) {
                 return (object)array(
                     'identity' => 'unknown',
-                    'email' => 'unknown'
+                    'email' => 'unknown',
+                    'id' => -1
                 );
             }
         }
