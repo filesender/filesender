@@ -322,6 +322,12 @@ class Transfer extends DBObject
     private $recipientsCache = null;
     private $logsCache = null;
     private static $optionsCache = null;
+
+    /**
+     * Allows a $force param to be sent to beforeDelete() to ignore
+     * errors deleting individual files and continue
+     */
+    public $deleteForce = false;
     
     /**
      * Constructor
@@ -673,7 +679,15 @@ class Transfer extends DBObject
         }
         
         foreach ($this->files as $file) {
-            $this->removeFile($file);
+            try {
+                $this->removeFile($file);
+            } catch (Exception $e) {
+                if( $this->deleteForce ) {
+                    Logger::warn("Transfer::delete() Failed to delete file error:" . $e->getMessage());
+                } else {
+                    throw $e;
+                }
+            }
         }
         
         foreach ($this->recipients as $recipient) {
@@ -700,8 +714,10 @@ class Transfer extends DBObject
     /**
      * Close the transfer
      */
-    public function close($manualy = true)
+    public function close( $manualy = true, $force = false )
     {
+        $this->deleteForce = $force;
+        
         switch ($this->status) {
             case TransferStatuses::CREATED:
             case TransferStatuses::STARTED:
@@ -754,9 +770,17 @@ class Transfer extends DBObject
         }
       
         // Send report if needed
-        if (!is_null(Config::get('auditlog_lifetime')) && $this->getOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
-            $report = new Report($this);
-            $report->sendTo($this->owner);
+        try {
+            if (!is_null(Config::get('auditlog_lifetime')) && $this->getOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
+                $report = new Report($this);
+                $report->sendTo($this->owner);
+            }
+        } catch (Exception $e) {
+            if( $force ) {
+                Logger::warn("Failed to send report during transfer close. error:" . $e->getMessage());
+            } else {
+                throw $e;
+            }
         }
         
         if (!Config::get('auditlog_lifetime')) {
@@ -765,7 +789,15 @@ class Transfer extends DBObject
         } else {
             // In case we keep audit data for some time only delete actual file data in storage
             foreach ($this->files as $file) {
-                Storage::deleteFile($file);
+                try {
+                    Storage::deleteFile($file);
+                } catch (Exception $e) {
+                    if( $force ) {
+                        Logger::warn("Transfer::delete() Failed to delete file error:" . $e->getMessage());
+                    } else {
+                        throw $e;
+                    }
+                }
             }
         }
         

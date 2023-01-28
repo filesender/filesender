@@ -450,8 +450,10 @@ class Guest extends DBObject
         if( is_null($this->expires)) {
             return false;
         }
-        $d = (24 * 3600) * floor(time() / (24 * 3600) - ($days * (24*3600)));
-        return $this->expires < $d;
+        $daysSinceEpoch = floor(time() / (24 * 3600)); // days to now()
+        $chosenExpireTime  = $daysSinceEpoch - $days;  // move that back selected $days
+        $chosenExpireTime *= (24 * 3600);              // convert to time_t
+        return $this->expires < $chosenExpireTime;     // compare
     }
     
     /**
@@ -519,6 +521,14 @@ class Guest extends DBObject
         TranslatableEmail::quickSend('guest_reminder', $this);
             
         Logger::info($this.' reminded');
+    }
+
+    /**
+     * Has the guest already been close()d in the database
+     */
+    public function isClosed()
+    {
+        return $this->status == GuestStatuses::CLOSED;
     }
     
     /**
