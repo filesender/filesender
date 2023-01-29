@@ -584,6 +584,22 @@ class Utilities
         return $token_to_check === self::$security_token['old']['value'];
     }
 
+    /**
+     * Get the URL method
+     */
+    public static function getHTTPMethod()
+    {
+        // Get method from possible headers
+        $method = null;
+        foreach (array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
+            if (!array_key_exists($k, $_SERVER)) {
+                continue;
+            }
+            $method = strtolower($_SERVER[$k]);
+        }
+        return $method;
+    }
+    
 
     /**
      * Read the config $configkey and if it is set then regex

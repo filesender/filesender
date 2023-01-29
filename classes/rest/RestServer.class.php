@@ -89,15 +89,9 @@ class RestServer
             if (array_key_exists('PATH_INFO', $_SERVER)) {
                 $path = array_filter(explode('/', $_SERVER['PATH_INFO']));
             }
-            
+
             // Get method from possible headers
-            $method = null;
-            foreach (array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
-                if (!array_key_exists($k, $_SERVER)) {
-                    continue;
-                }
-                $method = strtolower($_SERVER[$k]);
-            }
+            $method = Utilities::getHTTPMethod();
 
             // Record called method (for log), fail if unknown
             RestException::setContext('method', $method);
