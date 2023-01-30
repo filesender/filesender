@@ -176,6 +176,7 @@ A note about colours;
 * [streamsaver_on_edge](#streamsaver_edge)
 * [streamsaver_on_safari](#streamsaver_safari)
 * [recipient_reminder_limit](#recipient_reminder_limit)
+* [log_user_download_by_ensure_user_as_recipient](#log_user_download_by_ensure_user_as_recipient)
 
 ## Graphs
 
@@ -1886,6 +1887,31 @@ This is only for old, existing transfers which have no roundtriptoken set.
     defaulted to 50 so the default configuration will effectively
     remain the same as before 2.30 but now these settings can be
     changed independently.
+
+
+### log_user_download_by_ensure_user_as_recipient
+
+* __description:__ Log the saml Identifiant for downloads performed by authenticated users
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since before version 2.39
+* __comment:__ This option allows a user to see which authenticated users have
+     downloaded their transfers. This is mainly useful when the
+     transfer is created with "get a link" and that link is shared by
+     the user with other users outside of the system. If another user
+     logs into the FileSender server and downloads a file from a
+     transfer then the authenticated downloader is logged against each
+     file that they download.
+     This logging is not done when the user has admin privlidges.
+     
+     This option will ensure that there is an entry in the recipients
+     table for the transfer for the saml Identifiant (normally email
+     address) of an authenticated user who is downloading a file. This
+     has privacy implications as the person who created a transfer may
+     be able to see the email address of each authenticated user who
+     has downloaded each file.
+
 
 
 

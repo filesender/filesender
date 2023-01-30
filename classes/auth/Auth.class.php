@@ -450,6 +450,14 @@ class Auth
         return self::$isAdmin && !self::isGuest();
     }
 
+    /**
+     * Current user is not an admin, not remote, not guest.
+     */
+    public static function isRegularUser()
+    {
+        return !self::isAdmin() && !self::isRemote() && !self::isGuest();
+    }
+
     public static function canViewAggregateStatistics()
     {
         if (is_null(self::$canViewAggregateStats)) {

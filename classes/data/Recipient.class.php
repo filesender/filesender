@@ -161,6 +161,7 @@ class Recipient extends DBObject
         
         return $recipient;
     }
+
     
     /**
      * Create a new recipient bound to a transfer
