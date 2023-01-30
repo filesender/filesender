@@ -72,7 +72,7 @@ try {
         $transfer = $recipient->transfer;
 
 
-        if( Config::get('log_user_download_by_ensure_user_as_recipient')) {
+        if( Config::get('log_authenticated_user_download_by_ensure_user_as_recipient')) {
             if( Auth::isRegularUser()) {
                 $user = Auth::user();
                 $email = $user->saml_user_identification_uid;

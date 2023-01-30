@@ -176,7 +176,7 @@ A note about colours;
 * [streamsaver_on_edge](#streamsaver_edge)
 * [streamsaver_on_safari](#streamsaver_safari)
 * [recipient_reminder_limit](#recipient_reminder_limit)
-* [log_user_download_by_ensure_user_as_recipient](#log_user_download_by_ensure_user_as_recipient)
+* [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 
 ## Graphs
 
@@ -1889,7 +1889,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
     changed independently.
 
 
-### log_user_download_by_ensure_user_as_recipient
+### log_authenticated_user_download_by_ensure_user_as_recipient
 
 * __description:__ Log the saml Identifiant for downloads performed by authenticated users
 * __mandatory:__ no

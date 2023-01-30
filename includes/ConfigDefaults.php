@@ -206,7 +206,7 @@ $default = array(
 
     'user_page' => array('lang'=>true,'auth_secret'=>true,'id'=>true,'created'=>true),
 
-    'log_user_download_by_ensure_user_as_recipient' => false,
+    'log_authenticated_user_download_by_ensure_user_as_recipient' => false,
     
 
     // Logging
