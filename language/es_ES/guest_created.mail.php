@@ -54,11 +54,7 @@ Saludos,
         </tr>
         <tr>
             <td>Fecha de expiración</td>
-{if:guest.does_not_expire}
-            <td>nunca</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>

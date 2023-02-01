@@ -13,7 +13,7 @@ subject: ゲストバウチャーの有効期限切れ
 
 利用者様、
 
-{guest.user_email}からのゲストバウチャーの有効期限が切れています。
+{guest.user_email}からのゲストバウチャーの有効期限が切れました。
 
 以上、よろしくお願いいたします。
 {cfg:site_name}
@@ -25,10 +25,10 @@ subject: ゲストバウチャーの有効期限切れ
 </p>
 
 <p>
-   <a href="mailto:{guest.user_email}">{guest.user_email}</a>からのゲストバウチャーの有効期限が切れています。
+   <a href="mailto:{guest.user_email}">{guest.user_email}</a>からのゲストバウチャーの有効期限が切れました。
 </p>
 
 <p>
-    以上、よろしくお願いいたします。<br/>
+    以上、よろしくお願いいたします。<br />
     {cfg:site_name}
 </p>

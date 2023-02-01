@@ -53,11 +53,7 @@ Lijepi pozdrav,
         </tr>
         <tr>
             <td>Vrijedi do</td>
-{if:guest.does_not_expire}
-            <td>nikada</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>

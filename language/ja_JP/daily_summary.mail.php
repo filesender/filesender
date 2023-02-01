@@ -41,7 +41,7 @@ subject: 転送の日次サマリー
 {if:events}
 <ul>
 {each:events as event}
-    <li>受信者{event.who}が{if:event.what == "archive"}アーカイブ{else}ファイル{event.what_name}{endif}を{datetime:event.when}にダウンロードしました。
+    <li>受信者{event.who}が{if:event.what == "archive"}アーカイブ{else}ファイル{event.what_name}{endif}を{datetime:event.when}にダウンロードしました。</li>
 {endeach}
 </ul>
 {else}
