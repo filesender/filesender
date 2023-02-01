@@ -53,11 +53,7 @@ subject: {guest.subject}
         </tr>
         <tr>
             <td>無効化日</td>
-{if:guest.does_not_expire}
-            <td>なし</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>
