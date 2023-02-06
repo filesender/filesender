@@ -239,25 +239,34 @@ authentication for development and testing. When you move to a
 production service you probably want to change that to only support
 authentication sources of your choice.
 
+All versions of FileSender currently use the SimpleSAMLphp 1.x series. For example, version 1.19.7 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
 [(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
 probably work. The continuous integration in FileSender has an
 installation of SimpleSAMLphp the [setup
 script](https://github.com/filesender/filesender/blob/master/ci/scripts/simplesamlphp-setup.sh)
-shows the version currently used there. For the FileSender 2.0 release
-we tested with version 1.17.1. In the below I will assume you have
-downloaded SimpleSAMLphp to a file at
-/tmp/simplesamlphp-1.17.1.tar.gz.
+shows the version currently used there. 
 
 * **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://github.com/simplesamlphp/simplesamlphp/releases), right?
 
 Extract SimpleSAMLphp in a suitable directory and create symlink:
 
 ```
+mkdir -p ~/src
+cd ~/src
+wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.7/simplesamlphp-1.19.7.tar.gz
+
+php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v1.19.7 >| checklist
+echo " simplesamlphp-1.19.7.tar.gz" >> checklist
+sha256sum --check checklist
+ simplesamlphp-1.19.7.tar.gz: OK
+
 mkdir -p /opt/filesender
 cd /opt/filesender
-tar xvzf /tmp/simplesamlphp-1.17.1.tar.gz
-ln -s simplesamlphp-1.17.1 simplesaml
+tar xvzf ~/src/simplesamlphp-1.19.7.tar.gz
+ln -s simplesamlphp-1.19.7 simplesaml
+
+
 ```
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web directory with a web server alias.
