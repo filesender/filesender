@@ -695,6 +695,48 @@ your settings. Be sure to at least set `$config['site_url']`, contact
 details, database settings and authentication configuration. The
 configuration file is self-explanatory.
 
+The main settings you will want to inspect and update are shown below.
+You will want to change URLs shown below from 127.0.0.1 to your host name.
+Email addresses shown as `root@localhost.localdomain` should be updated.
+You will want to update all FIXME in password fields.
+
+```
+//
+// Email and URL settings to update
+//
+// String, URL of the application
+$config['site_url'] = 'https://127.0.0.1/filesender';                
+
+// Url of simplesamlphp
+$config['auth_sp_saml_simplesamlphp_url'] ='https://127.0.0.1/simplesaml/';
+
+// String, UID's (from  $config['saml_uid_attribute'])
+// that have Administrator permissions
+$config['admin'] = 'root@localhost.localdomain'; 
+                                                       
+// String, email  address(es, separated by ,)
+// to receive administrative messages (low disk  space warning)
+$config['admin_email'] ='root@localhost.localdomain'; 
+                                                             
+// String, default no-reply email  address
+$config['email_reply_to'] ='root@localhost.localdomain';
+
+
+//
+// Database settings to update
+//
+// mysql or pgsql
+$config["db_type"] ='mysql';
+
+// password for regular use
+$config['db_password'] ='FIXME';
+
+// if the database update script needs more privileges (mysql) then set this as well
+$config['db_username_admin'] = 'filesenderadmin';
+$config['db_password_admin'] = 'FIXME';
+
+
+```
 
 
 # Step 9 - Initialise the FileSender database
