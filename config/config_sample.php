@@ -46,13 +46,13 @@
 //              General settings
 // ---------------------------------------------
 // 
-//$config['site_url'] = '';                // String, URL of the application
+//$config['site_url'] = 'https://127.0.0.1/filesender';                // String, URL of the application
 // 
-//$config['admin'] = '';            // String, UID's (from  $config['saml_uid_attribute']) 
-                                    // that have Administrator permissions
+//$config['admin'] = 'root@localhost.localdomain'; // String, UID's (from  $config['saml_uid_attribute']) 
+//                                                 // that have Administrator permissions
 
-//$config['admin_email'] ='';       // String, email  address(es, separated by ,) 
-                                    // to receive administrative messages (low disk  space warning)
+//$config['admin_email'] ='root@localhost.localdomain';   // String, email  address(es, separated by ,) 
+//                                                        // to receive administrative messages (low disk  space warning)
 
 //$config['email_reply_to'] ='';    // String, default no-reply email  address
 
@@ -71,6 +71,8 @@
 //$config['db_database'] ='filesender';
 //$config['db_username'] ='filesender';
 //$config['db_password'] ='';
+//$config['db_username_admin'] = 'filesenderadmin';
+//$config['db_password_admin'] = '';
 
 // ---------------------------------------------
 // PostgreSQL DB configuration
@@ -90,7 +92,7 @@
 // ---------------------------------------------
 // NOTE: These MUST have trailing slash
 //$config['auth_sp_saml_simplesamlphp_url'] ='https://127.0.0.1/simplesaml/';     // Url of simplesamlphp
-//$config['auth_sp_saml_simplesamlphp_location'] ='/opt/filesender/simplesaml/';   // Location of simplesamlphp libraries
+$config['auth_sp_saml_simplesamlphp_location'] ='/opt/filesender/simplesaml/';   // Location of simplesamlphp libraries
 
 //      ----------------------------
 //      -------- [optional] --------
@@ -122,6 +124,9 @@
 //
 // // Get path  attribute from authentication service
 // $config['auth_sp_saml_authentication_source'] = 'default-sp';
+
+// If you want to use hard coded user/pass in /opt/filesender/simplesaml/config/authsources.php for testing.
+// $config['auth_sp_saml_authentication_source'] ="example-userpass";
 
 // --------------------------------------------------
 //    TeraSender high speed upload module             
