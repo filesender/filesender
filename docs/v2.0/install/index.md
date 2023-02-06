@@ -133,19 +133,26 @@ apt-get install -y git
 ```
 
 
-Install the FileSender 2.0 beta branch from the GIT repository use the
-following commands. You will need to know the release tag of the
-version you wish to run from the
-[Releases](https://github.com/filesender/filesender/releases) page. Or
-you can run "master" if you just want the latest at a specific point
-in time. You might do this to test a new bugfix that is not in any
-current release yet.
+Install the FileSender 2.0 from the GIT repository use the following
+commands. The `master` branch will always contain the latest release.
+You can select explicit versions using the release tag of the version
+you wish to run from the
+[Releases](https://github.com/filesender/filesender/releases) page. If
+you wish to test a feature that is in development and has been merged
+but is not part of any release yet you might like to checkout the
+`development` branch which contains all merged updates.
 
-In the example code below I am going to use version filesender-2.0.
-You can see the tag (version string) that you need for git by looking
-on the [Releases](https://github.com/filesender/filesender/releases)
-page and on the left will be the tag shown for every release next to a
-little ticket icon.
+The version 3.0 alpha series has an updated UI using Bootstrap.
+Similar to the master and development there are `master3` and
+`development3` which are the latest release and current development
+code respectively.
+
+In the example code below I am going to use the latest release in the
+2.x series. You can see the tag (version string) that you need for git
+to get an explicit version by looking on the
+[Releases](https://github.com/filesender/filesender/releases) page and
+on the left will be the tag shown for every release next to a little
+ticket icon.
 
 
 ```
@@ -155,7 +162,7 @@ cd    /opt/filesender
 git clone https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
-git checkout filesender-2.0
+git checkout master
 ```
 
 You can bring down new releases to an existing git repository and then
