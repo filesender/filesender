@@ -59,14 +59,14 @@ dnf install -y httpd mod_ssl php php-mbstring php-xml php-json
 On Debian, run:
 
 ```
-apt-get install -y apache2 php7.0 php7.0-mbstring php7.0-xml php7.0-json libapache2-mod-php7.0
+apt-get install -y apache2 php php-mbstring php-xml php-json libapache2-mod-php
 ```
 
 # Step 1-nginx - Install NGINX and PHP
 
 Its for Debian/Ubuntu use a modern Nginx (after v.0.8) and php-fpm (fpm-fcgi).
 
-	sudo apt-get install nginx php7.0-fpm 
+	sudo apt-get install nginx php-fpm 
 
 
 
@@ -540,7 +540,7 @@ On RedHat/CentOS, run:
 
 On Debian, run:
 
-	apt-get install -y postgresql php7.0-pgsql
+	apt-get install -y postgresql php-pgsql
 
 FileSender uses password based database logins and by default assumes
 that PostgreSQL is configured to accept password based sessions on
@@ -601,7 +601,7 @@ On RedHat/CentOS, run:
 
 On Debian, run:
 
-	apt-get install -y mariadb-server php7.0-mysql 
+	apt-get install -y mariadb-server php-mysql 
 
 Create the filesender database. It is recommended to create two users for the database,
 one for normal web usage and another with higher abilities to allow the database setup
