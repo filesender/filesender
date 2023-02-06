@@ -78,7 +78,10 @@ if( $testingMode ) {
 
 
 
-if( $verbose ) echo "cron.php starting up... --force:$force --testing-mode:$testingMode\n";
+if( $verbose ) {
+    echo "cron.php starting up... --force:$force --testing-mode:$testingMode\n";
+    echo "cron.php running as user: " . `id` . "\n";
+}
 
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
