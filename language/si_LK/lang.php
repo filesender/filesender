@@ -276,8 +276,7 @@ $lang['file_encryption_password_must_have_special_characters'] = 'මුරප�
 $lang['file_encryption_password_must_have_upper_and_lower_case'] = 'මුරපදයේ ඉහළ සහ කුඩා අකුරු අඩංගු විය යුතුය';
 $lang['file_encryption_password_too_short'] = 'සමාවන්න, ඔබගේ මුරපදය කෙටි වැඩිය';
 $lang['file_encryption_show_password'] = 'මුරපදය පෙන්වන්න / සඟවන්න';
-$lang['file_encryption_wrong_password'] = 'වැරදි මුරපදයකි
-';
+$lang['file_encryption_wrong_password'] = 'වැරදි මුරපදයකි';
 $lang['file_extension_not_allowed'] = 'ගොනු දිගුව අවසර නැත';
 $lang['file_integrity_check_failed'] = 'ගොනු අඛණ්ඩතාව පරීක්ෂා කිරීම අසාර්ථක විය';
 $lang['file_not_found'] = 'ගොනුව හමු නොවිණි';
