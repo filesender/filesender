@@ -50,6 +50,8 @@ $locales  =  array(
     'es-es'=>  'es_ES',
     'fr' => array('name' => 'Français', 'path' => 'fr_FR'),
     'fr-fr' => array('name' => 'Français', 'path' => 'fr_FR'),
+    'km'    => 'km_KH',
+    'km-kh' => 'km_KH',
     'hr' => 'hr_HR',
     'hr-hr' => 'hr_HR',
     'hu' => 'hu_HU',

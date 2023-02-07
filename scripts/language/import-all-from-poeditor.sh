@@ -32,6 +32,7 @@ $SCRIPTDIR/download-language-from-poeditor.sh "si"    "Sinhalese" $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "ur"    "Urdu"      $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "zh-Hans" "Chinese_Hans"      $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "zh-Hant" "Chinese_Hant"      $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "km_KH"   "Khmer"             $dirname
 
 
 
