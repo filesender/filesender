@@ -48,6 +48,8 @@ importfile ja_JP FileSender_2.0_Japanese.php
 importfile hr_HR FileSender_2.0_Croatian.php
 importfile si_LK FileSender_2.0_Sinhalese.php
 importfile ur_PK FileSender_2.0_Urdu.php
+importfile zh_HANS FileSender_2.0_Chinese_Hans.php
+importfile zh_HANT FileSender_2.0_Chinese_Hant.php
 
 echo "Checking syntax of generated .php files, please wait..."
 for f in $(find ../../language -type f -name \*.php)

@@ -67,13 +67,15 @@ $locales  =  array(
     'nb-no' => 'no_NO',
     'pl' => array('name' => 'Polski', 'path' => 'pl_PL'),
     'pt-br' => array('name' => 'Português Brasileiro', 'path' => 'pt_BR'),
+    'ru' => 'ru_RU',
     'si' => 'si_LK',
     'si-lk' => 'si_LK',
     'sl' => 'sl_SI',
     'sl-si' => 'sl_SI',
     'sr' => 'sr_RS',
-    'ru' => 'ru_RU',
+    'tr' => array('name' => 'Turkish', 'path' => 'tr_TR'),
     'ur' => 'ur_PK',
     'ur-pk' => 'ur_PK',
-    'tr' => array('name' => 'Turkish', 'path' => 'tr_TR')
+    'zh-hans' => 'zh_HANS',
+    'zh-hant' => 'zh_HANT'
 );
