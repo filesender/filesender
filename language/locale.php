@@ -68,10 +68,12 @@ $locales  =  array(
     'pl' => array('name' => 'Polski', 'path' => 'pl_PL'),
     'pt-br' => array('name' => 'Português Brasileiro', 'path' => 'pt_BR'),
     'si' => 'si_LK',
-    'si-LK' => 'si_LK',
+    'si-lk' => 'si_LK',
     'sl' => 'sl_SI',
     'sl-si' => 'sl_SI',
     'sr' => 'sr_RS',
     'ru' => 'ru_RU',
+    'ur' => 'ur_PK',
+    'ur-pk' => 'ur_PK',
     'tr' => array('name' => 'Turkish', 'path' => 'tr_TR')
 );
