@@ -688,6 +688,13 @@ class RestEndpointTransfer extends RestEndpoint
                 $dummy1 = $transfer->salt;
             }
 
+            // sanity check aead values
+            foreach ($data->files as $filedata) {
+                if($filedata->aead && strlen($filedata->aead)) {
+                    $t = Utilities::validateBase64encodedJSON( $filedata->aead );
+                }
+            }
+
             // Mandatory to add recipients and files
             $transfer->save(); 
 
