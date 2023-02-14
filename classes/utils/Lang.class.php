@@ -460,7 +460,7 @@ class Lang
             $stack = self::getCodeStack();
             Logger::warn('No translation found for '.$id.' in '.$stack['main'].' language');
 
-            $fallbackid = null;
+            $fallbackid = 'unknown';
             // fallback is an array of lang codes, so loop through those
             foreach (self::$translations['fallback'] as $fallback_lang) {
                 if (array_key_exists($id, $fallback_lang)) {
