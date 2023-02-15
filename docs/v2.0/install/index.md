@@ -407,6 +407,10 @@ been added to the apache template shown below. This will prevent the
 SimpleSAML authentication cookies being sent to the site from cross
 site requests.
 
+The apache template configuration file also sets the HTTP
+Strict-Transport-Security (HSTS) header for all FileSender responses
+not just php pages.
+
 
 
 # Step 5-apache - Configure Apache
