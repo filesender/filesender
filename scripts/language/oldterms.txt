@@ -396,6 +396,7 @@ perform_these_actions_on_all_users
 performed
 please_add_file_again
 preferences_updated
+previous_password_shown_for_next_action
 privacy_page
 privacy_page_auditlog_lifetime
 privacy_page_clientlogs_lifetime

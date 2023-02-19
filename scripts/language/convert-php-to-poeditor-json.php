@@ -32,7 +32,7 @@ if(count($argv) < 2) {
 }
 $filesenderLang = $argv[1];
 $outputFilename = $argv[2];
-$termregex = ".*";
+$termregex = "/.*/";
 $max = 0;
 $skipTermFilePath = "";
 $count = 0;
