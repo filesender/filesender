@@ -168,17 +168,18 @@ class Config
         $auth_config_regex_files = self::get('auth_config_regex_files');
         if( !empty($auth_config_regex_files) && is_array($auth_config_regex_files) && Auth::isAuthenticated()) {
                 $auth_attrs = Auth::attributes();
-                foreach ($auth_config_regex_files as $attr=>$regex_and_config) {
-                        if (!is_array($regex_and_config)) {
+                foreach ($auth_config_regex_files as $attr=>$regex_and_configs) {
+                        if (!is_array($regex_and_configs)) {
                                 continue;
                         }
-                        list($regex, $extra_config_name) = $regex_and_config;
-                        if (preg_match('`'.$regex.'`', $auth_attrs[$attr])) {
-                                $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
-                                if (file_exists($extra_config_file)) {
-                                        $config = array();
-                                        include_once($extra_config_file);
-                                        self::merge(self::$parameters, $config);
+                        foreach ($regex_and_configs as $regex => $extra_config_name) {
+                                if (preg_match('`'.$regex.'`', $auth_attrs[$attr])) {
+                                        $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
+                                        if (file_exists($extra_config_file)) {
+                                                $config = array();
+                                                include_once($extra_config_file);
+                                                self::merge(self::$parameters, $config);
+                                        }
                                 }
                         }
                 }
