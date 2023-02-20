@@ -2950,7 +2950,7 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ example:
-	* <pre><code>
+	<pre><code>
 	$config['auth_config_regex_files'] = [
 		'uid' => ['@mydomain.com$','mydomainfile']
 		];
