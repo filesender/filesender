@@ -282,6 +282,7 @@ A note about colours;
 
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
+* [auth_config_regex_files](#auth_config_regex_files)
 
 ## Data Protection
 
@@ -2940,6 +2941,23 @@ $config['rest_allow_jsonp'] = array(
 
 Changes are saved in config_overrides.json in the config directory.  The config.php file is NOT modified.  This keeps overrides separated from the site config.  is_string, is_numeric (standard php validators) or a function of your own which returns a boolean indicating if the value is good or not.
 
+	
+### auth_config_regex_files
+* __description:__ <span style="background-color:orange">In version 2.0 you can override settings based authenticated client attritbutes using regex</span>. With the auth_config_regex_files directive you specify an array of attributes + regex and resulting filename to load if the regex matches for the attribute value.
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: no overrides loaded.
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ example:
+	<pre><code>
+	$config['auth_config_regex_files'] = [
+		'uid' => ['@mydomain.com$','mydomainfile']
+		];
+	</code></pre>
+
+	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
+	
 ###
 
 ---
