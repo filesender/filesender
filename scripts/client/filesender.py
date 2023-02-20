@@ -35,9 +35,12 @@ try:
   from collections.abc import Iterable
   from collections.abc import MutableMapping
   import hmac
+  import concurrent.futures
+
   import hashlib
   import urllib3
   import os
+  import sys
   import json
   import configparser
   from os.path import expanduser
@@ -151,7 +154,10 @@ def flatten(d, parent_key=''):
   items.sort()
   return items
 
-def call(method, path, data, content=None, rawContent=None, options={}):
+def call(method, path, data, content=None, rawContent=None, options={}, tryCount=0):
+  initData = {}
+  for k in data:
+    initData[k] = data[k]
   data['remote_user'] = username
   data['timestamp'] = str(round(time.time()))
   flatdata=flatten(data)
@@ -179,15 +185,26 @@ def call(method, path, data, content=None, rawContent=None, options={}):
     "Content-Type": content_type
   }
   response = None
-  if method == "get":
-    response = requests.get(url, verify=not insecure, headers=headers)
-  elif method == "post":
-    response = requests.post(url, data=inputcontent, verify=not insecure, headers=headers)
-  elif method == "put":
-    response = requests.put(url, data=inputcontent, verify=not insecure, headers=headers)
-  elif method == "delete":
-    response = requests.delete(url, verify=not insecure, headers=headers)
+  try:
+    if method == "get":
+      response = requests.get(url, verify=not insecure, headers=headers)
+    elif method == "post":
+      response = requests.post(url, data=inputcontent, verify=not insecure, headers=headers)
+    elif method == "put":
+      response = requests.put(url, data=inputcontent, verify=not insecure, headers=headers)
+    elif method == "delete":
+      response = requests.delete(url, verify=not insecure, headers=headers)
+  except Exception as _exc:
+    if debug:
+      print("Try " + str((tryCount + 1)) + " Exception:")
+      print(_exc)
+    if tryCount < 2:
+      time.sleep(300)############ todo add user arg ####################################################
+      return call(method=method, path=path, data=initData,
+                  content=content, rawContent=rawContent,
+                   options=options, tryCount=tryCount + 1)
 
+    raise _exc
   if response is None:
     raise Exception('Client error')
 
@@ -199,7 +216,17 @@ def call(method, path, data, content=None, rawContent=None, options={}):
 
   if code!=200:
     if method!='post' or code!=201:
-      raise Exception('Http error '+str(code)+' '+response.text)
+      if tryCount > 2 :                                                                  #
+        raise Exception('Http error '+str(code)+' '+response.text)                      #
+      else:                                                                             #
+        if debug:                                                                       #
+          print("Failed " + str((tryCount + 1)) + " times on request, retrying")          #
+          print("Fail Reason: " + str(code))                                                 #
+          print(response.text)
+        time.sleep(300) ###########################################################################################
+        return call(method=method, path=path, data=initData,
+                  content=content, rawContent=rawContent,
+                   options=options, tryCount=tryCount + 1)
 
   if response.text=="":
     raise Exception('Http error '+str(code)+' Empty response')
@@ -351,12 +378,14 @@ try:
     if debug:
       print('putChunks: '+path)
     with open(path, mode='rb', buffering=0) as fin:
-      for offset in range(0,size,upload_chunk_size):
-        if progress:
-          print('Uploading: '+path+' '+str(offset)+'-'+str(min(offset+upload_chunk_size, size))+' '+str(round(offset/size*100))+'%')
-        data = fin.read(upload_chunk_size)
-        #print(data)
-        putChunk(transfer, f, data, offset)
+      total_chunks = size
+      progressed_cunks = 0
+      with concurrent.futures.ThreadPoolExecutor(max_workers=5) as e:
+        fut = [e.submit((lambda x:putChunk(transfer, f, fin.read(upload_chunk_size), x)), i) for i in range(0,size,upload_chunk_size)]
+        for r in concurrent.futures.as_completed(fut):
+          if progress:
+            progressed_cunks += upload_chunk_size
+            print('Uploading: '+path+' '+' '+str(round(progressed_cunks/size*100))+'%')
 
     #fileComplete
     if debug:
