@@ -2952,11 +2952,14 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __comment:__ example:
 	<pre><code>
 	$config['auth_config_regex_files'] = [
-		'uid' => ['@mydomain.com$','mydomainfile']
+		'uid' => [
+			'@mydomain.com$' => 'mydomainfile',
+			'@myotherdomain.com$|@yetanotherdomain.com$' => 'myotherdomainfile',
 		];
 	</code></pre>
 
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
+	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
 	
 ###
 
