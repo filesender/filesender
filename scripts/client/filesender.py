@@ -149,21 +149,25 @@ try:
     regex_match = re.search(r"terasender_worker_max_chunk_retries\D*(\d+)",config_response.text)
     worker_retries = int(regex_match.group(1))
     regex_match = re.search(r"terasender_enabled\W*(\w+)",config_response.text)
-    send_chunks = regex_match.group(1) == "true"
+    terasender_enabled = regex_match.group(1) == "true"
 except Exception as e:
     print("Failed to parse match")
     print(e)
     worker_count = 4
     worker_timeout = 180
     max_chunk_retries = 20
-    send_chunks = False
+    terasender_enabled = False
 
-if user_threads:
-  worker_count = min(int(user_threads), worker_count)
+if terasender_enabled:
+  if user_threads:
+    worker_count = min(int(user_threads), worker_count)
+else:
+  worker_count = 1
+
 if user_timeout:
-  worker_timeout = min(int(user_timeout),worker_timeout)
+  worker_timeout = min(int(user_timeout), worker_timeout)
 if user_retries:
-  worker_retries  = min(int(user_retries),worker_retries)
+  worker_retries  = min(int(user_retries), worker_retries)
 
 
 if debug:
@@ -230,8 +234,10 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     elif method == "delete":
       response = requests.delete(url, verify=not insecure, headers=headers, timeout=worker_timeout)
   except Exception as _exc:
+    if progress or debug:
+      print("Failure when attempting to call: " + url)
+      print("Retry attempt " + str((tryCount + 1)))
     if debug:
-      print("Try " + str((tryCount + 1)) + " Exception:")
       print(_exc)
     if tryCount < worker_retries:
       time.sleep(300)
@@ -254,10 +260,12 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
       if tryCount > worker_retries:
         raise Exception('Http error '+str(code)+' '+response.text)
       else:
+        if progress or debug:
+          print("Failure when attempting to call: " + url)
+          print("Retry attempt " + str((tryCount + 1)))
         if debug:
-          print("Failed " + str((tryCount + 1)) + " times on request, retrying")
           print("Fail Reason: " + str(code))
-          print(response.text)
+          print(response.text)          
         time.sleep(300)
         return call(method=method, path=path, data=initData,
                   content=content, rawContent=rawContent,
@@ -420,7 +428,7 @@ try:
         for r in concurrent.futures.as_completed(fut):
           if progress:
             progressed_cunks += upload_chunk_size
-            print('Uploading: '+path+' '+' '+str(round(progressed_cunks/size*100))+'%')
+            print('Uploading: '+path+' '+' '+str(min(round(progressed_cunks/size*100),100))+'%')
 
     #fileComplete
     if debug:
