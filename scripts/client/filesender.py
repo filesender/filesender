@@ -125,7 +125,7 @@ if args.apikey is not None:
 #configs
 try:
   info_response = requests.get(base_url+'/info', verify=True)
-  config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True) #ideally these are also in info. but who knows php...
+  config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
 except requests.exceptions.SSLError as exc:
   if not insecure:
     print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
