@@ -161,9 +161,9 @@ except Exception as e:
 if user_threads:
   worker_count = min(int(user_threads), worker_count)
 if user_timeout:
-  worker_timeout = min(int(worker_timeout), user_timeout)
+  worker_timeout = min(int(user_timeout),worker_timeout)
 if user_retries:
-  worker_retries  = min(int(worker_retries), user_retries)
+  worker_retries  = min(int(user_retries),worker_retries)
 
 
 if debug:
