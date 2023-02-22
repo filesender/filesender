@@ -70,6 +70,26 @@ try {
         
         // Getting associated transfer 
         $transfer = $recipient->transfer;
+
+
+        if( Config::get('log_authenticated_user_download_by_ensure_user_as_recipient')) {
+            if( Auth::isRegularUser()) {
+                $user = Auth::user();
+                $email = $user->saml_user_identification_uid;
+                $found = false;
+                foreach($transfer->recipients as $r) {
+                    if( $r->email == $email ) {
+                        $recipient = $r;
+                        $found = true;
+                        break;
+                    }
+                }
+                if( !$found ) {
+                    $recipient = $transfer->addRecipient($email);
+                }
+                $token = $recipient->token;
+            }
+        }
         
     } elseif(Auth::isAuthenticated()) {
         // Direct owner/admin download
@@ -88,6 +108,7 @@ try {
                 
     } else
         throw new TokenIsMissingException();
+
     
     // Are all files from the transfer ?
     $not_from_transfer = array();
@@ -104,11 +125,10 @@ try {
     // Close session to avoid simultaneous requests from being locked
     session_write_close();
     
+    $recently_downloaded = false;
     // Check if file set has already been downloaded over the last hour
     if( Config::get('logs_limit_messages_from_same_ip_address')) {
         $recently_downloaded = $recipient ? AuditLog::clientRecentlyDownloaded($recipient, $files_ids) : false;
-    } else {
-        $recently_downloaded = false;
     }
 
     $archive_format_selected = false;
@@ -396,8 +416,9 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     if($done) {
         Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
         
-        if(!$recently_downloaded)
+        if(!$recently_downloaded) {
             Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+        }
     }
     
     return array('result' => $done, 'files' => array($file));
@@ -406,7 +427,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
 function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false) {
 
-    if( $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] && $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] == 'true' ) {
+    if( !empty($_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD']) && $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_DOWNLOAD'] == 'true' ) {
     
         $archiveList = $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_CONTENTS'];
         if( $transfer && 
@@ -417,7 +438,7 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
             if (preg_match("/^[0-9,]+$/", $archiveList)) {        
 
                 $files = array();
-                $files_ids = array_filter(array_map('trim', explode(',', $_SERVER['HTTP_X_FILESENDER_ENCRYPTED_ARCHIVE_CONTENTS'])));
+                $files_ids = array_filter(array_map('trim', explode(',', $archiveList)));
                 
                 foreach ($files_ids as $fileId) {
                     $file = File::fromId($fileId);

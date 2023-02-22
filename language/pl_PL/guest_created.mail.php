@@ -53,11 +53,7 @@ Z Poważaniem,
         </tr>
         <tr>
             <td>Ważność</td>
-{if:guest.does_not_expire}
-            <td>nigdy</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>

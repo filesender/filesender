@@ -30,17 +30,58 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('Cron started');
 
-$testingMode = (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
+//
+// False by default, if present it is set
+//
+function getBoolArg( $name )
+{
+    global $argv;
+    
+    $ret = (count($argv) > 1) ? $argv[1]==$name : false;
+    if( !$ret && count($argv) > 2 ) {
+        $ret = ($argv[2]==$name);
+        if( !$ret && count($argv) > 3 ) {
+            $ret = ($argv[3]==$name);
+        }
+    }
+    return $ret;
+}
+
+//
+// Print some messages to give a hint to the user on progress
+//
+$verbose = getBoolArg('--verbose');
+
+//
+// If one or more files in the transfer can not be deleted
+// then the error should be logged and the transfer delete
+// should complete rather than throwing an exception and
+// stopping. This might be handy if the sys admin has already
+// deleted some files and the system is halting when it tries
+// to delete those same files.
+//
+$force = getBoolArg('--force');
+
+//
+// Mainly a developer feature. Do not send emails to allow rapid testing
+//
+$testingMode = getBoolArg('--testing-mode'); // (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
 if( $testingMode ) {
     Mail::TESTING_SET_DO_NOT_SEND_EMAIL();
 }
 
 
+
+if( $verbose ) {
+    echo "cron.php starting up... --force:$force --testing-mode:$testingMode\n";
+    echo "cron.php running as user: " . `id` . "\n";
+}
 
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
@@ -53,47 +94,64 @@ if(!is_null($storage_usage)) {
 }
 
 StatLog::createGlobal(LogEventTypes::GLOBAL_ACTIVE_USERS, count(User::getActive()));
-
 StatLog::createGlobal(LogEventTypes::GLOBAL_AVAILABLE_TRANSFERS, count(Transfer::all(Transfer::AVAILABLE)));
 
+
 // Close expired transfers
+if( $verbose ) echo "cron.php closing expired transfers...\n";
 foreach(Transfer::allExpired() as $transfer) {
     if($transfer->status == TransferStatuses::CLOSED) {
         continue;
     }
     Logger::info($transfer.' expired, closing it');
-    $transfer->close(false);
+    $transfer->close(false, $force );
 }
 
 // Delete failed transfers
+if( $verbose ) echo "cron.php delete failed transfers...\n";
 foreach(Transfer::allFailed() as $transfer) {
     Logger::info($transfer.' failed, deleting it');
     $transfer->delete();
 }
 
 // Close expired guests
+if( $verbose ) echo "cron.php close expired guests...\n";
 $days = Config::get('guests_expired_lifetime');
 foreach(Guest::allExpired() as $guest) {
     if($guest->does_not_expire) continue;
 
-    if( $days != -1 && $guest->isExpiredDaysAgo($days)) {
-        Logger::info($guest.' expired and before guests_expired_lifetime so deleting it');
-        $guest->delete();
-    } else {
-        if($guest->status == GuestStatuses::CLOSED) continue;
+    if( $days != -1
+     && $guest->isClosed()
+     && $guest->isExpiredDaysAgo($days))
+    {
+        //
+        // only delete the guest if there are no available transfers
+        // created by that guest.
+        $transfers = Transfer::fromGuest($guest);
+        if( !count($transfers)) {
+            Logger::info($guest.' expired and before guests_expired_lifetime so deleting it');
+            $guest->delete();
+        }
+    }
+    else
+    {
+        if($guest->isClosed()) continue;
         Logger::info($guest.' expired, closing it');
         $guest->close(false);
     }
 }
 
 // Delete expired audit logs and related data
+if( $verbose ) echo "cron.php Delete expired audit logs and related data...\n";
 foreach(Transfer::allExpiredAuditlogs() as $transfer) {
     Logger::info($transfer.' auditlogs expired, deleting them and deleting transfer data');
     AuditLog::clean($transfer);
+    $transfer->deleteForce = $force;
     $transfer->delete();
 }
 
 // Send daily summaries
+if( $verbose ) echo "cron.php Send daily summaries...\n";
 foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
     if(!$transfer->getOption(TransferOptions::EMAIL_DAILY_STATISTICS)) continue;
     
@@ -119,10 +177,12 @@ foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
 }
 
 // Send automatic reminders
+if( $verbose ) echo "cron.php Send automatic reminders...\n";
 if(Config::get('transfer_automatic_reminder'))
     Transfer::sendAutomaticReminders();
 
 // Report bounces ?
+if( $verbose ) echo "cron.php Report bounces ?...\n";
 $report = Config::get('report_bounces');
 if(in_array($report, array('daily', 'asap_then_daily'))) {
     Logger::info('Bounces reporting in effect, gathering bounces and reporting them');
@@ -133,6 +193,7 @@ if(in_array($report, array('daily', 'asap_then_daily'))) {
 }
 
 // Storage warning ?
+if( $verbose ) echo "cron.php Storage warning ?...\n";
 $level = Config::get('storage_usage_warning');
 if((int)$level) {
     $usage = Storage::getUsage();
@@ -152,21 +213,27 @@ if((int)$level) {
 }
 
 // Remove inactive users preferences
+if( $verbose ) echo "cron.php Remove inactive users...\n";
 User::removeInactive();
 
 // Clean old client logs
+if( $verbose ) echo "cron.php Clean up old client logs...\n";
 ClientLog::clean();
 
 // Clean old translated emails
+if( $verbose ) echo "cron.php Clean old translated emails...\n";
 TranslatableEmail::clean();
 
 // Clean old tracking events 
+if( $verbose ) echo "cron.php Clean old tracking events...\n";
 TrackingEvent::clean();
 
 // Clean old tracking events 
+if( $verbose ) echo "cron.php Clean old tracking events (statlog)...\n";
 StatLog::clean();
 
 // Clean old auditlog events
+if( $verbose ) echo "cron.php Clean old auditlog events...\n";
 AuditLog::cleanup();
 
 // If we are configured to send aggregate (anonymous) statistics

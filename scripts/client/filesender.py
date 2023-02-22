@@ -84,6 +84,7 @@ parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
+parser.add_argument("-g", "--guest", action="store_true")
 requiredNamed = parser.add_argument_group('required named arguments')
 
 # if we have found these in the config file they become optional arguments
@@ -102,6 +103,7 @@ args = parser.parse_args()
 debug = args.verbose
 progress = args.progress
 insecure = args.insecure
+guest = args.guest
 
 if args.username is not None:
   username = args.username
@@ -275,11 +277,45 @@ def deleteTransfer(transfer):
     {}
   )
 
+
+def postGuest(user_id, recipient, subject=None, message=None, expires=None, options=[]):
+
+  if expires is None:
+    expires = round(time.time()) + (default_transfer_days_valid*24*3600)
+
+  return call(
+    'post',
+    '/guest',
+    {},
+    {
+      'from': user_id,
+      'recipient': recipient,
+      'subject': subject,
+      'message': message,
+      'expires': expires,
+      'aup_checked':1,
+      'options': options
+    },
+    None,
+    {}
+  )
+
 ##########################################################################
 
 #postTransfer
 if debug:
   print('postTransfer')
+
+if guest:
+  print('creating new guest ' + args.recipients)
+  troptions = {'get_a_link':0}
+  r = postGuest( username,
+                 args.recipients,
+                 subject=args.subject,
+                 message=args.message,
+                 expires=None,
+                 options=troptions)
+  exit(0)
 
 files = {}
 filesTransfer = []

@@ -73,12 +73,26 @@ if( $db_database ) {
     echo "newly set db_database is " . Config::get('db_database') . "\n";
 }
 echo "current db_database is " . Config::get('db_database') . "\n";
+$dbtype = Config::get('db_type');
+
+//
+// A quick sanity check that we know what db and dbname to connect 
+//
+if( $dbtype != 'mysql' && $dbtype != 'pgsql' ) {
+    echo "ERROR: Please set the db_type to your database type in config.php\n";
+    exit;
+}
+if( Config::get('db_database') == '' ) {
+    echo "ERROR: Please set the db_database to your database name in config.php\n";
+    exit;
+}
+
 
 $currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
-$dbtype = Config::get('db_type');
 if( $dbtype != 'mysql' ) {
     DBI::beginTransaction();
 }
+
 
 
 // Get data classes

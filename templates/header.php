@@ -68,9 +68,15 @@ $headerclass = "header";
                             echo '       <ul>';
                             $opts = array();
                             $code = Lang::getCode();
+                            $prevname = null;
+                            
                             foreach(Lang::getAvailableLanguages() as $id => $dfn) {
                                 $selected = ($id == $code) ? 'selected="selected"' : '';
+                                if( $prevname && $prevname == $dfn['name'] ) {
+                                    continue;
+                                }
                                 $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                $prevname = $dfn['name'];
                             }
                         
                             echo '<li><label>'.Lang::tr('user_lang').'</label><select id="language_selector">'.implode('', $opts).'</select></li>';

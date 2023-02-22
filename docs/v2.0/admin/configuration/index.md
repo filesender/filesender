@@ -176,6 +176,7 @@ A note about colours;
 * [streamsaver_on_edge](#streamsaver_edge)
 * [streamsaver_on_safari](#streamsaver_safari)
 * [recipient_reminder_limit](#recipient_reminder_limit)
+* [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 
 ## Graphs
 
@@ -266,6 +267,7 @@ A note about colours;
 * [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
 * [auth_remote_applications](#auth_remote_applications)
+* [auth_remote_user_enabled](#auth_remote_user_enabled)
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
 * [rest_allow_jsonp](#rest_allow_jsonp)
 
@@ -280,6 +282,7 @@ A note about colours;
 
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
+* [auth_config_regex_files](#auth_config_regex_files)
 
 ## Data Protection
 
@@ -1887,6 +1890,42 @@ This is only for old, existing transfers which have no roundtriptoken set.
     changed independently.
 
 
+### log_authenticated_user_download_by_ensure_user_as_recipient
+
+* __description:__ Log the saml Identifiant for downloads performed by authenticated users
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since before version 2.39
+* __comment:__ This option allows a user to see which authenticated users have
+     downloaded their transfers. This option is most effective when
+     "User must login to FileSender to download file" is enabled for a transfer.
+
+     This is mainly useful when the transfer is created with "get a
+     link" and that link is shared by the user with other users
+     outside of the system. If another user logs into the FileSender
+     server and downloads a file from a transfer then the
+     authenticated downloader is logged against each file that they
+     download. This logging is not done when the user has admin
+     privileges.
+     
+     This option will ensure that there is an entry in the recipients
+     table for the transfer for the saml Identifiant (normally email
+     address) of an authenticated user who is downloading a file. This
+     has privacy implications as the person who created a transfer may
+     be able to see the email address of each authenticated user who
+     has downloaded each file. One should be aware of and accept this
+     arrangement before enabling this feature for a FileSender
+     installation.
+
+     Note that if a regular user visits a download link and they are
+     allowed to download because "User must login to FileSender to
+     download file" is not selected then the user can download without
+     log in and thus the exact user is not known for the download log.
+     
+
+
+
 
 
 
@@ -2780,9 +2819,19 @@ Example:
 The array above contains the remote_application name and all the information for that is in an array under the key. 
 In this example, the application `appname` with secret `secret` has admin rights and can access the endpoint `/info` and `/transfer` by get and post. If you want it to access another endpoint it's necessary to put it in `acl` array. Without it the `info` ACL the test example would fail with permission denied.
 
+### auth_remote_user_enabled
+
+* __description:__ Enable API authentication of remote users. Users can authenticate if they have generated an API key in their user profile.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
 ### auth_remote_user_autogenerate_secret
 
-* __description:__ <span style="background-color:orange">ask etienne how this works</span>
+* __description:__ Automatically generate the user API key upon login, so they dont have to do it themselves
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ false
@@ -2892,6 +2941,26 @@ $config['rest_allow_jsonp'] = array(
 
 Changes are saved in config_overrides.json in the config directory.  The config.php file is NOT modified.  This keeps overrides separated from the site config.  is_string, is_numeric (standard php validators) or a function of your own which returns a boolean indicating if the value is good or not.
 
+	
+### auth_config_regex_files
+* __description:__ <span style="background-color:orange">In version 2.0 you can override settings based authenticated client attritbutes using regex</span>. With the auth_config_regex_files directive you specify an array of attributes + regex and resulting filename to load if the regex matches for the attribute value.
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: no overrides loaded.
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ example:
+	<pre><code>
+	$config['auth_config_regex_files'] = [
+		'uid' => [
+			'@mydomain.com$' => 'mydomainfile',
+			'@myotherdomain.com$|@yetanotherdomain.com$' => 'myotherdomainfile',
+		];
+	</code></pre>
+
+	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
+	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
+	
 ###
 
 ---

@@ -43,6 +43,8 @@ window.filesender.crypto_app_downloading = false;
 // list of fileid for this encrypted download
 window.filesender.crypto_encrypted_archive_download_fileidlist = '';
 
+window.filesender.crypto_last_password_succeeded = false;
+window.filesender.crypto_last_password = '';
 
 
 /*
@@ -1149,6 +1151,8 @@ window.filesender.crypto_app = function () {
                                 progress.html(window.filesender.config.language.download_complete);
                             }
                             blobSink.done();
+
+                            window.filesender.crypto_last_password_succeeded = true;
                         };
                         
                         var callbackProgress = function (i,c) {
@@ -1294,7 +1298,8 @@ window.filesender.crypto_app = function () {
             
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
-            
+                window.filesender.crypto_last_password = pass;
+                
                 $this.decryptDownloadToBlobSink( blobSink, pass, transferid,
                                                  link, mime, name, filesize, encrypted_filesize,
                                                  key_version, salt,
@@ -1307,7 +1312,16 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
+
+            if( window.filesender.crypto_last_password_succeeded ) {
+                $('<p>' + lang.tr('previous_password_shown_for_next_action').out() + '</p>').appendTo(prompt);
+            }            
             var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
+            if( window.filesender.crypto_last_password_succeeded ) {
+                input.attr("value", window.filesender.crypto_last_password );
+            }
+            window.filesender.crypto_last_password_succeeded = false;
+
             var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
             prompt.append(toggleView);
             $('#showdlpass').on(
@@ -1356,6 +1370,7 @@ window.filesender.crypto_app = function () {
 
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
+                window.filesender.crypto_last_password = pass;
 
                 var archiveName = $this.getArchiveFileName(link,selectedFiles,"zip");
                 blobSinkStreamed = window.filesender.streamsaver_sink_zip64( $this, link, transferid, archiveName, pass, selectedFiles, callbackError );
@@ -1375,7 +1390,15 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            if( window.filesender.crypto_last_password_succeeded ) {
+                $('<p>' + lang.tr('previous_password_shown_for_next_action').out() + '</p>').appendTo(prompt);
+            }            
             var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
+            if( window.filesender.crypto_last_password_succeeded ) {
+                input.attr("value", window.filesender.crypto_last_password );
+            }
+            window.filesender.crypto_last_password_succeeded = false;
+
             var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
             prompt.append(toggleView);
             $('#showdlpass').on(
