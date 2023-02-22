@@ -137,7 +137,7 @@ except requests.exceptions.SSLError as exc:
     print(exc)
     print('Running with --insecure flag, ignoring warning...')
     info_response = requests.get(base_url+'/info', verify=False)
-    config_response = requests.get(base_url[-9]+'/filesender-config.js.php',verify=True)
+    config_response = requests.get(base_url[-9]+'/filesender-config.js.php',verify=False)
 
 upload_chunk_size = info_response.json()['upload_chunk_size']
 
@@ -421,7 +421,6 @@ try:
     if debug:
       print('putChunks: '+path)
     with open(path, mode='rb', buffering=0) as fin:
-      total_chunks = size
       progressed_cunks = 0
       with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as e:
         fut = [e.submit((lambda x:putChunk(transfer, f, fin.read(upload_chunk_size), x)), i) for i in range(0,size,upload_chunk_size)]
