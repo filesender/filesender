@@ -396,6 +396,7 @@ perform_these_actions_on_all_users
 performed
 please_add_file_again
 preferences_updated
+previous_password_shown_for_next_action
 privacy_page
 privacy_page_auditlog_lifetime
 privacy_page_clientlogs_lifetime
@@ -589,6 +590,8 @@ time_format
 time_to_complete_ms
 time_to_complete_s
 to
+token_has_bad_format
+token_is_missing
 too_long_since_any_data_was_last_sent
 tracking_event_not_found
 tracking_unknown_event
@@ -628,6 +631,7 @@ transfer_user_quota_exceeded
 transfers_guest
 transfers_page
 transfers_uid_page
+translatable_email_not_found
 translate_email_footer
 translate_to
 turning_on_guests_get_a_link_disables_can_only_send_to_me

@@ -7,6 +7,9 @@
 // 
 // 
 ?>
-Met een uitnodiging kunt u iemand een bestand laten sturen.<br />
-Om een uitnodiging te maken, voer een e-mailadres in en klik op Stuur Uitnodiging.<br />
-Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.
+<h2>Een gastgebruiker uitnodigen</h2>
+<p>Wil je bestanden laten versturen door een gebruiker zonder account? Zo stuur je een uitnodiging:
+<li>Voer het e-mailadres van de gastgebruiker in.</li> 
+<li>Type eventueel een onderwerp en bericht.</li> 
+<li>Klik op 'Stuur uitnodiging'.</li></p> 
+<p>De gastgebruiker krijgt nu een e-mail met daarin de uitnodigingslink.</p>

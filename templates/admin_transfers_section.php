@@ -25,12 +25,12 @@ $transfers_page = function($status) {
         }
     }
     $placeholders=array();
-    $senderemail_full_match = Utilities::arrayKeyOrDefault( $_GET, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
-    $senderemailUnsanitized = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' );
-    $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_SANITIZE_EMAIL );
+    $senderemail_full_match = Utilities::arrayKeyOrDefault( $_POST, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
+    $senderemailUnsanitized = Utilities::arrayKeyOrDefault( $_POST, 'senderemail', '' );
+    $senderemail = Utilities::arrayKeyOrDefault( $_POST, 'senderemail', '', FILTER_SANITIZE_EMAIL );
     // if this is a full match then we can filter the email string.
     if( $senderemail_full_match ) 
-        $senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_VALIDATE_EMAIL );
+        $senderemail = Utilities::arrayKeyOrDefault( $_POST, 'senderemail', '', FILTER_VALIDATE_EMAIL );
     
     if( $status == 'search' ) {
         
@@ -52,7 +52,7 @@ $transfers_page = function($status) {
             $placeholders[":senderemail"] = mb_strtolower($senderemail);
         } else {
             if( $senderemail_full_match ) {
-                if( strlen(Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '', FILTER_SANITIZE_EMAIL ))) {
+                if( strlen(Utilities::arrayKeyOrDefault( $_POST, 'senderemail', '', FILTER_SANITIZE_EMAIL ))) {
                     // the email didn't validate so show no search results.
                     $selector .= ' and id < 0 ';
                 }
@@ -154,23 +154,31 @@ if( $idmax == -1 ) {
 
 
 <?php
-$senderemail_full_match = Utilities::arrayKeyOrDefault( $_GET, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
-$senderemail = Utilities::arrayKeyOrDefault( $_GET, 'senderemail', '' ); // we don't want to FILTER_SANITIZE_EMAIL here
+Logger::error("AAA " . $_POST['senderemail'] );
+$senderemail_full_match = Utilities::arrayKeyOrDefault( $_POST, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
+$senderemail = Utilities::arrayKeyOrDefault( $_POST, 'senderemail', '' ); // we don't want to FILTER_SANITIZE_EMAIL here
 $senderemail_full_match_extra = '';
 if( $senderemail_full_match ) {
     $senderemail_full_match_extra = ' checked ';
 }
 echo "<p>{tr:search_transfer_by_sender_email_description}</p>\n";
 ?>
-<fieldset class="search">
-    <input id="senderemail_full_match" name="senderemail_full_match" type="checkbox" <?php echo $senderemail_full_match_extra ?>>  
-    <label id="senderemail_full_match_label" for="senderemail_full_match" >{tr:email_full_match_search}</label>
-</fieldset>
-<fieldset class="search">
-    <label for="senderemail" class="mandatory">{tr:sender_email_search}</label>
-    <input type="text" name="senderemail" size="60" value="<?php echo $senderemail ?>" />
-    <input type="button" name="idbuttonse" value="{tr:search}" />
-</fieldset>
+
+<form action="https://sam/filesender/" method="post">
+    <input type="hidden" name="s" value="admin" />
+    <fieldset class="search">
+        <fieldset class="search">
+            <input id="senderemail_full_match" name="senderemail_full_match" type="checkbox" <?php echo $senderemail_full_match_extra ?>>  
+            <label id="senderemail_full_match_label" for="senderemail_full_match" >{tr:email_full_match_search}</label>
+        </fieldset>
+        <fieldset class="search">
+            <label for="senderemail" class="mandatory">{tr:sender_email_search}</label>
+            <input type="text" name="senderemail" size="60" value="<?php echo $senderemail ?>" />
+            <input type="submit" value="{tr:search}">
+        </fieldset>
+</form>
+
+        
 <?php 
 $transfers_page('search');
 

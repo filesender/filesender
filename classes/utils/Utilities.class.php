@@ -584,6 +584,22 @@ class Utilities
         return $token_to_check === self::$security_token['old']['value'];
     }
 
+    /**
+     * Get the URL method
+     */
+    public static function getHTTPMethod()
+    {
+        // Get method from possible headers
+        $method = null;
+        foreach (array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
+            if (!array_key_exists($k, $_SERVER)) {
+                continue;
+            }
+            $method = strtolower($_SERVER[$k]);
+        }
+        return $method;
+    }
+    
 
     /**
      * Read the config $configkey and if it is set then regex
@@ -753,4 +769,24 @@ class Utilities
         return $v;
     }
 
+    /**
+     * Check that a serialized json string that has been base64 encoded can be decoded
+     * without error. This can help detect some nefarious activity where bad input is provided.
+     *
+     * an empty string is allowed and returns null
+     * otherwise the decoded data is returned
+     *
+     * if there is an error in base64 decode or json decode an exception is thrown
+     */
+    public static function validateBase64encodedJSON( $v )
+    {
+        if( !strlen($v)) {
+            return null;
+        }
+        $t = base64_decode( $v, true );
+        if( !$t ) {
+            throw new RestBadParameterException('base64_data_badly_encoded');
+        }
+        return json_decode( $t, null, 4, JSON_THROW_ON_ERROR );
+    }
 }

@@ -109,7 +109,6 @@ releases.
 * webWorkersLimit (since 1.6)
 * auth_sp_saml_simplesamlphp_url
 * site_filestore:
-* site_tempfilestore: use different way of storing files
 * log_location
 * cron_exclude_prefix
 * cron_cleanuptempdays

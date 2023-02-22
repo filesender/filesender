@@ -9,15 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chart.js": "^3.7.1",
+    "chart.js": "^4.2.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.6.0",
-    "jquery-ui-dist": "^1.13.1",
-    "promise-polyfill": "^8.2.3",
+    "jquery": "^3.6.3",
+    "jquery-ui-dist": "^1.13.2",
+    "promise-polyfill": "^8.3.0",
     "reset": "^0.1.0",
     "streamsaver": "^2.0.6",
     "web-streams-polyfill": "^3.2.1",
     "webcrypto-shim": "^0.1.7",
-    "xregexp": "^5.1.0"
+    "xregexp": "^5.1.1"
   }
 }

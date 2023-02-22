@@ -469,8 +469,7 @@ $lang['terasender_no_workers_have_started'] = 'Prijenos dijelova datoteke nije u
 $lang['terasender_worker_count'] = 'Broj TeraSender worker-a';
 $lang['terasender_worker_failed_to_start'] = 'Nije moguće pokrenuti jedan ili više zadataka prijenosa';
 $lang['testterm'] = 'testna vrijednost';
-$lang['time_format'] = '{h:H\h} {i:i\m\i
-} {s:s\s}';
+$lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s}';
 $lang['time_to_complete_ms'] = 'Vrijeme za dovršavanje (ms)';
 $lang['time_to_complete_s'] = 'Vrijeme za dovršavanje (sekundi)';
 $lang['to'] = 'Primatelj';
