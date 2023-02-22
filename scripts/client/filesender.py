@@ -32,12 +32,15 @@ import argparse
 try:
   import requests
   import time
+  import re
   from collections.abc import Iterable
   from collections.abc import MutableMapping
   import hmac
+  import concurrent.futures
   import hashlib
   import urllib3
   import os
+  import sys
   import json
   import configparser
   from os.path import expanduser
@@ -85,6 +88,11 @@ parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
+parser.add_argument("--threads")
+parser.add_argument("--timeout")
+parser.add_argument("--retries")
+
+
 requiredNamed = parser.add_argument_group('required named arguments')
 
 # if we have found these in the config file they become optional arguments
@@ -104,17 +112,20 @@ debug = args.verbose
 progress = args.progress
 insecure = args.insecure
 guest = args.guest
-
+user_threads = args.threads
+user_timeout = args.timeout
+user_retries = args.retries
 if args.username is not None:
   username = args.username
   
 if args.apikey is not None:
   apikey = args.apikey
 
-  
+
 #configs
 try:
-  response = requests.get(base_url+'/info', verify=True)
+  info_response = requests.get(base_url+'/info', verify=True)
+  config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
 except requests.exceptions.SSLError as exc:
   if not insecure:
     print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
@@ -125,8 +136,39 @@ except requests.exceptions.SSLError as exc:
     print('Warning: Error: the SSL certificate of the server you are connecting to cannot be verified:')
     print(exc)
     print('Running with --insecure flag, ignoring warning...')
-    response = requests.get(base_url+'/info', verify=False)
-upload_chunk_size = response.json()['upload_chunk_size']
+    info_response = requests.get(base_url+'/info', verify=False)
+    config_response = requests.get(base_url[-9]+'/filesender-config.js.php',verify=False)
+
+upload_chunk_size = info_response.json()['upload_chunk_size']
+
+try:
+    regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
+    worker_count =  int(regex_match.group(1))
+    regex_match = re.search(r"terasender_worker_start_must_complete_within_ms\D*(\d+)",config_response.text)
+    worker_timeout = int(regex_match.group(1)) // 1000
+    regex_match = re.search(r"terasender_worker_max_chunk_retries\D*(\d+)",config_response.text)
+    worker_retries = int(regex_match.group(1))
+    regex_match = re.search(r"terasender_enabled\W*(\w+)",config_response.text)
+    terasender_enabled = regex_match.group(1) == "true"
+except Exception as e:
+    print("Failed to parse match")
+    print(e)
+    worker_count = 4
+    worker_timeout = 180
+    max_chunk_retries = 20
+    terasender_enabled = False
+
+if terasender_enabled:
+  if user_threads:
+    worker_count = min(int(user_threads), worker_count)
+else:
+  worker_count = 1
+
+if user_timeout:
+  worker_timeout = min(int(user_timeout), worker_timeout)
+if user_retries:
+  worker_retries  = min(int(user_retries), worker_retries)
+
 
 if debug:
   print('base_url          : '+base_url)
@@ -151,7 +193,10 @@ def flatten(d, parent_key=''):
   items.sort()
   return items
 
-def call(method, path, data, content=None, rawContent=None, options={}):
+def call(method, path, data, content=None, rawContent=None, options={}, tryCount=0):
+  initData = {}
+  for k in data:
+    initData[k] = data[k]
   data['remote_user'] = username
   data['timestamp'] = str(round(time.time()))
   flatdata=flatten(data)
@@ -179,15 +224,28 @@ def call(method, path, data, content=None, rawContent=None, options={}):
     "Content-Type": content_type
   }
   response = None
-  if method == "get":
-    response = requests.get(url, verify=not insecure, headers=headers)
-  elif method == "post":
-    response = requests.post(url, data=inputcontent, verify=not insecure, headers=headers)
-  elif method == "put":
-    response = requests.put(url, data=inputcontent, verify=not insecure, headers=headers)
-  elif method == "delete":
-    response = requests.delete(url, verify=not insecure, headers=headers)
+  try:
+    if method == "get":
+      response = requests.get(url, verify=not insecure, headers=headers, timeout=worker_timeout)
+    elif method == "post":
+      response = requests.post(url, data=inputcontent, verify=not insecure, headers=headers, timeout=worker_timeout)
+    elif method == "put":
+      response = requests.put(url, data=inputcontent, verify=not insecure, headers=headers, timeout=worker_timeout)
+    elif method == "delete":
+      response = requests.delete(url, verify=not insecure, headers=headers, timeout=worker_timeout)
+  except Exception as _exc:
+    if progress or debug:
+      print("Failure when attempting to call: " + url)
+      print("Retry attempt " + str((tryCount + 1)))
+    if debug:
+      print(_exc)
+    if tryCount < worker_retries:
+      time.sleep(300)
+      return call(method=method, path=path, data=initData,
+                  content=content, rawContent=rawContent,
+                   options=options, tryCount=tryCount + 1)
 
+    raise _exc
   if response is None:
     raise Exception('Client error')
 
@@ -199,7 +257,19 @@ def call(method, path, data, content=None, rawContent=None, options={}):
 
   if code!=200:
     if method!='post' or code!=201:
-      raise Exception('Http error '+str(code)+' '+response.text)
+      if tryCount > worker_retries:
+        raise Exception('Http error '+str(code)+' '+response.text)
+      else:
+        if progress or debug:
+          print("Failure when attempting to call: " + url)
+          print("Retry attempt " + str((tryCount + 1)))
+        if debug:
+          print("Fail Reason: " + str(code))
+          print(response.text)          
+        time.sleep(300)
+        return call(method=method, path=path, data=initData,
+                  content=content, rawContent=rawContent,
+                   options=options, tryCount=tryCount + 1)
 
   if response.text=="":
     raise Exception('Http error '+str(code)+' Empty response')
@@ -351,12 +421,13 @@ try:
     if debug:
       print('putChunks: '+path)
     with open(path, mode='rb', buffering=0) as fin:
-      for offset in range(0,size,upload_chunk_size):
-        if progress:
-          print('Uploading: '+path+' '+str(offset)+'-'+str(min(offset+upload_chunk_size, size))+' '+str(round(offset/size*100))+'%')
-        data = fin.read(upload_chunk_size)
-        #print(data)
-        putChunk(transfer, f, data, offset)
+      progressed_cunks = 0
+      with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as e:
+        fut = [e.submit((lambda x:putChunk(transfer, f, fin.read(upload_chunk_size), x)), i) for i in range(0,size,upload_chunk_size)]
+        for r in concurrent.futures.as_completed(fut):
+          if progress:
+            progressed_cunks += upload_chunk_size
+            print('Uploading: '+path+' '+' '+str(min(round(progressed_cunks/size*100),100))+'%')
 
     #fileComplete
     if debug:
