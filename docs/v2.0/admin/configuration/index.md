@@ -155,6 +155,7 @@ A note about colours;
 * [directory_upload_button_enabled](#directory_button_upload_enabled)
 * [encryption_enabled](#encryption_enabled)
 * [encryption_mandatory](#encryption_mandatory)
+* [encryption_mandatory_with_generated_password](#encryption_mandatory_with_generated_password)
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_password_must_have_upper_and_lower_case](#encryption_password_must_have_upper_and_lower_case)
 * [encryption_password_must_have_numbers](#encryption_password_must_have_numbers)
@@ -1586,6 +1587,15 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ false
 * __available:__ since version 2.23
 * __comment:__
+
+### encryption_mandatory_with_generated_password
+* __description:__ If set to true then every file uploaded must be encrypted and use a generated password. This enables encryption_mandatory automatically.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.40
+* __comment:__
+
 
 
 
