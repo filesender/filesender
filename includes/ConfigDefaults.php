@@ -106,6 +106,7 @@ $default = array(
     
     'encryption_enabled' => true,
     'encryption_mandatory' => false,
+    'encryption_mandatory_with_generated_password' => false,
     'encryption_min_password_length' => 12,
     'encryption_password_must_have_upper_and_lower_case' => true,
     'encryption_password_must_have_numbers' => true,
