@@ -9,36 +9,24 @@
 
 ## Announcements
 
-The FileSender project uses a mailinglist to announce new releases and important news:
+The FileSender project uses a [mailinglist](https://lists.nordu.net/postorius/lists/filesender-announce.filesender.org/) to announce new releases and important news:
 
-filesender-announce@filesender.org
+To subscribe visit the below link and follow the directions.
 
-To subscribe send an email to sympa@filesender.org with 'subscribe
-filesender-announce' in the subject or the body of the mail.
-Alternatively you can go to the Sympa mailinglist server web interface
-and subscribe yourself there.
+https://lists.nordu.net/postorius/lists/filesender-announce.filesender.org/
 
-[The mailinglist archive can be found
-here](https://postlister.uninett.no/sympa_filesender/arc/filesender-announce)
+The mailinglist archive can be found once you are subscribed.
 
 ## Support and development discussion
 
 The FileSender project uses one mailinglist to coordinate the
 development and provide support to the user community:
 
-     filesender-dev@filesender.org
+To subscribe visit the below link and follow the directions.
 
-To subscribe send an email to sympa@filesender.org with 'subscribe
-filesender-dev' in the subject or the body of the mail. Alternatively
-you can go to the [Sympa mailinglist server web interface](https://postlister.uninett.no/sympa_filesender/info/filesender-dev) and subscribe
-yourself there.
+https://lists.nordu.net/postorius/lists/filesender-dev.filesender.org/
 
-Non-subscribers can also send emails to the list - note that those
-emails are moderated by one of three list-owners, so it can take a
-little while before your email gets through.
-
-[The mailinglist archive can be found
-here](https://postlister.uninett.no/sympa_filesender/arc/filesender-dev)
+The mailinglist archive can be found once you are subscribed.
 
 ## Bugs
 
