@@ -2,7 +2,6 @@
 
 $guest_can_only_send_to_creator = false;
 $encryption_mandatory = Principal::isEncryptionMandatory();
-$encryption_mandatory_with_generated_password = Principal::isEncryptionMandatoryWithGeneratedPassword();
 $encryption_checkbox_checked = '';
 $encryption_checkbox_classes = '';
 
@@ -58,10 +57,6 @@ if(Auth::isGuest()) {
 if( $encryption_mandatory ) {
     $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
     $encryption_checkbox_classes = '';
-}
-if( $encryption_mandatory_with_generated_password ) {
-    $encryption_generate_password_checkbox_checked = ' checked="checked"  disabled="disabled" ';
-    $encryption_generate_password_checkbox_classes = '';
 }
 
 ?>
