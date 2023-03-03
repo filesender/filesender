@@ -154,7 +154,6 @@ if( $idmax == -1 ) {
 
 
 <?php
-Logger::error("AAA " . $_POST['senderemail'] );
 $senderemail_full_match = Utilities::arrayKeyOrDefault( $_POST, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
 $senderemail = Utilities::arrayKeyOrDefault( $_POST, 'senderemail', '' ); // we don't want to FILTER_SANITIZE_EMAIL here
 $senderemail_full_match_extra = '';
@@ -164,7 +163,7 @@ if( $senderemail_full_match ) {
 echo "<p>{tr:search_transfer_by_sender_email_description}</p>\n";
 ?>
 
-<form action="https://sam/filesender/" method="post">
+<form action="{path:?s=admin&as=transfers}" method="post">
     <input type="hidden" name="s" value="admin" />
     <fieldset class="search">
         <fieldset class="search">
