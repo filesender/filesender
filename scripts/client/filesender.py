@@ -29,8 +29,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import argparse
-import textwrap
 try:
+  import textwrap #used to format help description and epilog
   import requests
   import time
   import re
