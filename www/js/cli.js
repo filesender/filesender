@@ -60,10 +60,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         transfer.addFile('test.txt', blob, undefined);
 
         //set the recipient
-        transfer.addRecipient('joey@joeyn.dev', undefined);
-
-        //set the from email
-        transfer.from = 'johannes.nicholas@utas.edu.au';
+        transfer.addRecipient('someone@example.com', undefined);
     
         //set the expiry date for 7 days in the future
         let expiry = (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
@@ -71,7 +68,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         transfer.expires = expiry.toISOString().split('T')[0];
 
         //set the security token
-        global.window.filesender.client.security_token = "5ce498c5-e5e0-48ee-8e6a-61e906eabc85";
+        global.window.filesender.client.security_token = "security token here";
 
         //start the transfer
         transfer.start();
