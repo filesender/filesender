@@ -31,6 +31,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         require('./client.js');
         require('./filesender.js');
         require('./transfer.js');
+        require('./lang.js');
         
 
         //add some required functions
@@ -45,6 +46,15 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         global.window.filesender.ui.log = function(message) {
             console.log('[log] ' + message);
         }
+        global.window.filesender.ui.popup = function(message, buttons, options) {
+            console.log('[popup] ' + message);
+            return {
+                text: function(text) {
+                    console.log('[popup text] ' + text);
+                }
+            }
+        }
+        filesender.client.authentication_required.text
         global.window.filesender.ui.validators = {};
         global.window.filesender.ui.validators.email = /^[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-z]{2,})$/i
 
