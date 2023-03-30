@@ -11,7 +11,6 @@ If you want to add your FileSender installation to this list, send an email to f
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012| March 2023 |
-| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014|
 | Belgium  | BELNET  | [https://filesender.belnet.be/](https://filesender.belnet.be/)      | Mar 2010|
 | Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011|
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010|
@@ -79,6 +78,8 @@ If you want to add your FileSender installation to this list, send an email to f
 | South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014|
 | Uganda | RENU | [https://filesender.renu.ac.ug/](https://filesender.renu.ac.ug/) | Mar 2018|
 
+## HE&R Community installations
+| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014| March 2023 |
 
 
 ## Other
