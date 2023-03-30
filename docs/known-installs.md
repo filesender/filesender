@@ -8,8 +8,8 @@ If you want to add your FileSender installation to this list, send an email to f
 
 ## HE&R Community installations - Europe & Middle-East
 
-| Country/Region|NREN/Org  | Service URL          | Known since|
-| --- | --- | --- |---|
+| Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
+| --- | --- | --- |---|---|
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016|
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012|
 | Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014|
