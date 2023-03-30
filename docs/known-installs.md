@@ -90,3 +90,5 @@ If you want to add your FileSender installation to this list, send an email to f
 | Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013|
 | Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013|
 
+## Decommissioned installations
+
