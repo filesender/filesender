@@ -58,7 +58,7 @@ class UtilitiesTest extends CommonUnitTestCase {
         $timestamp = strtotime($strDate);
 
         try {
-            $this->assertTrue(Utilities::formatDate($timestamp) == "04/09/2014");
+            $this->assertTrue(Utilities::formatDate($timestamp) == "04 Sep 2014");
 
             $this->displayInfo(get_class(), __FUNCTION__, '');
         } catch (PHPUnit_Framework_AssertionFailedError $ex) {
