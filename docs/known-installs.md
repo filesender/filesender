@@ -48,10 +48,13 @@ If you want to add your FileSender installation to this list, send an email to f
 | --- | --- | --- |---|---|
 | Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 5 April 2023 |
 | Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017| 5 April 2023 |
-| Japan / Okinawa| Okinawa Institute of Science and Technology  | [https://filesender.oist.jp](https://filesender.oist.jp)  | Sep 2013|5 April 2023 |
 | Korea    | KISTI  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014|5 April 2023 |
 | Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017|5 April 2023 |
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016|5 April 2023 |
+
+## HE&R Community installations - Asia - Pacific
+| Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
+| Japan / Okinawa| Okinawa Institute of Science and Technology  | [https://filesender.oist.jp](https://filesender.oist.jp)  | Sep 2013|5 April 2023 |
 
 ## HE&R Community installations - Americas
 
