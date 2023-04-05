@@ -13,8 +13,8 @@ If you want to add your FileSender installation to this list, send an email to f
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012| March 2023 |
 | Belgium  | BELNET  | [https://filesender.belnet.be/](https://filesender.belnet.be/)      | Mar 2010| March 2023 |
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010| March 2023 |
-| Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021|
-| Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012| 5 April 2023
+| Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021| 5 April 2023 |
+| Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012| 5 April 2023 |
 | Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012| 5 April 2023|
 | Europe  | GÉANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010| 5 April 2023|
 | Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012| 5 April 2023|
@@ -24,24 +24,20 @@ If you want to add your FileSender installation to this list, send an email to f
 | Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 | 5 April 2023 |
 | Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016| 5 April 2023 |
 | Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012| 5 April 2023 |
-| Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012|
-| Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012|
-| Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011|
-| Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016|
-| Netherlands  | SURFnet  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010|
-| Norway  | UNINETT  | [https://filesender.uninett.no/](https://filesender.uninett.no/)    | 2009|
-| Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013|
-| Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011|
-| Romania | RoEduNet | [https://fisiere.roedu.net/](https://fisiere.roedu.net/) | 2013 |
-| Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018|
-| Serbia  | AMRES    | [https://filesender.amres.ac.rs/](https://filesender.amres.ac.rs/)    | Jul 2014|
-| Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011|
-| Spain    | RedIRIS  | [https://filesender.rediris.es](https://filesender.rediris.es)      | Mar 2017|
-| Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014|
-| Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://filesender.upo.es/](https://filesender.upo.es/)  | May 2014|
-| Switzerland  | SWITCH  | [https://filesender.switch.ch](https://filesender.switch.ch)      | Sep 2012|
-| UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014|
-| Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018|
+| Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012| 5 April 2023 |
+| Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011| 5 April 2023 | 
+| Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016| 5 April 2023 |
+| Netherlands  | SURFnet  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010| 5 April 2023 |
+| Norway  | Sikt  | [https://filesender.sikt.no/](https://filesender.sikt.no/)    | 2009| 5 April 2023 | 5 April 2023 |
+| Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013| 5 April 2023 |
+| Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011| 5 April 2023 |
+| Romania | RoEduNet | [https://fisiere.roedu.net/](https://fisiere.roedu.net/) | 2013 | 5 April 2023 |
+| Serbia  | AMRES    | [https://filesender.amres.ac.rs/](https://filesender.amres.ac.rs/)    | Jul 2014| 5 April 2023 |
+| Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011| 5 April 2023 |
+| Spain    | RedIRIS  | [https://filesender.rediris.es](https://filesender.rediris.es)      | Mar 2017| 5 April 2023 |
+| Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 5 April 2023 |
+| Switzerland  | SWITCH  | [https://filesender.switch.ch](https://filesender.switch.ch)      | Sep 2012| 5 April 2023 |
+| Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018| 5 April 2023 |
 
 ## HE&R Community installations - Asia - Pacific
 
@@ -92,6 +88,10 @@ If you want to add your FileSender installation to this list, send an email to f
 | Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| March 2023 |
 | Cyprus  | CYNET    | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| March 2023 |
 | Israel  | IUCC/HUJI  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 5 April 2023 - unreachable |
+| Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012| 5 April 2023 - unreachable |
+| Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018| 5 April 2023 - unreachable |
+| Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://filesender.upo.es/](https://filesender.upo.es/)  | May 2014| 5 April 2023 - unreachable |
+| UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| 5 April 2023 - unreachable |
 
 
 ## Verified decommissioned installations
