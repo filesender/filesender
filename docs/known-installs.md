@@ -39,18 +39,19 @@ If you want to add your FileSender installation to this list, send an email to f
 | Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018| 5 April 2023 |
 
 ## HE&R Community installations - Europe & Middle East
+| Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
+| --- | --- | --- |---|---|
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 5 April 2023 |
 
 ## NREN installations - Asia - Pacific
-
-| Country/Region|NREN  | Service URL | Known since|
-| --- | --- | --- |---|
-| Australia  | AARNet  | [https://cloudstor.aarnet.edu.au/](https://cloudstor.aarnet.edu.au/)    | 2009 |
-| Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017|
-| Japan / Okinawa| Okinawa Institute of Science and Technology  | [https://filesender.oist.jp](https://filesender.oist.jp)  | Sep 2013|
-| Korea    | KREONET  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014|
-| Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017|
-| Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016|
+| Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
+| --- | --- | --- |---|---|
+| Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 5 April 2023 |
+| Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017| 5 April 2023 |
+| Japan / Okinawa| Okinawa Institute of Science and Technology  | [https://filesender.oist.jp](https://filesender.oist.jp)  | Sep 2013|5 April 2023 |
+| Korea    | KISTI  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014|5 April 2023 |
+| Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017|5 April 2023 |
+| Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016|5 April 2023 |
 
 ## HE&R Community installations - Americas
 
