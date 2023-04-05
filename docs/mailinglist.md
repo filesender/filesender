@@ -13,7 +13,7 @@ The FileSender project uses a [mailinglist](https://lists.nordu.net/postorius/li
 
 To subscribe visit the below link and follow the directions.
 
-https://lists.nordu.net/postorius/lists/filesender-announce.filesender.org/
+[https://lists.nordu.net/postorius/lists/filesender-announce.filesender.org/](https://lists.nordu.net/postorius/lists/filesender-announce.filesender.org/)
 
 The mailinglist archive can be found once you are subscribed.
 
@@ -24,7 +24,7 @@ development and provide support to the user community:
 
 To subscribe visit the below link and follow the directions.
 
-https://lists.nordu.net/postorius/lists/filesender-dev.filesender.org/
+[https://lists.nordu.net/postorius/lists/filesender-dev.filesender.org/](https://lists.nordu.net/postorius/lists/filesender-dev.filesender.org/)
 
 The mailinglist archive can be found once you are subscribed.
 
