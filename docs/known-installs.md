@@ -41,6 +41,7 @@ If you want to add your FileSender installation to this list, send an email to f
 ## HE&R Community installations - Europe & Middle East
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
+| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014| March 2023 |
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 5 April 2023 |
 
 ## NREN installations - Asia - Pacific
@@ -54,22 +55,21 @@ If you want to add your FileSender installation to this list, send an email to f
 
 ## HE&R Community installations - Asia - Pacific
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
+| --- | --- | --- |---|---|
 | Japan / Okinawa| Okinawa Institute of Science and Technology  | [https://filesender.oist.jp](https://filesender.oist.jp)  | Sep 2013|5 April 2023 |
 
-## HE&R Community installations - Americas
+## NREN installations - Americas
+| Country/Region|NREN  | Service URL | Known since| Last checked |
+| --- | --- | --- |---|---|
+| Brazil  | RNP    | [https://filesender.rnp.br](https://filesender.rnp.br)      | Oct 2014| 5 April 2023 |
+| Chili    | REUNA    | [https://filesender.reuna.cl](https://filesender.reuna.cl)      | Sep 2013|5 April 2023 |
+| Equador   | CEDIA    | [https://filesender.cedia.org.ec](https://filesender.cedia.org.ec)  | Jun 2017|5 April 2023 |
+| Latin-America  | ELCIRA  | [https://filesender.redclara.net/filesender/](https://filesender.redclara.net/filesender/)  | Oct 2013|5 April 2023 |
 
-| Country/Region|NREN  | Service URL | Known since|
-| --- | --- | --- |---|
-| Brazil  | RNP    | [https://filesender.rnp.br](https://filesender.rnp.br)      | Oct 2014|
-| Chili    | REUNA    | [https://filesender.reuna.cl](https://filesender.reuna.cl)      | Sep 2013|
-| Equador   | CEDIA    | [https://filesender.cedia.org.ec](https://filesender.cedia.org.ec)  | Jun 2017|
-| Latin-America  | ELCIRA  | [https://filesender.redclara.net/filesender/](https://filesender.redclara.net/filesender/)  | Oct 2013|
-| USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012|
 
-## HE&R Community installations - Africa
-
-| Country/Region|NREN  | Service URL | Known since|
-| --- | --- | --- |---|
+## NREN installations - Africa
+| Country/Region|NREN  | Service URL | Known since|Last checked |
+| --- | --- | --- |---|---|
 | East Africa | UBUNTUNET | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | March 2018|
 | Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 |
 | Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015|
@@ -77,14 +77,14 @@ If you want to add your FileSender installation to this list, send an email to f
 | South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014|
 | Uganda | RENU | [https://filesender.renu.ac.ug/](https://filesender.renu.ac.ug/) | Mar 2018|
 
-## HE&R Community installations
-| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014| March 2023 |
+
+
 
 
 ## Other
 
-| Country/Region| Organisation | Service URL | Known since|
-| --- | --- | --- |---|
+| Country/Region| Organisation | Service URL | Known since|Last checked |
+| --- | --- | --- |---|---|
 | Australia | BARNET - Legal sector ISP | [https://filesender.barnet.com.au/](https://filesender.barnet.com.au/) | March 2018 |
 | Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013|
 | Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013|
@@ -98,6 +98,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018| 5 April 2023 - unreachable |
 | Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://filesender.upo.es/](https://filesender.upo.es/)  | May 2014| 5 April 2023 - unreachable |
 | UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| 5 April 2023 - unreachable |
+| USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| November 2020 - unreachable |
 
 
 ## Verified decommissioned installations
