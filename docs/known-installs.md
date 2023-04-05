@@ -70,26 +70,22 @@ If you want to add your FileSender installation to this list, send an email to f
 ## NREN installations - Africa
 | Country/Region|NREN  | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
-| East Africa | UBUNTUNET | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | March 2018|
-| Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 |
-| Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015|
-| Somalia | SomaliREN | [https://filesender.somaliren.org.so/filesender/](https://filesender.somaliren.org.so/filesender/) | May 2022 |
-| South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014|
-| Uganda | RENU | [https://filesender.renu.ac.ug/](https://filesender.renu.ac.ug/) | Mar 2018|
+| East Africa | UBUNTUNET | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | March 2018|5 April 2023 |
+| Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 |5 April 2023 |
+| Somalia | SomaliREN | [https://filesender.somaliren.org.so/filesender/](https://filesender.somaliren.org.so/filesender/) | May 2022 |5 April 2023 |
+| South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014|5 April 2023 |
 
-
-
-
-
-## Other
+## Known installs in other communities
 
 | Country/Region| Organisation | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
-| Australia | BARNET - Legal sector ISP | [https://filesender.barnet.com.au/](https://filesender.barnet.com.au/) | March 2018 |
-| Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013|
-| Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013|
+| Australia | BARNET - Legal sector ISP | [https://filesender.barnet.com.au/](https://filesender.barnet.com.au/) | March 2018 | 5 April 2023 |
+| Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 5 April 2023 |
+
 
 ## Unreachable installations
+| Country/Region| Organisation | Service URL | Known since|Last checked |
+| --- | --- | --- |---|---|
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016| March 2023 |
 | Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| March 2023 |
 | Cyprus  | CYNET    | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| March 2023 |
@@ -98,8 +94,9 @@ If you want to add your FileSender installation to this list, send an email to f
 | Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018| 5 April 2023 - unreachable |
 | Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://filesender.upo.es/](https://filesender.upo.es/)  | May 2014| 5 April 2023 - unreachable |
 | UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| 5 April 2023 - unreachable |
-| USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| November 2020 - unreachable |
-
+| Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015| 5 April 2023 - unreachable |
+| Uganda | RENU | [https://filesender.renu.ac.ug/](https://filesender.renu.ac.ug/) | Mar 2018| 5 April 2023 - installation broken |
+| Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013| 5 April 2023 - unreachable |
 
 ## Verified decommissioned installations
-
+| USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| November 2020 - unreachable |
