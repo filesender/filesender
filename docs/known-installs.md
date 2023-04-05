@@ -6,7 +6,7 @@ title: Known FileSender installations
 
 If you want to add your FileSender installation to this list, send an email to filesender-dev@filesender.org or edit the file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request.
 
-## HE&R Community installations - Europe & Middle-East
+## NREN installations - Europe and Middle East
 
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
@@ -14,17 +14,16 @@ If you want to add your FileSender installation to this list, send an email to f
 | Belgium  | BELNET  | [https://filesender.belnet.be/](https://filesender.belnet.be/)      | Mar 2010| March 2023 |
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010| March 2023 |
 | Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021|
-| Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012|
-| Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012|
-| Europe  | GÉANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010|
-| Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012|
-| France  | RENATER  | [https://filesender.renater.fr/](https://filesender.renater.fr/)    | Nov 2013|
-| Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018|
-| Hungary  | NIIF    | [https://filesender.niif.hu](https://filesender.niif.hu)      | Feb 2012|
-| Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 |
-| Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016|
-| Israel  | IUCC/HUJI  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012|
-| Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012|
+| Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012| 5 April 2023
+| Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012| 5 April 2023|
+| Europe  | GÉANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010| 5 April 2023|
+| Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012| 5 April 2023|
+| France  | RENATER  | [https://filesender.renater.fr/](https://filesender.renater.fr/)    | Nov 2013| 5 April 2023|
+| Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018| 5 April 2023|
+| Hungary  | NIIF    | [https://filesender.hu](https://filesender.hu)      | Feb 2012|  5 April 2023 |
+| Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 | 5 April 2023 |
+| Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016| 5 April 2023 |
+| Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012| 5 April 2023 |
 | Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012|
 | Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012|
 | Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011|
@@ -92,6 +91,8 @@ If you want to add your FileSender installation to this list, send an email to f
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016| March 2023 |
 | Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| March 2023 |
 | Cyprus  | CYNET    | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| March 2023 |
+| Israel  | IUCC/HUJI  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 5 April 2023 - unreachable |
+
 
 ## Verified decommissioned installations
 
