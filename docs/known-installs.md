@@ -35,11 +35,13 @@ If you want to add your FileSender installation to this list, send an email to f
 | Serbia  | AMRES    | [https://filesender.amres.ac.rs/](https://filesender.amres.ac.rs/)    | Jul 2014| 5 April 2023 |
 | Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011| 5 April 2023 |
 | Spain    | RedIRIS  | [https://filesender.rediris.es](https://filesender.rediris.es)      | Mar 2017| 5 April 2023 |
-| Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 5 April 2023 |
 | Switzerland  | SWITCH  | [https://filesender.switch.ch](https://filesender.switch.ch)      | Sep 2012| 5 April 2023 |
 | Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018| 5 April 2023 |
 
-## HE&R Community installations - Asia - Pacific
+## HE&R Community installations - Europe & Middle East
+| Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 5 April 2023 |
+
+## NREN installations - Asia - Pacific
 
 | Country/Region|NREN  | Service URL | Known since|
 | --- | --- | --- |---|
