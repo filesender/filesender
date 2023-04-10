@@ -367,7 +367,7 @@ if (!function_exists('clickableHeader')) {
                         <tr class="transfer_options">
                             <td class="desc">{tr:options}</td>
                             <td><div class="options">
-                                <?php if(count($transfer->options)) { ?>
+                                <?php if(count(array_filter($transfer->options))) { ?>
                                     <ul class="options">
                                         <li>
                                             <?php echo implode('</li><li>', array_map(function($o) {
