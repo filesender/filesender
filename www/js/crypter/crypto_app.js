@@ -1,3 +1,7 @@
+/**
+ * Part of the Filesender software.
+ * See http://filesender.org
+ */
 
 if (typeof window === 'undefined')
     window = {}; // dummy window for use in webworkers
