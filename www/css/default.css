@@ -352,6 +352,10 @@ label.invalid {
 }
 
 
+.languages {
+    overflow-x: auto;
+}
+
 .buttons {
     display: table;
     border-collapse: separate;
