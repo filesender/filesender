@@ -3,7 +3,11 @@
     
     <div class="logon">
         <?php
-        echo GUI::getLoginButton();
+        $page = null;
+        if (array_key_exists('s', $_REQUEST)) {
+            $page = Utilities::http_build_query(array('s' => $_REQUEST['s']));
+        }
+        echo GUI::getLoginButton($page);
         ?>
     </div>
 </div>
