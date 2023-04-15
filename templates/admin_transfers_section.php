@@ -67,11 +67,20 @@ $transfers_page = function($status) {
     // FIXME: move the code away from wanting to know the total.
     //       if the user has 1000 tuples do we really want to show 1000/15 direct page links
     //       or should we instead allow queries on timeframe etc.
-    $total_count = Transfer::count(array(
-        'view'   => $trsort->getViewName(),
-        'where'  => $selector . $trsort->getWhereClause($selector)
-    ), $placeholders);
-
+    //
+    // At offset zero with no interesting selector info we just assume there
+    // are a bunch of results to avoid hitting the database for a count(*) right
+    // at the start (there are three views by default and couint(*) might do a
+    // seq scan to complete.
+    if( !$offset && !strstr($selector,' AND')) {
+        $total_count = $page_size * $display_page_num;
+    } else {
+        $total_count = Transfer::count(array(
+            'view'   => $trsort->getViewName(),
+            'where'  => $selector . $trsort->getWhereClause($selector)
+        ), $placeholders);
+    }
+    
     $entries = Transfer::all(array(
         'view'   => $trsort->getViewName(),
         'where'  => $selector . $trsort->getWhereClause($selector),
@@ -98,18 +107,22 @@ $transfers_page = function($status) {
         $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
-    $p = 1;
-    for($o=0; $o<$total_count; $o+=$page_size) {
+    $start_index = $offset - $page_size * $display_page_num;
+    if( $start_index < 0 ) {
+        $start_index = 0;
+    }
+    $p = ceil(($start_index+1) / $page_size);
+    $end_index = min($total_count, $offset + $page_size * ($display_page_num + 1));
+    for($o=$start_index; $o < $end_index; $o += $page_size)
+    {
         if($o >= $offset && $o < $offset + $page_size) {
             $navigation .= '<span>'.$p.'</span>'."\n";
-        } elseif($o >= $offset - $page_size * $display_page_num &&
-                 $o < $offset - $page_size * ($display_page_num - 1) ||
-                 $o >= $offset + $page_size * $display_page_num &&
-                 $o < $offset + $page_size * ($display_page_num + 1)) {
-            $navigation .= '<span>'.'...'.'</span>'."\n";
         } elseif($o < $offset - $page_size * $display_page_num ||
                  $o >= $offset + $page_size * ($display_page_num + 1)) {
             // nothing
+        } elseif( $o < $offset - $page_size * ($display_page_num - 1) ||
+                  $o >= $offset + $page_size * $display_page_num ) {
+            $navigation .= '<span>'.'...'.'</span>'."\n";
         } else {
             $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers">'.$p.'</a>'."\n";
         }
@@ -194,7 +207,6 @@ echo "<p>{tr:search_transfer_by_sender_email_description}</p>\n";
 <?php 
 $transfers_page('search');
 
-
 // available
 echo '<span id="available_transfers"></span>'."\n";
 if($auditlogs)
@@ -217,5 +229,6 @@ if($auditlogs) {
     
     $transfers_page('closed');
 }
+
 ?>
 <script type="text/javascript" src="{path:js/admin_transfers.js}"></script>
