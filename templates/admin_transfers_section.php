@@ -4,6 +4,7 @@ $auditlogs = Config::get('auditlog_lifetime') > 0;
 
 $transfers_page = function($status) {
     $page_size = 15;
+    $display_page_num = 4;
 
     switch($status) {
         case 'available': $selector = Transfer::AVAILABLE_NO_ORDER; break;
@@ -66,7 +67,11 @@ $transfers_page = function($status) {
     // FIXME: move the code away from wanting to know the total.
     //       if the user has 1000 tuples do we really want to show 1000/15 direct page links
     //       or should we instead allow queries on timeframe etc.
-    $total_count = 100;
+    $total_count = Transfer::count(array(
+        'view'   => $trsort->getViewName(),
+        'where'  => $selector . $trsort->getWhereClause($selector)
+    ), $placeholders);
+
     $entries = Transfer::all(array(
         'view'   => $trsort->getViewName(),
         'where'  => $selector . $trsort->getWhereClause($selector),
@@ -97,6 +102,14 @@ $transfers_page = function($status) {
     for($o=0; $o<$total_count; $o+=$page_size) {
         if($o >= $offset && $o < $offset + $page_size) {
             $navigation .= '<span>'.$p.'</span>'."\n";
+        } elseif($o >= $offset - $page_size * $display_page_num &&
+                 $o < $offset - $page_size * ($display_page_num - 1) ||
+                 $o >= $offset + $page_size * $display_page_num &&
+                 $o < $offset + $page_size * ($display_page_num + 1)) {
+            $navigation .= '<span>'.'...'.'</span>'."\n";
+        } elseif($o < $offset - $page_size * $display_page_num ||
+                 $o >= $offset + $page_size * ($display_page_num + 1)) {
+            // nothing
         } else {
             $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers">'.$p.'</a>'."\n";
         }
