@@ -148,8 +148,14 @@ class FeedbackMailHeaders
                     $sparts = array_map('trim', explode(';', $value));
                     $value = array_shift($sparts);
                     foreach ($sparts as $subtype) {
-                        if (strlen($subtype) == 0) continue;
-                        list($skey, $sval) = array_map('trim', explode('=', $subtype, 2));
+                        if (!strlen($subtype)) {
+                            continue;
+                        }
+                        $subtypearray = array_map('trim', explode('=', $subtype, 2));
+                        if( count($subtypearray) < 2 ) {
+                            continue;
+                        }
+                        list($skey, $sval) = $subtypearray;
                         $skey = str_replace('-', '_', strtolower($skey));
                         if (preg_match('`^"(.+)"$`', $sval, $m)) {
                             $sval = $m[1];
