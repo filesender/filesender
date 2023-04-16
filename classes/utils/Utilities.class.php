@@ -569,7 +569,7 @@ class Utilities
     public static function checkSecurityToken($token_to_check)
     {
         $token = self::getSecurityToken();
-        
+
         // Direct match
         if ($token_to_check === $token) {
             return true;

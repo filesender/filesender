@@ -407,9 +407,8 @@ $lang['python_cli_client_setup_information'] = '<p>Zo gebruik je de Python CLI C
 <p>Staat het configuratiebestand op de juiste plaats? Upload je bestand nu met:
 <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre></p>
 
-<li><a href="https://filesenderbeta.surf.nl/clidownload.php">Download Python CLI Client</a></li>
-<li><a href="https://filesenderbeta.surf.nl/clidownload.php?config=1">Download Python CLI Client configuration</a></li>
-';
+<li><a href="{cfg:site_url}/clidownload.php">Download Python CLI Client</a></li>
+<li><a href="{cfg:site_url}/clidownload.php?config=1">Download Python CLI Client configuration</a></li>';
 $lang['quota_usage'] = '{size:used} van {size:total} in gebruik, {size:available} resterend';
 $lang['rate_limit_exceeded'] = 'Je hebt geprobeerd deze bewerking vaker uit te voeren dan is toegestaan in een periode van 24 uur.';
 $lang['reader_not_supported'] = 'U gebruikt een oudere browser zonder ondersteuning voor HTML5.<br /><br />Slepen en plaatsen om bestanden te selecteren is daarom niet beschikbaar.<br /><br />U kunt bestanden uploaden van maximaal {size} groot.';
