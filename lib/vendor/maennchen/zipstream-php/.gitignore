@@ -4,3 +4,10 @@ coverage.clover
 .idea
 phpunit.xml
 vendor
+.editorconfig
+.phive/
+.phpdoc/
+.tool-versions
+guides/
+phpdoc.dist.xml
+
