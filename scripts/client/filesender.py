@@ -92,10 +92,13 @@ def get_config_data():
             apikey = config['user'].get('apikey')
         # if we have found these in the config file they become optional arguments
         if username is None or apikey is None:
-            print_usage_and_exit('Missing username or apikey in ini file!')
-
+            print('Missing username or apikey in ini file!')
+            print('Check that ~/.filesender/filsender.py.ini exists and contains necessary parameters.')
+            exit(-1)
     except Exception as err:
-        print_usage_and_exit('Error in ini file: error = {e}'.format(e=str(err)))
+        print('Error in ini file: error = {e}'.format(e=str(err)))
+        print('Check that ~/.filesender/filsender.py.ini exists and contains necessary parameters.')
+        exit(-1)
 
     return [base_url, default_transfer_days_valid, username, apikey]
 
@@ -323,7 +326,7 @@ def get_upload_chunk_size(base_url, insecure):
             print(exc)
             print('Running with --insecure flag, ignoring warning...')
             response = requests.get(base_url + '/info', verify=False)
-    if response.status_code is not 200:
+    if response.status_code != 200:
         print("Error from server: status_code = {s}.".format(s=response.status_code))
         exit(1)
     upload_chunk_size = response.json()['upload_chunk_size']
