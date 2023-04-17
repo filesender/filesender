@@ -215,6 +215,7 @@ class StorageCloudS3 extends StorageFilesystem
     {
         $file_path = self::buildPath($file).$file->uid;
 
+        $offset = 0;
         $bucket_name = self::getBucketName( $file );
         $object_name = self::getObjectName( $file, $offset );
         
