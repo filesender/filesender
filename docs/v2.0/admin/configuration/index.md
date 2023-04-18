@@ -31,6 +31,8 @@ A note about colours;
 * [mime_type_default](#mime_type_default)
 * [service_aup_min_required_version](#service_aup_min_required_version)
 * [tmp_path](#tmp_path)
+* [site_css](#site_css)
+* [site_logo](#site_logo)
 
 ## Security settings
 * [use_strict_csp](#use_strict_csp)
@@ -452,6 +454,26 @@ A note about colours;
 * __default:__ FILESENDER_BASE.'/tmp/',
 * __available:__ since before version 2.30
 * __comment:__ Only some code has been migrated to using this configuration setting. It is intended to be a location that files might be temporarily stored while processing is happening.
+
+
+### site_css
+
+* __description:__ An additional css file to load after system ones to allow css updates by the admin. One might consider using this with the auth_config_regex_files option to change the look of a site depending on its use.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.40
+* __comment:__  This will be taken relative to the css/ directory automatically.
+
+### site_logo
+
+* __description:__ An additional logo image to use. One might consider using this with the auth_config_regex_files option to change the look of a site depending on its use.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.40
+* __comment:__  Note that this is relative to the www directory. So you might want to add the prefix images/ or skin/ depending on how your system is set up to find the image.
+
 
 
 
