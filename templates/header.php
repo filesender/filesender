@@ -53,7 +53,6 @@ $headerclass = "header";
             <div id="<?php echo $headerclass; ?>">
                 <a href="<?php echo GUI::path() ?>">
                     <?php GUI::includeLogo() ?>
-                    
                     <?php if(Config::get('site_name_in_header')) { ?>
                     <div class="site_name"><?php echo Config::get('site_name') ?></div>
                     <div class="site_baseline"><?php echo Config::get('site_baseline') ?></div>
