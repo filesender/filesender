@@ -70,6 +70,7 @@ window.filesender.notification = {
         }
         
         function handlePermission(permission) {
+            console.log("handlePermission() have result: ", Notification.permission);
             if(Notification.permission === 'denied' || Notification.permission === 'default') {
                 // remember that this might not be the notification object in this context
                 window.filesender.notification.available = false;
@@ -91,12 +92,15 @@ window.filesender.notification = {
         if (!('Notification' in window)) {
             console.log("This browser does not support notifications.");
         } else {
+            console.log("ask() in the else part.");
             if(checkNotificationPromise()) {
+                console.log("ask() in checkNotificationPromise() part.");
                 Notification.requestPermission()
                     .then((permission) => {
                         handlePermission(permission);
                     })
             } else {
+                console.log("ask() in the Notification.requestPermission direct part.");
                 Notification.requestPermission(function(permission) {
                     handlePermission(permission);
                 });
