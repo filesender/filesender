@@ -41,6 +41,7 @@ window.filesender.notification = {
     use: false,
     asked: false,
     n: [],
+    pending_notifications: [],
 
 
     /**
@@ -73,7 +74,16 @@ window.filesender.notification = {
                 // remember that this might not be the notification object in this context
                 window.filesender.notification.available = false;
             } else {
-                window.filesender.notification.available = true;
+                setTimeout(() => {
+                    console.log("handlePermission() have permission so showing any delayed notifications now.");
+                    window.filesender.notification.available = true;
+                    window.filesender.notification.pending_notifications.forEach(function(e) {
+                        var newn = new Notification( e.title, { body: e.msg, icon: e.image });
+                        window.filesender.notification.n.push(newn);
+                    });
+                    window.filesender.notification.pending_notifications = [];
+                }, 100);
+                
             }
         }
 
@@ -105,6 +115,7 @@ window.filesender.notification = {
      */
     notify: function( title, msg, image ) {
         if( !this.available ) {
+            window.filesender.notification.pending_notifications.push( { title: title, msg: msg, image: image } );
             return;
         }
 
