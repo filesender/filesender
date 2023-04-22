@@ -50,6 +50,11 @@ window.filesender.notification = {
     ask: function( force = false ) {
         this.available = false;
 
+        console.log("AAA ask()");
+        console.log("AAA ask() force", force );
+        console.log("AAA ask() asked ", this.asked );
+        console.log("AAA ask() Notification.permission ", Notification.permission );
+        
         // only try to ask once.
         if( this.asked &&
             (Notification.permission === 'denied' || Notification.permission === 'default'))
