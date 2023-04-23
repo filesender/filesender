@@ -30,6 +30,7 @@
 
 import argparse
 try:
+  import textwrap #used to format help description and epilog
   import requests
   import time
   import re
@@ -80,7 +81,18 @@ if 'user' in config:
 
 
 #argv
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=textwrap.dedent(f'''\
+      File Sender CLI client.
+      Source code: https://github.com/filesender/filesender/blob/master/scripts/client/filesender.py
+    '''),
+    epilog=textwrap.dedent(f'''\
+      A config file can be added to {homepath}/.filesender/filesender.py.ini to avoid having to specify username and apikey on the command line.
+
+      Example (Config file is present): 
+      python filesender.py -r reciever@example.com file1.txt''')
+)
 parser.add_argument("files", help="path to file(s) to send", nargs='+')
 parser.add_argument("-v", "--verbose", action="store_true")
 parser.add_argument("-i", "--insecure", action="store_true")
