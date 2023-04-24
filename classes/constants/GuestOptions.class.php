@@ -45,6 +45,6 @@ class GuestOptions extends Enum
     const EMAIL_GUEST_CREATED           = 'email_guest_created';
     const EMAIL_GUEST_CREATED_RECEIPT   = 'email_guest_created_receipt';
     const EMAIL_GUEST_EXPIRED           = 'email_guest_expired';
-    const GUEST_UPLOADS_EXPIRE_WHEN_GUEST_EXPIRES = 'guest_uploads_expire_when_guest_expires';
+    const GUEST_UPLOAD_DEFAULT_EXPIRE_IS_GUEST_EXPIRE = 'guest_upload_default_expire_is_guest_expire';
     const GUEST_UPLOAD_EXPIRE_READ_ONLY = 'guest_upload_expire_read_only';
 }
