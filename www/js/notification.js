@@ -81,16 +81,10 @@ window.filesender.notification = {
         if (!('Notification' in window)) {
             console.log("This browser does not support notifications.");
         } else {
-            if(checkNotificationPromise()) {
-                Notification.requestPermission()
-                    .then((permission) => {
-                        handlePermission(permission);
-                    })
-            } else {
-                Notification.requestPermission(function(permission) {
+            Notification.requestPermission()
+                .then((permission) => {
                     handlePermission(permission);
-                });
-            }
+                })
         }
 
         return this.available;
