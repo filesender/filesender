@@ -811,8 +811,8 @@ class Guest extends DBObject
         if ($property == 'email_guest_created_expired') {
             return $this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED);
         }
-        if ($property == 'guest_uploads_expire_when_guest_expires') {
-            return $this->getOption(GuestOptions::GUEST_UPLOADS_EXPIRE_WHEN_GUEST_EXPIRES);
+        if ($property == 'guest_upload_default_expire_is_guest_expire') {
+            return $this->getOption(GuestOptions::GUEST_UPLOAD_DEFAULT_EXPIRE_IS_GUEST_EXPIRE);
         }
         if ($property == 'guest_upload_expire_read_only') {
             return $this->getOption(GuestOptions::GUEST_UPLOAD_EXPIRE_READ_ONLY);
