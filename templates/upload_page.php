@@ -62,7 +62,7 @@ if( $encryption_mandatory ) {
 
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
-    if( $guest->guest_expire_read_only ) {
+    if( $guest->guest_upload_expire_read_only ) {
         $expire_time_is_editable = false;
     }
 }
