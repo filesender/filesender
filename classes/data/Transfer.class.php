@@ -576,7 +576,7 @@ class Transfer extends DBObject
 
         if( Auth::isGuest()) {
             $guest = AuthGuest::getGuest();
-            if( $guest->guest_uploads_expire_when_guest_expires ) {
+            if( $guest->guest_upload_default_expire_is_guest_expire ) {
                 $days = min( Config::get('max_transfer_days_valid'),
                              $guest->expires_in_days );
             }
