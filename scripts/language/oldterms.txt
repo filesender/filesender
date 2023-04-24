@@ -305,6 +305,8 @@ guest_too_many_recipients
 guest_transfer_options
 guest_upload_complete
 guest_upload_complete_confirmation_to_guest
+guest_upload_default_expire_is_guest_expire
+guest_upload_expire_read_only
 guest_upload_start
 guest_vouchers_sent
 guests
