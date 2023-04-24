@@ -2138,7 +2138,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 	* __email_guest_created:__ send the guest an email when the guest voucher is created.
 	* __email_guest_created_receipt:__ send the guest invitation owner an email when the guest voucher is created.
 	* __email_guest_expired:__ send the guest an email when the guest voucher is expired.
-	* __guest\_uploads\_expire\_when\_guest\_expires:__ [optional] Try to set the transfer expire time to the guest expire time if it is close enough
+	* __guest\_uploads\_expire\_when\_guest\_expires:__ [optional] Try to set the transfer expire time to the guest expire time if it is close enough.
         * __guest\_upload\_expire\_read\_only:__ [optional] Guest can not change the expire time for a transfer.
 
 * __*Configuration example:*__
