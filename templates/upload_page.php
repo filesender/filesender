@@ -4,6 +4,7 @@ $guest_can_only_send_to_creator = false;
 $encryption_mandatory = Principal::isEncryptionMandatory();
 $encryption_checkbox_checked = '';
 $encryption_checkbox_classes = '';
+$expire_time_is_editable = true;
 
 $files_actions_div_extra_class = "div3";
 $upload_directory_button_enabled = false;
@@ -58,6 +59,15 @@ if( $encryption_mandatory ) {
     $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
     $encryption_checkbox_classes = '';
 }
+
+if(Auth::isGuest()) {
+    $guest = AuthGuest::getGuest();
+    if( $guest->guest_upload_expire_read_only ) {
+        $expire_time_is_editable = false;
+    }
+}
+
+
 
 ?>
 
@@ -309,7 +319,7 @@ if( $encryption_mandatory ) {
                         <div class="fieldcontainer">
                             <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                             
-                            <input id="expires" name="expires" type="text" autocomplete="off"
+                            <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
                                    title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
                                    data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
                             />
