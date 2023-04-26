@@ -184,7 +184,7 @@ class StorageCloudS3 extends StorageFilesystem
             
             return array(
                 'offset' => $offset,
-                'written' => $written
+                'written' => $chunk_size
             );
         } catch (Exception $e) {
             $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
@@ -222,7 +222,11 @@ class StorageCloudS3 extends StorageFilesystem
         try {
             $client = self::getClient();
 
-            $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name));
+            if( !self::usingCustomBucketName( $file ) ) {
+                $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name));
+            } else {
+                $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name, 'Prefix' => $file->uid));    
+            }
 
             foreach ($objects as $object) {
                 $result = $client->deleteObject(array(

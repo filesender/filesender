@@ -508,7 +508,7 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
 
-            if( Config::get('storage_type') == 'CloudS3' ) {
+            if( strtolower(Config::get('storage_type')) == 'clouds3' ) {
                 $v = Config::get('cloud_s3_bucket');
                 if( $v && $v != '' ) {
                     $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
