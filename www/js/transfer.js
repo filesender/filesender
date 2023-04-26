@@ -237,7 +237,7 @@ window.filesender.transfer = function() {
     }
 
     this.getExtention = function(file) {
-        var fileSplit = file.name.split('.');
+        var fileSplit = file.name.replace(/^.+[\/\\]/, '').split('.');
         if (fileSplit.length>1) {
             return fileSplit.pop();
         }
