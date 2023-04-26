@@ -91,10 +91,6 @@ EOT;
                 echo <<<EOT
                    <h2>Python CLI Client</h2>
                    {tr:python_cli_client_setup_information}
-                   <br/>
-                   <a href="clidownload.php" target="_blank">{tr:download} Python CLI Client</a>
-                   <br/>
-                   <a href="clidownload.php?config=1" target="_blank">{tr:download} Python CLI Client {tr:configuration}</a>
 EOT;
             },
         ),
