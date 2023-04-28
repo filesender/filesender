@@ -10,11 +10,11 @@ Amazon S3 is another possible cloud target.
 
 It was reported that performance with the S3 backend (and maybe others)
 can be greatly increased by bumping up upload_chunk_size and related values.
-For example:
+For example using 40mb chunks:
 
 ```
 $config['upload_chunk_size'] = 1024 * 1024 * 40;
-$config['upload_crypted_chunk_size'] = $config['upload_chunk_size'] + 32;
+$config['upload_crypted_chunk_size'] = $config['upload_chunk_size'] + $config['upload_crypted_chunk_padding_size'];
 $config['download_chunk_size'] = $config['upload_chunk_size'];
 ```
 
