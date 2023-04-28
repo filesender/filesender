@@ -70,6 +70,8 @@ A note about colours;
 * [cloud_s3_secret](#cloud_s3_secret)
 * [cloud_s3_use_path_style_endpoint](#cloud_s3_use_path_style_endpoint)
 * [cloud_s3_bucket](#cloud_s3_bucket)
+* [cloud_s3_use_daily_bucket](#cloud_s3_use_daily_bucket)
+* [cloud_s3_bucket_prefix](#cloud_s3_bucket_prefix)
 
 ## Shredding
 
@@ -841,6 +843,32 @@ $config['rate_limits'] = array(
 * __available:__ since version 2.31
 * __comment:__ If you wish to store all files in a single bucket set it's name in this configuration option.
 Ensure that the named bucket already exists if you use this setting.
+
+### cloud_s3_use_daily_bucket
+
+* __description:__ Enable filesender to use daily buckets for storing files.
+* __mandatory:__ no.  
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.40
+* __comment:__ If you wish to store all files uploaded in a single day at one bucket, enable this option and
+optionally also set cloud_s3_bucket_prefix to define the prefix for daily buckets. Bucket names are formed by
+concatenating cloud_s3_bucket_prefix + YYYY-MM-DD, for example a prefix of "Test-" could create bucket "Test-2023-04-30".
+If cloud_s3_bucket and cloud_s3_use_daily_bucket are both set, this option takes precedence.
+Daily buckets are created/deleted by cron.php so ensure you have it configured in your crontab! If you wish
+to manually create the buckets (for example when first turning this setting on), run
+php scripts/task/S3bucketmaintenance.php --verbose
+
+### cloud_s3_bucket_prefix
+
+* __description:__ Optional prefix for S3 daily buckets.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.40
+* __comment:__ If cloud_s3_use_daily_bucket has been set, you can define the prefix for daily buckets with
+this option. Daily bucket names are formed by concatenating cloud_s3_bucket_prefix + YYYY-MM-DD,
+for example a prefix of "Test-" could create bucket "Test-2023-04-30". An empty prefix would create "2023-04-30".
 
 
 ---
