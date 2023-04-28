@@ -695,3 +695,5 @@ $lang['you_can_send_client_logs'] = 'In order to help your support team to find 
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
 $lang['guest_upload_default_expire_is_guest_expire'] = 'Guest default upload expiry date is the same as the guest invitation one';
 $lang['guest_upload_expire_read_only'] = 'Guest can not change the expire time for uploads';
+$lang['python_cli_client_heading'] = 'Python CLI Client';
+

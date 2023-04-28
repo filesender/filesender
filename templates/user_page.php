@@ -89,7 +89,7 @@ EOF;
 EOT;
                 
                 echo <<<EOT
-                   <h2>Python CLI Client</h2>
+                   <h2>{tr:python_cli_client_heading}</h2>
                    {tr:python_cli_client_setup_information}
 EOT;
             },
