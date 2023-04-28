@@ -369,7 +369,7 @@ if (!function_exists('clickableHeader')) {
                             <td><div class="options">
 <?php
 			$optionshtml = "";
-                        if(count($transfer->options)) {
+                        if(count(array_filter($transfer->options))) {
                             foreach (array_keys(array_filter($transfer->options)) as $o) {
                                 if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
                                     // this option will never be shown to the user
