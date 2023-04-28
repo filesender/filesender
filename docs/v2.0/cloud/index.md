@@ -2,7 +2,7 @@
 title: FileSender Cloud Storage Backends
 ---
 
-# FileSender Cloud Could Backends
+# FileSender Cloud Backends
 
 FileSender 2.0 can store the uploaded file data in the cloud. Support
 is currently being developed for storing data in Azure blobs and
