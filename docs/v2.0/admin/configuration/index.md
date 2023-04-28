@@ -701,6 +701,8 @@ $config['rate_limits'] = array(
 * __available:__ since version 2.0
 * __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. The primary choices for value are filesystem and filesystemChunked. Note that you need to respect the non leading capital letters in the class name such as the "C" in filesystemChunked. Future storage types could include e.g. **object**, **amazon_s3** and others.
 
+   Please also see the [cloud configuration page](https://docs.filesender.org/filesender/v2.0/cloud/) if you are using cloud backed storage.
+
 ### storage_filesystem_path
 
 * __description:__ when using storage type **filesystem** this is the absolute path to the file system where uploaded files are stored until they expire.  Your FileSender storage root.
