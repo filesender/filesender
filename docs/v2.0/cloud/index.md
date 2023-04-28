@@ -8,6 +8,19 @@ FileSender 2.0 can store the uploaded file data in the cloud. Support
 is currently being developed for storing data in Azure blobs and
 Amazon S3 is another possible cloud target.
 
+It was reported that performance with the S3 backend (and maybe others)
+can be greatly increased by bumping up upload_chunk_size and related values.
+For example using 40mb chunks:
+
+```
+$config['upload_chunk_size'] = 1024 * 1024 * 40;
+$config['download_chunk_size'] = $config['upload_chunk_size'];
+$config['upload_crypted_chunk_size'] = $config['upload_chunk_size'] + $config['upload_crypted_chunk_padding_size'];
+```
+
+Increasing upload_chunk_size also requires you to verify PHP's memory
+limit is equal or bigger than about 5x upload_chunk_size.
+
 ## Azure
 
 At the moment a new container is created for each file and files are
