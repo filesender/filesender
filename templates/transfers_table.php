@@ -367,20 +367,31 @@ if (!function_exists('clickableHeader')) {
                         <tr class="transfer_options">
                             <td class="desc">{tr:options}</td>
                             <td><div class="options">
-                                <?php if(count(array_filter($transfer->options))) { ?>
+<?php
+			$optionshtml = "";
+                        if(count($transfer->options)) {
+                            foreach (array_keys(array_filter($transfer->options)) as $o) {
+                                if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
+                                    // this option will never be shown to the user
+                                } else {
+                                    $optionshtml .= "<li>";
+                                    if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
+                                        $optionshtml .= Lang::tr($o) . '&nbsp;'
+                                                     . '<span data-action="remove" data-option="'
+                                                     . TransferOptions::EMAIL_DAILY_STATISTICS
+                                                     . '" class="fa fa-lg fa-times" title="{tr:remove_option}"></span>'
+                                                     ;
+                                    } else {
+                                        $optionshtml .= Lang::tr($o);
+                                    }
+                                    $optionshtml .= "</li>";
+                                }
+                            }
+                        }
+                    
+                        if($optionshtml != '') { ?>
                                     <ul class="options">
-                                        <li>
-                                            <?php echo implode('</li><li>', array_map(function($o) {
-                                                if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
-                                                    return Lang::tr($o) . '&nbsp;'
-                                                    . '<span data-action="remove" data-option="' 
-                                                               . TransferOptions::EMAIL_DAILY_STATISTICS 
-                                                               . '" class="fa fa-lg fa-times" title="{tr:remove_option}"></span>'
-                                                    ;
-                                                }
-                                                return Lang::tr($o);
-                                            }, array_keys(array_filter($transfer->options)))) ?>
-                                        </li>
+                                        <?php echo $optionshtml; ?>
                                     </ul>
                                 <?php } else echo Lang::tr('none') ?>
                             </div>

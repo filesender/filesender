@@ -236,6 +236,13 @@ StatLog::clean();
 if( $verbose ) echo "cron.php Clean old auditlog events...\n";
 AuditLog::cleanup();
 
+// Clean up S3 buckets if storage backend is set to CloudS3 and configuration
+// option cloud_s3_use_daily_bucket has been set to true
+if (Utilities::startsWith(strtolower(Config::get('storage_type')), 'clouds3') && Config::get('cloud_s3_use_daily_bucket')) {
+    if( $verbose ) echo "cron.php S3 daily bucket maintenance...\n";
+    StorageCloudS3::dailyBucketMaintenance($verbose);
+}
+
 // If we are configured to send aggregate (anonymous) statistics
 // to a central server then we should check if it is time to do that.
 AggregateStatistic::maybeSendReport();
