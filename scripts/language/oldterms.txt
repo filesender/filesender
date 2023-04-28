@@ -411,6 +411,7 @@ privacy_page_translatable_emails_lifetime
 privacy_text
 profile_page_text_linking_to_admin_page
 profile_page_text_linking_to_privacy_page
+python_cli_client_heading
 python_cli_client_setup_information
 quota_usage
 rate_limit_exceeded
