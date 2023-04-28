@@ -203,6 +203,14 @@ $config['cloud_s3_secret']   = 'verySecretKey1';
 // optional, Ensure that the bucket exists if you want to use a
 // single bucket. 
 // $config['cloud_s3_bucket']   = 'filesender';
+
+// optional, if you wish to have a bucket-a-day configure these options
+// please note that the buckets are created/deleted via cronjob, so make
+// sure you are running cron.php regularly!
+// after turning this on, create the daily buckets with
+// php scripts/task/S3bucketmaintenance.php --verbose
+// $config['cloud_s3_use_daily_bucket'] = true;
+// $config['cloud_s3_bucket_prefix'] = "FileSenderDaily-";
 ```
 
 ### Running a test
