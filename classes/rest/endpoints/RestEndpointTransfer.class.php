@@ -502,6 +502,13 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
             
+            if( Config::get('hide_sender_email_enabled') &&
+                $options[TransferOptions::GET_A_LINK] &&
+                $data->options->exists(TransferOptions::HIDE_SENDER_EMAIL)) {
+                $name = TransferOptions::HIDE_SENDER_EMAIL;
+                $options[$name] = $data->options->$name;
+            }
+
             $options['encryption'] = $data->encryption;
 
             // check if encryption is mandatory but the user tried to disable it
