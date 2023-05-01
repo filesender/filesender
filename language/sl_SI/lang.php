@@ -451,8 +451,7 @@ $lang['terasender_no_workers_have_started'] = 'Nalaganje kosa datoteke je spodle
 $lang['terasender_worker_count'] = 'Število TeraSender delavcev';
 $lang['terasender_worker_failed_to_start'] = 'Ni bilo mogoče inicializirati enega ali več postopkov za prenos';
 $lang['testterm'] = 'testna vrednost';
-$lang['time_format'] = '{h:H\h} {i:i\m\i
-} {s:s\s}';
+$lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s}';
 $lang['time_to_complete_ms'] = 'Čas do konca (ms)';
 $lang['time_to_complete_s'] = 'Čas do konca (sekunde)';
 $lang['to'] = 'Za';

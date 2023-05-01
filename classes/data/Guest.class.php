@@ -450,8 +450,10 @@ class Guest extends DBObject
         if( is_null($this->expires)) {
             return false;
         }
-        $d = (24 * 3600) * floor(time() / (24 * 3600) - ($days * (24*3600)));
-        return $this->expires < $d;
+        $daysSinceEpoch = floor(time() / (24 * 3600)); // days to now()
+        $chosenExpireTime  = $daysSinceEpoch - $days;  // move that back selected $days
+        $chosenExpireTime *= (24 * 3600);              // convert to time_t
+        return $this->expires < $chosenExpireTime;     // compare
     }
     
     /**
@@ -520,6 +522,14 @@ class Guest extends DBObject
             
         Logger::info($this.' reminded');
     }
+
+    /**
+     * Has the guest already been close()d in the database
+     */
+    public function isClosed()
+    {
+        return $this->status == GuestStatuses::CLOSED;
+    }
     
     /**
      * Close the guest
@@ -571,7 +581,7 @@ class Guest extends DBObject
         if (!is_array($options)) {
             $options = array();
         }
-
+        
         self::validateOptions($options);
         return $options;
     }
@@ -709,6 +719,15 @@ class Guest extends DBObject
         ))) {
             return $this->$property;
         }
+        if ($property == 'expires_in_days') {
+            $v = $this->expires - time();
+            if( $v < (24*3600)) {
+                $v = 0;
+            } else {
+                $v = ceil( $v / (24*3600));
+            }
+            return $v;
+        }
         
         if ($property == 'user' || $property == 'owner') {
             $user = User::fromId($this->userid);
@@ -792,7 +811,13 @@ class Guest extends DBObject
         if ($property == 'email_guest_created_expired') {
             return $this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED);
         }
-        
+        if ($property == 'guest_upload_default_expire_is_guest_expire') {
+            return $this->getOption(GuestOptions::GUEST_UPLOAD_DEFAULT_EXPIRE_IS_GUEST_EXPIRE);
+        }
+        if ($property == 'guest_upload_expire_read_only') {
+            return $this->getOption(GuestOptions::GUEST_UPLOAD_EXPIRE_READ_ONLY);
+        }
+
         throw new PropertyAccessException($this, $property);
     }
     

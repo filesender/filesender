@@ -68,7 +68,8 @@ class GUI
             'lib/bootstrap/dist/css/bootstrap.min.css',
             'lib/flag-icons/css/flag-icons.min.css',            
             'css/default.css',
-            'skin/styles.css'
+            'skin/styles.css',
+            'css/' . Config::get('site_css')
         ));
     }
     
@@ -213,7 +214,8 @@ class GUI
     {
         $locations = self::filterSources(array(
             'images/logo.png',
-            'skin/logo.png'
+            'skin/logo.png',
+            Config::get('site_logo')
         ));
         
         return array_pop($locations);

@@ -12,7 +12,7 @@ subject: Gast-Zugang Upload-Seite
 
 Sehr geehrte Damen und Herren,
 
-der Gast {guest.email} hat dieUpload-Seite der Einladung aufgerufen.
+der Gast {guest.email} hat die Upload-Seite der Einladung aufgerufen.
 
 Mit freundlichen Grüßen
 {cfg:site_name}
@@ -24,7 +24,7 @@ Mit freundlichen Grüßen
 </p>
 
 <p>
-    der Gast <a href="mailto:{guest.email}">{guest.email}</a> hat dieUpload-Seite der Einladung aufgerufen.
+    der Gast <a href="mailto:{guest.email}">{guest.email}</a> hat die Upload-Seite der Einladung aufgerufen.
 </p>
 
 <p>

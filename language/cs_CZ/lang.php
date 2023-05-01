@@ -176,7 +176,7 @@ $lang['dp_month_names'] = 'Leden,Únor,Březen,Duben,Květen,Červen,Červenec,S
 $lang['dp_month_names_short'] = 'Led,Úno,Bře,Dub,Kvě,Čer,Čec,Srp,Zář,Říj,Lis,Pro';
 $lang['dp_next_text'] = 'Další';
 $lang['dp_prev_text'] = 'Předchozí';
-$lang['dp_show_month_after_year'] = 'Ne';
+$lang['dp_show_month_after_year'] = 'false';
 $lang['dp_week_header'] = 'Týd';
 $lang['dp_year_suffix'] = ' 
 ';

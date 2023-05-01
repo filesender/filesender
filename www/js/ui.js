@@ -323,7 +323,7 @@ window.filesender.ui = {
         return ret;
     },
 
-    promptPassword: function(title, onok, oncancel) {
+    promptPassword: function(title, onok, oncancel, value='') {
 
         if(typeof title != 'string') {
             if(title.out) {
@@ -339,6 +339,7 @@ window.filesender.ui = {
             inputType: 'password',
             className: 'prompt-dialog',
             centerVertical: true,
+            value: value,
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
                 if( result ) {

@@ -48,10 +48,10 @@ $core-bg: #ffffff;
 $body-color: #333;
 
 
-
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/variables";
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/mixins";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/maps";
 
 // 4. Include any optional Bootstrap components as you like
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/root";
@@ -436,6 +436,11 @@ input.invalid, textarea.invalid {
 label.invalid {
     color: #f00;
 }
+
+.languages {
+    overflow-x: auto;
+}
+
 
 
 .buttons {
@@ -1330,6 +1335,23 @@ table.paginator a {
     line-height: 1.1em;
 }
 
+
+.logoutbutton {
+    background: #efe3db!important;
+    color: black !important;
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    padding: 0.6em 1em;
+    text-decoration: none;
+    border-width: 0px;
+    text-shadow: 0 0 0em #000;
+    transition: all 0.2s ease 0s;
+}
+
+.logoutbutton:hover {
+    background-color: #fff3f3 !important;
+}
 
 @import "local-variables.scss";
              

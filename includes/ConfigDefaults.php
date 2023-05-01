@@ -43,6 +43,8 @@ $default = array(
     'lang_selector_enabled' => false, // Display language selector (requires lang_url_enabled = true)
     'lang_save_url_switch_in_userpref' => false, // Save lang switching in user preferences (requires lang_url_enabled = true and lang_userpref_enabled = true)
     'site_name' => 'FileSender', // Default site name to user
+    'site_css' => '', // [optional] This allows an additional css file to be loaded per site using auth_config_regex_files
+    'site_logo' => '', // [optional] This allows a different logo image to be used per site using auth_config_regex_files
     'email_use_html' => true,   // By default, use HTML on mails
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
@@ -106,6 +108,7 @@ $default = array(
     
     'encryption_enabled' => true,
     'encryption_mandatory' => false,
+    'encryption_mandatory_with_generated_password' => false,
     'encryption_min_password_length' => 12,
     'encryption_password_must_have_upper_and_lower_case' => true,
     'encryption_password_must_have_numbers' => true,
@@ -207,6 +210,9 @@ $default = array(
 
     'user_page' => array('lang'=>true,'auth_secret'=>true,'id'=>true,'created'=>true),
 
+    'log_authenticated_user_download_by_ensure_user_as_recipient' => false,
+    
+
     // Logging
     'log_facilities' => array(
         array(
@@ -230,6 +236,8 @@ $default = array(
     'cloud_s3_key'    => 'accessKey1',
     'cloud_s3_secret' => 'verySecretKey1',
     'cloud_s3_bucket' => '',
+    'cloud_s3_use_daily_bucket' => false,
+    'cloud_s3_bucket_prefix' => '',
 
     'disable_directory_upload' => true,
     'directory_upload_button_enabled' => true,

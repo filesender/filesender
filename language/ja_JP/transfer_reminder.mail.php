@@ -94,6 +94,6 @@ subject: (リマインダー){transfer.subject}
 {endif}
 
 <p>
-    以上、よろしくお願いします。<br/>
+    以上、よろしくお願いします。<br />
    {cfg:site_name}
 </p>

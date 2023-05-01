@@ -59,14 +59,14 @@ dnf install -y httpd mod_ssl php php-mbstring php-xml php-json
 On Debian, run:
 
 ```
-apt-get install -y apache2 php7.0 php7.0-mbstring php7.0-xml php7.0-json libapache2-mod-php7.0
+apt-get install -y apache2 php php-mbstring php-xml php-json libapache2-mod-php
 ```
 
 # Step 1-nginx - Install NGINX and PHP
 
 Its for Debian/Ubuntu use a modern Nginx (after v.0.8) and php-fpm (fpm-fcgi).
 
-	sudo apt-get install nginx php7.0-fpm 
+	sudo apt-get install nginx php-fpm 
 
 
 
@@ -133,19 +133,26 @@ apt-get install -y git
 ```
 
 
-Install the FileSender 2.0 beta branch from the GIT repository use the
-following commands. You will need to know the release tag of the
-version you wish to run from the
-[Releases](https://github.com/filesender/filesender/releases) page. Or
-you can run "master" if you just want the latest at a specific point
-in time. You might do this to test a new bugfix that is not in any
-current release yet.
+Install the FileSender 2.0 from the GIT repository use the following
+commands. The `master` branch will always contain the latest release.
+You can select explicit versions using the release tag of the version
+you wish to run from the
+[Releases](https://github.com/filesender/filesender/releases) page. If
+you wish to test a feature that is in development and has been merged
+but is not part of any release yet you might like to checkout the
+`development` branch which contains all merged updates.
 
-In the example code below I am going to use version filesender-2.0.
-You can see the tag (version string) that you need for git by looking
-on the [Releases](https://github.com/filesender/filesender/releases)
-page and on the left will be the tag shown for every release next to a
-little ticket icon.
+The version 3.0 alpha series has an updated UI using Bootstrap.
+Similar to the master and development there are `master3` and
+`development3` which are the latest release and current development
+code respectively.
+
+In the example code below I am going to use the latest release in the
+2.x series. You can see the tag (version string) that you need for git
+to get an explicit version by looking on the
+[Releases](https://github.com/filesender/filesender/releases) page and
+on the left will be the tag shown for every release next to a little
+ticket icon.
 
 
 ```
@@ -155,7 +162,7 @@ cd    /opt/filesender
 git clone https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
-git checkout filesender-2.0
+git checkout master
 ```
 
 You can bring down new releases to an existing git repository and then
@@ -232,25 +239,34 @@ authentication for development and testing. When you move to a
 production service you probably want to change that to only support
 authentication sources of your choice.
 
+All versions of FileSender currently use the SimpleSAMLphp 1.x series. For example, version 1.19.7 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
 [(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
 probably work. The continuous integration in FileSender has an
 installation of SimpleSAMLphp the [setup
 script](https://github.com/filesender/filesender/blob/master/ci/scripts/simplesamlphp-setup.sh)
-shows the version currently used there. For the FileSender 2.0 release
-we tested with version 1.17.1. In the below I will assume you have
-downloaded SimpleSAMLphp to a file at
-/tmp/simplesamlphp-1.17.1.tar.gz.
+shows the version currently used there. 
 
 * **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://github.com/simplesamlphp/simplesamlphp/releases), right?
 
 Extract SimpleSAMLphp in a suitable directory and create symlink:
 
 ```
+mkdir -p ~/src
+cd ~/src
+wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.7/simplesamlphp-1.19.7.tar.gz
+
+php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v1.19.7 >| checklist
+echo " simplesamlphp-1.19.7.tar.gz" >> checklist
+sha256sum --check checklist
+ simplesamlphp-1.19.7.tar.gz: OK
+
 mkdir -p /opt/filesender
 cd /opt/filesender
-tar xvzf /tmp/simplesamlphp-1.17.1.tar.gz
-ln -s simplesamlphp-1.17.1 simplesaml
+tar xvzf ~/src/simplesamlphp-1.19.7.tar.gz
+ln -s simplesamlphp-1.19.7 simplesaml
+
+
 ```
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web directory with a web server alias.
@@ -390,6 +406,10 @@ You may also like to edit cookies at the web server level to set
 been added to the apache template shown below. This will prevent the
 SimpleSAML authentication cookies being sent to the site from cross
 site requests.
+
+The apache template configuration file also sets the HTTP
+Strict-Transport-Security (HSTS) header for all FileSender responses
+not just php pages.
 
 
 
@@ -540,7 +560,7 @@ On RedHat/CentOS, run:
 
 On Debian, run:
 
-	apt-get install -y postgresql php7.0-pgsql
+	apt-get install -y postgresql php-pgsql
 
 FileSender uses password based database logins and by default assumes
 that PostgreSQL is configured to accept password based sessions on
@@ -601,7 +621,7 @@ On RedHat/CentOS, run:
 
 On Debian, run:
 
-	apt-get install -y mariadb-server php7.0-mysql 
+	apt-get install -y mariadb-server php-mysql 
 
 Create the filesender database. It is recommended to create two users for the database,
 one for normal web usage and another with higher abilities to allow the database setup
@@ -668,13 +688,6 @@ On **Debian**, run:
 
 ## Manual
 
-Ensure the php temporary upload directory points to a location with enough space:
-
-	upload_tmp_dir = /tmp
-
-* **NOTE**: You probably want to point this to the same directory you will use as your HTML5 upload temp directory (`$config['site_temp_filestore']`).
-* **NOTE**: that this setting is for all PHP-apps, not only for filesender.
-
 Turn on logging:
 
         log_errors = on
@@ -702,6 +715,48 @@ your settings. Be sure to at least set `$config['site_url']`, contact
 details, database settings and authentication configuration. The
 configuration file is self-explanatory.
 
+The main settings you will want to inspect and update are shown below.
+You will want to change URLs shown below from 127.0.0.1 to your host name.
+Email addresses shown as `root@localhost.localdomain` should be updated.
+You will want to update all FIXME in password fields.
+
+```
+//
+// Email and URL settings to update
+//
+// String, URL of the application
+$config['site_url'] = 'https://127.0.0.1/filesender';                
+
+// Url of simplesamlphp
+$config['auth_sp_saml_simplesamlphp_url'] ='https://127.0.0.1/simplesaml/';
+
+// String, UID's (from  $config['saml_uid_attribute'])
+// that have Administrator permissions
+$config['admin'] = 'root@localhost.localdomain'; 
+                                                       
+// String, email  address(es, separated by ,)
+// to receive administrative messages (low disk  space warning)
+$config['admin_email'] ='root@localhost.localdomain'; 
+                                                             
+// String, default no-reply email  address
+$config['email_reply_to'] ='root@localhost.localdomain';
+
+
+//
+// Database settings to update
+//
+// mysql or pgsql
+$config["db_type"] ='mysql';
+
+// password for regular use
+$config['db_password'] ='FIXME';
+
+// if the database update script needs more privileges (mysql) then set this as well
+$config['db_username_admin'] = 'filesenderadmin';
+$config['db_password_admin'] = 'FIXME';
+
+
+```
 
 
 # Step 9 - Initialise the FileSender database

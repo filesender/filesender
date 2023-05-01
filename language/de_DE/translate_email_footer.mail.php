@@ -11,10 +11,10 @@ subject: Übersetzung E-Mail-Fußzeile, wird von allen Sprachen gemeinsam benutz
 
 {alternative:plain}
 
-Übersetzt diese E-Mail: {raw:translatableemail.link}
+Diese E-Mail in anderen Sprachen ansehen: {raw:translatableemail.link}
 
 {alternative:html}
 
 <p>
-    Übersetze diese E-Mail: <a href="{translatableemail.link}">{translatableemail.link}</a>
+    Diese E-Mail in anderen Sprachen ansehen: <a href="{translatableemail.link}">{translatableemail.link}</a>
 </p>
