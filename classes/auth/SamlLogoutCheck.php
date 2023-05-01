@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * FileSender www.filesender.org
  *
  * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
@@ -18,7 +18,7 @@
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -30,21 +30,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+require_once(__DIR__ . '/../../includes/init.php');
+Logger::setProcess(ProcessTypes::GUI);
+include_once(__DIR__ . '/../../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
 
-/**
- * Class containing upload options for guest voucher
- */
 
-class GuestOptions extends Enum
-{
-    const EMAIL_UPLOAD_STARTED          = 'email_upload_started';
-    const EMAIL_UPLOAD_PAGE_ACCESS      = 'email_upload_page_access';
-    const VALID_ONLY_ONE_TIME           = 'valid_only_one_time';
-    const DOES_NOT_EXPIRE               = 'does_not_expire';
-    const CAN_ONLY_SEND_TO_ME           = 'can_only_send_to_me';
-    const EMAIL_GUEST_CREATED           = 'email_guest_created';
-    const EMAIL_GUEST_CREATED_RECEIPT   = 'email_guest_created_receipt';
-    const EMAIL_GUEST_EXPIRED           = 'email_guest_expired';
-    const GUEST_UPLOAD_DEFAULT_EXPIRE_IS_GUEST_EXPIRE = 'guest_upload_default_expire_is_guest_expire';
-    const GUEST_UPLOAD_EXPIRE_READ_ONLY = 'guest_upload_expire_read_only';
+// Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+    throw new exception('You must use HTTP POST to logout.');
+}
+
+
+Security::validateAgainstCSRF();
+

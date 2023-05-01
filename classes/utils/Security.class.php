@@ -98,7 +98,7 @@ class Security
     {
         $checkToken = Utilities::isTrue(Config::get('owasp_csrf_protector_enabled'));
         $method = Utilities::getHTTPMethod();
-
+        
         //
         // Remote API users and applications do not need to do CSRF
         //
@@ -113,7 +113,8 @@ class Security
         }
         
         if( $checkToken ) {
-            include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
+            include_once(__DIR__ . '/../../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
+            
             if( !self::$filesender_csrf_protector_logger ) {
                 self::$filesender_csrf_protector_logger = new FileSendercsrfProtectorLogger();
             }

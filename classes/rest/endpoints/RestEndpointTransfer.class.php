@@ -58,6 +58,9 @@ class RestEndpointTransfer extends RestEndpoint
         if( $v && $v != '' ) {
             $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = '';
         }
+        if (Config::get('cloud_s3_use_daily_bucket')) {
+            $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = '';
+        }
         
         return array(
             'id' => $transfer->id,
@@ -508,10 +511,19 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
 
-            if( Config::get('storage_type') == 'CloudS3' ) {
-                $v = Config::get('cloud_s3_bucket');
-                if( $v && $v != '' ) {
-                    $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
+            if( strtolower(Config::get('storage_type')) == 'clouds3' ) {
+                if (Config::get('cloud_s3_use_daily_bucket')) {
+                    $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = "";
+                    $v = Config::get('cloud_s3_bucket_prefix');
+                    if( $v && $v != '' ) {
+                        $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
+                    }
+                    $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] .= date("Y-m-d");
+                } else {
+                    $v = Config::get('cloud_s3_bucket');
+                    if( $v && $v != '' ) {
+                        $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
+                    }
                 }
             }
 

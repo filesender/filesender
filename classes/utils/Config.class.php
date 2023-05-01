@@ -243,7 +243,7 @@ class Config
         }
 
         // see the error message for info
-        if (Utilities::startsWith(Config::get('storage_type'), 'Cloud')) {
+        if (Utilities::startsWith(strtolower(Config::get('storage_type')), 'cloud')) {
             if (self::get('upload_chunk_size') != self::get('download_chunk_size')) {
                 throw new ConfigBadParameterException('When storing files using the Cloud storage the upload_chunk_size must be the same as download_chunk_size');
             }

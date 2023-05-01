@@ -260,7 +260,7 @@ $lang['feature_not_enabled'] = '申し訳ありませんが、この機能は有
 $lang['file_bad_hash'] = 'ファイルのハッシュが無効です';
 $lang['file_chunk_out_of_bounds'] = 'ファイルのチャンクが範囲外です';
 $lang['file_deleted'] = 'ファイルは削除されました。';
-$lang['file_encryption'] = 'ファイルを暗号化してより安全に送信する。';
+$lang['file_encryption'] = 'ファイルを暗号化してより安全に送信する';
 $lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle colorffaa00"  aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; ファイル暗号化はエンドツーエンドです。ファイルはWebブラウザで暗号化されます。パスワードは保存されないため、暗号化パスワードはあなたが受信者に送信してください。<br/><i class="fa fa-exclamation-triangle colorffaa00"  aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; ファイル暗号化は、送信者側でも受信者側でもあなたのブラウザもしくはデバイスのパフォーマンスに大きな影響を与えます。<br/><i class="fa fa-exclamation-triangle colorffaa00"  aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; 4GB以上の暗号化ファイルは、Webブラウザの制限によりダウンロードできない場合があります。';
 $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; お使いのブラウザではサポートされていません。最新のFirefox、Internet Explorer、Safari、またはChromeでもう一度お試しください。';
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;ファイルの復号は、お使いのブラウザではサポートされていません。最新のFirefox、Internet Explorer、Safari、またはChromeでもう一度お試しください。';

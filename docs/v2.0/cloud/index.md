@@ -2,11 +2,24 @@
 title: FileSender Cloud Storage Backends
 ---
 
-# FileSender Cloud Could Backends
+# FileSender Cloud Backends
 
 FileSender 2.0 can store the uploaded file data in the cloud. Support
 is currently being developed for storing data in Azure blobs and
 Amazon S3 is another possible cloud target.
+
+It was reported that performance with the S3 backend (and maybe others)
+can be greatly increased by bumping up upload_chunk_size and related values.
+For example using 40mb chunks:
+
+```
+$config['upload_chunk_size'] = 1024 * 1024 * 40;
+$config['download_chunk_size'] = $config['upload_chunk_size'];
+$config['upload_crypted_chunk_size'] = $config['upload_chunk_size'] + $config['upload_crypted_chunk_padding_size'];
+```
+
+Increasing upload_chunk_size also requires you to verify PHP's memory
+limit is equal or bigger than about 5x upload_chunk_size.
 
 ## Azure
 
@@ -203,6 +216,14 @@ $config['cloud_s3_secret']   = 'verySecretKey1';
 // optional, Ensure that the bucket exists if you want to use a
 // single bucket. 
 // $config['cloud_s3_bucket']   = 'filesender';
+
+// optional, if you wish to have a bucket-a-day configure these options
+// please note that the buckets are created/deleted via cronjob, so make
+// sure you are running cron.php regularly!
+// after turning this on, create the daily buckets with
+// php scripts/task/S3bucketmaintenance.php --verbose
+// $config['cloud_s3_use_daily_bucket'] = true;
+// $config['cloud_s3_bucket_prefix'] = "FileSenderDaily-";
 ```
 
 ### Running a test

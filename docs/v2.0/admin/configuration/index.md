@@ -31,6 +31,8 @@ A note about colours;
 * [mime_type_default](#mime_type_default)
 * [service_aup_min_required_version](#service_aup_min_required_version)
 * [tmp_path](#tmp_path)
+* [site_css](#site_css)
+* [site_logo](#site_logo)
 
 ## Security settings
 * [use_strict_csp](#use_strict_csp)
@@ -68,6 +70,8 @@ A note about colours;
 * [cloud_s3_secret](#cloud_s3_secret)
 * [cloud_s3_use_path_style_endpoint](#cloud_s3_use_path_style_endpoint)
 * [cloud_s3_bucket](#cloud_s3_bucket)
+* [cloud_s3_use_daily_bucket](#cloud_s3_use_daily_bucket)
+* [cloud_s3_bucket_prefix](#cloud_s3_bucket_prefix)
 
 ## Shredding
 
@@ -155,6 +159,7 @@ A note about colours;
 * [directory_upload_button_enabled](#directory_button_upload_enabled)
 * [encryption_enabled](#encryption_enabled)
 * [encryption_mandatory](#encryption_mandatory)
+* [encryption_mandatory_with_generated_password](#encryption_mandatory_with_generated_password)
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_password_must_have_upper_and_lower_case](#encryption_password_must_have_upper_and_lower_case)
 * [encryption_password_must_have_numbers](#encryption_password_must_have_numbers)
@@ -453,6 +458,26 @@ A note about colours;
 * __comment:__ Only some code has been migrated to using this configuration setting. It is intended to be a location that files might be temporarily stored while processing is happening.
 
 
+### site_css
+
+* __description:__ An additional css file to load after system ones to allow css updates by the admin. One might consider using this with the auth_config_regex_files option to change the look of a site depending on its use.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.40
+* __comment:__  This will be taken relative to the css/ directory automatically.
+
+### site_logo
+
+* __description:__ An additional logo image to use. One might consider using this with the auth_config_regex_files option to change the look of a site depending on its use.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.40
+* __comment:__  Note that this is relative to the www directory. So you might want to add the prefix images/ or skin/ depending on how your system is set up to find the image.
+
+
+
 
 
 
@@ -676,6 +701,8 @@ $config['rate_limits'] = array(
 * __available:__ since version 2.0
 * __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. The primary choices for value are filesystem and filesystemChunked. Note that you need to respect the non leading capital letters in the class name such as the "C" in filesystemChunked. Future storage types could include e.g. **object**, **amazon_s3** and others.
 
+   If you are using cloud backed storage please also see the [cloud configuration page](https://docs.filesender.org/filesender/v2.0/cloud/).
+
 ### storage_filesystem_path
 
 * __description:__ when using storage type **filesystem** this is the absolute path to the file system where uploaded files are stored until they expire.  Your FileSender storage root.
@@ -733,7 +760,7 @@ $config['rate_limits'] = array(
 * __available:__ since version 20
 * __1.x name:__
 * __comment:__ not tested
-* __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligable. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
+* __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligible. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
 
 
 ### storage_filesystem_ignore_disk_full_check
@@ -818,6 +845,32 @@ $config['rate_limits'] = array(
 * __available:__ since version 2.31
 * __comment:__ If you wish to store all files in a single bucket set it's name in this configuration option.
 Ensure that the named bucket already exists if you use this setting.
+
+### cloud_s3_use_daily_bucket
+
+* __description:__ Enable filesender to use daily buckets for storing files.
+* __mandatory:__ no.  
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.40
+* __comment:__ If you wish to store all files uploaded in a single day at one bucket, enable this option and
+optionally also set cloud_s3_bucket_prefix to define the prefix for daily buckets. Bucket names are formed by
+concatenating cloud_s3_bucket_prefix + YYYY-MM-DD, for example a prefix of "Test-" could create bucket "Test-2023-04-30".
+If cloud_s3_bucket and cloud_s3_use_daily_bucket are both set, this option takes precedence.
+Daily buckets are created/deleted by cron.php so ensure you have it configured in your crontab! If you wish
+to manually create the buckets (for example when first turning this setting on), run
+php scripts/task/S3bucketmaintenance.php --verbose
+
+### cloud_s3_bucket_prefix
+
+* __description:__ Optional prefix for S3 daily buckets.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.40
+* __comment:__ If cloud_s3_use_daily_bucket has been set, you can define the prefix for daily buckets with
+this option. Daily bucket names are formed by concatenating cloud_s3_bucket_prefix + YYYY-MM-DD,
+for example a prefix of "Test-" could create bucket "Test-2023-04-30". An empty prefix would create "2023-04-30".
 
 
 ---
@@ -1587,6 +1640,15 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.23
 * __comment:__
 
+### encryption_mandatory_with_generated_password
+* __description:__ If set to true then every file uploaded must be encrypted and use a generated password. This enables encryption_mandatory automatically.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.40
+* __comment:__
+
+
 
 
 ### encryption_min_password_length
@@ -2106,6 +2168,8 @@ This is only for old, existing transfers which have no roundtriptoken set.
 	* __email_guest_created:__ send the guest an email when the guest voucher is created.
 	* __email_guest_created_receipt:__ send the guest invitation owner an email when the guest voucher is created.
 	* __email_guest_expired:__ send the guest an email when the guest voucher is expired.
+	* __guest\_upload\_expire\_is\_guest\_expire:__ [optional] Try to set the default transfer expire time to the guest expire time if it is close enough.
+        * __guest\_upload\_expire\_read\_only:__ [optional] Guest can not change the expire time for a transfer.
 
 * __*Configuration example:*__
 

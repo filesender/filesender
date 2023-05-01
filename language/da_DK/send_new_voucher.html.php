@@ -7,6 +7,9 @@
 // 
 // 
 ?>
-En voucher sætter nogen i stand til at sende dig en fil.<br />
-Skriv modtagerens e-mailadresse og vælg <i>Afsend voucher</i> for at oprette en voucher til vedkommende.<br />
-Så vil der blive sendt en mail til modtageren med et link til voucheren.
+<h2>Inivitér en gæstebruger</h2>
+<p>Med en invitation kan du sender filer til en bruger uden konto:
+<li>Angiv gæstebrugerens mailadresse.</li>
+<li>Skriv et emne og en meddelelse, om nødvendigt.</li>
+<li>Klik på 'Send invitation'.</li></p>
+<p>Gæstebrugeren får en mail med et invitationslink.</p>

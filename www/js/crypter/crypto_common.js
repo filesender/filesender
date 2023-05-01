@@ -33,12 +33,7 @@ window.filesender.crypto_common = function () {
         },
         convertStringToArrayBufferView: function (str)
         {
-            var bytes = new Uint8Array(str.length);
-            for (var iii = 0; iii < str.length; iii++)
-            {
-                bytes[iii] = str.charCodeAt(iii);
-            }
-            return bytes;
+            return new TextEncoder().encode(str);
         },
         convertArrayBufferToHexaDecimal: function (buffer)
         {

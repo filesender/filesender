@@ -13,7 +13,7 @@ subject: Rapport om {target.type} #{target.id}
 
 Kære afsender!
 
-Rapport om overførsel #{target.id} er vedhæftet den her e-mail.
+Rapport om overførsel #{target.id} er vedhæftet den her mail.
 
 Med venlig hilsen
 {cfg:site_name}
@@ -25,7 +25,7 @@ Kære afsender!
 </p>
 
 <p>
-Rapport om overførsel #{target.id} er vedhæftet den her e-mail.
+Rapport om overførsel #{target.id} er vedhæftet den her mail.
 </p>
 
 <p>Med venlig hilsen<br/>

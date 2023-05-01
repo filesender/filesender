@@ -573,6 +573,14 @@ class Transfer extends DBObject
     public static function getDefaultExpire()
     {
         $days = Config::get('default_transfer_days_valid');
+
+        if( Auth::isGuest()) {
+            $guest = AuthGuest::getGuest();
+            if( $guest->guest_upload_default_expire_is_guest_expire ) {
+                $days = min( Config::get('max_transfer_days_valid'),
+                             $guest->expires_in_days );
+            }
+        }
         
         return strtotime('+'.$days.' day');
     }

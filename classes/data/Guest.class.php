@@ -581,7 +581,7 @@ class Guest extends DBObject
         if (!is_array($options)) {
             $options = array();
         }
-
+        
         self::validateOptions($options);
         return $options;
     }
@@ -719,6 +719,15 @@ class Guest extends DBObject
         ))) {
             return $this->$property;
         }
+        if ($property == 'expires_in_days') {
+            $v = $this->expires - time();
+            if( $v < (24*3600)) {
+                $v = 0;
+            } else {
+                $v = ceil( $v / (24*3600));
+            }
+            return $v;
+        }
         
         if ($property == 'user' || $property == 'owner') {
             $user = User::fromId($this->userid);
@@ -802,7 +811,13 @@ class Guest extends DBObject
         if ($property == 'email_guest_created_expired') {
             return $this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED);
         }
-        
+        if ($property == 'guest_upload_default_expire_is_guest_expire') {
+            return $this->getOption(GuestOptions::GUEST_UPLOAD_DEFAULT_EXPIRE_IS_GUEST_EXPIRE);
+        }
+        if ($property == 'guest_upload_expire_read_only') {
+            return $this->getOption(GuestOptions::GUEST_UPLOAD_EXPIRE_READ_ONLY);
+        }
+
         throw new PropertyAccessException($this, $property);
     }
     

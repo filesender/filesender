@@ -7,9 +7,11 @@
 // 
 // 
 ?>
-<h1>Velkommen til {cfg:site_name}</h1>
+<h1>Velkommen til {cfg:site_name}!</h1>
 
 <p>
-    {cfg:site_name} er en sikker måde at dele filer med alle på!
-Log ind for at uploade dine filer eller invitere andre til at sende <i>dig</i> en fil.
+Del dine filer sikkert ved hjælp af {cfg:site_name}.
+</p>
+<p>
+Har du fået en invitation hertil? Så følg anvisningerne i din invitationsmail.
 </p>

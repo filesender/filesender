@@ -86,7 +86,7 @@ window.filesender.terasender = {
      * To stop the server sending emails for each file in the encrypted download.
      */
     crypto_encrypted_archive_download_fileidlist: '',
-    crypto_encrypted_archive_download: false,
+//    crypto_encrypted_archive_download: false,
     
     /**
      * Send command to worker
@@ -141,7 +141,7 @@ window.filesender.terasender = {
                 link:               this.receiver.link,
                 security_token:     this.security_token,
                 csrfptoken:         filesender.client.getCSRFToken(),
-                crypto_encrypted_archive_download: this.crypto_encrypted_archive_download,
+                crypto_encrypted_archive_download: window.filesender.crypto_encrypted_archive_download,
                 crypto_encrypted_archive_download_fileidlist: this.crypto_encrypted_archive_download_fileidlist
             };
 

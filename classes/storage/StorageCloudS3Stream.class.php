@@ -72,6 +72,11 @@ class StorageCloudS3Stream
         }
 
         $this->offset += strlen($data);
+
+	if ($this->stream_eof()) {
+	   $this->gameOver = true;
+	}
+
         return $data;
     }
 

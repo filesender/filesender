@@ -26,11 +26,11 @@
     <li><i class="fa-li fa fa-caret-right"></i>
         Man kan <strong>genoptage</strong> en afbrudt eller annulleret upload. For at gentoptage en upload skal man blot <strong>sende nøjagtig de samme filer</strong> en gang til!
         Sørg for at filerne har nøjagtig <strong>samme navne og størrelse</strong> som før.
-        Når din upload begynder på ny, bør du kunne se fremgangsbjælken springe dertil hvor uploaden blev afbrudt, og fortsætte derfra.
+        Når din upload begynder på ny, bør du kunne se fremgangsbjælken og springe dertil hvor uploaden blev afbrudt, og fortsætte derfra.
     </li>
 </ul>
 
-<h3>Upload filer hver op til {size:cfg:max_legacy_file_size} stor uden HTML5</h3>
+<h3>Upload filer på hver op til {size:cfg:max_legacy_file_size} uden HTML5</h3>
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>FileSender advarer dig hvis du forsøger at uploade en fil som er større end tilladt.</li>
     <li><i class="fa-li fa fa-caret-right"></i>Uploads kan ikke genoptages med den her metode.</li>
@@ -43,7 +43,7 @@
 
 <h3>Begrænsningsindstillinger</h3>
 <ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i><strong>Maksimalt antal modtagere: </strong>{cfg:max_transfer_recipients} e-mailadresser adskilt ved komma eller semikolon</li>
+    <li><i class="fa-li fa fa-caret-right"></i><strong>Maksimalt antal modtagere: </strong>{cfg:max_transfer_recipients} mailadresser adskilt ved komma eller semikolon</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>Maksimalt antal filer i hver overførsel: </strong>{cfg:max_transfer_files}</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>Maksimalt størrelse på hver overførsel: </strong>{size:cfg:max_transfer_size}</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>Maksimal filstørrelse for browsere uden HTML5: </strong>{size:cfg:max_legacy_file_size}</li>

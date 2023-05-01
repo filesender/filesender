@@ -17,6 +17,7 @@
     $url = '?s=translate_email&amp;token='.$token.'&amp;lang=';
     
     if(count($available) > 1) {
+        echo '<div class="languages">';
         echo '<div class="buttons">';
         
         echo '<span class="spaced">'.Lang::tr('translate_to').'</span>';
@@ -29,6 +30,7 @@
             }
         }
         
+        echo '</div>';
         echo '</div>';
     }
     
