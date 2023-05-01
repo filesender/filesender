@@ -21,7 +21,7 @@ $packages = array(
     ),
     'bootbox' => array(
         'path' => 'bootbox/dist/bootbox.all.min.js',
-        'pattern' => '/@version: ([0-9.]+).*/m',
+        'pattern' => '/ @version: ([0-9.]+).*/m',
     ),    
     'chart.js' => array(
         'path' => 'chart.js/chart.min.js',
