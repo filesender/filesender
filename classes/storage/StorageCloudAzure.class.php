@@ -153,7 +153,7 @@ class StorageCloudAzure extends StorageFilesystem
             }
             return array(
                 'offset' => $offset,
-                'written' => $written
+                'written' => $chunk_size
             );
         } catch (ServiceException $e) {
             $msg = 'Azure: writeChunk() Can not write to blob: ' . $blob_name . ' offset ' . $offset

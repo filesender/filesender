@@ -1,5 +1,7 @@
 if(!('filesender' in window)) window.filesender = {};
 
+window.filesender.crypto_encrypted_archive_download = false;
+
 /**
  * Supports (updated at end of script)
  */

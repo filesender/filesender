@@ -324,7 +324,7 @@ class DatabasePgsql
         
         $typematcher = '';
         $length = null;
-        
+
         // Build type matcher
         switch ($definition['type']) {
             case 'int':
@@ -336,7 +336,11 @@ class DatabasePgsql
                 $s2s = array('small' => 'smallint', 'medium' => 'integer', 'big' => 'bigint');
                 $typematcher = $s2s[$size];
                 break;
-            
+
+            case 'numeric':
+                $typematcher = 'numeric';
+                break;
+                
             case 'string':
                 $typematcher = 'character varying';
                 $length = (int)$definition['size'];
@@ -390,6 +394,14 @@ class DatabasePgsql
                 $expected = $definition['default'] ? 'true' : 'false';
                 if ((bool)$column_dfn['column_default'] != $expected) {
                     $logger($column.' default is not '.$expected);
+                    $non_respected[] = 'default';
+                }
+            } elseif ($definition['type'] == 'numeric' ) {
+                $d = $column_dfn['column_default'];
+                $d = preg_replace('/::numeric/i','', $d);
+                $d = preg_replace("/'/i",'', $d);
+                if( $d != $definition['default'] ) {
+                    $logger($column.' have '.$column_dfn['column_default'].'  CCC default is not "'.$definition['default'].'"');
                     $non_respected[] = 'default';
                 }
             } elseif ($column_dfn['column_default'] != $definition['default']

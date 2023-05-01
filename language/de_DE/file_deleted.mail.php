@@ -25,7 +25,7 @@ Mit freundliche Grüßen,
 </p>
 
 <p>
-    die Datei {file.path} ({size:file.size}) wurde von der Dateiübertragung Nr. {transfer.id}  gelöscht und steht nicht mehr zum Download zur Verfügung.
+    die Datei {file.path} ({size:file.size}) wurde von der Dateiübertragung Nr. {transfer.id} gelöscht und steht nicht mehr zum Download zur Verfügung.
 </p>
 
 <p>

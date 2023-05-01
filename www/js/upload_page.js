@@ -2152,9 +2152,9 @@ $(function() {
             filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
         }
     });
+
     
     filesender.ui.nodes.encryption.generate.on('click', function() {
-
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
         password = encoded.value;
@@ -2168,6 +2168,16 @@ $(function() {
         filesender.ui.evalUploadEnabled();
     });
 
+    if( filesender.config.encryption_mandatory_with_generated_password ) {
+        setTimeout( function() {
+            filesender.ui.nodes.encryption.use_generated.click();
+            filesender.ui.nodes.encryption.password.attr('type','text');
+            filesender.ui.nodes.encryption.use_generated.attr('disabled', 'disabled' )
+        }, 0 );
+    }
+    
+
+    
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if (filesender.ui.nodes.encryption.show_hide.is(':checked')) {
             filesender.ui.nodes.encryption.password.attr('type','text');
@@ -2177,7 +2187,6 @@ $(function() {
         filesender.ui.nodes.encryption.password.stop().effect('highlight',{},500);
         return false;
     });
-  
     
     // Bind buttons
     filesender.ui.nodes.buttons.start.on('click', function() {

@@ -53,11 +53,7 @@ Kære gæst!
         </tr>
         <tr>
             <td>Gyldig indtil</td>
-{if:guest.does_not_expire}
-            <td>aldrig</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>

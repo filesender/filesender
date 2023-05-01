@@ -58,7 +58,7 @@ function pagemenuitem($page) {
         $icon = '<i class="fa '.$faicon.'"></i> ';
     }
     echo '<div class="nav-item">';
-    echo '<a class="p-2 nav-link  '.$class.'" id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$icon.$label.'</a>';
+    echo '<a class="p-2 nav-link  '.$class.'" id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$icon.$label.'</a>';
     echo '</div>';
 }
 

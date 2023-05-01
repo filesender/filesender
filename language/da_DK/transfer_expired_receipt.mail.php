@@ -15,7 +15,7 @@ Kære afsender!
 
 Din overførsel nr. {transfer.id} er udløbet, og filerne i den kan derfor ikke længere hentes af modtagerne. ({transfer.link}).
 
-Best regards,
+Med venlig hilsen
 {cfg:site_name}
 
 {alternative:html}

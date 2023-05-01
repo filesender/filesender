@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-<h1>Der udføres lige nu vedligeholdelsesarbejde på tjenesten her.</h1>
+<h1>Der udføres lige nu vedligeholdelsesarbejde her på tjenesten.</h1>
 <p>
    Prøv at komme tilbage senere.
 </p>

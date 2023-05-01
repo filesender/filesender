@@ -305,6 +305,8 @@ guest_too_many_recipients
 guest_transfer_options
 guest_upload_complete
 guest_upload_complete_confirmation_to_guest
+guest_upload_default_expire_is_guest_expire
+guest_upload_expire_read_only
 guest_upload_start
 guest_vouchers_sent
 guests
@@ -396,6 +398,7 @@ perform_these_actions_on_all_users
 performed
 please_add_file_again
 preferences_updated
+previous_password_shown_for_next_action
 privacy_page
 privacy_page_auditlog_lifetime
 privacy_page_clientlogs_lifetime
@@ -408,6 +411,7 @@ privacy_page_translatable_emails_lifetime
 privacy_text
 profile_page_text_linking_to_admin_page
 profile_page_text_linking_to_privacy_page
+python_cli_client_heading
 python_cli_client_setup_information
 quota_usage
 rate_limit_exceeded
@@ -589,6 +593,8 @@ time_format
 time_to_complete_ms
 time_to_complete_s
 to
+token_has_bad_format
+token_is_missing
 too_long_since_any_data_was_last_sent
 tracking_event_not_found
 tracking_unknown_event
@@ -628,6 +634,7 @@ transfer_user_quota_exceeded
 transfers_guest
 transfers_page
 transfers_uid_page
+translatable_email_not_found
 translate_email_footer
 translate_to
 turning_on_guests_get_a_link_disables_can_only_send_to_me

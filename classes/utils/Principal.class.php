@@ -50,7 +50,11 @@ class Principal
      */
     public static function isEncryptionMandatory()
     {
-        return Config::get('encryption_mandatory');
+        return Config::get('encryption_mandatory') || Config::get('encryption_mandatory_with_generated_password');
+    }
+    public static function isEncryptionMandatoryWithGeneratedPassword()
+    {
+        return Config::get('encryption_mandatory_with_generated_password');
     }
 
 }

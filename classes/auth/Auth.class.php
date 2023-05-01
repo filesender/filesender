@@ -111,7 +111,15 @@ class Auth
             session_start($opts);
         }
     }
+
     
+    /**
+     * Are remote users or applications an enabled feature for this server
+     */
+    public static function isRemoteFeatureEnabled()
+    {
+        return Config::get('auth_remote_application_enabled') || Config::get('auth_remote_user_enabled');
+    }
     
     /**
      * Return current user if it exists.
@@ -138,7 +146,7 @@ class Auth
                 } elseif (AuthLocal::isAuthenticated()) { // Local (script)
                     self::$attributes = AuthLocal::attributes();
                     self::$type = 'local';
-                } elseif ((Config::get('auth_remote_application_enabled') || Config::get('auth_remote_user_enabled')) && AuthRemote::isAuthenticated()) { // Remote application/user
+                } elseif (self::isRemoteFeatureEnabled() && AuthRemote::isAuthenticated()) { // Remote application/user
                     if (
                         (AuthRemote::application() && Config::get('auth_remote_application_enabled')) ||
                         (!AuthRemote::application() && Config::get('auth_remote_user_enabled'))
@@ -440,6 +448,14 @@ class Auth
         }
 
         return self::$isAdmin && !self::isGuest();
+    }
+
+    /**
+     * Current user is not an admin, not remote, not guest.
+     */
+    public static function isRegularUser()
+    {
+        return !self::isAdmin() && !self::isRemote() && !self::isGuest();
     }
 
     public static function canViewAggregateStatistics()

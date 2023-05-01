@@ -75,22 +75,6 @@ $(function() {
     idbutton.on('click',   function() { idsearch(); });
 
 
-    var search_senderemail = function() {
-        var full_match = senderemail_full_match.is(':checked');
-        
-        filesender.ui.redirect( filesender.config.base_path
-                                + '?s=admin&as=transfers'
-                                + '&senderemail=' + encodeURIComponent(senderemail.val())
-                                + '&senderemail_full_match=' + full_match
-                              );
-    }
     
-    idbuttonse.on('click', function() { search_senderemail(); } );
-    senderemail.keypress(function (e) {
-        if (e.which == 13) {
-            search_senderemail();
-            return false;
-        }
-    });    
     ideval();
 });

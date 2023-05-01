@@ -53,11 +53,7 @@ Saygılarımıza,
         </tr>
         <tr>
             <td>Valid until</td>
-{if:guest.does_not_expire}
-            <td>asla</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>
