@@ -62,7 +62,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                     echo <<<EOT
                     <li>
                       <form action="$link" method="post" >
-                        <button class="logoutbutton" type="submit" >$icon.$txt</button>
+                        <button class="logoutbutton" type="submit" >${icon}$txt</button>
                       </form>
                     </li>
 EOT;
