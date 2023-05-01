@@ -437,6 +437,11 @@ label.invalid {
     color: #f00;
 }
 
+.languages {
+    overflow-x: auto;
+}
+
+
 
 .buttons {
     display: table;
@@ -1330,6 +1335,23 @@ table.paginator a {
     line-height: 1.1em;
 }
 
+
+.logoutbutton {
+    background: none!important;
+    color: #E6E6E6;
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    padding: 0.6em 1em;
+    text-decoration: none;
+    border-width: 0px;
+    text-shadow: 0 0 0.2em #000;
+    transition: all 0.2s ease 0s;
+}
+
+.logoutbutton:hover {
+    background-color: rgb(51,51,51)!important;
+}
 
 @import "local-variables.scss";
              

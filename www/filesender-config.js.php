@@ -88,6 +88,7 @@ window.filesender.config = {
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
     
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
+    encryption_mandatory_with_generated_password: '<?php echo Config::get('encryption_mandatory_with_generated_password') ?>',
     encryption_min_password_length: '<?php echo Config::get('encryption_min_password_length') ?>',
     encryption_password_text_only_min_password_length: '<?php echo Config::get('encryption_password_text_only_min_password_length') ?>',
     encryption_generated_password_length: '<?php echo Config::get('encryption_generated_password_length') ?>',

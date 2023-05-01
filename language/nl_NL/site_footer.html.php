@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Problemen? Neem contact op met uw instellingshelpdesk.
+Heb je een vraag? Neem contact op met de helpdesk van je instelling.

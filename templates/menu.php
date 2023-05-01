@@ -52,11 +52,24 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
             if (Auth::isAuthenticated() && Auth::isSP())
             {
                 $url = AuthSP::logoffURL();
-                if($url) {
-                    $faicon = 'fa-sign-out';
-                    $icon = '<i class="fa '.$faicon.'"></i> ';
+                if( Config::get('auth_sp_type') == "saml" ) {
                     
-                    echo '<div class="nav-item"><a class="p-2 nav-link" href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.$icon.Lang::tr('logoff').'</a></div>';
+                    $link = Utilities::sanitizeOutput($url);
+                    $txt = Lang::tr('logoff');
+                    echo <<<EOT
+                    <li>
+                      <form action="$link" method="post" >
+                        <button class="logoutbutton" type="submit" >$txt</button>
+                      </form>
+                    </li>
+EOT;
+                } else {
+                    if($url) {
+                        $faicon = 'fa-sign-out';
+                        $icon = '<i class="fa '.$faicon.'"></i> ';
+                        
+                        echo '<div class="nav-item"><a class="p-2 nav-link" href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.$icon.Lang::tr('logoff').'</a></div>';
+                    }
                 }
             }
             else if (!Auth::isGuest())

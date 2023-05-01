@@ -1,2 +1,8 @@
 #!/bin/sh
-php -q /opt/filesender/filesender/scripts/task/cron.php
+
+USER=apache
+if id www-data >/dev/null 2>&1; then
+    USER=www-data;
+fi
+
+sudo -u "$USER" php -q /opt/filesender/filesender/scripts/task/cron.php

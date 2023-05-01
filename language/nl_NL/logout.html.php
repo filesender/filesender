@@ -8,5 +8,5 @@
 // 
 ?>
 <p>
-   U bent uitgelogd, bedankt dat u {cfg:site_name} gebruikt hebt.
+   Wat fijn dat je koos voor {cfg:site_name}. Je bent nu uitgelogd.
 </p>

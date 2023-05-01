@@ -52,11 +52,7 @@ Terveisin,
         </tr>
         <tr>
             <td>Voimassa</td>
-{if:guest.does_not_expire}
-            <td>ei koskaan</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>

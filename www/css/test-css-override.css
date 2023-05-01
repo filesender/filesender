@@ -1,0 +1,8 @@
+
+#header {
+    background: #666 url(../images/banner900.png)  top left;
+    height: 90px;
+    background-size: cover;
+    background-repeat: no-repeat;    
+    margin-bottom: 1em;
+}

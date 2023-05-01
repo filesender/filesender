@@ -175,7 +175,7 @@ window.filesender.streamsaver_sink_zip64 = function ( cryptoapp, link, transferi
                     if (transfer.canUseTeraReceiver()) {
                         window.filesender.crypto_encrypted_archive_download_fileidlist = '';
                         if( window.filesender.terasender  ) {
-                            window.filesender.terasender.crypto_encrypted_archive_download_fileidlist = $this.crypto_encrypted_archive_download_fileidlist;
+                            window.filesender.crypto_encrypted_archive_download_fileidlist = $this.crypto_encrypted_archive_download_fileidlist;
                         }
                         
                     }

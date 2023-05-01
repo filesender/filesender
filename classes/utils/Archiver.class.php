@@ -305,6 +305,9 @@ class Archiver
 	while ($data = fread($stream, $block_size))
 	{
 	    $archive->stream_file_part($data);
+            if( feof($stream) ) {
+                break;
+            }            
 	}
         fclose($stream);
 	$archive->complete_file_stream();        

@@ -97,13 +97,24 @@ class Security
     public static function validateAgainstCSRF( $canReturnJSON = false )
     {
         $checkToken = Utilities::isTrue(Config::get('owasp_csrf_protector_enabled'));
+        $method = Utilities::getHTTPMethod();
+        
+        //
+        // Remote API users and applications do not need to do CSRF
+        //
+        if( Auth::isRemoteFeatureEnabled()) {
+            if( Auth::isRemote() && AuthRemote::isAuthenticated()) {
+                return;
+            }
+        }
 
         if (Auth::isGuest()) {
             $checkToken = true;
         }
         
         if( $checkToken ) {
-            include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
+            include_once(__DIR__ . '/../../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
+            
             if( !self::$filesender_csrf_protector_logger ) {
                 self::$filesender_csrf_protector_logger = new FileSendercsrfProtectorLogger();
             }

@@ -28,7 +28,7 @@ Overførslen blev afsendt til {transfer.recipients} modtager(e).
 Filen hedder {file.path}, fylder {size:file.size} og er/var tilgængelig indtil {date:file.transfer.expires}.
 {endif}
 {if:target.type == "Recipient"}
-Modtageren har e-mailaddressen {recipient.email} og er berettiget indtil {date:recipient.expires}.
+Modtageren har mailaddressen {recipient.email} og er berettiget indtil {date:recipient.expires}.
 {endif}
 
 Her er den fuldstændige log over hvad der er sket med overførslen:
@@ -60,7 +60,7 @@ Her er rapporten om din {if:target.type == "Transfer"}overførsel{endif}{if:targ
     Filen hedder {file.path}, fylder {size:file.size} og er/var tilgængelig indtil {date:file.transfer.expires}.{date:file.transfer.expires}.
     {endif}
     {if:target.type == "Recipient"}
-    Modtageren har e-mailaddressen {recipient.email} og er berettiget indtil {date:recipient.expires}.
+    Modtageren har mailaddressen {recipient.email} og er berettiget indtil {date:recipient.expires}.
     {endif}
 </p>
 

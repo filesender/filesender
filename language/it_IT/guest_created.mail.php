@@ -53,11 +53,7 @@ Cordiali saluti,
         </tr>
         <tr>
             <td>Valido fino al</td>
-{if:guest.does_not_expire}
-            <td>mai</td>
-{else}
             <td>{date:guest.expires}</td>
-{endif}
         </tr>
     </tbody>
 </table>

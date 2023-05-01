@@ -105,7 +105,7 @@ window.filesender.pbkdf2dialog = {
 
         window.filesender.onPBKDF2Ended = function() {
             
-            window.filesender.log("BBB pbkdf2 ended() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            window.filesender.log("pbkdf2 ended() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
             if( $this.only_one_pbkdf2_process ) {
                 $this.onPBKDF2Over();
             }
@@ -114,12 +114,12 @@ window.filesender.pbkdf2dialog = {
         // Chain this out so the UI can still get it.
         var allEnded = window.filesender.onPBKDF2AllEnded;
         window.filesender.onPBKDF2AllEnded = function() {
-            window.filesender.log("BBB pbkdf2 ending() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            window.filesender.log("pbkdf2 ending() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
             if( !($this.only_one_pbkdf2_process)) {
                 $this.onPBKDF2Over();
             }
             
-            window.filesender.log("BBB pbkdf2 pbkdf2dialog onPBKDF2AllEnded()");
+            window.filesender.log("pbkdf2 pbkdf2dialog onPBKDF2AllEnded()");
             allEnded();
         };
     },
@@ -137,7 +137,7 @@ window.filesender.pbkdf2dialog = {
     onPBKDF2Over: function() {
         $this = this;
         $this.time_end = Date.now();
-        window.filesender.log("BBB pbkdf2dialog onPBKDF2Over()");
+        window.filesender.log("pbkdf2dialog onPBKDF2Over()");
         $this.already_complete = true;
         if( $this.dialog ) {
             var d = $this.dialog;
