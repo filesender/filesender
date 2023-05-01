@@ -48,10 +48,10 @@ $core-bg: #ffffff;
 $body-color: #333;
 
 
-
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/variables";
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/mixins";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/maps";
 
 // 4. Include any optional Bootstrap components as you like
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/root";
@@ -1337,20 +1337,20 @@ table.paginator a {
 
 
 .logoutbutton {
-    background: none!important;
-    color: #E6E6E6;
+    background: #efe3db!important;
+    color: black !important;
     display: block;
     font-style: normal;
     font-weight: normal;
     padding: 0.6em 1em;
     text-decoration: none;
     border-width: 0px;
-    text-shadow: 0 0 0.2em #000;
+    text-shadow: 0 0 0em #000;
     transition: all 0.2s ease 0s;
 }
 
 .logoutbutton:hover {
-    background-color: rgb(51,51,51)!important;
+    background-color: #fff3f3 !important;
 }
 
 @import "local-variables.scss";

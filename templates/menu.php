@@ -51,6 +51,9 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
             if (Auth::isAuthenticated() && Auth::isSP())
             {
+                $faicon = 'fa-sign-out';
+                $icon = '<i class="fa '.$faicon.'"></i> ';
+                
                 $url = AuthSP::logoffURL();
                 if( Config::get('auth_sp_type') == "saml" ) {
                     
@@ -59,14 +62,12 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                     echo <<<EOT
                     <li>
                       <form action="$link" method="post" >
-                        <button class="logoutbutton" type="submit" >$txt</button>
+                        <button class="logoutbutton" type="submit" >${icon}$txt</button>
                       </form>
                     </li>
 EOT;
                 } else {
                     if($url) {
-                        $faicon = 'fa-sign-out';
-                        $icon = '<i class="fa '.$faicon.'"></i> ';
                         
                         echo '<div class="nav-item"><a class="p-2 nav-link" href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.$icon.Lang::tr('logoff').'</a></div>';
                     }
