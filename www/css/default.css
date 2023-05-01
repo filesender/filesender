@@ -1,9 +1,10 @@
-/* Error: Can't find stylesheet to import.
- *    ,
- * 43 | @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/functions";
- *    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- *    '
- *   default.scss 43:9  root stylesheet */
+/* Error: Undefined variable.
+ *   ,
+ * 6 | $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value") !default;
+ *   |                             ^^^^^^^^^^^^^
+ *   '
+ *   ../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/_maps.scss 6:29  @import
+ *   default.scss 50:9                                                             root stylesheet */
 
 body::before {
   font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
@@ -13,5 +14,5 @@ body::before {
   padding: 1em;
   margin-bottom: 1em;
   border-bottom: 2px solid black;
-  content: "Error: Can't find stylesheet to import.\a    \2577 \a 43 \2502  @import \"../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/functions\";\a    \2502          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   default.scss 43:9  root stylesheet";
+  content: 'Error: Undefined variable.\a   \2577 \a 6 \2502  $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value") !default;\a   \2502                              ^^^^^^^^^^^^^\a   \2575 \a   ../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/_maps.scss 6:29  @import\a   default.scss 50:9                                                             root stylesheet';
 }
