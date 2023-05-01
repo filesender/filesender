@@ -3131,8 +3131,8 @@ table.paginator a {
 }
 
 .logoutbutton {
-  background: none !important;
-  color: #efe3db;
+  background: #efe3db !important;
+  color: black !important;
   display: block;
   font-style: normal;
   font-weight: normal;
