@@ -47,11 +47,11 @@ $body-bg: #fff3eb;
 $core-bg: #ffffff;
 $body-color: #333;
 
-@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/maps";
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/variables";
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/mixins";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/maps";
 
 // 4. Include any optional Bootstrap components as you like
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/root";
