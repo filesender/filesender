@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: En gæst har besøgt uploadssiden
+subject: En gæst har besøgt uploadsiden
 
 {alternative:plain}
 
@@ -25,7 +25,7 @@ Kære afsender!
 </p>
 
 <p>
-Gæsten <a href="mailto:{guest.email}">{guest.email}</a> har besøgt uploadssiden på grundlag af din voucher.
+Gæsten <a href="mailto:{guest.email}">{guest.email}</a> har besøgt uploadsiden på grundlag af din voucher.
 </p>
 
 <p>

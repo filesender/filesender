@@ -198,10 +198,10 @@ class Utilities
         $lid = $with_time ? 'datetime_format' : 'date_format';
         $dateFormat = Lang::trWithConfigOverride($lid);
         if ($dateFormat == '{date_format}') {
-            $dateFormat = '%d/%m/%Y';
+            $dateFormat = '%d %b %Y';
         }
         if ($dateFormat == '{datetime_format}') {
-            $dateFormat = '%d/%m/%Y %T';
+            $dateFormat = '%d %b %Y %T';
         }
 
         return utf8_encode(strftime($dateFormat, $timestamp));
@@ -569,7 +569,7 @@ class Utilities
     public static function checkSecurityToken($token_to_check)
     {
         $token = self::getSecurityToken();
-        
+
         // Direct match
         if ($token_to_check === $token) {
             return true;

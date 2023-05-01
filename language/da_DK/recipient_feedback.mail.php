@@ -13,7 +13,7 @@ subject: Feedback fra din {if:target_type=="recipient"}modtager{endif}{if:target
 
 Kære afsender!
 
-Vi har fået feedback på e-mail fra {if:target_type=="recipient"}modtageren{endif}{if:target_type=="guest"}gæsten{endif} {target.email}. Se venligst vedhæftningen.
+Vi har fået feedback på mail fra {if:target_type=="recipient"}modtageren{endif}{if:target_type=="guest"}gæsten{endif} {target.email}. Se venligst vedhæftningen.
 
 Med venlig hilsen
 {cfg:site_name}
@@ -25,7 +25,7 @@ Kære afsender!
 </p>
 
 <p>
-Vi har fået feedback på e-mail fra {if:target_type=="recipient"}modtageren{endif}{if:target_type=="guest"}gæsten{endif} {target.email}. Se venligst vedhæftningen.
+Vi har fået feedback på mail fra {if:target_type=="recipient"}modtageren{endif}{if:target_type=="guest"}gæsten{endif} {target.email}. Se venligst vedhæftningen.
 </p>
 
 <p>

@@ -153,6 +153,8 @@ window.filesender.zip64handler = function() {
         openFile: function(filename) {
             var $this = this;
 
+            var filename_array = window.filesender.crypto_common().convertStringToArrayBufferView(filename);
+
             var genb = 0x0808;
             var dts = $this.dostime(new Date());
 
@@ -166,10 +168,10 @@ window.filesender.zip64handler = function() {
             this.writeu32( 0          );  // no crc-32 yet
             this.writeu32( 0xFFFFFFFF );  // no size yet
             this.writeu32( 0xFFFFFFFF );  // ...
-            this.writeu16( filename.length );
+            this.writeu16( filename_array.length );
             this.writeu16( 0          );  // no extra data
 
-            $this.writestr( filename );
+            $this.write( filename_array );
 
             $this.crc = 0;
             $this.filesize = 0;
@@ -199,6 +201,8 @@ window.filesender.zip64handler = function() {
         add_cdr_file: function(f) {
             var $this = this;
 
+            var filename = window.filesender.crypto_common().convertStringToArrayBufferView(f.name);
+
             var startOffset = this.coffset;
             $this.writeu32( 0x02014b50 );  // magic number for this header
             $this.writeu16( $this.VERSION );  
@@ -209,7 +213,7 @@ window.filesender.zip64handler = function() {
             $this.writeu32( f.crc );
             $this.writeu32( 0xFFFFFFFF );
             $this.writeu32( 0xFFFFFFFF );
-            $this.writeu16( f.name.length );
+            $this.writeu16( filename.length );
             $this.writeu16( 32 );          // extra data
             $this.writeu16( 0 );           // comment
             $this.writeu16( 0 );          
@@ -219,7 +223,7 @@ window.filesender.zip64handler = function() {
 
             
 
-            $this.writestr( f.name );
+            $this.write( filename );
 
             // extra data
             $this.writeu16( 1 ); 

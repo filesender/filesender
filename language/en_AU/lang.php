@@ -140,8 +140,8 @@ $lang['current_guest'] = 'Current guests';
 $lang['database_access_failure'] = 'Failed to access database';
 $lang['database_updated'] = 'Database updated';
 $lang['date'] = 'Date';
-$lang['date_format'] = '%d/%m/%Y';
-$lang['datetime_format'] = '%d/%m/%Y %T';
+$lang['date_format'] = '%d %b %Y';
+$lang['datetime_format'] = '%d %b %Y %T';
 $lang['dbi_missing_parameter'] = 'Missing DBI configuration parameter';
 $lang['decrypting'] = 'Decrypting';
 $lang['decryption_verification_failed_bad_aead'] = 'Some encrypted files are protected with AEAD which allows FileSender to check the integrity of the file. It was found that the AEAD data does not match the expected value for this file so decryption was halted for your protection.';
@@ -300,6 +300,8 @@ $lang['guest_reminder_limit_reached'] = 'You have reached the maximum number of 
 $lang['guest_reminder_rate_limit_reached'] = 'You can only send {cfg:guest_reminder_limit_per_day} reminders each day. Please try again later.';
 $lang['guest_too_many_recipients'] = 'Maximum number of recipients exceeded';
 $lang['guest_transfer_options'] = 'Created transfers options';
+$lang['guest_upload_default_expire_is_guest_expire'] = 'Guest uploads expire at or before when the guest invitation expires';
+$lang['guest_upload_expire_read_only'] = 'Guest can not change the expire time for uploads';
 $lang['guest_vouchers_sent'] = 'Guest vouchers sent';
 $lang['guests'] = 'Guests';
 $lang['guests_page'] = 'Guests';
@@ -398,6 +400,7 @@ $lang['privacy_page_trackingevents_lifetime'] = 'Days that a log of tracking eve
 $lang['privacy_page_translatable_emails_lifetime'] = 'Number of days emails sent to a user will be retained';
 $lang['profile_page_text_linking_to_admin_page'] = 'You are allowed to visit the <a href="{cfg:site_url}/?s=admin">admin page</a>.';
 $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender values your privacy. Please <a href="{cfg:site_url}/?s=privacy">click to see</a> how long information is retained by this installation';
+$lang['python_cli_client_heading'] = 'Python CLI Client';
 $lang['python_cli_client_setup_information'] = 'To use the Python CLI Client configuration, create a directory ~/.filesender and copy the configuration file filesender.py.ini to the directory ~/.filesender. The configuration file is optional but is recommended as it means you do not always have to specify all parameters on the command line. The python CLI Client can be downloaded to any location and requires Python version 3 to execute.<p>With the configuration file in place you can upload a file using <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>';
 $lang['quota_usage'] = '{size:used} out of {size:total} used, {size:available} remaining';
 $lang['rate_limit_exceeded'] = 'You have attempted to perform this operation more frequently than is allowed in a 24 hour period.';

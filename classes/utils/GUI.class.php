@@ -67,7 +67,8 @@ class GUI
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'css/default.css',
-            'skin/styles.css'
+            'skin/styles.css',
+            'css/' . Config::get('site_css')
         ));
     }
     
@@ -210,7 +211,8 @@ class GUI
     {
         $locations = self::filterSources(array(
             'images/logo.png',
-            'skin/logo.png'
+            'skin/logo.png',
+            Config::get('site_logo')
         ));
         
         return array_pop($locations);

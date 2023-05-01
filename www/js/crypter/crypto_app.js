@@ -1,3 +1,7 @@
+/**
+ * Part of the Filesender software.
+ * See http://filesender.org
+ */
 
 if (typeof window === 'undefined')
     window = {}; // dummy window for use in webworkers
@@ -775,7 +779,7 @@ window.filesender.crypto_app = function () {
             var startoffset = 1 * (chunkid * chunksz);
             var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
             var legacyChunkPadding = 0;
-            oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', filesender.terasender.crypto_encrypted_archive_download );
+            oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', filesender.crypto_encrypted_archive_download );
 
             
             //
@@ -1220,7 +1224,7 @@ window.filesender.crypto_app = function () {
         {
             var $this = this;
 
-            filesender.terasender.crypto_encrypted_archive_download = false;
+            filesender.crypto_encrypted_archive_download = false;
             
             callbackError = function (error) {
                 window.filesender.log(error);
@@ -1366,7 +1370,7 @@ window.filesender.crypto_app = function () {
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
             };
-            filesender.terasender.crypto_encrypted_archive_download = true;
+            filesender.crypto_encrypted_archive_download = true;
 
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();

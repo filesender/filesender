@@ -35,8 +35,8 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
-include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
-include_once('../lib/vendor/owasp/csrf-protector-php/libs/csrf/LoggerInterface.php');
+include_once(__DIR__ . '/../../lib/vendor/owasp/csrf-protector-php/libs/csrf/csrfprotector.php');
+include_once(__DIR__ . '/../../lib/vendor/owasp/csrf-protector-php/libs/csrf/LoggerInterface.php');
 
 class FileSendercsrfProtectorLogger implements LoggerInterface {
     
