@@ -265,6 +265,7 @@ $default = array(
                                                                 , 'email_daily_statistics', 'email_report_on_closing'
                                                                 , 'enable_recipient_email_download_complete'
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
+                                                                , 'hide_sender_email'
     ),
 
     'header_x_frame_options' => 'sameorigin',

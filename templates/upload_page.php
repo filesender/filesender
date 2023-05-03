@@ -179,12 +179,6 @@ if(Auth::isGuest()) {
                         <?php } else echo Template::sanitizeOutputEmail($emails[0]) ?>
                     </div>
                     
-                    <?php if(Config::get('hide_sender_email_enabled')) { ?>
-                    <div class="fieldcontainer" id="hide_sender_email_container" >
-                        <input id="hide_sender_email" name="hide_sender_email" type="checkbox">
-                        <label for="hide_sender_email" class="cursor" >{tr:hide_sender_email}</label>
-                    </div>
-                    <?php } ?>
                     
                     <?php if($allow_recipients) { ?>
                     <div class="fieldcontainer" data-related-to="message">
