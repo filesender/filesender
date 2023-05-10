@@ -309,6 +309,7 @@ $lang['guests_transfers'] = 'Guests transfers';
 $lang['gui_unknown_admin_section'] = 'Unknown admin section';
 $lang['help'] = 'Help';
 $lang['help_page'] = 'Help';
+$lang['hide_sender_email'] = 'Hide sender email on the download page';
 $lang['hide_details'] = 'Hide details';
 $lang['hit_guest_creation_rate_limit'] = 'Hit guest creation total limit';
 $lang['hit_guest_creation_total_limit'] = 'Hit guest creation rate limit';

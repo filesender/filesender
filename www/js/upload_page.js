@@ -1445,7 +1445,9 @@ $(function() {
         lang: form.find('input[name="lang"]'),
         aup: form.find('input[name="aup"]'),
         expires: form.find('input[name="expires"]'),
-        options: {},
+        options: {
+            hide_sender_email: form.find('input[name="hide_sender_email"]')
+        },
         buttons: {
             start: form.find('.buttons .start'),
             restart: form.find('.buttons .restart'),
@@ -1677,6 +1679,9 @@ $(function() {
             ' .fieldcontainer[data-option="email_me_copies"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
+        form.find(
+            ' .fieldcontainer[data-option="hide_sender_email"]'
+        ).toggle(choice);
         filesender.ui.evalUploadEnabled();
     });
     

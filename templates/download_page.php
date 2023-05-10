@@ -140,7 +140,10 @@ function presentAVName( $v )
     
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
+        <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
+                 !$transfer->options['hide_sender_email']) { ?>
         <div class="from">{tr:from} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></div>
+        <?php } ?>
         
         <div class="created">{tr:created} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></div>
         
