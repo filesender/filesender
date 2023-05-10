@@ -876,7 +876,7 @@ table.list .date {
     resize: vertical;
 }
 
-#hide_sender_email_container {
+#upload_form .fieldcontainer[data-option="hide_sender_email"] {
   display: none;
 }
 

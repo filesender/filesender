@@ -1679,7 +1679,9 @@ $(function() {
             ' .fieldcontainer[data-option="email_me_copies"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
-        $('#hide_sender_email_container').toggle(choice);
+        form.find(
+            ' .fieldcontainer[data-option="hide_sender_email"]'
+        ).toggle(choice);
         filesender.ui.evalUploadEnabled();
     });
     
