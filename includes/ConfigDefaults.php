@@ -187,7 +187,7 @@ $default = array(
     'report_format' => ReportFormats::INLINE,
 
     // Note that this must not have a fixed end of string '$' as the last character in the match 
-    'valid_filename_regex' => '^[ \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+',
+    'valid_filename_regex' => '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+$',
     'message_can_not_contain_urls_regex' => '',
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 

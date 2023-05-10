@@ -128,7 +128,7 @@ window.filesender.config = {
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
     
-    valid_filename_regex: '<?php $v = Config::get('valid_filename_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
+    valid_filename_regex: '<?php $v = Config::get('valid_filename_regex'); $v = str_replace("\u{10000}-\u{10FFFF}", '', $v); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
