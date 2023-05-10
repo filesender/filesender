@@ -400,8 +400,6 @@ $default = array(
         ),
     ),
 
-    'hide_sender_email_enabled' => false,
-
     'guest_upload_page_hide_unchangable_options' => false,
 
     'guest_options' => array(
