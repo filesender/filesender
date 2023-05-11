@@ -425,6 +425,10 @@ if(Auth::isGuest()) {
                 </div>
             <?php } ?>
             
+            <div class="d-flex justify-content-center">
+                <a href="#" class="btn btn-primary btn-lg btn-block stage1continue" role="button">{tr:continue}&nbsp;<i class="fa fa-chevron-right"></i></a>
+            </div>
+
             <?php if (Config::get('upload_graph_bulk_display')) { ?>
                 <div class="row">
                     <div class="col-12">
@@ -434,10 +438,7 @@ if(Auth::isGuest()) {
                     </div>
         	</div>
             <?php } ?>
-
-            <div class="d-flex justify-content-center">
-                <a href="#" class="btn btn-primary btn-lg btn-block stage1continue" role="button">{tr:continue}&nbsp;<i class="fa fa-chevron-right"></i></a>
-            </div>
+            
         </div>
         
         <div class="nobox">
