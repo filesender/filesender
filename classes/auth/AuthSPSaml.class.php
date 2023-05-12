@@ -208,7 +208,7 @@ class AuthSPSaml
         $url = Utilities::http_build_query(array(
             'AuthId' => self::$config['authentication_source'],
             'ReturnTo' => $target,
-        ), self::$config['simplesamlphp_url'].'module.php/core/as_login.php?');
+        ), self::$simplesamlphp_auth_simple->getLoginURL($target));
 
         return $url;
     }
@@ -231,7 +231,7 @@ class AuthSPSaml
         $url = Utilities::http_build_query(array(
             'AuthId' => self::$config['authentication_source'],
             'ReturnTo' => $target,
-        ), self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?');
+        ), self::$simplesamlphp_auth_simple->getLogoutURL($target));
         
         return $url;
     }
