@@ -50,6 +50,7 @@ A note about colours;
 * [upload_crypted_chunk_size](#upload_crypted_chunk_size)
 * [cookie_domain](#cookie_domain)
 * [rate_limits](#rate_limits) (rate limits for some actions)
+* [valid_filename_regex](#valid_filename_regex)
 
 
 ## Backend storage
@@ -683,6 +684,27 @@ $config['rate_limits'] = array(
             'transfer_available' => array( 'day' => 200 ),
         ),
 );
+
+
+### valid_filename_regex
+* __description:__ Regular exression that must match a file name in an upload for that file to be allowed
+* __mandatory:__ no
+* __type:__ string
+* __default:__ '^[ \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+'
+* __available:__ since version 2.0
+* __comment:__ You may wish to allow more characters to this
+               expression to allow emoji in file names for example.
+               One might like to consider potential cases such as the
+               unicode U+2044 fraction slash which might be confused
+               with a / and U+205F which is a math space and might be
+               confused with a regular space. The ending '$' will be
+               added to match against the end of string for you.
+               
+* __*Configuration example:*__
+  //  adds '+' in ASCII
+  //  adds special character areas, for example MIDDLE DOT U+30FB
+$config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
+
 
 
 ---
