@@ -127,8 +127,15 @@ window.filesender.config = {
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
-    
-    valid_filename_regex: '<?php $v = Config::get('valid_filename_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
+
+<?php
+$vfregex = Config::get('valid_filename_regex');
+// convert from PHP to JavaScript for surrogate pairs
+//   ex) CJK UNIFIED IDEOGRAPHS : U+29E3D, Emoji : U+1F637
+$vfregex = str_replace("\u{10000}-\u{10FFFF}", '', $vfregex);
+$vfregex = str_replace('\\', '\\\\', $vfregex);
+?>
+    valid_filename_regex: '<?php echo $vfregex ?>',
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
