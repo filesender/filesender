@@ -839,5 +839,22 @@ window.filesender.client = {
         $('<p>' + lang.tr('reset_per_user_guest_expire_setting') + '</p>').appendTo(prompt);
         input.focus();
     },
+
+    sendVerificationCodeToYourEmailAddress: function(id, callback) {
+        var m = window.location.search.match(/token=([0-9a-f-]+)/);
+        var token = m[1];
+        
+        return this.put('/transfer/' + id + '/sendVerificationCodeToYourEmailAddress',
+                        {sendVerificationCodeToYourEmailAddress: true, token: token},
+                        callback);
+    },
+
+    checkVerificationCodeWithServer: function(id, pass, callback, ecb ) {
+        var m = window.location.search.match(/token=([0-9a-f-]+)/);
+        var token = m[1];
+        return this.put('/transfer/' + id + '/checkVerificationCodeWithServer',
+                        {checkVerificationCodeWithServer: pass, token: token},
+                        callback, ecb );
+    },
     
 };

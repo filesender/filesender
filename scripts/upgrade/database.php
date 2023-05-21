@@ -426,6 +426,18 @@ function ensureFK()
 	            call_user_func('Transfer::getDBTable'), 'transfer_passwordencoding', 'password_encoding',
 	            call_user_func('DBConstantPasswordEncoding::getDBTable'), 'id' ));
 
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'downloadonetimepasswords.tid refers to transfers.id',
+	            call_user_func('DownloadOneTimePassword::getDBTable'), 'DownloadOneTimePassword_tid', 'tid',
+	            call_user_func('Transfer::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'downloadonetimepasswords.rid refers to recipients.id',
+	            call_user_func('DownloadOneTimePassword::getDBTable'), 'DownloadOneTimePassword_rid', 'rid',
+	            call_user_func('Recipient::getDBTable'), 'id' ));
+    
     
     foreach ( $fks as $fk ) {
         $fk->ensure();

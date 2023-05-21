@@ -33,6 +33,10 @@ A note about colours;
 * [tmp_path](#tmp_path)
 * [site_css](#site_css)
 * [site_logo](#site_logo)
+* [download_verification_code_enabled](#download_verification_code_enabled)
+* [download_verification_code_valid_duration](#download_verification_code_valid_duration)
+* [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
+
 
 ## Security settings
 * [use_strict_csp](#use_strict_csp)
@@ -397,6 +401,32 @@ A note about colours;
 * __default:__ $config['site_url'].'?s=logout'
 * __available:__ since version 1.6
 
+### download_verification_code_enabled
+
+* __description:__ Check that the user has access to their email address by sending a one time code to them and requiring them to enter that code before they can download files in a transfer. This is restricted to checking only users who have not logged in to the system.
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.41
+
+
+### download_verification_code_valid_duration
+
+* __description:__ how long a verify by email code should be valid for (in seconds).
+* __mandatory:__ no.
+* __type:__ int
+* __default:__ 60*15
+* __available:__ since version 2.41
+* __comment:__ Default should be ok.
+
+### download_verification_code_random_bytes_used
+
+* __description:__ how many random bytes to use in the download verification code
+* __mandatory:__ no.
+* __type:__ int
+* __default:__ 8
+* __available:__ since version 2.41
+* __comment:__ Default should be ok.
 
 
 

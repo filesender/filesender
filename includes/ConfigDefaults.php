@@ -336,6 +336,9 @@ $default = array(
                                          GUIPages::APISECRETAUP ),
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
     
+    'download_verification_code_enabled' => false,
+    'download_verification_code_valid_duration' => 60*15,
+    'download_verification_code_random_bytes_used' => 8,
     
     'transfer_options' => array(
         'email_me_copies' => array(

@@ -203,7 +203,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     encryption_password_must_have_numbers: <?php echo value_to_TF(Config::get('encryption_password_must_have_numbers')) ?>,
     encryption_password_must_have_special_characters: <?php echo value_to_TF(Config::get('encryption_password_must_have_special_characters')) ?>,
 
-
+    download_verification_code_enabled: <?php echo value_to_TF(Config::get('download_verification_code_enabled')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
