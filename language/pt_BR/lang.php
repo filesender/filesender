@@ -1,11 +1,11 @@
-<?php 
+<?php
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-// 
-// 
+//
+//
 ?>
 <?php
 $lang['about'] = 'Sobre';
@@ -672,3 +672,4 @@ $lang['you_can_report_exception'] = 'Ao relatar esse erro, forneça o código a 
 $lang['you_can_report_exception_by_email'] = 'Você pode reportar este erro por e-mail';
 $lang['you_can_send_client_logs'] = 'Para ajudar sua equipe de suporte a descobrir o que aconteceu, você pode enviar as últimas entradas de log da interface do usuário clicando nesse botão :';
 $lang['you_generated_this_auth_secret_at'] = 'Você gerou esse segredo de autentificação em {datetime}';
+$lang['version'] = 'Versão do FileSender:';
