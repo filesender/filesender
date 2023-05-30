@@ -1,0 +1,125 @@
+.fs-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--fs-spacing-4x);
+  cursor: pointer;
+  height: var(--fs-spacing-6x);
+  padding: 0 var(--fs-spacing-3x);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  color: var(--fs-white);
+  background: var(--fs-accent);
+}
+
+.fs-button * {
+  pointer-events: none;
+}
+
+.fs-button:hover {
+  color: var(--fs-white);
+  background: var(--fs-btn-hover);
+}
+
+.fs-button:active {
+  color: var(--fs-white);
+  background: var(--fs-btn-active);
+}
+
+.fs-button i {
+  margin-right: var(--fs-spacing-base);
+}
+
+.fs-button--icon-right i {
+  margin-right: 0;
+  margin-left: var(--fs-spacing-base);
+}
+
+.fs-button--circle {
+  width: var(--fs-spacing-6x);
+  height: var(--fs-spacing-6x);
+}
+
+.fs-button--small {
+  font-size: 14px;
+  height: var(--fs-spacing-4x);
+  padding: 0 var(--fs-spacing-2x);
+}
+
+.fs-button--transparent {
+  background: transparent !important;
+  color: var(--fs-accent);
+}
+
+.fs-button--transparent.fs-button--danger {
+  color: var(--fs-danger) !important;
+}
+
+.fs-button--success {
+  color: var(--fs-white);
+  background: var(--fs-success);
+}
+
+.fs-button--success:hover {
+  background: var(--fs-success-hover) !important;
+  color: var(--fs-white) !important;
+}
+
+.fs-button--success:active {
+  background: var(--fs-success-active) !important;
+  color: var(--fs-white) !important;
+}
+
+.fs-button--info {
+  color: var(--fs-white);
+  background: var(--fs-info);
+}
+
+.fs-button--info:hover {
+  background: var(--fs-info-hover) !important;
+  color: var(--fs-white) !important;
+}
+
+.fs-button--info:active {
+  background: var(--fs-info-active) !important;
+  color: var(--fs-white) !important;
+}
+
+.fs-button--warning {
+  color: var(--fs-text-color);
+  background: var(--fs-warning);
+}
+
+.fs-button--warning:hover {
+  background: var(--fs-warning-hover) !important;
+  color: var(--fs-text-color) !important;
+}
+
+.fs-button--warning:active {
+  background: var(--fs-warning-active) !important;
+  color: var(--fs-text-color) !important;
+}
+
+.fs-button--danger {
+  color: var(--fs-white);
+  background: var(--fs-danger);
+}
+
+.fs-button--danger:hover {
+  background: var(--fs-danger-hover) !important;
+  color: var(--fs-white) !important;
+}
+
+.fs-button--danger:active {
+  background: var(--fs-danger-active) !important;
+  color: var(--fs-white) !important;
+}
+
+.fs-button--no-text i {
+  margin-right: 0;
+}
+

@@ -1,0 +1,27 @@
+.fs-badge-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--fs-accent);
+  border-radius: var(--fs-spacing-4x);
+  height: var(--fs-spacing-4x);
+  padding: 0 var(--fs-spacing-2x);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  color: var(--fs-accent);
+  background: var(--fs-blue-100);
+}
+
+.fs-badge + .fs-badge {
+  margin-left: var(--fs-spacing-base);
+}

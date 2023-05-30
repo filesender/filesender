@@ -1,0 +1,23 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bs-gray-100);
+  color: var(--fs-text-color);
+}
+
+main {
+  flex: 1 0 auto;
+  padding: var(--fs-spacing-2x) 0;
+}
+
+hr {
+  margin-top: var(--fs-spacing-3x) !important;
+  margin-bottom: var(--fs-spacing-3x) !important;;
+  border-top: 1px solid var(--fs-gray-200);
+  opacity: 1;
+}

@@ -1,0 +1,13 @@
+.fs-table {
+  margin: 0;
+  padding: 0;
+}
+
+.fs-table td {
+  margin: 0;
+  padding: var(--fs-spacing-base) 0;
+}
+
+.fs-table td + td {
+  padding-left: var(--fs-spacing-6x);
+}

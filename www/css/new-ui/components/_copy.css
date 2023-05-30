@@ -1,0 +1,20 @@
+.fs-copy {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--fs-blue-100);
+  border: 1px solid var(--fs-accent);
+  border-radius: var(--fs-spacing-4x);
+  font-weight: 700;
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-copy span {
+  flex: 1;
+  font-size: 12px;
+  padding: 0 var(--fs-spacing-3x);
+}
+
+.fs-copy button {
+  font-size: 14px;
+}

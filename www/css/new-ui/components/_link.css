@@ -1,0 +1,43 @@
+.fs-link {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 300;
+    font-size: 14px;
+    border-radius: var(--fs-spacing-3x);
+    color: var(--fs-text-color);
+    background: transparent;
+    border: none;
+}
+
+.fs-link:hover {
+    color: var(--fs-accent) !important;
+    background: var(--fs-hover) !important;
+}
+
+.fs-link:hover i {
+    color: var(--fs-accent) !important;
+}
+
+.fs-link i {
+    color: var(--fs-accent);
+    font-size: 1.2rem !important;
+}
+
+.fs-link i + span {
+    margin-left: var(--fs-spacing-base);
+}
+
+.fs-link--no-hover:hover {
+    background: transparent;
+}
+
+.fs-link:active,
+.fs-link:visited,
+.fs-link:focus,
+.fs-link:focus-visible {
+    background: transparent;
+    border: none;
+}

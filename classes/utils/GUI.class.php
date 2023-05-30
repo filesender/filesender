@@ -44,17 +44,17 @@ class GUI
      * Base web path
      */
     private static $path = null;
-    
+
     /**
      * Current application page
      */
     private static $current_page = null;
-    
+
     /**
      * Application pages allowed to the user
      */
     private static $allowed_pages = null;
-    
+
     /**
      * Get stylesheet(s)
      *
@@ -66,13 +66,14 @@ class GUI
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'lib/bootstrap/dist/css/bootstrap.min.css',
-            'lib/flag-icons/css/flag-icons.min.css',            
+            'lib/flag-icons/css/flag-icons.min.css',
             'css/default.css',
+            'css/new-ui/styles.css', // Adding the new-ui styles
             'skin/styles.css',
             'css/' . Config::get('site_css')
         ));
     }
-    
+
     /**
      * Include stylesheets
      */
@@ -90,7 +91,7 @@ class GUI
               ||   preg_match("@Trident/@i", $_SERVER['HTTP_USER_AGENT'] );
         }
     }
-    
+
     public static function browser_is_edge()
     {
         if (isset($_SERVER['HTTP_USER_AGENT'])) {
@@ -102,7 +103,7 @@ class GUI
     {
         return Utilities::isTrue(GUI::browser_is_ie11() || GUI::browser_is_edge());
     }
-    
+
     /**
      * Get script(s)
      *
@@ -111,7 +112,7 @@ class GUI
     public static function scripts()
     {
         $sources = array();
-        
+
         if( Browser::instance()->allowStreamSaver ) {
             array_push( $sources,
                         'lib/streamsaver/StreamSaver.js',
@@ -128,7 +129,7 @@ class GUI
                     'lib/web-streams-polyfill/dist/ponyfill.js',
                     'lib/webcrypto-shim/webcrypto-shim.min.js',
                     'lib/bootstrap/dist/js/bootstrap.bundle.min.js',
-                    'lib/bootbox/dist/bootbox.all.min.js',          
+                    'lib/bootbox/dist/bootbox.all.min.js',
                     'js/filesender.js',
                     'js/lang.js',
                     'js/client.js',
@@ -144,7 +145,7 @@ class GUI
                     'lib/xregexp/xregexp-all.js'
         );
 
-        
+
         if (Config::get('terasender_enabled')) {
             $sources[] = 'js/terasender/terasender.js';
         }
@@ -157,12 +158,12 @@ class GUI
                 $sources[] = 'js/asmcrypto/asmcryptoshim.js';
             }
         }
-        
+
         $sources[] = 'skin/script.js';
-        
+
         return self::filterSources($sources);
     }
-    
+
     /**
      * Include scripts
      */
@@ -172,7 +173,7 @@ class GUI
             echo '<script type="text/javascript" src="'.$path.'"></script>'."\n";
         }
     }
-    
+
     /**
      * Get favicon
      *
@@ -188,10 +189,10 @@ class GUI
             'skin/favicon.gif',
             'skin/favicon.png'
         ));
-        
+
         return array_pop($locations);
     }
-    
+
     /**
      * Include favicon
      */
@@ -201,10 +202,10 @@ class GUI
         if (!$location) {
             return;
         }
-        
+
         echo '<link type="'.Mime::getFromFile($location).'" rel="icon" href="'.self::path($location).'" />'."\n";
     }
-    
+
     /**
      * Get logo
      *
@@ -217,10 +218,10 @@ class GUI
             'skin/logo.png',
             Config::get('site_logo')
         ));
-        
+
         return array_pop($locations);
     }
-    
+
     /**
      * Include logo
      */
@@ -230,10 +231,10 @@ class GUI
         if (!$location) {
             return;
         }
-        
+
         echo '<img id="logo" src="'.self::path($location).'" alt="'.Config::get('site_name').'" />'."\n";
     }
-    
+
     /**
      * Compute base path
      *
@@ -246,16 +247,16 @@ class GUI
         if (is_null(self::$path)) {
             self::$path = preg_replace('`^(https?://)?([^/]+)/`', '/', Config::get('site_url'));
         }
-        
+
         if (is_array($location)) {
             return array_map(function ($l) {
                 return GUI::path($l);
             }, $location);
         }
-        
+
         return self::$path.$location;
     }
-    
+
     /**
      * Filter sources based on existance
      *
@@ -269,7 +270,7 @@ class GUI
             return file_exists(FILESENDER_BASE.'/www/'.$source);
         });
     }
-    
+
     /**
      * Force HTTPS - redirects HTTP to HTTPS
      */
@@ -279,11 +280,11 @@ class GUI
             if (session_id() != '') {
                 // Destroy current session to prevent stealing session, because someone may have sniffed it during our HTTP (not HTTPS) request.
                 unset($_SESSION);
-                
+
                 if (ini_get('session.use_cookies')) {
                     // Unset the PHPSESSID cookie, so that the user will get a new session ID on their next request.
                     $params = session_get_cookie_params();
-                    
+
                     setcookie(
                         session_name(),
                         '',
@@ -294,10 +295,10 @@ class GUI
                         $params['httponly']
                     );
                 }
-                
+
                 session_destroy();
             }
-            
+
             // ... Redirect the user to HTTPS.
             $host = array_key_exists('HTTP_HOST', $_SERVER) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
             $redirect = sprintf('Location: https://%s%s', $host, $_SERVER['REQUEST_URI']);
@@ -305,7 +306,7 @@ class GUI
             exit;
         }
     }
-    
+
     /**
      * Get current page
      *
@@ -318,7 +319,7 @@ class GUI
         if (!is_null($page)) {
             self::$current_page = $page;
         }
-        
+
         // Already cached ?
         if (!self::$current_page) {
             // Get from request
@@ -326,12 +327,12 @@ class GUI
             if (array_key_exists('s', $_REQUEST)) {
                 $page = $_REQUEST['s'];
             }
-            
+
             // Maintenance override
             if (Config::get('maintenance')) {
                 $page = 'maintenance';
             }
-            
+
             // Landing page if no value found
             if (!$page) {
                 if (Auth::isAuthenticated() && !Auth::isGuest()) {
@@ -341,18 +342,18 @@ class GUI
                     $page = 'home';
                 }
             }
-            
+
             // Fail if unknown
             if (!GUIPages::isValidValue($page)) {
                 throw new GUIUnknownPageException($page);
             }
-            
+
             self::$current_page = $page;
         }
-        
+
         return self::$current_page;
     }
-    
+
     /**
      * Get the pages the current user has access to
      *
@@ -364,7 +365,7 @@ class GUI
         if (is_null(self::$allowed_pages)) {
 
             self::$allowed_pages = Config::get('allow_pages_core');
-            
+
             // Authenticated users have access to lots ...
             if (Auth::isAuthenticated(false)) {
                 if (Auth::isGuest()) {
@@ -373,7 +374,7 @@ class GUI
                 } else {
                     self::$allowed_pages = array_merge( self::$allowed_pages,
                                                         Config::get('allow_pages_add_for_user'));
-                    
+
                     // ... and admin to even more !
                     if (Auth::isAdmin()) {
                         self::$allowed_pages = array_merge( self::$allowed_pages,
@@ -387,7 +388,7 @@ class GUI
                     if (Auth::canViewStatistics()) {
                         self::$allowed_pages[] = GUIPages::STATISTICS;
                     }
-                    
+
                     // Is user page disabled?
                     if (!Config::get('user_page')) {
                         self::$allowed_pages = array_diff( self::$allowed_pages,
@@ -395,7 +396,7 @@ class GUI
                     }
                 }
             }
-            
+
 
             //
             // the above doesn't matter if we are not allowing use right now.
@@ -404,10 +405,10 @@ class GUI
                 self::$allowed_pages = array(GUIPages::MAINTENANCE);
             }
         }
-        
+
         return self::$allowed_pages;
     }
-    
+
     /**
      * Check if current user can acces a page
      *
@@ -420,7 +421,7 @@ class GUI
         if (is_null($page)) {
             $page = self::currentPage();
         }
-        
+
         // Fail if unknown
         if (!GUIPages::isValidValue($page)) {
             throw new GUIUnknownPageException($page);
@@ -430,8 +431,8 @@ class GUI
         if(!Config::get('guest_support_enabled') && $page == 'guests') {
             throw new GUIUnknownPageException($page);
         }
-        
-        
+
+
         return in_array($page, self::allowedPages());
     }
 
@@ -446,13 +447,13 @@ class GUI
         if(!$addedClass) {
             $addedClass = '';
         }
-        
+
         $embed = Config::get('auth_sp_embed');
-        
+
         if(!$embed) {
             $embed = '<a class="btn btn-primary '.$addedClass.'" id="btn_logon" href="'.AuthSP::logonURL($target).'">'.Lang::tr('logon').'</a>';
         }
-        
+
         return $embed;
     }
 }
