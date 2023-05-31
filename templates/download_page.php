@@ -34,6 +34,26 @@ function presentAVName( $v )
     }
     return $ret;
 }
+
+$rid = 0;
+if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
+    if(array_key_exists('token', $_REQUEST)) {
+        $token = $_REQUEST['token'];
+        
+        if(Utilities::isValidUID($token)) {
+            
+            try {
+                // Getting recipient from the token
+                $recipient = Recipient::fromToken($token); // Throws
+                $rid = $recipient->id;
+            } catch (RecipientNotFoundException $e) {
+            }
+        }
+    }
+}
+
+
+
 ?>
 <div class="boxnoframe">
     <h1>{tr:download_page}</h1>
@@ -137,6 +157,38 @@ function presentAVName( $v )
         </div>
     <?php } ?>
                             
+    <div class="verify_email_to_download">
+        <h2>{tr:verify_your_email_address_to_download}</h2>
+
+        <table columns="2" border="1">
+	    <col style="width:25%">
+	    <col style="width:75%">            
+            <tr>
+                <td>
+                    <a href="#" class="verificationcodesendtoemail">
+                        <span class="fa fa-paper-plane fa-lg"></span>&nbsp;{tr:send}
+                    </a>
+                </td>
+                <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p>{tr:then_enter_verification_code_below}</p>
+                </td>
+            </tr>
+            <tr class="verificationcodesendpage">
+                <td>
+                    <a class="verificationcodesend verificationcodesendelement" href="#">
+                        <span class="fa fa-unlock fa-lg"></span>&nbsp;{tr:verify}
+                    </a>
+                </td>
+                <td class="verify_labels2">
+                    <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
     
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
@@ -261,6 +313,7 @@ function presentAVName( $v )
         </div>
     <?php } ?>    
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
+        <div class="rid" data-id="<?php echo $rid ?>"></div>
     </div>
 </div>
 

@@ -1677,6 +1677,7 @@ $(function() {
             '.fieldcontainer[data-related-to="message"], .recipients,' +
             ' .fieldcontainer[data-option="add_me_to_recipients"],' +
             ' .fieldcontainer[data-option="email_me_copies"],' +
+            ' .fieldcontainer[data-option="verify_email_to_download"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
         form.find(
