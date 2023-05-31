@@ -7,14 +7,14 @@
 // 
 // 
 ?>
-subject: FileSender: One time verification code for download
+subject: {cfg:site_name}: One time verification code for download
 
 {alternative:plain}
 
 Hello,
 
 Somebody (probably you) has requested a one time verification code in order to
-download a file which was made available to you through the FileSender service.
+download a file which was made available to you through the {cfg:site_name} service.
 This is your email verification code to download this transfer:
 
 {verificationCode}
@@ -28,7 +28,7 @@ This is your email verification code to download this transfer:
 
 <p>
 Somebody (probably you) has requested a one time verification code in order to
-download a file which was made available to you through the FileSender service.
+download a file which was made available to you through the {cfg:site_name} service.
 This is your email verification code to download this transfer:
 </p>
 <p>
