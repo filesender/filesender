@@ -13,7 +13,7 @@
   margin-left: var(--fs-spacing-2x);
 }
 
-.fs-progress-bar__indicator {
+.fs-progress-bar__progress {
   position: relative;
   flex: 1;
   height: var(--fs-spacing-2x);
@@ -22,7 +22,7 @@
   margin: 0 !important;
 }
 
-.fs-progress-bar__indicator:before {
+.fs-progress-bar__indicator {
   content: '';
   position: absolute;
   width: 0%;

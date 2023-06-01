@@ -39,7 +39,7 @@
 
 .fs-collapse__content {
   display: none;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   padding: var(--fs-spacing-4x);
 }

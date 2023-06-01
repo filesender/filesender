@@ -1,11 +1,16 @@
 header {
-  padding: var(--fs-spacing-base);
+  position: fixed;
+  height: var(--fs-spacing-12x);
+  width: 100%;
+  padding: 0 var(--fs-spacing-base);
   background: var(--fs-white);
   border-bottom: 1px solid var(--fs-gray-200);
+  z-index: 1;
 }
 
 header nav {
   display: flex;
+  height: 100%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;

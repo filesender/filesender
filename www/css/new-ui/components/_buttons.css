@@ -30,6 +30,14 @@
   background: var(--fs-btn-active);
 }
 
+.fs-button:disabled,
+.fs-button[disabled] {
+  opacity: .3;
+  cursor: not-allowed;
+  color: var(--fs-white) !important;
+  background: var(--fs-accent) !important;
+}
+
 .fs-button i {
   margin-right: var(--fs-spacing-base);
 }
@@ -74,6 +82,12 @@
   color: var(--fs-white) !important;
 }
 
+.fs-button--success:disabled,
+.fs-button--success[disabled] {
+  color: var(--fs-white) !important;
+  background: var(--fs-success) !important;
+}
+
 .fs-button--info {
   color: var(--fs-white);
   background: var(--fs-info);
@@ -87,6 +101,12 @@
 .fs-button--info:active {
   background: var(--fs-info-active) !important;
   color: var(--fs-white) !important;
+}
+
+.fs-button--info:disabled,
+.fs-button--info[disabled] {
+  color: var(--fs-white) !important;
+  background: var(--fs-info) !important;
 }
 
 .fs-button--warning {
@@ -104,6 +124,12 @@
   color: var(--fs-text-color) !important;
 }
 
+.fs-button--warning:disabled,
+.fs-button--warning[disabled] {
+  color: var(--fs-text-color) !important;
+  background: var(--fs-warning) !important;
+}
+
 .fs-button--danger {
   color: var(--fs-white);
   background: var(--fs-danger);
@@ -117,6 +143,12 @@
 .fs-button--danger:active {
   background: var(--fs-danger-active) !important;
   color: var(--fs-white) !important;
+}
+
+.fs-button--danger:disabled,
+.fs-button--danger[disabled] {
+  color: var(--fs-white) !important;
+  background: var(--fs-danger) !important;
 }
 
 .fs-button--no-text i {

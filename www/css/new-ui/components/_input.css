@@ -14,6 +14,20 @@
   width: var(--fs-spacing-18x);
 }
 
+.fs-input-group--vertical {
+  flex-direction: column;
+}
+
+.fs-input-group--vertical label {
+  width: auto;
+  margin-bottom: var(--fs-spacing-base);
+}
+
+.fs-input-group span.invalid {
+  position: absolute;
+  left: var(--fs-spacing-15x);
+}
+
 .fs-input-group input,
 .fs-input-group textarea {
   flex: 1;
@@ -21,6 +35,11 @@
   min-height: var(--fs-spacing-6x);
   background: var(--fs-white);
   border-radius: var(--fs-spacing-base);
+}
+
+.fs-input-group input.invalid,
+.fs-input-group textarea.invalid {
+  border-color: var(--fs-danger);
 }
 
 .fs-input-group input:focus,

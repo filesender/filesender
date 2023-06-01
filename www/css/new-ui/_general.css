@@ -12,12 +12,18 @@ body {
 
 main {
   flex: 1 0 auto;
-  padding: var(--fs-spacing-2x) 0;
+  padding: var(--fs-spacing-17x) var(--fs-spacing-5x);
+}
+
+main .core {
+  background: var(--fs-white);
+  border: 1px solid var(--fs-gray-200);
+  border-radius: var(--fs-spacing-base);
 }
 
 hr {
   margin-top: var(--fs-spacing-3x) !important;
-  margin-bottom: var(--fs-spacing-3x) !important;;
+  margin-bottom: var(--fs-spacing-3x) !important;
   border-top: 1px solid var(--fs-gray-200);
   opacity: 1;
 }
