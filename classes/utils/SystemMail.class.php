@@ -62,7 +62,7 @@ class SystemMail extends ApplicationMail
      * @param string $translation_id
      * @param mixed ... additional translation variables
      */
-    public static function quickSend($translation_id /*, ... */)
+    public static function quickSend($translation_id, $to='' /*, ... */)
     {
         $vars = array_slice(func_get_args(), 1);
         
