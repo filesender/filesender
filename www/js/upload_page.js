@@ -312,10 +312,6 @@ filesender.ui.files = {
     updateTotalFileSizeAndCountStats: function() {
         filesender.ui.updateSizeInfo();
 
-        filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
-            lang.tr('text_desc_of_file_count_and_size')
-                .r({filecount: filecount, totalsize: sizetxt }).out());
-
     },
 
     addFile: function(filepath, fileblob, source_node) {
@@ -411,12 +407,6 @@ filesender.ui.files = {
             }
         } else {
             filesender.ui.updateSizeInfo();
-
-            filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
-                lang.tr('text_desc_of_file_count_and_size')
-                    .r({filecount: filecount, totalsize: sizetxt }).out());
-
-
         }
 
         tr.attr('index', filesender.ui.transfer.files.length - 1);
@@ -1310,7 +1300,7 @@ filesender.ui.startUpload = function() {
         if (filesender.ui.transfer.recipients && filesender.ui.transfer.recipients.length > 0) {
             $('.fs-uploader__upload-recipients').addClass('fs-uploader__upload-recipients--show');
 
-            const badgeList = $('.fs-uploader__upload-link .fs-badge-list');
+            const badgeList = $('.fs-uploader__upload-recipients .fs-badge-list');
 
             filesender.ui.transfer.recipients.forEach(recipient => {
                 badgeList.append(`<div class="fs-badge">${recipient}</div>`);
@@ -1692,6 +1682,9 @@ filesender.ui.updateSizeInfo = function () {
     filesender.ui.nodes.stats.size.find('.value').text(sizetxt + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
     filesender.ui.nodes.stats.filecount.text(filecount);
     filesender.ui.nodes.stats.sendingsize.text(sizetxt);
+
+    filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(lang.tr('text_desc_of_file_count_and_size').r({filecount: filecount, totalsize: sizetxt }).out());
+
 };
 
 $(function() {
