@@ -5,6 +5,10 @@
   margin-bottom: var(--fs-spacing-3x);
 }
 
+.fs-switch--hide {
+  display: none;
+}
+
 .fs-switch--small label {
   font-size: 12px !important;
   padding-left: var(--fs-spacing-9x) !important;
@@ -51,8 +55,10 @@
   overflow: hidden;
   position: absolute;
   width: 0;
-  margin-left: var(--spacing-scale-base);
+  margin-left: var(--fs-spacing-base);
 }
+
+
 
 .fs-switch input + label:after {
   left: 4px;

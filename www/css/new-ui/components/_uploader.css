@@ -212,6 +212,7 @@
 
 .fs-uploader__files table td div .progressbar .progress-bar {
   padding-left: var(--fs-spacing-base);
+  background-color: var(--fs-success);
 }
 
 .fs-uploader__actions {
@@ -297,11 +298,21 @@
 }
 
 .fs-uploader__upload-link {
+  display: none;
   margin-top: var(--fs-spacing-5x);
 }
 
+.fs-uploader__upload-link--show {
+  display: block;
+}
+
 .fs-uploader__upload-recipients {
+  display: none;
   margin-top: var(--fs-spacing-5x);
+}
+
+.fs-uploader__upload-recipients--show {
+  display: block;
 }
 
 .fs-uploader__upload-expires {
@@ -309,6 +320,7 @@
 }
 
 .fs-uploader__upload-custom-name {
+  display: none;
   margin-top: var(--fs-spacing-5x);
 }
 
@@ -325,7 +337,11 @@
   border-top: 1px solid var(--fs-gray-200);
 }
 
-.fs-uploader__upload-actions button + button {
+.fs-uploader__upload-actions a {
+  text-decoration: none !important;
+}
+
+.fs-uploader__upload-actions button + button, .fs-uploader__upload-actions a + a {
   margin-left: var(--fs-spacing-2x);
 }
 

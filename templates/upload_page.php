@@ -128,7 +128,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
         echo '</div>';
 
     } else {
-        echo '<div class="fs-switch">';
+        echo '<div id="fs-uploader__add-me-to-recipients" class="fs-switch">';
         echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
         echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
         echo '</div>';
@@ -334,112 +334,162 @@ if(Auth::isGuest()) {
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="fs-uploader__options">
+                            <div class="fs-uploader__send-options">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5>Choose how you want to transfer your files</h5>
 
-                            <?php if($show_get_a_link_or_email_choice) { ?>
-                                <div class="fs-uploader__send-options">
-                                    <h5>Choose how you want to transfer your files</h5>
+                                        <?php if($show_get_a_link_or_email_choice) { ?>
 
-                                    <div class="fs-radio-group">
-                                        <input type="radio" id="transfer-link" name="transfer-type" value="transfer-link">
+                                            <div class="fs-radio-group">
+                                                <input type="radio" id="transfer-link" name="transfer-type" value="transfer-link">
 
-                                        <label for="transfer-link" class="fs-radio">
-                                            <div class="fs-radio__option">
-                                                <span class="fs-radio__circle"></span>
-                                                <span class="fs-radio__text">
-                                                A transfer link
+                                                <label for="transfer-link" class="fs-radio">
+                                                    <div class="fs-radio__option">
+                                                        <span class="fs-radio__circle"></span>
+                                                        <span class="fs-radio__text">
+                                                    A transfer link
+                                                </span>
+                                                    </div>
+                                                    <span class="fs-radio__info">
+                                                - You send the download link to your recipients
                                             </span>
+                                                </label>
                                             </div>
-                                            <span class="fs-radio__info">
-                                        - You send the download link to your recipients
-                                    </span>
-                                        </label>
-                                    </div>
+                                        <?php } ?>
 
-                                    <div class="fs-radio-group">
-                                        <input type="radio" id="transfer-email" name="transfer-type" value="transfer-email">
+                                        <div class="fs-radio-group">
+                                            <input type="radio" id="transfer-email" name="transfer-type" value="transfer-email">
 
-                                        <label for="transfer-email" class="fs-radio">
-                                            <div class="fs-radio__option">
-                                                <span class="fs-radio__circle"></span>
-                                                <span class="fs-radio__text">
-                                            An email
+                                            <label for="transfer-email" class="fs-radio">
+                                                <div class="fs-radio__option">
+                                                    <span class="fs-radio__circle"></span>
+                                                    <span class="fs-radio__text">
+                                                An email
+                                            </span>
+                                                </div>
+                                                <span class="fs-radio__info">
+                                            - We send the transfer direclty to your recipients
                                         </span>
-                                            </div>
-                                            <span class="fs-radio__info">
-                                        - We send the transfer direclty to your recipients
-                                    </span>
-                                        </label>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            <?php } ?>
+                            </div>
 
                             <div class="fs-uploader__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-uploader__transfer-fields--show'; } ?>">
                                 <hr />
 
-                                <?php if($allow_recipients) { ?>
-                                    <div data-related-to="message">
-                                        <?php
-                                        foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                            if( $name == 'add_me_to_recipients' ) {
-                                                $upload_options_handled[$name] = 1;
-                                                $forcedOption = false;
-                                                $displayoption($name, $cfg, Auth::isGuest(), $forcedOption,"message");
-                                            }
-                                        }
-                                        ?>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div data-related-to="emailfrom">
 
-                                        <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
-                                            <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
-                                                <label for="to">
-                                                    Send transfer to
-                                                </label>
+                                            <?php $emails = Auth::isGuest() ? array(AuthGuest::getGuest()->email) : Auth::user()->email_addresses ?>
 
-                                                <?php echo AuthGuest::getGuest()->user_email ?>
+                                            <?php if (count($emails) > 1) { ?>
+                                                <div class="fs-select">
+                                                    <label for="form">
+                                                        {tr:from}
+                                                    </label>
+                                                    <select id="from" name="from">
+                                                        <?php foreach ($emails as $email) { ?>
+                                                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            <?php } else { ?>
+                                                <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
+                                                    <label for="from">
+                                                        {tr:from}
+                                                    </label>
+
+                                                    <input name="to" id="to" type="email"
+                                                           title="{tr:from}"
+                                                           value=""
+                                                           placeholder="<?php echo Template::sanitizeOutputEmail($emails[0]) ?>" disabled />
+
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <?php if($allow_recipients) { ?>
+                                            <div data-related-to="message">
+                                                <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
+                                                    <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
+                                                        <label for="to">
+                                                            Send transfer to
+                                                        </label>
+
+                                                        <?php echo AuthGuest::getGuest()->user_email ?>
+                                                    </div>
+                                                <?php } else { ?>
+                                                    <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
+                                                        <label for="to">
+                                                            Send transfer to
+                                                        </label>
+
+                                                        <input name="to" id="to" type="email"
+                                                               multiple title="{tr:email_separator_msg}"
+                                                               value=""
+                                                               placeholder="{tr:enter_to_email}" />
+                                                    </div>
+
+                                                    <div class="fs-uploader__recipients recipients"></div>
+                                                <?php } ?>
                                             </div>
-                                        <?php } else { ?>
-                                            <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
-                                                <label for="to">
-                                                    Send transfer to
+
+                                            <div data-related-to="message">
+                                                <div class="fs-input-group">
+                                                    <label for="message">
+                                                        {tr:message}
+                                                    </label>
+                                                    <textarea id="message" name="message" rows="3" placeholder="Optional message"></textarea>
+                                                </div>
+
+                                                <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
+                                                <label class="invalid" id="password_can_not_be_part_of_message_warning">
+                                                    {tr:password_can_not_be_part_of_message_warning}
                                                 </label>
-
-                                                <input name="to" id="to" type="emai"
-                                                       multiple title="{tr:email_separator_msg}"
-                                                       value=""
-                                                       placeholder="{tr:enter_to_email}" />
+                                                <label class="invalid" id="password_can_not_be_part_of_message_error">
+                                                    {tr:password_can_not_be_part_of_message_error}
+                                                </label>
                                             </div>
-
-                                            <div class="fs-uploader__recipients recipients"></div>
+                                        <?php } ?> <!-- closing if($allow_recipients) -->
+                                        <?php if(Auth::isGuest()) { ?>
+                                            <div>
+                                                <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
+                                                <input type="hidden" id="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
+                                            </div>
                                         <?php } ?>
                                     </div>
+                                </div>
 
-                                    <div data-related-to="message">
-                                        <div class="fs-input-group">
-                                            <label for="message">
-                                                {tr:message}
-                                            </label>
-                                            <textarea id="message" name="message" rows="3" placeholder="Optional message"></textarea>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div data-related-to="message">
+                                            <?php
+                                            foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                if( $name == 'add_me_to_recipients' ) {
+                                                    $upload_options_handled[$name] = 1;
+                                                    $forcedOption = false;
+                                                    $displayoption($name, $cfg, Auth::isGuest(), $forcedOption,"message");
+                                                }
+                                            }
+                                            ?>
                                         </div>
-
-                                        <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
-                                        <label class="invalid" id="password_can_not_be_part_of_message_warning">
-                                            {tr:password_can_not_be_part_of_message_warning}
-                                        </label>
-                                        <label class="invalid" id="password_can_not_be_part_of_message_error">
-                                            {tr:password_can_not_be_part_of_message_error}
-                                        </label>
                                     </div>
-                                <?php } ?> <!-- closing if($allow_recipients) -->
-                                <?php if(Auth::isGuest()) { ?>
-                                    <div>
-                                        <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
-                                        <input type="hidden" id="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
-                                        <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
-                                    </div>
-                                <?php } ?>
+                                </div>
                             </div>
 
                             <div class="fs-uploader__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-uploader__transfer-settings--show'; } ?>">
                                 <hr />
+
+
 
                                 <strong>Transfer settings</strong>
 
@@ -457,7 +507,7 @@ if(Auth::isGuest()) {
                                                 <div class="fs-uploader__password-top" id="encryption_password_container">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-7">
-                                                            <div class="fs-input-group" data-transfer-type="transfer-email">
+                                                            <div class="fs-input-group">
                                                                 <input type="text" id="encryption_password" name="encryption_password" placeholder="Enter your password">
                                                             </div>
                                                         </div>
@@ -500,14 +550,15 @@ if(Auth::isGuest()) {
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="fs-select">
-                                            <label for="expires">
+                                            <label for="expires-select">
                                                 Expires after
                                             </label>
-                                            <select id="expires" name="expires">
+                                            <select id="expires-select" name="expires-select">
                                                 <option value="7" selected>7 days</option>
                                                 <option value="15">15 days</option>
                                                 <option value="30">30 days</option>
                                                 <option value="60">60 days</option>
+                                                <option value="90">90 days</option>
                                             </select>
                                         </div>
                                     </div>
@@ -652,37 +703,13 @@ if(Auth::isGuest()) {
                             <div class="fs-uploader__upload-size-info">
                                 <div class="stats">
                                     <div class="uploaded">
-                                    <span class="value">
-                                        0 MB of 0 MB
-                                    </span>
+                                        <span class="value">
+                                            0 MB of 0 MB
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                             <div class="fs-uploader__upload-speed-info">
-                                <!--                                <div class="msg">-->
-                                <!--                                    <table class="fs-table resumetable">-->
-                                <!--                                        <tbody>-->
-                                <!--                                        <tr>-->
-                                <!--                                            <td>-->
-                                <!--                                                <div class="auto_resume_timer_top">-->
-                                <!--                                                    <div class="auto_resume_timer">-->
-                                <!--                                                    </div>-->
-                                <!--                                                </div>-->
-                                <!--                                            </td>-->
-                                <!--                                        </tr>-->
-                                <!--                                        <tr>-->
-                                <!--                                            <td>-->
-                                <!--                                                <div class="seconds_since_data_sent" id="seconds_since_data_sent"></div>-->
-                                <!--                                            </td>-->
-                                <!--                                        </tr>-->
-                                <!--                                        <tr>-->
-                                <!--                                            <td>-->
-                                <!--                                                <div class="seconds_since_data_sent_info" id="seconds_since_data_sent_info"></div>-->
-                                <!--                                            </td>-->
-                                <!--                                        </tr>-->
-                                <!--                                        </tbody>-->
-                                <!--                                    </table>-->
-                                <!--                                </div>-->
                                 <div class="stats">
                                     <table class="fs-table">
                                         <tbody>
@@ -699,7 +726,9 @@ if(Auth::isGuest()) {
                                                 <strong>Estimated completion</strong>
                                             </td>
                                             <td>
-                                                <strong id="fs-uploader__estimated-time" class="value">in 13 minutes</strong>
+                                                <strong id="fs-uploader__estimated-time" class="value">
+                                                    in 13 minutes
+                                                </strong>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -733,36 +762,12 @@ if(Auth::isGuest()) {
                             </span>
                             </div>
                             <div class="fs-uploader__upload-speed-info">
-                                <!--                                <div class="msg">-->
-                                <!--                                    <table class="fs-table resumetable">-->
-                                <!--                                        <tbody>-->
-                                <!--                                        <tr>-->
-                                <!--                                            <td>-->
-                                <!--                                                <div class="auto_resume_timer_top">-->
-                                <!--                                                    <div class="auto_resume_timer">-->
-                                <!--                                                    </div>-->
-                                <!--                                                </div>-->
-                                <!--                                            </td>-->
-                                <!--                                        </tr>-->
-                                <!--                                        <tr>-->
-                                <!--                                            <td>-->
-                                <!--                                                <div class="seconds_since_data_sent" id="seconds_since_data_sent"></div>-->
-                                <!--                                            </td>-->
-                                <!--                                        </tr>-->
-                                <!--                                        <tr>-->
-                                <!--                                            <td>-->
-                                <!--                                                <div class="seconds_since_data_sent_info" id="seconds_since_data_sent_info"></div>-->
-                                <!--                                            </td>-->
-                                <!--                                        </tr>-->
-                                <!--                                        </tbody>-->
-                                <!--                                    </table>-->
-                                <!--                                </div>-->
                                 <div class="stats">
                                     <table class="fs-table">
                                         <tbody>
                                         <tr class="fs-uploader__total-info size">
                                             <td>Total size</td>
-                                            <td id="fs-uploader__total-size value">0 MB</td>
+                                            <td id="fs-uploader__total-size" class="value">0 MB</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -787,16 +792,12 @@ if(Auth::isGuest()) {
                                     <div class="fs-badge">
                                         fulano@rnp.br
                                     </div>
-                                    <div class="fs-badge">
-                                        ciclano@rnp.br
-                                    </div>
-                                    <div class="fs-badge">
-                                        beltrano@rnp.br
-                                    </div>
                                 </div>
                             </div>
                             <div class="fs-uploader__upload-expires">
-                                <span>The transfer expires in 7 days.</span>
+                                <span>
+                                    The transfer expires in <span id="expires-days">7</span> days.
+                                </span>
                             </div>
                             <div class="fs-uploader__upload-custom-name">
                                 <label for="transfer-name">
@@ -815,14 +816,14 @@ if(Auth::isGuest()) {
                 </div>
 
                 <div class="fs-uploader__upload-actions">
-                    <button type="button" class="fs-button fs-button--info">
+                    <a id="download-link" href=""type="button" class="fs-button fs-button--info" role="button">
                         <i class="fa fa-file-text-o"></i>
                         Transfer details
-                    </button>
-                    <button type="button" class="fs-button fs-button--info">
+                    </a>
+                    <a href="?s=transfers" class="fs-button fs-button--info" role="button">
                         <i class="fa fa-exchange"></i>
                         All my transfers
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -853,27 +854,27 @@ if(Auth::isGuest()) {
 
 
 
-        <div class="">
-            <div class="files_uploadlogtop stage3">
-                <div class="uploadlogbox">
-                    <div class="uploadlogheader">{tr:upload_log_header}</div>
-                    <table class="uploadlog">
-                        <thead hidden="true">
-                        <tr>
-                            <th>{tr:date}</th>
-                            <th>{tr:message}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="tpl">
-                            <td class="date"></td>
-                            <td class="message"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+<!--        <div class="">-->
+<!--            <div class="files_uploadlogtop stage3">-->
+<!--                <div class="uploadlogbox">-->
+<!--                    <div class="uploadlogheader">{tr:upload_log_header}</div>-->
+<!--                    <table class="uploadlog">-->
+<!--                        <thead hidden="true">-->
+<!--                        <tr>-->
+<!--                            <th>{tr:date}</th>-->
+<!--                            <th>{tr:message}</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr class="tpl">-->
+<!--                            <td class="date"></td>-->
+<!--                            <td class="message"></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <!-- closed class="" still in form & core -->
 
         <div class="upload stage1 stage1options mt-2">
@@ -886,83 +887,6 @@ if(Auth::isGuest()) {
                     </div>
                 </div>
             <?php } ?>
-
-        </div>
-
-        <div class="nobox">
-
-            <div class="stage2 mainbox rounded">
-                <table class="upload stage2" width="100%" id="">
-                    <tr>
-                        <td class="nobox" colspan="3">
-
-                            <div class="basic_options">
-                                <div class="fieldcontainer">
-                                    <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
-
-                                    <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
-                                           title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
-                                           data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
-                                    />
-                                </div>
-
-
-                                <?php if(Config::get('transfer_recipients_lang_selector_enabled')) { ?>
-                                    <div class="nav-item dropdown">
-
-                                        <?php
-                                        echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
-                                        $code = Lang::getCode();
-                                        foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                                            if($id == $code) {
-                                                $specificid = $dfn['specific-id'];
-                                                echo '<a class="nav-link dropdown-toggle" ';
-                                                echo ' href="" ';
-                                                echo ' id="lang" name="lang" ';
-                                                echo ' data-bs-toggle="dropdown" ';
-                                                echo ' data-id="'.$id.'" ';
-                                                echo ' aria-haspopup="true" ';
-                                                echo ' aria-expanded="false"> ';
-                                                echo '  <span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
-                                            }
-                                        }
-                                        ?>
-
-                                        <div class="dropdown-menu" aria-labelledby="lang" id="rlangdropdown">
-                                            <?php
-                                            $code = Lang::getCode();
-                                            foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                                                $specificid = $dfn['specific-id'];
-                                                $selected = ($id == $code) ? 'selected="selected"' : '';
-                                                echo '<a class="dropdown-item rlangdropitem" data-id="'.$id.'" >';
-                                                echo '<span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
-
-                                            }
-                                            ?>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-
-
-                                <?php
-                                foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                    if( !array_key_exists($name,$upload_options_handled)) {
-                                        $displayoption($name, $cfg, Auth::isGuest());
-                                    }
-                                }
-                                ?>
-
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="d-flex justify-content-between">
-                    <a href="#" class="stage2back btn btn-primary btn-lg btn-block" role="button"><i class="fa fa-chevron-left"></i>&nbsp;{tr:back}</a>
-                    <a href="#" class="stage2continue btn btn-primary btn-lg btn-block" role="button">{tr:send}&nbsp;<i class="fa fa-chevron-right"></i></a></a>
-                </div>
-
-            </div>
 
         </div>
 

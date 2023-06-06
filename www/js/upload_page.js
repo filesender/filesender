@@ -227,7 +227,7 @@ filesender.ui.elements.preventEmpty = function(el) {
     el.on( 'focus', function(e) { originalValue = e.target.value; } );
     el.on( 'blur',  function(e) {
         if( e.target.value == '' ) {
-            filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
+            // filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
         }
     });
     return this;
@@ -310,14 +310,7 @@ filesender.ui.files = {
     */
 
     updateTotalFileSizeAndCountStats: function() {
-        var filecount = filesender.ui.transfer.getFileCount();
-        var size      = filesender.ui.transfer.getTotalSize();
-        var sizetxt   = filesender.ui.formatBytes(size);
-
-        filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filecount + '/' + filesender.config.max_transfer_files);
-        filesender.ui.nodes.stats.size.show().find('.value').text( sizetxt + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
-        filesender.ui.nodes.stats.filecount.text( filecount );
-        filesender.ui.nodes.stats.sendingsize.text( sizetxt );
+        filesender.ui.updateSizeInfo();
 
         filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
             lang.tr('text_desc_of_file_count_and_size')
@@ -417,14 +410,7 @@ filesender.ui.files = {
             if(file) {
             }
         } else {
-            var size      = filesender.ui.transfer.getTotalSize();
-            var filecount = filesender.ui.transfer.getFileCount();
-            var sizetxt   = filesender.ui.formatBytes(size);
-
-            filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filecount + '/' + filesender.config.max_transfer_files);
-            filesender.ui.nodes.stats.size.show().find('.value').text(sizetxt + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
-            filesender.ui.nodes.stats.filecount.text(filecount);
-            filesender.ui.nodes.stats.sendingsize.text(sizetxt);
+            filesender.ui.updateSizeInfo();
 
             filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(
                 lang.tr('text_desc_of_file_count_and_size')
@@ -577,7 +563,6 @@ filesender.ui.files = {
             if( i < offending.length ) {
                 b = offending[i];
             }
-//            console.log("AAAAAAA file " + file + " i " + i + " v " + v + " b " + b );
             filesender.ui.files.update_crust_meter_for_worker( file, i, v, b );
 
             // calculate stats across all workers
@@ -649,7 +634,6 @@ filesender.ui.files = {
 
         filesender.ui.nodes.stats.filecount.text('');
         filesender.ui.nodes.stats.sendingsize.text('');
-        console.log(filesender.ui.nodes.stats.filecount);
         filesender.ui.evalUploadEnabled();
         this.updateStatsAndClearAll();
 
@@ -968,8 +952,9 @@ filesender.ui.recipients = {
 };
 
 filesender.ui.isUserGettingALink = function() {
-    var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
-    return gal;
+    // var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
+    // return gal;
+    return filesender.ui.getALink;
 }
 filesender.ui.isUserAddMeToRecipients = function() {
     var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
@@ -1064,9 +1049,6 @@ filesender.ui.evalUploadEnabled = function() {
         filesender.ui.nodes.buttons.start.button(ok ? 'enable' : 'disable');
     }
 
-
-    console.log("uploadFileStageOk ", uploadFileStageOk );
-    console.log("ok ", ok );
 
     if (filesender.ui.stage == 2) {
         filesender.ui.nodes.stages.nextStep.prop('disabled', !uploadFileStageOk);
@@ -1206,7 +1188,12 @@ filesender.ui.startUpload = function() {
     window.filesender.pbkdf2dialog.reset();
 
     if(!filesender.ui.nodes.required_files) {
-        this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+        const expiresDays = $('#expires-select').find(":selected").val();
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
+
+        this.transfer.expires = expiresDate / 1000;
 
         if(filesender.ui.nodes.from.length)
             this.transfer.from = filesender.ui.nodes.from.val();
@@ -1226,9 +1213,8 @@ filesender.ui.startUpload = function() {
             var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
             this.transfer.options[o] = v;
         }
-//        console.log("Transfer options ");
-//        console.log(this.transfer.options);
     }
+
     var crypto = window.filesender.crypto_app();
     this.transfer.encryption_key_version = filesender.config.encryption_key_version_new_files;
     this.transfer.encryption_password_hash_iterations = filesender.config.encryption_password_hash_iterations_new_files;
@@ -1304,15 +1290,10 @@ filesender.ui.startUpload = function() {
             }
         };
 
-        filesender.ui.nodes.stats.size.show().find('.value').text( sizetxt + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
-
-
         // show the completed stage.
         filesender.ui.stage = 4;
 
-        filesender.ui.nodes.form.find('.downloadlink').html(filesender.ui.transfer.download_link);
-        filesender.ui.nodes.form.find('.downloadlink').attr('href',filesender.ui.transfer.download_link);
-        filesender.ui.nodes.form.find('.downloadlink').attr('data-link',filesender.ui.transfer.download_link);
+        $('.fs-uploader__upload-link .fs-copy > span').html(filesender.ui.transfer.download_link);
 
         var link = filesender.ui.createPageLink(
             filesender.ui.transfer.guest_token ? 'home' : 'transfers',
@@ -1321,17 +1302,32 @@ filesender.ui.startUpload = function() {
         );
         filesender.ui.nodes.form.find('.mytransferslink').attr('href',link);
 
-        // filesender.ui.nodes.stage1hide.hide();
-        // filesender.ui.nodes.stage2hide.hide();
-        // filesender.ui.nodes.stage3hide.hide();
-        // filesender.ui.nodes.stage4show.show();
-        // filesender.ui.nodes.form.find('.stage4').show();
-
         filesender.ui.goToStage(5);
         filesender.ui.setFileList(4, 5);
 
-        const size      = filesender.ui.transfer.getTotalSize();
-        const sizetxt   = filesender.ui.formatBytes(size);
+        filesender.ui.updateSizeInfo();
+
+        if (filesender.ui.transfer.recipients && filesender.ui.transfer.recipients.length > 0) {
+            $('.fs-uploader__upload-recipients').addClass('fs-uploader__upload-recipients--show');
+
+            const badgeList = $('.fs-uploader__upload-link .fs-badge-list');
+
+            filesender.ui.transfer.recipients.forEach(recipient => {
+                badgeList.append(`<div class="fs-badge">${recipient}</div>`);
+            });
+        } else {
+            $('.fs-uploader__upload-link').addClass('fs-uploader__upload-link--show');
+        }
+
+        const expireDays = new Date(filesender.ui.transfer.expires * 1000);
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const dateDiff = expireDays.getTime() - now.getTime();
+        const daysToExpire = Math.ceil(dateDiff / (1000 * 3600 * 24));
+
+        $('#expires-days').text(daysToExpire);
+
+        $('#download-link').attr('href', filesender.ui.transfer.download_link);
 
         if( useWebNotifications()) {
             window.filesender.notification.notify(lang.tr('web_notification_upload_complete_title'),
@@ -1545,21 +1541,20 @@ filesender.ui.setTimeSinceDataWasLastSentMessage = function(msg) {
 }
 
 
-filesender.ui.handle_get_a_link_change = function() {
-
-    var form = $('#upload_form');
-    var gal = form.find('input[name="get_a_link"]');
-    var choice = gal.is(':checked');
-    form.find(
-        '.fieldcontainer[data-related-to="message"], .recipients,' +
-        ' .fieldcontainer[data-option="add_me_to_recipients"],' +
-        ' .fieldcontainer[data-option="email_me_copies"],' +
-        ' .fieldcontainer[data-related-to="emailfrom"],' +
-        ' .custom-checkbox[data-option="add_me_to_recipients"],' +
-        ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
-    ).toggle(!choice);
-    filesender.ui.evalUploadEnabled();
-}
+// filesender.ui.handle_get_a_link_change = function() {
+//     var form = $('#upload_form');
+//     var gal = form.find('input[name="get_a_link"]');
+//     var choice = gal.is(':checked');
+//     form.find(
+//         '.fieldcontainer[data-related-to="message"], .recipients,' +
+//         ' .fieldcontainer[data-option="add_me_to_recipients"],' +
+//         ' .fieldcontainer[data-option="email_me_copies"],' +
+//         ' .fieldcontainer[data-related-to="emailfrom"],' +
+//         ' .custom-checkbox[data-option="add_me_to_recipients"],' +
+//         ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
+//     ).toggle(!choice);
+//     filesender.ui.evalUploadEnabled();
+// }
 
 // Add class to highlight droparea container
 filesender.ui.activeDroparea = function () {
@@ -1603,7 +1598,6 @@ filesender.ui.removeFile = function (e) {
     }
 
     var iidx = filesender.ui.files.invalidFiles.indexOf(name);
-    console.log("iidx " + iidx + " name " + name );
     if (iidx === -1) {
         // not an invalid file name
         filesender.ui.files.updateTotalFileSizeAndCountStats();
@@ -1665,18 +1659,39 @@ filesender.ui.onChangeTransferType = function (transferType) {
         $('.fs-uploader__transfer-settings').addClass('fs-uploader__transfer-settings--show');
 
         const emailField = $(`[data-transfer-type='${TRANSFER_TYPES.TRANSFER_EMAIL}']`);
+        const addMeToRecipientsField = $(`#fs-uploader__add-me-to-recipients`);
 
         switch (transferType) {
             case TRANSFER_TYPES.TRANSFER_LINK:
                 emailField.addClass('fs-input-group--hide');
+                addMeToRecipientsField.addClass('fs-switch--hide');
+                filesender.ui.getALink = true;
+
+                $('.recipients').html('');
+                $('[data-option="add_me_to_recipients"], [data-option="email_me_copies"], [data-option="enable_recipient_email_download_complete"]').prop( "checked", false );
+                filesender.ui.recipients.clear();
+
                 break;
             case TRANSFER_TYPES.TRANSFER_EMAIL:
                 emailField.removeClass('fs-input-group--hide');
+                addMeToRecipientsField.removeClass('fs-switch--hide');
+                filesender.ui.getALink = false;
                 break;
             default:
                 break;
         }
     }
+};
+
+filesender.ui.updateSizeInfo = function () {
+    var size      = filesender.ui.transfer.getTotalSize();
+    var filecount = filesender.ui.transfer.getFileCount();
+    var sizetxt   = filesender.ui.formatBytes(size);
+
+    filesender.ui.nodes.stats.number_of_files.find('.value').text(filecount + '/' + filesender.config.max_transfer_files);
+    filesender.ui.nodes.stats.size.find('.value').text(sizetxt + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+    filesender.ui.nodes.stats.filecount.text(filecount);
+    filesender.ui.nodes.stats.sendingsize.text(sizetxt);
 };
 
 $(function() {
@@ -1756,7 +1771,7 @@ $(function() {
         lang: form.find('#lang'),
         aup: form.find('input[name="aup"]'),
         aupshowhide: form.find('#aupshowhide'),
-        expires: form.find('input[name="expires"]'),
+        expires: form.find('#expires'),
         options: {
             get_a_link: form.find('input[name="get_a_link"]'),
         },
@@ -1838,7 +1853,7 @@ $(function() {
         filesender.ui.setFileList(2, 3);
 
         var get_a_link_checked = filesender.ui.isUserGettingALink();
-        filesender.ui.handle_get_a_link_change();
+        // filesender.ui.handle_get_a_link_change();
         if( get_a_link_checked ) {
             form.find('.galmodelink').show();
             form.find('.galmodeemail').hide();
@@ -1912,14 +1927,14 @@ $(function() {
 
     filesender.ui.nodes.gal.gal.on('click',function() {
         filesender.ui.nodes.gal.checkbox.prop('checked',true);
-        filesender.ui.handle_get_a_link_change();
+        // filesender.ui.handle_get_a_link_change();
         form.find('.galmodelink').show();
         form.find('.galmodeemail').hide();
         return false;
     });
     filesender.ui.nodes.gal.email.on('click',function() {
         filesender.ui.nodes.gal.checkbox.prop('checked',false);
-        filesender.ui.handle_get_a_link_change();
+        // filesender.ui.handle_get_a_link_change();
         form.find('.galmodelink').hide();
         form.find('.galmodeemail').show();
         return false;
@@ -2104,50 +2119,10 @@ $(function() {
         $(this.parentElement).removeClass('fs-collapse--open');
     });
 
-    // Setup date picker
-    $.datepicker.setDefaults({
-        closeText: lang.tr('dp_close_text').out(),
-        prevText: lang.tr('dp_prev_text').out(),
-        nextText: lang.tr('dp_next_text').out(),
-        currentText: lang.tr('dp_current_text').out(),
-
-        monthNames: lang.tr('dp_month_names').values(),
-        monthNamesShort: lang.tr('dp_month_names_short').values(),
-        dayNames: lang.tr('dp_day_names').values(),
-        dayNamesShort: lang.tr('dp_day_names_short').values(),
-        dayNamesMin: lang.tr('dp_day_names_min').values(),
-
-        weekHeader: lang.tr('dp_week_header').out(),
-        dateFormat: lang.trWithConfigOverride('dp_date_format').out(),
-
-        firstDay: parseInt(lang.tr('dp_first_day').out()),
-        isRTL: lang.tr('dp_is_rtl').out().match(/true/),
-        showMonthAfterYear: lang.tr('dp_show_month_after_year').out().match(/true/),
-
-        yearSuffix: lang.tr('dp_year_suffix').out()
-    });
-    // Bind picker
-    filesender.ui.nodes.expires.datepicker({
-        minDate: 1,
-        maxDate: filesender.config.max_transfer_days_valid
-    });
-    // set value from epoch time
-    filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
-    filesender.ui.nodes.expires.on('change', function() {
-        filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
-    });
-
-
     form.find('.rlangdropitem').on('click', function() {
         form.find('#lang').html( this.innerHTML );
         form.find('#lang').attr('data-id', this.getAttribute('data-id'));
     });
-
-    // prevent the datepicker from having an empty string.
-    filesender.ui.nodes.expires.preventEmpty = filesender.ui.elements.preventEmpty(
-        filesender.ui.nodes.expires);
-
-
 
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {
@@ -2159,20 +2134,6 @@ $(function() {
         return false;
     });
 
-    // transfer-type
-    form.find('input[name="get_a_link"]').on('change', function() {
-        var choice = $(this).is(':checked');
-        form.find(
-            '.fieldcontainer[data-related-to="message"], .recipients,' +
-            ' .fieldcontainer[data-option="add_me_to_recipients"],' +
-            ' .fieldcontainer[data-option="email_me_copies"],' +
-            ' .fieldcontainer[data-related-to="emailfrom"],' +
-            ' .custom-checkbox[data-option="add_me_to_recipients"],' +
-            ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
-        ).toggle(!choice);
-        filesender.ui.evalUploadEnabled();
-    });
-
     form.find('input[name="transfer-type"]').on('change', function() {
         const value = $('input[name="transfer-type"]:checked' ).val();
         filesender.ui.onChangeTransferType(value);
@@ -2180,6 +2141,7 @@ $(function() {
     });
 
     form.find('input[name="add_me_to_recipients"]').on('change', function() {
+        console.log('add_me_to_recipients');
         filesender.ui.evalUploadEnabled();
     });
 
@@ -2469,6 +2431,7 @@ $(function() {
     var auth = $('body').attr('data-auth-type');
 
     if(auth == 'guest') {
+        //TODO: VERIFICAR GUEST MODE
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
         for(option in filesender.ui.nodes.options) {
             if(option == 'undefined' || option == 'expires') continue;
@@ -2479,7 +2442,9 @@ $(function() {
                 i.val(transfer_options[option]);
             }
         }
-        form.find('input[name="get_a_link"]').trigger('change');
+        // form.find('input[name="get_a_link"]').trigger('change');
+        $('#transfer-email').prop("checked", true);
+        $('input[name="transfer-type"]').trigger('change');
 
     } else if(failed) {
         var id = failed.id;
@@ -2535,8 +2500,6 @@ $(function() {
                 filesender.ui.nodes.message.val(failed.message);
 
                 filesender.ui.nodes.aup.prop('checked', true);
-
-                filesender.ui.nodes.expires.datepicker('setDate', new Date(failed.expires * 1000));
 
                 for(var o in failed.options) {
                     var i = filesender.ui.nodes.options[o];
