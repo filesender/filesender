@@ -68,12 +68,16 @@ header nav > .fs-link img + * {
 /* XS */
 @media (max-width: 575px) {
 
+  header {
+    height: var(--fs-spacing-15x);
+  }
+
   header nav {
     flex-direction: column;
   }
 
   header nav ul {
-    margin-top: var(--fs-spacing-2x);
+    margin: var(--fs-spacing-2x) 0;
   }
 }
 

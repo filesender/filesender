@@ -12,7 +12,7 @@ body {
 
 main {
   flex: 1 0 auto;
-  padding: var(--fs-spacing-17x) var(--fs-spacing-5x);
+  padding: var(--fs-spacing-17x) var(--fs-spacing-5x) var(--fs-spacing-5x) var(--fs-spacing-5x);
 }
 
 main .core {
@@ -26,4 +26,12 @@ hr {
   margin-bottom: var(--fs-spacing-3x) !important;
   border-top: 1px solid var(--fs-gray-200);
   opacity: 1;
+}
+
+/* XS */
+@media (max-width: 575px) {
+
+  main {
+    padding: var(--fs-spacing-19x) var(--fs-spacing-5x) var(--fs-spacing-5x) var(--fs-spacing-5x);
+  }
 }
