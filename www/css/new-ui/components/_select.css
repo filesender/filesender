@@ -8,7 +8,7 @@
 }
 
 .fs-select--small label, .fs-select--small select {
-  font-size: 12px !important;
+  font-size: 0.8rem !important;
 }
 
 .fs-select--small select {

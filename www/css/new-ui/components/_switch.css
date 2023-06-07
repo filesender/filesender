@@ -10,7 +10,7 @@
 }
 
 .fs-switch--small label {
-  font-size: 12px !important;
+  font-size: 0.9rem !important;
   padding-left: var(--fs-spacing-9x) !important;
 }
 
@@ -19,7 +19,7 @@
   color: #333;
   cursor: pointer;
   display: inline-flex;
-  font-size: 14px;
+  font-size: 0.9rem;
   margin-bottom: 0;
   position: relative;
   padding-left: var(--fs-spacing-11x);

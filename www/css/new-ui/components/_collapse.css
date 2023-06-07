@@ -22,10 +22,14 @@
 }
 
 .fs-collapse__open, .fs-collapse__close {
-  font-size: 14px;
+  font-size: 0.9rem;
   background: var(--fs-blue-100);
   color: var(--fs-accent) !important;
   border: 1px solid var(--fs-accent);
+}
+
+.fs-collapse .row {
+  width: 100%;
 }
 
 .fs-collapse__open:hover, .fs-collapse__close:hover,

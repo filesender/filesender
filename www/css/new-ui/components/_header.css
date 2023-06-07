@@ -64,3 +64,56 @@ header nav > .fs-link {
 header nav > .fs-link img + * {
   margin-left: var(--fs-spacing-base);
 }
+
+/* XS */
+@media (max-width: 575px) {
+
+  header nav {
+    flex-direction: column;
+  }
+
+  header nav ul {
+    margin-top: var(--fs-spacing-2x);
+  }
+}
+
+/* XS/SM */
+@media (max-width: 767px) {
+
+  header nav > a img {
+    max-height: var(--fs-spacing-6x);
+  }
+
+  header nav > a span {
+    display: none;
+  }
+
+  header nav ul li .fs-link {
+    padding: var(--fs-spacing-half) var(--fs-spacing-2x);
+  }
+
+  header nav ul li .fs-link span {
+    display: none;
+  }
+}
+
+/* MD */
+@media (min-width: 768px) and (max-width: 991px) {
+
+  header nav > a img {
+    max-height: var(--fs-spacing-6x);
+  }
+
+  header nav > a span {
+    font-size: 1.1rem;
+  }
+
+  header nav ul li .fs-link {
+    padding: var(--fs-spacing-base) calc(var(--fs-spacing-base) + var(--fs-spacing-quarter));
+  }
+
+  header nav ul li .fs-link i + span {
+    margin-left: var(--fs-spacing-half);
+  }
+}
+

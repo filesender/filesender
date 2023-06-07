@@ -3,8 +3,8 @@
 }
 
 .fs-uploader h1 {
-  font-size: 32px !important;
-  font-weight: 300 !important;
+  font-size: 2rem;
+  font-weight: 300;
   text-align: center !important;
   margin-top: 0 !important;
   padding: 0 !important;
@@ -31,6 +31,7 @@
   background: var(--fs-white);
   border: 1px dashed var(--fs-gray-300);
   border-radius: var(--fs-spacing-base);
+  font-size: 0.9rem;
 }
 
 .fs-uploader__droparea--hide {
@@ -255,7 +256,7 @@
 }
 
 .fs-uploader__password small {
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 .fs-uploader__password-top {
@@ -378,3 +379,68 @@
 .fs-uploader .fs-table {
   margin: 0 !important;
 }
+
+@media (max-width: 575px) {
+  .fs-uploader {
+    font-size: 0.8rem;
+  }
+  .fs-uploader h1 {
+    font-size: 1.6rem;
+    margin: var(--fs-spacing-2x);
+  }
+  .fs-uploader__droparea {
+    padding: var(--fs-spacing-base);
+    margin-top: var(--fs-spacing-2x);
+  }
+  .fs-uploader__list h6 {
+    padding: var(--fs-spacing-2x) var(--fs-spacing-base) var(--fs-spacing-base) var(--fs-spacing-base);
+    font-size: 0.9rem;
+  }
+  .fs-uploader__files {
+    padding: 0 var(--fs-spacing-base) 0 var(--fs-spacing-base);
+  }
+  .fs-uploader__actions {
+    flex-direction: column-reverse;
+  }
+  .fs-uploader__left {
+    margin-top: var(--fs-spacing-2x);
+  }
+  .fs-uploader__left, .fs-uploader__right {
+    display: flex;
+    flex-direction: column;
+  }
+  .fs-uploader__left button + button, .fs-uploader__right button + button {
+    margin-top: var(--fs-spacing-2x);
+  }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+  .fs-uploader h1 {
+    font-size: 1.8rem;
+    margin: var(--fs-spacing-3x);
+  }
+  .fs-uploader__droparea {
+    padding: var(--fs-spacing-2x);
+    margin-top: var(--fs-spacing-3x);
+  }
+  .fs-uploader__list h6 {
+    padding: var(--fs-spacing-3x) var(--fs-spacing-2x) var(--fs-spacing-2x) var(--fs-spacing-2x);
+    font-size: 1.2rem;
+  }
+  .fs-uploader__files {
+    padding: 0 var(--fs-spacing-base) 0 var(--fs-spacing-base);
+  }
+  .fs-uploader__actions {
+    flex-direction: column-reverse;
+  }
+  .fs-uploader__left {
+    margin-top: var(--fs-spacing-2x);
+  }
+  .fs-uploader__left, .fs-uploader__right {
+    display: flex;
+    flex-direction: column;
+  }
+  .fs-uploader__left button + button, .fs-uploader__right button + button {
+    margin-top: var(--fs-spacing-2x);
+  }
+}
+

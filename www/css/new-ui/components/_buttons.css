@@ -53,7 +53,7 @@
 }
 
 .fs-button--small {
-  font-size: 14px;
+  font-size: 0.9rem;
   height: var(--fs-spacing-4x);
   padding: 0 var(--fs-spacing-2x);
 }

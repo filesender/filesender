@@ -11,10 +11,10 @@
 
 .fs-copy span {
   flex: 1;
-  font-size: 12px;
+  font-size: 0.9rem;
   padding: 0 var(--fs-spacing-3x);
 }
 
 .fs-copy button {
-  font-size: 14px;
+  font-size: 0.9rem;
 }

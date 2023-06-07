@@ -4,8 +4,7 @@
     flex-direction: row;
     align-items: center;
     text-decoration: none;
-    font-weight: 300;
-    font-size: 14px;
+    font-size: 0.8rem;
     border-radius: var(--fs-spacing-3x);
     color: var(--fs-text-color);
     background: transparent;
@@ -23,7 +22,7 @@
 
 .fs-link i {
     color: var(--fs-accent);
-    font-size: 1.2rem !important;
+    font-size: 1.2rem;
 }
 
 .fs-link i + span {

@@ -305,13 +305,13 @@ if(Auth::isGuest()) {
                 <div class="row">
                     <div class="col-12">
                         <div class="fs-uploader__actions">
-                            <div class="fs-uploader___left">
+                            <div class="fs-uploader__left">
                                 <button type="button" class="fs-button fs-button--danger fs-uploader__clear-all">
                                     <i class="fa fa-trash"></i>
                                     {tr:clear_all}
                                 </button>
                             </div>
-                            <div class="fs-uploader___right">
+                            <div class="fs-uploader__right">
                                 <button type="button" id="fs-uploader__next-step" class="fs-button fs-button--info fs-button--icon-right fs-uploader__next">
                                     Next
                                     <i class="fa fa-arrow-right"></i>
@@ -576,41 +576,45 @@ if(Auth::isGuest()) {
                                                 <span>Hide advanced settings</span>
                                             </button>
                                             <div class="fs-collapse__content">
-                                                <div>
-                                                    <strong>Advanced upload settings</strong>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <strong>Advanced upload settings</strong>
 
-                                                    <?php
-                                                    foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                        if( !array_key_exists($name, $upload_options_handled)) {
-                                                            $displayoption($name, $cfg, Auth::isGuest());
-                                                        }
-                                                    }
-                                                    ?>
-                                                </div>
-                                                <div>
-                                                    <strong>Terasender settings</strong>
-
-                                                    <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                                                         <?php
-                                                        foreach(Transfer::availableOptions(true) as $name => $cfg)  {
-                                                            if( !array_key_exists($name,$upload_options_handled)) {
+                                                        foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                            if( !array_key_exists($name, $upload_options_handled)) {
                                                                 $displayoption($name, $cfg, Auth::isGuest());
                                                             }
                                                         }
                                                         ?>
-                                                        <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
-                                                            <div class="fs-input-group fs-input-group--vertical">
-                                                                <label for="terasender_worker_count">
-                                                                    {tr:terasender_worker_count}
-                                                                </label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <strong>Terasender settings</strong>
 
-                                                                <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
-                                                            </div>
-                                                        <?php } ?>
-                                                        <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
-                                                            $displayoption('disable_terasender', array('default'=>false), false);
-                                                        }?>
-                                                    <?php } /* End of advanced settings div. */ ?>
+                                                        <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
+                                                            <?php
+                                                            foreach(Transfer::availableOptions(true) as $name => $cfg)  {
+                                                                if( !array_key_exists($name,$upload_options_handled)) {
+                                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                                }
+                                                            }
+                                                            ?>
+                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
+                                                                <div class="fs-input-group fs-input-group--vertical">
+                                                                    <label for="terasender_worker_count">
+                                                                        {tr:terasender_worker_count}
+                                                                    </label>
+
+                                                                    <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
+                                                                </div>
+                                                            <?php } ?>
+                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
+                                                                $displayoption('disable_terasender', array('default'=>false), false);
+                                                            }?>
+                                                        <?php } /* End of advanced settings div. */ ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -658,7 +662,7 @@ if(Auth::isGuest()) {
                 <div class="row">
                     <div class="col-12">
                         <div class="fs-uploader__actions">
-                            <div class="fs-uploader___left">
+                            <div class="fs-uploader__left">
                                 <button type="button" id="fs-uploader__previous-step" class="fs-button fs-button--info">
                                     <i class="fa fa-arrow-left"></i>
                                     Previous
@@ -668,7 +672,7 @@ if(Auth::isGuest()) {
                                     Cancel
                                 </button>
                             </div>
-                            <div class="fs-uploader___right">
+                            <div class="fs-uploader__right">
                                 <button type="button" id="fs-uploader__confirm" class="fs-button fs-button--info fs-button--icon-right">
                                     Confirm
                                     <i class="fa fa-check"></i>
