@@ -159,11 +159,7 @@ if(Auth::isGuest()) {
     }
 }
 
-
-
-
-//$upload_directory_button_enabled = true;
-
+$upload_directory_button_enabled = true;
 
 ?>
 
@@ -177,7 +173,9 @@ if(Auth::isGuest()) {
           data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
 
         <div class="fs-uploader">
-            <h1>Transfer files</h1>
+            <h1>
+                {tr:transfer_files}
+            </h1>
 
             <div class="fs-uploader__step fs-uploader__step--active" data-step="1">
                 <div class="row">
@@ -185,16 +183,18 @@ if(Auth::isGuest()) {
                         <div class="fs-uploader__droparea">
                             <input id="files" class="fs-uploader__input" type="file" name="file" multiple />
                             <label for="files">
-                                <strong>Get started by selection files</strong>
+                                <strong>{tr:start_selection_files}</strong>
                                 <span class="fs-button">
                                 <i class="fa fa-plus"></i>
-                                drag & drop or click here to select
+                                {tr:drag_drop_select}
                             </span>
                             </label>
 
                             <?php if ($upload_directory_button_enabled) { ?>
                                 <div class="fs_uploader__directory">
-                                    <span>or</span>
+                                    <span>
+                                        {tr:or}
+                                    </span>
                                     <label for="selectdir">
                                         <span class="fs-button">
                                             <i class="fa fa-folder"></i>
@@ -227,7 +227,9 @@ if(Auth::isGuest()) {
                 <div class="row">
                     <div class="col-12">
                         <div class="fs-uploader__list">
-                            <h6>Selected files</h6>
+                            <h6>
+                                {tr:selected_files}
+                            </h6>
                             <div class="fs-uploader__files">
                                 <table>
                                     <thead hidden="true">
@@ -284,14 +286,14 @@ if(Auth::isGuest()) {
                                 <label for="files">
                                     <span class="fs-button">
                                         <i class="fa fa-plus"></i>
-                                        Add files
+                                        {tr:add_files}
                                     </span>
                                 </label>
                                 <?php if ($upload_directory_button_enabled) { ?>
                                     <label for="selectdir">
                                         <span class="fs-button">
                                             <i class="fa fa-folder"></i>
-                                            Add directory
+                                            {tr:add_directory}
                                         </span>
                                     </label>
                                 <?php } ?>
@@ -313,7 +315,7 @@ if(Auth::isGuest()) {
                             </div>
                             <div class="fs-uploader__right">
                                 <button type="button" id="fs-uploader__next-step" class="fs-button fs-button--info fs-button--icon-right fs-uploader__next">
-                                    Next
+                                    {tr:next}
                                     <i class="fa fa-arrow-right"></i>
                                 </button>
                             </div>
@@ -326,7 +328,9 @@ if(Auth::isGuest()) {
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="fs-uploader__list fs-uploader__list--full">
-                            <h6>Selected files</h6>
+                            <h6>
+                                {tr:selected_files}
+                            </h6>
                             <div class="fs-uploader__files">
                                 <table></table>
                             </div>
@@ -337,7 +341,9 @@ if(Auth::isGuest()) {
                             <div class="fs-uploader__send-options">
                                 <div class="row">
                                     <div class="col-12">
-                                        <h5>Choose how you want to transfer your files</h5>
+                                        <h5>
+                                            {tr:choose_files}
+                                        </h5>
 
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
@@ -348,12 +354,12 @@ if(Auth::isGuest()) {
                                                     <div class="fs-radio__option">
                                                         <span class="fs-radio__circle"></span>
                                                         <span class="fs-radio__text">
-                                                    A transfer link
-                                                </span>
+                                                            {tr:a_transfer_link}
+                                                         </span>
                                                     </div>
                                                     <span class="fs-radio__info">
-                                                - You send the download link to your recipients
-                                            </span>
+                                                        - {tr:a_transfer_link_tip}
+                                                    </span>
                                                 </label>
                                             </div>
                                         <?php } ?>
@@ -365,12 +371,12 @@ if(Auth::isGuest()) {
                                                 <div class="fs-radio__option">
                                                     <span class="fs-radio__circle"></span>
                                                     <span class="fs-radio__text">
-                                                An email
-                                            </span>
+                                                        {tr:an_email}
+                                                    </span>
                                                 </div>
                                                 <span class="fs-radio__info">
-                                            - We send the transfer direclty to your recipients
-                                        </span>
+                                                    - {tr:an_email_tip}
+                                                </span>
                                             </label>
                                         </div>
                                     </div>
@@ -421,7 +427,7 @@ if(Auth::isGuest()) {
                                                 <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
-                                                            Send transfer to
+                                                            {tr:send_transfer_to}
                                                         </label>
 
                                                         <?php echo AuthGuest::getGuest()->user_email ?>
@@ -429,7 +435,7 @@ if(Auth::isGuest()) {
                                                 <?php } else { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
-                                                            Send transfer to
+                                                            {tr:send_transfer_to}
                                                         </label>
 
                                                         <input name="to" id="to" type="email"
@@ -499,7 +505,7 @@ if(Auth::isGuest()) {
                                             <div class="fs-switch" data-related-to="encryption">
                                                 <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
                                                 <label for="encryption">
-                                                    Encrypt files with password
+                                                    {tr:encrypt_files_with_password}
                                                 </label>
                                             </div>
 
@@ -508,19 +514,19 @@ if(Auth::isGuest()) {
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-7">
                                                             <div class="fs-input-group">
-                                                                <input type="text" id="encryption_password" name="encryption_password" placeholder="Enter your password">
+                                                                <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-5">
                                                             <div class="fs-uploader__generate-password">
-                                                                <span>or</span>
-                                                                <a id="encryption_generate_password" href="javascript:void(0);" class="fs-link">generate a password</a>
+                                                                <span>{tr:or}</span>
+                                                                <a id="encryption_generate_password" href="javascript:void(0);" class="fs-link">{tr:generate_password}</a>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="fs-uploader__password-bottom">
-                                                    <small>! make sure to write down your password and only share it with those who may access your files.</small>
+                                                    <small>{tr:password_share_tip}</small>
                                                 </div>
 
                                                 <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">
@@ -551,14 +557,14 @@ if(Auth::isGuest()) {
                                     <div class="col-12">
                                         <div class="fs-select">
                                             <label for="expires-select">
-                                                Expires after
+                                                {tr:expires_after}
                                             </label>
                                             <select id="expires-select" name="expires-select">
-                                                <option value="7" selected>7 days</option>
-                                                <option value="15">15 days</option>
-                                                <option value="30">30 days</option>
-                                                <option value="60">60 days</option>
-                                                <option value="90">90 days</option>
+                                                <option value="7" selected>7 {tr:days}</option>
+                                                <option value="15">15 {tr:days}</option>
+                                                <option value="30">30 {tr:days}</option>
+                                                <option value="60">60 {tr:days}</option>
+                                                <option value="90">90 {tr:days}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -569,16 +575,22 @@ if(Auth::isGuest()) {
                                         <div class="fs-collapse">
                                             <button type="button" class="fs-button fs-collapse__open">
                                                 <i class="fa fa-chevron-down"></i>
-                                                <span>Show advanced settings</span>
+                                                <span>
+                                                    {tr:show_advanced_settings}
+                                                </span>
                                             </button>
                                             <button type="button" class="fs-button fs-collapse__close">
                                                 <i class="fa fa-chevron-up"></i>
-                                                <span>Hide advanced settings</span>
+                                                <span>
+                                                    {tr:hide_advanced_settings}
+                                                </span>
                                             </button>
                                             <div class="fs-collapse__content">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <strong>Advanced upload settings</strong>
+                                                        <strong>
+                                                            {tr:advanced_upload_settings}
+                                                        </strong>
 
                                                         <?php
                                                         foreach(Transfer::availableOptions(false) as $name => $cfg) {
@@ -591,7 +603,9 @@ if(Auth::isGuest()) {
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <strong>Terasender settings</strong>
+                                                        <strong>
+                                                            {tr:terasender_settings}
+                                                        </strong>
 
                                                         <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                                                             <?php
@@ -642,7 +656,7 @@ if(Auth::isGuest()) {
 
                                             <div class="aupbox">
                                                 <div name="aupshowhide" id="aupshowhide" class="fs-link">
-                                                    Show/Hide terms of use
+                                                    {tr:show_hide_terms}
                                                 </div>
 
                                                 <div class="terms">
@@ -665,16 +679,16 @@ if(Auth::isGuest()) {
                             <div class="fs-uploader__left">
                                 <button type="button" id="fs-uploader__previous-step" class="fs-button fs-button--info">
                                     <i class="fa fa-arrow-left"></i>
-                                    Previous
+                                    {tr:previous}
                                 </button>
                                 <button type="button" id="fs-uploader__cancel" class="fs-button fs-button--danger">
                                     <i class="fa fa-ban"></i>
-                                    Cancel
+                                    {tr:cancel}
                                 </button>
                             </div>
                             <div class="fs-uploader__right">
                                 <button type="button" id="fs-uploader__confirm" class="fs-button fs-button--info fs-button--icon-right">
-                                    Confirm
+                                    {tr:confirm}
                                     <i class="fa fa-check"></i>
                                 </button>
                             </div>
@@ -687,7 +701,9 @@ if(Auth::isGuest()) {
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="fs-uploader__list fs-uploader__list--full">
-                            <h6>Selected files</h6>
+                            <h6>
+                                {tr:selected_files}
+                            </h6>
                             <div class="fs-uploader__files">
                                 <table></table>
                             </div>
@@ -696,7 +712,7 @@ if(Auth::isGuest()) {
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="fs-uploader__upload-detail fs-uploader__upload-uploading">
                             <h5>
-                                Uploading your transfer...
+
                             </h5>
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">0%</strong>
@@ -708,7 +724,7 @@ if(Auth::isGuest()) {
                                 <div class="stats">
                                     <div class="uploaded">
                                         <span class="value">
-                                            0 MB of 0 MB
+                                            0 MB/0 MB
                                         </span>
                                     </div>
                                 </div>
@@ -722,16 +738,18 @@ if(Auth::isGuest()) {
                                             <td id="fs-uploader__average-speed" class="value">17.4 MB / sec</td>
                                         </tr>
                                         <tr class="fs-uploader__number-of-files number_of_files">
-                                            <td>Number of files</td>
-                                            <td id="fs-uploader__total-files" class="value">0 files</td>
+                                            <td>{tr:number_of_files}</td>
+                                            <td id="fs-uploader__total-files" class="value">0 {tr:files_lowercase}</td>
                                         </tr>
                                         <tr class="fs-uploader__estimated-info estimated_completion">
                                             <td>
-                                                <strong>Estimated completion</strong>
+                                                <strong>
+                                                    {tr:estimated_completion}
+                                                </strong>
                                             </td>
                                             <td>
                                                 <strong id="fs-uploader__estimated-time" class="value">
-                                                    in 13 minutes
+                                                    {tr:in} 13 {tr:minutes}
                                                 </strong>
                                             </td>
                                         </tr>
@@ -748,7 +766,9 @@ if(Auth::isGuest()) {
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="fs-uploader__list fs-uploader__list--full">
-                            <h6>Selected files</h6>
+                            <h6>
+                                {tr:selected_files}
+                            </h6>
                             <div class="fs-uploader__files">
                                 <table></table>
                             </div>
@@ -757,7 +777,7 @@ if(Auth::isGuest()) {
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="fs-uploader__upload-detail fs-uploader__upload-finished">
                             <h5>
-                                Transfer completed!
+                                {tr:transfer_completed}
                             </h5>
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">100%</strong>
@@ -770,7 +790,7 @@ if(Auth::isGuest()) {
                                     <table class="fs-table">
                                         <tbody>
                                         <tr class="fs-uploader__total-info size">
-                                            <td>Total size</td>
+                                            <td>{tr:ui2_total_size}</td>
                                             <td id="fs-uploader__total-size" class="value">0 MB</td>
                                         </tr>
                                         </tbody>
@@ -778,40 +798,39 @@ if(Auth::isGuest()) {
                                 </div>
                             </div>
                             <div class="fs-uploader__upload-link">
-                                <span>Here's your download link</span>
+                                <span>
+                                    {tr:your_download_link}
+                                </span>
                                 <div class="fs-copy">
-                                    <span>https://filesenderbeta.surf.nl/?s=download&token=bba50dd8-2f0e-41dc-98a1-4c116529809a</span>
+                                    <span></span>
 
-                                    <button type="button" class="fs-button">
+                                    <button id="copy-to-clipboard" type="button" class="fs-button">
                                         <i class="fa fa-copy"></i>
-                                        Copy
+                                        {tr:copy}
                                     </button>
                                 </div>
                             </div>
                             <div class="fs-uploader__upload-recipients">
                                 <span>
-                                    Your transfer was sent to the following email addresses
+                                    {tr:your_transfer_was_sent}
                                 </span>
                                 <div class="fs-badge-list">
-                                    <div class="fs-badge">
-                                        fulano@rnp.br
-                                    </div>
                                 </div>
                             </div>
                             <div class="fs-uploader__upload-expires">
                                 <span>
-                                    The transfer expires in <span id="expires-days">7</span> days.
+                                    {tr:expires_in} <span id="expires-days">7</span> {tr:days}.
                                 </span>
                             </div>
                             <div class="fs-uploader__upload-custom-name">
                                 <label for="transfer-name">
-                                    Add a custom name for this transfer
+                                    {tr:add_transfer_custom_name}
                                 </label>
                                 <div class="fs-input-inline">
                                     <input type="text" id="transfer-name" name="transfer-name" placeholder="Enter the transfer name (optional)">
                                     <button type="button" class="fs-button">
                                         <i class="fa fa-save"></i>
-                                        Save
+                                        {tr:save}
                                     </button>
                                 </div>
                             </div>
@@ -822,11 +841,11 @@ if(Auth::isGuest()) {
                 <div class="fs-uploader__upload-actions">
                     <a id="download-link" href=""type="button" class="fs-button fs-button--info" role="button">
                         <i class="fa fa-file-text-o"></i>
-                        Transfer details
+                        {tr:transfer_details}
                     </a>
                     <a href="?s=transfers" class="fs-button fs-button--info" role="button">
                         <i class="fa fa-exchange"></i>
-                        All my transfers
+                        {tr:all_my_transfers}
                     </a>
                 </div>
             </div>
@@ -915,6 +934,22 @@ if(Auth::isGuest()) {
         <!--            </a>-->
         <!--        </div>-->
     </form>
+
+    <div class="fs-theme">
+        <strong>Theme example:</strong>
+        <ul>
+            <li>
+                <a role="button" id="normal-theme" class="fs-link">
+                    Normal
+                </a>
+            </li>
+            <li>
+                <a role="button" id="dark-theme" class="fs-link">
+                    Dark
+                </a>
+            </li>
+        </ul>
+    </div>
 
 
     <?php if (!Config::get('disable_directory_upload')) { ?>
