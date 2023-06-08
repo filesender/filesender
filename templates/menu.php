@@ -45,9 +45,11 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
             }
 
-            pagemenuitem('help');
-            pagemenuitem('about');
-            pagemenuitem('privacy');
+            if (!Auth::isAuthenticated()) {
+                pagemenuitem('help');
+                pagemenuitem('about');
+                pagemenuitem('privacy');
+            }
 
             if (Auth::isAuthenticated() && Auth::isSP())
             {
