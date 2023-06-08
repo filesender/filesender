@@ -19,7 +19,7 @@
   white-space: nowrap;
   width: auto;
   color: var(--fs-accent);
-  background: var(--fs-blue-100);
+  background: var(--fs-hightlight-bg);
 }
 
 .fs-badge + .fs-badge {

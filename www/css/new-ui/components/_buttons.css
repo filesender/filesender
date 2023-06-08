@@ -12,7 +12,7 @@
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
-  color: var(--fs-white);
+  color: var(--fs-light);
   background: var(--fs-accent);
 }
 
@@ -21,12 +21,12 @@
 }
 
 .fs-button:hover {
-  color: var(--fs-white);
+  color: var(--fs-light);
   background: var(--fs-btn-hover);
 }
 
 .fs-button:active {
-  color: var(--fs-white);
+  color: var(--fs-light);
   background: var(--fs-btn-active);
 }
 
@@ -34,7 +34,7 @@
 .fs-button[disabled] {
   opacity: .3;
   cursor: not-allowed;
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
   background: var(--fs-accent) !important;
 }
 
@@ -68,44 +68,44 @@
 }
 
 .fs-button--success {
-  color: var(--fs-white);
+  color: var(--fs-light);
   background: var(--fs-success);
 }
 
 .fs-button--success:hover {
   background: var(--fs-success-hover) !important;
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
 }
 
 .fs-button--success:active {
   background: var(--fs-success-active) !important;
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
 }
 
 .fs-button--success:disabled,
 .fs-button--success[disabled] {
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
   background: var(--fs-success) !important;
 }
 
 .fs-button--info {
-  color: var(--fs-white);
+  color: var(--fs-light);
   background: var(--fs-info);
 }
 
 .fs-button--info:hover {
   background: var(--fs-info-hover) !important;
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
 }
 
 .fs-button--info:active {
   background: var(--fs-info-active) !important;
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
 }
 
 .fs-button--info:disabled,
 .fs-button--info[disabled] {
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
   background: var(--fs-info) !important;
 }
 
@@ -131,23 +131,23 @@
 }
 
 .fs-button--danger {
-  color: var(--fs-white);
+  color: var(--fs-light);
   background: var(--fs-danger);
 }
 
 .fs-button--danger:hover {
   background: var(--fs-danger-hover) !important;
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
 }
 
 .fs-button--danger:active {
   background: var(--fs-danger-active) !important;
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
 }
 
 .fs-button--danger:disabled,
 .fs-button--danger[disabled] {
-  color: var(--fs-white) !important;
+  color: var(--fs-light) !important;
   background: var(--fs-danger) !important;
 }
 

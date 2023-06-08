@@ -1,6 +1,6 @@
 footer {
-  background: var(--fs-white);
-  border-top: 1px solid var(--fs-gray-200);
+  background: var(--fs-bg-color-secondary);
+  border-top: 1px solid var(--fs-border);
   color: var(--fs-text-color);
 }
 
@@ -30,7 +30,7 @@ footer a img {
 }
 
 footer .fs-version {
-  background: var(--fs-gray-200);
+  background: var(--fs-bg-color);
   text-align: right;
   font-size: 0.6rem;
   padding: var(--fs-spacing-half) var(--fs-spacing-base);

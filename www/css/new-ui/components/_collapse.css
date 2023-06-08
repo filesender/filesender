@@ -1,5 +1,5 @@
 .fs-collapse--open {
-  background: var(--fs-blue-100);
+  background: var(--fs-hightlight-bg-alternative);
   border-radius: var(--fs-spacing-base);
   border: 1px solid var(--fs-accent);
 }
@@ -23,7 +23,7 @@
 
 .fs-collapse__open, .fs-collapse__close {
   font-size: 0.9rem;
-  background: var(--fs-blue-100);
+  background: var(--fs-hightlight-bg-alternative);
   color: var(--fs-accent) !important;
   border: 1px solid var(--fs-accent);
 }

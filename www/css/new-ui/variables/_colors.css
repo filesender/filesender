@@ -2,6 +2,7 @@
   --fs-black: #000000;
   --fs-white: #FFFFFF;
 
+  --fs-gray-50: #F8F9FA;
   --fs-gray-100: #f0f0f0;
   --fs-gray-200: #E9E9E9;
   --fs-gray-300: #ccc;
@@ -19,6 +20,8 @@
   --fs-accent: var(--fs-blue);
   --fs-hover: #DCE3F2;
   --fs-accent--fs-active: #9EB0DB;
+
+  --fs-bg-color: var(--fs-gray-50);
 
   --fs-text-color: var(--fs-gray-900);
 

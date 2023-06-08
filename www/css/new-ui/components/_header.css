@@ -3,8 +3,8 @@ header {
   height: var(--fs-spacing-12x);
   width: 100%;
   padding: 0 var(--fs-spacing-base);
-  background: var(--fs-white);
-  border-bottom: 1px solid var(--fs-gray-200);
+  background: var(--fs-bg-color-secondary);
+  border-bottom: 1px solid var(--fs-border);
   z-index: 1;
 }
 
@@ -89,7 +89,7 @@ header nav > .fs-link img + * {
   }
 
   header nav > a span {
-    display: none;
+    font-size: 1.3rem;
   }
 
   header nav ul li .fs-link {
@@ -109,7 +109,7 @@ header nav > .fs-link img + * {
   }
 
   header nav > a span {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
   header nav ul li .fs-link {

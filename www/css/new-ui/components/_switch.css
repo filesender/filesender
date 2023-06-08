@@ -16,7 +16,7 @@
 
 .fs-switch label {
   align-items: center;
-  color: #333;
+  color: var(--fs-text-color);
   cursor: pointer;
   display: inline-flex;
   font-size: 0.9rem;
