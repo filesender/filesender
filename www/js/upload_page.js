@@ -1285,6 +1285,10 @@ filesender.ui.startUpload = function() {
 
         $('.fs-uploader__upload-link .fs-copy > span').html(filesender.ui.transfer.download_link);
 
+        $('#copy-to-clipboard').on('click', function(e){
+            filesender.ui.copyToClipboard(filesender.ui.transfer.download_link);
+        });
+
         var link = filesender.ui.createPageLink(
             filesender.ui.transfer.guest_token ? 'home' : 'transfers',
             null,
@@ -1685,6 +1689,11 @@ filesender.ui.updateSizeInfo = function () {
 
     filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(lang.tr('text_desc_of_file_count_and_size').r({filecount: filecount, totalsize: sizetxt }).out());
 
+};
+
+filesender.ui.copyToClipboard = function(value) {
+    navigator.clipboard.writeText(value);
+    filesender.ui.notify('info', 'Copied to clipboard!');
 };
 
 $(function() {
@@ -2584,4 +2593,30 @@ $(function() {
 $('.instructions').on('click', function(){
     filesender.ui.nodes.files.files_input.click();
     return false;
+});
+
+$('#normal-theme').on('click', function() {
+    console.log('normal theme');
+
+    const head = document.head;
+    const link = document.createElement("link");
+
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = "/filesender/css/themes/rnp.css";
+
+    head.appendChild(link);
+});
+
+$('#dark-theme').on('click', function() {
+    console.log('dark theme');
+
+    const head = document.head;
+    const link = document.createElement("link");
+
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = "/filesender/css/themes/dark.css";
+
+    head.appendChild(link);
 });
