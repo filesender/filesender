@@ -581,6 +581,8 @@ A note about colours;
                or if the scanner itself encountered an error:
                { "passes": "0", "error": "1", "reason": "unable to use local database to compare data with." }.
 
+               From an implementation perspective,  results are recorded in a new AVResults table and the download page will display the results of scans if they are available.
+
 
 
 ```
