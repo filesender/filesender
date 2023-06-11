@@ -565,7 +565,9 @@ A note about colours;
                file content to for scanning. It is expected that the reply is JSON with a passes, error, and reason property.
                The mime AV program takes an array of MIME types that the content MUST be in using the matchlist parameter.
                The mime AV program defaults to using the first 8k of content to determine the MIME type, use bytesToConsider
-               to change this. Setting bytesToConsider to values below 8k will have no effect.
+               to change this. Setting bytesToConsider to values below 8k will have no effect. Note that these programs are
+               only executed when you run execute-av-program-on-files.php on the server. The execute-av-program-on-files.php
+               script will run forever, checking for new files to scan every 10 seconds.
 
 ```
 $config['avprogram_list'] = array( 'always_pass',
