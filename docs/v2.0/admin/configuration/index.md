@@ -569,6 +569,7 @@ A note about colours;
 
                Note that these programs are only executed when you run execute-av-program-on-files.php on the server. The
                execute-av-program-on-files.php script will run forever, checking for new files to scan every 10 seconds.
+               The execute-av-program-on-files.php script needs permissions to access to the uploaded files and the database.
 
                If you are using the 'url' method then FileSender will post file content to that URL and expect an JSON result
                indicating the result of the scan. For example for a success:
