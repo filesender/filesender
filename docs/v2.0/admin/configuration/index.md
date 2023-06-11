@@ -570,6 +570,12 @@ A note about colours;
                Note that these programs are only executed when you run execute-av-program-on-files.php on the server. The
                execute-av-program-on-files.php script will run forever, checking for new files to scan every 10 seconds.
 
+               If you are using the 'url' method then FileSender will post file content to that URL and expect an JSON result
+               indicating the result of the scan. For example for a success:
+               { "passes": "1", "error": "0", "reason": "clean." }
+
+
+
 ```
 $config['avprogram_list'] = array( 'always_pass',
                                    'mime' => array(
