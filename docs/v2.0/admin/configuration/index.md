@@ -573,6 +573,8 @@ A note about colours;
                If you are using the 'url' method then FileSender will post file content to that URL and expect an JSON result
                indicating the result of the scan. For example for a success:
                { "passes": "1", "error": "0", "reason": "clean." }
+               or something like the following or for an error:
+               { "passes": "0", "error": "0", "reason": "contains a Trojan (56% certainty)." }
 
 
 
