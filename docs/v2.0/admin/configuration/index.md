@@ -568,8 +568,7 @@ A note about colours;
                to change this. Setting bytesToConsider to values below 8k will have no effect.
 
                Note that these programs are only executed when you run execute-av-program-on-files.php on the server. The
-               execute-av-program-on-files.php script will run forever, checking for new files to scan every 10
-               seconds.
+               execute-av-program-on-files.php script will run forever, checking for new files to scan every 10 seconds.
 
 ```
 $config['avprogram_list'] = array( 'always_pass',
