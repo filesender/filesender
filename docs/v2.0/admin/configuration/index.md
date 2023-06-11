@@ -567,9 +567,9 @@ A note about colours;
                The mime AV program defaults to using the first 8k of content to determine the MIME type, use bytesToConsider
                to change this. Setting bytesToConsider to values below 8k will have no effect.
 
-               Note that these programs are only executed when you run execute-av-program-on-files.php on the server. The
-               execute-av-program-on-files.php script will run forever, checking for new files to scan every 10 seconds.
+               Note that these programs are only executed when you run execute-av-program-on-files.php on the server. 
                The execute-av-program-on-files.php script needs permissions to access to the uploaded files and the database.
+               The execute-av-program-on-files.php script will work on a small batch of files and sleep 10 seconds and then work on the next batch of files. It may be that the script needs to be improved for larger sites to allow many machines to access and perform these tasks as they can be time consuming depending on the scanner.
 
                If you are using the 'url' method then FileSender will post file content to that URL and expect an JSON result
                indicating the result of the scan. For example for a success:
