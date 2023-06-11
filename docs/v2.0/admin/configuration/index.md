@@ -576,8 +576,8 @@ A note about colours;
                The expected setup will use virus scanners over https passing the file stream to the scanner and retrieving the
                results of that scan to store in the database. An example of this is provided in
                classes/avprograms/AVProgramURLTest.php. The AVProgramURLTest.php can be installed on a web server and will
-               fail for content that contains a bad word which in this case is literally "badword". The AVProgramURLTest is provided as an example
-               that can be fleshed out to use other malware scanners as installations wish.
+               fail for content that contains a bad word which in this case is literally "badword". The AVProgramURLTest is
+               provided as an example that can be fleshed out to use other malware scanners as installations wish.
 
                If you are using the 'url' method then FileSender will post file content to that URL and expect an JSON result
                indicating the result of the scan. For example for a success:
