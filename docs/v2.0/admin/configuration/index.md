@@ -589,7 +589,8 @@ A note about colours;
 
                An example program AVProgramURLTest.php is provided which does not pass data over a POST request but instead
                handles it locally. The AVProgramURLTest.php can be installed on a web server and will fail content that
-               contains a bad word which in this case is literally "badword". The AVProgramURLTest is provided as an example that can be fleshed out to use other malware scanners
+               contains a bad word which in this case is literally "badword". The AVProgramURLTest is provided as an example
+               that can be fleshed out to use other malware scanners
                as installations wish.
 
 
