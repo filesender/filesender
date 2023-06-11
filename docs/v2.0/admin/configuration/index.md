@@ -574,7 +574,8 @@ A note about colours;
                machines to access and perform these tasks as they can be time consuming depending on the scanner.
 
                The expected setup will use virus scanners over https passing the file stream to the scanner and retrieving the
-               results of that scan to store in the database. 
+               results of that scan to store in the database. An example of this is provided in
+               classes/avprograms/AVProgramURLTest.php.
 
                If you are using the 'url' method then FileSender will post file content to that URL and expect an JSON result
                indicating the result of the scan. For example for a success:
