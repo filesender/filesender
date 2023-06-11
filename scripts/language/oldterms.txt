@@ -317,6 +317,7 @@ help
 help_page
 help_text
 hide_details
+hide_sender_email
 hit_guest_creation_rate_limit
 hit_guest_creation_total_limit
 hit_guest_remind_rate_limit
@@ -472,6 +473,7 @@ rest_access_forbidden
 rest_admin_required
 rest_authentication_required
 rest_bad_parameter
+rest_data_stale
 rest_endpoint_missing
 rest_endpoint_not_implemented
 rest_jsonp_get_only
@@ -510,6 +512,7 @@ send_client_logs
 send_new_voucher
 send_reminder
 send_to_my_email
+send_verification_code_to_your_email_address
 send_voucher
 sender_email_search
 serverlog_auth_sp_attribute_not_found
@@ -589,6 +592,7 @@ terasender_worker_count
 terasender_worker_failed_to_start
 testterm
 text_desc_of_file_count_and_size
+then_enter_verification_code_below
 time_format
 time_to_complete_ms
 time_to_complete_s
@@ -603,6 +607,7 @@ transfer_available
 transfer_closed
 transfer_deleted
 transfer_deleted_receipt
+transfer_email_verify_to_download
 transfer_expired
 transfer_expired_receipt
 transfer_expiry_extension_count_exceeded
@@ -711,6 +716,11 @@ utilities_uid_generator_bad_unicity_checker
 utilities_uid_generator_tried_too_much
 valid_only_one_time
 value
+verification_code_did_not_match
+verification_code_is_too_old
+verify
+verify_email_to_download
+verify_your_email_address_to_download
 view_full_log
 waiting_for_upload_to_stabilize
 web_notification_upload_complete
