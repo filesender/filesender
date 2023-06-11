@@ -575,6 +575,8 @@ A note about colours;
                { "passes": "1", "error": "0", "reason": "clean." }
                or something like the following or for an error:
                { "passes": "0", "error": "0", "reason": "contains a Trojan (56% certainty)." }
+               or if the scanner itself encountered an error:
+               { "passes": "0", "error": "1", "reason": "unable to use local database to compare data with." }.
 
 
 
