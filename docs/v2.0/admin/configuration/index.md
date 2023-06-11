@@ -585,7 +585,9 @@ A note about colours;
                display the results of scans if they are available.
 
                The expected setup will use virus scanners over https passing the file stream to the scanner and retrieving the
-               results of that scan to store in the database. An example program AVProgramURLTest.php is provided that can be installed on a web server and will fail content that contains a bad word which in this case is literally "badword". The AVProgramURLTest is provided as an example that can be fleshed out to use other malware scanners as installations wish.
+               results of that scan to store in the database. An example program AVProgramURLTest.php is provided that can be
+               installed on a web server and will fail content that contains a bad word which in this case is literally
+               "badword". The AVProgramURLTest is provided as an example that can be fleshed out to use other malware scanners as installations wish.
 
 
 
