@@ -337,7 +337,7 @@ class File extends DBObject
         $file->logsCache = array();
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
-        
+
         // Generate uid until it is indeed unique
         $file->uid = Utilities::generateUID(function ($uid, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
@@ -348,7 +348,7 @@ class File extends DBObject
             }
             return !$data;
         });
-
+        
         $file->storage_class_name = Storage::getDefaultStorageClass();
 
         if (!is_null($size)) {
@@ -400,7 +400,7 @@ class File extends DBObject
      */
     public static function fromTransfer(Transfer $transfer)
     {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id order by name desc');
         $s->execute(array(':transfer_id' => $transfer->id));
         $tree_files = array();
         $files = array();
