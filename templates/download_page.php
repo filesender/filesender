@@ -303,14 +303,14 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             </div>
             
             <div class="archive_download_frame">
-            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_download" title="{tr:archive_download}">
+            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLinkRAW) ?>" class="archive_download" title="{tr:archive_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_download}
             </a>
             </div>
             <?php if($canDownloadAsTar) { ?>
             <div class="archive_tar_download_frame">
-            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_tar_download" title="{tr:archive_tar_download}">
+            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLinkRAW) ?>" class="archive_tar_download" title="{tr:archive_tar_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_tar_download}
             </a>
