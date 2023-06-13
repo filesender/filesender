@@ -465,7 +465,6 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
 
-            
             // Must have files ...
             if (!count($data->files)) {
                 throw new TransferNoFilesException();

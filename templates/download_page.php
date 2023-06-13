@@ -81,6 +81,9 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
 
     $downloadLinks = array();
     $archiveDownloadLink = '#';
+    $archiveDownloadLinkRAW = '';
+    $archiveDownloadLinkFileIDs = '';
+    
     if(empty($transfer->options['encryption'])) {
         $fileIds = array();
         foreach($transfer->files as $file) {
@@ -94,6 +97,10 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             'token' => $token,
             'files_ids' => implode(',', $fileIds),
         ), 'download.php?' );
+        $archiveDownloadLinkRAW = Utilities::http_build_query(array(
+            'token' => $token,
+        ), 'download.php?' );
+        $archiveDownloadLinkFileIDs = implode(',', $fileIds);
     }
 
     $isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'];
@@ -307,8 +314,20 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_tar_download}
             </a>
+            </div>            
+            <?php } ?>
+
+            <div class="archive_download_framex hidden">
+                <form id="dlarchivepost" action="<?php echo Utilities::sanitizeOutput($archiveDownloadLinkRAW) ?>" method="post">
+                    <input class="hidden archivefileids" name="files_ids" value="<?php echo $archiveDownloadLinkFileIDs; ?>" />
+                    <input id="dlarchivepostformat" class="hidden " name="archive_format" value="zip" />
+                    <button type="submit"
+                            name="your_name" value="your_value"
+                            class="btn-link">DOWNLOAD
+                    </button>
+                </form>
             </div>
-            <?php } ?>    
+            
             <span class="downloadprogress"/>
         </div>
     <?php } ?>    

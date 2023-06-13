@@ -42,6 +42,15 @@ $(function() {
     }
     
     window.filesender.pbkdf2dialog.setup( true );
+
+    var updateSelectedFilesForArchiveDownload = function()  {
+        var ids = [];
+        page.find('.file[data-selected="1"]').each(function() {
+            ids.push($(this).attr('data-id'));
+        });
+        var idlist = ids.join(',');
+        $('.archivefileids').attr('value', idlist );
+    }
     
     // Bind file selectors
     page.find('.file .select').on('click', function() {
@@ -85,10 +94,17 @@ $(function() {
         var dlcb = function(notify) {
             notify = notify ? '&notify_upon_completion=1' : '';
             return function() {
-                filesender.ui.redirect( filesender.config.base_path
-                                        + 'download.php?token=' + token
-                                        + '&archive_format=' + archive_format
-                                        + '&files_ids=' + ids.join(',') + notify);
+                if( archive_format ) {
+                    console.log("Starting download using POST method...");
+                    $('#dlarchivepostformat').attr( 'value', archive_format );
+                    updateSelectedFilesForArchiveDownload();
+                    $('#dlarchivepost').submit();
+                } else {
+                    filesender.ui.redirect( filesender.config.base_path
+                                            + 'download.php?token=' + token
+                                            + '&archive_format=' + archive_format
+                                            + '&files_ids=' + ids.join(',') + notify);
+                }
             };
         };
         if (!encrypted && confirm){
