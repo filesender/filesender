@@ -30,12 +30,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Disable session cache
-session_cache_limiter('nocache');
 
 
 // Start session if necessary
 if(!session_id()) {
+    // Disable session cache
+    session_cache_limiter('nocache');
+    
     // start new session and mark it as valid because the system is a trusted source
     
     // Set session cookie options
