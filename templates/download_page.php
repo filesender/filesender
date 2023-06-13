@@ -53,7 +53,6 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
 }
 
 
-
 ?>
 <div class="boxnoframe">
     <h1>{tr:download_page}</h1>
@@ -78,6 +77,9 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     if($transfer->isExpired()) throw new TransferExpiredException($transfer);
     
     if($transfer->status != TransferStatuses::AVAILABLE) throw new TransferNotAvailableException($transfer);
+
+    $sortedFiles = $transfer->files;
+    usort($sortedFiles, function( $a, $b ) { return strnatcmp( $a->name, $b->name ); });
 
     $downloadLinks = array();
     $archiveDownloadLink = '#';
@@ -221,7 +223,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     <?php if($have_av) { ?>
         <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
             <div class="avdesc">{tr:av_results_description}
-            <?php foreach($transfer->files as $file) { ?>
+            <?php foreach($sortedFiles as $file) { ?>
                 <div class="avfile" data-avid="<?php echo $file->id ?>" >
                     <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
                     <?php if(!$file->have_avresults) { ?>
@@ -248,7 +250,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             </div>
         </div>
     <?php } ?>
-    <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($transfer->files):'1' ?>">
+    <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($sortedFiles):'1' ?>">
         <?php if($canDownloadArchive) { ?>
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
@@ -258,7 +260,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             </span>
         </div>
         <?php } ?>
-    <?php foreach($transfer->files as $file) { ?>
+    <?php foreach($sortedFiles as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>"
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
