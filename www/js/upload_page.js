@@ -223,16 +223,20 @@ filesender.ui.files = {
                 file_name = files[i].webkitRelativePath;
             }
             
-            var latest_node = filesender.ui.files.addFile(file_name, files[i], source_node);
+            var latest_node = filesender.ui.files.addFile(file_name, files[i], false, source_node);
             if (latest_node) {
                 node = latest_node;
             }
         }
+        
+        filesender.ui.evalUploadEnabled();
+        filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
+        
         this.sortErrorLinesToTop();
         return node;
     },
     
-    addFile: function(filepath, fileblob, source_node) {
+    addFile: function(filepath, fileblob, isSingleOperation, source_node) {
         var filesize = fileblob.size;
         var node = null;
             var info = filepath + ' : ' + filesender.ui.formatBytes(filesize);
@@ -297,7 +301,7 @@ filesender.ui.files = {
                     filesender.ui.evalUploadEnabled();
                 }).appendTo(node);
                 
-                var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, function(error) {
+                var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, true, function(error) {
                     var tt = 1;
                     if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                     node.addClass('invalid');
@@ -314,8 +318,10 @@ filesender.ui.files = {
                 
                 if(added_cid === false) return node;
             }
-                
-            filesender.ui.evalUploadEnabled();
+
+            if( isSingleOperation ) {
+                filesender.ui.evalUploadEnabled();
+            }
             node.attr('data-cid', added_cid);
 
             var bar = $('<div class="progressbar" />').appendTo(node);
@@ -385,7 +391,9 @@ filesender.ui.files = {
             
             node.attr('index', filesender.ui.transfer.files.length - 1);
         
-        filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
+        if( isSingleOperation ) {
+            filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
+        }
         
         return node;
     },
@@ -1120,7 +1128,7 @@ filesender.ui.startUpload = function() {
     this.transfer.aup_checked = false;
     if(filesender.ui.nodes.aup.length)
         this.transfer.aup_checked = filesender.ui.nodes.aup.is(':checked');
-    
+
     if( filesender.config.upload_display_per_file_stats ) {
         window.setInterval(function() {
             if( !window.filesender.pbkdf2dialog.already_complete ) {

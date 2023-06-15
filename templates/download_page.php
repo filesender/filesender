@@ -53,7 +53,6 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
 }
 
 
-
 ?>
 <div class="boxnoframe">
     <h1>{tr:download_page}</h1>
@@ -79,8 +78,13 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     
     if($transfer->status != TransferStatuses::AVAILABLE) throw new TransferNotAvailableException($transfer);
 
+    $sortedFiles = $transfer->files;
+    usort($sortedFiles, function( $a, $b ) { return strnatcmp( $a->name, $b->name ); });
+
     $downloadLinks = array();
     $archiveDownloadLink = '#';
+    $archiveDownloadLinkFileIDs = '';
+    
     if(empty($transfer->options['encryption'])) {
         $fileIds = array();
         foreach($transfer->files as $file) {
@@ -92,8 +96,8 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
         }
         $archiveDownloadLink = Utilities::http_build_query(array(
             'token' => $token,
-            'files_ids' => implode(',', $fileIds),
         ), 'download.php?' );
+        $archiveDownloadLinkFileIDs = implode(',', $fileIds);
     }
 
     $isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'];
@@ -219,7 +223,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     <?php if($have_av) { ?>
         <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
             <div class="avdesc">{tr:av_results_description}
-            <?php foreach($transfer->files as $file) { ?>
+            <?php foreach($sortedFiles as $file) { ?>
                 <div class="avfile" data-avid="<?php echo $file->id ?>" >
                     <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
                     <?php if(!$file->have_avresults) { ?>
@@ -246,7 +250,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             </div>
         </div>
     <?php } ?>
-    <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($transfer->files):'1' ?>">
+    <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($sortedFiles):'1' ?>">
         <?php if($canDownloadArchive) { ?>
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
@@ -256,7 +260,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             </span>
         </div>
         <?php } ?>
-    <?php foreach($transfer->files as $file) { ?>
+    <?php foreach($sortedFiles as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>"
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
@@ -307,8 +311,20 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_tar_download}
             </a>
+            </div>            
+            <?php } ?>
+
+            <div class="archive_download_framex hidden">
+                <form id="dlarchivepost" action="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" method="post">
+                    <input class="hidden archivefileids" name="files_ids" value="<?php echo $archiveDownloadLinkFileIDs; ?>" />
+                    <input id="dlarchivepostformat" class="hidden " name="archive_format" value="zip" />
+                    <button type="submit"
+                            name="your_name" value="your_value"
+                            class="btn-link">DOWNLOAD
+                    </button>
+                </form>
             </div>
-            <?php } ?>    
+            
             <span class="downloadprogress"/>
         </div>
     <?php } ?>    
