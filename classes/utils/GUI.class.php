@@ -263,7 +263,7 @@ class GUI
     private static function filterSources($sources)
     {
         return array_filter($sources, function ($source) {
-            return file_exists(FILESENDER_BASE.'/www/'.$source);
+            return is_file(FILESENDER_BASE.'/www/'.$source);
         });
     }
     
