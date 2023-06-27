@@ -2013,7 +2013,21 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __type:__ boolean
 * __default:__ true
 * __available:__ since version 2.19
-* __comment:__ 
+* __comment:__
+
+
+### fileSystemWritableFileStream_enabled
+* __description:__ Allow the use of the FileSystemWritableFileStream API to perform streaming download of encrypted files on supported browsers.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.41
+* __comment:__
+    This feature is currently only available when you have streamsaver_enabled=true set. This will prefer to use the
+    FileSystemWritableFileStream API when available to stream data to disk. As at mid 2023 Edge and Chrome support
+    this feature, Firefox supports most but not all (so can not be used) and Safari does not support the feature.
+    In the future this may be separated from the streamsaver_enabled option so it can be enabled independently.
 
 ### recipient_reminder_limit
 
