@@ -31,6 +31,7 @@ importfile cs_CZ FileSender_2.0_Czech.php
 importfile da_DK FileSender_2.0_Danish.php
 importfile nl_NL FileSender_2.0_Dutch.php
 importfile en_AU FileSender_2.0_English_AU.php
+importfile en_GB FileSender_2.0_English_GB.php
 importfile et_EE FileSender_2.0_Estonian.php
 importfile fi_FI FileSender_2.0_Finnish.php
 importfile de_DE FileSender_2.0_German.php

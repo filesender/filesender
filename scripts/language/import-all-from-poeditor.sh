@@ -13,6 +13,7 @@ $SCRIPTDIR/download-language-from-poeditor.sh "cs"    "Czech"      $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "da"    "Danish"     $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "nl"    "Dutch"      $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "en-au" "English_AU" $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "en"    "English_GB" $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "et"    "Estonian"   $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "fi"    "Finnish"    $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "de"    "German"     $dirname
