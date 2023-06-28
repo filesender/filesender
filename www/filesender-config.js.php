@@ -196,6 +196,8 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     guest_reminder_limit_per_day:  <?php echo Config::get('guest_reminder_limit_per_day') ?>,
     storage_type:  "<?php echo Config::get('storage_type') ?>",
     allow_streamsaver: <?php echo value_to_TF(Browser::instance()->allowStreamSaver) ?>,
+    allow_filesystemwritablefilestream: <?php echo value_to_TF(Browser::instance()->allowFileSystemWritableFileStream) ?>,
+
 
     upload_page_password_can_not_be_part_of_message_handling: "<?php echo Config::get('upload_page_password_can_not_be_part_of_message_handling') ?>",
 
@@ -220,3 +222,11 @@ $(function() {
 });
 
 <?php } ?>
+
+window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload = function() {
+    return 'showSaveFilePicker' in window;
+};
+window.filesender.config.useFileSystemWritableFileStreamForDownload = function() {
+    return window.filesender.config.allow_filesystemwritablefilestream
+        && window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload();
+}

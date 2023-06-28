@@ -106,6 +106,14 @@ window.filesender.crypto_app = function () {
         disable_streamsaver: false,
 
 
+        useStreamSaver: function() {
+            // Should we use streamsaver for this download?
+            window.filesender.config.use_streamsaver = window.filesender.config.allow_streamsaver;
+            if( this.disable_streamsaver ) {
+                window.filesender.config.use_streamsaver = false;
+            }
+            return window.filesender.config.use_streamsaver;
+        },
 
         /**
          * This turns a filesender chunkid into a 4 byte array
@@ -712,40 +720,45 @@ window.filesender.crypto_app = function () {
                                                             callbackError );
 
                 window.filesender.log("decryptBlob() about to really decrypt() nonStreamed " + nonStreamed );
-                
-                crypto.subtle.decrypt(decryptParams, key, value.data).then(
-                    function (result) {
-                        var blobArrayBuffer = new Uint8Array(result);
-                        blobSink.visit(chunkid,blobArrayBuffer);
-                        // done
-                        if( chunkid == encryption_details.chunkcount ) {
 
-                            window.filesender.log("decryptBlob() done" );
-                            $this.decryptBlobSpecificFinalChunkChecks( chunkid,
-                                                                       encryption_details,
-                                                                       callbackError );
-                            callbackDone(blobSink);
-                        }
-                        else
-                        {
-                            callbackNext();
-                        }
-                    },
-                    function (e) {
-                        window.filesender.log("decrypt(e) nonStreamed " + nonStreamed );
-                        window.filesender.log(e);
-                        if(nonStreamed) {
-                            e = new Error();
-                        }
-                        if (!wrongPassword) {
-                            wrongPassword=true;
-                            window.filesender.log("decrypt(e5) nonStreamed " + nonStreamed );
-                            window.filesender.log("decrypt(e5) msg " + e.message );
-                            filesender.client.decryptionFailedForTransfer( encryption_details.transferid );
-                            callbackError(e);
-                        }
+                var decryptAndContinue = async function() {
+                    var result = await crypto.subtle.decrypt(decryptParams, key, value.data);
+                    var blobArrayBuffer = new Uint8Array(result);
+                    window.filesender.log("decryptBlob() about to visit the data" );
+                    await blobSink.visit(chunkid,blobArrayBuffer);
+                    window.filesender.log("decryptBlob() visited the data" );
+                    // done
+                    if( chunkid == encryption_details.chunkcount ) {
+                                        
+                        window.filesender.log("decryptBlob() done" );
+                        $this.decryptBlobSpecificFinalChunkChecks( chunkid,
+                                                                   encryption_details,
+                                                                   callbackError );
+                        callbackDone(blobSink);
                     }
-		);
+                    else
+                    {
+                        callbackNext();
+                    }
+                };
+
+                // dispatch into an async function for await -> catch()
+                decryptAndContinue()
+                    .then( function() {} )
+                    .catch( e => {
+                            window.filesender.log("decrypt(e) nonStreamed " + nonStreamed );
+                            window.filesender.log(e);
+                            if(nonStreamed) {
+                                e = new Error();
+                            }
+                            if (!wrongPassword) {
+                                wrongPassword=true;
+                                window.filesender.log("decrypt(e5) nonStreamed " + nonStreamed );
+                                window.filesender.log("decrypt(e5) msg " + e.message );
+                                filesender.client.decryptionFailedForTransfer( encryption_details.transferid );
+                                callbackError(e);
+                            }
+                    });
             }
             catch(e) {
                 callbackError(e);                
@@ -1015,15 +1028,12 @@ window.filesender.crypto_app = function () {
             encryption_details.client_entropy_decoded = new Uint8Array(16);
 
             // Should we use streamsaver for this download?
-            window.filesender.config.use_streamsaver = window.filesender.config.allow_streamsaver;
-            if( this.disable_streamsaver ) {
-                window.filesender.config.use_streamsaver = false;
-            }
+            var use_streamsaver = $this.useStreamSaver();
             window.filesender.log('StreamSaver info. config.allow ' + window.filesender.config.allow_streamsaver
                                   + ' this.disable ' + this.disable_streamsaver
-                                  + ' config.use ' + window.filesender.config.use_streamsaver );
+                                  + ' config.use ' + use_streamsaver );
 
-            if( window.filesender.config.use_streamsaver ) {
+            if( use_streamsaver ) {
                 const ponyfill = window.WebStreamsPolyfill || {};
                 streamSaver.WritableStream = ponyfill.WritableStream;
                 streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
@@ -1236,10 +1246,8 @@ window.filesender.crypto_app = function () {
             };
 
             // Should we use streamsaver for this download?
-            window.filesender.config.use_streamsaver = window.filesender.config.allow_streamsaver;
-            if( this.disable_streamsaver ) {
-                window.filesender.config.use_streamsaver = false;
-            }
+            var use_streamsaver = $this.useStreamSaver();
+            
             
             /*
              * This is a blob visitor that performs a legacy (as of mid 2020)
@@ -1288,12 +1296,19 @@ window.filesender.crypto_app = function () {
             var blobSink = blobSinkLegacy;
             var blobSinkStreamed = blobSinkLegacy;
 
+            window.filesender.log('Newer streaming API information.'
+                                  + ' Use streamsaver: ' + window.filesender.config.use_streamsaver
+                                  + ' use FileSystemWritableFileStream (FSWF) ' + window.filesender.config.useFileSystemWritableFileStreamForDownload());
             /*
-             * If we should use the streamsaver implementation then
-             * declare the code and set blobSink to use that instead
-             */                     
-            if( window.filesender.config.use_streamsaver ) {
-
+             * As of 2023 we can use either streamsaver or FileSystemWritableFileStream
+             * to stream the contents to a file on disk. Note that the final else case is already
+             * attended to above as blobSink is already a blobSinkLegacy
+             */
+            if( window.filesender.config.useFileSystemWritableFileStreamForDownload()) {
+                window.filesender.log('Using FSWF code for storing data...' );
+                blobSinkStreamed = window.filesender.filesystemwritablefilestream_sink( name, filesize, callbackError );
+                blobSink = blobSinkStreamed;
+            } else if( window.filesender.config.use_streamsaver ) {
                 window.filesender.log('Using new StreamSaver code for storing data...' );
                 blobSinkStreamed = window.filesender.streamsaver_sink( name, filesize, callbackError );
                 blobSink = blobSinkStreamed;
@@ -1377,16 +1392,37 @@ window.filesender.crypto_app = function () {
                 window.filesender.crypto_last_password = pass;
 
                 var archiveName = $this.getArchiveFileName(link,selectedFiles,"zip");
-                blobSinkStreamed = window.filesender.streamsaver_sink_zip64( $this, link, transferid, archiveName, pass, selectedFiles, callbackError );
-                blobSink = blobSinkStreamed;
-                blobSink.init();
-                blobSink.progress = progress;
-                blobSink.onOpen   = onFileOpen;
-                blobSink.onClose  = onFileClose;
-                blobSink.onComplete = onComplete;
 
-                // start downloading.
-                blobSink.downloadNext();
+                window.filesender.log('Zip64 newer streaming API information.'
+                                      + ' Use streamsaver: ' + window.filesender.config.use_streamsaver
+                                      + ' use FileSystemWritableFileStream (FSWF) ' + window.filesender.config.useFileSystemWritableFileStreamForDownload());
+
+                if( !$this.useStreamSaver()
+                    && !window.filesender.config.useFileSystemWritableFileStreamForDownload())
+                {
+                    // no streaming method is available to use!
+                    window.filesender.log("ERROR can not use any streaming tech to download into a zip file!");
+                    return;
+                }
+                                                     
+                
+                blobSinkStreamed = window.filesender.archive_sink( $this, link, transferid, archiveName, pass, selectedFiles, callbackError );
+                blobSink = blobSinkStreamed;
+                blobSink.init()
+                    .then( () => {
+                        blobSink.progress = progress;
+                        blobSink.onOpen   = onFileOpen;
+                        blobSink.onClose  = onFileClose;
+                        blobSink.onComplete = onComplete;
+                        
+                        // start downloading.
+                        blobSink.downloadNext();
+                    })
+                    .catch( e => {
+                        callbackError(e);
+                    });
+
+                
                 
             }, function(){
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);

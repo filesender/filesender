@@ -115,8 +115,14 @@ class GUI
             array_push( $sources,
                         'lib/streamsaver/StreamSaver.js',
                         'js/crypter/streamsaver_sink.js',
+                        'js/crypter/archive_sink.js',
                         'js/crc32handler.js',
                         'js/zip64handler.js'
+            );
+        }
+        if( Browser::instance()->allowFileSystemWritableFileStream ) {
+            array_push( $sources,
+                        'js/crypter/filesystemwritablefilestream_sink.js'
             );
         }
 
