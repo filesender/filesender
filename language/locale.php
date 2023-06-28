@@ -44,7 +44,7 @@ $locales  =  array(
     'de-de' => array('name' => 'German',       'path' => 'de_DE'),
     'en-au' => array('name' => 'English (AU)', 'path' => 'en_AU'),
     'en-us' => array('name' => 'English (US)', 'path' => 'en_AU'),
-    'en-gb' => array('name' => 'English (GB)', 'path' => 'en_AU'),
+    'en-gb' => array('name' => 'English (GB)', 'path' => 'en_GB'),
     'en'    => array('name' => 'English',      'path' => 'en_AU'),
     'es'    => array('name' => 'Spanish',      'path' => 'es_ES'),
     'es-es' => array('name' => 'Spanish',      'path' => 'es_ES'),
