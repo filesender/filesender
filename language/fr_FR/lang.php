@@ -300,6 +300,8 @@ $lang['guest_reminder_limit_reached'] = 'Vous avez atteint le nombre maximum de 
 $lang['guest_reminder_rate_limit_reached'] = 'Vous ne pouvez envoyer que des rappels {cfg:guest_reminder_limit_per_day} par jour. Veuillez réessayer plus tard.';
 $lang['guest_too_many_recipients'] = 'Nombre maximum de destinataires dépassé';
 $lang['guest_transfer_options'] = 'Options du dépôt des invités';
+$lang['guest_upload_default_expire_is_guest_expire'] = 'Les téléversements des invités expirent au plus tard à la date d\'expiration de l\'invitation';
+$lang['guest_upload_expire_read_only'] = 'L\'invité ne peut pas modifier le délai d\'expiration des téléversements';
 $lang['guest_vouchers_sent'] = 'Invitations envoyées';
 $lang['guests'] = 'Invités';
 $lang['guests_page'] = 'Invités';
@@ -398,6 +400,7 @@ $lang['privacy_page_trackingevents_lifetime'] = 'Jours pendant lesquels un journ
 $lang['privacy_page_translatable_emails_lifetime'] = 'Nombre de jours de rétention des emails envoyés';
 $lang['profile_page_text_linking_to_admin_page'] = 'Vous êtes autorisé à accéder à la <a href="{cfg:site_url}/?s=admin">page admin</a>.';
 $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender respecte votre vie privée. Veuillez <a href="{cfg:site_url}/?s=privacy">cliquer ici</a> pour consulter combien de temps les informations sont conservées par cette installation';
+$lang['python_cli_client_heading'] = 'Client CLI Python';
 $lang['python_cli_client_setup_information'] = 'Pour utiliser la configuration du client CLI Python, créez un répertoire ~/.filesender et copiez le fichier de configuration filesender.py.ini dans le répertoire ~/.filesender. Le fichier de configuration est facultatif, mais il est recommandé car il vous permet de ne pas toujours devoir spécifier tous les paramètres sur la ligne de commande. Le client CLI python peut être téléchargé à n\'importe quel endroit et nécessite la version 3 de Python pour s\'exécuter.</p>Avec le fichier de configuration en place, vous pouvez télécharger un fichier en utilisant <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>.';
 $lang['quota_usage'] = '{size:used} sur {size:total} utilisés, {size:available} restants';
 $lang['rate_limit_exceeded'] = 'Vous avez tenté d\'effectuer cette opération plus fréquemment que ce qui est autorisé dans une période de 24 heures.';
