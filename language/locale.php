@@ -79,5 +79,6 @@ $locales  =  array(
     'ur'    => array('name' => 'Urdu',      'path' => 'ur_PK'),
     'ur-pk' => array('name' => 'Urdu',      'path' => 'ur_PK'),
     'zh-hans' => array('name' => 'Chinese (simplified)',      'path' => 'zh_HANS'),
-    'zh-hant' => array('name' => 'Chinese (traditional)',     'path' => 'zh_HANT')
+    'zh-hant' => array('name' => 'Chinese (traditional)',     'path' => 'zh_HANT'),
+    'ne-np' => array('name' => 'Nepali',      'path' => 'ne_NP')
 );
