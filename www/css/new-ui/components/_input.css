@@ -85,3 +85,72 @@
 .fs-input-inline button {
   font-size: 0.9rem;
 }
+
+.fs-checkbox {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  height: var(--fs-spacing-3x);
+  min-width: var(--fs-spacing-3x);
+}
+
+.fs-checkbox label {
+  margin-left: var(--fs-spacing-5x);
+  cursor: pointer;
+}
+
+.fs-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.fs-checkbox__mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--fs-spacing-3x);
+  width: var(--fs-spacing-3x);
+  background-color: var(--fs-gray-100);
+  border-radius: var(--fs-spacing-half);
+}
+
+/* On mouse-over, add a grey background color */
+.fs-checkbox:hover input ~ .fs-checkbox__mark {
+  background-color: var(--fs-gray-300);
+}
+
+/* When the checkbox is checked, add a blue background */
+.fs-checkbox input:checked ~ .fs-checkbox__mark {
+  background-color: var(--fs-accent);
+}
+
+/* Create the fs-checkbox__mark/indicator (hidden when not checked) */
+.fs-checkbox__mark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the fs-checkbox__mark when checked */
+.fs-checkbox input:checked ~ .fs-checkbox__mark:after {
+  display: block;
+}
+
+.fs-checkbox .fs-checkbox__mark:after {
+  left: 8px;
+  top: 4.5px;
+  width: 7px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

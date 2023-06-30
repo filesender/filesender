@@ -1,5 +1,4 @@
 <?php
-
 $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
@@ -11,7 +10,6 @@ if (Config::get('aup_default') || (isset($_SESSION['aup']) /*&& !$authvoucher->a
     $aupChecked = 'checked="checked"';
 }
 
-
 $crustMeterCount = 1;
 if( Config::get('terasender_enabled'))
     $crustMeterCount = Config::get('terasender_worker_count');
@@ -20,11 +18,9 @@ $encryption_mandatory = Principal::isEncryptionMandatory();
 $encryption_checkbox_checked = '';
 $encryption_checkbox_classes = '';
 $expire_time_is_editable = true;
-
-
-
 $files_actions_div_extra_class = "div3";
 $upload_directory_button_enabled = false;
+
 if( !Config::get('disable_directory_upload')
     && Config::get('directory_upload_button_enabled')
     && (Browser::instance()->isChrome || Browser::instance()->isFirefox))
@@ -32,13 +28,8 @@ if( !Config::get('disable_directory_upload')
     $upload_directory_button_enabled = true;
     $files_actions_div_extra_class = "div4";
 }
+
 $files_actions_div_extra_class = "";
-
-//$formClasses = "upload_form_regular";
-//if (Config::get('upload_display_per_file_stats')) {
-//   $formClasses = "upload_form_stats";
-//}
-
 
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
@@ -56,6 +47,7 @@ if(Auth::isGuest()) {
 
 $need_recipients = true;
 $allow_recipients = true;
+
 foreach(Transfer::allOptions() as $name => $dfn)  {
     if($dfn['available']) continue;
     if(!$dfn['default']) continue;
@@ -78,7 +70,6 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
     }
 }
 
-
 if(Auth::isGuest()) {
     $show_get_a_link_or_email_choice = false;
 
@@ -86,8 +77,6 @@ if(Auth::isGuest()) {
         $guest_can_only_send_to_creator = true;
     }
 }
-
-
 
 $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$relatedTo = '') use ($guest_can_only_send_to_creator) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
@@ -128,7 +117,7 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
         echo '</div>';
 
     } else {
-        echo '<div id="fs-uploader__add-me-to-recipients" class="fs-switch">';
+        echo '<div id="fs-transfer__add-me-to-recipients" class="fs-switch">';
         echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
         echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
         echo '</div>';
@@ -146,7 +135,6 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
 };
 
 
-
 if( $encryption_mandatory ) {
     $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
     $encryption_checkbox_classes = '';
@@ -158,9 +146,6 @@ if(Auth::isGuest()) {
         $expire_time_is_editable = false;
     }
 }
-
-$upload_directory_button_enabled = true;
-
 ?>
 
 <div class="container">
@@ -172,16 +157,16 @@ $upload_directory_button_enabled = true;
           autocomplete="off"
           data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
 
-        <div class="fs-uploader">
+        <div class="fs-transfer">
             <h1>
                 {tr:transfer_files}
             </h1>
 
-            <div class="fs-uploader__step fs-uploader__step--active" data-step="1">
+            <div class="fs-transfer__step fs-transfer__step--active" data-step="1">
                 <div class="row">
                     <div class="col-12">
-                        <div class="fs-uploader__droparea">
-                            <input id="files" class="fs-uploader__input" type="file" name="file" multiple />
+                        <div class="fs-transfer__droparea">
+                            <input id="files" class="fs-transfer__input" type="file" name="file" multiple />
                             <label for="files">
                                 <strong>{tr:start_selection_files}</strong>
                                 <span class="fs-button">
@@ -191,7 +176,7 @@ $upload_directory_button_enabled = true;
                             </label>
 
                             <?php if ($upload_directory_button_enabled) { ?>
-                                <div class="fs_uploader__directory">
+                                <div class="fs-transfer__directory">
                                     <span>
                                         {tr:or}
                                     </span>
@@ -201,7 +186,7 @@ $upload_directory_button_enabled = true;
                                             {tr:send_an_entire_directory}
                                         </span>
                                     </label>
-                                    <input type="file" name="selectdir" id="selectdir" class="fs-uploader__input" webkitdirectory directory multiple mozdirectory />
+                                    <input type="file" name="selectdir" id="selectdir" class="fs-transfer__input" webkitdirectory directory multiple mozdirectory />
                                 </div>
                             <?php } ?>
                         </div>
@@ -223,15 +208,15 @@ $upload_directory_button_enabled = true;
                 <!--            </div>-->
             </div>
 
-            <div class="fs-uploader__step" data-step="2">
+            <div class="fs-transfer__step" data-step="2">
                 <div class="row">
                     <div class="col-12">
-                        <div class="fs-uploader__list">
+                        <div class="fs-transfer__list">
                             <h6>
                                 {tr:selected_files}
                             </h6>
-                            <div class="fs-uploader__files">
-                                <table>
+                            <div class="fs-transfer__files">
+                                <table class="fs-table">
                                     <thead hidden="true">
                                     <tr>
                                         <th>{tr:date}</th>
@@ -282,7 +267,7 @@ $upload_directory_button_enabled = true;
                                 </table>
                             </div>
 
-                            <div class="fs_uploder__add-buttons">
+                            <div class="fs-transfer__add-buttons">
                                 <label for="files">
                                     <span class="fs-button">
                                         <i class="fa fa-plus"></i>
@@ -306,15 +291,15 @@ $upload_directory_button_enabled = true;
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="fs-uploader__actions">
-                            <div class="fs-uploader__left">
-                                <button type="button" class="fs-button fs-button--danger fs-uploader__clear-all">
+                        <div class="fs-transfer__actions">
+                            <div class="fs-transfer__left">
+                                <button type="button" class="fs-button fs-button--danger fs-transfer__clear-all">
                                     <i class="fa fa-trash"></i>
                                     {tr:clear_all}
                                 </button>
                             </div>
-                            <div class="fs-uploader__right">
-                                <button type="button" id="fs-uploader__next-step" class="fs-button fs-button--info fs-button--icon-right fs-uploader__next">
+                            <div class="fs-transfer__right">
+                                <button type="button" id="fs-transfer__next-step" class="fs-button fs-button--info fs-button--icon-right fs-transfer__next">
                                     {tr:next}
                                     <i class="fa fa-arrow-right"></i>
                                 </button>
@@ -324,21 +309,21 @@ $upload_directory_button_enabled = true;
                 </div>
             </div>
 
-            <div class="fs-uploader__step" data-step="3">
+            <div class="fs-transfer__step" data-step="3">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-uploader__list fs-uploader__list--full">
+                        <div class="fs-transfer__list fs-transfer__list--full">
                             <h6>
                                 {tr:selected_files}
                             </h6>
-                            <div class="fs-uploader__files">
+                            <div class="fs-transfer__files">
                                 <table></table>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-uploader__options">
-                            <div class="fs-uploader__send-options">
+                        <div class="fs-transfer__options">
+                            <div class="fs-transfer__send-options">
                                 <div class="row">
                                     <div class="col-12">
                                         <h5>
@@ -383,7 +368,7 @@ $upload_directory_button_enabled = true;
                                 </div>
                             </div>
 
-                            <div class="fs-uploader__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-uploader__transfer-fields--show'; } ?>">
+                            <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
                                 <hr />
 
                                 <div class="row">
@@ -444,7 +429,7 @@ $upload_directory_button_enabled = true;
                                                                placeholder="{tr:enter_to_email}" />
                                                     </div>
 
-                                                    <div class="fs-uploader__recipients recipients"></div>
+                                                    <div class="fs-transfer__recipients recipients"></div>
                                                 <?php } ?>
                                             </div>
 
@@ -492,7 +477,7 @@ $upload_directory_button_enabled = true;
                                 </div>
                             </div>
 
-                            <div class="fs-uploader__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-uploader__transfer-settings--show'; } ?>">
+                            <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
                                 <hr />
 
 
@@ -509,8 +494,8 @@ $upload_directory_button_enabled = true;
                                                 </label>
                                             </div>
 
-                                            <div id="encgroup1" class="fs-uploader__password">
-                                                <div class="fs-uploader__password-top" id="encryption_password_container">
+                                            <div id="encgroup1" class="fs-transfer__password">
+                                                <div class="fs-transfer__password-top" id="encryption_password_container">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-7">
                                                             <div class="fs-input-group">
@@ -518,14 +503,14 @@ $upload_directory_button_enabled = true;
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-5">
-                                                            <div class="fs-uploader__generate-password">
+                                                            <div class="fs-transfer__generate-password">
                                                                 <span>{tr:or}</span>
                                                                 <a id="encryption_generate_password" href="javascript:void(0);" class="fs-link">{tr:generate_password}</a>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="fs-uploader__password-bottom">
+                                                <div class="fs-transfer__password-bottom">
                                                     <small>{tr:password_share_tip}</small>
                                                 </div>
 
@@ -675,19 +660,19 @@ $upload_directory_button_enabled = true;
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="fs-uploader__actions">
-                            <div class="fs-uploader__left">
-                                <button type="button" id="fs-uploader__previous-step" class="fs-button fs-button--info">
+                        <div class="fs-transfer__actions">
+                            <div class="fs-transfer__left">
+                                <button type="button" id="fs-transfer__previous-step" class="fs-button fs-button--info">
                                     <i class="fa fa-arrow-left"></i>
                                     {tr:previous}
                                 </button>
-                                <button type="button" id="fs-uploader__cancel" class="fs-button fs-button--danger">
+                                <button type="button" id="fs-transfer__cancel" class="fs-button fs-button--danger">
                                     <i class="fa fa-ban"></i>
                                     {tr:cancel}
                                 </button>
                             </div>
-                            <div class="fs-uploader__right">
-                                <button type="button" id="fs-uploader__confirm" class="fs-button fs-button--info fs-button--icon-right">
+                            <div class="fs-transfer__right">
+                                <button type="button" id="fs-transfer__confirm" class="fs-button fs-button--info fs-button--icon-right">
                                     {tr:confirm}
                                     <i class="fa fa-check"></i>
                                 </button>
@@ -697,20 +682,20 @@ $upload_directory_button_enabled = true;
                 </div>
             </div>
 
-            <div class="fs-uploader__step" data-step="4">
+            <div class="fs-transfer__step" data-step="4">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-uploader__list fs-uploader__list--full">
+                        <div class="fs-transfer__list fs-transfer__list--full">
                             <h6>
                                 {tr:selected_files}
                             </h6>
-                            <div class="fs-uploader__files">
-                                <table></table>
+                            <div class="fs-transfer__files">
+                                <table class="fs-table"></table>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-uploader__upload-detail fs-uploader__upload-uploading">
+                        <div class="fs-transfer__upload-detail fs-transfer__upload-uploading">
                             <h5>
 
                             </h5>
@@ -720,7 +705,7 @@ $upload_directory_button_enabled = true;
                                 <span class="fs-progress-bar__indicator"></span>
                             </span>
                             </div>
-                            <div class="fs-uploader__upload-size-info">
+                            <div class="fs-transfer__upload-size-info">
                                 <div class="stats">
                                     <div class="uploaded">
                                         <span class="value">
@@ -729,26 +714,26 @@ $upload_directory_button_enabled = true;
                                     </div>
                                 </div>
                             </div>
-                            <div class="fs-uploader__upload-speed-info">
+                            <div class="fs-transfer__upload-speed-info">
                                 <div class="stats">
                                     <table class="fs-table">
                                         <tbody>
-                                        <tr class="fs-uploader__speed-info average_speed">
+                                        <tr class="fs-transfer__speed-info average_speed">
                                             <td>{tr:average_speed}</td>
-                                            <td id="fs-uploader__average-speed" class="value">17.4 MB / sec</td>
+                                            <td id="fs-transfer__average-speed" class="value">17.4 MB / sec</td>
                                         </tr>
-                                        <tr class="fs-uploader__number-of-files number_of_files">
+                                        <tr class="fs-transfer__number-of-files number_of_files">
                                             <td>{tr:number_of_files}</td>
-                                            <td id="fs-uploader__total-files" class="value">0 {tr:files_lowercase}</td>
+                                            <td id="fs-transfer__total-files" class="value">0 {tr:files_lowercase}</td>
                                         </tr>
-                                        <tr class="fs-uploader__estimated-info estimated_completion">
+                                        <tr class="fs-transfer__estimated-info estimated_completion">
                                             <td>
                                                 <strong>
                                                     {tr:estimated_completion}
                                                 </strong>
                                             </td>
                                             <td>
-                                                <strong id="fs-uploader__estimated-time" class="value">
+                                                <strong id="fs-transfer__estimated-time" class="value">
                                                     {tr:in} 13 {tr:minutes}
                                                 </strong>
                                             </td>
@@ -762,20 +747,20 @@ $upload_directory_button_enabled = true;
                 </div>
             </div>
 
-            <div class="fs-uploader__step" data-step="5">
+            <div class="fs-transfer__step" data-step="5">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-uploader__list fs-uploader__list--full">
+                        <div class="fs-transfer__list fs-transfer__list--full">
                             <h6>
                                 {tr:selected_files}
                             </h6>
-                            <div class="fs-uploader__files">
-                                <table></table>
+                            <div class="fs-transfer__files">
+                                <table class="fs-table"></table>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-uploader__upload-detail fs-uploader__upload-finished">
+                        <div class="fs-transfer__upload-detail fs-transfer__upload-finished">
                             <h5>
                                 {tr:transfer_completed}
                             </h5>
@@ -785,19 +770,19 @@ $upload_directory_button_enabled = true;
                                 <span class="fs-progress-bar__indicator" style="width: 100%"></span>
                             </span>
                             </div>
-                            <div class="fs-uploader__upload-speed-info">
+                            <div class="fs-transfer__upload-speed-info">
                                 <div class="stats">
                                     <table class="fs-table">
                                         <tbody>
-                                        <tr class="fs-uploader__total-info size">
+                                        <tr class="fs-transfer__total-info size">
                                             <td>{tr:ui2_total_size}</td>
-                                            <td id="fs-uploader__total-size" class="value">0 MB</td>
+                                            <td id="fs-transfer__total-size" class="value">0 MB</td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="fs-uploader__upload-link">
+                            <div class="fs-transfer__upload-link">
                                 <span>
                                     {tr:your_download_link}
                                 </span>
@@ -810,19 +795,19 @@ $upload_directory_button_enabled = true;
                                     </button>
                                 </div>
                             </div>
-                            <div class="fs-uploader__upload-recipients">
+                            <div class="fs-transfer__upload-recipients">
                                 <span>
                                     {tr:your_transfer_was_sent}
                                 </span>
                                 <div class="fs-badge-list">
                                 </div>
                             </div>
-                            <div class="fs-uploader__upload-expires">
+                            <div class="fs-transfer__upload-expires">
                                 <span>
                                     {tr:expires_in} <span id="expires-days">7</span> {tr:days}.
                                 </span>
                             </div>
-                            <div class="fs-uploader__upload-custom-name">
+                            <div class="fs-transfer__upload-custom-name">
                                 <label for="transfer-name">
                                     {tr:add_transfer_custom_name}
                                 </label>
@@ -838,7 +823,7 @@ $upload_directory_button_enabled = true;
                     </div>
                 </div>
 
-                <div class="fs-uploader__upload-actions">
+                <div class="fs-transfer__upload-actions">
                     <a id="download-link" href=""type="button" class="fs-button fs-button--info" role="button">
                         <i class="fa fa-file-text-o"></i>
                         {tr:transfer_details}
@@ -850,55 +835,6 @@ $upload_directory_button_enabled = true;
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--        <div class="">-->
-<!--            <div class="files_uploadlogtop stage3">-->
-<!--                <div class="uploadlogbox">-->
-<!--                    <div class="uploadlogheader">{tr:upload_log_header}</div>-->
-<!--                    <table class="uploadlog">-->
-<!--                        <thead hidden="true">-->
-<!--                        <tr>-->
-<!--                            <th>{tr:date}</th>-->
-<!--                            <th>{tr:message}</th>-->
-<!--                        </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                        <tr class="tpl">-->
-<!--                            <td class="date"></td>-->
-<!--                            <td class="message"></td>-->
-<!--                        </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-        <!-- closed class="" still in form & core -->
 
         <div class="upload stage1 stage1options mt-2">
             <?php if (Config::get('upload_graph_bulk_display')) { ?>
@@ -912,27 +848,6 @@ $upload_directory_button_enabled = true;
             <?php } ?>
 
         </div>
-
-        <!--        <div class="buttons stage3">-->
-        <!--            <a href="#" class="start  btn btn-primary ">-->
-        <!--                <span class="fa fa-cloud-upload fa-lg"></span>&nbsp;{tr:send}-->
-        <!--            </a>-->
-        <!--            <a href="#" class="restart not_displayed  btn btn-secondary ">-->
-        <!--                <span class="fa fa-cloud-upload fa-lg"></span>&nbsp;{tr:restart}-->
-        <!--            </a>-->
-        <!--            <a href="#" class="pause not_displayed btn btn-secondary ">-->
-        <!--                <span class="fa fa-pause fa-lg"></span>&nbsp;{tr:pause}-->
-        <!--            </a>-->
-        <!--            <a href="#" class="resume not_displayed btn btn-secondary ">-->
-        <!--                <span class="fa fa-play fa-lg"></span>&nbsp;{tr:resume}-->
-        <!--            </a>-->
-        <!--            <a href="#" class="stop not_displayed btn btn-secondary ">-->
-        <!--                <span class="fa fa-stop fa-lg"></span>&nbsp;{tr:stop}-->
-        <!--            </a>-->
-        <!--            <a href="#" class="reconnect not_displayed btn btn-secondary ">-->
-        <!--                <span class="fa fa-cloud-upload fa-lg"></span>&nbsp;{tr:reconnect_and_continue}-->
-        <!--            </a>-->
-        <!--        </div>-->
     </form>
 
     <div class="fs-theme">
@@ -950,7 +865,6 @@ $upload_directory_button_enabled = true;
             </li>
         </ul>
     </div>
-
 
     <?php if (!Config::get('disable_directory_upload')) { ?>
         <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>

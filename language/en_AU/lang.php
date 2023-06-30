@@ -735,3 +735,6 @@ $lang['days'] = 'days';
 $lang['add_transfer_custom_name'] = 'Add a custom name for this transfer';
 $lang['transfer_details'] = 'Transfer details';
 $lang['all_my_transfers'] = 'All my transfers';
+$lang['transfer_page_subtitle'] = 'An onverview of all the transfers you sent. Click in any transfer to see its details.';
+$lang['active_transfers'] = 'Active transfers';
+$lang['expired_transfers'] = 'Expired transfers';

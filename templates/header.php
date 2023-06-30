@@ -47,5 +47,3 @@ $headerclass = "header";
     </head>
 
     <body data-security-token="<?php echo Utilities::getSecurityToken() ?>" data-auth-type="<?php echo Auth::type() ?>">
-        <!-- New UI header - BEGIN -->
-        <header>

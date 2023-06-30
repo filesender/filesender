@@ -40,3 +40,19 @@
     background: transparent;
     border: none;
 }
+
+.fs-link--circle {
+    color: var(--fs-accent) !important;
+    background: var(--fs-blue-100) !important;
+}
+
+.fs-link--disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    text-decoration: none;
+}
+
+.fs-link--disabled:hover {
+    color: var(--fs-accent) !important;
+    background: var(--fs-blue-100) !important;
+}

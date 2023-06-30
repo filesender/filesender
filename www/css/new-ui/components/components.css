@@ -4,7 +4,6 @@
 @import "_link.css";
 @import "_form.css";
 @import "_buttons.css";
-@import "_uploader.css";
 @import "_radio.css";
 @import "_input.css";
 @import "_switch.css";
@@ -14,3 +13,5 @@
 @import "_table.css";
 @import "_copy.css";
 @import "_badge.css";
+@import "_text.css";
+@import "_paginator.css";

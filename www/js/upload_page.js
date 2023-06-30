@@ -598,8 +598,8 @@ filesender.ui.files = {
 
         const uploadPercentage = Math.round((uploaded * 100) / size);
 
-        $('.fs-uploader__upload-detail .fs-progress-bar__value').html(`${uploadPercentage}%`)
-        $('.fs-uploader__upload-detail .fs-progress-bar__indicator').css('width', `${uploadPercentage}%`);
+        $('.fs-transfer__upload-detail .fs-progress-bar__value').html(`${uploadPercentage}%`)
+        $('.fs-transfer__upload-detail .fs-progress-bar__indicator').css('width', `${uploadPercentage}%`);
 
         if(this.status != 'paused')
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
@@ -1283,7 +1283,7 @@ filesender.ui.startUpload = function() {
         // show the completed stage.
         filesender.ui.stage = 4;
 
-        $('.fs-uploader__upload-link .fs-copy > span').html(filesender.ui.transfer.download_link);
+        $('.fs-transfer__upload-link .fs-copy > span').html(filesender.ui.transfer.download_link);
 
         $('#copy-to-clipboard').on('click', function(e){
             filesender.ui.copyToClipboard(filesender.ui.transfer.download_link);
@@ -1302,15 +1302,15 @@ filesender.ui.startUpload = function() {
         filesender.ui.updateSizeInfo();
 
         if (filesender.ui.transfer.recipients && filesender.ui.transfer.recipients.length > 0) {
-            $('.fs-uploader__upload-recipients').addClass('fs-uploader__upload-recipients--show');
+            $('.fs-transfer__upload-recipients').addClass('fs-transfer__upload-recipients--show');
 
-            const badgeList = $('.fs-uploader__upload-recipients .fs-badge-list');
+            const badgeList = $('.fs-transfer__upload-recipients .fs-badge-list');
 
             filesender.ui.transfer.recipients.forEach(recipient => {
                 badgeList.append(`<div class="fs-badge">${recipient}</div>`);
             });
         } else {
-            $('.fs-uploader__upload-link').addClass('fs-uploader__upload-link--show');
+            $('.fs-transfer__upload-link').addClass('fs-transfer__upload-link--show');
         }
 
         const expireDays = new Date(filesender.ui.transfer.expires * 1000);
@@ -1552,12 +1552,12 @@ filesender.ui.setTimeSinceDataWasLastSentMessage = function(msg) {
 
 // Add class to highlight droparea container
 filesender.ui.activeDroparea = function () {
-    $('.fs-uploader__droparea').addClass('fs-uploader__droparea--active');
+    $('.fs-transfer__droparea').addClass('fs-transfer__droparea--active');
 }
 
 // Remove the droparea container highlight class
 filesender.ui.inactiveDroparea = function () {
-    $('.fs-uploader__droparea').removeClass('fs-uploader__droparea--active');
+    $('.fs-transfer__droparea').removeClass('fs-transfer__droparea--active');
 }
 
 filesender.ui.resetStage = function() {
@@ -1617,8 +1617,8 @@ filesender.ui.removeFile = function (e) {
 }
 
 filesender.ui.setFileList = function (stageToClone, stageToApply) {
-    const fileListToClone = $(`[data-step="${stageToClone}"]`).find('.fs-uploader__files table');
-    const fileListToApply = $(`[data-step="${stageToApply}"]`).find('.fs-uploader__files');
+    const fileListToClone = $(`[data-step="${stageToClone}"]`).find('.fs-transfer__files table');
+    const fileListToApply = $(`[data-step="${stageToApply}"]`).find('.fs-transfer__files');
 
     fileListToApply.html('');
 
@@ -1628,16 +1628,16 @@ filesender.ui.setFileList = function (stageToClone, stageToApply) {
         filesender.ui.removeFile(this);
     });
 
-    if ($(`[data-step="${stageToClone}"]`).find('.fs-uploader__files table tbody').children().length === 1) {
-        $(`[data-step="3"]`).find('.fs-uploader__files table').html('');
+    if ($(`[data-step="${stageToClone}"]`).find('.fs-transfer__files table tbody').children().length === 1) {
+        $(`[data-step="3"]`).find('.fs-transfer__files table').html('');
         filesender.ui.files.clear();
         filesender.ui.goToStage(1);
-        filesender.ui.nodes.files.filestable = $(`[data-step="2"]`).find('.fs-uploader__files table');
+        filesender.ui.nodes.files.filestable = $(`[data-step="2"]`).find('.fs-transfer__files table');
     }
 }
 
 filesender.ui.deleteRemoveButton = function () {
-    $(`[data-step="4"]`).find('.fs-uploader__files table tr .removebutton').each(function(){
+    $(`[data-step="4"]`).find('.fs-transfer__files table tr .removebutton').each(function(){
         $(this).remove();
     });
 }
@@ -1649,11 +1649,11 @@ filesender.ui.onChangeTransferType = function (transferType) {
     }
 
     if (transferType) {
-        $('.fs-uploader__transfer-fields').addClass('fs-uploader__transfer-fields--show');
-        $('.fs-uploader__transfer-settings').addClass('fs-uploader__transfer-settings--show');
+        $('.fs-transfer__transfer-fields').addClass('fs-transfer__transfer-fields--show');
+        $('.fs-transfer__transfer-settings').addClass('fs-transfer__transfer-settings--show');
 
         const emailField = $(`[data-transfer-type='${TRANSFER_TYPES.TRANSFER_EMAIL}']`);
-        const addMeToRecipientsField = $(`#fs-uploader__add-me-to-recipients`);
+        const addMeToRecipientsField = $(`#fs-transfer__add-me-to-recipients`);
 
         switch (transferType) {
             case TRANSFER_TYPES.TRANSFER_LINK:
@@ -1711,7 +1711,7 @@ $(function() {
     filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
 
     // Stage active class
-    filesender.ui.stageActiveClass = 'fs-uploader__step--active';
+    filesender.ui.stageActiveClass = 'fs-transfer__step--active';
 
     // Register frequently used nodes
     filesender.ui.nodes = {
@@ -1719,14 +1719,14 @@ $(function() {
         files: {
             input: form.find(':file'),
             files_input: form.find('#files:file'),
-            list: form.find('.fs-uploader__list'),
-            dragdrop: form.find('.fs-uploader__droparea'),
+            list: form.find('.fs-transfer__list'),
+            dragdrop: form.find('.fs-transfer__droparea'),
             uploadlogtop: form.find('.files_uploadlogtop'),
             uploadlog: form.find('.uploadlog'),
             select: form.find('.files_actions .select_files'),
             selectdir: form.find('.select_directory'),
-            clear: form.find('.fs-uploader__clear-all'),
-            filestable: form.find('.fs-uploader__files table'),
+            clear: form.find('.fs-transfer__clear-all'),
+            filestable: form.find('.fs-transfer__files table'),
         },
         clearandstats: form.find('.clearandstats'),
         stage1: form.find('[data-step="1"'),
@@ -1734,10 +1734,10 @@ $(function() {
         stage3: form.find('[data-step="3"'),
         stage4: form.find('[data-step="4"'),
         stages: {
-            nextStep: form.find('#fs-uploader__next-step'),
-            previousStep: form.find('#fs-uploader__previous-step'),
-            confirm: form.find('#fs-uploader__confirm'),
-            cancel: form.find('#fs-uploader__cancel'),
+            nextStep: form.find('#fs-transfer__next-step'),
+            previousStep: form.find('#fs-transfer__previous-step'),
+            confirm: form.find('#fs-transfer__confirm'),
+            cancel: form.find('#fs-transfer__cancel'),
         },
         gal: {
             gal: form.find('#galgal'),
@@ -1760,9 +1760,9 @@ $(function() {
             use_generated: form.find('#encryption_use_generated_password'),
             generate_again: form.find('#encryption_password_container_generate_again')
         },
-        uploading_actions_msg:form.find('.fs-uploader__upload-speed-info .msg'),
-        auto_resume_timer:form.find('.fs-uploader__upload-speed-info .auto_resume_timer'),
-        auto_resume_timer_top:form.find('.fs-uploader__upload-speed-info .auto_resume_timer_top'),
+        uploading_actions_msg:form.find('.fs-transfer__upload-speed-info .msg'),
+        auto_resume_timer:form.find('.fs-transfer__upload-speed-info .auto_resume_timer'),
+        auto_resume_timer_top:form.find('.fs-transfer__upload-speed-info .auto_resume_timer_top'),
         seconds_since_data_sent:form.find('#seconds_since_data_sent'),
         seconds_since_data_sent_info:form.find('#seconds_since_data_sent_info'),
         disable_terasender: form.find('input[name="disable_terasender"]'),
@@ -1787,16 +1787,16 @@ $(function() {
         },
         upload_options_table: form.find('#upload_options_table'),
         files_actions: form.find('.files_actions'),
-        uploading_actions: form.find('.fs-uploader__upload-speed-info'),
+        uploading_actions: form.find('.fs-transfer__upload-speed-info'),
         text_desc_of_file_count_and_size: form.find('.text_desc_of_file_count_and_size'),
         stats: {
             number_of_files: form.find('.number_of_files'),
             size:            form.find('.size'),
             filecount:       form.find('.filecount'),
             sendingsize:     form.find('.sendingsize'),
-            uploaded:        form.find('.fs-uploader__upload-size-info .stats .uploaded'),
-            average_speed:   form.find('.fs-uploader__upload-speed-info .stats .average_speed'),
-            estimated_completion: form.find('.fs-uploader__upload-speed-info .stats .estimated_completion')
+            uploaded:        form.find('.fs-transfer__upload-size-info .stats .uploaded'),
+            average_speed:   form.find('.fs-transfer__upload-speed-info .stats .average_speed'),
+            estimated_completion: form.find('.fs-transfer__upload-speed-info .stats .estimated_completion')
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };

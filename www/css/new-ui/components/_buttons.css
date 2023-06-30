@@ -67,6 +67,14 @@
   color: var(--fs-danger) !important;
 }
 
+.fs-button--transparent.fs-button--success {
+  color: var(--fs-success);
+}
+
+.fs-button--transparent.fs-button--info {
+  color: var(--fs-info);
+}
+
 .fs-button--success {
   color: var(--fs-light);
   background: var(--fs-success);

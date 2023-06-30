@@ -12,120 +12,123 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
 ?>
 
-<nav>
-    <a class="fs-link fs-link--no-hover" href="">
-        <img src="{cfg:site_url}/images/filesender-icon.png" alt="Brand">
-        <span>FileSender</span>
-    </a>
-    <ul>
-        <?php
+<!-- New UI header - BEGIN -->
+    <header>
 
-            if(!Auth::isGuest()) {
-                pagemenuitem('upload');
+    <nav>
+        <a class="fs-link fs-link--no-hover" href="">
+            <img src="{cfg:site_url}/images/filesender-icon.png" alt="Brand">
+            <span>FileSender</span>
+        </a>
+        <ul>
+            <?php
 
-                pagemenuitem('transfers');
+                if(!Auth::isGuest()) {
+                    pagemenuitem('upload');
 
-                if(Config::get('guest_support_enabled')) {
-                    pagemenuitem('guests');
+                    pagemenuitem('transfers');
+
+                    if(Config::get('guest_support_enabled')) {
+                        pagemenuitem('guests');
+                    }
+
+                    if(Config::get('user_page')) {
+                        pagemenuitem('user');
+                    }
+
+                    pagemenuitem('statistics');
+
+                    pagemenuitem('admin');
+
+                    if( $maybe_display_aggregate_statistics_menu ) {
+                        if (AggregateStatistic::enabled()) {
+                            pagemenuitem('aggregate_statistics');
+                        }
+                    }
+
                 }
 
-                if(Config::get('user_page')) {
-                    pagemenuitem('user');
+                if (!Auth::isAuthenticated()) {
+                    pagemenuitem('help');
+                    pagemenuitem('about');
+                    pagemenuitem('privacy');
                 }
 
-                pagemenuitem('statistics');
+                if (Auth::isAuthenticated() && Auth::isSP())
+                {
+                    $faicon = 'fa-sign-out';
+                    $icon = '<i class="fa '.$faicon.'"></i> ';
 
-                pagemenuitem('admin');
+                    $url = AuthSP::logoffURL();
+                    if( Config::get('auth_sp_type') == "saml" ) {
 
-                if( $maybe_display_aggregate_statistics_menu ) {
-                    if (AggregateStatistic::enabled()) {
-                        pagemenuitem('aggregate_statistics');
+                        $link = Utilities::sanitizeOutput($url);
+                        $txt = Lang::tr('logoff');
+                        echo <<<EOT
+                        <li>
+                          <form action="$link" method="post" >
+                            <button class="fs-link" type="submit" >
+                                ${icon}
+                                <span>$txt</span>
+                            </button>
+                          </form>
+                        </li>
+    EOT;
+                    } else {
+                        if($url) {
+                            echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.$icon.Lang::tr('logoff').'</a></li>';
+                        }
                     }
                 }
+                else if (!Auth::isGuest())
+                {
+                    $faicon = 'fa-sign-in';
+                    $icon = '<i class="fa '.$faicon.'"></i> ';
 
-            }
-
-            if (!Auth::isAuthenticated()) {
-                pagemenuitem('help');
-                pagemenuitem('about');
-                pagemenuitem('privacy');
-            }
-
-            if (Auth::isAuthenticated() && Auth::isSP())
-            {
-                $faicon = 'fa-sign-out';
-                $icon = '<i class="fa '.$faicon.'"></i> ';
-
-                $url = AuthSP::logoffURL();
-                if( Config::get('auth_sp_type') == "saml" ) {
-
-                    $link = Utilities::sanitizeOutput($url);
-                    $txt = Lang::tr('logoff');
-                    echo <<<EOT
-                    <li>
-                      <form action="$link" method="post" >
-                        <button class="fs-link" type="submit" >
-                            ${icon}
-                            <span>$txt</span>
-                        </button>
-                      </form>
-                    </li>
-EOT;
-                } else {
-                    if($url) {
-                        echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.$icon.Lang::tr('logoff').'</a></li>';
+                    if(Config::get('auth_sp_embedded')) {
+                        pagemenuitem('logon');
+                    }else{
+                        echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.$icon.'<span>'.Lang::tr('logon').'</span>'.'</a></li>';
                     }
                 }
-            }
-            else if (!Auth::isGuest())
-            {
-                $faicon = 'fa-sign-in';
-                $icon = '<i class="fa '.$faicon.'"></i> ';
+            ?>
 
-                if(Config::get('auth_sp_embedded')) {
-                    pagemenuitem('logon');
-                }else{
-                    echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.$icon.'<span>'.Lang::tr('logon').'</span>'.'</a></li>';
-                }
-            }
-        ?>
+            <?php if($LanguageSelectorShown): ?>
 
-        <?php if($LanguageSelectorShown): ?>
+                <li class="nav-item dropdown language-selector">
 
-            <li class="nav-item dropdown language-selector">
-
-                <?php
-                $code = Lang::getCode();
-                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                    if($id == $code) {
-                        $specificid = $dfn['specific-id'];
-                        echo '<a class="nav-link dropdown-toggle language-dropdown-toggle" ';
-                        echo ' href="#" ';
-                        echo ' id="toplangdropdownlabel" ';
-                        echo ' data-bs-toggle="dropdown" ';
-                        echo ' aria-haspopup="true" ';
-                        echo ' aria-expanded="false"> ';
-                        echo '  <span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
-                    }
-                }
-                ?>
-
-                <div class="dropdown-menu" aria-labelledby="toplangdropdownlabel" id="toplangdropdown">
                     <?php
                     $code = Lang::getCode();
                     foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                        $specificid = $dfn['specific-id'];
-                        $selected = ($id == $code) ? 'selected="selected"' : '';
-                        echo '<a class="dropdown-item toplangdropitem" data-id="'.$id.'"  href="#">';
-                        echo '<span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
-
+                        if($id == $code) {
+                            $specificid = $dfn['specific-id'];
+                            echo '<a class="nav-link dropdown-toggle language-dropdown-toggle" ';
+                            echo ' href="#" ';
+                            echo ' id="toplangdropdownlabel" ';
+                            echo ' data-bs-toggle="dropdown" ';
+                            echo ' aria-haspopup="true" ';
+                            echo ' aria-expanded="false"> ';
+                            echo '  <span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
+                        }
                     }
                     ?>
-                </div>
-            </li>
-        <?php endif; ?>
-    </ul>
-</nav>
+
+                    <div class="dropdown-menu" aria-labelledby="toplangdropdownlabel" id="toplangdropdown">
+                        <?php
+                        $code = Lang::getCode();
+                        foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                            $specificid = $dfn['specific-id'];
+                            $selected = ($id == $code) ? 'selected="selected"' : '';
+                            echo '<a class="dropdown-item toplangdropitem" data-id="'.$id.'"  href="#">';
+                            echo '<span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
+
+                        }
+                        ?>
+                    </div>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
 
 
 </header> <!-- New UI header - END -->

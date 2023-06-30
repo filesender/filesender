@@ -676,7 +676,7 @@ $lang['version'] = 'Versão do FileSender:';
 $lang['upload_completed'] = 'Upload finalizado!';
 
 $lang['start_selection_files'] = 'Inicie selecionando os arquivos';
-$lang['drag_drop_select'] = 'arraste e large ou click para seleciona';
+$lang['drag_drop_select'] = 'Arraste e large ou clique para selecionar';
 $lang['or'] = 'ou';
 $lang['transfer_files'] = 'Transferir arquivos';
 $lang['selected_files'] = 'Arquivos selecionados';
@@ -716,3 +716,6 @@ $lang['days'] = 'dias';
 $lang['add_transfer_custom_name'] = 'Adicione um nome personalizado para esta transferência';
 $lang['transfer_details'] = 'Detalhes da transferência';
 $lang['all_my_transfers'] = 'Minhas transferências';
+$lang['transfer_page_subtitle'] = 'Uma visão geral de todas as transferências que você enviou. Clique em qualquer transferência para ver seus detalhes.';
+$lang['active_transfers'] = 'Transferências ativas';
+$lang['expired_transfers'] = 'Transferências expiradas';

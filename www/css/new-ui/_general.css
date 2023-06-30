@@ -13,7 +13,9 @@ body {
 main {
   position: relative;
   flex: 1 0 auto;
-  padding: var(--fs-spacing-17x) var(--fs-spacing-5x) var(--fs-spacing-5x) var(--fs-spacing-5x);
+  display: flex;
+  flex-direction: column;
+  padding: var(--fs-spacing-12x) 0 0 0;
 }
 
 main .core {
@@ -79,10 +81,14 @@ hr {
   padding: 4px 10px;
 }
 
+.toggle-select-all::before {
+  display: none;
+}
+
 /* XS */
 @media (max-width: 575px) {
 
   main {
-    padding: var(--fs-spacing-19x) var(--fs-spacing-5x) var(--fs-spacing-5x) var(--fs-spacing-5x);
+    padding: var(--fs-spacing-15x) 0 0 0;
   }
 }

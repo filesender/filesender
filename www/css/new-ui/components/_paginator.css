@@ -1,0 +1,27 @@
+.fs-paginator {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: var(--fs-spacing-4x);
+}
+
+.fs-paginator--center {
+    justify-content: center;
+}
+
+.fs-paginator--right {
+    justify-content: flex-end;
+}
+
+.fs-paginator .fs-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--fs-spacing-5x);
+    width: var(--fs-spacing-5x);
+    border-radius: 100%;
+}
+
+.fs-paginator .fs-link + .fs-link {
+    margin-left: var(--fs-spacing-base);
+}

@@ -49,7 +49,7 @@ header nav .fs-link--active i {
 }
 
 header nav .fs-link--active span {
-  text-shadow: 1px 0px 0px black;
+  text-shadow: 0.5px 0px 0px black;
 }
 
 header nav > .fs-link:hover {

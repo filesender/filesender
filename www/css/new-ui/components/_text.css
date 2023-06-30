@@ -1,0 +1,38 @@
+h1 {
+    font-size: 2rem !important;
+    font-weight: 300 !important;
+    text-align: center !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+
+h2 {
+    font-size: 1.6rem !important;
+    font-weight: 500 !important;
+}
+
+h1, h2, h3,
+h4, h5, h6 {
+    padding: 0 !important;
+}
+
+@media (max-width: 575px) {
+    h1 {
+        font-size: 1.6rem;
+        margin: var(--fs-spacing-2x);
+    }
+
+    h2 {
+        font-size: 1.4rem !important;
+    }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+    h1 {
+        font-size: 1.8rem;
+        margin: var(--fs-spacing-3x);
+    }
+
+    h2 {
+        font-size: 1.4rem !important;
+    }
+}
