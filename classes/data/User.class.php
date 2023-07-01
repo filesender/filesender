@@ -272,11 +272,12 @@ class User extends DBObject
         if (array_key_exists('name', $attributes)) {
             $user->name = $attributes['name'];
         }
+
         
         return $user;
     }
 
-    public static function fromAuthID($authid)
+    public static function fromAuthId($authid)
     {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE authid = :authid');
         $statement->execute(array(':authid' => $authid));
@@ -292,7 +293,7 @@ class User extends DBObject
             return $ret;
         }
         $id = $data['id'];
-//        Logger::info('fromAuthID() found authid ' . $authid . ' at id ' . $id );
+//        Logger::info('fromAuthId() found authid ' . $authid . ' at id ' . $id );
         return self::fromId($id);
     }
     
