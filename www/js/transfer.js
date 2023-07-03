@@ -236,6 +236,8 @@ window.filesender.transfer = function() {
         return enable;
     }
 
+
+    
     this.getExtention = function(file) {
         var fileSplit = file.name.replace(/^.+[\/\\]/, '').split('.');
         if (fileSplit.length>1) {
@@ -244,6 +246,8 @@ window.filesender.transfer = function() {
         return '';
     };
 
+
+    
     this.getEncryptionMetadata = function( file ) {
         var key_version = this.encryption_key_version;
 	var ret = {
