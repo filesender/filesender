@@ -223,7 +223,7 @@ filesender.ui.files = {
                 file_name = files[i].webkitRelativePath;
             }
             
-            var latest_node = filesender.ui.files.addFile(file_name, files[i], false, source_node);
+            var latest_node = filesender.ui.files.addFile(file_name, files[i], source_node);
             if (latest_node) {
                 node = latest_node;
             }
@@ -236,7 +236,7 @@ filesender.ui.files = {
         return node;
     },
     
-    addFile: function(filepath, fileblob, isSingleOperation, source_node) {
+    addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
         var node = null;
             var info = filepath + ' : ' + filesender.ui.formatBytes(filesize);
@@ -389,11 +389,9 @@ filesender.ui.files = {
             
             node.attr('index', filesender.ui.transfer.files.length - 1);
         
-        if( isSingleOperation ) {
             filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
-        }
         
-        return node;
+            return node;
     },
     
     update_crust_meter_for_worker: function(file,idx,v,b) {
