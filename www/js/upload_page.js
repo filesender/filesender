@@ -319,9 +319,7 @@ filesender.ui.files = {
                 if(added_cid === false) return node;
             }
 
-            if( isSingleOperation ) {
-                filesender.ui.evalUploadEnabled();
-            }
+            filesender.ui.evalUploadEnabled();
             node.attr('data-cid', added_cid);
 
             var bar = $('<div class="progressbar" />').appendTo(node);
