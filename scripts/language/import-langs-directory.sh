@@ -56,6 +56,7 @@ importfile ne_NP   FileSender_2.0_Nepali.php
 importfile th_TH   FileSender_2.0_Thai.php
 importfile vi_VN   FileSender_2.0_Vietnamese.php
 importfile ko_KR   FileSender_2.0_Korean.php
+importfile ta_TAM  FileSender_2.0_Tamil.php
 
 
 echo "Checking syntax of generated .php files, please wait..."
