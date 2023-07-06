@@ -83,6 +83,6 @@ $locales  =  array(
     'ne-np' => array('name' => 'Nepali',      'path' => 'ne_NP'),
     'vi-vn' => array('name' => 'Vietnamese',  'path' => 'vi_VN'),
     'ko-kr' => array('name' => 'Korean',      'path' => 'ko_KR'),
-    'ta-TAM' => array('name' => 'Tamil',      'path' => 'ta_TAM')
+    'ta-tam' => array('name' => 'Tamil',      'path' => 'ta_TAM')
     
 );
