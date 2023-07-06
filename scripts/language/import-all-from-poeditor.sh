@@ -36,6 +36,7 @@ $SCRIPTDIR/download-language-from-poeditor.sh "zh-Hant" "Chinese_Hant"      $dir
 $SCRIPTDIR/download-language-from-poeditor.sh "km"      "Khmer"             $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "ne"      "Nepali"            $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "th"      "Thai"              $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "vi"      "Vietnamese"        $dirname
 
 
 
