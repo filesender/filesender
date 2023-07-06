@@ -81,5 +81,6 @@ $locales  =  array(
     'zh-hans' => array('name' => 'Chinese (simplified)',      'path' => 'zh_HANS'),
     'zh-hant' => array('name' => 'Chinese (traditional)',     'path' => 'zh_HANT'),
     'ne-np' => array('name' => 'Nepali',      'path' => 'ne_NP'),
-    'th-th' => array('name' => 'Thai',        'path' => 'th_TH')
+    'vi-vn' => array('name' => 'Vietnamese',  'path' => 'vi_VN')
+    
 );

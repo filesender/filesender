@@ -54,6 +54,7 @@ importfile zh_HANT FileSender_2.0_Chinese_Hant.php
 importfile km_KH   FileSender_2.0_Khmer.php
 importfile ne_NP   FileSender_2.0_Nepali.php
 importfile th_TH   FileSender_2.0_Thai.php
+importfile vi_VN   FileSender_2.0_Vietnamese.php
 
 echo "Checking syntax of generated .php files, please wait..."
 for f in $(find ../../language -type f -name \*.php)
