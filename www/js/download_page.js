@@ -77,11 +77,11 @@ $(function() {
         });
 
         if(!ids.length) {
-            $('.fs_download__actions').addClass('fs_download__actions--hide');
-            $('.fs_download__zip64-info').addClass('fs_download__zip64-info--hide');
+            $('.fs-download__actions').addClass('fs-download__actions--hide');
+            $('.fs-download__zip64-info').addClass('fs-download__zip64-info--hide');
         } else {
-            $('.fs_download__actions').removeClass('fs_download__actions--hide');
-            $('.fs_download__zip64-info').removeClass('fs_download__zip64-info--hide');
+            $('.fs-download__actions').removeClass('fs-download__actions--hide');
+            $('.fs-download__zip64-info').removeClass('fs-download__zip64-info--hide');
         }
     };
 
@@ -93,12 +93,12 @@ $(function() {
 
         const formattedTotalSize = formatBytes(totalSize);
 
-        $('.fs_download__total-size span').text(formattedTotalSize);
+        $('.fs-download__total-size span').text(formattedTotalSize);
 
         if (totalSize > 0) {
-            $('.fs_download__total-size').addClass('fs_download__total-size--show');
+            $('.fs-download__total-size').addClass('fs-download__total-size--show');
         } else {
-            $('.fs_download__total-size').removeClass('fs_download__total-size--show');
+            $('.fs-download__total-size').removeClass('fs-download__total-size--show');
         }
     };
 

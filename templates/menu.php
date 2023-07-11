@@ -13,7 +13,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 ?>
 
 <!-- New UI header - BEGIN -->
-    <header>
+<header>
 
     <nav>
         <a class="fs-link fs-link--no-hover" href="">

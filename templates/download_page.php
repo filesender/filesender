@@ -116,8 +116,8 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
         <div class="row">
             <div class="col">
                 <div class="fs-download__title">
-                    <h1><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?> transferred these files</h1>
-                    <p>This transfer expires in <?php echo $days_to_expire ?> days</p>
+                    <h1><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?> {tr:transferred_these_files}</h1>
+                    <p>{tr:transfer_expires_in} <?php echo $days_to_expire ?> {tr:days}</p>
                 </div>
             </div>
         </div>
@@ -127,9 +127,9 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
         <div class="row">
             <div class="col col-sm-12 col-md-5 col-lg-4">
                 <div class="fs-download__details">
-                    <h2>Transfer details</h2>
+                    <h2>{tr:transfer_details}</h2>
                     <div class="fs-download__info">
-                        <strong>Transfer sent on:</strong>
+                        <strong>{tr:transfer_sent_on}:</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></span>
                     </div>
                     <div class="fs-download__info">
@@ -143,7 +143,7 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                         </div>
                     <?php } ?>
                     <div class="fs-download__info">
-                        <strong>Expiration date:</strong>
+                        <strong>{tr:expiration_date}:</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
                     </div>
                     <?php if($transfer->message) { ?>
@@ -153,21 +153,21 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                         </div>
                     <?php } ?>
                     <div class="fs-download__info">
-                        <strong>Transfer size:</strong>
+                        <strong>{tr:transfer_size}:</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></span>
                     </div>
                 </div>
             </div>
             <div class="col col-sm-12 col-md-7 col-lg-8">
                 <div class="fs-download__files">
-                    <h2>Download files</h2>
-                    <p>Select the files you wish to download and download as .zip or .tar file, or download a file seperately.</p>
+                    <h2>{tr:download_files}</h2>
+                    <p>{tr:select_files_to_download}</p>
 
                     <?php if($canDownloadArchive) { ?>
                         <div class="fs-download__check-all select_all">
                             <label class="fs-checkbox">
                                 <label for="check-all" class="select_all_text">
-                                    click here to select all files
+                                    {tr:click_to_check_all}
                                 </label>
                                 <input id="check-all" type="checkbox">
                                 <span class="fs-checkbox__mark toggle-select-all"></span>
@@ -228,13 +228,13 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                             <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
                         </div>
                     </div>
-                    <div class="fs_download__total-size">
-                        <strong>Size of selected files</strong>
+                    <div class="fs-download__total-size">
+                        <strong>{tr:size_of_selected_files}</strong>
                         <span>486mb</span>
                     </div>
 
                     <?php if($canDownloadArchive) { ?>
-                        <div class="fs_download__actions archive">
+                        <div class="fs-download__actions archive">
                             <button type="button" class="fs-button archive_download_frame archive_download" title="{tr:archive_download}">
                                 <i class="fa fa-download"></i>
                                 <span>{tr:archive_download}</span>
@@ -250,7 +250,7 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                         </div>
                     <?php } ?>
 
-                    <div class="fs_download__zip64-info archive_message mac_archive_message">
+                    <div class="fs-download__zip64-info archive_message mac_archive_message">
                         <p>
                             {tr:mac_archive_message}
                         </p>

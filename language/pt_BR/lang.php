@@ -674,7 +674,6 @@ $lang['you_can_send_client_logs'] = 'Para ajudar sua equipe de suporte a descobr
 $lang['you_generated_this_auth_secret_at'] = 'Você gerou esse segredo de autentificação em {datetime}';
 $lang['version'] = 'Versão do FileSender:';
 $lang['upload_completed'] = 'Upload finalizado!';
-
 $lang['start_selection_files'] = 'Inicie selecionando os arquivos';
 $lang['drag_drop_select'] = 'Arraste e large ou clique para selecionar';
 $lang['or'] = 'ou';
@@ -712,10 +711,20 @@ $lang['copy'] = 'Copiar';
 $lang['your_download_link'] = "Aqui o seu link de download";
 $lang['your_transfer_was_sent'] = 'Sua transferência foi enviada para os seguintes endereços de e-mail';
 $lang['expires_in'] = 'A transferência expira em';
-$lang['days'] = 'dias';
 $lang['add_transfer_custom_name'] = 'Adicione um nome personalizado para esta transferência';
 $lang['transfer_details'] = 'Detalhes da transferência';
 $lang['all_my_transfers'] = 'Minhas transferências';
 $lang['transfer_page_subtitle'] = 'Uma visão geral de todas as transferências que você enviou. Clique em qualquer transferência para ver seus detalhes.';
 $lang['active_transfers'] = 'Transferências ativas';
 $lang['expired_transfers'] = 'Transferências expiradas';
+
+
+$lang['transferred_these_files'] = 'transferiu esses arquivos';
+$lang['transfer_expires_in'] = 'Esta transferência expira em';
+$lang['transfer_sent_on'] = 'Transferência enviada em';
+$lang['expiration_date'] = 'Data de validade';
+$lang['transfer_size'] = 'Tamanho da transferência';
+$lang['download_files'] = 'Baixar arquivos';
+$lang['select_files_to_download'] = 'Selecione os arquivos que deseja baixar e baixe como arquivo .zip ou .tar, ou baixe um arquivo separadamente.';
+$lang['click_to_check_all'] = 'Clique aqui para selecionar todos os arquivos';
+$lang['size_of_selected_files'] = 'Tamanho dos arquivos selecionados';

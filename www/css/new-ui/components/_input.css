@@ -98,6 +98,21 @@
   min-width: var(--fs-spacing-3x);
 }
 
+.fs-checkbox--disabled,
+.fs-checkbox--disabled label,
+.fs-checkbox--disabled input,
+.fs-checkbox--disabled .fs-checkbox__mark{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: not-allowed;
+}
+
+.fs-checkbox--disabled .fs-checkbox__mark {
+  opacity: 0.5;
+}
+
 .fs-checkbox label {
   margin-left: var(--fs-spacing-5x);
   cursor: pointer;

@@ -42,6 +42,12 @@
 }
 
 .fs-link--circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--fs-spacing-5x);
+    width: var(--fs-spacing-5x);
+    border-radius: 100%;
     color: var(--fs-accent) !important;
     background: var(--fs-blue-100) !important;
 }
