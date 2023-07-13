@@ -1692,8 +1692,12 @@ filesender.ui.updateSizeInfo = function () {
 };
 
 filesender.ui.copyToClipboard = function(value) {
-    navigator.clipboard.writeText(value);
-    filesender.ui.notify('info', 'Copied to clipboard!');
+    navigator.clipboard.writeText(value).then((x) => {
+        filesender.ui.notify('info', 'Copied to clipboard!');
+    }).catch((e) => {
+        console.error(e);
+        filesender.ui.notify('error', 'Error copying to clipboard!');
+    });
 };
 
 $(function() {

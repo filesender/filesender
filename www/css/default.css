@@ -2039,9 +2039,9 @@ div.not_displayed {
   display: none;
 }
 
-.get_a_link_lock {
-  background: #eeeeff;
-}
+/*.get_a_link_lock {*/
+/*  background: #eeeeff;*/
+/*}*/
 
 .number {
   text-align: right;

@@ -692,4 +692,4 @@ $lang['yes'] = 'Oui';
 $lang['you_can_report_exception'] = 'En rapportant cette erreur merci de mentionner le code suivant afin de faciliter la recherche du problème';
 $lang['you_can_report_exception_by_email'] = 'Vous pouvez rapporter cette erreur par email';
 $lang['you_can_send_client_logs'] = 'Afin d\'aider votre support à identifier votre problème, vous pouvez envoyer l\'audit des actions en cliquant sur ce bouton :';
-$lang['you_generated_this_auth_secret_at'] = 'Vous avez généré cette clé API en date du: {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Vous avez généré cette clé API en date du: <strong>{datetime}</strong>';

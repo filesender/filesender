@@ -6,12 +6,38 @@
   margin-bottom: var(--fs-spacing-3x);
 }
 
+.fs-input-group--center {
+  align-items: center;
+}
+
 .fs-input-group--hide {
   display: none;
 }
 
 .fs-input-group label {
-  width: var(--fs-spacing-18x);
+  width: var(--fs-spacing-19x);
+}
+
+.fs-input-group div {
+  flex: 1;
+}
+
+.fs-input-group div input {
+  width: 100%;
+}
+
+.fs-input-group label + * {
+  margin-left: var(--fs-spacing-3x);
+}
+
+.fs-input-group--auto label,
+.fs-input-group--auto input {
+  width: auto;
+}
+
+.fs-input-group--auto input {
+  width: auto;
+  flex: none !important;
 }
 
 .fs-input-group--vertical {

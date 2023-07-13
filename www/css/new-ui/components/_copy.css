@@ -13,8 +13,17 @@
   flex: 1;
   font-size: 0.9rem;
   padding: 0 var(--fs-spacing-3x);
+  word-break: break-word;
 }
 
 .fs-copy button {
   font-size: 0.9rem;
+}
+
+/* XS,SM */
+@media (max-width: 767px) {
+
+  .fs-copy span {
+    font-size: 0.7rem;
+  }
 }

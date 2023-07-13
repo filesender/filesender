@@ -36,3 +36,7 @@
   border: 1px solid var(--fs-accent);
   outline: none;
 }
+
+.fs-select--oval select {
+  border-radius: var(--fs-spacing-4x);
+}

@@ -693,4 +693,4 @@ $lang['yes'] = 'Ja';
 $lang['you_can_report_exception'] = 'Wenn diese Fehlerberichterstattung erscheint geben Sie bitte den folgenden Code ein, um bei der Unterstützung zu helfen weitere Details herauszufinden.';
 $lang['you_can_report_exception_by_email'] = 'Sie können diesen Fehler per E-Mail melden';
 $lang['you_can_send_client_logs'] = 'Um Ihrem Support Team zu helfen, herauszufinden, was mit Ihrer Übertragung passiert ist, senden Sie bitte den letzten Log-Eintrag über Ihre Benutzerinterface durch Klicken auf diesen Knopf:';
-$lang['you_generated_this_auth_secret_at'] = 'Sie generierten dieses Authentifizierungsgeheimnis am {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Sie generierten dieses Authentifizierungsgeheimnis am <strong>{datetime}</strong>';

@@ -671,4 +671,4 @@ $lang['yes'] = 'ہاں';
 $lang['you_can_report_exception'] = 'اس خرابی کی اطلاع دیتے وقت براہ کرم درج ذیل کوڈ دیں تاکہ سپورٹ کو تفصیلات معلوم کرنے میں مدد ملے';
 $lang['you_can_report_exception_by_email'] = 'آپ ای میل کے ذریعے اس غلطی کی اطلاع دے سکتے ہیں';
 $lang['you_can_send_client_logs'] = 'اپنی سپورٹ ٹیم کو یہ جاننے میں مدد کرنے کے لیے کہ کیا ہوا ہے آپ اس بٹن پر کلک کرکے اپنے صارف انٹرفیس سے آخری لاگ اندراجات بھیج سکتے ہیں:';
-$lang['you_generated_this_auth_secret_at'] = 'آپ نے اس تصدیقی راز کو اس وقت بنایا: {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'آپ نے اس تصدیقی راز کو اس وقت بنایا: <strong>{datetime}</strong>';

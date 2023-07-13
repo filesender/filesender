@@ -58,8 +58,6 @@
   margin-left: var(--fs-spacing-base);
 }
 
-
-
 .fs-switch input + label:after {
   left: 4px;
 }
@@ -86,4 +84,9 @@
 
 .fs-switch input:hover:not([disabled]):not(checked) + label:before {
   background-color: var(--fs-gray-100);
+}
+
+.fs-switch input:disabled,
+.fs-switch input:disabled + label {
+  opacity: 0.5;
 }

@@ -109,12 +109,16 @@ if (!function_exists('clickableHeader')) {
 
 
 
+
+
+
+
 <div class="fs-transfer-detail">
     <div class="container">
         <div class="row">
             <div class="col">
                 <div class="fs-transfer-detail__header">
-                    <a href="" class="fs-link fs-link--circle">
+                    <a href='javascript:history.back()' class='fs-link fs-link--circle'>
                         <i class='fa fa-angle-left'></i>
                     </a>
                     <h1>Transfer details</h1>
@@ -126,31 +130,31 @@ if (!function_exists('clickableHeader')) {
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__details">
                     <h2>Transfer info</h2>
-                    <div class="fs-transfer-detail__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>Transfer sent on:</strong>
                         <span>01/01/2023</span>
                     </div>
-                    <div class="fs-transfer-detail__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>Expiration date:</strong>
                         <span>08/01/2023</span>
                     </div>
-                    <div class="fs-transfer-detail__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>Subject:</strong>
                         <span>Subject</span>
                     </div>
-                    <div class="fs-transfer-detail__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>Message:</strong>
                         <span>Hi, here are the files you asked for. You're welcome, have fun.</span>
                     </div>
-                    <div class="fs-transfer-detail__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>Language:</strong>
                         <span>English</span>
                     </div>
-                    <div class="fs-transfer-detail__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>Encryption:</strong>
                         <span>Off</span>
                     </div>
-                    <div class="fs-transfer-detail__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>Downloads:</strong>
                         <span>2</span>
                     </div>
@@ -236,7 +240,7 @@ if (!function_exists('clickableHeader')) {
                             <div class="fs-transfer-detail__check">
                                 <label class="fs-checkbox fs-checkbox--disabled">
                                     <label for="check-1">
-                                        click here to select all files
+                                        redirect after upload &nbsp;&nbsp;&nbsp; <small>redirecting link: <a href="">https://company.link/success-page</a></small>
                                     </label>
                                     <input id="check-1" type="checkbox" disabled>
                                     <span class="fs-checkbox__mark"></span>
@@ -245,7 +249,7 @@ if (!function_exists('clickableHeader')) {
                             <div class="fs-transfer-detail__check">
                                 <label class="fs-checkbox fs-checkbox--disabled">
                                     <label for="check-2">
-                                        click here to select all files
+                                        include me as a recipient
                                     </label>
                                     <input id="check-2" type="checkbox" disabled>
                                     <span class="fs-checkbox__mark"></span>
@@ -254,9 +258,18 @@ if (!function_exists('clickableHeader')) {
                             <div class="fs-transfer-detail__check">
                                 <label class="fs-checkbox fs-checkbox--disabled">
                                     <label for="check-3">
-                                        click here to select all files
+                                        slow internet upload
                                     </label>
                                     <input id="check-3" type="checkbox" disabled>
+                                    <span class="fs-checkbox__mark"></span>
+                                </label>
+                            </div>
+                            <div class="fs-transfer-detail__check">
+                                <label class="fs-checkbox fs-checkbox--disabled">
+                                    <label for="check-32">
+                                        recipient must login to download
+                                    </label>
+                                    <input id="check-32" type="checkbox" disabled>
                                     <span class="fs-checkbox__mark"></span>
                                 </label>
                             </div>
@@ -266,7 +279,7 @@ if (!function_exists('clickableHeader')) {
                             <div class="fs-transfer-detail__check">
                                 <label class="fs-checkbox fs-checkbox--disabled">
                                     <label for="check-4">
-                                        click here to select all files
+                                        email me when upload is done
                                     </label>
                                     <input id="check-4" type="checkbox" disabled>
                                     <span class="fs-checkbox__mark"></span>
@@ -275,7 +288,7 @@ if (!function_exists('clickableHeader')) {
                             <div class="fs-transfer-detail__check">
                                 <label class="fs-checkbox fs-checkbox--disabled">
                                     <label for="check-5">
-                                        click here to select all files
+                                        email me upon downloads
                                     </label>
                                     <input id="check-5" type="checkbox" disabled>
                                     <span class="fs-checkbox__mark"></span>
@@ -284,9 +297,27 @@ if (!function_exists('clickableHeader')) {
                             <div class="fs-transfer-detail__check">
                                 <label class="fs-checkbox fs-checkbox--disabled">
                                     <label for="check-6">
-                                        click here to select all files
+                                        email me when transfer is expired
                                     </label>
                                     <input id="check-6" type="checkbox" disabled>
+                                    <span class="fs-checkbox__mark"></span>
+                                </label>
+                            </div>
+                            <div class="fs-transfer-detail__check">
+                                <label class="fs-checkbox fs-checkbox--disabled">
+                                    <label for="check-62">
+                                        email me daily statistics
+                                    </label>
+                                    <input id="check-62" type="checkbox" disabled>
+                                    <span class="fs-checkbox__mark"></span>
+                                </label>
+                            </div>
+                            <div class="fs-transfer-detail__check">
+                                <label class="fs-checkbox fs-checkbox--disabled">
+                                    <label for="check-63">
+                                        email recipient when download is complete
+                                    </label>
+                                    <input id="check-63" type="checkbox" disabled>
                                     <span class="fs-checkbox__mark"></span>
                                 </label>
                             </div>
@@ -297,3 +328,5 @@ if (!function_exists('clickableHeader')) {
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="{path:js/transfer_detail_page.js}"></script>

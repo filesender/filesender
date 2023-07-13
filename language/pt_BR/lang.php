@@ -388,7 +388,7 @@ $lang['privacy_page_max_transfer_days_valid'] = 'Número máximo de dias até qu
 $lang['privacy_page_trackingevents_lifetime'] = 'Dias em que os logs de eventos de rastreamento são retidos. Estes são principalmente relacionados a e-mail';
 $lang['privacy_page_translatable_emails_lifetime'] = 'Número de dias que os emails enviados para um usuário serão retidos';
 $lang['profile_page_text_linking_to_admin_page'] = 'Você esta permitido para visitar a <a href="{cfg:site_url}/?s=admin"> página de administração</a>.';
-$lang['profile_page_text_linking_to_privacy_page'] = 'A RNP valoriza sua privacidade. Por Favor, <a target="_blank" href="https://ajuda.rnp.br/filesender/politicas-de-uso">, para ver por quanto tempo sua informação é mantida';
+$lang['profile_page_text_linking_to_privacy_page'] = 'A RNP valoriza sua privacidade. Por Favor, <a target="_blank" href="https://ajuda.rnp.br/filesender/politicas-de-uso">, para ver por quanto tempo sua informação é mantida</a>';
 $lang['python_cli_client_setup_information'] = 'Para usar a configuração CLI do Python, crie um diretório ~/.filesender  e copie o arquivo de configuração filesender.py.ini para o diretório ~/.filesender. O arquivo de configuração é opicional, mas é recomendado para que você não tenha que especificar sempre todos os parametros na linha de comando. O cliente Python CLI pode ser instalado em qualquer diretório exige Python 3 para executar.<p> Com o arquivo de configuração no local você pode subir um arquivo usando: <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>';
 $lang['quota_usage'] = '{size:used} de {size:total} usado, {size:available} restantes';
 $lang['reader_not_supported'] = 'Você está usando um navegador mais antigo sem suporte para HTML5.<br /><br />Arrastar e soltar para selecionar arquivos não está disponível.<br /><br />Você pode fazer upload de arquivos até {size}.';
@@ -671,7 +671,7 @@ $lang['yes'] = 'Sim';
 $lang['you_can_report_exception'] = 'Ao relatar esse erro, forneça o código a seguir para ajudar no suporte ao descobrir detalhes';
 $lang['you_can_report_exception_by_email'] = 'Você pode reportar este erro por e-mail';
 $lang['you_can_send_client_logs'] = 'Para ajudar sua equipe de suporte a descobrir o que aconteceu, você pode enviar as últimas entradas de log da interface do usuário clicando nesse botão :';
-$lang['you_generated_this_auth_secret_at'] = 'Você gerou esse segredo de autentificação em {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Você gerou esse segredo de autentificação em <strong>{datetime}</strong>';
 $lang['version'] = 'Versão do FileSender:';
 $lang['upload_completed'] = 'Upload finalizado!';
 $lang['start_selection_files'] = 'Inicie selecionando os arquivos';

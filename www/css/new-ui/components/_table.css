@@ -6,7 +6,18 @@
 
 .fs-table th,
 .fs-table td {
-  padding: var(--fs-spacing-2x) var(--fs-spacing-2x);
+  padding: var(--fs-spacing-2x);
+  vertical-align: top;
+}
+
+.fs-table--text-middle th,
+.fs-table--text-middle td {
+  vertical-align: middle;
+}
+
+.fs-table.fs-table--thin th,
+.fs-table.fs-table--thin td {
+  padding: var(--fs-spacing-base);
 }
 
 .fs-table.fs-table--striped tbody tr:nth-child(odd) {
@@ -24,6 +35,20 @@
 .fs-table__check-action {
   width: auto !important;
   padding: 0 !important;
+}
+
+.fs-table__actions {
+
+}
+
+.fs-table__actions .fs-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  height: var(--fs-spacing-4x);
+  width: var(--fs-spacing-4x);
+  padding: 0;
 }
 
 /* XS,SM,MD */

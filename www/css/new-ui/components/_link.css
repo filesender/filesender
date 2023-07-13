@@ -9,6 +9,7 @@
     color: var(--fs-text-color);
     background: transparent;
     border: none;
+    cursor: pointer;
 }
 
 .fs-link:hover {

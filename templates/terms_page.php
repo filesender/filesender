@@ -1,15 +1,8 @@
 <?php
-
-function config_VisString( $k, $specialv, $specialret ) {
-    $v = Config::get($k);
-    if($v == $specialv) {
-        return $specialret;
-    }
-    return $v;
-}
+include_once "pagemenuitem.php"
 ?>
 
-<div id="dialog-privacy" title="Privacy" class="fs-base-page">
+<div id="dialog-about" title="About" class="fs-base-page">
     <div class="container">
         <div class="row">
             <div class="col">
@@ -21,15 +14,14 @@ function config_VisString( $k, $specialv, $specialret ) {
                             </a>";
                     }
                     ?>
-                    <h1>{tr:privacy_title}</h1>
+                    <h1>{tr:terms_title}</h1>
                 </div>
 
                 <div class="fs-base-page__content">
-                    {tr:privacy_text}
+                    {tr:terms_text}
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 

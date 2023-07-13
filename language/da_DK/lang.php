@@ -698,4 +698,4 @@ $lang['yes'] = 'Ja';
 $lang['you_can_report_exception'] = 'Når du indberetter fejlen her, så oplys venligst følgende kode til supporten, for at hjælpe dem med at spore problemet';
 $lang['you_can_report_exception_by_email'] = 'Du kan indberette fejlen her via mail';
 $lang['you_can_send_client_logs'] = 'For at kunne hjælpe dit supportteam med at finde ud af hvad der er sket, kan du sende dem de seneste loglinjer fra dit brugerinterface ved at klikke på knappen her:';
-$lang['you_generated_this_auth_secret_at'] = 'Du dannede den her autentifikationshemmelighed: {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Du dannede den her autentifikationshemmelighed: <strong>{datetime}</strong>';

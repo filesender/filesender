@@ -688,4 +688,4 @@ $lang['yes'] = 'はい';
 $lang['you_can_report_exception'] = 'このエラーを報告する際には、サポートが詳細を見つけられるように、次のコードも報告してください';
 $lang['you_can_report_exception_by_email'] = 'このエラーをメールで報告できます';
 $lang['you_can_send_client_logs'] = '何が起こったかサポートチームが調査できるようにするために、次のボタンをクリックして、ユーザーインターフェイスから最後のログエントリを送信することができます:';
-$lang['you_generated_this_auth_secret_at'] = 'この認証シークレットは次の日時に生成されました:{datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'この認証シークレットは次の日時に生成されました:<strong>{datetime}</strong>';

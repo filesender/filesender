@@ -7,13 +7,24 @@ h1 {
 }
 
 h2 {
-    font-size: 1.6rem !important;
-    font-weight: 500 !important;
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+}
+
+h3 {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
 }
 
 h1, h2, h3,
 h4, h5, h6 {
     padding: 0 !important;
+}
+
+p {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
 }
 
 @media (max-width: 575px) {
@@ -23,7 +34,11 @@ h4, h5, h6 {
     }
 
     h2 {
-        font-size: 1.4rem !important;
+        font-size: 1.2rem !important;
+    }
+
+    h3 {
+        font-size: 1rem !important;
     }
 }
 @media (min-width: 576px) and (max-width: 767px) {
@@ -33,6 +48,10 @@ h4, h5, h6 {
     }
 
     h2 {
-        font-size: 1.4rem !important;
+        font-size: 1.2rem !important;
+    }
+
+    h3 {
+        font-size: 1rem !important;
     }
 }

@@ -17,34 +17,14 @@
     margin-top: var(--fs-spacing-3x);
 }
 
-.fs-download__info {
-    display: flex;
-    flex-direction: row;
-}
-
-.fs-download__info + .fs-download__info {
-    margin-top: var(--fs-spacing-2x);
-}
-
-p {
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 0;
-}
-
-h2 + .fs-download__info,
-h2 + p {
+.fs-download h2 + .fs-info,
+.fs-download h2 + p {
     margin-top: var(--fs-spacing-4x);
 }
 
-.fs-download__info strong,
-.fs-download__info span {
+.fs-download .fs-info strong {
     display: inline-block;
     word-break: break-word;
-}
-
-.fs-download__info strong {
-    width: var(--fs-spacing-20x);
 }
 
 .fs-download__check-all {

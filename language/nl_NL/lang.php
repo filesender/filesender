@@ -709,4 +709,4 @@ $lang['yes'] = 'Ja';
 $lang['you_can_report_exception'] = 'Als u deze foutmelding rapporteert, geef dan de volgende code door om uw ondersteuners te helpen de fout op te sporen';
 $lang['you_can_report_exception_by_email'] = 'U kunt deze foutmelding per email doorgeven';
 $lang['you_can_send_client_logs'] = 'Om het supportteam te helpen om te kijken wat er fout ging kan je de laatste meldingen uit je log versturen door op deze knop te drukken:';
-$lang['you_generated_this_auth_secret_at'] = 'Je hebt deze sleutel gemaakt op: {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Je hebt deze sleutel gemaakt op: <strong>{datetime}</strong>';

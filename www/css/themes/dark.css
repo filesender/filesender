@@ -79,4 +79,14 @@
     --fs-spacing-18x: calc(var(--fs-spacing-base) * 18);
     --fs-spacing-19x: calc(var(--fs-spacing-base) * 19);
     --fs-spacing-20x: calc(var(--fs-spacing-base) * 20);
+    --fs-spacing-21x: calc(var(--fs-spacing-base) * 21);
+    --fs-spacing-22x: calc(var(--fs-spacing-base) * 22);
+    --fs-spacing-23x: calc(var(--fs-spacing-base) * 23);
+    --fs-spacing-24x: calc(var(--fs-spacing-base) * 24);
+    --fs-spacing-25x: calc(var(--fs-spacing-base) * 25);
+    --fs-spacing-26x: calc(var(--fs-spacing-base) * 26);
+    --fs-spacing-27x: calc(var(--fs-spacing-base) * 27);
+    --fs-spacing-28x: calc(var(--fs-spacing-base) * 28);
+    --fs-spacing-29x: calc(var(--fs-spacing-base) * 29);
+    --fs-spacing-30x: calc(var(--fs-spacing-base) * 30);
 }

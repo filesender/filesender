@@ -354,7 +354,7 @@
 }
 
 .fs-transfer__recipients {
-  padding-left: var(--fs-spacing-18x);
+  padding-left: var(--fs-spacing-22x);
 }
 
 .fs-transfer__recipients .remove {

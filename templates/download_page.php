@@ -128,31 +128,31 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
             <div class="col col-sm-12 col-md-5 col-lg-4">
                 <div class="fs-download__details">
                     <h2>{tr:transfer_details}</h2>
-                    <div class="fs-download__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_sent_on}:</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></span>
                     </div>
-                    <div class="fs-download__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>{tr:from}:</strong>
                         <span><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></span>
                     </div>
                     <?php if($transfer->subject) { ?>
-                        <div class="fs-download__info">
+                        <div class="fs-info fs-info--aligned">
                             <strong>{tr:subject}:</strong>
                             <span><?php echo Utilities::sanitizeOutput($transfer->subject) ?></span>
                         </div>
                     <?php } ?>
-                    <div class="fs-download__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}:</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
                     </div>
                     <?php if($transfer->message) { ?>
-                        <div class="fs-download__info">
+                        <div class="fs-info fs-info--aligned">
                             <strong>{tr:message}:</strong>
                             <span><?php echo Utilities::sanitizeOutput($transfer->message) ?></span>
                         </div>
                     <?php } ?>
-                    <div class="fs-download__info">
+                    <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_size}:</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></span>
                     </div>

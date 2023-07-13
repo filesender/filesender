@@ -423,10 +423,12 @@ if(Auth::isGuest()) {
                                                             {tr:send_transfer_to}
                                                         </label>
 
-                                                        <input name="to" id="to" type="email"
-                                                               multiple title="{tr:email_separator_msg}"
-                                                               value=""
-                                                               placeholder="{tr:enter_to_email}" />
+                                                        <div>
+                                                            <input name="to" id="to" type="email"
+                                                                   multiple title="{tr:email_separator_msg}"
+                                                                   value=""
+                                                                   placeholder="{tr:enter_to_email}" />
+                                                        </div>
                                                     </div>
 
                                                     <div class="fs-transfer__recipients recipients"></div>
@@ -548,8 +550,7 @@ if(Auth::isGuest()) {
                                                 <option value="7" selected>7 {tr:days}</option>
                                                 <option value="15">15 {tr:days}</option>
                                                 <option value="30">30 {tr:days}</option>
-                                                <option value="60">60 {tr:days}</option>
-                                                <option value="90">90 {tr:days}</option>
+                                                <option value="40">40 {tr:days}</option>
                                             </select>
                                         </div>
                                     </div>

@@ -1,0 +1,25 @@
+.fs-base-page {
+    flex: 1;
+    background: var(--fs-light);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+    justify-content: flex-start;
+}
+
+.fs-base-page__header {
+    display: flex;
+    flex-direction: row;
+}
+
+.fs-base-page__header .fs-link {
+    margin-left: calc(-1 * var(--fs-spacing-10x));
+}
+
+.fs-base-page__header .fs-link + h1 {
+    margin-left: var(--fs-spacing-5x);
+}
+
+.fs-base-page__header h1 {
+    text-align: left !important;
+    margin-left: 0;
+    margin-bottom: var(--fs-spacing-8x);
+}
