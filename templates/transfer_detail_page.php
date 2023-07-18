@@ -118,7 +118,7 @@ if (!function_exists('clickableHeader')) {
         <div class="row">
             <div class="col">
                 <div class="fs-transfer-detail__header">
-                    <a href='javascript:history.back()' class='fs-link fs-link--circle'>
+                    <a id='fs-back-link' class='fs-link fs-link--circle'>
                         <i class='fa fa-angle-left'></i>
                     </a>
                     <h1>Transfer details</h1>

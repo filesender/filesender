@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="fs-settings__header">
-                    <h1>Account settings</h1>
+                    <h1>{tr:user_page}</h1>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
         <div class="row">
             <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                 <div class="fs-settings__preferences">
-                    <h2>Preferences</h2>
+                    <h2>{tr:user_preferences}</h2>
 
                     <?php
                     if (Config::get('lang_userpref_enabled')) {
@@ -56,7 +56,7 @@
                                     }
 
                                     echo "<div class='fs-select'>";
-                                    echo "<label for='user_lang'>Language</label>";
+                                    echo "<label for='user_lang'>{tr:language}</label>";
                                     echo '<select id="user_lang" name="user_lang">'.implode('', $opts).'</select>';
                                     echo "</div>";
                                 } else {
@@ -66,7 +66,7 @@
                                     }
 
                                     echo "<div class='fs-input-group fs-input-group--auto fs-input-group--center'>";
-                                    echo "<label for='lang'>Language</label>";
+                                    echo "<label for='lang'>{tr:language}</label>";
                                     echo "<input id='lang' type='text' value='".$value."' disabled>";
                                     echo "</div>";
                                 }
@@ -78,27 +78,29 @@
                     <div class="fs-switch fs-switch--small">
                         <input id="previous-settings" type="checkbox" />
                         <label for="previous-settings">
-                            Use transfer settings from previous upload as default settings for next transfer.
+                            {tr:previous_settings}
                         </label>
                     </div>
 
                     <div class="fs-switch fs-switch--small">
                         <input id="save-recipients-emails" type="checkbox" />
                         <label for="save-recipients-emails">
-                            Save email recipients from past use (used to automatically complete email fields).
+                            {tr:save_recipients_emails}
                         </label>
                     </div>
 
                     <button type="submit" id="save-preferences" class="fs-button">
                         <i class="fa fa-save"></i>
-                        <span>Save preferences</span>
+                        <span>
+                            {tr:save_preferences}
+                        </span>
                     </button>
                 </div>
             </div>
 
             <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-5 offset-xl-1">
                 <div class="fs-settings__account-info">
-                    <h2>Account information</h2>
+                    <h2>{tr:account_information}</h2>
 
                     <?php
 
@@ -107,7 +109,7 @@
                     $email = $value[0];
 
                     echo "<div class='fs-info'>";
-                    echo "<strong>Email address:</strong>";
+                    echo "<strong>{tr:email_address}:</strong>";
                     echo "<span>".$email."</span>";
                     echo "</div>";
 
@@ -115,7 +117,7 @@
                     $value = Auth::user()->$id;
 
                     echo "<div class='fs-info'>";
-                    echo "<strong>Identifiant:</strong>";
+                    echo "<strong>{tr:user_id}:</strong>";
                     echo "<span>".$value."</span>";
                     echo "</div>";
 
@@ -123,7 +125,7 @@
                     $value = Auth::user()->$id;
 
                     echo "<div class='fs-info'>";
-                    echo "<strong>First login:</strong>";
+                    echo "<strong>{tr:user_created}:</strong>";
                     echo "<span>".Utilities::formatDate($value)."</span>";
                     echo "</div>";
 
@@ -131,7 +133,7 @@
                     $value = Auth::user()->$id;
 
                     echo "<div class='fs-info'>";
-                    echo "<strong>Current quota storage:</strong>";
+                    echo "<strong>{tr:current_quota_storage}:</strong>";
                     echo "<span>".$value."</span>";
                     echo "</div>";
                     ?>
@@ -193,18 +195,18 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             <div class="fs-settings__saved-info">
-                                <h3>Saved information</h3>
+                                <h3>{tr:saved_information}</h3>
 
                                 <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
                                     <li>
                                         <button type="button" id="clear_user_transfer_preferences" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
-                                            <span>Clear transfer settings</span>
+                                            <span>{tr:clear_transfer_settings}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <span>
-                                            Clear stored transfer settings from last upload.
+                                            {tr:clear_stored_transfer_settings}
                                         </span>
                                     </li>
                                 </ul>
@@ -213,19 +215,19 @@
                                     <li>
                                         <button type="button" id="clear_frequent_recipients" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
-                                            <span>Clear email recipients</span>
+                                            <span>{tr:clear_recipients_emails}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <span>
-                                            Clear stored email recipients from past use (used to automatically complete email fields).
+                                            {tr:clear_stores_recipients_emails}
                                         </span>
                                     </li>
                                 </ul>
                             </div>
 
                             <div class="fs-settings__general">
-                                <h3>General</h3>
+                                <h3>{tr:general}</h3>
 
                                 <button type="button" id="delete_my_account" class="fs-button fs-button--danger">
                                     <i class="fa fa-close"></i>
@@ -237,18 +239,18 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             <div class="fs-settings__logs">
-                                <h3>Logs</h3>
+                                <h3>{tr:logs}</h3>
 
                                 <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
                                     <li>
                                         <button type="button" id="send_client_logs" class="fs-button">
                                             <i class="fa fa-arrow-right"></i>
-                                            <span>Send logs</span>
+                                            <span>{tr:send_client_logs}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <span>
-                                            Send the logs from your web browser to the server.
+                                            {tr:send_logs_to_server}
                                         </span>
                                     </li>
                                 </ul>
@@ -257,12 +259,12 @@
                                     <li>
                                         <button type="button" id="export_client_logs" class="fs-button">
                                             <i class="fa fa-download"></i>
-                                            <span>Export logs</span>
+                                            <span>{tr:export_logs}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <span>
-                                            Export client logs to a file.
+                                            {tr:export_logs_to_file}
                                         </span>
                                     </li>
                                 </div>
@@ -271,12 +273,12 @@
                                     <li>
                                         <button type="button" id="clear_client_logs" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
-                                            <span>Clear logs</span>
+                                            <span>{tr:clear_logs}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <span>
-                                            Clear stored transfer settings from last upload.
+                                            {tr:clear_client_logs}
                                         </span>
                                     </li>
                                 </div>
@@ -290,13 +292,13 @@
         <div class="row">
             <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                 <div class="fs-settings__about">
-                    <h2>About FileSender</h2>
+                    <h2>{tr:about_title}</h2>
 
                     <p>
-                        By using FileSender, you automatically agree with the <a href="?s=terms">general terms and conditions</a> of FileSender.
+                        {tr:agree_text}
                     </p>
                     <p>
-                        For more information about FileSender, go to the <a href="?s=about">About FileSender page</a>.
+                        {tr:about_more_info}
                     </p>
                 </div>
             </div>
@@ -309,32 +311,32 @@
         <div class="row">
             <div class="col-12">
                 <div class="fs-settings__remote-authentication">
-                    <h2>Remote authentication</h2>
+                    <h2>{tr:user_remote_authentication}</h2>
 
-        <?php
-            $id = 'auth_secret';
+                    <?php
+                        $id = 'auth_secret';
 
-            if($page[$id]) {
-                $value = Auth::user()->$id;
+                        if($page[$id]) {
+                            $value = Auth::user()->$id;
 
-                $v = Auth::user()->auth_secret_created_formatted;
-                if( $v == '' ) {
-                } else {
-                    $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
-                }
-                $info['key'] = 'auth_secret';
-                //                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
-            }
+                            $v = Auth::user()->auth_secret_created_formatted;
+                            if( $v == '' ) {
+                            } else {
+                                $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
+                            }
+                            $info['key'] = 'auth_secret';
+                            //                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
+                        }
 
-        ?>
+                    ?>
                     <p>
-                        Use this information to authenticate with the system if you are developing REST clients.
+                        {tr:user_remote_authentication_body}
                     </p>
 
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             <div class="fs-settings__api-secret">
-                                <h3>API secret</h3>
+                                <h3>{tr:api_secret}</h3>
 
                                 <?php echo "<p>$tt</p>"; ?>
 
@@ -345,7 +347,7 @@
                                         <span>$value</span>
                                         <button id='copy-api-secret' type='button' class='fs-button'>
                                             <i class='fa fa-copy'></i>
-                                            Copy
+                                            {tr:copy}
                                         </button>
                                     </div>
                                     EOT;
@@ -357,12 +359,12 @@
                                     <li>
                                         <button type="button" id="api_secret_create" class="fs-button">
                                             <i class="fa fa-plus"></i>
-                                            <span>New API secret</span>
+                                            <span>{tr:new_api_secret}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <span>
-                                            Generate a new API secret.
+                                            {tr:generate_new_api_secret}
                                         </span>
                                     </li>
                                 </div>
@@ -371,12 +373,12 @@
                                     <li>
                                         <button type="button" id="api_secret_delete" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
-                                            <span>Clear API secret</span>
+                                            <span>{tr:clear_api_secret}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <span>
-                                            Delete the current API secret.
+                                            {tr:delete_current_api_secret}
                                         </span>
                                     </li>
                                 </div>
@@ -386,31 +388,26 @@
                             <div class="fs-settings__cli">
                                 <h3><?php echo Lang::tr('python_cli_client_heading'); ?></h3>
 
-                                <p>
-                                    To use the Python CLI Client configuration, create a directory ~/.filesender and copy the configuration file filesender.py.ini to the directory ~/.filesender. The configuration file is optional but is recommended as it means you do not always have to specify all parameters on the command line. The python CLI Client can be downloaded to any location and requires Python version 3 to execute.
-                                </p>
-                                <p>
-                                    With the configuration file in place you can upload a file using:
-                                </p>
+                                {tr:python_cli_client_setup_information}
 
                                 <div class="fs-copy">
                                     <span>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</span>
 
                                     <button id="copy-python-command" type="button" class="fs-button">
                                         <i class="fa fa-copy"></i>
-                                        Copy
+                                        {tr:copy}
                                     </button>
                                 </div>
 
                                 <ul class="fs-list fs-list--inline">
                                     <li>
                                         <a href="">
-                                            Download Python CLI Client
+                                            {tr:download_python_cli}
                                         </a>
                                     </li>
                                     <li>
                                         <a href="">
-                                            Download Python CLI Client configuration
+                                            {tr:download_python_cli_configuration}
                                         </a>
                                     </li>
                                 </ul>

@@ -452,10 +452,9 @@ class GUI
         $embed = Config::get('auth_sp_embed');
 
         if(!$embed) {
-            $embed = '<a class="btn btn-primary '.$addedClass.'" id="btn_logon" href="'.AuthSP::logonURL($target).'">'.Lang::tr('logon').'</a>';
+            $embed = '<a class="fs-button '.$addedClass.'" id="btn_logon" href="'.AuthSP::logonURL($target).'"><i class="fa fa-sign-in"></i><span>'.Lang::tr('logon').'</span></a>';
         }
 
         return $embed;
     }
 }
-

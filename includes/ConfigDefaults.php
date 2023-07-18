@@ -33,8 +33,8 @@
 
 // Load default configuration
 $default = array(
-    'testing'   => true,   // TODO
-    'debug'   => true,   // TODO
+    'testing'   => false,   // TODO
+    'debug'   => false,   // TODO
     'default_timezone' => 'Europe/London', // Default timezone to use
     'default_language' => 'en', // Default language to user
     'lang_browser_enabled' => true, // Take language from user's browser's accept-language header if provided
@@ -49,14 +49,14 @@ $default = array(
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
     'upload_display_bits_per_sec' => true, // By default, do not show bits per seconds
     'upload_display_per_file_stats' => true, //
-    'upload_force_transfer_resume_forget_if_encrypted' => true, //
+    'upload_force_transfer_resume_forget_if_encrypted' => false, //
     'upload_considered_too_slow_if_no_progress_for_seconds' => 30, // seconds
     'force_ssl' => true,
     'client_ip_key' => 'REMOTE_ADDR',
     'use_strict_csp' => true, // add a strict CSP header to the web pages
 
     'auth_sp_type' => 'saml',  // Authentification type
-    'auth_sp_set_idp_as_user_organization' => true,
+    'auth_sp_set_idp_as_user_organization' => false,
     'auth_sp_saml_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_saml_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_saml_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
@@ -64,21 +64,21 @@ $default = array(
     'auth_sp_shibboleth_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
-    'auth_sp_force_session_start_first' => true,  // maybe move session_start() forward.
+    'auth_sp_force_session_start_first' => false,  // maybe move session_start() forward.
 
-    'auth_remote_user_autogenerate_secret' => true,
+    'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
 
-    'auth_remote_user_enabled' => true, //disables remote user auth
+    'auth_remote_user_enabled' => false, //disables remote user auth
 
-    'aup_default' => true,
-    'aup_enabled' => true,
-    'api_secret_aup_enabled' => true,
+    'aup_default' => false,
+    'aup_enabled' => false,
+    'api_secret_aup_enabled' => false,
     'mac_unzip_name' => 'The Unarchiver',
     'mac_unzip_link' => 'https://theunarchiver.com/',
     'ban_extension' => 'exe,bat',
     'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
-    'internal_use_only_running_on_ci' => true,
+    'internal_use_only_running_on_ci' => false,
 
     'mime_type_regex' => '^[-a-zA-Z0-9/; ]*$',
     'mime_type_default' => 'application/octet-stream',
@@ -89,7 +89,7 @@ $default = array(
     'max_transfer_days_valid' => 20,
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
-    'transfer_recipients_lang_selector_enabled' => true,
+    'transfer_recipients_lang_selector_enabled' => false,
     'max_transfer_file_size' => 0,
     'max_transfer_encrypted_file_size' => 0,
 
@@ -102,13 +102,13 @@ $default = array(
     'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 5 * 1024 * 1024,
     'chunk_upload_security' => 'key',
-    'chunk_upload_roundtriptoken_check_enabled' => true,
+    'chunk_upload_roundtriptoken_check_enabled' => false,
     'chunk_upload_roundtriptoken_accept_empty_before' => 0,
     'download_chunk_size' => 5 * 1024 * 1024,
 
     'encryption_enabled' => true,
-    'encryption_mandatory' => true,
-    'encryption_mandatory_with_generated_password' => true,
+    'encryption_mandatory' => false,
+    'encryption_mandatory_with_generated_password' => false,
     'encryption_min_password_length' => 12,
     'encryption_password_must_have_upper_and_lower_case' => true,
     'encryption_password_must_have_numbers' => true,
@@ -116,7 +116,7 @@ $default = array(
     'encryption_password_text_only_min_password_length' => 40,
     'encryption_generated_password_length' => 30,
     'encryption_generated_password_encoding' => 'base64',
-    'encryption_encode_encrypted_chunks_in_base64_during_upload' => true,
+    'encryption_encode_encrypted_chunks_in_base64_during_upload' => false,
 
     'upload_crypted_chunk_padding_size' => 16 + 16, // CONST the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
@@ -129,8 +129,8 @@ $default = array(
     'crypto_gcm_max_chunk_count' => 4294967295,                   // 2^32-1
 
     'terasender_enabled' => true,
-    'terareceiver_enabled' => true,
-    'terasender_advanced' => true,
+    'terareceiver_enabled' => false,
+    'terasender_advanced' => false,
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
@@ -138,7 +138,7 @@ $default = array(
     'terasender_worker_max_chunk_retries' => 20,
     'terasender_worker_xhr_timeout' => 3600000, // in ms, 1 hour for a chunk to complete by default.
     'terasender_worker_start_must_complete_within_ms' => 180000, // in ms, 3 minutes by default.
-    'stalling_detection' => true,
+    'stalling_detection' => false,
 
     'crypto_pbkdf2_dialog_enabled' => true,          // display a dialog after delay_to_show_dialog ms
     'crypto_pbkdf2_delay_to_show_dialog' => 300,     // in ms. 0 to disable the dialog
@@ -160,8 +160,8 @@ $default = array(
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
     'storage_filesystem_df_command' => 'df {path}',
     'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
-    'storage_filesystem_ignore_disk_full_check' => true,
-    'storage_filesystem_hash_check' => true, //used by filesystemChunked
+    'storage_filesystem_ignore_disk_full_check' => false,
+    'storage_filesystem_hash_check' => false, //used by filesystemChunked
     'storage_filesystem_read_retry' => 10, //used by filesystemChunked
     'storage_filesystem_write_retry' => 10, //used by filesystemChunked
     'storage_filesystem_retry_sleep' => 400000, //400ms //used by filesystemChunked
@@ -172,15 +172,15 @@ $default = array(
     'email_from' => 'sender',
     'email_return_path' => 'sender',
     'email_subject_prefix' => '{cfg:site_name}:',
-    'email_headers' => true,
+    'email_headers' => false,
 
     'report_bounces' => 'asap',
     'report_bounces_asap_then_daily_range' => 15 * 60,
 
-    'reports_show_ip_addr' => true,
+    'reports_show_ip_addr' => false,
 
     'statlog_lifetime' => 0,
-    'statlog_log_user_organization' => true,
+    'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
 
     'storage_usage_warning' => 20,
@@ -199,7 +199,7 @@ $default = array(
     'guest_reminder_limit_per_day' => 0,
     'recipient_reminder_limit' => 50,
 
-    'autocomplete' => true,
+    'autocomplete' => false,
     'autocomplete_min_characters' => 3,
 
     'upload_graph_bulk_display' => true,
@@ -210,7 +210,7 @@ $default = array(
 
     'user_page' => array('lang'=>true,'auth_secret'=>true,'id'=>true,'created'=>true),
 
-    'log_authenticated_user_download_by_ensure_user_as_recipient' => true,
+    'log_authenticated_user_download_by_ensure_user_as_recipient' => false,
 
 
     // Logging
@@ -236,7 +236,7 @@ $default = array(
     'cloud_s3_key'    => 'accessKey1',
     'cloud_s3_secret' => 'verySecretKey1',
     'cloud_s3_bucket' => '',
-    'cloud_s3_use_daily_bucket' => true,
+    'cloud_s3_use_daily_bucket' => false,
     'cloud_s3_bucket_prefix' => '',
 
     'disable_directory_upload' => true,
@@ -254,9 +254,9 @@ $default = array(
 
     'user_quota' => 0,
 
-    'testsuite_run_locally' => true,
+    'testsuite_run_locally' => false,
 
-    'aggregate_statlog_lifetime' => true,
+    'aggregate_statlog_lifetime' => false,
     'aggregate_statlog_send_report_days' => 0,
     'aggregate_statlog_send_report_email_address' => '',
 
@@ -270,11 +270,11 @@ $default = array(
 
     'header_x_frame_options' => 'sameorigin',
     'header_add_hsts_duration' => 63072000,
-    'owasp_csrf_protector_enabled' => true,
+    'owasp_csrf_protector_enabled' => false,
 
     'theme' => '',
 
-    'user_can_only_view_guest_transfers_shared_with_them' => true,
+    'user_can_only_view_guest_transfers_shared_with_them' => false,
 
     // see crypto_app.js for constants in the range crypto_key_version_constants
     // Generally higher is newer + better.
@@ -295,8 +295,8 @@ $default = array(
     'using_local_saml_dbauth' => 0,
 
     'streamsaver_enabled' => true,
-    'streamsaver_on_unknown_browser' => true,
-    'streamsaver_on_firefox' => true,
+    'streamsaver_on_unknown_browser' => false,
+    'streamsaver_on_firefox' => false,
     'streamsaver_on_chrome' => true,
     'streamsaver_on_edge'   => true,
     'streamsaver_on_safari' => true,
@@ -305,8 +305,8 @@ $default = array(
 
     'upload_page_password_can_not_be_part_of_message_handling' => 'warning',
 
-    'data_protection_user_frequent_email_address_disabled' => true,
-    'data_protection_user_transfer_preferences_disabled' => true,
+    'data_protection_user_frequent_email_address_disabled' => false,
+    'data_protection_user_transfer_preferences_disabled' => false,
 
     'allow_guest_expiry_date_extension' => 0,
     'allow_guest_expiry_date_extension_admin' => array(31, true),
@@ -314,14 +314,12 @@ $default = array(
     'avprogram_list' => array(),
     'avprogram_max_size_to_scan' => 100*1024*1024,
 
-    'logs_limit_messages_from_same_ip_address' => true,
+    'logs_limit_messages_from_same_ip_address' => false,
 
 
     'service_aup_min_required_version' => 0,
 
     'cookie_domain' => '',
-
-
 
     'allow_pages_core' => array( GUIPages::DOWNLOAD,
                                  GUIPages::TRANSLATE_EMAIL,
@@ -349,12 +347,11 @@ $default = array(
 
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
 
-
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'email_me_on_expire' => array(
             'available' => true,
@@ -364,7 +361,7 @@ $default = array(
         'email_upload_complete' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'email_download_complete' => array(
             'available' => true,
@@ -374,7 +371,7 @@ $default = array(
         'email_daily_statistics' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'email_report_on_closing' => array(
             'available' => true,
@@ -382,7 +379,7 @@ $default = array(
             'default' => true
         ),
         'email_recipient_when_transfer_expires' => array(
-            'available' => true,
+            'available' => false,
             'advanced' => true,
             'default' => true
         ),
@@ -394,7 +391,7 @@ $default = array(
         'add_me_to_recipients' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'get_a_link' => array(
             'available' => true,
@@ -402,18 +399,18 @@ $default = array(
             'default' => true
         ),
         'redirect_url_on_complete' => array(
-            'available' => true,
+            'available' => false,
             'advanced' => true,
             'default' => ''
         ),
         'must_be_logged_in_to_download' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
     ),
 
-    'guest_upload_page_hide_unchangable_options' => true,
+    'guest_upload_page_hide_unchangable_options' => false,
 
     'guest_options' => array(
         'email_upload_started' => array(
@@ -424,35 +421,35 @@ $default = array(
         'email_upload_page_access' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'valid_only_one_time' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'does_not_expire' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'can_only_send_to_me' => array(
             'available' => true,
             'advanced' => true,
-            'default' => true
+            'default' => false
         ),
         'email_guest_created' => array(
-            'available' => true,
+            'available' => false,
             'advanced' => true,
             'default' => true
         ),
         'email_guest_created_receipt' => array(
-            'available' => true,
+            'available' => false,
             'advanced' => true,
             'default' => true
         ),
         'email_guest_expired' => array(
-            'available' => true,
+            'available' => false,
             'advanced' => true,
             'default' => true
         ),
