@@ -14,8 +14,8 @@ $packages = array(
 $json = file_get_contents(dirname(__FILE__) . '/package-lock.json');
 
 $top = json_decode($json, true);
-$deps = $top['dependencies'];
+$deps = $top['packages']['']['dependencies'];
 
 foreach( $packages as $pkg => $d ) {
-    printf("%20s %10s\n", $pkg, $deps[$pkg]['version']);
+    printf("%20s %10s\n", $pkg, $deps[$pkg]);
 }
