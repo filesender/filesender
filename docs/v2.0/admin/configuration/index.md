@@ -136,6 +136,11 @@ A note about colours;
 * [allow_pages_add_for_guest](#allow_pages_add_for_guest)
 * [allow_pages_add_for_user](#allow_pages_add_for_user)
 * [allow_pages_add_for_admin](#allow_pages_add_for_admin)
+* [can_view_statistics](#can_view_statistics)
+* [can_view_aggregate_statistics](#can_view_aggregate_statistics)
+* [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
+* [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
+
 
 
 ## Transfers
@@ -1433,8 +1438,37 @@ User language detection is done in the following order:
 * __comment:__ See also allow_pages_core
 
 
+### can_view_statistics
+* __description:__ Access to the statistics tab is governed by this setting which has similar format to the admin setting. This is a comma separated list of uids which will be matched against the saml_user_identification_uid column in the authentications table of the database. Normally this is the full email of the user who is logging in. You can also use the auth_sp_saml_can_view_statistics_entitlement and auth_sp_saml_can_view_aggregate_statistics_entitlement settings to enabled these features using attributes from SAML.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_aggregate_statistics, admin
 
+### can_view_aggregate_statistics
+* __description:__ Access to the statistics tab is governed by this setting which has similar format to the admin setting. This is a comma separated list of uids which will be matched against the saml_user_identification_uid column in the authentications table of the database. Normally this is the full email of the user who is logging in. You can also use the auth_sp_saml_can_view_statistics_entitlement and auth_sp_saml_can_view_aggregate_statistics_entitlement settings to enabled these features using attributes from SAML.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_statistics
 
+### auth_sp_saml_can_view_statistics_entitlement
+* __description:__  This is the name of an entitlement_attribute from the authentication session that will grant an authenticated user access to the statistics page. For full details see the Auth::isPrivilegeAllowed() method.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_statistics
+
+### auth_sp_saml_can_view_aggregate_statistics_entitlement
+* __description:__  This is the name of an entitlement_attribute from the authentication session that will grant an authenticated user access to the aggregate statistics page. For full details see the Auth::isPrivilegeAllowed() method.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_statistics
 
 
 ---
