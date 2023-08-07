@@ -562,18 +562,11 @@ class Mail
             return true;
         }
         Logger::warn('Sending mail');
-        $safemode = ini_get('safe_mode');
-        $safemode = ($safemode && !preg_match('`^off$`i', $safemode));
         
         if (Config::get('debug_mail')) {
             $this->sendDebugMail($source);
         } else {
-            if (!$safemode && $this->return_path) {
-                return mail($source['to'], $this->subject, $source['body'], $source['headers'], '-r' . $this->return_path);
-            } else {
-                Logger::warn('Safe mode is on, cannot set the return_path for sent email');
-                return mail($source['to'], $this->subject, $source['body'], $source['headers']);
-            }
+            return mail($source['to'], $this->subject, $source['body'], $source['headers']);
         }
     }
 
