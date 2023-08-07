@@ -66,6 +66,9 @@ filesender.dragdrop = {
                 filesender.dragdrop.recurseTree(tree);
             }
         }
+        window.setTimeout(
+            function() { filesender.ui.evalUploadEnabled(); },
+            100 );
 
         // calling this directly doesn't seem to sort on Firefox/Linux 2018
         window.setTimeout(

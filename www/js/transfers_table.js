@@ -41,7 +41,9 @@ $(function() {
         var el = $(this);
         var tr = el.closest('tr');
         var details = el.closest('table').find('.transfer_details[data-id="' + tr.attr('data-id') + '"]');
-        
+
+        var collapse = details.find('.collapse');
+        collapse.show('fast');
         tr.hide('fast');
         details.show('fast');
     });

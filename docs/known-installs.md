@@ -27,7 +27,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012| 5 April 2023 |
 | Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011| 5 April 2023 | 
 | Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016| 5 April 2023 |
-| Netherlands  | SURFnet  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010| 5 April 2023 |
+| Netherlands  | SURF  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010| 5 April 2023 |
 | Norway  | Sikt  | [https://filesender.sikt.no/](https://filesender.sikt.no/)    | 2009| 5 April 2023 | 5 April 2023 |
 | Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013| 5 April 2023 |
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011| 5 April 2023 |

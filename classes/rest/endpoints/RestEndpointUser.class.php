@@ -478,7 +478,7 @@ class RestEndpointUser extends RestEndpoint
         $aa = Authentication::ensure( $username );
         $aa->password = $password;
         $aa->save();
-        $user = User::fromAuthID($aa->id);
+        $user = User::fromAuthId($aa->id);
         $user->save();
 
         return array(
