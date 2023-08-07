@@ -271,11 +271,15 @@ filesender.ui.files = {
                 file_name = files[i].webkitRelativePath;
             }
             
-            var latest_node = filesender.ui.files.addFile(file_name, files[i], source_node);
+            var latest_node = filesender.ui.files.addFile(file_name, files[i], false, source_node);
             if (latest_node) {
                 node = latest_node;
             }
         }
+        
+        filesender.ui.evalUploadEnabled();
+        filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
+        
         this.sortErrorLinesToTop();
         return node;
     },
@@ -328,7 +332,7 @@ filesender.ui.files = {
         
     },
     
-    addFile: function(filepath, fileblob, source_node) {
+    addFile: function(filepath, fileblob, isSingleOperation, source_node) {
         var filesize = fileblob.size;
 
         var table = filesender.ui.nodes.files.filestable;
@@ -426,6 +430,10 @@ filesender.ui.files = {
         filesender.ui.evalUploadEnabled();
         tr.attr('data-cid', added_cid);
 
+        if( isSingleOperation ) {
+            filesender.ui.evalUploadEnabled();
+        }
+        
         if( filesender.config.test_for_unreadable_files ) {
             // IE11 has issues
 /*
@@ -459,8 +467,10 @@ filesender.ui.files = {
         
         tr.attr('index', filesender.ui.transfer.files.length - 1);
         
-        filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
-        this.updateStatsAndClearAll();
+        if( isSingleOperation ) {
+            filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
+        }
+        // this.updateStatsAndClearAll();
 
         return tr;
     },
@@ -1271,7 +1281,7 @@ filesender.ui.startUpload = function() {
     this.transfer.aup_checked = false;
     if(filesender.ui.nodes.aup.length)
         this.transfer.aup_checked = filesender.ui.nodes.aup.is(':checked');
-    
+
     if( filesender.config.upload_display_per_file_stats ) {
         window.setInterval(function() {
             if( window.filesender.transfer.encryption && !window.filesender.pbkdf2dialog.already_complete ) {
@@ -1657,6 +1667,7 @@ $(function() {
         expires: form.find('input[name="expires"]'),
         options: {
             get_a_link: form.find('input[name="get_a_link"]'),
+            hide_sender_email: form.find('input[name="hide_sender_email"]')
         },
         buttons: {
             start: form.find('.buttons .start'),
@@ -2047,9 +2058,13 @@ $(function() {
                 ' .fieldcontainer[data-option="add_me_to_recipients"],' +
                 ' .fieldcontainer[data-option="email_me_copies"],' +
                 ' .fieldcontainer[data-related-to="emailfrom"],' +
+                ' .fieldcontainer[data-related-to="verify_email_to_download"],' +
                 ' .custom-checkbox[data-option="add_me_to_recipients"],' +
                 ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
+        form.find(
+            ' .fieldcontainer[data-option="hide_sender_email"]'
+        ).toggle(choice);
         filesender.ui.evalUploadEnabled();
     });
     

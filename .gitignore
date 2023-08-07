@@ -21,4 +21,5 @@ scripts/client/test.php
 scripts/testing/test1.php
 simplesaml
 simplesamlphp-*
-docs/.bundle
+/.phpactor.json
+/docs/.bundle/

@@ -100,7 +100,7 @@ window.filesender.ui = {
         var btndef = [];
         for(var lid in buttons) {
             btndef.push({
-                label: lang.tr(lid).out(),
+                label: lang.tr(lid).out().replace(/<[^>]*>/g, ''),
                 className: buttons[lid].className ? buttons[lid].className : 'btn-success',
                 callback: buttons[lid].callback ? buttons[lid].callback : function() {}
             });

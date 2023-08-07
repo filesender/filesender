@@ -49,6 +49,8 @@ class TransferOptions extends Enum
     
     const GET_A_LINK                                = 'get_a_link';
     
+    const HIDE_SENDER_EMAIL                         = 'hide_sender_email';
+    
     const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
 
     const ENCRYPTION                                = 'encryption';
@@ -59,5 +61,7 @@ class TransferOptions extends Enum
     const STORAGE_CLOUD_S3_BUCKET                   = 'storage_cloud_s3_bucket';
     
     const WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE  = 'web_notification_when_upload_is_complete';
+
+    const VERIFY_EMAIL_TO_DOWNLOAD                  = 'verify_email_to_download';
     
 }

@@ -375,6 +375,7 @@ class Config
             self::$parameters['crypto_crypt_name'] = "AES-CBC";
         }
 
+        self::$parameters['download_verification_code_valid_duration_minutes'] = floor(self::$parameters['download_verification_code_valid_duration'] / 60);
         
         // verify classes are happy
         Guest::validateConfig();
