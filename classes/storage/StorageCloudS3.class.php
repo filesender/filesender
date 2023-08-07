@@ -241,8 +241,17 @@ class StorageCloudS3 extends StorageFilesystem
                 ));
             }
         } catch (Exception $e) {
-            Logger::info('deleteFile() error ' . $e);
-            throw new StorageFilesystemCannotDeleteException($file_path, $file);
+            if (preg_match('/NoSuchBucket/', $e)) {
+                // S3 backend has returned a NoSuchBucket error, this happens when we have already
+                // deleted this file (when using per-file buckets) or the daily bucket was empty and has
+                // already been deleted (when using daily buckets).
+                // 
+                // Usually this happens when Transfer was deleted when it expired and cron.php re-deletes
+                // all files when it's purging the transfer from database.
+            } else {
+                Logger::info('deleteFile() error ' . $e);
+                throw new StorageFilesystemCannotDeleteException($file_path, $file);
+            }
         }
     }
 

@@ -265,6 +265,7 @@ $default = array(
                                                                 , 'email_daily_statistics', 'email_report_on_closing'
                                                                 , 'enable_recipient_email_download_complete'
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
+                                                                , 'hide_sender_email'
     ),
 
     'header_x_frame_options' => 'sameorigin',
@@ -300,6 +301,8 @@ $default = array(
     'streamsaver_on_edge'   => true,
     'streamsaver_on_safari' => true,
 
+    'filesystemwritablefilestream_enabled' => false,
+    
     'upload_page_password_can_not_be_part_of_message_handling' => 'warning',
 
     'data_protection_user_frequent_email_address_disabled' => false,
@@ -335,6 +338,9 @@ $default = array(
                                          GUIPages::APISECRETAUP ),
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
     
+    'download_verification_code_enabled' => false,
+    'download_verification_code_valid_duration' => 60*15,
+    'download_verification_code_random_bytes_used' => 8,
     
     'transfer_options' => array(
         'email_me_copies' => array(

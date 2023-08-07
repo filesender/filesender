@@ -33,8 +33,24 @@
 $(function() {
     var page = $('.download_page');
     if(!page.length) return;
+    var verificationCodePassed = true;
+    var verificationCodeObjectThatTiggeredEvent = null;
+    var verificationCodePassedPopup = null;
 
+    if( window.filesender.config.download_verification_code_enabled ) {
+        verificationCodePassed = false;
+    }
+    
     window.filesender.pbkdf2dialog.setup( true );
+
+    var updateSelectedFilesForArchiveDownload = function()  {
+        var ids = [];
+        page.find('.file[data-selected="1"]').each(function() {
+            ids.push($(this).attr('data-id'));
+        });
+        var idlist = ids.join(',');
+        $('.archivefileids').attr('value', idlist );
+    }
     
     // Bind file selectors
     page.find('.file .select').on('click', function() {
@@ -78,10 +94,17 @@ $(function() {
         var dlcb = function(notify) {
             notify = notify ? '&notify_upon_completion=1' : '';
             return function() {
-                filesender.ui.redirect( filesender.config.base_path
-                                        + 'download.php?token=' + token
-                                        + '&archive_format=' + archive_format
-                                        + '&files_ids=' + ids.join(',') + notify);
+                if( archive_format ) {
+                    console.log("Starting download using POST method...");
+                    $('#dlarchivepostformat').attr( 'value', archive_format );
+                    updateSelectedFilesForArchiveDownload();
+                    $('#dlarchivepost').submit();
+                } else {
+                    filesender.ui.redirect( filesender.config.base_path
+                                            + 'download.php?token=' + token
+                                            + '&archive_format=' + archive_format
+                                            + '&files_ids=' + ids.join(',') + notify);
+                }
             };
         };
         if (!encrypted && confirm){
@@ -228,13 +251,20 @@ $(function() {
         
         var transferid = $('.transfer').attr('data-id');
 
+        verificationCodeObjectThatTiggeredEvent = $(this);
+        if( !verificationCodePassed ) {
+            verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"));
+            return false;
+        }
+
+        
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
             dl(id, dl_complete_enabled, encrypted, progress );
         });        
         return false;
     });
     
-    var dlArchive = function( archive_format ) {
+    var dlArchive = function( archive_format, button ) {
         var ids = [];
         page.find('.file[data-selected="1"]').each(function() {
             ids.push($(this).attr('data-id'));
@@ -249,6 +279,13 @@ $(function() {
         
         var transferid = $('.transfer').attr('data-id');
         var encrypted = $('.transfer_is_encrypted').text()==1;
+
+        verificationCodeObjectThatTiggeredEvent = button;
+        if( !verificationCodePassed ) {
+            verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"));
+            return false;
+        }
+
         
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
             dl(ids, dl_complete_enabled, encrypted, null, archive_format );
@@ -259,10 +296,10 @@ $(function() {
     
     // Bind archive download button
     page.find('.archive .archive_download').button().on('click', function() {
-        return dlArchive( 'zip' );
+        return dlArchive( 'zip', $(this) );
     });
     page.find('.archive .archive_tar_download').button().on('click', function() {
-        return dlArchive( 'tar' );
+        return dlArchive( 'tar', $(this) );
     });
     
     var macos = navigator.platform.match(/Mac/);
@@ -284,6 +321,64 @@ $(function() {
         button_tardl.addClass('recommended');
     } else {
         button_zipdl.addClass('recommended');
+    }
+
+
+    if( window.filesender.config.download_verification_code_enabled ) {
+
+        var transferid = $('.transfer').attr('data-id');
+        var rid        = $('.rid').attr('data-id');
+        
+        page.find('.verificationcodesendtoemail').button().on('click', function() {
+            filesender.client.sendVerificationCodeToYourEmailAddress(
+                transferid,
+                function() {
+                    window.filesender.ui.notify("info", lang.tr("email_sent"));
+                });
+            return true;
+        });
+        page.find('.verificationcodesend').button().on('click', function() {
+            var pass = $('#verificationcode').val();
+            if( !pass.length ) {
+                return true;
+            }
+            try
+            {
+                var options = { error: function(e) {
+                    if( e.message == 'rest_data_stale' ) {
+                        window.filesender.ui.alert("error", lang.tr("verification_code_is_too_old"));
+                        return;
+                    }
+                    filesender.ui.error(e);
+                }};
+                
+                
+
+                filesender.client.checkVerificationCodeWithServer(
+                    transferid, pass,
+                    function(args) {
+                        if( args.ok === true ) {
+                            verificationCodePassed = true;
+                            $(".verify_email_to_download").dialog( "close" );
+                            
+                            var encrypted = verificationCodeObjectThatTiggeredEvent.closest('.file').attr('data-encrypted');
+                            var msg = "downloading";
+                            if( !encrypted ) {
+                                window.filesender.ui.notify("info", lang.tr(msg));
+                            }
+                            verificationCodeObjectThatTiggeredEvent.click();
+                        } else {
+                            window.filesender.ui.alert("error", lang.tr("verification_code_did_not_match"));
+                        }
+                    }
+                    , options
+                );
+            }
+            catch( exception ) {
+            }
+            
+            return true;
+        });
     }
     
 });

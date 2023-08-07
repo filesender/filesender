@@ -127,8 +127,15 @@ window.filesender.config = {
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
-    
-    valid_filename_regex: '<?php $v = Config::get('valid_filename_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
+
+<?php
+$vfregex = Config::get('valid_filename_regex');
+// convert from PHP to JavaScript for surrogate pairs
+//   ex) CJK UNIFIED IDEOGRAPHS : U+29E3D, Emoji : U+1F637
+$vfregex = str_replace("\u{10000}-\u{10FFFF}", '', $vfregex);
+$vfregex = str_replace('\\', '\\\\', $vfregex);
+?>
+    valid_filename_regex: '<?php echo $vfregex ?>',
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
@@ -189,6 +196,8 @@ window.filesender.config = {
     guest_reminder_limit_per_day:  <?php echo Config::get('guest_reminder_limit_per_day') ?>,
     storage_type:  "<?php echo Config::get('storage_type') ?>",
     allow_streamsaver: <?php echo value_to_TF(Browser::instance()->allowStreamSaver) ?>,
+    allow_filesystemwritablefilestream: <?php echo value_to_TF(Browser::instance()->allowFileSystemWritableFileStream) ?>,
+
 
     upload_page_password_can_not_be_part_of_message_handling: "<?php echo Config::get('upload_page_password_can_not_be_part_of_message_handling') ?>",
 
@@ -196,7 +205,7 @@ window.filesender.config = {
     encryption_password_must_have_numbers: <?php echo value_to_TF(Config::get('encryption_password_must_have_numbers')) ?>,
     encryption_password_must_have_special_characters: <?php echo value_to_TF(Config::get('encryption_password_must_have_special_characters')) ?>,
 
-
+    download_verification_code_enabled: <?php echo value_to_TF(Config::get('download_verification_code_enabled')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
@@ -213,3 +222,11 @@ $(function() {
 });
 
 <?php } ?>
+
+window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload = function() {
+    return 'showSaveFilePicker' in window;
+};
+window.filesender.config.useFileSystemWritableFileStreamForDownload = function() {
+    return window.filesender.config.allow_filesystemwritablefilestream
+        && window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload();
+}

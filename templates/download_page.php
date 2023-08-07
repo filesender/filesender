@@ -34,6 +34,25 @@ function presentAVName( $v )
     }
     return $ret;
 }
+
+$rid = 0;
+if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
+    if(array_key_exists('token', $_REQUEST)) {
+        $token = $_REQUEST['token'];
+        
+        if(Utilities::isValidUID($token)) {
+            
+            try {
+                // Getting recipient from the token
+                $recipient = Recipient::fromToken($token); // Throws
+                $rid = $recipient->id;
+            } catch (RecipientNotFoundException $e) {
+            }
+        }
+    }
+}
+
+
 ?>
 <div class="boxnoframe">
     <h1>{tr:download_page}</h1>
@@ -59,8 +78,13 @@ function presentAVName( $v )
     
     if($transfer->status != TransferStatuses::AVAILABLE) throw new TransferNotAvailableException($transfer);
 
+    $sortedFiles = $transfer->files;
+    usort($sortedFiles, function( $a, $b ) { return strnatcmp( $a->name, $b->name ); });
+
     $downloadLinks = array();
     $archiveDownloadLink = '#';
+    $archiveDownloadLinkFileIDs = '';
+    
     if(empty($transfer->options['encryption'])) {
         $fileIds = array();
         foreach($transfer->files as $file) {
@@ -72,8 +96,8 @@ function presentAVName( $v )
         }
         $archiveDownloadLink = Utilities::http_build_query(array(
             'token' => $token,
-            'files_ids' => implode(',', $fileIds),
         ), 'download.php?' );
+        $archiveDownloadLinkFileIDs = implode(',', $fileIds);
     }
 
     $isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'];
@@ -137,10 +161,45 @@ function presentAVName( $v )
         </div>
     <?php } ?>
                             
+    <div class="verify_email_to_download">
+        <h2>{tr:verify_your_email_address_to_download}</h2>
+
+        <table columns="2" border="1">
+	    <col style="width:25%">
+	    <col style="width:75%">            
+            <tr>
+                <td>
+                    <a href="#" class="verificationcodesendtoemail">
+                        <span class="fa fa-paper-plane fa-lg"></span>&nbsp;{tr:send}
+                    </a>
+                </td>
+                <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p>{tr:then_enter_verification_code_below}</p>
+                </td>
+            </tr>
+            <tr class="verificationcodesendpage">
+                <td>
+                    <a class="verificationcodesend verificationcodesendelement" href="#">
+                        <span class="fa fa-unlock fa-lg"></span>&nbsp;{tr:verify}
+                    </a>
+                </td>
+                <td class="verify_labels2">
+                    <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
     
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
+        <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
+                 !$transfer->options['hide_sender_email']) { ?>
         <div class="from">{tr:from} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></div>
+        <?php } ?>
         
         <div class="created">{tr:created} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></div>
         
@@ -164,7 +223,7 @@ function presentAVName( $v )
     <?php if($have_av) { ?>
         <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
             <div class="avdesc">{tr:av_results_description}
-            <?php foreach($transfer->files as $file) { ?>
+            <?php foreach($sortedFiles as $file) { ?>
                 <div class="avfile" data-avid="<?php echo $file->id ?>" >
                     <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
                     <?php if(!$file->have_avresults) { ?>
@@ -191,7 +250,7 @@ function presentAVName( $v )
             </div>
         </div>
     <?php } ?>
-    <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($transfer->files):'1' ?>">
+    <div class="files box" data-count="<?php echo ($canDownloadArchive)?count($sortedFiles):'1' ?>">
         <?php if($canDownloadArchive) { ?>
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
@@ -201,7 +260,7 @@ function presentAVName( $v )
             </span>
         </div>
         <?php } ?>
-    <?php foreach($transfer->files as $file) { ?>
+    <?php foreach($sortedFiles as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>"
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
@@ -252,12 +311,25 @@ function presentAVName( $v )
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_tar_download}
             </a>
+            </div>            
+            <?php } ?>
+
+            <div class="archive_download_framex hidden">
+                <form id="dlarchivepost" action="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" method="post">
+                    <input class="hidden archivefileids" name="files_ids" value="<?php echo $archiveDownloadLinkFileIDs; ?>" />
+                    <input id="dlarchivepostformat" class="hidden " name="archive_format" value="zip" />
+                    <button type="submit"
+                            name="your_name" value="your_value"
+                            class="btn-link">DOWNLOAD
+                    </button>
+                </form>
             </div>
-            <?php } ?>    
+            
             <span class="downloadprogress"/>
         </div>
     <?php } ?>    
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
+        <div class="rid" data-id="<?php echo $rid ?>"></div>
     </div>
 </div>
 

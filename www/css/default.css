@@ -876,6 +876,10 @@ table.list .date {
     resize: vertical;
 }
 
+#upload_form .fieldcontainer[data-option="hide_sender_email"] {
+  display: none;
+}
+
 #upload_form .advanced_options {
     display: none;
 }
@@ -1768,3 +1772,28 @@ div.not_displayed {
 .logoutbutton:hover {
     background-color: rgb(51,51,51)!important;
 }
+
+.verificationcodesendtoemail,
+.verificationcodesend  {
+    float: right;
+}
+
+.verificationcode {
+    float: center;
+}
+.verify_labels2 {
+    float: center;
+    vertical-align: middle;
+}
+    
+
+.verify_email_to_download {
+    width: 50%;
+    display: none;
+}
+.verify_labels {
+    style: text-align:center;
+    style: align:center;
+    vertical-align: middle;
+}
+
