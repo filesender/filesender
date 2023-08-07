@@ -79,20 +79,44 @@ window.filesender.zip64handler = function() {
         zip64_end_of_central_directory_record_offset2: 22,
         zip64_central_directory_record_length: 0,
         files: [],
+        fileStream: null,
         
-        init: function( filename ) {
+        init: async function( filename ) {
+            console.log("zip64 init (top)");
+            
             var $this = this;
             this.filename = filename;
             this.coffset = 0;
 
-            const ponyfill = window.WebStreamsPolyfill || {};
-            streamSaver.WritableStream = ponyfill.WritableStream;
-            streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
-            streamSaver.WritableStream = ponyfill.WritableStream;
+            window.filesender.log('zip64 handler newer streaming API information.'
+                                  + ' Use streamsaver: ' + window.filesender.config.use_streamsaver
+                                  + ' use FileSystemWritableFileStream (FSWF) ' + window.filesender.config.useFileSystemWritableFileStreamForDownload());
+            if( window.filesender.config.useFileSystemWritableFileStreamForDownload()) {
+                
+                if( !$this.fileStream ) {
+                    console.log("FileSystemWritableFileStream zinit (p1)");
+                    $this.fileStream = await window.showSaveFilePicker({
+                        suggestedName: this.filename,
+                        startIn: 'downloads',
+                    });
+                    console.log("FileSystemWritableFileStream zinit (p2)");
+                }
+                if( !$this.writer ) {
+                    $this.writer = await $this.fileStream.createWritable();
+                }
+                console.log("FileSystemWritableFileStream zip64 zinit (end)");
+                
+            } else if( window.filesender.config.use_streamsaver ) {
+                const ponyfill = window.WebStreamsPolyfill || {};
+                streamSaver.WritableStream = ponyfill.WritableStream;
+                streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
+                streamSaver.WritableStream = ponyfill.WritableStream;
 
-            streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
-            var fileStream = streamSaver.createWriteStream( filename );
-            $this.writer = fileStream.getWriter();
+                streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
+                var fileStream = streamSaver.createWriteStream( filename );
+                $this.writer = fileStream.getWriter();
+            }            
+
 
             $this.files = [];
         },
@@ -281,9 +305,10 @@ window.filesender.zip64handler = function() {
             $this.writeu16( comment.length );
             $this.writestr( comment );
         },
-        complete: function() {
+        complete: async function() {
             var $this = this;
 
+            console.log("ziphandler complete()!");
             $this.zip64_start_of_central_directory_record_offset = $this.coffset;
             for (let i = 0; i < this.files.length; i++) {
                 $this.add_cdr_file(this.files[i])
@@ -292,7 +317,9 @@ window.filesender.zip64handler = function() {
 	    $this.add_cdr_eof_zip64();
 	    $this.add_cdr_eof_locator_zip64();
             $this.write_end_cdr_record();
-            $this.writer.close();
+            console.log("ziphandler complete() closing writer");
+            await $this.writer.close();
+            console.log("ziphandler complete() closed writer");
         },
         abort: function() {
             var $this = this;

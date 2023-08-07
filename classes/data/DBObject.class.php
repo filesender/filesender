@@ -789,7 +789,7 @@ class DBObject
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved');
     }
 
-    public function getViewName()
+    public static function getViewName()
     {
         return strtolower(self::getDBTable()) . 'view';
     }

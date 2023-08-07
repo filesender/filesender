@@ -31,6 +31,7 @@ importfile cs_CZ FileSender_2.0_Czech.php
 importfile da_DK FileSender_2.0_Danish.php
 importfile nl_NL FileSender_2.0_Dutch.php
 importfile en_AU FileSender_2.0_English_AU.php
+importfile en_GB FileSender_2.0_English_GB.php
 importfile et_EE FileSender_2.0_Estonian.php
 importfile fi_FI FileSender_2.0_Finnish.php
 importfile de_DE FileSender_2.0_German.php
@@ -50,7 +51,13 @@ importfile si_LK FileSender_2.0_Sinhalese.php
 importfile ur_PK FileSender_2.0_Urdu.php
 importfile zh_HANS FileSender_2.0_Chinese_Hans.php
 importfile zh_HANT FileSender_2.0_Chinese_Hant.php
-importfile km_KH FileSender_2.0_Khmer.php
+importfile km_KH   FileSender_2.0_Khmer.php
+importfile ne_NP   FileSender_2.0_Nepali.php
+importfile th_TH   FileSender_2.0_Thai.php
+importfile vi_VN   FileSender_2.0_Vietnamese.php
+importfile ko_KR   FileSender_2.0_Korean.php
+importfile ta_TAM  FileSender_2.0_Tamil.php
+
 
 echo "Checking syntax of generated .php files, please wait..."
 for f in $(find ../../language -type f -name \*.php)

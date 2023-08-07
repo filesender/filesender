@@ -71,7 +71,14 @@ try {
         // Getting associated transfer 
         $transfer = $recipient->transfer;
 
-
+        // $recipient
+        if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
+            $otp = DownloadOneTimePassword::mostRecentForDownload( $transfer, $recipient );
+            if( !$otp->verified) {
+                throw new RestDataStaleException('transfer = '.$transfer->id);
+            }
+        }
+    
         if( Config::get('log_authenticated_user_download_by_ensure_user_as_recipient')) {
             if( Auth::isRegularUser()) {
                 $user = Auth::user();

@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chart.js": "^4.2.0",
+    "chart.js": "^4.3.2",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.6.3",
+    "jquery": "^3.7.0",
     "jquery-ui-dist": "^1.13.2",
     "promise-polyfill": "^8.3.0",
     "reset": "^0.1.0",

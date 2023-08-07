@@ -92,7 +92,7 @@ window.filesender.pbkdf2dialog = {
                         // Generated keys do not need repeated hashing
                         // so they should be too quick for a dialog to be needed
                         // See end of https://github.com/filesender/filesender/pull/375#issuecomment-439160499
-                        if( !($this.usingGeneratedKey())) {
+                        if( 'usingGeneratedKey' in $this && !($this.usingGeneratedKey())) {
                             $this.dialog = filesender.ui.alert(
                                 "info", lang.tr(trans).r({seconds: expected_delay}).out());
                         }

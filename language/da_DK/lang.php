@@ -300,6 +300,8 @@ $lang['guest_reminder_limit_reached'] = 'Du har nået loftet over hvor mange på
 $lang['guest_reminder_rate_limit_reached'] = 'Du kan kun sende en gæst {cfg:guest_reminder_limit_per_day} påmindelser dagligt. Prøv igen senere.';
 $lang['guest_too_many_recipients'] = 'For mange modtagere';
 $lang['guest_transfer_options'] = '<h3>Valg for oprettede overførsler</h3>';
+$lang['guest_upload_default_expire_is_guest_expire'] = 'En gæsts uploads udløber til eller før den tid hvor gæstens invitation udløber';
+$lang['guest_upload_expire_read_only'] = 'Gæsten kan ikke ændre udløbstiden for sine uploads';
 $lang['guest_vouchers_sent'] = 'Gæstevouchere afsendt';
 $lang['guests'] = 'Gæster';
 $lang['guests_page'] = 'Gæster';
@@ -399,6 +401,7 @@ $lang['privacy_page_trackingevents_lifetime'] = 'Antal dage loggen over sporings
 $lang['privacy_page_translatable_emails_lifetime'] = 'Antal dage mails gemmes som er blevet sendt til en bruger';
 $lang['profile_page_text_linking_to_admin_page'] = 'Du må godt besøge <a href="{cfg:site_url}/?s=admin">administratorsiden</a>.';
 $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender tager dit privatliv alvorligt. Se venligst <a href="{cfg:site_url}/?s=privacy">her</a> hvor længe data opbevares i den her installation af FileSender.';
+$lang['python_cli_client_heading'] = 'Python-CLI-klient';
 $lang['python_cli_client_setup_information'] = 'FOr at bruge Pyhton CLI Client-konfigurationen skal du oprette et katalog ~/.filesender og kopiere konfigurationsfilen filesender.py.ini ind i kataloget ~/.filesender. Det er valgfrit at have konfigurationsfilen, men anbefales, fordi du dermed ikke behøver angive alle parametre på kommandolinjen hver gang. Pyhton CLI Client\'en kan hentes til hvor det skal være, og kræver Python version 3 for at kunne køre.<p>Med konfigurationsfilen på plads kan du uploade en fil vha. <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>';
 $lang['quota_usage'] = '
 {size:used} af i alt {size:total} brugt; {size:available} tilbage

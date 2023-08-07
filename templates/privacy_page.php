@@ -15,7 +15,7 @@ function config_VisString( $k, $specialv, $specialret ) {
         <h2>{tr:privacy_page_days_old_table_text}</h2>
         <table columns="2">
             <tr><th><?php echo Lang::tr('value')?></th>
-                <th><?php echo Lang::tr('Description')?></th>
+                <th><?php echo Lang::tr('description')?></th>
             </tr>
             <tr><td><?php echo Config::get('max_transfer_days_valid') ?></td>
                 <td><?php echo Lang::tr('privacy_page_max_transfer_days_valid')?></td>

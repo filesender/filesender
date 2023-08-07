@@ -434,7 +434,6 @@ class Transfer extends DBObject
         if ($user instanceof User) {
             $user = $user->id;
         }
-
         return self::all(
             array(
                 'view'  => $viewClause,

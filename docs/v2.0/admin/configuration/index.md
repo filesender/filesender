@@ -33,6 +33,10 @@ A note about colours;
 * [tmp_path](#tmp_path)
 * [site_css](#site_css)
 * [site_logo](#site_logo)
+* [download_verification_code_enabled](#download_verification_code_enabled)
+* [download_verification_code_valid_duration](#download_verification_code_valid_duration)
+* [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
+
 
 ## Security settings
 * [use_strict_csp](#use_strict_csp)
@@ -50,6 +54,7 @@ A note about colours;
 * [upload_crypted_chunk_size](#upload_crypted_chunk_size)
 * [cookie_domain](#cookie_domain)
 * [rate_limits](#rate_limits) (rate limits for some actions)
+* [valid_filename_regex](#valid_filename_regex)
 
 
 ## Backend storage
@@ -131,6 +136,11 @@ A note about colours;
 * [allow_pages_add_for_guest](#allow_pages_add_for_guest)
 * [allow_pages_add_for_user](#allow_pages_add_for_user)
 * [allow_pages_add_for_admin](#allow_pages_add_for_admin)
+* [can_view_statistics](#can_view_statistics)
+* [can_view_aggregate_statistics](#can_view_aggregate_statistics)
+* [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
+* [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
+
 
 
 ## Transfers
@@ -396,6 +406,32 @@ A note about colours;
 * __default:__ $config['site_url'].'?s=logout'
 * __available:__ since version 1.6
 
+### download_verification_code_enabled
+
+* __description:__ Check that the user has access to their email address by sending a one time code to them and requiring them to enter that code before they can download files in a transfer. This is restricted to checking only users who have not logged in to the system.
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.41
+
+
+### download_verification_code_valid_duration
+
+* __description:__ how long a verify by email code should be valid for (in seconds).
+* __mandatory:__ no.
+* __type:__ int
+* __default:__ 60*15
+* __available:__ since version 2.41
+* __comment:__ Default should be ok.
+
+### download_verification_code_random_bytes_used
+
+* __description:__ how many random bytes to use in the download verification code
+* __mandatory:__ no.
+* __type:__ int
+* __default:__ 8
+* __available:__ since version 2.41
+* __comment:__ Default should be ok.
 
 
 
@@ -535,6 +571,33 @@ A note about colours;
                The mime AV program takes an array of MIME types that the content MUST be in using the matchlist parameter.
                The mime AV program defaults to using the first 8k of content to determine the MIME type, use bytesToConsider
                to change this. Setting bytesToConsider to values below 8k will have no effect.
+
+               Note that these programs are only executed when you run execute-av-program-on-files.php on the server. 
+               The execute-av-program-on-files.php script needs permissions to access to the uploaded files and the database.
+               The execute-av-program-on-files.php script will work on a small batch of files and sleep 10 seconds and then
+               work on the next batch of files. It may be that the script needs to be improved for larger sites to allow many
+               machines to access and perform these tasks as they can be time consuming depending on the scanner.
+
+               The expected setup will use virus scanners over https passing the file stream to the scanner and retrieving the
+               results of that scan to store in the database. An example of this is provided in
+               classes/avprograms/AVProgramURLTest.php. The AVProgramURLTest.php can be installed on a web server and will
+               fail for content that contains a bad word which in this case is literally "badword". The AVProgramURLTest is
+               provided as an example that can be fleshed out to use other malware scanners as an installation desires.
+
+               If you are using the 'url' method then FileSender will post file content to that URL and expect an JSON result
+               indicating the result of the scan. For example for a success:
+               { "passes": "1", "error": "0", "reason": "clean." }
+               or something like the following or for an error:
+               { "passes": "0", "error": "0", "reason": "contains a Trojan (56% certainty)." }
+               or if the scanner itself encountered an error:
+               { "passes": "0", "error": "1", "reason": "unable to use local database to compare data with." }.
+
+               From an implementation perspective, results are recorded in the AVResults table and the download page will
+               display the results of scans if they are available.
+
+               
+
+
 
 ```
 $config['avprogram_list'] = array( 'always_pass',
@@ -683,6 +746,27 @@ $config['rate_limits'] = array(
             'transfer_available' => array( 'day' => 200 ),
         ),
 );
+
+
+### valid_filename_regex
+* __description:__ Regular exression that must match a file name in an upload for that file to be allowed
+* __mandatory:__ no
+* __type:__ string
+* __default:__ '^[ \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+'
+* __available:__ since version 2.0
+* __comment:__ You may wish to allow more characters to this
+               expression to allow emoji in file names for example.
+               One might like to consider potential cases such as the
+               unicode U+2044 fraction slash which might be confused
+               with a / and U+205F which is a math space and might be
+               confused with a regular space. The ending '$' will be
+               added to match against the end of string for you.
+               
+* __*Configuration example:*__
+  //  adds '+' in ASCII
+  //  adds special character areas, for example MIDDLE DOT U+30FB
+$config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
+
 
 
 ---
@@ -1354,8 +1438,37 @@ User language detection is done in the following order:
 * __comment:__ See also allow_pages_core
 
 
+### can_view_statistics
+* __description:__ Access to the statistics tab is governed by this setting which has similar format to the admin setting. This is a comma separated list of uids which will be matched against the saml_user_identification_uid column in the authentications table of the database. Normally this is the full email of the user who is logging in. You can also use the auth_sp_saml_can_view_statistics_entitlement and auth_sp_saml_can_view_aggregate_statistics_entitlement settings to enabled these features using attributes from SAML.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_aggregate_statistics, admin
 
+### can_view_aggregate_statistics
+* __description:__ Access to the statistics tab is governed by this setting which has similar format to the admin setting. This is a comma separated list of uids which will be matched against the saml_user_identification_uid column in the authentications table of the database. Normally this is the full email of the user who is logging in. You can also use the auth_sp_saml_can_view_statistics_entitlement and auth_sp_saml_can_view_aggregate_statistics_entitlement settings to enabled these features using attributes from SAML.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_statistics
 
+### auth_sp_saml_can_view_statistics_entitlement
+* __description:__  This is the name of an entitlement_attribute from the authentication session that will grant an authenticated user access to the statistics page. For full details see the Auth::isPrivilegeAllowed() method.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_statistics
+
+### auth_sp_saml_can_view_aggregate_statistics_entitlement
+* __description:__  This is the name of an entitlement_attribute from the authentication session that will grant an authenticated user access to the aggregate statistics page. For full details see the Auth::isPrivilegeAllowed() method.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ""
+* __available:__ since version 2.8
+* __comment:__ See also can_view_statistics
 
 
 ---
@@ -1550,10 +1663,11 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __email\_recipient\_when\_transfer\_expires:__ As of release 2.21 this is a global default setting to email users when a transfer expires during cron execution. The default is true to maintain the previous functionality as it was. Setting this to false will not send out emails to intended recipients as transfers are expired by the cron job. This is set here because it may be able to be adjusted by a user in the UI in the future for each transfer.
 	* __enable\_recipient\_email\_download\_complete:__ this gives the downloader a tick box in the download window which in turn lets the downloader indicate they would like to receive an email once the download is finished.  If you want this option available for all downloaders and do not want to bother the uploader with it, simply configure it with 'default' => false as the only parameter. __Warning:__ if the recipient of a file is a mailinglist and someone ticks the "send me a message on download complete" box, then all members of that mailinglist will receive that message.  That might be a reason why you don't want to make this option available to your users.        
 	* __add\_me\_to\_recipients:__ include the sender as one of the recipients.
-	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can se the download count, but not who downloaded it (obviously, as there are no recipients defined).
+	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can see the download count, but not who downloaded it (obviously, as there are no recipients defined).
+	* __hide\_sender\_email:__ If checked it will hide the sender's email address on the download page. The option is only displayed if the __get\_a\_link__ option is checked. This is useful when sending download links to mailing lists, etc., and you do not want your personal email account to be displayed on the download page.
 	* __redirect_url_on_complete:__ When the transfer upload completes, instead of showing a success message, redirect the user to a URL. This interferes with __get\_a\_link__ in that the uploader will not see the link after the upload completes. Additionally, if the uploader is a guest, there is no way straightforward way for the uploader to learn the download link, although this must not be used as a security feature.
-        * __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
-        * __web_notification_when_upload_is_complete__: Added in release 2.32. Options include available, advanced, and default. If you wish to use this feature you should set available=true to allow the user to see the option. Some browsers such as Firefox require the user to explicitly click a link to start the acceptance dialog so being able to see the option (available=true) on the web page is very useful. Using notifications will require the user to accept them for the site. Currently as of release 2.32 a notification can be sent when the upload is complete.
+	* __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
+	* __web_notification_when_upload_is_complete__: Added in release 2.32. Options include available, advanced, and default. If you wish to use this feature you should set available=true to allow the user to see the option. Some browsers such as Firefox require the user to explicitly click a link to start the acceptance dialog so being able to see the option (available=true) on the web page is very useful. Using notifications will require the user to accept them for the site. Currently as of release 2.32 a notification can be sent when the upload is complete.
 
 * __*Configuration example:*__
 
@@ -1933,7 +2047,21 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __type:__ boolean
 * __default:__ true
 * __available:__ since version 2.19
-* __comment:__ 
+* __comment:__
+
+
+### fileSystemWritableFileStream_enabled
+* __description:__ Allow the use of the FileSystemWritableFileStream API to perform streaming download of encrypted files on supported browsers.
+* __mandatory:__ no 
+* __recommend_leaving_at_default:__ true
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.41
+* __comment:__
+    This feature is currently only available when you have streamsaver_enabled=true set. This will prefer to use the
+    FileSystemWritableFileStream API when available to stream data to disk. As at mid 2023 Edge and Chrome support
+    this feature, Firefox supports most but not all (so can not be used) and Safari does not support the feature.
+    In the future this may be separated from the streamsaver_enabled option so it can be enabled independently.
 
 ### recipient_reminder_limit
 

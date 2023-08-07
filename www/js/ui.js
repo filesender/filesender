@@ -96,7 +96,7 @@ window.filesender.ui = {
         var btndef = [];
         for(var lid in buttons) {
             btndef.push({
-                text: lang.tr(lid).out(),
+                text: lang.tr(lid).out().replace(/<[^>]*>/g, ''),
                 click: handle(lid)
             });
         }
