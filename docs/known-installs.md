@@ -10,6 +10,7 @@ If you want to add your FileSender installation to this list, send an email to f
 
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
+| Albania  | RASH  | [https://filesender.rash.al/](https://filesender.rash.al/)      | Nov 2020| Aug 2023 |
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012| March 2023 |
 | Belgium  | BELNET  | [https://filesender.belnet.be/](https://filesender.belnet.be/)      | Mar 2010| March 2023 |
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010| March 2023 |
