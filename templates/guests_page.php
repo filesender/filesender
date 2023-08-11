@@ -88,21 +88,21 @@ use ( $new_guests_can_only_send_to_creator,
         <div class="row">
             <div class="col">
                 <div class="fs-invitations__header">
-                    <h1>My invitations</h1>
+                    <h1>{tr:guests_page}</h1>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12 col-sm-12 col-md-12 col-lg-6 offset-lg-3">
                 <div class="fs-invitations__action">
-                    <h2>Invite someone to transfer a file to me</h2>
+                    <h2>{tr:invitation_title}</h2>
                     <p>
-                        You can send an invitation to someone to give them guest access to FileSender, and enable them to send files to you or others.
+                        {tr:invitation_description}
                     </p>
 
                     <a href="?s=new_invitation" class="fs-button">
                         <i class="fa fa-plus"></i>
-                        <span>New invitation</span>
+                        <span>{tr:new_invitation}</span>
                     </a>
                 </div>
             </div>
@@ -110,9 +110,9 @@ use ( $new_guests_can_only_send_to_creator,
         <div class="row">
             <div class="col">
                 <div class="fs-invitations__list">
-                    <h2>All my invitations</h2>
+                    <h2>{tr:all_my_invitations}</h2>
                     <p>
-                        An overview of all invitations you have sent.
+                        {tr:invitation_overview}
                     </p>
 
                     <?php

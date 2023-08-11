@@ -90,7 +90,7 @@ use ( $new_guests_can_only_send_to_creator,
                     <a id='fs-back-link' class="fs-link fs-link--circle">
                         <i class='fa fa-angle-left'></i>
                     </a>
-                    <h1>New invitation</h1>
+                    <h1>{tr:new_invitation}</h1>
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@ use ( $new_guests_can_only_send_to_creator,
                 <div class="col-12 col-sm-12 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
                     <div class="fs-new-invitation__data">
                         <h2>
-                            Invite someone to transfer a file to me
+                            {tr:invitation_title}
                         </h2>
                         <form action="">
                             <div class="row">
@@ -108,7 +108,7 @@ use ( $new_guests_can_only_send_to_creator,
                                     <div>
                                         <div class="fs-input-group">
                                             <label for="to" class="mandatory">
-                                                Send invitation to
+                                                {tr:send_invitation_to}
                                             </label>
 
                                             <div>
@@ -123,21 +123,21 @@ use ( $new_guests_can_only_send_to_creator,
 
                                     <div class="fs-input-group">
                                         <label for="subject">
-                                            Subject
+                                            {tr:subject}
                                         </label>
                                         <input id="subject" name="subject" type="text" placeholder="Subject">
                                     </div>
 
                                     <div class="fs-input-group">
                                         <label for="message">
-                                            Message
+                                            {tr:message}
                                         </label>
                                         <textarea id="message" name="message" rows="4" placeholder="Optional message"></textarea>
                                     </div>
 
                                     <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
 
-                                    <h2>Transfer settings</h2>
+                                    <h2>{tr:transfer_settings}</h2>
 
                                     <div class="guest_options options_box">
                                         <?php
@@ -173,15 +173,15 @@ use ( $new_guests_can_only_send_to_creator,
                                     <div class="fs-collapse">
                                         <button type="button" class="fs-button fs-collapse__open">
                                             <i class="fa fa-chevron-down"></i>
-                                            <span>Show advanced settings</span>
+                                            <span>{tr:show_advanced_settings}</span>
                                         </button>
                                         <button type="button" class="fs-button fs-collapse__close">
                                             <i class="fa fa-chevron-up"></i>
-                                            <span>Hide advanced settings</span>
+                                            <span>{tr:hide_advanced_settings}</span>
                                         </button>
                                         <div class="fs-collapse__content">
                                             <div class="fs-collapse__column">
-                                                <strong>Settings for the transfer the guest creates</strong>
+                                                <strong>{tr:guest_transfer_settings}</strong>
 
                                                 <div>
                                                     <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
@@ -202,7 +202,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                 } ?>
                                             </div>
                                             <div class="fs-collapse__column">
-                                                <strong>Email notification settings</strong>
+                                                <strong>{tr:guest_email_settings}</strong>
 
                                                 <div>
                                                     <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {
@@ -226,7 +226,7 @@ use ( $new_guests_can_only_send_to_creator,
                                     <div class="fs-new-invitation__actions">
                                         <button type="button" class="fs-button send">
                                             <i class="fa fa-send"></i>
-                                            <span>Send invitation</span>
+                                            <span>{tr:send_invitation}</span>
                                         </button>
                                     </div>
                                 </div>

@@ -8,25 +8,25 @@
     <thead>
     <tr>
         <th class="created">
-            Invitation was sent on
+            {tr:invitation_was_sent_on}
         </th>
         <th class="to">
-            Recipients
+            {tr:recipients}
         </th>
         <th class="expires">
-            Expiration
+            {tr:expiration}
         </th>
         <th class="guest_transfers">
-            Guest transfers
+            {tr:guest_transfers}
         </th>
         <th class="actions">
-            Actions
+            {tr:actions}
         </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach($guests as $guest) { ?>
-        <tr class="guest objectholder"
+        <tr class="guest objectholder fs-table__row fs-table__row--clickable"
             data-id="<?php echo $guest->id ?>"
             data-expiry-extension="<?php echo $guest->expiry_date_extension ?>"
             data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
