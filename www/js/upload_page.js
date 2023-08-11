@@ -2619,29 +2619,3 @@ $('.instructions').on('click', function(){
     filesender.ui.nodes.files.files_input.click();
     return false;
 });
-
-$('#normal-theme').on('click', function() {
-    console.log('normal theme');
-
-    const head = document.head;
-    const link = document.createElement("link");
-
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = "/filesender/css/themes/rnp.css";
-
-    head.appendChild(link);
-});
-
-$('#dark-theme').on('click', function() {
-    console.log('dark theme');
-
-    const head = document.head;
-    const link = document.createElement("link");
-
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = "/filesender/css/themes/dark.css";
-
-    head.appendChild(link);
-});

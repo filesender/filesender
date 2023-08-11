@@ -869,22 +869,6 @@ if(Auth::isGuest()) {
         </div>
     </form>
 
-    <div class="fs-theme">
-        <strong>Theme example:</strong>
-        <ul>
-            <li>
-                <a role="button" id="normal-theme" class="fs-link">
-                    Normal
-                </a>
-            </li>
-            <li>
-                <a role="button" id="dark-theme" class="fs-link">
-                    Dark
-                </a>
-            </li>
-        </ul>
-    </div>
-
     <?php if (!Config::get('disable_directory_upload')) { ?>
         <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>
     <?php } ?>
