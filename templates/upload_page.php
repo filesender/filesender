@@ -333,9 +333,9 @@ if(Auth::isGuest()) {
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
                                             <div class="fs-radio-group">
-                                                <input type="radio" id="transfer-link" name="transfer-type" value="transfer-link">
+                                                <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link">
 
-                                                <label for="transfer-link" class="fs-radio">
+                                                <label for="get_a_link" class="fs-radio">
                                                     <div class="fs-radio__option">
                                                         <span class="fs-radio__circle"></span>
                                                         <span class="fs-radio__text">
@@ -433,6 +433,26 @@ if(Auth::isGuest()) {
 
                                                     <div class="fs-transfer__recipients recipients"></div>
                                                 <?php } ?>
+                                            </div>
+
+                                            <div data-related-to="message">
+                                                <div class="fs-input-group">
+                                                    <label for="subject">
+                                                        {tr:subject}
+                                                    </label>
+                                                    <input name="subject" id="subject" type="text"
+                                                           title="{tr:subject}"
+                                                           value=""
+                                                           placeholder="{tr:enter_to_subject}" />
+                                                </div>
+
+                                                <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
+                                                <label class="invalid" id="password_can_not_be_part_of_message_warning">
+                                                    {tr:password_can_not_be_part_of_message_warning}
+                                                </label>
+                                                <label class="invalid" id="password_can_not_be_part_of_message_error">
+                                                    {tr:password_can_not_be_part_of_message_error}
+                                                </label>
                                             </div>
 
                                             <div data-related-to="message">
@@ -579,43 +599,41 @@ if(Auth::isGuest()) {
                                                         </strong>
 
                                                         <?php
-                                                        foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                            if( !array_key_exists($name, $upload_options_handled)) {
-                                                                $displayoption($name, $cfg, Auth::isGuest());
+                                                            foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                                if( !array_key_exists($name,$upload_options_handled)) {
+                                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                                }
                                                             }
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <strong>
-                                                            {tr:terasender_settings}
-                                                        </strong>
 
-                                                        <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
-                                                            <?php
                                                             foreach(Transfer::availableOptions(true) as $name => $cfg)  {
                                                                 if( !array_key_exists($name,$upload_options_handled)) {
                                                                     $displayoption($name, $cfg, Auth::isGuest());
                                                                 }
                                                             }
-                                                            ?>
-                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
-                                                                <div class="fs-input-group fs-input-group--vertical">
-                                                                    <label for="terasender_worker_count">
-                                                                        {tr:terasender_worker_count}
-                                                                    </label>
-
-                                                                    <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
-                                                                </div>
-                                                            <?php } ?>
-                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
-                                                                $displayoption('disable_terasender', array('default'=>false), false);
-                                                            }?>
-                                                        <?php } /* End of advanced settings div. */ ?>
+                                                        ?>
                                                     </div>
                                                 </div>
+                                                <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <strong>
+                                                                {tr:terasender_settings}
+                                                            </strong>
+                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
+                                                                    <div class="fs-input-group fs-input-group--vertical">
+                                                                        <label for="terasender_worker_count">
+                                                                            {tr:terasender_worker_count}
+                                                                        </label>
+
+                                                                        <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
+                                                                    </div>
+                                                                <?php } ?>
+                                                                <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
+                                                                    $displayoption('disable_terasender', array('default'=>false), false);
+                                                            }?>
+                                                        </div>
+                                                    </div>
+                                                <?php } /* End of advanced settings div. */ ?>
                                             </div>
                                         </div>
                                     </div>

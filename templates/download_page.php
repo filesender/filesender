@@ -84,8 +84,6 @@ if($isEncrypted) {
     }
 }
 
-
-
 if( $transfer->must_be_logged_in_to_download ) {
     $user = Auth::user();
     if( !$user ) {
@@ -133,6 +131,10 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
+                        <strong>{tr:expiration_date}:</strong>
+                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
+                    </div>
+                    <div class="fs-info fs-info--aligned">
                         <strong>{tr:from}:</strong>
                         <span><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></span>
                     </div>
@@ -142,10 +144,6 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                             <span><?php echo Utilities::sanitizeOutput($transfer->subject) ?></span>
                         </div>
                     <?php } ?>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:expiration_date}:</strong>
-                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
-                    </div>
                     <?php if($transfer->message) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:message}:</strong>
@@ -209,7 +207,6 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                                             <div>
                                                 <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
                                                 <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
-                                                <span><p class="download_decryption_disabled">{tr:file_encryption_disabled}</p></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
                                                     <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
@@ -228,6 +225,11 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                             <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
                         </div>
                     </div>
+
+                    <div class="fieldcontainer" id="encryption_description_not_supported">
+                        {tr:file_encryption_disabled}
+                    </div>
+
                     <div class="fs-download__total-size">
                         <strong>{tr:size_of_selected_files}</strong>
                         <span>486mb</span>
@@ -261,39 +263,6 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--    <div class="crypto_not_supported_message">-->
-<!--         {tr:file_encryption_disabled}-->
-<!--    </div>-->
-<!---->
 <!--    --><?php //if( Browser::instance()->allowStreamSaver ) { ?>
 <!---->
 <!--        <div class="form-check form-switch custom-control custom-switch" data-option="options">-->

@@ -942,9 +942,8 @@ filesender.ui.recipients = {
 };
 
 filesender.ui.isUserGettingALink = function() {
-    // var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
-    // return gal;
-    return filesender.ui.getALink;
+    var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
+    return gal;
 }
 filesender.ui.isUserAddMeToRecipients = function() {
     var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
@@ -1535,20 +1534,20 @@ filesender.ui.setTimeSinceDataWasLastSentMessage = function(msg) {
 }
 
 
-// filesender.ui.handle_get_a_link_change = function() {
-//     var form = $('#upload_form');
-//     var gal = form.find('input[name="get_a_link"]');
-//     var choice = gal.is(':checked');
-//     form.find(
-//         '.fieldcontainer[data-related-to="message"], .recipients,' +
-//         ' .fieldcontainer[data-option="add_me_to_recipients"],' +
-//         ' .fieldcontainer[data-option="email_me_copies"],' +
-//         ' .fieldcontainer[data-related-to="emailfrom"],' +
-//         ' .custom-checkbox[data-option="add_me_to_recipients"],' +
-//         ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
-//     ).toggle(!choice);
-//     filesender.ui.evalUploadEnabled();
-// }
+filesender.ui.handle_get_a_link_change = function() {
+    var form = $('#upload_form');
+    var gal = form.find('input[id="get_a_link"]');
+    var choice = gal.is(':checked');
+    form.find(
+        '.fieldcontainer[data-related-to="message"], .recipients,' +
+        ' .fieldcontainer[data-option="add_me_to_recipients"],' +
+        ' .fieldcontainer[data-option="email_me_copies"],' +
+        ' .fieldcontainer[data-related-to="emailfrom"],' +
+        ' .custom-checkbox[data-option="add_me_to_recipients"],' +
+        ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
+    ).toggle(!choice);
+    filesender.ui.evalUploadEnabled();
+}
 
 // Add class to highlight droparea container
 filesender.ui.activeDroparea = function () {
@@ -1660,6 +1659,7 @@ filesender.ui.onChangeTransferType = function (transferType) {
                 emailField.addClass('fs-input-group--hide');
                 addMeToRecipientsField.addClass('fs-switch--hide');
                 filesender.ui.getALink = true;
+                filesender.ui.nodes.gal.checkbox.prop('checked', true);
 
                 $('.recipients').html('');
                 $('[data-option="add_me_to_recipients"], [data-option="email_me_copies"], [data-option="enable_recipient_email_download_complete"]').prop( "checked", false );
@@ -1670,6 +1670,7 @@ filesender.ui.onChangeTransferType = function (transferType) {
                 emailField.removeClass('fs-input-group--hide');
                 addMeToRecipientsField.removeClass('fs-switch--hide');
                 filesender.ui.getALink = false;
+                filesender.ui.nodes.gal.checkbox.prop('checked', false);
                 break;
             default:
                 break;
@@ -1746,7 +1747,7 @@ $(function() {
         gal: {
             gal: form.find('#galgal'),
             email: form.find('#galemail'),
-            checkbox: form.find('input[name="get_a_link"]'),
+            checkbox: form.find('input[id="get_a_link"]'),
             checkboxcontainer: form.find('.custom-control[data-option="get_a_link"]'),
         },
         get_a_link_or_email_choice: form.find('#get_a_link_or_email_choice'),
@@ -1779,7 +1780,7 @@ $(function() {
         aupshowhide: form.find('#aupshowhide'),
         expires: form.find('#expires'),
         options: {
-            get_a_link: form.find('input[name="get_a_link"]'),
+            get_a_link: form.find('input[id="get_a_link"]'),
         },
         buttons: {
             start: form.find('.buttons .start'),
@@ -1859,7 +1860,7 @@ $(function() {
         filesender.ui.setFileList(2, 3);
 
         var get_a_link_checked = filesender.ui.isUserGettingALink();
-        // filesender.ui.handle_get_a_link_change();
+        filesender.ui.handle_get_a_link_change();
         if( get_a_link_checked ) {
             form.find('.galmodelink').show();
             form.find('.galmodeemail').hide();
@@ -1931,18 +1932,23 @@ $(function() {
         return false;
     });
 
-    filesender.ui.nodes.gal.gal.on('click',function() {
-        filesender.ui.nodes.gal.checkbox.prop('checked',true);
-        // filesender.ui.handle_get_a_link_change();
-        form.find('.galmodelink').show();
-        form.find('.galmodeemail').hide();
+    $('#get_a_link').on('change',function() {
+        if ($(this).is(":checked")) {
+            // filesender.ui.nodes.gal.checkbox.prop('checked', true);
+            filesender.ui.handle_get_a_link_change();
+            form.find('.galmodelink').show();
+            form.find('.galmodeemail').hide();
+        }
         return false;
     });
-    filesender.ui.nodes.gal.email.on('click',function() {
-        filesender.ui.nodes.gal.checkbox.prop('checked',false);
-        // filesender.ui.handle_get_a_link_change();
-        form.find('.galmodelink').hide();
-        form.find('.galmodeemail').show();
+
+    $('#transfer-email').on('change',function() {
+        if ($(this).is(":checked")) {
+            filesender.ui.nodes.gal.checkbox.prop('checked', false);
+            filesender.ui.handle_get_a_link_change();
+            form.find('.galmodelink').hide();
+            form.find('.galmodeemail').show();
+        }
         return false;
     });
 
@@ -2138,6 +2144,23 @@ $(function() {
     form.find('.toggle_hidden_options').on('click', function() {
         $('.hidden_options').slideToggle();
         return false;
+    });
+
+    form.find('input[id="get_a_link"]').on('change', function() {
+        var choice = $(this).is(':checked');
+        form.find(
+            '.fieldcontainer[data-related-to="message"], .recipients,' +
+            ' .fieldcontainer[data-option="add_me_to_recipients"],' +
+            ' .fieldcontainer[data-option="email_me_copies"],' +
+            ' .fieldcontainer[data-related-to="emailfrom"],' +
+            ' .fieldcontainer[data-related-to="verify_email_to_download"],' +
+            ' .custom-checkbox[data-option="add_me_to_recipients"],' +
+            ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
+        ).toggle(!choice);
+        form.find(
+            ' .fieldcontainer[data-option="hide_sender_email"]'
+        ).toggle(choice);
+        filesender.ui.evalUploadEnabled();
     });
 
     form.find('input[name="transfer-type"]').on('change', function() {
@@ -2437,7 +2460,6 @@ $(function() {
     var auth = $('body').attr('data-auth-type');
 
     if(auth == 'guest') {
-        //TODO: VERIFICAR GUEST MODE
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
         for(option in filesender.ui.nodes.options) {
             if(option == 'undefined' || option == 'expires') continue;
@@ -2448,9 +2470,8 @@ $(function() {
                 i.val(transfer_options[option]);
             }
         }
-        // form.find('input[name="get_a_link"]').trigger('change');
-        $('#transfer-email').prop("checked", true);
         $('input[name="transfer-type"]').trigger('change');
+        $('#transfer-email').prop("checked", true);
 
     } else if(failed) {
         var id = failed.id;
