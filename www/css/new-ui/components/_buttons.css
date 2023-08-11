@@ -55,7 +55,7 @@
 .fs-button--small {
   font-size: 0.9rem;
   height: var(--fs-spacing-4x);
-  padding: 0 var(--fs-spacing-2x);
+  padding: 0 var(--fs-spacing-base);
 }
 
 .fs-button--transparent {

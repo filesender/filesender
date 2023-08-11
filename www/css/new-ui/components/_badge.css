@@ -20,8 +20,14 @@
   width: auto;
   color: var(--fs-accent);
   background: var(--fs-hightlight-bg);
+  margin-right: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-2x);
 }
 
-.fs-badge + .fs-badge {
-  margin-left: var(--fs-spacing-base);
+.fs-badge-list .fs-button {
+  border-radius: var(--fs-spacing-4x);
+  height: var(--fs-spacing-4x);
+  padding: 0 var(--fs-spacing-2x);
+  margin-right: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-2x);
 }

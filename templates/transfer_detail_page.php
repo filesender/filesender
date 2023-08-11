@@ -1,119 +1,34 @@
 <?php
-$nosort = false;
-if(!isset($trsort))  $nosort = true;
-
-if(!isset($status)) $status = 'available';
 if(!isset($mode)) $mode = 'user';
-if(!isset($transfers) || !is_array($transfers)) $transfers = array();
-if(!isset($limit)) $limit = 100000;
-if(!isset($offset)) $offset = 0;
-if(!isset($pagerprefix)) $pagerprefix = '';
-if(!isset($trsort)) $trsort = TransferQueryOrder::create();
 $show_guest = isset($show_guest) ? (bool)$show_guest : false;
 $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
-$audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
 $haveNext = 0;
 $havePrev = 0;
 
+$transfer_id  = Utilities::arrayKeyOrDefault($_GET, 'transfer_id',  0, FILTER_VALIDATE_INT  );
+$isEncrypted = false;
+$downloadsCount = 0;
+$audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
 
-$isAdmin = false;
-$showAdminExtend = false;
-if (Auth::isAuthenticated()) {
-    if (Auth::isAdmin()) {
-
-        $isAdmin = true;
-
-        if(Config::get('allow_transfer_expiry_date_extension_admin')) {
-            $showAdminExtend = true;
-        }
-    }
-}
-
-$cgiuid = "";
-if (Auth::isAuthenticated()) {
-    if (Auth::isAdmin()) {
-
-        $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
-        if( $uid ) {
-            $cgiuid = "&uid=".$uid;
-        }
-    }
-}
-
-$cgiminmax = "";
-$idmin = Utilities::arrayKeyOrDefault( $_GET, 'idmin', -1, FILTER_VALIDATE_INT  );
-$idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  );
-if( $idmin >= 0 ) {
-    $cgiminmax .= "&idmin=".$idmin;
-}
-if( $idmax >= 0 ) {
-    $cgiminmax .= "&idmax=".$idmax;
-}
-
-if (!function_exists('clickableHeader')) {
-
-    function clickableHeader($displayName,$trsortcol,$trsort,$nosort,$title = null) {
-
-        if( $nosort ) {
-            echo $displayName;
-            return;
-        }
-
-        $qa = array(
-            's' => Utilities::getGETparam('s','')
-        , 'transfersort' => $trsort->clickableSortValue($trsortcol)
-        , 'as' => Utilities::getGETparam('as','')
-        );
-
-        if (Auth::isAuthenticated()) {
-            if (Auth::isAdmin()) {
-
-                $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
-                if( $uid ) {
-                    $qa["uid"] = $uid;
-                }
-            }
-        }
-        $idmin = Utilities::arrayKeyOrDefault( $_GET, 'idmin', -1, FILTER_VALIDATE_INT  );
-        $idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  );
-        if( $idmin >= 0 ) {
-            $qa["idmin"] = $idmin;
-        }
-        if( $idmax >= 0 ) {
-            $qa["idmax"] = $idmax;
-        }
-
-        $tr_url = Utilities::http_build_query($qa);
-        echo '<a href="' . $tr_url . '" ';
-        if( strlen($title)) {
-            echo ' title="' . $title . '" ';
-        }
-        echo ' >';
-        echo $displayName;
-        echo ' ' . $trsort->screenArrowHTML($trsortcol);
-        echo '</a>';
-    }
+if ($transfer_id) {
+    $transfer = Transfer::fromId($transfer_id);
+    $downloadsCount = count($transfer->downloads);
 }
 ?>
 
-<?php foreach($transfers as $transfer) {
-    echo $transfer->id;
-}
-?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="fs-transfer-detail">
+<div class="fs-transfer-detail"
+     id="transfer_<?php echo $transfer->id ?>"
+     data-id="<?php echo $transfer->id ?>"
+     data-status="<?php echo $transfer->status ?>"
+     data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
+     data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
+     data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
+     data-key-version="<?php echo $transfer->key_version; ?>"
+     data-key-salt="<?php echo $transfer->salt; ?>"
+     data-password-version="<?php echo $transfer->password_version; ?>"
+     data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
+     data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
+     data-client-entropy="<?php echo $transfer->client_entropy; ?>">
     <div class="container">
         <div class="row">
             <div class="col">
@@ -121,7 +36,7 @@ if (!function_exists('clickableHeader')) {
                     <a id='fs-back-link' class='fs-link fs-link--circle'>
                         <i class='fa fa-angle-left'></i>
                     </a>
-                    <h1>Transfer details</h1>
+                    <h1>{tr:transfer_details}</h1>
                 </div>
             </div>
         </div>
@@ -129,200 +44,260 @@ if (!function_exists('clickableHeader')) {
         <div class="row">
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__details">
-                    <h2>Transfer info</h2>
+                    <h2>{tr:transfer_details}</h2>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Transfer sent on:</strong>
-                        <span>01/01/2023</span>
+                        <strong>{tr:transfer_sent_on}:</strong>
+                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Expiration date:</strong>
-                        <span>08/01/2023</span>
+                        <strong>{tr:expiration_date}:</strong>
+                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Subject:</strong>
-                        <span>Subject</span>
+                        <strong>{tr:from}:</strong>
+                        <span><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></span>
+                    </div>
+                    <?php if($transfer->subject) { ?>
+                        <div class="fs-info fs-info--aligned">
+                            <strong>{tr:subject}:</strong>
+                            <span><?php echo Utilities::sanitizeOutput($transfer->subject) ?></span>
+                        </div>
+                    <?php } ?>
+                    <?php if($transfer->message) { ?>
+                        <div class="fs-info fs-info--aligned">
+                            <strong>{tr:message}:</strong>
+                            <span><?php echo Utilities::sanitizeOutput($transfer->message) ?></span>
+                        </div>
+                    <?php } ?>
+                    <div class="fs-info fs-info--aligned">
+                        <strong>{tr:encryption}:</strong>
+                        <span>
+                            <?php if ($isEncrypted) {
+                                echo Lang::tr('yes');
+                            } else {
+                                echo Lang::tr('no');
+                            } ?>
+                        </span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Message:</strong>
-                        <span>Hi, here are the files you asked for. You're welcome, have fun.</span>
-                    </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>Language:</strong>
-                        <span>English</span>
-                    </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>Encryption:</strong>
-                        <span>Off</span>
-                    </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>Downloads:</strong>
-                        <span>2</span>
+                        <strong>{tr:downloads}:</strong>
+                        <span>
+                            <?php echo $downloadsCount ?>
+                        </span>
                     </div>
                 </div>
             </div>
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__files">
-                    <h2>Transferred files</h2>
+                    <h2>{tr:transferred_files}</h2>
                     <div class="fs-transfer__list">
-                        <div class="fs-transfer__files">
-                            <table class="fs-table">
+                        <div class="fs-transfer__files"">
+                            <table class="fs-table files">
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <span class="filename">RNP2023-052900.zip</span>
-                                            <span class="filesize">578.2 kB</span>
-                                            <span class="remove stage1">
-                                                    <button type="button" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text removebutton" alt="Remover arquivo">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
+                                <?php foreach($transfer->files as $file) { ?>
+                                    <tr class="file"
+                                        data-id="<?php echo $file->id ?>"
+                                        data-key-version="<?php echo $transfer->key_version; ?>"
+                                        data-key-salt="<?php echo $transfer->salt; ?>"
+                                        data-password-version="<?php echo $transfer->password_version; ?>"
+                                        data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
+                                        data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
+                                        data-client-entropy="<?php echo $transfer->client_entropy; ?>"
+                                        data-fileiv="<?php echo $file->iv; ?>"
+                                        data-fileaead="<?php echo $file->aead; ?>"
+                                        data-transferid="<?php echo $transfer->id; ?>"
+                                    >
+                                        <td>
+                                            <div>
+                                                <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
+                                                <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
+
+                                                <?php if(!$transfer->is_expired) { ?>
+
+                                                    <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
+                                                        <span class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}"
+                                                              data-id="<?php echo $file->id ?>"
+                                                              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
+                                                              data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>"
+                                                              data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
+                                                              data-size="<?php echo $file->size; ?>"
+                                                              data-encrypted-size="<?php echo $file->encrypted_size; ?>"
+                                                              data-key-version="<?php echo $transfer->key_version; ?>"
+                                                              data-key-salt="<?php echo $transfer->salt; ?>"
+                                                              data-password-version="<?php echo $transfer->password_version; ?>"
+                                                              data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
+                                                              data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
+                                                              data-client-entropy="<?php echo $transfer->client_entropy; ?>"
+                                                              data-fileiv="<?php echo $file->iv; ?>"
+                                                              data-fileaead="<?php echo $file->aead; ?>"
+                                                              data-transferid="<?php echo $transfer->id; ?>"
+                                                        >
+                                                            <i class="fa fa-download"></i>
+                                                        </span>
+
+                                                    <?php } else {?>
+                                                        <a class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                    <?php } ?>
+                                                <?php } ?>
+
+                                                <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text download" title="{tr:delete}">
+                                                    <i class="fa fa-trash-o"></i>
                                                 </span>
-                                            <span class="remove stage1">
-                                                    <button type="button" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text removebutton" alt="Remover arquivo">
-                                                        <i class="fa fa-download"></i>
-                                                    </button>
-                                                </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbod
+
+                                                <?php if($audit) { ?>
+                                                    <span data-action="auditlog" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:open_file_auditlog}">
+                                                        <i class="fa fa-history"></i>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                <?php } ?>
+
                                 </tbody>
                             </table>
+
+                            <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
                         </div>
+                    </div>
+                    <div class="fieldcontainer" id="encryption_description_not_supported">
+                        {tr:file_encryption_disabled}
                     </div>
                     <div class="fs-transfer-detail__total-size">
-                        <strong>Size of selected files</strong>
-                        <span>486mb</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <div class="fs-transfer-detail__recipients">
-                    <h2>Recipients</h2>
-                    <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
+                        <strong>{tr:total_transfer_size}:</strong>
                         <span>
-                            Sua transferência foi enviada para os seguintes endereços de e-mail
+                            <?php echo Utilities::formatBytes($transfer->size) ?>
                         </span>
-                        <div class="fs-badge-list">
-                            <div class="fs-badge">wrg.wrg@gmail.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+            <div class="row">
+                <div class="col">
+                    <div class="fs-transfer-detail__recipients">
+                        <h2>Recipients</h2>
+
+                        <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
+                            <span>
+                                Your transfer has been sent to the following email addresses
+                            </span>
+
+                            <div class="fs-badge-list">
+                                <?php foreach($transfer->recipients as $recipient) { ?>
+                                    <div class="fs-badge" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                                        <?php
+                                        if(in_array($recipient->email, Auth::user()->email_addresses)) {
+                                            echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                                        } else {
+                                            echo '<span>'.Template::sanitizeOutput($recipient->identity).'</span>';
+                                        }
+                                        ?>
+                                    </div>
+                                <?php } ?>
+
+                                <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
+                                    <i class="fa fa-lg fa-envelope-o"></i>
+                                    <span>Add recipient</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php } ?>
 
-        <div class="row">
-            <div class="col col-sm-12 col-md-8">
-                <div class="fs-transfer-detail__link">
-                    <h2>Download link</h2>
-                    <div class="fs-copy">
-                        <span>https://localhost/filesender/?s=download&amp;token=f7923fbd-eb16-43f3-aa45-f5639e52d3d5</span>
+        <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+            <div class="row">
+                <div class="col col-sm-12 col-md-8">
+                    <div class="fs-transfer-detail__link">
+                        <h2>{tr:download_link}</h2>
+                        <div class="fs-copy">
+                            <span><?php echo $transfer->first_recipient->download_link ?></span>
 
-                        <button id="copy-to-clipboard" type="button" class="fs-button">
-                            <i class="fa fa-copy"></i>
-                            Copiar
-                        </button>
+                            <button id="copy-to-clipboard" type="button" class="fs-button">
+                                <i class="fa fa-copy"></i>
+                                Copy
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php } ?>
+
+        <?php if ($transfer->options) { ?>
+            <div class="row">
+                <div class="col">
+                    <div class="fs-transfer-detail__options">
+                        <h2>{tr:transfer_selected_options}</h2>
+                        <div class="row">
+                            <div class="col col-sm-12">
+                                <h3>{tr:advanced_transfer_options}</h3>
+
+                                <?php
+                                    $optionshtml = "";
+                                    if(count(array_filter($transfer->options))) {
+                                        foreach (array_keys(array_filter($transfer->options)) as $o) {
+                                            if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
+                                                // this option will never be shown to the user
+                                            } else {
+                                                $checkboxClass = $o == TransferOptions::EMAIL_DAILY_STATISTICS ? "" : "fs-checkbox--disabled";
+
+                                                $optionshtml .= "<div class='fs-transfer-detail__check'>";
+                                                $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
+                                                $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
+
+                                                if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
+                                                    $optionshtml .= "<input id='".$o."' data-option='".TransferOptions::EMAIL_DAILY_STATISTICS."' type='checkbox' checked>";
+                                                } else {
+                                                    $optionshtml .= "<input id='".$o."' type='checkbox' checked disabled>";
+                                                }
+
+                                                $optionshtml .= "<span class='fs-checkbox__mark'></span>";
+                                                $optionshtml .= "</label>";
+                                                $optionshtml .= "</div>";
+                                            }
+                                        }
+                                    }
+
+                                    if($optionshtml != '') {
+                                        echo $optionshtml;
+                                    } else {
+                                        echo Lang::tr('none') ;
+                                    }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
 
         <div class="row">
             <div class="col">
-                <div class="fs-transfer-detail__options">
-                    <h2>Selected options for this transfer</h2>
-                    <div class="row">
-                        <div class="col col-sm-12 col-md-12 col-lg-6">
-                            <h3>Selected transfer options</h3>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-1">
-                                        redirect after upload &nbsp;&nbsp;&nbsp; <small>redirecting link: <a href="">https://company.link/success-page</a></small>
-                                    </label>
-                                    <input id="check-1" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-2">
-                                        include me as a recipient
-                                    </label>
-                                    <input id="check-2" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-3">
-                                        slow internet upload
-                                    </label>
-                                    <input id="check-3" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-32">
-                                        recipient must login to download
-                                    </label>
-                                    <input id="check-32" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col col-sm-12 col-md-12 col-lg-6">
-                            <h3>Selected notification options</h3>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-4">
-                                        email me when upload is done
-                                    </label>
-                                    <input id="check-4" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-5">
-                                        email me upon downloads
-                                    </label>
-                                    <input id="check-5" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-6">
-                                        email me when transfer is expired
-                                    </label>
-                                    <input id="check-6" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-62">
-                                        email me daily statistics
-                                    </label>
-                                    <input id="check-62" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-transfer-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-63">
-                                        email recipient when download is complete
-                                    </label>
-                                    <input id="check-63" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                <div class="fs-transfer-detail__actions">
+                    <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+                        <button type="button" data-action="remind" class="fs-button">
+                            <i class="fa fa-repeat"></i>
+                            <span>{tr:send_reminder}</span>
+                        </button>
+                    <?php } ?>
+
+                    <?php if($audit) { ?>
+                        <button type="button" data-action="auditlog" class="fs-button">
+                            <i class="fa fa-history"></i>
+                            <span>{tr:see_transfer_logs}</span>
+                        </button>
+                    <?php } ?>
+
+                    <button type="button" data-action="delete" class="fs-button fs-button--danger">
+                        <i class="fa fa-trash"></i>
+                        <span>{tr:delete_transfer}</span>
+                    </button>
                 </div>
             </div>
         </div>

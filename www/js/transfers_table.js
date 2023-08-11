@@ -516,6 +516,14 @@ $(function() {
     });
     // FIM TODO
 
+    $('.fs-table__row--clickable').on('click', function() {
+        const transfer_id = $(this).data("id");
+
+        if (transfer_id) {
+            window.location.href = `?s=transfer_detail&transfer_id=${transfer_id}`;
+        }
+    });
+
     // Do we have a quick open hash ?
     var anchor = window.location.hash.substr(1);
     var match = anchor.match(/^transfer_([0-9]+)$/);

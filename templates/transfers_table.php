@@ -148,15 +148,15 @@
             <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort,$nosort); ?>
         </th>
 
-        <th>
-            {tr:actions}
-        </th>
+<!--        <th>-->
+<!--            {tr:actions}-->
+<!--        </th>-->
     </tr>
     </thead>
     <tbody>
     <?php foreach($transfers as $transfer) { ?>
-        <tr class="transfer objectholder"
-            id="transfer_<?php echo $transfer->id ?>"
+        <tr id="transfer_<?php echo $transfer->id ?>"
+            class="transfer objectholder fs-table__row fs-table__row--clickable"
             data-transfer
             data-id="<?php echo $transfer->id ?>"
             data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
@@ -232,24 +232,13 @@
 
             <td data-label="{tr:downloads}">
                 <?php
-                $dc = count($transfer->downloads);
-                echo $dc;
-                if($dc) { ?>
-                    <br/><span class="clickable expand">{tr:see_all}</span>
-                <?php } ?>
+                    $dc = count($transfer->downloads);
+                    echo $dc;
+                ?>
             </td>
 
             <td data-label="{tr:expires}">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
-            </td>
-
-            <td class="actions" data-label="{tr:actions}">
-                <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
-                <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
-                <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
-                <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
-                <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o adminaction" title="{tr:extend_expires}"></span><?php } ?>
             </td>
         </tr>
     <?php } ?>

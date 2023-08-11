@@ -377,6 +377,10 @@
   margin: 0 !important;
 }
 
+.fs-transfer__files table .fs-button {
+  margin-left: var(--fs-spacing-base);
+}
+
 /* XS */
 @media (max-width: 575px) {
   .fs-transfer {

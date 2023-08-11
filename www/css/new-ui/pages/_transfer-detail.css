@@ -70,9 +70,9 @@
 .fs-transfer-detail__actions {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    margin-top: var(--fs-spacing-4x) !important;
+    margin-top: var(--fs-spacing-6x) !important;
 }
 
 .fs-transfer-detail__actions--hide {
@@ -102,6 +102,18 @@
 .fs-transfer-detail__link,
 .fs-transfer-detail__options {
     margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer-detail .fs-transfer-detail__total-size {
+    display: block;
+    text-align: left;
+    padding-left: var(--fs-spacing-5x);
+}
+
+.fs-transfer-detail[data-status="uploading"] [data-action],
+.fs-transfer-detail[data-status="closed"] [data-action],
+.fs-transfer-detail[data-status="closed"] .fs-transfer-detail__link {
+    display: none;
 }
 
 /* XS */
