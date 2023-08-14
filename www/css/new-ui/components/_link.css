@@ -31,7 +31,7 @@
 }
 
 .fs-link--no-hover:hover {
-    background: transparent;
+    background: transparent !important;
 }
 
 .fs-link:active,

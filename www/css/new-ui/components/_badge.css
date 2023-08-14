@@ -24,6 +24,12 @@
   margin-bottom: var(--fs-spacing-2x);
 }
 
+.fs-badge a {
+  font-size: 1rem !important;
+  color: var(--fs-accent) !important;
+  text-decoration: none !important;
+}
+
 .fs-badge-list .fs-button {
   border-radius: var(--fs-spacing-4x);
   height: var(--fs-spacing-4x);
