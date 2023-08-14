@@ -278,3 +278,20 @@ class RestUnknownPrincipalException extends RestException
         parent::__construct('rest_unknown_principal', 404, array());
     }
 }
+
+
+/**
+ * REST error if the data sent is too old
+ */
+class RestDataStaleException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param string $name name of the missing parameter
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_data_stale', 404, array());
+    }
+}

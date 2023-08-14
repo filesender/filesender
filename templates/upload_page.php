@@ -78,8 +78,17 @@ if(Auth::isGuest()) {
     }
 }
 
-$displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$relatedTo = '') use ($guest_can_only_send_to_creator) {
+/**
+ * @param optionsToFilter is an array of options which we do not want to
+ *                        show in the default panels on the left. This allows
+ *                        some options to be displayed in other locations on the page.
+ */
+$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email')) use ($guest_can_only_send_to_creator) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
+
+    if( in_array($name, $optionsToFilter)) {
+        return;
+    }
 
     $default = $cfg['default'];
     if( !$forcedOption ) {
@@ -105,9 +114,6 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
         }
     }
 
-    if( $relatedTo != '' ) {
-        echo '<div data-related-to="'.$relatedTo.'">';
-    }
     echo '<div data-option="'.$name.'" '. $extraDivAttrs .'>';
 
     if($text) {
@@ -124,14 +130,11 @@ $displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$
     }
 
     if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
-        echo '<div class="info warning">'.Lang::tr('enable_recipient_email_download_complete_warning').'</div>';
+        echo '<div class="info message">'.Lang::tr('enable_recipient_email_download_complete_warning').'</div>';
     if($name == TransferOptions::WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE && Browser::instance()->isFirefox)
         echo '<div class="info message"><a class="enable_web_notifications" href="#">'.Lang::tr('click_to_enable_web_notifications').'</a></div>';
 
     echo '</div>';
-    if( $relatedTo != '' ) {
-        echo '</div>';
-    }
 };
 
 
@@ -407,6 +410,17 @@ if(Auth::isGuest()) {
 
                                 <div class="row">
                                     <div class="col-12">
+                                        <?php
+                                            $ops = Transfer::availableOptions();
+                                            if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), false, array() );
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
                                         <?php if($allow_recipients) { ?>
                                             <div data-related-to="message">
                                                 <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
@@ -620,16 +634,16 @@ if(Auth::isGuest()) {
                                                                 {tr:terasender_settings}
                                                             </strong>
                                                             <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
-                                                                    <div class="fs-input-group fs-input-group--vertical">
-                                                                        <label for="terasender_worker_count">
-                                                                            {tr:terasender_worker_count}
-                                                                        </label>
+                                                                <div class="fs-input-group fs-input-group--vertical">
+                                                                    <label for="terasender_worker_count">
+                                                                        {tr:terasender_worker_count}
+                                                                    </label>
 
-                                                                        <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
-                                                                    </div>
-                                                                <?php } ?>
-                                                                <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
-                                                                    $displayoption('disable_terasender', array('default'=>false), false);
+                                                                    <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
+                                                                </div>
+                                                            <?php } ?>
+                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
+                                                                $displayoption('disable_terasender', array('default'=>false), false);
                                                             }?>
                                                         </div>
                                                     </div>

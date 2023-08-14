@@ -261,11 +261,12 @@ $default = array(
     'aggregate_statlog_send_report_email_address' => '',
 
     'transfer_options_not_available_to_export_to_client' => array('get_a_link'
-    , 'email_me_copies','email_me_on_expire'
-    , 'email_upload_complete', 'email_download_complete'
-    , 'email_daily_statistics', 'email_report_on_closing'
-    , 'enable_recipient_email_download_complete'
-    , 'add_me_to_recipients', 'redirect_url_on_complete'
+                                                                , 'email_me_copies','email_me_on_expire'
+                                                                , 'email_upload_complete', 'email_download_complete'
+                                                                , 'email_daily_statistics', 'email_report_on_closing'
+                                                                , 'enable_recipient_email_download_complete'
+                                                                , 'add_me_to_recipients', 'redirect_url_on_complete'
+                                                                , 'hide_sender_email'
     ),
 
     'header_x_frame_options' => 'sameorigin',
@@ -302,6 +303,8 @@ $default = array(
     'streamsaver_on_safari' => true,
 
     'test_for_unreadable_files' => true,
+
+    'filesystemwritablefilestream_enabled' => false,
 
     'upload_page_password_can_not_be_part_of_message_handling' => 'warning',
 
@@ -346,6 +349,10 @@ $default = array(
                                          GUIPages::APISECRETAUP),
 
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
+
+    'download_verification_code_enabled' => false,
+    'download_verification_code_valid_duration' => 60*15,
+    'download_verification_code_random_bytes_used' => 8,
 
     'transfer_options' => array(
         'email_me_copies' => array(

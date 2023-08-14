@@ -35,6 +35,23 @@ function presentAVName( $v )
     return $ret;
 }
 
+$rid = 0;
+if(Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
+    if(array_key_exists('token', $_REQUEST)) {
+        $token = $_REQUEST['token'];
+
+        if(Utilities::isValidUID($token)) {
+
+            try {
+                // Getting recipient from the token
+                $recipient = Recipient::fromToken($token); // Throws
+                $rid = $recipient->id;
+            } catch (RecipientNotFoundException $e) {
+            }
+        }
+    }
+}
+
 if(!array_key_exists('token', $_REQUEST))
     throw new TokenIsMissingException();
 
@@ -53,8 +70,13 @@ if($transfer->isExpired()) throw new TransferExpiredException($transfer);
 
 if($transfer->status != TransferStatuses::AVAILABLE) throw new TransferNotAvailableException($transfer);
 
+$sortedFiles = $transfer->files;
+usort($sortedFiles, function( $a, $b ) { return strnatcmp( $a->name, $b->name ); });
+
 $downloadLinks = array();
 $archiveDownloadLink = '#';
+$archiveDownloadLinkFileIDs = '';
+
 if(empty($transfer->options['encryption'])) {
     $fileIds = array();
     foreach($transfer->files as $file) {
@@ -66,8 +88,8 @@ if(empty($transfer->options['encryption'])) {
     }
     $archiveDownloadLink = Utilities::http_build_query(array(
         'token' => $token,
-        'files_ids' => implode(',', $fileIds),
     ), 'download.php?' );
+    $archiveDownloadLinkFileIDs = implode(',', $fileIds);
 }
 
 $isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'];
@@ -174,10 +196,10 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                     <?php } ?>
 
                     <div class="fs-transfer__list">
-                        <div class="fs-transfer__files" data-count="<?php echo ($canDownloadArchive)?count($transfer->files):'1' ?>">
+                        <div class="fs-transfer__files" data-count="<?php echo ($canDownloadArchive)?count($sortedFiles):'1' ?>">
                             <table class="fs-table files">
                                 <tbody>
-                                <?php foreach($transfer->files as $file) { ?>
+                                <?php foreach($sortedFiles as $file) { ?>
                                     <tr class="file" data-id="<?php echo $file->id ?>"
                                         data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
                                         data-mime="<?php echo $file->mime_type; ?>"
@@ -223,6 +245,7 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                             </table>
 
                             <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
+                            <div class="rid" data-id="<?php echo $rid ?>"></div>
                         </div>
                     </div>
 
@@ -248,6 +271,17 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
                                 </button>
 
                             <?php } ?>
+
+                            <div class="archive_download_framex hidden">
+                                <form id="dlarchivepost" action="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" method="post">
+                                    <input class="hidden archivefileids" name="files_ids" value="<?php echo $archiveDownloadLinkFileIDs; ?>" />
+                                    <input id="dlarchivepostformat" class="hidden " name="archive_format" value="zip" />
+                                    <button type="submit"
+                                            name="your_name" value="your_value"
+                                            class="btn-link">DOWNLOAD
+                                    </button>
+                                </form>
+                            </div>
                             <span class="downloadprogress"/>
                         </div>
                     <?php } ?>
@@ -263,45 +297,114 @@ $days_to_expire = round($datediff / (60 * 60 * 24));
     </div>
 </div>
 
-<!--    --><?php //if( Browser::instance()->allowStreamSaver ) { ?>
-<!---->
-<!--        <div class="form-check form-switch custom-control custom-switch" data-option="options">-->
-<!--            <input id="streamsaverenabled" class="form-check-input" name="streamsaverenabled" type="checkbox" checked="checked" />-->
-<!--            <label for="streamsaverenabled" class="form-check-label">{tr:use_streamsaver_for_download}</label>-->
-<!--        </div>-->
-<!--    --><?php //} ?>
-<!---->
-<!---->
-<!--    --><?php //if($have_av) { ?>
-<!--        <div class="general2 box" data-transfer-size="--><?php //echo $transfer->size ?><!--">-->
-<!--            <div class="avdesc">{tr:av_results_description}-->
-<!--            --><?php //foreach($transfer->files as $file) { ?>
-<!--                <div class="avfile" data-avid="--><?php //echo $file->id ?><!--" >-->
-<!--                    <span class="name avheader--><?php //outputBool($file->av_all_good)?><!-- ">--><?php //echo Utilities::sanitizeOutput($file->path) ?><!--</span>-->
-<!--                    --><?php //if(!$file->have_avresults) { ?>
-<!--                        <span class="desc">{tr:no_av_scans_performed}</span>-->
-<!--                    --><?php //} else { ?>
-<!--                        <table>-->
-<!--                            <tr class="avresultheader">-->
-<!--                                <th>{tr:performed}</th>-->
-<!--                                <th>{tr:result}</th>-->
-<!--                                <th>{tr:avname}</th>-->
-<!--                            </tr>-->
-<!--                        --><?php //foreach($file->scan_results as $res) { $resultdesc = passErrToDesc($res->passes,$res->error); ?>
-<!--                            <tr class="avresult">-->
-<!--                                <td class="created">--><?php //echo Utilities::sanitizeOutput(Utilities::formatDate($res->created)) ?><!--</td>-->
-<!--                                <td class="result avresult--><?php //echo $resultdesc ?><!--">--><?php //echo Lang::tr($resultdesc) ?><!--</td>-->
-<!--                                <td class="app_name">--><?php //echo presentAVName($res->name) ?><!--</td>-->
-<!--                            </tr>-->
-<!--                        --><?php //} ?>
-<!--                        </table>-->
-<!--                    --><?php //} ?>
-<!---->
-<!--                </div>-->
-<!--            --><?php //} ?>
-<!--            </div>-->
-<!--        </div>-->
-<!--    --><?php //} ?>
+    <?php if( Browser::instance()->allowStreamSaver ) { ?>
+
+        <div class="form-check form-switch custom-control custom-switch" data-option="options">
+            <input id="streamsaverenabled" class="form-check-input" name="streamsaverenabled" type="checkbox" checked="checked" />
+            <label for="streamsaverenabled" class="form-check-label">{tr:use_streamsaver_for_download}</label>
+        </div>
+    <?php } ?>
+
+
+    <?php if($have_av) { ?>
+        <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
+            <div class="avdesc">{tr:av_results_description}
+            <?php foreach($sortedFiles->files as $file) { ?>
+                <div class="avfile" data-avid="<?php echo $file->id ?>" >
+                    <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
+                    <?php if(!$file->have_avresults) { ?>
+                        <span class="desc">{tr:no_av_scans_performed}</span>
+                    <?php } else { ?>
+                        <table>
+                            <tr class="avresultheader">
+                                <th>{tr:performed}</th>
+                                <th>{tr:result}</th>
+                                <th>{tr:avname}</th>
+                            </tr>
+                        <?php foreach($file->scan_results as $res) { $resultdesc = passErrToDesc($res->passes,$res->error); ?>
+                            <tr class="avresult">
+                                <td class="created"><?php echo Utilities::sanitizeOutput(Utilities::formatDate($res->created)) ?></td>
+                                <td class="result avresult<?php echo $resultdesc ?>"><?php echo Lang::tr($resultdesc) ?></td>
+                                <td class="app_name"><?php echo presentAVName($res->name) ?></td>
+                            </tr>
+                        <?php } ?>
+                        </table>
+                    <?php } ?>
+
+                </div>
+            <?php } ?>
+            </div>
+        </div>
+    <?php } ?>
+
+
+    <div class="verify_email_to_download">
+        <h2>{tr:verify_your_email_address_to_download}</h2>
+        <table columns="2" border="1">
+            <col style="width:25%">
+            <col style="width:75%">
+            <tr>
+                <td>
+                    <a href="#" class="verificationcodesendtoemail">
+                        <span class="fa fa-paper-plane fa-lg"></span>&nbsp;{tr:send}
+                    </a>
+                </td>
+                <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p>{tr:then_enter_verification_code_below}</p>
+                </td>
+            </tr>
+            <tr class="verificationcodesendpage">
+                <td>
+                    <a class="verificationcodesend verificationcodesendelement" href="#">
+                        <span class="fa fa-unlock fa-lg"></span>&nbsp;{tr:verify}
+                    </a>
+                </td>
+                <td class="verify_labels2">
+                    <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="table borderless general" data-transfer-size="<?php echo $transfer->size ?>">
+        <tbody>
+        <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
+            !$transfer->options['hide_sender_email']) { ?>
+            <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td></tr>
+        <?php } ?>
+        <tr>
+            <td align="right" class="created">{tr:created}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></td>
+            <td align="right" class="expires">{tr:expires}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></td>
+            <td align="right" class="size">{tr:size}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></td>
+        </tr>
+        <?php if($transfer->subject) { ?>
+            <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Utilities::sanitizeOutput($transfer->subject) ?></td></tr>
+        <?php } ?>
+
+        <?php if($transfer->message) { ?>
+            <tr><td align="right" class="message">{tr:message}</td><td><p><?php echo Utilities::sanitizeOutput($transfer->message) ?></p></td></tr>
+        <?php } ?>
+        </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <div class="transfer_is_encrypted not_displayed">
         <?php echo $isEncrypted ? 1 : 0;  ?>

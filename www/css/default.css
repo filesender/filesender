@@ -3147,6 +3147,30 @@ table.paginator a {
   background-color: #fff3f3 !important;
 }
 
+.verificationcodesendtoemail,
+.verificationcodesend  {
+    float: right;
+}
+
+.verificationcode {
+    float: center;
+}
+.verify_labels2 {
+    float: center;
+    vertical-align: middle;
+}
+    
+
+.verify_email_to_download {
+    width: 50%;
+    display: none;
+}
+.verify_labels {
+    style: text-align:center;
+    style: align:center;
+    vertical-align: middle;
+}
+
 /* Local Variables:    */
 /* mode: text          */
 /* comment-column: 0   */

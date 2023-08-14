@@ -308,6 +308,7 @@ $lang['gui_unknown_admin_section'] = '不明な管理セクションです';
 $lang['help'] = 'ヘルプ';
 $lang['help_page'] = 'ヘルプ';
 $lang['hide_details'] = '詳細を非表示';
+$lang['hide_sender_email'] = '送信者メールアドレスをダウンロード画面に表示しない';
 $lang['hit_guest_creation_rate_limit'] = 'ゲスト作成の合計制限に達しました';
 $lang['hit_guest_creation_total_limit'] = 'ゲスト作成のレート制限に達しました';
 $lang['hit_guest_remind_rate_limit'] = 'ゲストリマインダーのレート制限に達しました';
