@@ -857,7 +857,7 @@ if(Auth::isGuest()) {
                 </div>
 
                 <div class="fs-transfer__upload-actions">
-                    <a id="download-link" href=""type="button" class="fs-button fs-button--info" role="button">
+                    <a id="detail-link" href=""type="button" class="fs-button fs-button--info" role="button">
                         <i class="fa fa-file-text-o"></i>
                         {tr:transfer_details}
                     </a>

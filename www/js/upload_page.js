@@ -1330,7 +1330,7 @@ filesender.ui.startUpload = function() {
 
         $('#expires-days').text(daysToExpire);
 
-        $('#download-link').attr('href', filesender.ui.transfer.download_link);
+        $('#detail-link').attr('href', `?s=transfer_detail&transfer_id=${filesender.ui.transfer.id}`);
 
         if( useWebNotifications()) {
             window.filesender.notification.notify(lang.tr('web_notification_upload_complete_title'),
