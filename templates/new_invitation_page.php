@@ -125,14 +125,14 @@ use ( $new_guests_can_only_send_to_creator,
                                         <label for="subject">
                                             {tr:subject}
                                         </label>
-                                        <input id="subject" name="subject" type="text" placeholder="Subject">
+                                        <input id="subject" name="subject" type="text" placeholder="{tr:subject}">
                                     </div>
 
                                     <div class="fs-input-group">
                                         <label for="message">
                                             {tr:message}
                                         </label>
-                                        <textarea id="message" name="message" rows="4" placeholder="Optional message"></textarea>
+                                        <textarea id="message" name="message" rows="4" placeholder="{tr:optional_message}"></textarea>
                                     </div>
 
                                     <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
@@ -242,10 +242,10 @@ use ( $new_guests_can_only_send_to_creator,
                 <div class="col-12 col-sm-12 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
                     <div class="fs-new-invitation__success-info">
                         <h2>
-                            Invitation sent!
+                            {tr:invitation_sent}
                         </h2>
                         <p>
-                            Your invitation was sent to the following email address:
+                            {tr:invitation_was_sent_to}
                         </p>
                         <br />
                         <div class="fs-new-invitation__recipients-result">
@@ -254,20 +254,20 @@ use ( $new_guests_can_only_send_to_creator,
                         </div>
                         <br />
                         <p>
-                            The Invitation expires in <span id="expires-days">7</span> {tr:days}.
+                            {tr:invitation_expires_in} <span id="expires-days">7</span> {tr:days}.
                         </p>
                         <br />
                         <ul class="fs-list fs-list--inline">
+<!--                            <li>-->
+<!--                                <a href="" id="detail-link" class="fs-button">-->
+<!--                                    <i class="fa fa-envelope-open"></i>-->
+<!--                                    <span>{tr:see_invitation_details}</span>-->
+<!--                                </a>-->
+<!--                            </li>-->
                             <li>
-                                <a href="?s=invitation_detail&id=0" type="button" class="fs-button">
-                                    <i class="fa fa-envelope-open"></i>
-                                    <span>See invitation details</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="?s=guests" type="button" class="fs-button">
+                                <a href="?s=guests" class="fs-button">
                                     <i class="fa fa-envelope"></i>
-                                    <span>Go to all my invitations</span>
+                                    <span>{tr:go_to_invitations}</span>
                                 </a>
                             </li>
                         </ul>

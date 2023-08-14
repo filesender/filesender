@@ -2,6 +2,19 @@
     if(!isset($status)) $status = 'available';
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
+    if(!isset($guests)) $guests = array();
+    if(!isset($filtered)) $filtered = array();
+
+    $filter_callback = function ($element) {
+        if ($element->status && $element->status !== "closed") {
+            return true;
+        }
+        return false;
+    };
+
+    if (count($guests)) {
+        $filtered = array_filter($guests, $filter_callback);
+    }
 ?>
 
 <table class="fs-table fs-table--responsive fs-table--selectable fs-table--striped fs-table--text-middle guests list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
@@ -25,17 +38,17 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach($guests as $guest) { ?>
+    <?php foreach($filtered as $guest) { ?>
         <tr class="guest objectholder fs-table__row fs-table__row--clickable"
             data-id="<?php echo $guest->id ?>"
             data-expiry-extension="<?php echo $guest->expiry_date_extension ?>"
             data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
 
-            <td class="created d-none d-lg-table-cell" data-label="Invitation was sent on">
+            <td class="created d-none d-lg-table-cell" data-label="{tr:invitation_was_sent_on}">
                 <?php echo Utilities::formatDate($guest->created) ?>
             </td>
 
-            <td class="to" data-label="Recipients">
+            <td class="to" data-label="{tr:recipients}">
                 <a href="mailto:<?php echo Template::sanitizeOutputEmail($guest->email) ?>"><?php echo Template::sanitizeOutputEmail($guest->email) ?></a>
 
                 <?php if($guest->errors) echo '<br /><span class="errors">'.implode(', ', array_map(function($type) {
@@ -45,19 +58,27 @@
                     }, $guest->errors)))).'</span>' ?>
             </td>
 
-            <td class="expires" data-rel="expires" data-label="Expiration">
+            <td class="expires" data-rel="expires" data-label="{tr:expiration}">
                 <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
             </td>
 
-            <td class="guest_transfers" data-label="Guest transfers">
-                <ul class="fs-list fs-list--inline">
-                    <li>
-                        0
-                    </li>
-                    <li>
-                        <i class="fa fa-exclamation-circle"></i>
-                    </li>
-                </ul>
+            <td class="guest_transfers" data-label="{tr:guest_transfers}">
+                <?php
+                    $guestTransfers = Transfer::fromGuest($guest);
+                    if (!count($guestTransfers)) {
+                ?>
+                    <ul class="fs-list fs-list--inline">
+                        <li>
+                            0
+                        </li>
+                        <li>
+                            <i class="fa fa-exclamation-circle"></i>
+                        </li>
+                    </ul>
+                <?php } else {
+                    $dc = count($guestTransfers->downloads);
+                    echo $dc;
+                } ?>
             </td>
 
 <!--            <td class="subject">-->
@@ -76,9 +97,9 @@
 <!--                --><?php //} else echo Template::sanitizeOutput($guest->message) ?>
 <!--            </td>-->
 
-            <td class="actions fs-table__actions" data-label="Actions">
+            <td class="actions fs-table__actions" data-label="{tr:actions}">
                 <div class="actionsblock">
-                    <?php if( $mode == 'user' ) { ?>
+                    <?php if($mode == 'user' && $guest->status == 'available') { ?>
                         <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="Send a reminder">
                             <i class="fa fa-mail-forward"></i>
                         </button>
@@ -87,32 +108,22 @@
                         </button>
                     <?php } ?>
 
-                    <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="Delete invitation">
-                        <i class="fa fa-trash"></i>
-                    </button>
+                    <?php if ($guest->status == 'available') { ?>
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="Delete invitation">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    <?php } ?>
                 </div>
             </td>
         </tr>
     <?php } ?>
 
-    <?php if(!count($guests)) { ?>
+    <?php if(!count($filtered)) { ?>
         <tr>
             <td colspan="7" data-label="Results">{tr:no_guests}</td>
         </tr>
     <?php } ?>
     </tbody>
 </table>
-
-<!--<div class="fs-paginator fs-paginator--right">-->
-<!--    <a class="fs-link fs-link--circle" href="">-->
-<!--        <i class="fa fa-angle-double-left"></i>-->
-<!--    </a>-->
-<!--    <a class="fs-link fs-link--circle" href="">-->
-<!--        <i class="fa fa-angle-left"></i>-->
-<!--    </a>-->
-<!--    <a class="fs-link fs-link--circle" href="">-->
-<!--        <i class="fa fa-angle-right"></i>-->
-<!--    </a>-->
-<!--</div>-->
 
 <script type="text/javascript" src="{path:js/guests_table.js}"></script>

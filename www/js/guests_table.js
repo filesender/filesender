@@ -188,7 +188,6 @@ $(function() {
         });
     }
 
-
     // Errors details
     guests.find('.guest[data-errors="1"] .to .errors').each(function() {
         $('<span class="details clickable fa fa-lg fa-info-circle" />').appendTo($(this)).attr({
@@ -226,12 +225,12 @@ $(function() {
         });
     });
 
-    // $('.fs-table__row--clickable td').not('.actions').on('click', function() {
-    //     const parent = $(this).parent();
-    //     const guest_id = $(parent).data("id");
-    //
-    //     if (guest_id) {
-    //         window.location.href = `?s=invitation_detail&guest_id=${guest_id}`;
-    //     }
-    // });
+    $('.fs-table__row--clickable td').not('.actions').on('click', function() {
+        const parent = $(this).parent();
+        const guest_id = $(parent).data("id");
+
+        if (guest_id) {
+            window.location.href = `?s=invitation_detail&guest_id=${guest_id}`;
+        }
+    });
 });

@@ -117,7 +117,7 @@ use ( $new_guests_can_only_send_to_creator,
 
                     <?php
                     Template::display('guests_table',
-                        array('guests' => Guest::fromUserAvailable(Auth::user())));
+                        array('guests' => Guest::fromUser(Auth::user())));
                     ?>
                 </div>
             </div>

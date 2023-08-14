@@ -1,8 +1,27 @@
 <?php
+if(!isset($mode)) $mode = 'user';
+if(!isset($guests)) $guests = array();
+if(!isset($guest)) $guest = null;
+if(!isset($filtered)) $filtered = array();
+if(!isset($guest_id)) $guest_id = 0;
 
+$guest_id = Utilities::arrayKeyOrDefault($_GET, 'guest_id',  0, FILTER_VALIDATE_INT  );
+
+$filter_callback = function ($element) use ($guest_id) {
+    if ($element->id && $element->id == $guest_id) {
+        return true;
+    }
+    return false;
+};
+
+if ($guest_id) {
+    $guests = Guest::fromUserAvailable(Auth::user());
+    $filtered = array_filter($guests, $filter_callback);
+    $guest = $filtered[$guest_id];
+}
 ?>
 
-<div class="fs-invitation-detail">
+<div class="fs-invitation-detail" data-id="<?php echo $guest_id; ?>">
     <div class="container">
         <div class="row">
             <div class="col">
@@ -10,7 +29,7 @@
                     <a id='fs-back-link' class="fs-link fs-link--circle">
                         <i class='fa fa-angle-left'></i>
                     </a>
-                    <h1>Invitation details</h1>
+                    <h1>{tr:invitation_details}</h1>
                 </div>
             </div>
         </div>
@@ -18,208 +37,173 @@
         <div class="row">
             <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                 <div class="fs-invitation-detail__information">
-                    <h2>Invitation information</h2>
+                    <h2>{tr:invitation_information}</h2>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Transfer sent on:</strong>
-                        <span>01/01/2023</span>
+                        <strong>{tr:invitation_sent_on}:</strong>
+                        <span>
+                            <?php echo Utilities::formatDate($guest->created) ?>
+                        </span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Expiration date:</strong>
-                        <span>01/01/2023</span>
+                        <strong>{tr:expiration_date}:</strong>
+                        <span>
+                            <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
+                        </span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Message:</strong>
-                        <span>Hi, please send me file.docx. Thank you very much.</span>
+                        <strong>{tr:subject}:</strong>
+                        <span>
+                            <?php echo Template::sanitizeOutput($guest->subject) ?>
+                        </span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>Language:</strong>
-                        <span>English</span>
+                        <strong>{tr:message}:</strong>
+                        <span>
+                            <?php echo Template::sanitizeOutput($guest->message) ?>
+                        </span>
                     </div>
+<!--                    <div class="fs-info fs-info--aligned">-->
+<!--                        <strong>{tr:language}:</strong>-->
+<!--                        <span>English</span>-->
+<!--                    </div>-->
                 </div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                 <div class="fs-invitation-detail__recipients">
-                    <h2>Recipients</h2>
+                    <h2>{tr:recipient}</h2>
                     <p>
-                        Your transfer was sent to the following email address:
+                        {tr:your_invitation_was_sent_to}:
                     </p>
                     <div>
                         <div class="fs-badge">
-                            fulano@rnp.br
+                            <a class="fs-link fs-link--no-hover" href="mailto:<?php echo Template::sanitizeOutputEmail($guest->email) ?>"><?php echo Template::sanitizeOutputEmail($guest->email) ?></a>
                         </div>
                     </div>
-                    <ul class="fs-list fs-list--inline">
-                        <li>
-                            <button type="button" class="fs-button">
-                                <i class="fa fa-mail-forward"></i>
-                                <span>Send a reminder</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="fs-button">
-                                <i class="fa fa-repeat"></i>
-                                <span>Resend invitation</span>
-                            </button>
-                        </li>
-                    </ul>
+                    <?php if($mode == 'user' && $guest->status == 'available') { ?>
+                        <ul class="fs-list fs-list--inline">
+                            <li>
+                                <button type="button" class="fs-button remind">
+                                    <i class="fa fa-mail-forward"></i>
+                                    <span>{tr:send_a_reminder}</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="fs-button forward">
+                                    <i class="fa fa-repeat"></i>
+                                    <span>{tr:resend_invitation}</span>
+                                </button>
+                            </li>
+                        </ul>
+                    <?php } ?>
                 </div>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-7">
+            <div class="col-12 col-sm-12 col-md-12">
                 <div class="fs-invitation-detail__guest-list">
-                    <h2>Guest transfer linked to this invitation</h2>
-                    <table class="fs-table fs-table--responsive fs-table--selectable fs-table--thin fs-table--striped">
-                        <thead>
-                        <tr>
-                            <th>
-                                Transfer date
-                            </th>
-                            <th>
-                                Size
-                            </th>
-                            <th>
-                                Files
-                            </th>
-                            <th>
-                                Guest transfers
-                            </th>
-                            <th>
-                                Recipients
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td data-label="Transfer date">
-                                March 8, 2023
-                            </td>
-                            <td data-label="Size">
-                                20 MB
-                            </td>
-                            <td data-label="Files">
-                                file.png; file.docx; file.pdf
-                            </td>
-                            <td data-label="Guest transfers">
-                                + 3 more files
-                            </td>
-                            <td data-label="Recipients">
-                                me
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <h2>{tr:invitation_guest_transfer_linked}</h2>
+
+                    <?php
+                        $transfers = Transfer::fromGuest($guest);
+                        Template::display('transfers_table', array('transfers' => $transfers, 'show_guest' => true));
+                    ?>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-7">
-                <div class="fs-invitation-detail__options">
-                    <h2>Selected options for this transfer</h2>
-                    <div class="row">
-                        <div class="col col-sm-12 col-md-6">
-                            <h3>Selected transfer options</h3>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-1">
-                                        always include me as a recipient
-                                    </label>
-                                    <input id="check-1" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-2">
-                                        redirect after download
-                                    </label>
-                                    <input id="check-2" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-3">
-                                        recipient must login to download
-                                    </label>
-                                    <input id="check-3" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col col-sm-12 col-md-6">
-                            <h3>Selected notification options</h3>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-4">
-                                        email me the confirmation of this invitation
-                                    </label>
-                                    <input id="check-4" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-5">
-                                        email me when guest accesses upload page
-                                    </label>
-                                    <input id="check-5" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-6">
-                                        email me when guest starts upload
-                                    </label>
-                                    <input id="check-6" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-7">
-                                        email me when upload is done
-                                    </label>
-                                    <input id="check-7" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-8">
-                                        email me upon downloads of created transfer
-                                    </label>
-                                    <input id="check-8" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
-                            <div class="fs-invitation-detail__check">
-                                <label class="fs-checkbox fs-checkbox--disabled">
-                                    <label for="check-9">
-                                        email me daily statistics of created transfer
-                                    </label>
-                                    <input id="check-9" type="checkbox" disabled>
-                                    <span class="fs-checkbox__mark"></span>
-                                </label>
-                            </div>
+        <?php if ($guest->options || $guest->transfer_options) { ?>
+            <div class="row">
+                <div class="col">
+                    <div class="fs-invitation-detail__options">
+                        <h2>{tr:invitation_selected_options}</h2>
+                        <div class="row">
+                            <?php if ($guest->options) { ?>
+                                <div class="col col-sm-12 col-md-6">
+                                    <h3>{tr:advanced_invitation_options}</h3>
+
+                                    <?php
+                                    $optionshtml = "";
+                                    if(count(array_filter($guest->options))) {
+                                        foreach (array_keys(array_filter($guest->options)) as $o) {
+                                            $checkboxClass = "fs-checkbox--disabled";
+
+                                            $optionshtml .= "<div class='fs-invitation-detail__check'>";
+                                            $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
+                                            $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
+                                            $optionshtml .= "<input id='".$o."' type='checkbox' checked disabled>";
+                                            $optionshtml .= "<span class='fs-checkbox__mark'></span>";
+                                            $optionshtml .= "</label>";
+                                            $optionshtml .= "</div>";
+                                            $optionshtml .= "</div>";
+                                        }
+                                    }
+
+                                    if($optionshtml != '') {
+                                        echo $optionshtml;
+                                    } else {
+                                        echo Lang::tr('none') ;
+                                    }
+                                    ?>
+                                </div>
+                            <?php } ?>
+                            <?php if ($guest->transfer_options) { ?>
+                                <div class="col col-sm-12 col-md-6">
+                                    <h3>{tr:advanced_transfer_options}</h3>
+
+                                    <?php
+                                    $optionshtml = "";
+                                    if(count(array_filter($guest->transfer_options))) {
+                                        foreach (array_keys(array_filter($guest->transfer_options)) as $o) {
+                                            if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
+                                                // this option will never be shown to the user
+                                            } else {
+                                                $checkboxClass = $o == TransferOptions::EMAIL_DAILY_STATISTICS ? "" : "fs-checkbox--disabled";
+
+                                                $optionshtml .= "<div class='fs-invitation-detail__check'>";
+                                                $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
+                                                $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
+
+                                                if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
+                                                    $optionshtml .= "<input id='".$o."' data-option='".TransferOptions::EMAIL_DAILY_STATISTICS."' type='checkbox' checked>";
+                                                } else {
+                                                    $optionshtml .= "<input id='".$o."' type='checkbox' checked disabled>";
+                                                }
+
+                                                $optionshtml .= "<span class='fs-checkbox__mark'></span>";
+                                                $optionshtml .= "</label>";
+                                                $optionshtml .= "</div>";
+                                                $optionshtml .= "</div>";
+                                            }
+                                        }
+                                    }
+
+                                    if($optionshtml != '') {
+                                        echo $optionshtml;
+                                    } else {
+                                        echo Lang::tr('none') ;
+                                    }
+                                    ?>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php } ?>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="fs-invitation-detail__actions">
-                    <button type="button" class="fs-button fs-button--danger">
-                        <i class="fa fa-trash"></i>
-                        <span>Delete invitation</span>
-                    </button>
+        <?php if ($guest->status == 'available') { ?>
+            <div class="row">
+                <div class="col-12">
+                    <div class="fs-invitation-detail__actions">
+                        <button type="button" class="fs-button fs-button--danger delete">
+                            <i class="fa fa-trash"></i>
+                            <span>{tr:delete_invitation}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        <?php } ?>
     </div>
 </div>
 
