@@ -260,6 +260,7 @@ if ($transfer_id) {
                                                 $optionshtml .= "<span class='fs-checkbox__mark'></span>";
                                                 $optionshtml .= "</label>";
                                                 $optionshtml .= "</div>";
+                                                $optionshtml .= "</div>";
                                             }
                                         }
                                     }
