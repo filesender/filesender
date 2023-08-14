@@ -474,7 +474,7 @@ if(Auth::isGuest()) {
                                                     <label for="message">
                                                         {tr:message}
                                                     </label>
-                                                    <textarea id="message" name="message" rows="3" placeholder="Optional message"></textarea>
+                                                    <textarea id="message" name="message" rows="3" placeholder="{tr:optional_message}"></textarea>
                                                 </div>
 
                                                 <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
@@ -845,7 +845,7 @@ if(Auth::isGuest()) {
                                     {tr:add_transfer_custom_name}
                                 </label>
                                 <div class="fs-input-inline">
-                                    <input type="text" id="transfer-name" name="transfer-name" placeholder="Enter the transfer name (optional)">
+                                    <input type="text" id="transfer-name" name="transfer-name" placeholder="{tr:enter_transfer_name}">
                                     <button type="button" class="fs-button">
                                         <i class="fa fa-save"></i>
                                         {tr:save}

@@ -827,3 +827,4 @@ $lang['invitation_expires_in'] = 'The invitation expires in';
 $lang['see_invitation_details'] = 'See invitation details';
 $lang['go_to_invitations'] = 'Go to all my invitations';
 $lang['optional_message'] = 'Optional message';
+$lang['enter_transfer_name'] = 'Enter the transfer name (optional)';
