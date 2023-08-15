@@ -159,7 +159,7 @@ ticket icon.
 su -l
 mkdir /opt/filesender
 cd    /opt/filesender
-git clone https://github.com/filesender/filesender.git filesender
+git clone --depth 1 --branch master https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
 git checkout master
