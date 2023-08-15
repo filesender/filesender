@@ -731,7 +731,7 @@ You will want to update all FIXME in password fields.
 $config['site_url'] = 'https://127.0.0.1/filesender';                
 
 // Url of simplesamlphp
-$config['auth_sp_saml_simplesamlphp_url'] ='https://127.0.0.1/simplesaml/'; 
+$config['auth_sp_saml_simplesamlphp_url'] ='https://127.0.0.1/simplesaml/';
 
 // String, UID's (from  $config['saml_uid_attribute'])
 // that have Administrator permissions
