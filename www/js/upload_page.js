@@ -1579,8 +1579,14 @@ filesender.ui.handle_get_a_link_change = function() {
             ' .fieldcontainer[data-option="email_me_copies"],' +
             ' .fieldcontainer[data-related-to="emailfrom"],' +
             ' .custom-checkbox[data-option="add_me_to_recipients"],' +
+            ' .fieldcontainer[data-related-to="verify_email_to_download"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
     ).toggle(!choice);
+
+    form.find(
+        ' .fieldcontainer[data-option="hide_sender_email"]'
+    ).toggle(!choice);
+    
     filesender.ui.evalUploadEnabled();
 }
 
@@ -2051,22 +2057,6 @@ $(function() {
         return false;
     });
     
-    form.find('input[name="get_a_link"]').on('change', function() {
-        var choice = $(this).is(':checked');
-        form.find(
-            '.fieldcontainer[data-related-to="message"], .recipients,' +
-                ' .fieldcontainer[data-option="add_me_to_recipients"],' +
-                ' .fieldcontainer[data-option="email_me_copies"],' +
-                ' .fieldcontainer[data-related-to="emailfrom"],' +
-                ' .fieldcontainer[data-related-to="verify_email_to_download"],' +
-                ' .custom-checkbox[data-option="add_me_to_recipients"],' +
-                ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
-        ).toggle(!choice);
-        form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(choice);
-        filesender.ui.evalUploadEnabled();
-    });
     
     form.find('input[name="add_me_to_recipients"]').on('change', function() {
         filesender.ui.evalUploadEnabled();
@@ -2338,7 +2328,9 @@ $(function() {
     window.filesender.onPBKDF2AllEnded = function() {
         filesender.ui.uploadLogPrepend(lang.tr('upload_all_terasender_workers_completed_pbkdf2'));
     }
-    
+
+    form.find('.fieldcontainer[data-option="get_a_link"]').hide();
+
     
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
@@ -2355,7 +2347,7 @@ $(function() {
                 i.val(transfer_options[option]);
             }
         }
-        form.find('input[name="get_a_link"]').trigger('change');
+        form.find('input[data-option="get_a_link"]').trigger('change');
         
     } else if(failed) {
         var id = failed.id;
