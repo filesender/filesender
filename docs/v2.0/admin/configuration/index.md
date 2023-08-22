@@ -113,6 +113,7 @@ A note about colours;
 * [email_use_html](#email_use_html)
 * [email_newline](#email_newline)
 * [email_headers](#email_headers)
+* [email_send_with_minus_r_option](#email_send_with_minus_r_option)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 * [translatable_emails_lifetime](#translatable_emails_lifetime)
 
@@ -1239,6 +1240,17 @@ User language detection is done in the following order:
 * __default:__ false
 * __available:__ since version 2.x
 * __comment:__ E.g. add to your `$config['email_headers'] = array('Auto-Submitted' => 'auto-generated', 'X-Auto-Response-Suppress' => 'All');` to add these 2 headers with their respective values to all outgoing emails.
+
+
+### email_send_with_minus_r_option
+
+* __description:__ Use the -r option to mail() if return_path is set. This was the default behavior in all 2.x series released but the FileSender 2.41 release.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.42
+* __comment:__ This may allow for FileSender in container installations to work where the -r option is not desired and can be turned off for that.
+
 
 ### relay_unknown_feedbacks
 
