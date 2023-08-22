@@ -89,60 +89,6 @@ if(Auth::isGuest()) {
 
 
 
-$displayoption = function($name, $cfg, $disable = false, $forcedOption = false,$relatedTo = '') use ($guest_can_only_send_to_creator) {
-    $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
-
-    
-    
-    $default = $cfg['default'];
-    if( !$forcedOption ) {
-        if(Auth::isSP() && !$text)
-            $default = Auth::user()->defaultTransferOptionState($name);
-    }
-    
-    $checked = $default ? 'checked="checked"' : '';
-    $disabled = $disable ? 'disabled="disabled"' : '';
-    $extraDivAttrs = '';
-    if(Auth::isGuest() && $disable) {
-        if( Config::get('guest_upload_page_hide_unchangable_options')) {
-            $extraDivAttrs .= ' hidden="true" ';
-        }
-    }
-
-    // if they are a guest and can only send to the user
-    // who sent the guest voucher to them then don't even
-    // show the get a link option.
-    if(Auth::isGuest() && $name == 'get_a_link') {
-        if($name == 'get_a_link' && $guest_can_only_send_to_creator ) {
-            return;
-        }
-    }
-    
-    if( $relatedTo != '' ) {
-        echo '<div class="fieldcontainer" data-related-to="'.$relatedTo.'">';
-    }
-    echo '<div class="form-check form-switch custom-control custom-switch" data-option="'.$name.'" '. $extraDivAttrs .'>';
-
-    if($text) {
-        echo '    <label for="'.$name.'" class="form-check-label">'.Lang::tr($name).'</label>';
-        echo '    <input id="'.$name.'" name="'.$name.'" class="form-check-input uploadoption" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
-        
-    } else {
-        echo '  <input id="'.$name.'" name="'.$name.'" class="form-check-input uploadoption" type="checkbox" '.$checked.' '.$disabled.' />';
-        echo '  <label for="'.$name.'" class="form-check-label">'.Lang::tr($name).'</label>';
-    }
-    
-    if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
-        echo '<div class="info warning">'.Lang::tr('enable_recipient_email_download_complete_warning').'</div>';
-    if($name == TransferOptions::WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE && Browser::instance()->isFirefox)
-        echo '<div class="info message"><a class="enable_web_notifications" href="#">'.Lang::tr('click_to_enable_web_notifications').'</a></div>';
-    
-    echo '</div>';
-    if( $relatedTo != '' ) {
-        echo '</div>';
-    }
-    
-};
 
 
 
@@ -576,7 +522,7 @@ if(Auth::isGuest()) {
                         if( $name == 'add_me_to_recipients' ) {
                             $upload_options_handled[$name] = 1;
                             $forcedOption = false;
-                            $displayoption($name, $cfg, Auth::isGuest(),$forcedOption,array("message"));
+                            $displayoption($name, $cfg, Auth::isGuest(),$forcedOption);
                         }
                     }
                     ?>
