@@ -255,7 +255,7 @@ class Archiver
                 $zipfile = new ZipStream\File($archive, $archivedName, $fileopts);
                 
                 $stream = $file->getStream();
-                $zipfile->processStream(new ZipStream\DeflateStream($stream));
+                $zipfile->processStream(new ZipStream\Stream($stream));
                 fclose($stream);
             }
 
