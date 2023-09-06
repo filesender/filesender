@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7d8cf1a63696e3dbb9206a15e7fe86d",
+    "content-hash": "bf9df9d751b7ee5f73f4609e067ecde5",
     "packages": [
         {
             "name": "barracudanetworks/archivestream-php",
