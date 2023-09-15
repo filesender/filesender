@@ -1808,4 +1808,10 @@ div.not_displayed {
     style: align:center;
     vertical-align: middle;
 }
+.verify_email_to_download_col1 {
+    width: 25%;
+}
+.verify_email_to_download_col2 {
+    width: 75%;
+}
 
