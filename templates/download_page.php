@@ -52,6 +52,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     }
 }
 
+$showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links'));
 
 ?>
 <div class="box">
@@ -289,6 +290,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
                 {tr:download}
             </a>
             <span class="downloadprogress"/>
+            <?php if($showdownloadlinks) { ?>
             <br>
             <span class="directlink">
             <?php
@@ -299,6 +301,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
               }
             ?>
             </span>
+            <?php } ?>
         </div>
     <?php } ?>
         <?php if($canDownloadArchive) { ?>
@@ -315,6 +318,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
                 {tr:archive_download}
             </a>
             </div>
+            <?php if($showdownloadlinks) { ?>
             <br>
             <span class="directlinkArchive">
             <?php
@@ -326,6 +330,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             ?>
             </span>
             <br><br>
+            <?php } ?>
             <?php if($canDownloadAsTar) { ?>
             <div class="archive_tar_download_frame">
             <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_tar_download" title="{tr:archive_tar_download}">
@@ -333,6 +338,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
                 {tr:archive_tar_download}
             </a>
             </div>            
+            <?php if($showdownloadlinks) { ?>
             <br>
             <span class="directlinkArchive">
             <?php
@@ -343,6 +349,7 @@ if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
               }
             ?>
             </span>
+            <?php } ?>
             <?php } ?>
 
             <div class="archive_download_framex hidden">

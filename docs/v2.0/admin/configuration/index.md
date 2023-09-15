@@ -36,6 +36,7 @@ A note about colours;
 * [download_verification_code_enabled](#download_verification_code_enabled)
 * [download_verification_code_valid_duration](#download_verification_code_valid_duration)
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
+* [download_show_download_links](#download_show_download_links)
 
 
 ## Security settings
@@ -434,6 +435,14 @@ A note about colours;
 * __available:__ since version 2.41
 * __comment:__ Default should be ok.
 
+### download_show_download_links
+
+* __description:__ show direct download urls on download page
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.42
+* __comment:__ Default should be ok.
 
 
 
