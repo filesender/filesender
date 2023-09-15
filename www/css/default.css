@@ -1263,7 +1263,7 @@ table.guests .guest .to .errors .details {
 }
 
 .download_page .files .file {
-    height: 2.5em;
+    height: 5em;
     margin: 0.25em;
     padding: 1.2em 0.5em 0.5em 0.5em;
 }
@@ -1298,7 +1298,7 @@ table.guests .guest .to .errors .details {
 
 
 .download_page .archive {
-    margin-top: 4em;
+    margin-top: 2em;
     text-align: center;
 }
 
