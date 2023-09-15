@@ -1341,12 +1341,12 @@ table.guests .guest .to .errors .details {
     float: right;
     padding-right: 10px;
     color: #999999;
-    font-size: 0.7em;
+    font-size: 10px;
 }
 
 .directlinkArchive {
     color: #999999;
-    font-size: 0.7em;
+    font-size: 10px;
 }
 
 /* Admin sections */
