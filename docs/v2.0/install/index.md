@@ -620,7 +620,7 @@ $ createdb -E UTF8 -O filesender filesender
 
 On RedHat/CentOS, run:
 
-	yum install -y mariadb php-mysql mysql_secure_installation
+	yum install -y mariadb-server php-mysqlnd
 
 On Debian, run:
 
