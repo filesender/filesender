@@ -1063,13 +1063,14 @@ for example a prefix of "Test-" could create bucket "Test-2023-04-30". An empty 
 
 ### db_table_prefix
 
-* __description:__ table prefix to use.  Allows you to have several filesender instances in one database.  For example if you buy hosting with 1 database and still want multiple filesender instances.
-* __mandatory:__ <span style="background-color:orange">?  Would think not?</yes>
+* __description:__ This is known to have issues in 2.41 and is now deprecated. This feature will be removed in the 3.x release. table prefix to use.  Allows you to have several filesender instances in one database.  For example if you buy hosting with 1 database and still want multiple filesender instances.
+* __mandatory:__ no</yes>
 * __type:__ string
 * __default:__ -
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ 
+  Deprecated. This feature will be removed in the 3.x release
 
 
 ### db_driver_options
