@@ -727,7 +727,17 @@ This way the encryption_key_version_new_files can be updated and existing upload
 * __description:__ Some actions have hard or soft limits that can be applied. For example, actions that result in sending an email may have a soft limit that will perform the action but not send an email after the nominated number of actions is performed per time period. This allows for the system to prevent a nefarious guest from sending too many emails. The database table ratelimithistorys is used to track the information needed for this option. The time period for actions performed used for the initial implementation is 24 hours. For example, with the right setting you can not create more than 200 guests in a 24 hour block of time. There are two types of limits, hard and soft. A hard limit will be checked before performing an action and if the limit is already reached the action will not be performed. For example, creating a guest or sending a transfer_reminder is a hard limit. This is because creating a guest may require sending an email to be performed so it is not useful to try to perform the action if the rate limit is already reached. Some actions are soft limits such as guest_upload_start and will only effect the sending of an email. For the guest_upload_start example, if the limit is 30 per day then a guest may start an upload 1000 times and you will only receive emails for the first 30 attempts. This way the system remains functional but does not try to produce excessive emails while it is performing that function. In general a soft limit is to protect against excessive email but not to limit the use of the system itself.
 * __mandatory:__ no
 * __type:__ array
-* __default:__
+* __default:__ '$config['rate_limits'] = array(
+            'email' => array(
+            'guest_created'      => array( 'day' => 100 ),
+            'report_inline'      => array( 'day' => 100 ),
+            'transfer_reminder'  => array( 'day' => 100 ),
+            'download_complete'  => array( 'day' => 500 ),
+            'files_downloaded'   => array( 'day' => 500 ),
+            'guest_upload_start' => array( 'day' => 100 ),
+            'transfer_available' => array( 'day' => 500 ),
+        ),
+    );'
 * __available:__ since version 2.33
 * __1.x name:__
 * __comment:__ For current defaults see https://github.com/filesender/filesender/search?q=rate_limits+in%3Afile+path%3Aincludes
