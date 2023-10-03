@@ -740,7 +740,7 @@ This way the encryption_key_version_new_files can be updated and existing upload
     );'
 * __available:__ since version 2.33
 * __1.x name:__
-* __comment:__ For current defaults see https://github.com/filesender/filesender/search?q=rate_limits+in%3Afile+path%3Aincludes
+* __comment:__ For current defaults see https://github.com/search?q=repo%3Afilesender%2Ffilesender+rate_limits+path%3Aincludes
 * __*Standard parameters for all options:*__
 	* __day__(integer): The number of times this action can be performed per day.
 ed off by the user.
