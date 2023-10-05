@@ -99,6 +99,7 @@ parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
+parser.add_argument("-d", "--subfolder", action="store_true")#name.
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
@@ -132,6 +133,8 @@ guest = args.guest
 user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
+preserve_directories = args.subfolder
+
 if args.username is not None:
   username = args.username
   
@@ -398,6 +401,21 @@ def postGuest(user_id, recipient, subject=None, message=None, expires=None, opti
     {}
   )
 
+def findRootPath(files):
+  "Returns the shared root path if one exists to proprly set subdirectories."
+  workingString = os.path.abspath(files[0])#required arg so one will always be present.
+  lastFolderIndex = max(workingString.rfind("/"),workingString.rfind("\\"))#windows,unix safety...
+  workingString = workingString[0:lastFolderIndex]
+  for f in files[1:]:
+    limitW = len(workingString)
+    f = os.path.abspath(f)
+    limitF = len(f)
+    for i in range(min(limitW,limitW)):
+      if workingString[i] != f[i]:#remove any folders not in all strings.
+        workingString = workingString[:i]
+        break
+  return workingString + "/"
+
 ##########################################################################
 
 #postTransfer
@@ -417,20 +435,30 @@ if guest:
 
 files = {}
 filesTransfer = []
+fileRootPath = ""
+if preserve_directories:
+  fileRootPath = findRootPath(args.files)
+  if debug:
+    print("Root path identified : "+fileRootPath)
+
+fake_folders = {}
 for f in args.files:
   fn_abs = os.path.abspath(f)
   fn = os.path.basename(fn_abs)
+  if preserve_directories and len(fileRootPath) > 2:    
+    fn = fn_abs[len(fileRootPath):].replace("\\","/")#todo: maybe safer way here. what edge case?
+    fake_folders[fn] = fn_abs
   size = os.path.getsize(fn_abs)
-
   files[fn+':'+str(size)] = {
+
     'name':fn,
+
     'size':size,
     'path':fn_abs
   }
   filesTransfer.append({'name':fn,'size':size})
 
 troptions = {'get_a_link':0}
-
 
 transfer = postTransfer( username,
                          filesTransfer,
@@ -443,7 +471,13 @@ transfer = postTransfer( username,
 
 try:
   for f in transfer['files']:
-    path = files[f['name']+':'+str(f['size'])]['path']
+    if f['size'] == 0: #f size can be 0 because of directories, these can be safely skipped.
+      continue
+    if f['name'] in fake_folders:
+      path = fake_folders[f['name']]#files[f['name'][11:]+':'+str(f['size'])]['path'] change to this.
+      print(path) 
+    else:
+      path = files[f['name']+':'+str(f['size'])]['path']
     size = files[f['name']+':'+str(f['size'])]['size']
     #putChunks
     if debug:
