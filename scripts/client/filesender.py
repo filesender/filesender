@@ -99,7 +99,7 @@ parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
-parser.add_argument("-d", "--subfolder", action="store_true")#name.
+parser.add_argument("-d", "--directories", action="store_true")
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
@@ -133,7 +133,7 @@ guest = args.guest
 user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
-preserve_directories = args.subfolder
+preserve_directories = args.directories
 
 if args.username is not None:
   username = args.username
@@ -446,7 +446,7 @@ for f in args.files:
   fn_abs = os.path.abspath(f)
   fn = os.path.basename(fn_abs)
   if preserve_directories and len(fileRootPath) > 2:    
-    fn = fn_abs[len(fileRootPath):].replace("\\","/")#todo: maybe safer way here. what edge case?
+    fn = fn_abs[len(fileRootPath):].replace("\\","/")
     fake_folders[fn] = fn_abs
   size = os.path.getsize(fn_abs)
   files[fn+':'+str(size)] = {
@@ -474,8 +474,7 @@ try:
     if f['size'] == 0: #f size can be 0 because of directories, these can be safely skipped.
       continue
     if f['name'] in fake_folders:
-      path = fake_folders[f['name']]#files[f['name'][11:]+':'+str(f['size'])]['path'] change to this.
-      print(path) 
+      path = fake_folders[f['name']] 
     else:
       path = files[f['name']+':'+str(f['size'])]['path']
     size = files[f['name']+':'+str(f['size'])]['size']
