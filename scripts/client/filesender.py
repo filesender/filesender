@@ -75,11 +75,6 @@ if 'user' in config:
   username = config['user'].get('username')
   apikey = config['user'].get('apikey')
 
-
-
-  
-
-
 #argv
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -99,12 +94,10 @@ parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
-parser.add_argument("-d", "--directories", action="store_true")
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
 parser.add_argument("--retries")
-
 
 requiredNamed = parser.add_argument_group('required named arguments')
 
@@ -124,7 +117,7 @@ requiredNamed.add_argument("-r", "--recipients", required=True)
 # if username is not a valid email address then ensure user supplies a valid email address
 if not bool(re.match("([^@|\s]+@[^@]+\.[^@|\s]+)", username)):
   requiredNamed.add_argument("-f", "--from_address", help="filesender email from address", required=True)
-        
+
 args = parser.parse_args()
 debug = args.verbose
 progress = args.progress
@@ -133,8 +126,6 @@ guest = args.guest
 user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
-preserve_directories = args.directories
-
 if args.username is not None:
   username = args.username
   
@@ -151,7 +142,7 @@ if args.apikey is not None:
 # as an argument (i.e. -f/--from_address) or else the script will fail.
 from_address = username
 if hasattr(args, 'from_address'):
-  from_address = args.from_address  
+  from_address = args.from_address
 
 #configs
 try:
@@ -174,13 +165,15 @@ upload_chunk_size = info_response.json()['upload_chunk_size']
 
 try:
     regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
-    worker_count =  int(regex_match.group(1))
+    worker_count = int(regex_match.group(1))
     regex_match = re.search(r"terasender_worker_start_must_complete_within_ms\D*(\d+)",config_response.text)
     worker_timeout = int(regex_match.group(1)) // 1000
     regex_match = re.search(r"terasender_worker_max_chunk_retries\D*(\d+)",config_response.text)
     worker_retries = int(regex_match.group(1))
     regex_match = re.search(r"terasender_enabled\W*(\w+)",config_response.text)
     terasender_enabled = regex_match.group(1) == "true"
+    regex_match = re.search(r"max_transfer_files\D*(\d+)",config_response.text)
+    max_transfer_files = int(regex_match.group(1))
 except Exception as e:
     print("Failed to parse match")
     print(e)
@@ -188,6 +181,7 @@ except Exception as e:
     worker_timeout = 180
     max_chunk_retries = 20
     terasender_enabled = False
+    max_transfer_files = 30
 
 if terasender_enabled:
   if user_threads:
@@ -200,7 +194,6 @@ if user_timeout:
 if user_retries:
   worker_retries  = min(int(user_retries), worker_retries)
 
-
 if debug:
   print('base_url          : '+base_url)
   print('username          : '+username)
@@ -209,7 +202,6 @@ if debug:
   print('recipients        : '+args.recipients)
   print('files             : '+','.join(args.files))
   print('insecure          : '+str(insecure))
-
 
 ##########################################################################
 
@@ -248,7 +240,7 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
   bkey = bytearray()
   bkey.extend(map(ord, apikey))
   data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
-
+  #print("signed: " + str(signed))
   url = base_url+path+'?'+('&'.join(flatten(data)))
   headers = {
     "Accept": "application/json",
@@ -378,7 +370,6 @@ def deleteTransfer(transfer):
     {}
   )
 
-
 def postGuest(user_id, recipient, subject=None, message=None, expires=None, options=[]):
 
   if expires is None:
@@ -401,20 +392,9 @@ def postGuest(user_id, recipient, subject=None, message=None, expires=None, opti
     {}
   )
 
-def findRootPath(files):
-  "Returns the shared root path if one exists to proprly set subdirectories."
-  workingString = os.path.abspath(files[0])#required arg so one will always be present.
-  lastFolderIndex = max(workingString.rfind("/"),workingString.rfind("\\"))#windows,unix safety...
-  workingString = workingString[0:lastFolderIndex]
-  for f in files[1:]:
-    limitW = len(workingString)
-    f = os.path.abspath(f)
-    limitF = len(f)
-    for i in range(min(limitW,limitW)):
-      if workingString[i] != f[i]:#remove any folders not in all strings.
-        workingString = workingString[:i]
-        break
-  return workingString + "/"
+def release_list(a):
+   del a[:]
+   del a
 
 ##########################################################################
 
@@ -433,30 +413,44 @@ if guest:
                  options=troptions)
   exit(0)
 
+fileList = []
+i = 0
+while i < len(args.files):
+  fn_abs = os.path.abspath(args.files[i])
+  if(os.path.isdir(fn_abs)):
+    args.files.extend(
+      map(lambda s: fn_abs+os.sep+s,
+        os.listdir(args.files[i])))
+  else:
+    fileList.append(fn_abs)
+    if (len(fileList) > max_transfer_files):
+      print("You have exceeded the maximum number of files allowed in a transfer.")
+      exit(1)
+  i+=1
+fileList.sort()
+
+fileRootPath = ''
+if len(fileList)>1:
+  fileRootPath = os.path.commonpath(fileList)
+  if debug and len(fileRootPath) > 1:
+    print("root path to all files is: "+fileRootPath)
+
 files = {}
 filesTransfer = []
-fileRootPath = ""
-if preserve_directories:
-  fileRootPath = findRootPath(args.files)
-  if debug:
-    print("Root path identified : "+fileRootPath)
-
-fake_folders = {}
-for f in args.files:
-  fn_abs = os.path.abspath(f)
+for fn_abs in fileList:
   fn = os.path.basename(fn_abs)
-  if preserve_directories and len(fileRootPath) > 2:    
-    fn = fn_abs[len(fileRootPath):].replace("\\","/")
-    fake_folders[fn] = fn_abs
+  if len(fileRootPath) > 1:
+    fn = fn_abs[len(fileRootPath)+1:].replace("\\","/")
+
   size = os.path.getsize(fn_abs)
+
   files[fn+':'+str(size)] = {
-
     'name':fn,
-
     'size':size,
     'path':fn_abs
   }
   filesTransfer.append({'name':fn,'size':size})
+release_list(fileList) # don't need it anymore
 
 troptions = {'get_a_link':0}
 
@@ -467,16 +461,13 @@ transfer = postTransfer( username,
                          message=args.message,
                          expires=None,
                          options=troptions)['created']
-#print(transfer)
 
 try:
   for f in transfer['files']:
     if f['size'] == 0: #f size can be 0 because of directories, these can be safely skipped.
       continue
-    if f['name'] in fake_folders:
-      path = fake_folders[f['name']] 
-    else:
-      path = files[f['name']+':'+str(f['size'])]['path']
+
+    path = files[f['name']+':'+str(f['size'])]['path']
     size = files[f['name']+':'+str(f['size'])]['size']
     #putChunks
     if debug:
