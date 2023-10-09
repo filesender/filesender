@@ -427,6 +427,7 @@ while i < len(args.files):
       print("You have exceeded the maximum number of files allowed in a transfer.")
       exit(1)
   i+=1
+fileList.sort()
 
 fileRootPath = ''
 if len(fileList)>1:
