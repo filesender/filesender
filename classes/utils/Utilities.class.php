@@ -354,7 +354,7 @@ class Utilities
             return '127.0.0.1';
         }
         
-        return array_pop($ips);
+        return $ips[0];
     }
     
     /**
