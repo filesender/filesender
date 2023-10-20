@@ -45,6 +45,7 @@ try:
   import json
   import configparser
   from os.path import expanduser
+  from math import ceil
 except Exception as e:
   print(type(e))
   print(e.args)
@@ -392,9 +393,22 @@ def postGuest(user_id, recipient, subject=None, message=None, expires=None, opti
     {}
   )
 
+def send_file_chunk(transfer_file_index, offset):
+  transfer_file = transfer['files'][transfer_file_index]
+  filepath = files[transfer_file['name']+':'+str(transfer_file['size'])]['path']
+  #putChunks
+  if debug:
+    print('putChunks: '+path)
+  with open(filepath, mode='rb', buffering=0) as fin:
+    fin.seek(offset)
+    fi = fin.read(upload_chunk_size)
+    putChunk(transfer, transfer_file, fi, offset)
+  return transfer_file_index
+
+
 def release_list(a):
-   del a[:]
-   del a
+  del a[:]
+  del a
 
 ##########################################################################
 
@@ -427,7 +441,6 @@ while i < len(args.files):
       print("You have exceeded the maximum number of files allowed in a transfer.")
       exit(1)
   i+=1
-fileList.sort()
 
 fileRootPath = ''
 if len(fileList)>1:
@@ -461,33 +474,36 @@ transfer = postTransfer( username,
                          message=args.message,
                          expires=None,
                          options=troptions)['created']
-
+fileIndexQueue = []
+offsettQueue = []
 try:
-  for f in transfer['files']:
+  for indexOfFile,f in enumerate(transfer['files']):
+    #Prepare files for transfer
     if f['size'] == 0: #f size can be 0 because of directories, these can be safely skipped.
       continue
-
+    transfer['files'][indexOfFile]['p_total_chunks'] = ceil(f['size']/upload_chunk_size)
+    transfer['files'][indexOfFile]['p_progressed_chunks'] = 0
     path = files[f['name']+':'+str(f['size'])]['path']
     size = files[f['name']+':'+str(f['size'])]['size']
     #putChunks
-    if debug:
-      print('putChunks: '+path)
-    with open(path, mode='rb', buffering=0) as fin:
-      progressed_cunks = 0
-      with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as e:
-        fut = [e.submit((lambda x:putChunk(transfer, f, fin.read(upload_chunk_size), x)), i) for i in range(0,size,upload_chunk_size)]
-        for r in concurrent.futures.as_completed(fut):
-          if progress:
-            progressed_cunks += upload_chunk_size
-            print('Uploading: '+path+' '+' '+str(min(round(progressed_cunks/size*100),100))+'%')
-
-    #fileComplete
-    if debug:
-      print('fileComplete: '+path)
-    fileComplete(transfer,f)
-    if progress:
-      print('Uploading: '+path+' '+str(size)+' 100%')
-
+    
+    for i in range(0,size,upload_chunk_size):
+      fileIndexQueue.append(indexOfFile)
+      offsettQueue.append(i)
+  #begin transfer
+  with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as e:
+    fut = list(map(lambda fi,o: e.submit(send_file_chunk,fi,o),fileIndexQueue,offsettQueue))
+    for r in concurrent.futures.as_completed(fut):
+      transfer['files'][r.result()]['p_progressed_chunks'] += 1
+      if progress:
+        print('Uploading: '+transfer['files'][r.result()]['name']+' '+str(min(round(
+          transfer['files'][r.result()]['p_progressed_chunks']/
+          transfer['files'][r.result()]['p_total_chunks']*100),100))+'%')
+      
+      if transfer['files'][r.result()]['p_progressed_chunks'] >= transfer['files'][r.result()]['p_total_chunks']:
+        fileComplete(transfer,transfer['files'][r.result()])
+        if progress:
+          print(f"{transfer['files'][r.result()]['name']} complete")
 
   #transferComplete
   if debug:
@@ -505,3 +521,4 @@ except Exception as inst:
   if debug:
     print('deleteTransfer')
   deleteTransfer(transfer)
+sys.exit(0)
