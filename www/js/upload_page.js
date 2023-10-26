@@ -1816,6 +1816,10 @@ $(function() {
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };
+
+    filesender.ui.getALink = false;
+    filesender.ui.nodes.gal.checkbox.prop('checked', false);
+
     form.find('.basic_options [data-option] input, .advanced_options [data-option] input').each(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
