@@ -607,7 +607,7 @@ if(Auth::isGuest()) {
                                             </button>
                                             <div class="fs-collapse__content">
                                                 <div class="row">
-                                                    <div class="col-12">
+                                                    <div class="col-12 basic_options">
                                                         <strong>
                                                             {tr:advanced_upload_settings}
                                                         </strong>
@@ -629,7 +629,7 @@ if(Auth::isGuest()) {
                                                 </div>
                                                 <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                                                     <div class="row">
-                                                        <div class="col-12">
+                                                        <div class="col-12 advanced_options">
                                                             <strong>
                                                                 {tr:terasender_settings}
                                                             </strong>

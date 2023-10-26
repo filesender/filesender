@@ -245,14 +245,14 @@ if ($transfer_id) {
                                             if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
                                                 // this option will never be shown to the user
                                             } else {
-                                                $checkboxClass = $o == TransferOptions::EMAIL_DAILY_STATISTICS ? "" : "fs-checkbox--disabled";
+                                                $checkboxClass = "fs-checkbox--disabled";
 
                                                 $optionshtml .= "<div class='fs-transfer-detail__check'>";
                                                 $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
                                                 $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
 
                                                 if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
-                                                    $optionshtml .= "<input id='".$o."' data-option='".TransferOptions::EMAIL_DAILY_STATISTICS."' type='checkbox' checked>";
+                                                    $optionshtml .= "<input id='".$o."' data-option='".TransferOptions::EMAIL_DAILY_STATISTICS."' type='checkbox' checked disabled>";
                                                 } else {
                                                     $optionshtml .= "<input id='".$o."' type='checkbox' checked disabled>";
                                                 }
