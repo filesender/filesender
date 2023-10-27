@@ -2,7 +2,6 @@
     flex: 1;
     background: var(--fs-light);
     padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
-    justify-content: flex-start;
 }
 
 .fs-base-page__header {
@@ -22,4 +21,22 @@
     text-align: left !important;
     margin-left: 0;
     margin-bottom: var(--fs-spacing-8x);
+}
+
+.fs-base-page__content {
+    display: flex;
+    flex-direction: column;
+}
+
+.fs-base-page__header--center,
+.fs-base-page__content--center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.fs-base-page h3, .fs-base-page.h3, .fs-base-page h2,
+.fs-base-page .h2, .fs-base-page h1, .fs-base-page .h1 {
+    width: auto !important;
+    font-weight: bold;
 }
