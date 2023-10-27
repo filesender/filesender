@@ -16,9 +16,8 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 <header>
 
     <nav>
-        <a class="fs-link fs-link--no-hover" href="">
-            <img src="{cfg:site_url}/images/filesender-icon.png" alt="Brand">
-            <span>FileSender</span>
+        <a class="fs-link fs-link--no-hover" href="{cfg:site_url}">
+            <img src="{cfg:site_url}images/filesender-logo.svg" alt="Filesender Logo">
         </a>
         <ul>
             <?php

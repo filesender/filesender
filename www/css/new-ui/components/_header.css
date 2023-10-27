@@ -27,12 +27,17 @@ header nav ul {
   padding: 0;
 }
 
+header nav a {
+  display: inline-block;
+  height: 100%;
+}
+
 header nav ul li + li {
   margin-left: var(--fs-spacing-base);
 }
 
 header nav img {
-  max-height: var(--fs-spacing-9x);
+  max-height: var(--fs-spacing-8x);
 }
 
 header .fs-link {
