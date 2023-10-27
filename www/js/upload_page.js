@@ -1554,8 +1554,14 @@ filesender.ui.handle_get_a_link_change = function() {
         ' .fieldcontainer[data-option="email_me_copies"],' +
         ' .fieldcontainer[data-related-to="emailfrom"],' +
         ' .custom-checkbox[data-option="add_me_to_recipients"],' +
-        ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
+        ' .fieldcontainer[data-option="enable_recipient_email_download_complete"],' +
+        ' .fieldcontainer[data-related-to="verify_email_to_download"]'
     ).toggle(!choice);
+
+    form.find(
+        ' .fieldcontainer[data-option="hide_sender_email"]'
+    ).toggle(!choice);
+
     filesender.ui.evalUploadEnabled();
 }
 
@@ -2156,6 +2162,7 @@ $(function() {
         $('.advanced_options').slideToggle();
         return false;
     });
+
     form.find('.toggle_hidden_options').on('click', function() {
         $('.hidden_options').slideToggle();
         return false;
@@ -2169,27 +2176,27 @@ $(function() {
             ' .fieldcontainer[data-option="email_me_copies"],' +
             ' .fieldcontainer[data-related-to="emailfrom"],' +
             ' .fieldcontainer[data-related-to="verify_email_to_download"],' +
-            ' .fieldcontainer[data-related-to="verify_email_to_download"],' +
             ' .custom-checkbox[data-option="add_me_to_recipients"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
+
+        form.find(
+            ' .fieldcontainer[data-option="hide_sender_email"]'
+        ).toggle(!choice);
+
         form.find(
             ' .fieldcontainer[data-option="hide_sender_email"]'
         ).toggle(choice);
-        form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(choice);
+
         filesender.ui.evalUploadEnabled();
     });
 
     form.find('input[name="transfer-type"]').on('change', function() {
         const value = $('input[name="transfer-type"]:checked' ).val();
         filesender.ui.onChangeTransferType(value);
-        filesender.ui.evalUploadEnabled();
     });
 
     form.find('input[name="add_me_to_recipients"]').on('change', function() {
-        console.log('add_me_to_recipients');
         filesender.ui.evalUploadEnabled();
     });
 
@@ -2473,7 +2480,6 @@ $(function() {
         filesender.ui.uploadLogPrepend(lang.tr('upload_all_terasender_workers_completed_pbkdf2'));
     }
 
-
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
     var auth = $('body').attr('data-auth-type');
@@ -2489,9 +2495,9 @@ $(function() {
                 i.val(transfer_options[option]);
             }
         }
+
         $('input[name="transfer-type"]').trigger('change');
         $('#transfer-email').prop("checked", true);
-
     } else if(failed) {
         var id = failed.id;
         if(filesender.config.chunk_upload_security == 'key') {
