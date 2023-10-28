@@ -91,6 +91,13 @@ window.filesender.crypto_blob_reader = function () {
             
             return this;
         },
+
+        arrayBuffer: function () {
+            var $this = this;
+            this.in_progess = true;
+
+            return $this.blobSlice.arrayBuffer();
+        },
         
         readArrayBuffer: function (callback) {
             var $this = this;

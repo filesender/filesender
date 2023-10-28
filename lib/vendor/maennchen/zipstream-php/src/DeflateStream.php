@@ -12,7 +12,7 @@ class DeflateStream extends Stream
     public function __construct($stream)
     {
         parent::__construct($stream);
-        //trigger_error('Class ' . __CLASS__ . ' is deprecated, delation will be handled internally instead', E_USER_DEPRECATED);
+        trigger_error('Class ' . __CLASS__ . ' is deprecated, delation will be handled internally instead', E_USER_DEPRECATED);
     }
 
     public function removeDeflateFilter(): void

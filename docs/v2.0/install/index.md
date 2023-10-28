@@ -34,7 +34,10 @@ you can report issues with and update the documentation.
 * Apache (or nginx) and PHP version 7.3 or later.
 * A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
-* [SimpleSamlPhp](https://simplesamlphp.org/download/) 1.17.1 or newer.
+* [SimpleSamlPhp](https://simplesamlphp.org/download/) 1.19.7 or
+  newer. There is some support for the 2.x series of SimpleSamlPhp.
+  You may need to modify some files in your SimpleSamlPhp for this to
+  work, see [issue 1467](https://github.com/filesender/filesender/issues/1467).
 
 Note that older versions of PHP may work, but they are not supported
 by the PHP project so it is recommended to avoid them in production. Likewise,
@@ -91,8 +94,8 @@ see something like the following:
 # ls -l /opt/filesender
 total 8
 drwxrwxr-x. 21 root root 4096 Jun  6 15:28 filesender
-lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-1.15.4
-drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-1.15.4
+lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-1.19.7
+drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-1.19.7
 
 # ls -l /opt/filesender/filesender/
 total 160
@@ -159,7 +162,7 @@ ticket icon.
 su -l
 mkdir /opt/filesender
 cd    /opt/filesender
-git clone https://github.com/filesender/filesender.git filesender
+git clone --depth 1 --branch master https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
 git checkout master
@@ -617,7 +620,7 @@ $ createdb -E UTF8 -O filesender filesender
 
 On RedHat/CentOS, run:
 
-	yum install -y mariadb php-mysql mysql_secure_installation
+	yum install -y mariadb-server php-mysqlnd
 
 On Debian, run:
 

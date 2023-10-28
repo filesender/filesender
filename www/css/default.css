@@ -1263,7 +1263,7 @@ table.guests .guest .to .errors .details {
 }
 
 .download_page .files .file {
-    height: 2.5em;
+    height: 3em;
     margin: 0.25em;
     padding: 1.2em 0.5em 0.5em 0.5em;
 }
@@ -1298,7 +1298,7 @@ table.guests .guest .to .errors .details {
 
 
 .download_page .archive {
-    margin-top: 1em;
+    margin-top: 2em;
     text-align: center;
 }
 
@@ -1331,10 +1331,22 @@ table.guests .guest .to .errors .details {
 }
 
 .downloadprogress {
-       float:right;
-       font-size:1.7em;
-       padding-right:20px;
-       min-width: 100px;
+    float:right;
+    font-size:1.7em;
+    padding-right:20px;
+    min-width: 100px;
+}
+
+.directlink {
+    float: right;
+    padding-right: 10px;
+    color: #999999;
+    font-size: 10px;
+}
+
+.directlinkArchive {
+    color: #999999;
+    font-size: 10px;
 }
 
 /* Admin sections */
@@ -1795,5 +1807,11 @@ div.not_displayed {
     style: text-align:center;
     style: align:center;
     vertical-align: middle;
+}
+.verify_email_to_download_col1 {
+    width: 25%;
+}
+.verify_email_to_download_col2 {
+    width: 75%;
 }
 
