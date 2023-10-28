@@ -9,7 +9,7 @@
 ?>
 <h3>로그인</h3> 
 <ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i>나열된 아이디 제공자 중 하나를 선택하고 기관 계정을 통해 로그인할 수 있습니다.  소속기관을 목록에서 찾을 수 없으면 소속기관의 IT 관리부서나 support@kafe.or.kr에 문의하십시요</li>
+    <li><i class="fa-li fa fa-caret-right"></i>나열된 아이디 제공자 중 하나를 선택하고 기관 계정을 통해 로그인할 수 있습니다.  소속기관을 목록에서 찾을 수 없으면 소속기관의 IT 관리부서에 문의하십시요</li>
 </ul>
 
 <h3>귀하의 브라우져 특성</h3>
