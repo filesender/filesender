@@ -504,7 +504,7 @@ if(Auth::isGuest()) {
                                                 if( $name == 'add_me_to_recipients' ) {
                                                     $upload_options_handled[$name] = 1;
                                                     $forcedOption = false;
-                                                    $displayoption($name, $cfg, Auth::isGuest(), $forcedOption,"message");
+                                                    $displayoption($name, $cfg, Auth::isGuest(), $forcedOption,array("message"));
                                                 }
                                             }
                                             ?>
