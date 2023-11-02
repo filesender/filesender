@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -33,16 +33,15 @@
 $(function() {
     var page = $('.download_page');
     if(!page.length) return;
+
     var verificationCodePassed = true;
     var verificationCodeObjectThatTiggeredEvent = null;
     var verificationCodePassedPopup = null;
-
     if( window.filesender.config.download_verification_code_enabled ) {
         verificationCodePassed = false;
     }
-    
-    window.filesender.pbkdf2dialog.setup( true );
 
+    window.filesender.pbkdf2dialog.setup( true );
     var updateSelectedFilesForArchiveDownload = function()  {
         var ids = [];
         page.find('.file[data-selected="1"]').each(function() {
@@ -51,45 +50,92 @@ $(function() {
         var idlist = ids.join(',');
         $('.archivefileids').attr('value', idlist );
     }
-    
+
     // Bind file selectors
-    page.find('.file .select').on('click', function() {
-        var el = $(this);
-        var f = el.closest('.file');
-        
-        var selected = f.attr('data-selected') == '1';
-        selected = !selected;
-        f.attr('data-selected', selected ? '1' : '0');
-        
-        el.toggleClass('fa-square-o', !selected).toggleClass('fa-check-square-o', selected);
-    });
-    
-    // Bind global selector
-    page.find('.toggle-select-all, .select_all_text').on('mousedown', function(event) {
-        var el = page.find('.toggle-select-all');
-        
-        var selected = el.hasClass('fa-check-square-o');
-        selected = !selected;
-        el.toggleClass('fa-square-o', !selected).toggleClass('fa-check-square-o', selected);
-        
-        var files = page.find('.file');
-        files.attr('data-selected', selected ? '1' : '0');
-        
-        var selectors = page.find('.file .select');
-        selectors.push(el.find('.fa'));
-        selectors.toggleClass('fa-square-o', !selected).toggleClass('fa-check-square-o', selected);
-        event.stopPropagation();
+    page.find('.file input[type=checkbox]').on('change', function(e) {
+        console.log('SELECT LINHA');
+        const el = $(this);
+        const isChecked = e.target.checked;
+        const f = el.closest('.file');
+        f.attr('data-selected', isChecked ? '1' : '0');
+
+        if (!isChecked) {
+            const checkAll = $('#check-all');
+            checkAll.prop("checked", false);
+        }
+
+        checkHideDownloadButtons();
+        updateSelectedFileSize();
+
+        e.stopPropagation();
     });
 
-    
-   
+    // Bind global selector
+    page.find('#check-all').on('change', function(e) {
+        const isChecked = $('#check-all').is(":checked");
+        const files = page.find('.file');
+        files.attr('data-selected', isChecked ? '1' : '0');
+
+        const checkBoxes = $('.file input[type=checkbox]');
+        checkBoxes.prop("checked", isChecked);
+
+        checkHideDownloadButtons();
+        updateSelectedFileSize();
+
+        e.stopPropagation();
+    });
+
+    const checkHideDownloadButtons = function() {
+        const ids = [];
+        page.find('.file[data-selected="1"]').each(function() {
+            ids.push($(this).attr('data-id'));
+        });
+
+        if(!ids.length) {
+            $('.fs-download__actions').addClass('fs-download__actions--hide');
+            $('.fs-download__zip64-info').addClass('fs-download__zip64-info--hide');
+        } else {
+            $('.fs-download__actions').removeClass('fs-download__actions--hide');
+            $('.fs-download__zip64-info').removeClass('fs-download__zip64-info--hide');
+        }
+    };
+
+    const updateSelectedFileSize = function () {
+        let totalSize = 0;
+        page.find('.file[data-selected="1"]').each(function() {
+            totalSize = totalSize + parseInt($(this).attr('data-size'), 10);
+        });
+
+        const formattedTotalSize = formatBytes(totalSize);
+
+        $('.fs-download__total-size span').text(formattedTotalSize);
+
+        if (totalSize > 0) {
+            $('.fs-download__total-size').addClass('fs-download__total-size--show');
+        } else {
+            $('.fs-download__total-size').removeClass('fs-download__total-size--show');
+        }
+    };
+
+    const formatBytes = function (bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes'
+
+        const k = 1024
+        const dm = decimals < 0 ? 0 : decimals
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+    };
+
     // Get recipient token
     var m = window.location.search.match(/token=([0-9a-f-]+)/);
     var token = m[1];
     var $this = this;
     var dl = function(ids, confirm, encrypted, progress, archive_format ) {
         if(typeof ids == 'string') ids = [ids];
-        
+
         // the dlcb handles starting the download for
         // all non encrypted downloads
         var dlcb = function(notify) {
@@ -102,9 +148,9 @@ $(function() {
                     $('#dlarchivepost').submit();
                 } else {
                     filesender.ui.redirect( filesender.config.base_path
-                                            + 'download.php?token=' + token
-                                            + '&archive_format=' + archive_format
-                                            + '&files_ids=' + ids.join(',') + notify);
+                        + 'download.php?token=' + token
+                        + '&archive_format=' + archive_format
+                        + '&files_ids=' + ids.join(',') + notify);
                 }
             };
         };
@@ -151,7 +197,7 @@ $(function() {
                     {
                         var progress = $($this).find("[data-id='" + fileid + "']").find('.downloadprogress');
                         progress.html(window.filesender.config.language.download_complete);
-                        
+
                     };
                     var onComplete = function( blobSink )
                     {
@@ -168,7 +214,7 @@ $(function() {
                         var key_version = $($this).find("[data-id='" + ids[i] + "']").attr('data-key-version');
                         var fileivcoded = $($this).find("[data-id='" + ids[i] + "']").attr('data-fileiv');
                         var transferid = $('.transfer').attr('data-id');
-                        
+
                         selectedFiles.push({
                             fileid:ids[i]
                             , filename:$($this).find("[data-id='" + ids[i] + "']").attr('data-name')
@@ -199,7 +245,7 @@ $(function() {
                                                      , onFileOpen, onFileClose, onComplete
                                                    );
 
-                    
+
                 }
                 else
                 {
@@ -243,13 +289,13 @@ $(function() {
             }
         }
     };
-    
+
     // Bind download buttons
     page.find('.file .download').button().on('click', function() {
         var id = $(this).closest('.file').attr('data-id');
         var encrypted = $(this).closest('.file').attr('data-encrypted');
         var progress = $(this).closest('.file').find('.downloadprogress');
-        
+
         var transferid = $('.transfer').attr('data-id');
 
         verificationCodeObjectThatTiggeredEvent = $(this);
@@ -258,26 +304,25 @@ $(function() {
             return false;
         }
 
-        
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
             dl(id, dl_complete_enabled, encrypted, progress );
-        });        
+        });
         return false;
     });
-    
+
     var dlArchive = function( archive_format, button ) {
         var ids = [];
         page.find('.file[data-selected="1"]').each(function() {
             ids.push($(this).attr('data-id'));
         });
-        
+
         if(!ids.length) { // No files selected, supose we want all of them
             page.find('.file').each(function() {
                 ids.push($(this).attr('data-id'));
             });
         }
-        
-        
+
+
         var transferid = $('.transfer').attr('data-id');
         var encrypted = $('.transfer_is_encrypted').text()==1;
 
@@ -287,14 +332,13 @@ $(function() {
             return false;
         }
 
-        
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
             dl(ids, dl_complete_enabled, encrypted, null, archive_format );
         });
-        
+
         return false;
     };
-    
+
     // Bind archive download button
     page.find('.archive .archive_download').on('click', function() {
         return dlArchive( 'zip', $(this) );
@@ -302,7 +346,7 @@ $(function() {
     page.find('.archive .archive_tar_download').on('click', function() {
         return dlArchive( 'tar', $(this) );
     });
-    
+
     var macos = navigator.platform.match(/Mac/);
     var linuxos = navigator.platform.match(/Linux/);
     if( !macos )
@@ -311,7 +355,7 @@ $(function() {
     // only worry the user with this banner if any files are encrypted
     // and they will not be able to download them.
     var transfer_is_encrypted = $('.transfer_is_encrypted').text()==1;
-    if( transfer_is_encrypted && !filesender.supports.crypto ) 
+    if( transfer_is_encrypted && !filesender.supports.crypto )
         $('.crypto_not_supported_message').show();
 
     page.find('.toggle-select-all').trigger('mousedown');
@@ -324,47 +368,45 @@ $(function() {
         button_zipdl.addClass('btn-success');
     }
 
-
     if( window.filesender.config.download_verification_code_enabled ) {
-
         var transferid = $('.transfer').attr('data-id');
-        var rid        = $('.rid').attr('data-id');
-        
-        page.find('.verificationcodesendtoemail').button().on('click', function() {
+        var rid = $('.rid').attr('data-id');
+
+        page.find('.verificationcodesendtoemail').button().on('click', function () {
             filesender.client.sendVerificationCodeToYourEmailAddress(
                 transferid,
-                function() {
+                function () {
                     window.filesender.ui.notify("info", lang.tr("email_sent"));
                 });
             return true;
         });
-        page.find('.verificationcodesend').button().on('click', function() {
+        page.find('.verificationcodesend').button().on('click', function () {
             var pass = $('#verificationcode').val();
-            if( !pass.length ) {
+            if (!pass.length) {
                 return true;
             }
-            try
-            {
-                var options = { error: function(e) {
-                    if( e.message == 'rest_data_stale' ) {
-                        window.filesender.ui.alert("error", lang.tr("verification_code_is_too_old"));
-                        return;
+            try {
+                var options = {
+                    error: function (e) {
+                        if (e.message == 'rest_data_stale') {
+                            window.filesender.ui.alert("error", lang.tr("verification_code_is_too_old"));
+                            return;
+                        }
+                        filesender.ui.error(e);
                     }
-                    filesender.ui.error(e);
-                }};
-                
-                
+                };
+
 
                 filesender.client.checkVerificationCodeWithServer(
                     transferid, pass,
-                    function(args) {
-                        if( args.ok === true ) {
+                    function (args) {
+                        if (args.ok === true) {
                             verificationCodePassed = true;
-                            $(".verify_email_to_download").dialog( "close" );
-                            
+                            $(".verify_email_to_download").dialog("close");
+
                             var encrypted = verificationCodeObjectThatTiggeredEvent.closest('.file').attr('data-encrypted');
                             var msg = "downloading";
-                            if( !encrypted ) {
+                            if (!encrypted) {
                                 window.filesender.ui.notify("info", lang.tr(msg));
                             }
                             verificationCodeObjectThatTiggeredEvent.click();
@@ -374,12 +416,12 @@ $(function() {
                     }
                     , options
                 );
+            } catch (exception) {
             }
-            catch( exception ) {
-            }
-            
+
             return true;
         });
     }
-    
+
+    $('#check-all').click();
 });

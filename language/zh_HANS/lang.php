@@ -708,4 +708,4 @@ $lang['yes'] = '是的';
 $lang['you_can_report_exception'] = '报告此错误时，请同时提供以下代码，以帮助支持人员查找详细信息';
 $lang['you_can_report_exception_by_email'] = '您可以通过电子邮件报告此错误';
 $lang['you_can_send_client_logs'] = '为了帮助您的技术支持团队了解情况，您可以通过点击此按钮从用户界面发送最后的日志条目：';
-$lang['you_generated_this_auth_secret_at'] = '此身份认证密钥已在以下日期和时间生成：{datetime}';
+$lang['you_generated_this_auth_secret_at'] = '此身份认证密钥已在以下日期和时间生成：<strong>{datetime}</strong>';

@@ -688,4 +688,4 @@ $lang['yes'] = 'Si';
 $lang['you_can_report_exception'] = 'Al informar este error, proporcione el siguiente código para ayudar al soporte a encontrar detalles';
 $lang['you_can_report_exception_by_email'] = 'Puede reportar este error por correo electrónico';
 $lang['you_can_send_client_logs'] = 'Para ayudar a su equipo de soporte a descubrir qué sucedió, puede enviar las últimas entradas de registro desde su interfaz de usuario haciendo clic en este botón:';
-$lang['you_generated_this_auth_secret_at'] = 'Generó este secreto de autenticación el {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Generó este secreto de autenticación el <strong>{datetime}</strong>';

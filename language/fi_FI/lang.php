@@ -670,4 +670,4 @@ $lang['yes'] = 'Kyllä';
 $lang['you_can_report_exception'] = 'Raportoidessasi virheestä, liitäthän mukaan oheisen koodin, jotta virhetilanne olisi helpompi jäljittää.';
 $lang['you_can_report_exception_by_email'] = 'Voit raportoida tämän virheen sähköpostitse';
 $lang['you_can_send_client_logs'] = 'Voit auttaa vianselvityksessä lähettämällä ylläpidolle viimeisimmät lokimerkinnät oheisella painikkeella:';
-$lang['you_generated_this_auth_secret_at'] = 'Salalause generoitiin ajanhetkellä {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Salalause generoitiin ajanhetkellä <strong>{datetime}</strong>';

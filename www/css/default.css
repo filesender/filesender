@@ -1,24 +1,24 @@
 @charset "UTF-8";
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *   Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
- * 
+ *
  * *   Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * 
+ *
  * *   Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -2039,9 +2039,9 @@ div.not_displayed {
   display: none;
 }
 
-.get_a_link_lock {
-  background: #eeeeff;
-}
+/*.get_a_link_lock {*/
+/*  background: #eeeeff;*/
+/*}*/
 
 .number {
   text-align: right;
@@ -2918,11 +2918,11 @@ table.guests .guest .to .errors .details {
   vertical-align: middle;
 }
 
-.download_page .files .file {
-  height: 2.5em;
-  margin: 0.25em;
-  padding: 1.2em 0.5em 0.5em 0.5em;
-}
+/*.download_page .files .file {*/
+/*  height: 2.5em;*/
+/*  margin: 0.25em;*/
+/*  padding: 1.2em 0.5em 0.5em 0.5em;*/
+/*}*/
 
 .download_page .files[data-count="1"] .select_all,
 .download_page .files[data-count="1"] .file .select,

@@ -569,4 +569,4 @@ $lang['yes'] = 'Jah';
 $lang['you_can_report_exception'] = 'Kui soovid veateadet edastada RMK IT abisse, siis märgi üles ka allolev kood';
 $lang['you_can_report_exception_by_email'] = 'Saada veateade e-postiga';
 $lang['you_can_send_client_logs'] = 'Vajuta seda nuppu, et edastada logi kirjed IT abisse :';
-$lang['you_generated_this_auth_secret_at'] = 'Genereerisid antud autentimisvõtme: {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Genereerisid antud autentimisvõtme: <strong>{datetime}</strong>';

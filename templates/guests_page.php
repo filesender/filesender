@@ -45,7 +45,7 @@ use ( $new_guests_can_only_send_to_creator,
     if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
         return;
     }
-    
+
     $default = $cfg['default'];
     if(Auth::isSP()) {
         if($transfer) {
@@ -66,7 +66,7 @@ use ( $new_guests_can_only_send_to_creator,
         echo '    <input id="'.$name.'" class="form-check-input" name="'.$name.'" type="text">';
         echo '    <br/>';
         echo '</div>';
-        
+
     } else {
         $lockClassLabel = '';
         $lockClass = '';
@@ -83,206 +83,46 @@ use ( $new_guests_can_only_send_to_creator,
 
 ?>
 
-
-
-<?php
-
-
-
-////////////////////////
-// begin html part
-////////////////////////
-?>
-
-    <ul class="nav nav-tabs nav-tabs-coretop">
-        <?php foreach($sections as $s) { ?>
-            <li class="nav-item">
-                <a class="nav-link <?php if($s == $section) echo 'active'; else echo 'nav-link-coretop ' ?>" href="?s=guests&as=<?php echo $s . $cgiuid ?>">
-                    <?php echo Lang::tr($s.'_guest') ?>
-                </a>
-            </li>
-        <?php } ?>
-    </ul>
-
-    <div class="core-tabbed">
-    
-    <div class="<?php echo $section ?>_section section">
-        <?php if( $section == 'invite' ): ?>
-    
-            <div id="send_voucher" class="">
-                <div class="disclamer">
-                    {tr:send_new_voucher}
-                </div>
-
-                <table class="two_columns">
-                    <tr>
-                        <td class="">
-                            <div class="fieldcontainer">
-                                <?php $emails = Auth::user()->email_addresses ?>
-
-                                <label for="from" class="mandatory">{tr:from} :</label>
-
-                                <?php if (count($emails) > 1) { ?>
-
-                                    <select id="from" name="from">
-                                        <?php foreach ($emails as $email) { ?>
-                                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
-                                        <?php } ?>
-                                    </select>
-
-                                <?php } else echo Template::sanitizeOutputEmail($emails[0]) ?>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="to" class="mandatory">{tr:to} :</label>
-
-                                <div class="recipients"></div>
-
-                                <input id="to" name="to" type="email"
-                                       class="form-control"
-                                       multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="subject">{tr:subject} ({tr:optional}) :</label>
-
-                                <input id="subject" name="subject" type="text"
-                                       class="form-control" />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="message">{tr:message} ({tr:optional}) : </label>
-
-                                <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
-                                <textarea id="message" name="message" rows="4" class="form-control"></textarea>
-                            </div>
-                        </td>
-
-                        <td class="">
-                            <div class="form-group">
-
-                                <div class="guest_options options_box">
-                                    <?php
-                                    foreach(Guest::availableOptions(true) as $name => $cfg) {
-                                        if( $name == 'does_not_expire' ) {
-                                            $guest_options_handled[$name] = 1;
-                                            $displayoption($name, $cfg, false);
-                                        }
-                                    }
-                                    ?>
-                                </div>
-                                
-                                <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
-                                
-                                <input id="expires" name="expires" type="text" autocomplete="off" class="form-control"
-                                       title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_guest_days_valid'))) ?>"
-                                       data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
-                                />
-
-                                
-                            </div>
-                            
-
-                            <div class="guest_options options_box">
-                                <h3>{tr:guest_options}</h3>
-                                
-                                <div class="basic_options">
-                                    <?php foreach(Guest::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg, false) ?>
-                                </div>
-                                
-                                <?php if(count(Guest::availableOptions(true))) { ?>
-
-                                    <div class="accordion" class="advanced_options" id="advanced_options">
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="headingOne">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                    {tr:advanced_settings}
-                                                </button>
-                                            </h2>                            
-                                            <div class="card">
-                                                    <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#advanced_options" data-bs-parent="#advanced_options">
-                                                    <div class="card-body">
-                                                        
-                                                        <?php
-                                                        foreach(Guest::availableOptions(true) as $name => $cfg) {
-                                                            if( !array_key_exists($name,$guest_options_handled)) {
-                                                                $displayoption($name, $cfg, false);
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>     
-                                <?php } ?>
-                            </div>
-                            
-                            <div class="transfer_options options_box">
-                                <h3>{tr:guest_transfer_options}</h3>
-                                
-                                <div class="basic_options">
-                                    <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg, true) ?>
-                                </div>
-                                
-                                <?php if(count(Transfer::availableOptions(true))) { ?>
-                                    <div class="accordion" class="advanced_options_tr" id="advanced_options_tr">
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="headingOneTr">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvTr" aria-expanded="true" aria-controls="collapseOne">
-                                                    {tr:advanced_settings}
-                                                </button>
-                                            </h2>                            
-                                            <div class="card">
-
-                                                <div id="collapseAdvTr" class="collapse collapsed" aria-labelledby="headingOneTr" data-parent="#advanced_options_tr" data-bs-parent="#advanced_options_tr">
-                                                    <div class="card-body">
-                                                        <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="buttons">
-                    <button type="button" class="send btn btn-primary">
-                        <span class="fa fa-envelope fa-lg"></span> {tr:send_voucher}
-                    </button>
+<div class="fs-invitations">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="fs-invitations__header">
+                    <h1>{tr:guests_page}</h1>
                 </div>
             </div>
-            
-        <?php endif; ?>
-        <?php if( $section == 'current' ): ?>
-            <div class="box">
-                <h1>{tr:guests}</h1>
-                
-                <?php
-                Template::display('guests_table',
-                                  array('guests' => Guest::fromUserAvailable(Auth::user())));
-                ?>
-            </div>
-        <?php endif; ?>
-        <?php if( $section == 'transfers' ): ?>
-            <div class="box">
-                <h1>{tr:guests_transfers}</h1>
-                
-                <?php
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 offset-lg-3">
+                <div class="fs-invitations__action">
+                    <h2>{tr:invitation_title}</h2>
+                    <p>
+                        {tr:invitation_description}
+                    </p>
 
-                $user_can_only_view_guest_transfers_shared_with_them = Config::get('user_can_only_view_guest_transfers_shared_with_them');
-                $transfers = Transfer::fromGuestsOf(Auth::user(), $user_can_only_view_guest_transfers_shared_with_them);
-                Template::display('transfers_table',
-                                  array('transfers' => $transfers,
-                                        'show_guest' => true));
-                ?>
+                    <a href="?s=new_invitation" class="fs-button">
+                        <i class="fa fa-plus"></i>
+                        <span>{tr:new_invitation}</span>
+                    </a>
+                </div>
             </div>
-        <?php endif; ?>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="fs-invitations__list">
+                    <h2>{tr:all_my_invitations}</h2>
+                    <p>
+                        {tr:invitation_overview}
+                    </p>
+
+                    <?php
+                    Template::display('guests_table',
+                        array('guests' => Guest::fromUser(Auth::user())));
+                    ?>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
-    
+
 <script type="text/javascript" src="{path:js/guests_page.js}"></script>
