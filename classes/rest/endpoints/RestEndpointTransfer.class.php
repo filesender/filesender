@@ -148,7 +148,6 @@ class RestEndpointTransfer extends RestEndpoint
      */
     public function get($id = null, $property = null, $property_id = null, $filtertype = null, $filterid = null )
     {
-
         // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer
         if ($property == 'options' && 'enable_recipient_email_download_complete' == $property_id) {
 
@@ -177,6 +176,27 @@ class RestEndpointTransfer extends RestEndpoint
 
             $rc = $transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE);
             return $rc;
+        }
+
+        if( $id=='fileids' && array_key_exists('token', $_GET)) {
+            $token = $_GET['token'];
+            if (!Utilities::isValidUID($token)) {
+                throw new RestBadParameterException('token');
+            }
+            // Need to be authenticated
+            if (!Auth::isAuthenticated()) {
+                throw new RestAuthenticationRequiredException();
+            }
+            
+            $recipient = Recipient::fromToken($token);
+            if ($recipient->transfer) {
+                $files = $recipient->transfer->files;
+                $ret = array();
+                foreach ($files as $file) {
+                    array_push($ret,$file->id);
+                }
+                return $ret;
+            }
         }
         
         // If key was provided we validate it and return the transfer (guest restart)

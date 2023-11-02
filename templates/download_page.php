@@ -129,6 +129,8 @@ $now = time();
 $datediff = $transfer->expires - $now;
 $days_to_expire = round($datediff / (60 * 60 * 24));
 
+$showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links'));
+
 ?>
 
 <div class="fs-download">

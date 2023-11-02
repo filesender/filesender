@@ -682,6 +682,7 @@ $lang['utilities_uid_generator_bad_unicity_checker'] = 'Ungültige "unicity"-Pr�
 $lang['utilities_uid_generator_tried_too_much'] = 'Der UID-Generator wurde zu oft verwendet';
 $lang['valid_only_one_time'] = 'Nur für einen Upload gültig';
 $lang['value'] = 'Wert';
+$lang['verify'] = 'Bestätigen';
 $lang['view_full_log'] = 'Zeige das ganze Log';
 $lang['waiting_for_upload_to_stabilize'] = 'Warte auf eine Stabilisierung des Uploads';
 $lang['web_notification_upload_complete'] = 'Das Hochladen wurde beendet!';

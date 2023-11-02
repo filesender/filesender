@@ -343,25 +343,26 @@ var terasender_worker = {
         
         try {
 
-	    if (job.encryption) { //MD
-			var cryptedBlob = null;
-			var $this = this;
-			blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});
-			blobReader.blobSlice = blob;
-			blobReader.readArrayBuffer(function(arrayBuffer){
-			    window.filesender.crypto_app().encryptBlob(
-                                arrayBuffer,
-                                job.chunk.id,
-                                job.encryption_details,
-                                function (encrypted_blob) {
-				    xhr.setRequestHeader('X-Filesender-Encrypted', '1');
-				    xhr.send(encrypted_blob);
-				},
-                                function (e) { $this.error(e); } );
-			});
-		} else {
-			xhr.send(blob);
-		}
+	    if (!job.encryption) {
+                xhr.send(blob);
+	    } else {
+		var cryptedBlob = null;
+		var $this = this;
+		blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});
+		blobReader.blobSlice = blob;
+		blobReader.arrayBuffer().then( function (arrayBuffer)  {
+
+		    window.filesender.crypto_app().encryptBlob(
+                        arrayBuffer,
+                        job.chunk.id,
+                        job.encryption_details,
+                        function (encrypted_blob) {
+			    xhr.setRequestHeader('X-Filesender-Encrypted', '1');
+			    xhr.send(encrypted_blob);
+			},
+                        function (e) { $this.error(e); } );
+                });
+	    }
             
         } catch(err) {
             this.error({message: 'source_file_not_available', details: {job: this.job}});

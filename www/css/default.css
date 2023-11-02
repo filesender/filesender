@@ -2412,6 +2412,694 @@ td .desc {
   display: none;
 }
 
+#upload_form .advanced_options {
+    display: none;
+}
+
+#upload_form .hidden_options {
+    display: none;
+}
+
+#upload_form .aup {
+    padding: 1em;
+}
+
+#upload_form .aup label {
+    font-weight: bold;
+}
+
+#upload_form .aup label span {
+    color: #666;
+}
+
+#upload_form .aup .terms {
+    display: none;
+    margin-top: 0.5em;
+    padding: 0.5em;
+}
+
+#upload_form .buttons {
+    margin: 1em auto;
+}
+
+#upload_form .buttons a {
+    padding: 1em;
+    font-size: 1.5em;
+}
+
+#upload_form .buttons a span.fa {
+    font-size: 2em;
+}
+
+#upload_form .fieldcontainer .info.message {
+    margin: 0.5em 1em;
+}
+
+#legacy_uploader {
+    display: none;
+}
+
+.ui-dialog .ui-dialog-content .failed_transfer {
+    margin-top: 1em;
+}
+
+.ui-dialog .ui-dialog-content .failed_transfer div {
+    margin: 0.5em;
+}
+
+.ui-dialog .ui-dialog-content .failed_transfer ul {
+    list-style-type: disc;
+    margin-left: 2em;
+}
+
+.ui-dialog .ui-dialog-content .download_link {
+    margin-top: 1em;
+}
+
+.ui-dialog .ui-dialog-content .download_link textarea {
+    margin-top: 0.5em;
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .autoclose {
+    margin-right: 1em;
+}
+
+/* transfers page */
+
+.transfers_page .menu {
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+
+.transfers_page .menu ul {
+    display: inline;
+    float: left;
+    list-style: none outside none;
+    margin-bottom: -1px;
+}
+
+.transfers_page .menu li {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin: 0 0.3em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em 0.5em 0 0;
+    -moz-border-radius: 0.5em 0.5em 0 0;
+    cursor: pointer;
+    background-color: #ccc;
+}
+
+.transfers_page .menu li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+.transfers_page .menu li.current {
+    background-color: #fff;
+}
+
+
+/* transfers table */
+
+table.transfers .expand,
+table.transfers .collapse {
+    width: 2em;
+    text-align: center;
+}
+
+table.transfers .transfer_id {
+    width: 7em;
+    text-align: center;
+}
+
+table.transfers .downloads{
+    width: 10em;
+    text-align: center;
+}
+
+table.transfers .expires {
+    width: 8em;
+    text-align: center;
+}
+
+table.transfers .size {
+    width: 6em;
+    text-align: right;
+}
+
+table.transfers th.size {
+    text-align: center;
+}
+
+table.transfers td.downloads {
+    text-align: center;
+}
+
+table.transfers tbody .transfer[data-errors="1"] td {
+    background-color: #faa;
+}
+
+table.transfers[data-status="uploading"] tbody tr .actions [data-action],
+table.transfers[data-status="closed"] tbody tr .actions [data-action] {
+    display: none;
+}
+
+table.transfers[data-status="uploading"] tbody tr .actions [data-action="delete"],
+table.transfers[data-status="uploading"][data-audit="1"] tbody tr .actions [data-action="auditlog"],
+table.transfers[data-status="closed"][data-audit="1"] tbody tr .actions [data-action="auditlog"] {
+    display: inline;
+}
+
+table.transfers tbody tr.transfer_details {
+    display: none;
+}
+
+table.transfers .transfer_details div {
+    margin: 0.5em;
+}
+
+table.transfers .transfer_details .collapse,
+table.transfers .transfer_details .actions {
+    margin: 0.5em 0;
+}
+
+table.transfers .transfer_details .actions {
+    float: right;
+}
+
+table.transfers .transfer_details .general .options ul {
+    list-style-type: disc;
+    margin-left: 2em;
+}
+
+table.transfers .transfer_details h2 {
+    font-size: 1.3em;
+    margin-bottom: 0.3em;
+}
+
+table.transfers .transfer_details .recipients .recipient [data-action],
+table.transfers .transfer_details .files .file [data-action] {
+    margin: 0 0.15em;
+}
+.transfer-download {
+    cursor: pointer;
+}
+
+table.transfers .transfer_details .recipients .recipient .errors {
+    background-color: #faa;
+    padding: 0.1em;
+}
+
+table.transfers .transfer_details .recipients .recipient .errors [data-action="details"] {
+    margin-left: 0.25em;
+}
+
+table.transfers[data-status="closed"] .transfer_details .recipients .recipient [data-action="delete"],
+table.transfers[data-status="closed"] .transfer_details .files .file [data-action="delete"] {
+    display: none;
+}
+
+table.transfers .transfer_details .download_link input {
+    display: block;
+    width: 80%;
+    margin: 0.4em auto;
+}
+
+.transfers_list_page_navigation {
+    margin: 0.25em;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.transfers_list_page_navigation span,
+.transfers_list_page_navigation a {
+    margin: 0 0.25em;
+}
+
+.transfers_list_page_navigation a {
+    text-decoration: underline;
+}
+.transfers_list_page_navigation span {
+    font-weight: bold;
+}
+
+
+/* Guests page */
+
+#send_voucher .recipients {
+    display: none;
+    padding: 0.5em 0;
+}
+
+#send_voucher .recipients .recipient {
+    margin: 0.2em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #dedede;
+}
+
+#send_voucher .recipients .recipient .remove {
+    float: right;
+}
+
+#send_voucher textarea[name="message"] {
+    display: block;
+    width: 100%;
+    resize: vertical;
+}
+
+#send_voucher input[type="checkbox"] {
+    float: left;
+    width: 1.2em;
+    margin: 0 1em 0 0;
+}
+
+#send_voucher .advanced_options {
+    display: none;
+}
+
+.guests_page .progressbar.user_quota {
+    display: none;
+}
+
+
+/* Guests table */
+
+table.guests .from,
+table.guests .to,
+table.guests .subject {
+    width: 10em;
+    overflow: hidden;
+}
+
+table.guests .full {
+    display: none;
+}
+
+table.guests .created,
+table.guests .expires {
+    width: 7em;
+    text-align: center;
+}
+
+table.guests tbody .guest[data-errors="1"] td {
+    background-color: #faa;
+}
+
+table.guests .guest .to .errors .details {
+    margin-left: 0.25em;
+}
+
+
+/* Admin page */
+
+.admin_page .menu {
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+
+.admin_page .menu ul {
+    display: inline;
+    float: left;
+    list-style: none outside none;
+    margin-bottom: -1px;
+}
+
+.admin_page .menu li {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin: 0 0.3em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em 0.5em 0 0;
+    -moz-border-radius: 0.5em 0.5em 0 0;
+    cursor: pointer;
+    background-color: #ccc;
+}
+
+.admin_page .menu li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+.admin_page li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+.admin_page .menu li.current {
+    background-color: #fff;
+}
+
+.admin_page .progressbar.user_quota {
+    display: none;
+}
+
+
+/* Download page */
+
+.download_page {
+    margin: 1em;
+}
+
+.download_page .disclamer {
+    margin: 1em;
+}
+
+.download_page .general div {
+    margin-bottom: 0.8em;
+}
+
+.download_page .files .select_all {
+    margin-left: 1.2em;
+}
+
+.download_page .files .select_all span:first-child {
+    vertical-align: bottom;
+}
+
+.download_page .files .select_all .select {
+    text-decoration: none;
+}
+
+.download_page .files .select_all .select span {
+    vertical-align: middle;
+}
+
+.download_page .files .file {
+    height: 3em;
+    margin: 0.25em;
+    padding: 1.2em 0.5em 0.5em 0.5em;
+}
+
+.download_page .files .file .select,
+.download_page .files .file .name,
+.download_page .files .file .avresult,
+.download_page .files .file .size {
+}
+
+.download_page .files .file .name {
+    text-overflow: ellipsis;
+    width: 345px;
+    display: inline-block;
+    height: 1em;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.download_page .files .file .size {
+    color: #777;
+}
+
+.download_page .files .file .avresult {
+    text-align: right;
+}
+
+.download_page .files .file .download {
+    float: right;
+    margin-top: -0.5em;
+}
+
+
+.download_page .archive {
+    margin-top: 2em;
+    text-align: center;
+}
+
+.download_page .archive_tar_download_frame,
+.download_page .archive_download_frame {
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+    -moz-border-radius: 0.5em 0.5em 0.5em 0.5em;
+    display: inline-block;
+}
+
+.download_page .archive .archive_message,
+.download_page .archive .mac_archive_message {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.recommended {
+    border: 0.5em solid #55aa55;
+    background-color: #55aa55;
+}
+
+.download_page .files[data-count="1"] .select_all,
+.download_page .files[data-count="1"] .file .select,
+.download_page .files[data-count="1"] .archive {
+    display: none;
+}
+
+.download_page .progressbar.user_quota {
+    display: none;
+}
+
+.downloadprogress {
+    float:right;
+    font-size:1.7em;
+    padding-right:20px;
+    min-width: 100px;
+}
+
+.directlink {
+    float: right;
+    padding-right: 10px;
+    color: #999999;
+    font-size: 10px;
+}
+
+.directlinkArchive {
+    color: #999999;
+    font-size: 10px;
+}
+
+/* Admin sections */
+
+.admin_page .section h2 {
+    width: 100%;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 1em;
+    padding-top: 4px;
+}
+
+/* Admin config section */
+
+.admin_page .config_section .parameter {
+    margin: 0.5em 0;
+}
+
+.admin_page .config_section .parameter .is_default {
+    display: none;
+    font-style: italic;
+    color: #ccc;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] .is_default {
+    display: inline;
+}
+
+.admin_page .config_section .parameter .make_default {
+    display: inline;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] .make_default {
+    display: none;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] input,
+.admin_page .config_section .parameter[data-is-default="1"] textarea,
+.admin_page .config_section .parameter[data-is-default="1"] select {
+    color: #777;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] input:focus,
+.admin_page .config_section .parameter[data-is-default="1"] textarea:focus,
+.admin_page .config_section .parameter[data-is-default="1"] select:focus {
+    color: #000;
+}
+
+.admin_page .config_section .box+.box {
+    text-align: center;
+}
+
+
+/* User profile */
+
+.user_page .info {
+    margin: 1em 0;
+}
+
+.user_page .info .readonly {
+    border: 1px solid silver;
+    padding: 0.25em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.user_page .info .unknown {
+    border: 1px solid black;
+    background-color: #EABEBE;
+    padding: 0.25em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.user_page span[data-info="remote_config"] {
+    display: none;
+}
+
+.user_page span[data-remote-auth-sync-request] {
+    display: none;
+}
+
+
+/* Translate email page */
+
+.translate_email_page dl [data-property="subject"] {
+    margin: 0.5em;
+}
+
+.translate_email_page dl dt {
+    font-weight: bold;
+}
+
+.translate_email_page dl dt[data-property="subject"] {
+    float: left;
+    margin-top: 0;
+}
+
+.translate_email_page dl dt[data-property="message"] {
+    display: none;
+}
+
+.translate_email_page dl dd[data-property="message"] {
+    margin: 2em 0.5em;
+}
+
+.translate_email_page dl dd[data-property="message"] p {
+    margin: 1em 0;
+}
+
+/* Copy of mail.css */
+.translate_email_page dl dd[data-property="message"] table {
+    width: 100%;
+    border: 1px solid #bbb;
+    border-collapse: collapse;
+}
+
+.translate_email_page dl dd[data-property="message"] th,
+.translate_email_page dl dd[data-property="message"] td {
+    padding: 3px;
+    vertical-align: top;
+}
+
+.translate_email_page dl dd[data-property="message"] th:first-child,
+.translate_email_page dl dd[data-property="message"] td:first-child {
+    width: 5em;
+}
+
+.translate_email_page dl dd[data-property="message"] th {
+    background-color: #ccc;
+    height: 30px;
+}
+
+.translate_email_page dl dd[data-property="message"] tbody tr:nth-child(even) td {
+    background-color: #e5e5e5;
+}
+
+.translate_email_page dl dd[data-property="message"] td:first-child {
+    font-weight: bold;
+}
+/* End copy of mail.css */
+
+.translate_email_page .progressbar.user_quota {
+    display: none;
+}
+
+
+/* Admin statistics */
+
+.admin_page .statistics_section .storage_usage_blocks {
+    margin-top: 1em;
+}
+
+.admin_page .statistics_section .storage_usage.warning tr[data-metric="available"],
+.admin_page .statistics_section .storage_usage_blocks tr.warning {
+    background-color: #fcc;
+}
+
+
+/** Admin users */
+
+.admin_page .users_section .searching,
+.admin_page .users_section .no_results,
+.admin_page .users_section .client-logs,
+.admin_page .users_section .tpl {
+    display: none;
+}
+
+.admin_page .users_section .searching .searching,
+.admin_page .users_section .no_results .no_results {
+    display: table-row;
+    text-align: center;
+}
+
+.admin_page .users_section table {
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.admin_page .users_section th {
+    border: 1px solid silver;
+    text-align: center;
+    font-weight: bold;
+}
+
+.admin_page .users_section td {
+    border: 1px solid silver;
+}
+
+.admin_page .users_section .results th+th,
+.admin_page .users_section .results td+td,
+.admin_page .users_section .client-logs th:first-child,
+.admin_page .users_section .client-logs td:first-child {
+    width: 8rem;
+}
+
+    /* Popups */
+#dialog-help h4 {
+    font-size: 1.2em;
+    margin: 0.5em 1em;
+}
+
+#dialog-help ul {
+    margin-bottom: 2em;
+}
+
+#dialog-help ul li {
+    margin-bottom: 0.3em;
+    line-height: 1.1em;
+}
+
+#dialog-help img {
+    display: inline;
+    vertical-align: middle;
+}
+
+#dialog-help strong {
+    font-weight: bold;
+}
+
+
 /* Encryption */
 #encryption_password {
   width: 48ch;
@@ -3169,6 +3857,12 @@ table.paginator a {
     style: text-align:center;
     style: align:center;
     vertical-align: middle;
+}
+.verify_email_to_download_col1 {
+    width: 25%;
+}
+.verify_email_to_download_col2 {
+    width: 75%;
 }
 
 /* Local Variables:    */

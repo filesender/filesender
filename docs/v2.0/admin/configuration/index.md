@@ -36,6 +36,7 @@ A note about colours;
 * [download_verification_code_enabled](#download_verification_code_enabled)
 * [download_verification_code_valid_duration](#download_verification_code_valid_duration)
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
+* [download_show_download_links](#download_show_download_links)
 
 
 ## Security settings
@@ -113,6 +114,7 @@ A note about colours;
 * [email_use_html](#email_use_html)
 * [email_newline](#email_newline)
 * [email_headers](#email_headers)
+* [email_send_with_minus_r_option](#email_send_with_minus_r_option)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 * [translatable_emails_lifetime](#translatable_emails_lifetime)
 
@@ -434,6 +436,14 @@ A note about colours;
 * __available:__ since version 2.41
 * __comment:__ Default should be ok.
 
+### download_show_download_links
+
+* __description:__ show direct download urls on download page
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.42
+* __comment:__ Default should be ok.
 
 
 
@@ -718,10 +728,20 @@ This way the encryption_key_version_new_files can be updated and existing upload
 * __description:__ Some actions have hard or soft limits that can be applied. For example, actions that result in sending an email may have a soft limit that will perform the action but not send an email after the nominated number of actions is performed per time period. This allows for the system to prevent a nefarious guest from sending too many emails. The database table ratelimithistorys is used to track the information needed for this option. The time period for actions performed used for the initial implementation is 24 hours. For example, with the right setting you can not create more than 200 guests in a 24 hour block of time. There are two types of limits, hard and soft. A hard limit will be checked before performing an action and if the limit is already reached the action will not be performed. For example, creating a guest or sending a transfer_reminder is a hard limit. This is because creating a guest may require sending an email to be performed so it is not useful to try to perform the action if the rate limit is already reached. Some actions are soft limits such as guest_upload_start and will only effect the sending of an email. For the guest_upload_start example, if the limit is 30 per day then a guest may start an upload 1000 times and you will only receive emails for the first 30 attempts. This way the system remains functional but does not try to produce excessive emails while it is performing that function. In general a soft limit is to protect against excessive email but not to limit the use of the system itself.
 * __mandatory:__ no
 * __type:__ array
-* __default:__
+* __default:__ '$config['rate_limits'] = array(
+            'email' => array(
+            'guest_created'      => array( 'day' => 100 ),
+            'report_inline'      => array( 'day' => 100 ),
+            'transfer_reminder'  => array( 'day' => 100 ),
+            'download_complete'  => array( 'day' => 500 ),
+            'files_downloaded'   => array( 'day' => 500 ),
+            'guest_upload_start' => array( 'day' => 100 ),
+            'transfer_available' => array( 'day' => 500 ),
+        ),
+    );'
 * __available:__ since version 2.33
 * __1.x name:__
-* __comment:__ For current defaults see https://github.com/filesender/filesender/search?q=rate_limits+in%3Afile+path%3Aincludes
+* __comment:__ For current defaults see https://github.com/search?q=repo%3Afilesender%2Ffilesender+rate_limits+path%3Aincludes
 * __*Standard parameters for all options:*__
 	* __day__(integer): The number of times this action can be performed per day.
 ed off by the user.
@@ -1054,13 +1074,14 @@ for example a prefix of "Test-" could create bucket "Test-2023-04-30". An empty 
 
 ### db_table_prefix
 
-* __description:__ table prefix to use.  Allows you to have several filesender instances in one database.  For example if you buy hosting with 1 database and still want multiple filesender instances.
-* __mandatory:__ <span style="background-color:orange">?  Would think not?</yes>
+* __description:__ This is known to have issues in 2.41 and is now deprecated. This feature will be removed in the 3.x release. table prefix to use.  Allows you to have several filesender instances in one database.  For example if you buy hosting with 1 database and still want multiple filesender instances.
+* __mandatory:__ no</yes>
 * __type:__ string
 * __default:__ -
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ 
+  Deprecated. This feature will be removed in the 3.x release
 
 
 ### db_driver_options
@@ -1240,6 +1261,17 @@ User language detection is done in the following order:
 * __default:__ false
 * __available:__ since version 2.x
 * __comment:__ E.g. add to your `$config['email_headers'] = array('Auto-Submitted' => 'auto-generated', 'X-Auto-Response-Suppress' => 'All');` to add these 2 headers with their respective values to all outgoing emails.
+
+
+### email_send_with_minus_r_option
+
+* __description:__ Use the -r option to mail() if return_path is set. This was the default behavior in all 2.x series released but the FileSender 2.41 release.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.42
+* __comment:__ This may allow for FileSender in container installations to work where the -r option is not desired and can be turned off for that.
+
 
 ### relay_unknown_feedbacks
 
