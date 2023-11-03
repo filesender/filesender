@@ -3082,7 +3082,7 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __available:__ since version 2
 * __1.x name:__
 * __comment:__ the parameter needs an array of strings.  The strings are configuration parameters you want to appear in the "info" webservice endpoint.  You can also give it static strings that have a specific meaning for you, like "version 2.0".
-* __example:__ <span style="background-color:orange">example comes here.</span>
+* __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
 
 ### rest_allow_jsonp
 
