@@ -53,7 +53,6 @@ $(function() {
 
     // Bind file selectors
     page.find('.file input[type=checkbox]').on('change', function(e) {
-        console.log('SELECT LINHA');
         const el = $(this);
         const isChecked = e.target.checked;
         const f = el.closest('.file');
