@@ -14,12 +14,30 @@ $filter_callback = function ($element) use ($guest_id) {
     return false;
 };
 
+$found = 0;
 if ($guest_id) {
     $guests = Guest::fromUserAvailable(Auth::user());
     $filtered = array_filter($guests, $filter_callback);
-    $guest = $filtered[$guest_id];
+    $found = array_key_exists($guest_id,$filtered);
+    if( $found ) {
+        $guest = $filtered[$guest_id];
+    }
 }
 ?>
+
+
+<?php // short out if the guest id is not valid  ?>
+<?php if ( !$found ) { ?>
+    <div class="fs-invitation-detail" data-id="<?php echo $guest_id; ?>">
+        <div class="container">
+            <div class="row">
+                <h1>{tr:guest_not_found}</h1>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="{path:js/invitation_detail_page.js}"></script>
+<?php return; } ?>
+
 
 <div class="fs-invitation-detail" data-id="<?php echo $guest_id; ?>">
     <div class="container">
