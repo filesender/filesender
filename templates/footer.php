@@ -9,13 +9,12 @@
                 </div>
             </div>
 
-<!--            --><?php //if(Disclosed::isDisclosed('version')) { ?>
+            <?php if(Disclosed::isDisclosed('version')) { ?>
                 <div class="fs-version">
                     <?php echo Lang::tr('version') ?>
-<!--                    v--><?php //echo Version::code() ?>
-                    v3.0
+                    <?php echo Version::code() ?>
                 </div>
-<!--            --><?php //} ?>
+            <?php } ?>
         </footer>
     </body>
 </html>
