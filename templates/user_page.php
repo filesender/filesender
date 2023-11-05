@@ -103,8 +103,7 @@
 
                     <?php
 
-                    $id = 'email_addresses';
-                    $value = Auth::user()->$id;
+                    $value = Auth::user()->email_addresses;
                     $email = $value[0];
 
                     echo "<div class='fs-info'>";
@@ -112,24 +111,21 @@
                     echo "<span>".$email."</span>";
                     echo "</div>";
 
-                    $id = 'saml_user_identification_uid';
-                    $value = Auth::user()->$id;
+                    $value = Auth::user()->saml_user_identification_uid;
 
                     echo "<div class='fs-info'>";
                     echo "<strong>{tr:user_id}:</strong>";
                     echo "<span>".$value."</span>";
                     echo "</div>";
 
-                    $id = 'created';
-                    $value = Auth::user()->$id;
+                    $value = Auth::user()->created;
 
                     echo "<div class='fs-info'>";
                     echo "<strong>{tr:user_created}:</strong>";
                     echo "<span>".Utilities::formatDate($value)."</span>";
                     echo "</div>";
 
-                    $id = 'quota';
-                    $value = Auth::user()->$id;
+                    $value = Auth::user()->quota;
 
                     echo "<div class='fs-info'>";
                     echo "<strong>{tr:current_quota_storage}:</strong>";
