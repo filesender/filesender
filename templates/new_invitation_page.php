@@ -149,7 +149,8 @@ use ( $new_guests_can_only_send_to_creator,
                                         }
                                         ?>
                                     </div>
-
+ 
+                                    <div class="guest_options options_box">
                                     <?php
                                     foreach(Guest::availableOptions(true) as $name => $cfg) {
                                         if( $name == 'can_only_send_to_me' || $name == 'valid_only_one_time') {
@@ -157,6 +158,7 @@ use ( $new_guests_can_only_send_to_creator,
                                         }
                                     }
                                     ?>
+                                    </div>
 
                                     <div class="fs-select">
                                         <label for="expires-select">
@@ -183,7 +185,7 @@ use ( $new_guests_can_only_send_to_creator,
                                             <div class="fs-collapse__column">
                                                 <strong>{tr:guest_transfer_settings}</strong>
 
-                                                <div>
+                                                <div class="guest_options">
                                                     <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
                                                         if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
                                                             $displayoption($name, $cfg, false);
@@ -191,6 +193,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                     } ?>
                                                 </div>
 
+                                                <div class="guest_options">
                                                 <?php if(count(Guest::availableOptions(true))) {
                                                     foreach(Guest::availableOptions(true) as $name => $cfg) {
                                                         if( !array_key_exists($name, $guest_options_handled)) {
@@ -200,11 +203,12 @@ use ( $new_guests_can_only_send_to_creator,
                                                         }
                                                     }
                                                 } ?>
+                                                </div>
                                             </div>
                                             <div class="fs-collapse__column">
                                                 <strong>{tr:guest_email_settings}</strong>
 
-                                                <div>
+                                                <div class="transfer_options">
                                                     <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {
                                                         if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
                                                             $displayoption($name, $cfg, true);
@@ -212,6 +216,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                     } ?>
                                                 </div>
 
+                                                <div class="transfer_options">
                                                 <?php if(count(Transfer::availableOptions(true))) {
                                                     foreach(Transfer::availableOptions(true) as $name => $cfg) {
                                                         if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
@@ -219,6 +224,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                         }
                                                     }
                                                 } ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
