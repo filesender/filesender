@@ -64,8 +64,8 @@
 
             <td class="guest_transfers" data-label="{tr:guest_transfers}">
                 <?php
-                    $guestTransfers = Transfer::fromGuest($guest);
-                    if (!count($guestTransfers)) {
+                $guestTransfers = Transfer::fromGuest($guest);
+                if (!count($guestTransfers)) {
                 ?>
                     <ul class="fs-list fs-list--inline">
                         <li>
@@ -76,7 +76,7 @@
                         </li>
                     </ul>
                 <?php } else {
-                    $dc = count($guestTransfers->downloads);
+                    $dc = count($guestTransfers);
                     echo $dc;
                 } ?>
             </td>
