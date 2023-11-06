@@ -397,7 +397,7 @@
 
                                 <ul class="fs-list fs-list--inline">
                                     <li>
-                                        <a href="">
+                                        <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py">
                                             {tr:download_python_cli}
                                         </a>
                                     </li>
