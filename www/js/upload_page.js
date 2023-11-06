@@ -1690,6 +1690,10 @@ filesender.ui.onChangeTransferType = function (transferType) {
             default:
                 break;
         }
+
+        if( filesender.ui.doesUploadMessageContainPassword()) {
+            filesender.ui.nodes.message.focus();
+        }
     }
 };
 
