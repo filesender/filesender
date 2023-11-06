@@ -227,7 +227,7 @@ username = $username
 apikey = $authsecret
 END;
             
-            header('Content-Type: text/javascript');
+            header('Content-Type: text/plain');
             echo $doc;
             exit;
         }
