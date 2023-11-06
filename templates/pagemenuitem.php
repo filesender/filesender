@@ -6,7 +6,7 @@ function pagelink($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
     $class = ($page == GUI::currentPage()) ? ' fs-link--active ' : '';
 
-//    echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
+    echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
 }
 
 function pagemenuitem($page) {
