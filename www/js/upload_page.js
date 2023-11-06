@@ -962,9 +962,6 @@ filesender.ui.isUserAddMeToRecipients = function() {
 
 filesender.ui.doesUploadMessageContainPassword = function() {
 
-    if( filesender.ui.isUserGettingALink() )
-        return false;
-
     if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
         var p = filesender.ui.nodes.encryption.password.val();
         var m = filesender.ui.nodes.message.val();
