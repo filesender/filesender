@@ -1026,7 +1026,9 @@ filesender.ui.evalUploadEnabled = function() {
             ok = false;
             configStageOk = false;
         }
-        filesender.ui.nodes.encryption.password.focus();
+        if( document.activeElement !== document.getElementById("message")) {
+            filesender.ui.nodes.encryption.password.focus();
+        }
     }
 
     if( filesender.ui.doesUploadMessageContainPassword()) {
