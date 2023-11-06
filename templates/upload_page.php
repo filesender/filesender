@@ -89,6 +89,9 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
     if( in_array($name, $optionsToFilter)) {
         return;
     }
+    if( $name == "get_a_link" ) {
+        return;
+    }
 
     $default = $cfg['default'];
     if( !$forcedOption ) {
