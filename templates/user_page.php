@@ -309,6 +309,7 @@
                     <h2>{tr:user_remote_authentication}</h2>
 
                     <?php
+                        $tt = 0;
                         $id = 'auth_secret';
 
                         if($page[$id]) {
@@ -333,7 +334,7 @@
                             <div class="fs-settings__api-secret">
                                 <h3>{tr:api_secret}</h3>
 
-                                <?php echo "<p>$tt</p>"; ?>
+                                <?php if($tt) { echo "<p>$tt</p>"; } ?>
 
                                 <?php
                                 if ($value) {
