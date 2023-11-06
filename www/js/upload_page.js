@@ -1883,6 +1883,11 @@ $(function() {
 
         filesender.ui.setFileList(2, 3);
 
+        // If there is only one choice then we should already make it
+        if($('.get_a_link_top_selector').length==0) {
+            $('#transfer-email').prop("checked", true);
+        }
+        
         var get_a_link_checked = filesender.ui.isUserGettingALink();
         filesender.ui.handle_get_a_link_change();
         if( get_a_link_checked ) {

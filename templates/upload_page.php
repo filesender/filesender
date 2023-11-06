@@ -336,7 +336,7 @@ if(Auth::isGuest()) {
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
                                             <div class="fs-radio-group">
-                                                <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link">
+                                                <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link" class="get_a_link_top_selector">
 
                                                 <label for="get_a_link" class="fs-radio">
                                                     <div class="fs-radio__option">
