@@ -952,7 +952,10 @@ filesender.ui.recipients = {
 };
 
 filesender.ui.isUserGettingALink = function() {
-    var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
+    var gal = false;
+    if($('.get_a_link_top_selector').length) {
+        gal = $('.get_a_link_top_selector').is(':checked');
+    }    
     return gal;
 }
 filesender.ui.isUserAddMeToRecipients = function() {
@@ -990,7 +993,6 @@ filesender.ui.evalUploadEnabled = function() {
         ok = false;
         uploadFileStageOk = false;
     }
-
 
     if(
         filesender.ui.nodes.need_recipients &&
@@ -1212,6 +1214,7 @@ filesender.ui.startUpload = function() {
             this.transfer.options[o] = v;
         }
     }
+    this.transfer.options['get_a_link'] = filesender.ui.isUserGettingALink();
 
     var crypto = window.filesender.crypto_app();
     this.transfer.encryption_key_version = filesender.config.encryption_key_version_new_files;
