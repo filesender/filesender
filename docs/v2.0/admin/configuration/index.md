@@ -271,6 +271,7 @@ A note about colours;
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
 * [auth_sp_fake_additional_attributes_values](#auth_sp_fake_additional_attributes_values)
 * [auditlog_lifetime](#auditlog_lifetime)
+* [ratelimithistory_lifetime](#ratelimithistory_lifetime)
 * [report_format](#report_format)
 * [exception_additional_logging_regex](#exception_additional_logging_regex)
 * [clientlogs_stashsize](#clientlogs_stashsize)
@@ -2934,6 +2935,16 @@ $config['log_facilities'] =
 * __type:__ boolean/int (days).  Set to false to disable.
 * __default:__ 31
 * __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service.
+
+### ratelimithistory_lifetime
+
+* __description:__ The ratelimithistory entries are kept in the database for this long. Should be at least a day, default is a month.
+* __mandatory:__ no
+* __type:__ boolean/int (days).  Set to false to disable.
+* __default:__ 31
+* __available:__ since version 2.42
 * __1.x name:__
 * __comment:__ Use this setting to control the privacy footprint of your FileSender service.
 

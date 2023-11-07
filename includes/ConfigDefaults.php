@@ -182,6 +182,7 @@ $default = array(
     'statlog_lifetime' => 0,
     'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
+    'ratelimithistory_lifetime' => 31,
     
     'storage_usage_warning' => 20,
     
