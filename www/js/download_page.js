@@ -355,7 +355,7 @@ $(function() {
     // and they will not be able to download them.
     var transfer_is_encrypted = $('.transfer_is_encrypted').text()==1;
     if( transfer_is_encrypted && !filesender.supports.crypto )
-        $('.crypto_not_supported_message').show();
+        $('#encryption_description_not_supported').show();
 
     page.find('.toggle-select-all').trigger('mousedown');
 
