@@ -657,6 +657,11 @@ filesender.ui.files = {
 
     },
 
+    usingGeneratedPassword: function() {
+        var crypto = window.filesender.crypto_app();
+        return filesender.ui.transfer.encryption_password_version == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit;
+    },
+    
     checkEncryptionPassword: function(input,slideMessage) {
         input = $(input);
         var crypto = window.filesender.crypto_app();
@@ -690,8 +695,7 @@ filesender.ui.files = {
             }
         }
 
-        var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
-        if( v ) {
+        if( filesender.ui.files.usingGeneratedPassword()) {
             $('.passwordvalidation').each(function( index ) {
                 $(this).hide();
             });
@@ -2049,6 +2053,10 @@ $(function() {
     filesender.ui.nodes.encryption.password.on(
         'keyup',
         delayAndCallOnlyOnce(function(e) {
+            // as soon as they edit anything it can no longer be considered "generated".
+            filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
+            filesender.ui.transfer.encryption_password_encoding = 'none';
+            
             filesender.ui.files.checkEncryptionPassword($(this),true);
             filesender.ui.evalUploadEnabled();
         }, checkEncryptionPassword_delay )
@@ -2322,11 +2330,8 @@ $(function() {
         password = encoded.value;
         filesender.ui.nodes.encryption.password.val(password);
 
-        // filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
-        // filesender.ui.transfer.encryption_password_version  = encoded.version;
-
-        filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
-        filesender.ui.transfer.encryption_password_encoding = 'none';
+        filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
+        filesender.ui.transfer.encryption_password_version  = encoded.version;
 
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
