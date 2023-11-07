@@ -311,7 +311,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
     <?php if($have_av) { ?>
         <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
             <div class="avdesc">{tr:av_results_description}
-            <?php foreach($sortedFiles->files as $file) { ?>
+            <?php foreach($sortedFiles as $file) { ?>
                 <div class="avfile" data-avid="<?php echo $file->id ?>" >
                     <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
                     <?php if(!$file->have_avresults) { ?>
