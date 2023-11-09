@@ -1,0 +1,36 @@
+:root {
+  --fs-spacing-base: 8px;
+  --fs-spacing-half: calc(var(--fs-spacing-base) / 2);
+  --fs-spacing-quarter: calc(var(--fs-spacing-base) / 4);
+
+  --fs-spacing-1x: var(--fs-spacing-base);
+  --fs-spacing-2x: calc(var(--fs-spacing-base) * 2);
+  --fs-spacing-3x: calc(var(--fs-spacing-base) * 3);
+  --fs-spacing-4x: calc(var(--fs-spacing-base) * 4);
+  --fs-spacing-5x: calc(var(--fs-spacing-base) * 5);
+  --fs-spacing-6x: calc(var(--fs-spacing-base) * 6);
+  --fs-spacing-7x: calc(var(--fs-spacing-base) * 7);
+  --fs-spacing-8x: calc(var(--fs-spacing-base) * 8);
+  --fs-spacing-9x: calc(var(--fs-spacing-base) * 9);
+  --fs-spacing-10x: calc(var(--fs-spacing-base) * 10);
+  --fs-spacing-11x: calc(var(--fs-spacing-base) * 11);
+  --fs-spacing-12x: calc(var(--fs-spacing-base) * 12);
+  --fs-spacing-13x: calc(var(--fs-spacing-base) * 13);
+  --fs-spacing-14x: calc(var(--fs-spacing-base) * 14);
+  --fs-spacing-15x: calc(var(--fs-spacing-base) * 15);
+  --fs-spacing-16x: calc(var(--fs-spacing-base) * 16);
+  --fs-spacing-17x: calc(var(--fs-spacing-base) * 17);
+  --fs-spacing-18x: calc(var(--fs-spacing-base) * 18);
+  --fs-spacing-19x: calc(var(--fs-spacing-base) * 19);
+  --fs-spacing-20x: calc(var(--fs-spacing-base) * 20);
+  --fs-spacing-21x: calc(var(--fs-spacing-base) * 21);
+  --fs-spacing-22x: calc(var(--fs-spacing-base) * 22);
+  --fs-spacing-23x: calc(var(--fs-spacing-base) * 23);
+  --fs-spacing-24x: calc(var(--fs-spacing-base) * 24);
+  --fs-spacing-25x: calc(var(--fs-spacing-base) * 25);
+  --fs-spacing-26x: calc(var(--fs-spacing-base) * 26);
+  --fs-spacing-27x: calc(var(--fs-spacing-base) * 27);
+  --fs-spacing-28x: calc(var(--fs-spacing-base) * 28);
+  --fs-spacing-29x: calc(var(--fs-spacing-base) * 29);
+  --fs-spacing-30x: calc(var(--fs-spacing-base) * 30);
+}

@@ -10,10 +10,10 @@ If you want to add your FileSender installation to this list, send an email to f
 
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
+| Albania  | RASH  | [https://filesender.rash.al/](https://filesender.rash.al/)      | Nov 2020| Aug 2023 |
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012| March 2023 |
 | Belgium  | BELNET  | [https://filesender.belnet.be/](https://filesender.belnet.be/)      | Mar 2010| March 2023 |
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010| March 2023 |
-| Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021| 5 April 2023 |
 | Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012| 5 April 2023 |
 | Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012| 5 April 2023|
 | Europe  | GÉANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010| 5 April 2023|
@@ -28,7 +28,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011| 5 April 2023 | 
 | Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016| 5 April 2023 |
 | Netherlands  | SURF  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010| 5 April 2023 |
-| Norway  | Sikt  | [https://filesender.sikt.no/](https://filesender.sikt.no/)    | 2009| 5 April 2023 | 5 April 2023 |
+| Norway  | Sikt  | [https://filesender.sikt.no/](https://filesender.sikt.no/)    | 2009| 5 April 2023 |
 | Poland  | PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013| 5 April 2023 |
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011| 5 April 2023 |
 | Romania | RoEduNet | [https://fisiere.roedu.net/](https://fisiere.roedu.net/) | 2013 | 5 April 2023 |
@@ -36,15 +36,20 @@ If you want to add your FileSender installation to this list, send an email to f
 | Slovenia  | ARNES    | [https://filesender.arnes.si/](https://filesender.arnes.si/)       | May 2011| 5 April 2023 |
 | Spain    | RedIRIS  | [https://filesender.rediris.es](https://filesender.rediris.es)      | Mar 2017| 5 April 2023 |
 | Switzerland  | SWITCH  | [https://filesender.switch.ch](https://filesender.switch.ch)      | Sep 2012| 5 April 2023 |
+| Turkey  | ULAKBIM  | [https://filesender.ulakbim.gov.tr](https://filesender.ulakbim.gov.tr)      | Feb 2019| 11 October 2023 |
 | Ukraine | URAN | [https://filesender.uran.ua/filesender/](https://filesender.uran.ua/filesender/) | Mar 2018| 5 April 2023 |
 
 ## HE&R Community installations - Europe & Middle East
+
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014| March 2023 |
+| Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021| 5 April 2023 |
+| Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://filesender.hifis.dkfz.de/](https://filesender.hifis.dkfz.de/) | Aug 2023| 9 August 2023|
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 5 April 2023 |
 
 ## NREN installations - Asia - Pacific
+
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 5 April 2023 |
@@ -54,11 +59,13 @@ If you want to add your FileSender installation to this list, send an email to f
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016|5 April 2023 |
 
 ## HE&R Community installations - Asia - Pacific
+
 | Country/Region|NREN/Org  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Japan / Okinawa| Okinawa Institute of Science and Technology  | [https://filesender.oist.jp](https://filesender.oist.jp)  | Sep 2013|5 April 2023 |
 
 ## NREN installations - Americas
+
 | Country/Region|NREN  | Service URL | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Brazil  | RNP    | [https://filesender.rnp.br](https://filesender.rnp.br)      | Oct 2014| 5 April 2023 |
@@ -68,9 +75,11 @@ If you want to add your FileSender installation to this list, send an email to f
 
 
 ## NREN installations - Africa
+
 | Country/Region|NREN  | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
 | East Africa | UBUNTUNET | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | March 2018|5 April 2023 |
+| Ethiopia | EthERNet | [https://filesender.ethernet.edu.et/](https://filesender.ethernet.edu.et/) | Oct 2023 | 20 October 2023|
 | Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 |5 April 2023 |
 | Somalia | SomaliREN | [https://filesender.somaliren.org.so/filesender/](https://filesender.somaliren.org.so/filesender/) | May 2022 |5 April 2023 |
 | South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014|5 April 2023 |
@@ -84,11 +93,12 @@ If you want to add your FileSender installation to this list, send an email to f
 
 
 ## Unreachable installations
+
 | Country/Region| Organisation | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016| March 2023 |
 | Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| March 2023 |
-| Cyprus  | CYNET    | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| March 2023 |
+| Cyprus  | University of Cyprus | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| March 2023 |
 | Israel  | IUCC/HUJI  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 5 April 2023 - unreachable |
 | Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012| 5 April 2023 - unreachable |
 | Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018| 5 April 2023 - unreachable |

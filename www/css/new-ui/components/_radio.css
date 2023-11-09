@@ -1,0 +1,60 @@
+.fs-radio-group input[type="radio"] {
+  display: none;
+}
+
+.fs-radio-group input[type="radio"]:checked ~ .fs-radio {
+  border-color: var(--fs-accent);
+  background: var(--fs-hover);
+}
+
+.fs-radio-group input[type="radio"]:checked ~ .fs-radio .fs-radio__option .fs-radio__circle {
+  background: var(--fs-accent);
+  border: 5px solid var(--fs-light);
+}
+
+.fs-radio-group + * {
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-radio {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--fs-bg-light);
+  padding: var(--fs-spacing-base) var(--fs-spacing-2x);
+  border-radius: var(--fs-spacing-base);
+  border: 1px solid var(--fs-border);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.fs-radio:hover {
+  background: var(--fs-hover);
+}
+
+.fs-radio:hover .fs-radio__circle {
+  border-color: var(--fs-bg-light);
+  background: var(--fs-bg-light);
+}
+
+.fs-radio__option {
+  display: flex;
+  align-items: center;
+  min-width: var(--fs-spacing-20x);
+}
+
+.fs-radio__circle {
+  height: 22px;
+  width: 22px;
+  background: transparent;
+  border: 1px solid var(--fs-accent);
+  display: inline-block;
+  margin-right: 15px;
+  border-radius: 50%;
+  transition: all 0.25s ease;
+}
+
+.fs-radio__info {
+  font-weight: 300;
+  font-size: 0.9rem;
+}

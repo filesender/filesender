@@ -550,4 +550,4 @@ $lang['yes'] = 'Tak';
 $lang['you_can_report_exception'] = 'Aby pomóc działowi wsparcia w diagnozie problemu, zgłaszając ten błąd podaj następujący kod: ';
 $lang['you_can_report_exception_by_email'] = 'Możesz zgłosić ten błąd poprzez email';
 $lang['you_can_send_client_logs'] = 'Aby pomóc zespołowi pomocy technicznej dowiedzieć się, co się stało, możesz wysłać ostatnie wpisy dziennika z interfejsu użytkownika, klikając ten przycisk:';
-$lang['you_generated_this_auth_secret_at'] = 'Wygenerowałeś auth secret: {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Wygenerowałeś auth secret: <strong>{datetime}</strong>';

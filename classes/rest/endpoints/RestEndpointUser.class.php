@@ -210,6 +210,27 @@ class RestEndpointUser extends RestEndpoint
                 'data' => ''
             );
         }
+
+        if( $property == 'filesender-python-client-configuration-file' ) {
+
+            $username = $user->saml_user_identification_uid;
+            $authsecret = $user->auth_secret;
+            $site_url = Config::get('site_url');
+            
+            $doc = <<<END
+[system]            
+base_url = $site_url/rest.php
+default_transfer_days_valid = 10
+
+[user]
+username = $username
+apikey = $authsecret
+END;
+            
+            header('Content-Type: text/plain');
+            echo $doc;
+            exit;
+        }
         
         if ($property == 'quota') {
             // Get user quota info (if enabled)

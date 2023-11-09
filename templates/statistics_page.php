@@ -9,6 +9,7 @@
 if (AggregateStatistic::enabled()) {
     echo "<h3>{tr:aggregate_statistics}</h3>";
     pagelink('aggregate_statistics');
+    echo "<br/>";
 }
 ?>
     

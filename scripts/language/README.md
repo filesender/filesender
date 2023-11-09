@@ -1,11 +1,7 @@
-
-
-
-Sending strings from php files to poeditor
-------------------------------------------
+# Sending strings from PHP files to POEditor
 
 If you have a PR for example that contains language translations for
-new strings you might like to import these into poeditor through
+new strings you might like to import these into POEditor through
 scripts.
 
 You will need to store the poeditor API TOKEN in a file in your home
@@ -14,7 +10,7 @@ directory to import strings. For example, using something like:
 ```
 $ vi ~/.filesender/poeditor-apikey
 export API_TOKEN="fixme"
-export PROJECT_ID="48000"
+export PROJECT_ID="633591"
 ```
 
 The project id should be fine to set as shown above as this will inform
@@ -54,16 +50,16 @@ php convert-php-to-poeditor-json.php en_AU /tmp/test.json '/^about.*/'
 Feel free to trim or filter the exported JSON file to only contain the
 translations you are interested in uploading. To then upload those
 translations to poeditor use the following. en-au is the poeditor
-language code. The 48000 number tells the script to upload to the main
+language code. The 633591 number tells the script to upload to the main
 translation project on poeditor. If you are unsure of the outcome you
 might like to first use the number 380345 which will upload to the
 "Testing" poeditor translation project so you can see what happens
 without impacting existing real translations.
 
 ```
-# commentline    main project = 48000    test project = 380345
+# commentline    main project = 633591    test project = 380345
 
-./send-json-translations-for-language-to-poeditor.sh 48000 en-au /tmp/test.json
+./send-json-translations-for-language-to-poeditor.sh 633591 en-au /tmp/test.json
 ```
 
 
@@ -80,10 +76,10 @@ output can be sent using send-json-translations-for-language-to-poeditor.sh as d
 ```
 php convert-php-to-poeditor-json.php \
        en_AU /tmp/test.json '/.*/' 0 \
-       /tmp/filesender-poeditor-imports-wmsnC/FileSender_2.0_English_AU.php
+       /tmp/filesender-poeditor-imports-wmsnC/FileSender_3.0_English_AU.php
 ```
 
-To generate the FileSender_2.0_English_AU.php file from the current data on poeditor
+To generate the FileSender_3.0_English_AU.php file from the current data on poeditor
 one can use the below. See import-all-from-poeditor.sh for a list of poeditor language codes
 that are currently imported in bulk.
 

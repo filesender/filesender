@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -35,7 +35,9 @@ $(function() {
     window.transfers_table = true;
 
     window.filesender.pbkdf2dialog.setup( true );
-    
+
+    // TODO: REMOVER
+
     // Expand each transfer's details
     $('.transfer .expand span, .transfer span.expand').on('click', function() {
         var el = $(this);
@@ -47,47 +49,49 @@ $(function() {
         tr.hide('fast');
         details.show('fast');
     });
-    
+
     // Collapse each transfer's details
     $('.transfer_details .collapse span').on('click', function() {
         var el = $(this);
         var details = el.closest('tr');
         var tr = el.closest('table').find('.transfer[data-id="' + details.attr('data-id') + '"]');
-        
+
         details.hide('fast');
         tr.show('fast');
     });
-    
+
     // Expand / retract all
     $('thead .expand span').on('click', function() {
         var el = $(this);
         var table = el.closest('table');
-        
+
         var expanded = !el.hasClass('expanded');
-        
+
         table.find('.transfer_details')[expanded ? 'show' : 'hide']('fast');
         table.find('.transfer')[expanded ? 'hide' : 'show']('fast');
-        
+
         el.toggleClass('expanded', expanded).toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
     });
-    
+
     // Clone attributes for easier access
     $('.transfer_details').each(function() {
         var id = $(this).attr('data-id');
         if(!id || isNaN(id)) return;
-        
+
         var t = $('.transfer[data-id="' + id + '"]');
-        
+
         $(this).attr({
             'data-transfer': '',
             'data-recipients-enabled': t.attr('data-recipients-enabled'),
             'data-errors': t.attr('data-errors'),
             'data-expiry-extension': t.attr('data-expiry-extension'),
         });
-        
+
         t.attr({'data-transfer': ''});
     });
-    
+
+    // FIM TODO
+
     // Transfer delete buttons
     $('.actions [data-action="delete"]').on('click', function() {
         var id = $(this).closest('[data-transfer]').attr('data-id');
@@ -109,7 +113,7 @@ $(function() {
                             filesender.client.deleteTransfer(id, done);
                         });
                         break;
-                    
+
                     case 'delete_transfer_roughly' :
                         filesender.client.deleteTransfer(id, done);
                         break;
@@ -134,10 +138,10 @@ $(function() {
     });
 
 
-    
+
     // Extend buttons
     $('[data-expiry-extension="0"] [data-action="extend"]').addClass('disabled').attr({title: lang.tr('transfer_expiry_extension_count_exceeded')});
-    
+
     $('[data-expiry-extension][data-expiry-extension!="0"] [data-action="extend"]').each(function() {
         $(this).attr({
             title: lang.tr('extend_expiry_date').r({
@@ -157,118 +161,119 @@ $(function() {
     }).on('click', function() {
         filesender.ui.extendExpires( $(this), 'transfer');
     });
-    
 
-    
+
+
     // Add recipient buttons
     $('[data-recipients-enabled=""] [data-action="add_recipient"]').addClass('disabled');
-    
+
     $('[data-recipients-enabled="1"] [data-action="add_recipient"]').on('click', function() {
         var id = $(this).closest('[data-transfer]').attr('data-id');
         if(!id || isNaN(id)) return;
-        
+
         var recipients = [];
         $('.transfer_details[data-id="' + id + '"] .recipients .recipient').each(function() {
             recipients.push($(this).attr('data-email'));
         });
-        
+
         var prompt = filesender.ui.promptEmail(lang.tr('enter_to_email'), function(input) {
             $('p.error', this).remove();
-            
+
             var raw_emails = input.split(/[,;]/);
-            
+
             var emails = [];
             var errors = [];
-            
+
             for(var i=0; i<raw_emails.length; i++) {
                 var email = raw_emails[i].replace(/^\s+/, '').replace(/\s+$/, '');
                 if(!email) continue;
-                
+
                 if(!email.match(filesender.ui.validators.email)) {
                     errors.push(lang.tr('invalid_recipient').r({email: email}));
                     continue;
                 }
-                
+
                 for(var j=0; j<recipients.length; j++) {
                     if(recipients[j] == email) {
                         errors.push(lang.tr('duplicate_recipient').r({email: email}));
                         continue;
                     }
                 }
-                
+
                 for(var j=0; j<emails.length; j++) {
                     if(emails[j] == email) {
                         errors.push(lang.tr('duplicate_recipient').r({email: email}));
                         continue;
                     }
                 }
-                
+
                 emails.push(email);
             }
-            
+
             if(recipients.length + emails.length >= filesender.config.max_email_recipients)
                 errors.push(lang.tr('max_email_recipients_exceeded').r({max: filesender.config.max_email_recipients}));
-            
+
             if(errors.length) {
                 console.log(errors);
                 for(var i=0; i<errors.length; i++)
                     $('<p class="error message" />').text(errors[i].out()).appendTo(prompt);
                 return false;
             }
-            
+
             var done = 0;
             for(var i=0; i<emails.length; i++) {
                 filesender.client.addRecipient(id, emails[i], function() {
                     done++;
-                    
+
                     if(done < emails.length) return;
-                    
+
                     filesender.ui.notify('success', lang.tr('recipient_added'), function() {
                         filesender.ui.reload();
                     });
                 });
             }
-            
+
             return true;
         })
-        
+
         prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
     });
-    
+
     // Remind buttons
     $('[data-recipients-enabled=""] .actions [data-action="remind"]').addClass('disabled');
-    
+
     $('[data-recipients-enabled="1"] .actions [data-action="remind"]').on('click', function() {
         var id = $(this).closest('[data-transfer]').attr('data-id');
         if(!id || isNaN(id)) return;
-        
+
         filesender.ui.confirm(lang.tr('confirm_remind_transfer'), function() {
             filesender.client.remindTransfer(id, function() {
                 filesender.ui.notify('success', lang.tr('transfer_reminded'));
             });
         });
     });
-    
+
+    // TODO: REMOVER
     // Recipient remind buttons
     $('.transfer_details .recipient [data-action="remind"]').on('click', function() {
         var rcpt = $(this).closest('.recipient');
         var id = rcpt.attr('data-id');
         if(!id || isNaN(id)) return;
-        
+
         filesender.ui.confirm(lang.tr('confirm_remind_recipient'), function() {
             filesender.client.remindRecipient(id, function() {
                 filesender.ui.notify('success', lang.tr('recipient_reminded'));
             });
         });
     });
-    
+
     // Recipient delete buttons
     $('.transfer_details .recipient [data-action="delete"]').on('click', function() {
         var rcpt = $(this).closest('.recipient');
         var id = rcpt.attr('data-id');
         var transfer = rcpt.closest('.transfer_details');
         if(!id || isNaN(id)) return;
-        
+
         filesender.ui.confirm(lang.tr('confirm_delete_recipient'), function() {
             filesender.client.deleteRecipient(id, function() {
                 rcpt.remove();
@@ -280,58 +285,60 @@ $(function() {
             });
         });
     });
-    
+
     // Recipient error display
     $('.transfer_details .recipient .errors [data-action="details"]').on('click', function() {
         var rcpt = $(this).closest('.recipient');
         var id = rcpt.attr('data-id');
         if(!id || isNaN(id)) return;
-        
+
         filesender.client.getRecipient(id, function(recipient) {
             var popup = filesender.ui.wideInfoPopup(lang.tr('recipient_errors'));
-            
+
             for(var i=0; i<recipient.errors.length; i++) {
                 var error = recipient.errors[i];
-                
+
                 var node = $('<div class="error" />').appendTo(popup);
-                
+
                 var type = $('<div class="type" />').appendTo(node);
                 $('<span class="name" />').appendTo(type).text(lang.tr('error_type') + ' : ');
                 $('<span class="value" />').appendTo(type).text(lang.tr('recipient_error_' + error.type));
-                
+
                 var date = $('<div class="date" />').appendTo(node);
                 $('<span class="name" />').appendTo(date).text(lang.tr('error_date') + ' : ');
                 $('<span class="value" />').appendTo(date).text(error.date.formatted);
-                
+
                 var details = $('<div class="details" />').appendTo(node);
                 $('<span class="name" />').appendTo(details).text(lang.tr('error_details') + ' : ');
                 $('<pre class="value" />').appendTo(details).text(error.details);
             }
-            
+
             // Reset popup position as we may have added lengthy content
             filesender.ui.relocatePopup(popup);
         });
     });
+    // FIM TODO
 
     // Transfer options
     $('.transfer_options [data-action="remove"]').on('click', function() {
         var id = $(this).closest('[data-transfer]').attr('data-id');
         if(!id || isNaN(id)) return;
-        
+
         filesender.ui.confirm(lang.tr('confirm_remove_daily_stats_transfer'), function() {
             filesender.client.removeTransferOption(id, 'email_daily_statistics', function() {
                 filesender.ui.notify('success', lang.tr('transfer_option_modified'));
             });
         });
     });
-    
+
+    // TODO: REMOVER
     // File delete buttons
     $('.transfer_details .file [data-action="delete"]').on('click', function() {
         var file = $(this).closest('.file');
         var id = file.attr('data-id');
         var transfer_details = file.closest('.transfer_details');
         if(!id || isNaN(id)) return;
-        
+
         filesender.ui.confirm(lang.tr('confirm_delete_file'), function() {
             filesender.client.deleteFile(id, function() {
                 file.remove();
@@ -344,14 +351,15 @@ $(function() {
             });
         });
     });
-    
+    // FIM TODO
+
     // File download buttons when the files are encrypted
     $('.transfer-download').on('click', function () {
-        
+
         if(!filesender.supports.crypto){
             return;
         }
-        
+
         var transferid = $(this).attr('data-transferid');
         var id = $(this).attr('data-id');
         var encrypted = $(this).attr('data-encrypted');
@@ -370,11 +378,11 @@ $(function() {
         if( fileaead.length ) {
             fileaead = atob(fileaead);
         }
-        
+
         if (typeof id == 'string'){
             id = [id];
         }
-        
+
         window.filesender.crypto_app().decryptDownload(
             filesender.config.base_path + 'download.php?files_ids=' + id.join(','),
             transferid,
@@ -397,25 +405,25 @@ $(function() {
 
             var popup = filesender.ui.wideInfoPopup(lang.tr('auditlog'));
             popup.css('overflow','hidden');
-            
+
             if(!log || !log.length) {
                 $('<p />').text(lang.tr('no_auditlog')).appendTo(popup);
                 return;
             }
-            
+
             var tbl = $('<table class="list" />').appendTo(popup);
             var th = $('<tr />').appendTo($('<thead />').appendTo(tbl));
             $('<th class="date" />').text(lang.tr('date')).appendTo(th);
             $('<th />').text(lang.tr('action')).appendTo(th);
             $('<th />').text(lang.tr('ip')).appendTo(th);
-            
+
             if(filter) {
                 filter = filter.split('/');
                 if(filter.length != 3) filter = null;
             }
 
             var filterid = null;
-            
+
             if(filter) {
                 var flt = $('<div class="filtered" />').text(lang.tr('filtered_transfer_log')).prependTo(popup);
                 $('<a href="#" />').text(lang.tr('view_full_log')).appendTo(flt).on('click', function(e) {
@@ -432,7 +440,7 @@ $(function() {
             var tb = $('<tbody />').appendTo(tbl);
             for(var i=0; i<log.length; i++) {
                 var tr = $('<tr />').appendTo(tb);
-                
+
                 var filtered = false;
                 if(filter) {
                     var v = log[i][filter[0]];
@@ -444,50 +452,50 @@ $(function() {
                     }
                 }
                 if(filtered) tr.hide();
-                
+
                 $('<td class="date" />').text(log[i].date.formatted).appendTo(tr);
-                
+
                 var lid = 'report_event_' + log[i].event;
-                
+
                 var rpl = log[i];
                 var ttlc = log[i].target.type.toLowerCase();
                 rpl[ttlc] = log[i].target;
                 if( rpl[ttlc]['name'] && !rpl[ttlc]['path'] ) {
                     rpl[ttlc]['path'] = rpl[ttlc]['name'];
                 }
-                
+
                 $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
-                
+
                 $('<td />').text(log[i].author.ip).appendTo(tr);
-                
+
             }
-            
+
             var actions = $('<div class="actions" />').appendTo(popup);
-            
+
             var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(' ' + lang.tr('send_to_my_email')).appendTo(actions);
             $('<span class="fa fa-lg fa-envelope-o" />').prependTo(send_by_email);
             send_by_email.on('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
-                
+
                 filesender.client.getTransferAuditlogByEmail(transfer_id, filterid, function() {
                     filesender.ui.notify('success', lang.tr('email_sent'));
                 });
-                
+
                 return false;
             });
-            
+
             // Reset popup position as we may have added lengthy content
             filesender.ui.relocatePopup(popup);
-            
+
         });
     };
-    
+
     $('[data-transfer] .auditlog a').button().on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'));
     });
-    
-    
+
+    // TODO: REMOVER
     $('.transfer_details .recipient [data-action="auditlog"]').on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'), 'author/recipient/' + $(this).closest('.recipient').attr('data-id'));
     });
@@ -495,16 +503,27 @@ $(function() {
     $('.transfer_details .file [data-action="auditlog"]').on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'), 'target/file/' + $(this).closest('.file').attr('data-id'));
     });
+    // FIM TODO
 
     $('[data-action="auditlog"]').not('.transfer_details .file [data-action="auditlog"]').on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'));
     });
-    
+
+    // TODO: REMOVER
     // Downloadlinks auto-selection
     $('.transfer_details .download_link input').on('focus', function() {
         $(this).select();
     });
-    
+    // FIM TODO
+
+    $('.fs-table__row--clickable').on('click', function() {
+        const transfer_id = $(this).data("id");
+
+        if (transfer_id) {
+            window.location.href = `?s=transfer_detail&transfer_id=${transfer_id}`;
+        }
+    });
+
     // Do we have a quick open hash ?
     var anchor = window.location.hash.substr(1);
     var match = anchor.match(/^transfer_([0-9]+)$/);

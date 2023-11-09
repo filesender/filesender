@@ -1,0 +1,29 @@
+.fs-copy {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--fs-hightlight-bg);
+  border: 1px solid var(--fs-accent);
+  border-radius: var(--fs-spacing-4x);
+  font-weight: 700;
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-copy span {
+  flex: 1;
+  font-size: 0.9rem;
+  padding: 0 var(--fs-spacing-3x);
+  word-break: break-word;
+}
+
+.fs-copy button {
+  font-size: 0.9rem;
+}
+
+/* XS,SM */
+@media (max-width: 767px) {
+
+  .fs-copy span {
+    font-size: 0.7rem;
+  }
+}
