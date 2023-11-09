@@ -683,4 +683,4 @@ $lang['yes'] = 'Evet';
 $lang['you_can_report_exception'] = 'Bu hatayı rapor ederken detayların tespitine yardımcı olmak için lütfen aşağıdaki kodu verin';
 $lang['you_can_report_exception_by_email'] = 'Bu hatayı e-posta ile rapor edebilirsiniz';
 $lang['you_can_send_client_logs'] = 'Destek ekibinizin ne olduğunu bulmasına yardımcı olmak için bu düğmeye basarak kullanıcı arayüzünüzden son günlük girilerini gönderebilirsiniz:';
-$lang['you_generated_this_auth_secret_at'] = 'Bu kimlik doğrulama sırrını şu saatte oluşturdunuz: {datetime}';
+$lang['you_generated_this_auth_secret_at'] = 'Bu kimlik doğrulama sırrını şu saatte oluşturdunuz: <strong>{datetime}</strong>';

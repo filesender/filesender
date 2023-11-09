@@ -7,7 +7,7 @@ $headerclass = "header";
     try {
         if (Auth::isAuthenticated()) {
             if (Auth::isAdmin()) {
-            
+
                 $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
                 if( $uid ) {
                     if( Config::get('admin_can_view_user_transfers_page')) {
@@ -28,27 +28,22 @@ $headerclass = "header";
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-        
+
         <title><?php echo htmlspecialchars(Config::get('site_name')); ?></title>
 
         <?php GUI::includeStylesheets() ?>
-        
+
         <?php GUI::includeFavicon() ?>
-        
+
         <?php GUI::includeScripts() ?>
-        
+
         <script type="text/javascript" src="{path:filesender-config.js.php}"></script>
-        
+
         <script type="text/javascript" src="{path:rest.php/lang?callback=lang.setTranslations<?php echo $vidattr ?>}"></script>
-        
+
         <meta name="robots" content="noindex, nofollow" />
-        
+
         <meta name="auth" content="noindex, nofollow" />
     </head>
-    
-    <body data-security-token="<?php echo Utilities::getSecurityToken() ?>" data-auth-type="<?php echo Auth::type() ?>">
 
-    <div class="container sticky-top filesender-topcontent ">
-        <header class="filesender-header py-3 ">
-             
-	<div class="row"><a href="<?php echo Config::get('site_url') ?>" id="header"></a></div>
+    <body data-security-token="<?php echo Utilities::getSecurityToken() ?>" data-auth-type="<?php echo Auth::type() ?>">

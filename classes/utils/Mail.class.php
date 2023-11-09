@@ -562,11 +562,18 @@ class Mail
             return true;
         }
         Logger::warn('Sending mail');
-        
+
+        $add_minus_r_to_mail = Utilities::isTrue(Config::get('email_send_with_minus_r_option'));
+    
         if (Config::get('debug_mail')) {
             $this->sendDebugMail($source);
         } else {
-            return mail($source['to'], $this->subject, $source['body'], $source['headers']);
+
+           if( $add_minus_r_to_mail && $this->return_path ) {
+               return mail($source['to'], $this->subject, $source['body'], $source['headers'], '-r' . $this->return_path);
+           } else {
+               return mail($source['to'], $this->subject, $source['body'], $source['headers']);
+           }
         }
     }
 
@@ -758,7 +765,7 @@ class MailAttachment
         
         // Set Content-Disposition part header
         $source .= 'Content-Disposition: '.$this->disposition.($this->name ? '; filename="'.$this->name.'"' : '').$this->nl;
-        
+
         // Set Content-ID part header (for embedded attachments)
         if ($this->cid) {
             $source .= 'Content-ID: '.$this->cid.$this->nl;

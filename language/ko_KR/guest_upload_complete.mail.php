@@ -18,7 +18,7 @@ subject: 게스트가 파일 업로드를 종료함
 게스트: {guest.email}
 바우쳐 링크: {cfg:site_url}?s=upload&vid={guest.token}
 
-{date:guest.expires}까지 바우쳐가 유효하며 이후에는 자동으로 삭제돕니다.
+{date:guest.expires}까지 바우쳐가 유효하며 이후에는 자동으로 삭제됩니다.
 
 감사합니다,
 {cfg:site_name}

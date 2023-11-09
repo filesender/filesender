@@ -2,7 +2,8 @@
     "require": {
         "barracudanetworks/archivestream-php": "^1.0",
         "owasp/csrf-protector-php": "^1.0",
-	"guzzlehttp/guzzle": "^7.4.5",
-        "maennchen/zipstream-php": "^2.1"
+	"guzzlehttp/guzzle": "7.7.0",
+	"guzzlehttp/psr7": "2.6.0",
+        "maennchen/zipstream-php": "2.4.0"
     }
 }

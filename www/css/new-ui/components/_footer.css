@@ -1,0 +1,37 @@
+footer {
+  background: var(--fs-bg-color-secondary);
+  border-top: 1px solid var(--fs-border);
+  color: var(--fs-text-color);
+}
+
+footer .container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+footer a img {
+  max-height: var(--fs-spacing-10x);
+}
+
+.fs-footer-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: var(--fs-spacing-base);
+}
+
+.fs-footer-container--brand-list {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: space-between;
+}
+
+footer .fs-version {
+  background: var(--fs-bg-color);
+  text-align: right;
+  font-size: 0.6rem;
+  padding: var(--fs-spacing-half) var(--fs-spacing-base);
+}

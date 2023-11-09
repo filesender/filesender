@@ -4,16 +4,16 @@ include_once "vidattr.php";
 
 function pagelink($page) {
     if(!GUI::isUserAllowedToAccessPage($page)) return;
-    $class = ($page == GUI::currentPage()) ? ' active ' : '';
-    
-//    echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
+    $class = ($page == GUI::currentPage()) ? ' fs-link--active ' : '';
+
+    echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
 }
 
 function pagemenuitem($page) {
     global $vidattr;
-    
+
     if(!GUI::isUserAllowedToAccessPage($page)) return;
-    $class = ($page == GUI::currentPage()) ? ' active ' : '';
+    $class = ($page == GUI::currentPage()) ? ' fs-link--active ' : '';
 
     $label = Lang::tr($page.'_page');
     if( $page == 'transfers' ) {
@@ -53,12 +53,13 @@ function pagemenuitem($page) {
     if($page == 'help') {
         $faicon = 'fa-question-circle';
     }
-    
+
     if($faicon) {
         $icon = '<i class="fa '.$faicon.'"></i> ';
     }
-    echo '<div class="nav-item">';
-    echo '<a class="p-2 nav-link  '.$class.'" id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$icon.$label.'</a>';
-    echo '</div>';
+
+    echo '<li>';
+    echo '<a class="fs-link '.$class.'"  id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$icon.'<span>'.$label.'</span>'.'</a>';
+    echo '</li>';
 }
 

@@ -707,4 +707,4 @@ $lang['yes'] = '是的';
 $lang['you_can_report_exception'] = '報告此錯誤時，請同時提供以下代碼，以幫助支持人員查找詳細信息';
 $lang['you_can_report_exception_by_email'] = '您可以通過電子郵件報告此錯誤';
 $lang['you_can_send_client_logs'] = '為了幫助您的技術支持團隊了解情況，您可以通過點擊此按鈕從用戶界面發送最後的日誌條目：';
-$lang['you_generated_this_auth_secret_at'] = '此身份認證密鑰已在以下日期和時間生成：{datetime}';
+$lang['you_generated_this_auth_secret_at'] = '此身份認證密鑰已在以下日期和時間生成：<strong>{datetime}</strong>';
