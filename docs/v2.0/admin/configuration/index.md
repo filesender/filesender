@@ -194,6 +194,7 @@ A note about colours;
 * [streamsaver_on_safari](#streamsaver_safari)
 * [recipient_reminder_limit](#recipient_reminder_limit)
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
+* [transfer_automatic_reminder](#transfer_automatic_reminder)
 
 ## Graphs
 
@@ -2149,8 +2150,26 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 
 
+### transfer_automatic_reminder
 
-
+* __description:__ The number of reminders that a user can send to a recipient
+* __mandatory:__ no
+* __type:__ int, array of int, or false
+* __default:__ false
+* __available:__ since before version 2.40
+* __comment:__ This is used in the cron job to allow notifications to be sent to users
+  who have not downloaded files and the expire time for those files is coming up. The integer
+  is the number of days that remain before the transfer expires. Note that a user will only be notified
+  if they have not already downloaded the file.
+  
+  In the below configurations the first will notify people who have not downloaded a transfer a week from
+  it expiring. The second will result to two potential notifications, one 10 days out and one a week from
+  expiring. Note that if the user receives the first notification and downloads the file they will not receive
+  the notification a week out because they have already downloaded the file.
+  
+* __*Configuration example:*__
+   $config['transfer_automatic_reminder'] = 7;
+   $config['transfer_automatic_reminder'] = array(7,10);
 
 
 
