@@ -749,6 +749,7 @@ $lang['active_transfers'] = 'Active transfers';
 $lang['expired_transfers'] = 'Expired transfers';
 $lang['transferred_these_files'] = 'transferred these files';
 $lang['transfer_expires_in'] = 'This transfer expires in';
+$lang['transfer_expires_in_x_days'] = 'This transfer expires in {days_to_expire} days';
 $lang['transfer_sent_on'] = 'Transfer sent on';
 $lang['expiration_date'] = 'Expiration date';
 $lang['transfer_size'] = 'Transfer size';
