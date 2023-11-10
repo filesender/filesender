@@ -1325,7 +1325,9 @@ filesender.ui.startUpload = function() {
                 badgeList.append(`<div class="fs-badge">${recipient}</div>`);
             });
         } else {
-            $('.fs-transfer__upload-link').addClass('fs-transfer__upload-link--show');
+            if(filesender.ui.transfer.download_link) {
+                $('.fs-transfer__upload-link').addClass('fs-transfer__upload-link--show');
+            }
         }
 
         const expireDays = new Date(filesender.ui.transfer.expires * 1000);
