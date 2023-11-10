@@ -139,7 +139,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <div class="col">
                 <div class="fs-download__title">
                     <h1><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?> {tr:transferred_these_files}</h1>
-                    <p>{tr:transfer_expires_in} <?php echo $days_to_expire ?> {tr:days}</p>
+                    <p><?php  echo Lang::tr('transfer_expires_in_x_days')->r(array('days_to_expire' => $days_to_expire, 'days' => $days_to_expire)) ?></p>
                 </div>
             </div>
         </div>
