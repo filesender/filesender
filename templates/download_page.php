@@ -125,9 +125,7 @@ if( $transfer->must_be_logged_in_to_download ) {
     }
 }
 
-$now = time();
-$datediff = $transfer->expires - $now;
-$days_to_expire = round($datediff / (60 * 60 * 24));
+$days_to_expire = $transfer->days_to_expire;
 
 $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links'));
 
