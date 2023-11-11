@@ -1145,6 +1145,13 @@ class Transfer extends DBObject
         if ($property == 'upload_time') {
             return $this->upload_end - $this->upload_start;
         }
+
+        if ($property == 'days_to_expire') {
+            $now = time();
+            $datediff = $this->expires - $now;
+            $days_to_expire = round($datediff / (60 * 60 * 24));
+            return $days_to_expire;
+        }
         
         if ($property == 'link') {
             $tr_url = Utilities::http_build_query(array('s' => 'transfers#transfer_'.$this->id));
