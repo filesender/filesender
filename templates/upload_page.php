@@ -72,9 +72,11 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 
 if(Auth::isGuest()) {
     $show_get_a_link_or_email_choice = false;
+    $allow_recipients = true;
 
     if($guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
         $guest_can_only_send_to_creator = true;
+        $allow_recipients = false;
     }
 }
 
