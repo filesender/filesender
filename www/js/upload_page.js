@@ -1670,7 +1670,6 @@ filesender.ui.onChangeTransferType = function (transferType) {
         TRANSFER_LINK: 'transfer-link',
         TRANSFER_EMAIL: 'transfer-email'
     }
-
     if (transferType) {
         $('.fs-transfer__transfer-fields').addClass('fs-transfer__transfer-fields--show');
         $('.fs-transfer__transfer-settings').addClass('fs-transfer__transfer-settings--show');
@@ -1895,6 +1894,7 @@ $(function() {
         // If there is only one choice then we should already make it
         if($('.get_a_link_top_selector').length==0) {
             $('#transfer-email').prop("checked", true);
+            filesender.ui.onChangeTransferType("transfer-email");
         }
         
         var get_a_link_checked = filesender.ui.isUserGettingALink();
