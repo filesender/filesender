@@ -18,7 +18,6 @@ $encryption_mandatory = Principal::isEncryptionMandatory();
 $encryption_checkbox_checked = '';
 $encryption_checkbox_classes = '';
 $expire_time_is_editable = true;
-$files_actions_div_extra_class = "div3";
 $upload_directory_button_enabled = false;
 
 if( !Config::get('disable_directory_upload')
@@ -26,10 +25,8 @@ if( !Config::get('disable_directory_upload')
     && (Browser::instance()->isChrome || Browser::instance()->isFirefox))
 {
     $upload_directory_button_enabled = true;
-    $files_actions_div_extra_class = "div4";
 }
 
-$files_actions_div_extra_class = "";
 
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
