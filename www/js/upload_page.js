@@ -301,7 +301,7 @@ filesender.ui.files = {
                     filesender.ui.evalUploadEnabled();
                 }).appendTo(node);
                 
-                var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, true, function(error) {
+                var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, function(error) {
                     var tt = 1;
                     if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                     node.addClass('invalid');
