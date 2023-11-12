@@ -56,7 +56,7 @@ if( !count($avprograms)) {
 }
 
 while( true ) {
-    $limitPerIteration = 50;
+    $limitPerIteration = 100;
     if(count($inputs)) {
         $fileList = array();
         foreach( $inputs as $id ) {
@@ -66,23 +66,33 @@ while( true ) {
         $fileList = File::findFilesWithoutAVResults( $limitPerIteration );
     }
     echo "have " . count($fileList) . " files to work on this time around\n";
+    $fileTotal = count($fileList);
+    $filenum = 0;
     
     foreach( $fileList as $file ) {
         echo "Looking at file " . $file->id . "\n";
+        $filenum++;
         
-        if( $file->is_encrypted )
-        {
-            $encr->inspect( $file );
-        }
-        else
-        {
-            if( $file->size > $maxsizetoscan ) {
-                $toobig->inspect( $file );
-            } else {
-                foreach( $avprograms as $prg ) {
-                    $prg->inspect( $file );
+        try {
+            if( $file->is_encrypted )
+            {
+                $encr->inspect( $file );
+            }
+            else
+            {
+                if( $file->size > $maxsizetoscan ) {
+                    $toobig->inspect( $file );
+                } else {
+                    foreach( $avprograms as $prg ) {
+                        echo "prg inspecting file " . $file->id . "\n";
+                        $prg->inspect( $file );
+                    }
                 }
             }
+        }
+        catch( Exception $e )
+        {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";            
         }
     }
 
@@ -91,7 +101,7 @@ while( true ) {
         exit(0);
     }
 
-    echo "sleeping for a moment to avoid churn\n";
+    echo "sleeping for a moment to avoid churn...\n";
     sleep(10);
 }
 
