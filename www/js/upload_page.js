@@ -1325,7 +1325,9 @@ filesender.ui.startUpload = function() {
                 badgeList.append(`<div class="fs-badge">${recipient}</div>`);
             });
         } else {
-            $('.fs-transfer__upload-link').addClass('fs-transfer__upload-link--show');
+            if(filesender.ui.transfer.download_link) {
+                $('.fs-transfer__upload-link').addClass('fs-transfer__upload-link--show');
+            }
         }
 
         const expireDays = new Date(filesender.ui.transfer.expires * 1000);
@@ -1668,7 +1670,6 @@ filesender.ui.onChangeTransferType = function (transferType) {
         TRANSFER_LINK: 'transfer-link',
         TRANSFER_EMAIL: 'transfer-email'
     }
-
     if (transferType) {
         $('.fs-transfer__transfer-fields').addClass('fs-transfer__transfer-fields--show');
         $('.fs-transfer__transfer-settings').addClass('fs-transfer__transfer-settings--show');
@@ -1893,6 +1894,7 @@ $(function() {
         // If there is only one choice then we should already make it
         if($('.get_a_link_top_selector').length==0) {
             $('#transfer-email').prop("checked", true);
+            filesender.ui.onChangeTransferType("transfer-email");
         }
         
         var get_a_link_checked = filesender.ui.isUserGettingALink();
