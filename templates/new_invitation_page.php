@@ -45,6 +45,10 @@ use ( $new_guests_can_only_send_to_creator,
     if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
         return;
     }
+    // don't allow guests to get a link to their upload
+    if($name == 'get_a_link' ) {
+        return;
+    }
 
     $default = $cfg['default'];
     if(Auth::isSP()) {
@@ -152,7 +156,7 @@ use ( $new_guests_can_only_send_to_creator,
  
                                     <div class="guest_options options_box">
                                     <?php
-                                    foreach(Guest::availableOptions(true) as $name => $cfg) {
+                                    foreach(Guest::availableOptions() as $name => $cfg) {
                                         if( $name == 'can_only_send_to_me' || $name == 'valid_only_one_time') {
                                             $displayoption($name, $cfg, false);
                                         }
