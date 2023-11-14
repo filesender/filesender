@@ -829,3 +829,8 @@ $lang['see_invitation_details'] = 'See invitation details';
 $lang['go_to_invitations'] = 'Go to all my invitations';
 $lang['optional_message'] = 'Optional message';
 $lang['enter_transfer_name'] = 'Enter the transfer name (optional)';
+$lang['files_transferred_display'] = '{filecount}';
+$lang['size_transferred_display'] = '{size_human_readable}';
+
+
+
