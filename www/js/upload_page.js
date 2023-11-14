@@ -1710,8 +1710,16 @@ filesender.ui.updateSizeInfo = function () {
     var filecount = filesender.ui.transfer.getFileCount();
     var sizetxt   = filesender.ui.formatBytes(size);
 
-    filesender.ui.nodes.stats.number_of_files.find('.value').text(filecount + '/' + filesender.config.max_transfer_files);
-    filesender.ui.nodes.stats.size.find('.value').text(sizetxt + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+    var params = { filecount: filecount,
+                   max_transfer_files: filesender.config.max_transfer_files,
+                   max_transfer_size: filesender.config.max_transfer_size,
+                   sizetxt: sizetxt,
+                   size_human_readable: sizetxt,
+                   size: size
+                 };
+
+    filesender.ui.nodes.stats.number_of_files.find('.value').text(lang.tr('files_transferred_display').r( params ));
+    filesender.ui.nodes.stats.size.find('.value').text(lang.tr('size_transferred_display').r( params ));    
     filesender.ui.nodes.stats.filecount.text(filecount);
     filesender.ui.nodes.stats.sendingsize.text(sizetxt);
 
