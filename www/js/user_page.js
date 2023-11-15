@@ -174,27 +174,31 @@ $(function() {
 
         const inputs = $(':input');
 
+        const p = {};
         for (let i = 0; i < inputs.length; i++) {
             const element = $(inputs[i]);
 
             let name = element.attr('name');
-
             if (name) {
-                if (name.substr(0, 5) == 'user_') {
-                    name = name.substr(5);
+                if (name.substr(0, 5) == 'user_' || name.substr(0, 5) == 'save_') {
+                    if (name.substr(0, 5) == 'user_') {
+                        name = name.substr(5);
+                        p[name] = element.val();
+                    }
+                    if (name.substr(0, 5) == 'save_') {
+                        p[name] = element.is(':checked');
+                    }
 
-                    const p = {};
-                    p[name] = element.val();
-
-                    filesender.client.updateUserPreferences(p, function() {
-                        console.log('success');
-                    }).catch((e) => {
-                        hasError = true;
-                    });
                 }
             }
         }
+        filesender.client.updateUserPreferences(p, function() {
+            console.log('success');
+        }).catch((e) => {
+            hasError = true;
+        });
 
+        
         if (!hasError) {
             filesender.ui.notify('success', lang.tr('preferences_updated'));
             location.reload();

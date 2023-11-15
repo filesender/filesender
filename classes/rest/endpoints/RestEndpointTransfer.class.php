@@ -729,7 +729,7 @@ class RestEndpointTransfer extends RestEndpoint
             // Mandatory to add recipients and files
             $transfer->save(); 
 
-            
+
             // Get banned extensions
             $banned_exts = Config::get('ban_extension');
             if (is_string($banned_exts)) {

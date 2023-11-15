@@ -1,3 +1,12 @@
+<?php
+
+function isChecked( $v ) {
+    return $v ? 'checked="checked"' : '';
+}
+
+$user = Auth::user();
+
+?>
 <div class="fs-settings">
     <div class="container">
         <div class="row">
@@ -75,14 +84,14 @@
                     ?>
 
                     <div class="fs-switch fs-switch--small">
-                        <input id="previous-settings" type="checkbox" />
+                        <input id="previous-settings" type="checkbox" name="save_transfer_preferences"  <?php echo isChecked($user->save_transfer_preferences); ?> />
                         <label for="previous-settings">
                             {tr:previous_settings}
                         </label>
                     </div>
 
                     <div class="fs-switch fs-switch--small">
-                        <input id="save-recipients-emails" type="checkbox" />
+                        <input id="save-recipients-emails" name="save_frequent_email_address" type="checkbox"  <?php echo isChecked($user->save_frequent_email_address); ?> />
                         <label for="save-recipients-emails">
                             {tr:save_recipients_emails}
                         </label>
