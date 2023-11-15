@@ -128,6 +128,17 @@ class User extends DBObject
             'type' => 'datetime',
             'null' => true
         ),
+        
+        'save_frequent_email_address' => array(
+            'type' => 'bool',
+            'null'    => false,
+            'default' => true,
+        ),
+        'save_transfer_preferences' => array(
+            'type' => 'bool',
+            'null'    => false,
+            'default' => true,
+        ),
     );
 
 
@@ -175,6 +186,8 @@ class User extends DBObject
     protected $guest_expiry_default_days = null;
     protected $service_aup_accepted_version = 0;
     protected $service_aup_accepted_time = null;
+    protected $save_frequent_email_address = true;
+    protected $save_transfer_preferences = true;
 
     
     /** 
@@ -420,6 +433,9 @@ class User extends DBObject
         if( Config::get('data_protection_user_frequent_email_address_disabled')) {
             return array();
         }
+        if( !$this->save_frequent_email_address ) {
+            return array();
+        }
 
         // Get max number of returned recipients from config
         $size = Config::get('autocomplete');
@@ -495,6 +511,10 @@ class User extends DBObject
         if( Config::get('data_protection_user_frequent_email_address_disabled')) {
             $recipients = array();
         }
+        if( !$this->save_frequent_email_address ) {
+            $recipients = array();
+        }
+
         
         // Save if something changed
         if ($recipients !== $this->frequent_recipients) {
@@ -657,6 +677,8 @@ class User extends DBObject
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
           , 'guest_expiry_default_days', 'service_aup_accepted_version', 'service_aup_accepted_time'
+          , 'save_frequent_email_address', 'save_transfer_preferences'
+            
         ))) {
             return $this->$property;
         }
@@ -719,7 +741,7 @@ class User extends DBObject
         } elseif ($property == 'guest_preferences') {
             $this->guest_preferences = $value;
         } elseif ($property == 'frequent_recipients') {
-            if( Config::get('data_protection_user_frequent_email_address_disabled')) {
+            if( Config::get('data_protection_user_frequent_email_address_disabled') || !$this->save_frequent_email_address ) {
                 // keep nothing.
                 $this->frequent_recipients = array();
             } else {
@@ -752,10 +774,16 @@ class User extends DBObject
             $this->service_aup_accepted_version = $value;
         } elseif ($property == 'service_aup_accepted_time') {
             $this->service_aup_accepted_time = $value;
+        } elseif ($property == 'save_frequent_email_address') {
+            $this->save_frequent_email_address = $value;
+        } elseif ($property == 'save_transfer_preferences') {
+            $this->save_transfer_preferences = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
     }
+
+    
 
     /**
      * Delete the user related objects that the database delete will not remove.
@@ -788,7 +816,14 @@ class User extends DBObject
         if( Config::get('data_protection_user_frequent_email_address_disabled')) {
             $this->frequent_recipients = array();
         }
+        if( !$this->save_frequent_email_address ) {
+            $this->frequent_recipients = array();
+        }
+        Logger::dump("AAA beforesave ", $this->transfer_preferences );
         if( Config::get('data_protection_user_transfer_preferences_disabled')) {
+            $this->transfer_preferences = null;
+        }
+        if( !$this->save_transfer_preferences ) {
             $this->transfer_preferences = null;
         }
     }
