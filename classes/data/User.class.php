@@ -628,6 +628,10 @@ class User extends DBObject
         }
         
         $score = $props->$option;
+
+        if( $this->save_transfer_preferences ) {
+            return $score;
+        }
         
         if (abs($score) < 3) {
             return $default;
