@@ -1686,12 +1686,14 @@ filesender.ui.onChangeTransferType = function (transferType) {
 
                 $('.recipients').html('');
                 $('[data-option="add_me_to_recipients"], [data-option="email_me_copies"], [data-option="enable_recipient_email_download_complete"]').prop( "checked", false );
+                $('[data-option="add_me_to_recipients"]').addClass('fs-switch--hide');
                 filesender.ui.recipients.clear();
 
                 break;
             case TRANSFER_TYPES.TRANSFER_EMAIL:
                 emailField.removeClass('fs-input-group--hide');
                 addMeToRecipientsField.removeClass('fs-switch--hide');
+                $('[data-option="add_me_to_recipients"]').removeClass('fs-switch--hide');
                 filesender.ui.getALink = false;
                 filesender.ui.nodes.gal.checkbox.prop('checked', false);
                 break;
