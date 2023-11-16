@@ -2075,6 +2075,9 @@ $(function() {
             // as soon as they edit anything it can no longer be considered "generated".
             filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
             filesender.ui.transfer.encryption_password_encoding = 'none';
+            if($('#encryption_password_show_container').is(":hidden")) {
+                $('#encryption_password_show_container').show();
+            }
             
             filesender.ui.files.checkEncryptionPassword($(this),true);
             filesender.ui.evalUploadEnabled();

@@ -562,6 +562,11 @@ if( !Auth::isGuest()) {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="fieldcontainer" id="encryption_password_show_container">  
+                                                    <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >  
+                                                    <label class="cursor" for="encryption_show_password">{tr:file_encryption_show_password}</label>
+                                                </div>
+                                                
                                                 <div class="fs-transfer__password-bottom">
                                                     <small>{tr:password_share_tip}</small>
                                                 </div>
