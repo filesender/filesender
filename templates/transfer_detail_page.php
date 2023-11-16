@@ -14,6 +14,8 @@ if ($transfer_id) {
     $transfer = Transfer::fromId($transfer_id);
     $downloadsCount = count($transfer->downloads);
 }
+
+$extend = (bool)Config::get('allow_transfer_expiry_date_extension');
 ?>
 
 <div class="fs-transfer-detail"
@@ -151,6 +153,8 @@ if ($transfer_id) {
                                                         <i class="fa fa-history"></i>
                                                     </span>
                                                 <?php } ?>
+
+                                                
                                             </div>
                                         </td>
                                     </tr>
@@ -280,7 +284,7 @@ if ($transfer_id) {
 
         <div class="row">
             <div class="col">
-                <div class="fs-transfer-detail__actions">
+                <div class="fs-transfer-detail__actions" >
                     <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
                         <button type="button" data-action="remind" class="fs-button">
                             <i class="fa fa-repeat"></i>
@@ -299,6 +303,14 @@ if ($transfer_id) {
                         <i class="fa fa-trash"></i>
                         <span>{tr:delete_transfer}</span>
                     </button>
+
+                    <?php if($extend) { ?>
+                        <button type="button" data-action="extend" class="fs-button" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
+                            <i class="fa fa-calendar-plus-o"></i>
+                            <span>{tr:extend_expires}</span>
+                        </button>                        
+                    <?php } ?>
+                    
                 </div>
             </div>
         </div>
