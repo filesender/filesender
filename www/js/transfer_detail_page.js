@@ -197,6 +197,10 @@ $(function() {
         auditlogs($(this).closest('.fs-transfer-detail').attr('data-id'));
     });
 
+    $('.fs-transfer-detail__actions  button[data-action="extend"]').on('click', function() {
+        filesender.ui.extendExpires( $(this), 'transfer');
+    });    
+
     // Add recipient buttons
     $('[data-recipients-enabled=""] [data-action="add_recipient"]').addClass('disabled');
 

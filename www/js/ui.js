@@ -857,6 +857,10 @@ window.filesender.ui = {
 
         var t = self.closest('.objectholder');
         var id = t.attr('data-id');
+        if(!id || isNaN(id)) {
+            t = self;
+            id = self.attr('data-id');
+        }
         if(!id || isNaN(id)) return;
 
         var duration = parseInt(t.attr('data-expiry-extension'));
