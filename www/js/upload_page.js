@@ -2524,6 +2524,46 @@ $(function() {
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
     var auth = $('body').attr('data-auth-type');
 
+    form.find('.stopbutton').on('click', function(e) {
+        if(filesender.supports.reader) {
+            pause( true );
+        }
+        filesender.ui.confirm(lang.tr('confirm_stop_upload'),
+                              function() { // ok
+                                  filesender.ui.transfer.stop(function() {
+                                      filesender.ui.goToPage('upload');
+                                  });
+                              },
+                              function() { // cancel
+                                  filesender.ui.transfer.resume();
+                                  filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                                  filesender.ui.nodes.buttons.resume.addClass('not_displayed');
+                              });
+        return false;
+    });
+
+    form.find('.pausebutton').on('click', function(e) {
+        filesender.ui.cancelAutomaticResume();
+
+        pause( true );
+        filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+        filesender.ui.nodes.stats.estimated_completion.find('.value').text('');
+        filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
+        form.find('.resumebutton').prop("disabled",false);
+        form.find('.pausebutton').prop("disabled",true);
+        return false;
+    });
+        
+    form.find('.resumebutton').on('click', function(e) {
+        var force = filesender.ui.automatic_resume_retries > 0;
+        resume( force, true );
+        form.find('.pausebutton').prop("disabled", false);
+        form.find('.resumebutton').prop("disabled", true);
+            
+        return false;
+    });
+    
+
     if(auth == 'guest') {
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
         for(option in filesender.ui.nodes.options) {

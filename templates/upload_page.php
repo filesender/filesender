@@ -801,6 +801,22 @@ if( !Auth::isGuest()) {
                                         </tbody>
                                     </table>
                                 </div>
+                                <?php if(Config::get('upload_show_play_pause')) { ?>
+                                <div class="buttons">
+                                    <button type="button" id="fs-transfer__pause" class="fs-button fs-button--info fs-button--icon-right pausebutton">
+                                        {tr:pause}
+                                        <i class="fa fa-pause"></i>
+                                    </button>
+                                    <button type="button" id="fs-transfer__resume" class="fs-button fs-button--info fs-button--icon-right resumebutton" disabled="1">
+                                        {tr:resume}
+                                        <i class="fa fa-play"></i>
+                                    </button>
+                                    <button type="button" id="fs-transfer__stop" class="fs-button fs-button--info fs-button--icon-right stopbutton">
+                                        {tr:stop}
+                                        <i class="fa fa-stop"></i>
+                                    </button>
+                                </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
