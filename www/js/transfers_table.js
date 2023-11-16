@@ -38,57 +38,57 @@ $(function() {
 
     // TODO: REMOVER
 
-    // Expand each transfer's details
-    $('.transfer .expand span, .transfer span.expand').on('click', function() {
-        var el = $(this);
-        var tr = el.closest('tr');
-        var details = el.closest('table').find('.transfer_details[data-id="' + tr.attr('data-id') + '"]');
+    // // Expand each transfer's details
+    // $('.transfer .expand span, .transfer span.expand').on('click', function() {
+    //     var el = $(this);
+    //     var tr = el.closest('tr');
+    //     var details = el.closest('table').find('.transfer_details[data-id="' + tr.attr('data-id') + '"]');
 
-        var collapse = details.find('.collapse');
-        collapse.show('fast');
-        tr.hide('fast');
-        details.show('fast');
-    });
+    //     var collapse = details.find('.collapse');
+    //     collapse.show('fast');
+    //     tr.hide('fast');
+    //     details.show('fast');
+    // });
 
-    // Collapse each transfer's details
-    $('.transfer_details .collapse span').on('click', function() {
-        var el = $(this);
-        var details = el.closest('tr');
-        var tr = el.closest('table').find('.transfer[data-id="' + details.attr('data-id') + '"]');
+    // // Collapse each transfer's details
+    // $('.transfer_details .collapse span').on('click', function() {
+    //     var el = $(this);
+    //     var details = el.closest('tr');
+    //     var tr = el.closest('table').find('.transfer[data-id="' + details.attr('data-id') + '"]');
 
-        details.hide('fast');
-        tr.show('fast');
-    });
+    //     details.hide('fast');
+    //     tr.show('fast');
+    // });
 
-    // Expand / retract all
-    $('thead .expand span').on('click', function() {
-        var el = $(this);
-        var table = el.closest('table');
+    // // Expand / retract all
+    // $('thead .expand span').on('click', function() {
+    //     var el = $(this);
+    //     var table = el.closest('table');
 
-        var expanded = !el.hasClass('expanded');
+    //     var expanded = !el.hasClass('expanded');
 
-        table.find('.transfer_details')[expanded ? 'show' : 'hide']('fast');
-        table.find('.transfer')[expanded ? 'hide' : 'show']('fast');
+    //     table.find('.transfer_details')[expanded ? 'show' : 'hide']('fast');
+    //     table.find('.transfer')[expanded ? 'hide' : 'show']('fast');
 
-        el.toggleClass('expanded', expanded).toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
-    });
+    //     el.toggleClass('expanded', expanded).toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
+    // });
 
-    // Clone attributes for easier access
-    $('.transfer_details').each(function() {
-        var id = $(this).attr('data-id');
-        if(!id || isNaN(id)) return;
+    // // Clone attributes for easier access
+    // $('.transfer_details').each(function() {
+    //     var id = $(this).attr('data-id');
+    //     if(!id || isNaN(id)) return;
 
-        var t = $('.transfer[data-id="' + id + '"]');
+    //     var t = $('.transfer[data-id="' + id + '"]');
 
-        $(this).attr({
-            'data-transfer': '',
-            'data-recipients-enabled': t.attr('data-recipients-enabled'),
-            'data-errors': t.attr('data-errors'),
-            'data-expiry-extension': t.attr('data-expiry-extension'),
-        });
+    //     $(this).attr({
+    //         'data-transfer': '',
+    //         'data-recipients-enabled': t.attr('data-recipients-enabled'),
+    //         'data-errors': t.attr('data-errors'),
+    //         'data-expiry-extension': t.attr('data-expiry-extension'),
+    //     });
 
-        t.attr({'data-transfer': ''});
-    });
+    //     t.attr({'data-transfer': ''});
+    // });
 
     // FIM TODO
 
@@ -255,68 +255,68 @@ $(function() {
 
     // TODO: REMOVER
     // Recipient remind buttons
-    $('.transfer_details .recipient [data-action="remind"]').on('click', function() {
-        var rcpt = $(this).closest('.recipient');
-        var id = rcpt.attr('data-id');
-        if(!id || isNaN(id)) return;
+    // $('.transfer_details .recipient [data-action="remind"]').on('click', function() {
+    //     var rcpt = $(this).closest('.recipient');
+    //     var id = rcpt.attr('data-id');
+    //     if(!id || isNaN(id)) return;
 
-        filesender.ui.confirm(lang.tr('confirm_remind_recipient'), function() {
-            filesender.client.remindRecipient(id, function() {
-                filesender.ui.notify('success', lang.tr('recipient_reminded'));
-            });
-        });
-    });
+    //     filesender.ui.confirm(lang.tr('confirm_remind_recipient'), function() {
+    //         filesender.client.remindRecipient(id, function() {
+    //             filesender.ui.notify('success', lang.tr('recipient_reminded'));
+    //         });
+    //     });
+    // });
 
-    // Recipient delete buttons
-    $('.transfer_details .recipient [data-action="delete"]').on('click', function() {
-        var rcpt = $(this).closest('.recipient');
-        var id = rcpt.attr('data-id');
-        var transfer = rcpt.closest('.transfer_details');
-        if(!id || isNaN(id)) return;
+    // // Recipient delete buttons
+    // $('.transfer_details .recipient [data-action="delete"]').on('click', function() {
+    //     var rcpt = $(this).closest('.recipient');
+    //     var id = rcpt.attr('data-id');
+    //     var transfer = rcpt.closest('.transfer_details');
+    //     if(!id || isNaN(id)) return;
 
-        filesender.ui.confirm(lang.tr('confirm_delete_recipient'), function() {
-            filesender.client.deleteRecipient(id, function() {
-                rcpt.remove();
-                if(!transfer.find('.recipients .recipient').length) {
-                    transfer.prev('.transfer').remove();
-                    transfer.remove();
-                }
-                filesender.ui.notify('success', lang.tr('recipient_deleted'));
-            });
-        });
-    });
+    //     filesender.ui.confirm(lang.tr('confirm_delete_recipient'), function() {
+    //         filesender.client.deleteRecipient(id, function() {
+    //             rcpt.remove();
+    //             if(!transfer.find('.recipients .recipient').length) {
+    //                 transfer.prev('.transfer').remove();
+    //                 transfer.remove();
+    //             }
+    //             filesender.ui.notify('success', lang.tr('recipient_deleted'));
+    //         });
+    //     });
+    // });
 
-    // Recipient error display
-    $('.transfer_details .recipient .errors [data-action="details"]').on('click', function() {
-        var rcpt = $(this).closest('.recipient');
-        var id = rcpt.attr('data-id');
-        if(!id || isNaN(id)) return;
+    // // Recipient error display
+    // $('.transfer_details .recipient .errors [data-action="details"]').on('click', function() {
+    //     var rcpt = $(this).closest('.recipient');
+    //     var id = rcpt.attr('data-id');
+    //     if(!id || isNaN(id)) return;
 
-        filesender.client.getRecipient(id, function(recipient) {
-            var popup = filesender.ui.wideInfoPopup(lang.tr('recipient_errors'));
+    //     filesender.client.getRecipient(id, function(recipient) {
+    //         var popup = filesender.ui.wideInfoPopup(lang.tr('recipient_errors'));
 
-            for(var i=0; i<recipient.errors.length; i++) {
-                var error = recipient.errors[i];
+    //         for(var i=0; i<recipient.errors.length; i++) {
+    //             var error = recipient.errors[i];
 
-                var node = $('<div class="error" />').appendTo(popup);
+    //             var node = $('<div class="error" />').appendTo(popup);
 
-                var type = $('<div class="type" />').appendTo(node);
-                $('<span class="name" />').appendTo(type).text(lang.tr('error_type') + ' : ');
-                $('<span class="value" />').appendTo(type).text(lang.tr('recipient_error_' + error.type));
+    //             var type = $('<div class="type" />').appendTo(node);
+    //             $('<span class="name" />').appendTo(type).text(lang.tr('error_type') + ' : ');
+    //             $('<span class="value" />').appendTo(type).text(lang.tr('recipient_error_' + error.type));
 
-                var date = $('<div class="date" />').appendTo(node);
-                $('<span class="name" />').appendTo(date).text(lang.tr('error_date') + ' : ');
-                $('<span class="value" />').appendTo(date).text(error.date.formatted);
+    //             var date = $('<div class="date" />').appendTo(node);
+    //             $('<span class="name" />').appendTo(date).text(lang.tr('error_date') + ' : ');
+    //             $('<span class="value" />').appendTo(date).text(error.date.formatted);
 
-                var details = $('<div class="details" />').appendTo(node);
-                $('<span class="name" />').appendTo(details).text(lang.tr('error_details') + ' : ');
-                $('<pre class="value" />').appendTo(details).text(error.details);
-            }
+    //             var details = $('<div class="details" />').appendTo(node);
+    //             $('<span class="name" />').appendTo(details).text(lang.tr('error_details') + ' : ');
+    //             $('<pre class="value" />').appendTo(details).text(error.details);
+    //         }
 
-            // Reset popup position as we may have added lengthy content
-            filesender.ui.relocatePopup(popup);
-        });
-    });
+    //         // Reset popup position as we may have added lengthy content
+    //         filesender.ui.relocatePopup(popup);
+    //     });
+    // });
     // FIM TODO
 
     // Transfer options
@@ -332,25 +332,25 @@ $(function() {
     });
 
     // TODO: REMOVER
-    // File delete buttons
-    $('.transfer_details .file [data-action="delete"]').on('click', function() {
-        var file = $(this).closest('.file');
-        var id = file.attr('data-id');
-        var transfer_details = file.closest('.transfer_details');
-        if(!id || isNaN(id)) return;
+    // // File delete buttons
+    // $('.transfer_details .file [data-action="delete"]').on('click', function() {
+    //     var file = $(this).closest('.file');
+    //     var id = file.attr('data-id');
+    //     var transfer_details = file.closest('.transfer_details');
+    //     if(!id || isNaN(id)) return;
 
-        filesender.ui.confirm(lang.tr('confirm_delete_file'), function() {
-            filesender.client.deleteFile(id, function() {
-                file.remove();
-                if(!transfer_details.find('.files .file').length) {
-                    transfer_details.prev('.transfer').remove();
-                    transfer_details.remove();
-                }
-                filesender.ui.notify('success', lang.tr('file_deleted'));
-                filesender.ui.updateUserQuotaBar();
-            });
-        });
-    });
+    //     filesender.ui.confirm(lang.tr('confirm_delete_file'), function() {
+    //         filesender.client.deleteFile(id, function() {
+    //             file.remove();
+    //             if(!transfer_details.find('.files .file').length) {
+    //                 transfer_details.prev('.transfer').remove();
+    //                 transfer_details.remove();
+    //             }
+    //             filesender.ui.notify('success', lang.tr('file_deleted'));
+    //             filesender.ui.updateUserQuotaBar();
+    //         });
+    //     });
+    // });
     // FIM TODO
 
     // File download buttons when the files are encrypted
@@ -495,26 +495,26 @@ $(function() {
         auditlogs($(this).closest('tr').attr('data-id'));
     });
 
-    // TODO: REMOVER
-    $('.transfer_details .recipient [data-action="auditlog"]').on('click', function(e) {
-        auditlogs($(this).closest('tr').attr('data-id'), 'author/recipient/' + $(this).closest('.recipient').attr('data-id'));
-    });
+    // // TODO: REMOVER
+    // $('.transfer_details .recipient [data-action="auditlog"]').on('click', function(e) {
+    //     auditlogs($(this).closest('tr').attr('data-id'), 'author/recipient/' + $(this).closest('.recipient').attr('data-id'));
+    // });
 
-    $('.transfer_details .file [data-action="auditlog"]').on('click', function(e) {
-        auditlogs($(this).closest('tr').attr('data-id'), 'target/file/' + $(this).closest('.file').attr('data-id'));
-    });
-    // FIM TODO
+    // $('.transfer_details .file [data-action="auditlog"]').on('click', function(e) {
+    //     auditlogs($(this).closest('tr').attr('data-id'), 'target/file/' + $(this).closest('.file').attr('data-id'));
+    // });
+    // // FIM TODO
 
     $('[data-action="auditlog"]').not('.transfer_details .file [data-action="auditlog"]').on('click', function(e) {
         auditlogs($(this).closest('tr').attr('data-id'));
     });
 
-    // TODO: REMOVER
-    // Downloadlinks auto-selection
-    $('.transfer_details .download_link input').on('focus', function() {
-        $(this).select();
-    });
-    // FIM TODO
+    // // TODO: REMOVER
+    // // Downloadlinks auto-selection
+    // $('.transfer_details .download_link input').on('focus', function() {
+    //     $(this).select();
+    // });
+    // // FIM TODO
 
     $('.fs-table__row--clickable').on('click', function() {
         const transfer_id = $(this).data("id");
