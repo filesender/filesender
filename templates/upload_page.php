@@ -523,6 +523,12 @@ if( !Auth::isGuest()) {
                                                     $displayoption($name, $cfg, Auth::isGuest(), $forcedOption,array("message"));
                                                 }
                                             }
+                                            foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                if( !array_key_exists($name,$upload_options_handled)) {
+                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                }
+                                            }
+                                            
                                             ?>
                                         </div>
                                     </div>
