@@ -84,16 +84,16 @@
             <td class="actions fs-table__actions" data-label="{tr:actions}">
                 <div class="actionsblock">
                     <?php if($mode == 'user' && $guest->status == 'available') { ?>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="Send a reminder">
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="{tr:send_a_reminder}">
                             <i class="fa fa-mail-forward"></i>
                         </button>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="Resend invitation">
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="{tr:resend_invitation}">
                             <i class="fa fa-repeat"></i>
                         </button>
                     <?php } ?>
 
                     <?php if ($guest->status == 'available') { ?>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="Delete invitation">
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="{tr:delete_invitation}">
                             <i class="fa fa-trash"></i>
                         </button>
                     <?php } ?>
