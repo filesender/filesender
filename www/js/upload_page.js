@@ -1853,6 +1853,10 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+    form.find('.lifted_options [data-option] input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options[i.attr('name')] = i;
+    });
 
     form.find('.uploadoption').each(function() {
         var i = $(this);
@@ -1899,6 +1903,11 @@ $(function() {
 
         filesender.ui.setFileList(2, 3);
 
+        if( form.attr('data-user-has-gal-preference') == '1' ) {
+            $('#transfer-link').prop("checked", true);
+            filesender.ui.onChangeTransferType("transfer-link");
+        }
+        
         // If there is only one choice then we should already make it
         if($('.get_a_link_top_selector').length==0) {
             $('#transfer-email').prop("checked", true);

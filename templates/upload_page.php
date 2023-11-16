@@ -151,6 +151,18 @@ if(Auth::isGuest()) {
         $expire_time_is_editable = false;
     }
 }
+
+$userHasGALPreference = false;
+if( !Auth::isGuest()) {
+    $user = Auth::User();
+    if( $user->save_transfer_preferences ) {
+        $ops = (array)$user->transfer_preferences;
+        if( array_key_exists( 'get_a_link', $ops )) {
+            $userHasGALPreference = $ops["get_a_link"];
+        }
+    }
+}
+
 ?>
 
 <div class="container">
@@ -160,7 +172,9 @@ if(Auth::isGuest()) {
           accept-charset="utf-8"
           method="post"
           autocomplete="off"
-          data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
+          data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>"
+          data-user-has-gal-preference="<?php echo $userHasGALPreference ? '1' : '0' ?>"
+    >
 
         <div class="fs-transfer">
             <h1>
@@ -499,7 +513,7 @@ if(Auth::isGuest()) {
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 lifted_options">
                                         <div data-related-to="message">
                                             <?php
                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
