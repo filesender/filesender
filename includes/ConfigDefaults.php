@@ -355,6 +355,8 @@ $default = array(
     'download_verification_code_valid_duration' => 60*15,
     'download_verification_code_random_bytes_used' => 8,
     'download_show_download_links' => false,
+
+    'upload_show_play_pause' => false,
     
     'transfer_options' => array(
         'email_me_copies' => array(
