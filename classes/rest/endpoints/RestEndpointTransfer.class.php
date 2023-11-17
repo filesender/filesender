@@ -547,6 +547,7 @@ class RestEndpointTransfer extends RestEndpoint
             }
 
             Logger::info($options);
+            $optionsToMaybeSave = $options;
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
             if ($options[TransferOptions::GET_A_LINK]) {
                 unset($options[TransferOptions::EMAIL_ME_COPIES]);
@@ -729,6 +730,14 @@ class RestEndpointTransfer extends RestEndpoint
             // Mandatory to add recipients and files
             $transfer->save(); 
 
+
+            if (!Auth::isGuest()) {
+                $user = Auth::user();
+                if( $user->save_transfer_preferences ) {
+                    $user->transfer_preferences = $optionsToMaybeSave;
+                    $user->save();
+                }
+            }
             
             // Get banned extensions
             $banned_exts = Config::get('ban_extension');

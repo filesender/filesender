@@ -35,6 +35,8 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
+
+
 /**
  * REST transfer endpoint
  */
@@ -319,7 +321,14 @@ END;
         
         // Update data
         $data = $this->request->input;
-        
+
+        if( $data->save_transfer_preferences || $data->save_frequent_email_address ) {
+
+            $user->save_frequent_email_address = Utilities::validateCheckboxValue( $data->save_frequent_email_address );
+            $user->save_transfer_preferences   = Utilities::validateCheckboxValue( $data->save_transfer_preferences );
+
+            $user->save();
+        }
         if ($data->lang) {
             // Lang property update, fail if not allowed
             

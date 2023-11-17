@@ -1686,12 +1686,14 @@ filesender.ui.onChangeTransferType = function (transferType) {
 
                 $('.recipients').html('');
                 $('[data-option="add_me_to_recipients"], [data-option="email_me_copies"], [data-option="enable_recipient_email_download_complete"]').prop( "checked", false );
+                $('[data-option="add_me_to_recipients"]').addClass('fs-switch--hide');
                 filesender.ui.recipients.clear();
 
                 break;
             case TRANSFER_TYPES.TRANSFER_EMAIL:
                 emailField.removeClass('fs-input-group--hide');
                 addMeToRecipientsField.removeClass('fs-switch--hide');
+                $('[data-option="add_me_to_recipients"]').removeClass('fs-switch--hide');
                 filesender.ui.getALink = false;
                 filesender.ui.nodes.gal.checkbox.prop('checked', false);
                 break;
@@ -1710,8 +1712,16 @@ filesender.ui.updateSizeInfo = function () {
     var filecount = filesender.ui.transfer.getFileCount();
     var sizetxt   = filesender.ui.formatBytes(size);
 
-    filesender.ui.nodes.stats.number_of_files.find('.value').text(filecount + '/' + filesender.config.max_transfer_files);
-    filesender.ui.nodes.stats.size.find('.value').text(sizetxt + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+    var params = { filecount: filecount,
+                   max_transfer_files: filesender.config.max_transfer_files,
+                   max_transfer_size: filesender.config.max_transfer_size,
+                   sizetxt: sizetxt,
+                   size_human_readable: sizetxt,
+                   size: size
+                 };
+
+    filesender.ui.nodes.stats.number_of_files.find('.value').text(lang.tr('files_transferred_display').r( params ));
+    filesender.ui.nodes.stats.size.find('.value').text(lang.tr('size_transferred_display').r( params ));    
     filesender.ui.nodes.stats.filecount.text(filecount);
     filesender.ui.nodes.stats.sendingsize.text(sizetxt);
 
@@ -1845,6 +1855,10 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+    form.find('.lifted_options [data-option] input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options[i.attr('name')] = i;
+    });
 
     form.find('.uploadoption').each(function() {
         var i = $(this);
@@ -1891,6 +1905,11 @@ $(function() {
 
         filesender.ui.setFileList(2, 3);
 
+        if( form.attr('data-user-has-gal-preference') == '1' ) {
+            $('#transfer-link').prop("checked", true);
+            filesender.ui.onChangeTransferType("transfer-link");
+        }
+        
         // If there is only one choice then we should already make it
         if($('.get_a_link_top_selector').length==0) {
             $('#transfer-email').prop("checked", true);
@@ -2058,6 +2077,9 @@ $(function() {
             // as soon as they edit anything it can no longer be considered "generated".
             filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
             filesender.ui.transfer.encryption_password_encoding = 'none';
+            if($('#encryption_password_show_container').is(":hidden")) {
+                $('#encryption_password_show_container').show();
+            }
             
             filesender.ui.files.checkEncryptionPassword($(this),true);
             filesender.ui.evalUploadEnabled();
@@ -2501,6 +2523,46 @@ $(function() {
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
     var auth = $('body').attr('data-auth-type');
+
+    form.find('.stopbutton').on('click', function(e) {
+        if(filesender.supports.reader) {
+            pause( true );
+        }
+        filesender.ui.confirm(lang.tr('confirm_stop_upload'),
+                              function() { // ok
+                                  filesender.ui.transfer.stop(function() {
+                                      filesender.ui.goToPage('upload');
+                                  });
+                              },
+                              function() { // cancel
+                                  filesender.ui.transfer.resume();
+                                  filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                                  filesender.ui.nodes.buttons.resume.addClass('not_displayed');
+                              });
+        return false;
+    });
+
+    form.find('.pausebutton').on('click', function(e) {
+        filesender.ui.cancelAutomaticResume();
+
+        pause( true );
+        filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+        filesender.ui.nodes.stats.estimated_completion.find('.value').text('');
+        filesender.ui.setTimeSinceDataWasLastSentMessage(lang.tr('paused'));
+        form.find('.resumebutton').prop("disabled",false);
+        form.find('.pausebutton').prop("disabled",true);
+        return false;
+    });
+        
+    form.find('.resumebutton').on('click', function(e) {
+        var force = filesender.ui.automatic_resume_retries > 0;
+        resume( force, true );
+        form.find('.pausebutton').prop("disabled", false);
+        form.find('.resumebutton').prop("disabled", true);
+            
+        return false;
+    });
+    
 
     if(auth == 'guest') {
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());

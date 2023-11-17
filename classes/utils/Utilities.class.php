@@ -789,4 +789,11 @@ class Utilities
         }
         return json_decode( $t, null, 4, JSON_THROW_ON_ERROR );
     }
+    
+    public static function validateCheckboxValue( $v )
+    {
+        if( $v == 'true' || $v )
+            return true;
+        return false;
+    }
 }

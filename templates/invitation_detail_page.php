@@ -7,20 +7,14 @@ if(!isset($guest_id)) $guest_id = 0;
 
 $guest_id = Utilities::arrayKeyOrDefault($_GET, 'guest_id',  0, FILTER_VALIDATE_INT  );
 
-$filter_callback = function ($element) use ($guest_id) {
-    if ($element->id && $element->id == $guest_id) {
-        return true;
-    }
-    return false;
-};
 
 $found = 0;
 if ($guest_id) {
-    $guests = Guest::fromUserAvailable(Auth::user());
-    $filtered = array_filter($guests, $filter_callback);
-    $found = array_key_exists($guest_id,$filtered);
-    if( $found ) {
-        $guest = $filtered[$guest_id];
+    try {
+        $guest = Guest::fromId($guest_id);
+        $found = true;
+    }
+    catch( Exception $e ) {
     }
 }
 ?>

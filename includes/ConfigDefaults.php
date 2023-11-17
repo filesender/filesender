@@ -86,7 +86,7 @@ $default = array(
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,
     'max_transfer_files' => 30,
-    'max_transfer_days_valid' => 20,
+    'max_transfer_days_valid' => 45,
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
     'transfer_recipients_lang_selector_enabled' => false,
@@ -355,6 +355,8 @@ $default = array(
     'download_verification_code_valid_duration' => 60*15,
     'download_verification_code_random_bytes_used' => 8,
     'download_show_download_links' => false,
+
+    'upload_show_play_pause' => false,
     
     'transfer_options' => array(
         'email_me_copies' => array(

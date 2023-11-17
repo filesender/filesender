@@ -124,6 +124,7 @@ A note about colours;
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
+* [upload_show_play_pause](#upload_show_play_pause)
 * [upload_display_bits_per_sec](#upload_display_bits_per_sec)
 * [upload_display_per_file_stats](#upload_display_per_file_stats)
 * [upload_force_transfer_resume_forget_if_encrypted](#upload_force_transfer_resume_forget_if_encrypted)
@@ -1345,6 +1346,15 @@ User language detection is done in the following order:
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+### upload_show_play_pause
+
+* __description:__ Show buttons to allow an upload to pause, resume, and stop
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0
+* __comment:__ 
 
 ### upload_display_bits_per_sec
 

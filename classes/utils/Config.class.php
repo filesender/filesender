@@ -376,6 +376,11 @@ class Config
         }
 
         self::$parameters['download_verification_code_valid_duration_minutes'] = floor(self::$parameters['download_verification_code_valid_duration'] / 60);
+
+
+        if (self::get('max_transfer_days_valid') < 45) {
+            throw new ConfigBadParameterException('In FileSender 3.x the max_transfer_days_valid must be 45 or more.');
+        }
         
         // verify classes are happy
         Guest::validateConfig();
