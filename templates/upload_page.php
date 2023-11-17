@@ -151,6 +151,18 @@ if(Auth::isGuest()) {
         $expire_time_is_editable = false;
     }
 }
+
+$userHasGALPreference = false;
+if( !Auth::isGuest()) {
+    $user = Auth::User();
+    if( $user->save_transfer_preferences ) {
+        $ops = (array)$user->transfer_preferences;
+        if( array_key_exists( 'get_a_link', $ops )) {
+            $userHasGALPreference = $ops["get_a_link"];
+        }
+    }
+}
+
 ?>
 
 <div class="container">
@@ -160,7 +172,9 @@ if(Auth::isGuest()) {
           accept-charset="utf-8"
           method="post"
           autocomplete="off"
-          data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
+          data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>"
+          data-user-has-gal-preference="<?php echo $userHasGALPreference ? '1' : '0' ?>"
+    >
 
         <div class="fs-transfer">
             <h1>
@@ -499,7 +513,7 @@ if(Auth::isGuest()) {
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 lifted_options">
                                         <div data-related-to="message">
                                             <?php
                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
@@ -509,6 +523,12 @@ if(Auth::isGuest()) {
                                                     $displayoption($name, $cfg, Auth::isGuest(), $forcedOption,array("message"));
                                                 }
                                             }
+                                            foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                if( !array_key_exists($name,$upload_options_handled)) {
+                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                }
+                                            }
+                                            
                                             ?>
                                         </div>
                                     </div>
@@ -548,6 +568,11 @@ if(Auth::isGuest()) {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="fieldcontainer" id="encryption_password_show_container">  
+                                                    <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >  
+                                                    <label class="cursor" for="encryption_show_password">{tr:file_encryption_show_password}</label>
+                                                </div>
+                                                
                                                 <div class="fs-transfer__password-bottom">
                                                     <small>{tr:password_share_tip}</small>
                                                 </div>
@@ -776,6 +801,22 @@ if(Auth::isGuest()) {
                                         </tbody>
                                     </table>
                                 </div>
+                                <?php if(Config::get('upload_show_play_pause')) { ?>
+                                <div class="buttons">
+                                    <button type="button" id="fs-transfer__pause" class="fs-button fs-button--info fs-button--icon-right pausebutton">
+                                        {tr:pause}
+                                        <i class="fa fa-pause"></i>
+                                    </button>
+                                    <button type="button" id="fs-transfer__resume" class="fs-button fs-button--info fs-button--icon-right resumebutton" disabled="1">
+                                        {tr:resume}
+                                        <i class="fa fa-play"></i>
+                                    </button>
+                                    <button type="button" id="fs-transfer__stop" class="fs-button fs-button--info fs-button--icon-right stopbutton">
+                                        {tr:stop}
+                                        <i class="fa fa-stop"></i>
+                                    </button>
+                                </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

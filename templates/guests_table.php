@@ -3,18 +3,6 @@
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
     if(!isset($guests)) $guests = array();
-    if(!isset($filtered)) $filtered = array();
-
-    $filter_callback = function ($element) {
-        if ($element->status && $element->status !== "closed") {
-            return true;
-        }
-        return false;
-    };
-
-    if (count($guests)) {
-        $filtered = array_filter($guests, $filter_callback);
-    }
 ?>
 
 <table class="fs-table fs-table--responsive fs-table--selectable fs-table--striped fs-table--text-middle guests list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
@@ -38,7 +26,7 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach($filtered as $guest) { ?>
+    <?php foreach($guests as $guest) { ?>
         <tr class="guest objectholder fs-table__row fs-table__row--clickable"
             data-id="<?php echo $guest->id ?>"
             data-expiry-extension="<?php echo $guest->expiry_date_extension ?>"
@@ -84,16 +72,16 @@
             <td class="actions fs-table__actions" data-label="{tr:actions}">
                 <div class="actionsblock">
                     <?php if($mode == 'user' && $guest->status == 'available') { ?>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="Send a reminder">
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="{tr:send_a_reminder}">
                             <i class="fa fa-mail-forward"></i>
                         </button>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="Resend invitation">
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="{tr:resend_invitation}">
                             <i class="fa fa-repeat"></i>
                         </button>
                     <?php } ?>
 
                     <?php if ($guest->status == 'available') { ?>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="Delete invitation">
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="{tr:delete_invitation}">
                             <i class="fa fa-trash"></i>
                         </button>
                     <?php } ?>
@@ -102,7 +90,7 @@
         </tr>
     <?php } ?>
 
-    <?php if(!count($filtered)) { ?>
+    <?php if(!count($guests)) { ?>
         <tr>
             <td colspan="7" data-label="Results">{tr:no_guests}</td>
         </tr>
