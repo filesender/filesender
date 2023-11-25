@@ -43,11 +43,20 @@ filesender.dragdrop = {
         else if (item.isDirectory) {
             // Get folder contents
             let dirReader = item.createReader();
-            dirReader.readEntries(function(entries) {
+
+            // In chrome you have to keep calling readEntries() until zero are returned
+            // if you want to get them all.
+            var handleitems = function(entries) {
+                if( !entries.length ) {
+                    return;
+                }
                 for (let i=0; i<entries.length; i++) {
                     filesender.dragdrop.recurseTree(entries[i], path + item.name + "/");
                 }
-            });
+                dirReader.readEntries( handleitems );
+            };
+                
+            dirReader.readEntries(handleitems);
         }
     },
 
