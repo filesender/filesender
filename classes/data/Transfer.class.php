@@ -1143,6 +1143,9 @@ class Transfer extends DBObject
         }
         
         if ($property == 'upload_time') {
+            if( empty($this->files)) {
+                return 0;
+            }
             return $this->upload_end - $this->upload_start;
         }
         
