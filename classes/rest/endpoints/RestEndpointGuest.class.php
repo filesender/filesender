@@ -248,12 +248,9 @@ class RestEndpointGuest extends RestEndpoint
         if( $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
             $transfer_options[TransferOptions::GET_A_LINK] = false;
         }
-
-        if( Config::get('storage_type') == 'CloudS3' ) {
-            $v = Config::get('cloud_s3_bucket');
-            if( $v && $v != '' ) {
-                $transfer_options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
-            }
+        
+        if( strtolower(Config::get('storage_type')) == 'clouds3' ) {
+            $options = StorageCloudS3::augmentTransferOptions( $options );
         }
         
         $guest->transfer_options = $transfer_options;
