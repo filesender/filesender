@@ -102,6 +102,7 @@ class RestEndpointFile extends RestEndpoint
         return true; // Need token for every other situation
     }
 
+    
     /**
      * Get info about a file
      *
