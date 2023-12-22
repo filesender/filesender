@@ -489,7 +489,7 @@ class Config
             foreach (array_keys(self::$parameters) as $key) {
                 if (substr($key, 0, strlen($search)) == $search) {
                     $args[0] = $key;
-                    $set[substr($key, strlen($search))] = call_user_func_array(get_class().'::get', $args);
+                    $set[substr($key, strlen($search))] = call_user_func_array(static::class.'::get', $args);
                 }
             }
             return $set;
@@ -549,7 +549,7 @@ class Config
      */
     public static function getBaseValue($key)
     {
-        $value = call_user_func_array(get_class().'::get', func_get_args());
+        $value = call_user_func_array(static::class.'::get', func_get_args());
         
         if (
             is_array(self::$override) &&
