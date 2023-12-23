@@ -83,11 +83,11 @@ class DatasetTest extends CommonUnitTestCase {
             $data = $statement->fetch();
             $dbname = $data['c'];
             
-            $this->displayInfo(get_class(), __FUNCTION__, ' -- dbname:' . $dbname);
+            $this->displayInfo(get_class($this), __FUNCTION__, ' -- dbname:' . $dbname);
             $this->assertTrue( $dbname == 'filesenderdataset' );
             
         } catch (Exception $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         
@@ -113,11 +113,11 @@ class DatasetTest extends CommonUnitTestCase {
             $this->assertTrue($data['c'] == 1);
             
         } catch (Exception $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- test1 created:' . $this->test1);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- test1 created:' . $this->test1);
 
         return true;
     }
@@ -144,17 +144,17 @@ class DatasetTest extends CommonUnitTestCase {
             $statement->execute(array());
             $data = $statement->fetch();
             $guestCount = $data['c'];
-            $this->displayInfo(get_class(), __FUNCTION__, " -- userCount: $userCount  guestCount: $guestCount " );
+            $this->displayInfo(get_class($this), __FUNCTION__, " -- userCount: $userCount  guestCount: $guestCount " );
             
             $this->assertTrue($userCount  >  10000);
             $this->assertTrue($guestCount >=  3000);
             
         } catch (Exception $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         
-        $this->displayInfo(get_class(), __FUNCTION__, " -- userCount: $userCount" );
+        $this->displayInfo(get_class($this), __FUNCTION__, " -- userCount: $userCount" );
 
         return true;
     }
@@ -174,14 +174,14 @@ class DatasetTest extends CommonUnitTestCase {
             $this->cred->forceCredentialsToDefaultUser();
             $user = Auth::user();
             $user_id = $user->saml_user_identification_uid;
-            $this->displayInfo(get_class(), __FUNCTION__, " -- user_id: $user_id" );
+            $this->displayInfo(get_class($this), __FUNCTION__, " -- user_id: $user_id" );
             $this->assertTrue($user_id == 'filesender-testdriver@localhost.localdomain');
             
         } catch (Exception $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
-        $this->displayInfo(get_class(), __FUNCTION__, " -- user_id: $user_id" );
+        $this->displayInfo(get_class($this), __FUNCTION__, " -- user_id: $user_id" );
         
         return true;
     }
@@ -206,12 +206,12 @@ class DatasetTest extends CommonUnitTestCase {
             $statement->execute(array());
             $data = $statement->fetch();
             $count = $data['c'];
-            $this->displayInfo(get_class(), __FUNCTION__, " -- count: $count" );
+            $this->displayInfo(get_class($this), __FUNCTION__, " -- count: $count" );
 
             $this->assertTrue($count  > 60000);
             
         } catch (Exception $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         
@@ -235,7 +235,7 @@ class DatasetTest extends CommonUnitTestCase {
         $this->assertEquals( 35518,    $t->id     );
         $this->assertEquals( 'closed', $t->status );
         
-        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );
+        $this->displayInfo(get_class($this), __FUNCTION__, " -- a: $a" );
         
         return true;        
     }
@@ -271,7 +271,7 @@ class DatasetTest extends CommonUnitTestCase {
         $this->assertEquals( 'Transfer'          , $alog[12]->target_type );
         $this->assertEquals( 35517               , $alog[12]->target_id );
         
-        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );        
+        $this->displayInfo(get_class($this), __FUNCTION__, " -- a: $a" );        
         return true;
     }
 
@@ -300,7 +300,7 @@ class DatasetTest extends CommonUnitTestCase {
         $this->assertEquals( 'transfer_available', $travail->translation_id );
         
         
-        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );        
+        $this->displayInfo(get_class($this), __FUNCTION__, " -- a: $a" );        
         return true;
     }
 
@@ -329,7 +329,7 @@ class DatasetTest extends CommonUnitTestCase {
         $this->assertEquals( $t->id, $r2->transfer_id );
         
         
-        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );        
+        $this->displayInfo(get_class($this), __FUNCTION__, " -- a: $a" );        
         return true;
     }
     
