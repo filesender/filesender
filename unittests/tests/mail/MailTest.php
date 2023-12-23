@@ -59,7 +59,7 @@ class Mailtest extends CommonUnitTestCase {
 
         $this->assertTrue($mail->send());
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- Mail sent');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- Mail sent');
         
         return true;
     }

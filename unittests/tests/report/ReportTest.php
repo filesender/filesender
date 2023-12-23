@@ -77,7 +77,7 @@ class ReportTest extends CommonUnitTestCase {
 
         $this->assertTrue($results['reports'] != "");
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- Report generated');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- Report generated');
 
         return $transfer->id;
     }
