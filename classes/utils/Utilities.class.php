@@ -716,7 +716,7 @@ class Utilities
     {
         $ret = $def;
         if(array_key_exists($name, $_GET)) {
-            $ret = $_GET[$name];
+            $ret = htmlspecialchars($_GET[$name]);
         }
         return $ret;
     }
