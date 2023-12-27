@@ -332,7 +332,12 @@ class GUI
             // Get from request
             $page = null;
             if (array_key_exists('s', $_REQUEST)) {
-                $page = $_REQUEST['s'];
+                $t = $_REQUEST['s'];
+                if( !in_array($t, self::allowedPages())) {
+                    $page = 'home';
+                } else {
+                    $page = $t;
+                }
             }
 
             // Maintenance override
