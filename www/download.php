@@ -134,12 +134,12 @@ try {
     
     // Ensure transaction id
     $transaction_id = '';
-    if(array_key_exists('transaction_id', $_GET))
-        $transaction_id = $_GET['transaction_id'];
+    if(array_key_exists('transaction_id', $_REQUEST))
+        $transaction_id = $_REQUEST['transaction_id'];
 
     if(!$transaction_id || !Utilities::isValidUID($transaction_id)) {
         $transaction_id = Utilities::generateUID();
-        header('Location: '.Utilities::http_build_query(array_merge($_GET, ['transaction_id' => $transaction_id]), 'download.php?'));
+        header('Location: '.Utilities::http_build_query(array_merge($_REQUEST, ['transaction_id' => $transaction_id]), 'download.php?'));
         exit;
     }
 
