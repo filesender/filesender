@@ -254,7 +254,7 @@
 <?php
     if( $havePrev || $haveNext ) {
         echo "<div class='fs-paginator fs-paginator--center'>";
-        $base = '?s=' . $_GET['s'];
+        $base = '?s=' . htmlspecialchars($_GET['s']);
         $cgioffset = $pagerprefix . 'offset';
         $cgilimit  = $pagerprefix . 'limit';
         $nextPage  = $offset+$limit;
