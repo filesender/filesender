@@ -87,7 +87,7 @@ class FileTest extends CommonDatabaseTestCase {
         $dest = rtrim(Config::get('storage_filesystem_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         copy($this->srcFile, $dest . $file->uid);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- File created:'.$file->id);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- File created:'.$file->id);
 
         return $file->id;
     }
@@ -120,7 +120,7 @@ class FileTest extends CommonDatabaseTestCase {
         $this->assertTrue($file->name == $this->fileName);
         $this->assertTrue($file->size == $this->fileSize);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- File got:' . $fileId);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- File got:' . $fileId);
 
         return $fileId;
     }
@@ -153,7 +153,7 @@ class FileTest extends CommonDatabaseTestCase {
 
         $file->save();
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- File updated:' . $fileId);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- File updated:' . $fileId);
 
         return $fileId;
     }
@@ -173,7 +173,7 @@ class FileTest extends CommonDatabaseTestCase {
 
         $this->assertNotNull($rawDatas);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- Row DATAS got from file:'.$fileId);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- Row DATAS got from file:'.$fileId);
 
         return $fileId;
     }
@@ -201,7 +201,7 @@ class FileTest extends CommonDatabaseTestCase {
             $oldFile = File::fromId($fileId);
         } catch (FileNotFoundException $ex) {
             $isDeleted = true;
-            $this->displayInfo(get_class(), __FUNCTION__, ' -- File deleted:' . $fileId);
+            $this->displayInfo(get_class($this), __FUNCTION__, ' -- File deleted:' . $fileId);
         }
 
         $this->assertTrue($isDeleted);

@@ -435,6 +435,7 @@ $lang['report_event_transfer_started'] = 'Transfer was created';
 $lang['report_event_upload_ended'] = 'Upload ended';
 $lang['report_event_upload_resumed'] = 'Upload was resumed';
 $lang['report_event_upload_started'] = 'Upload started';
+$lang['report_event_transfer_decrypt_failed'] = 'Decryption failed';
 $lang['report_exception'] = 'report error';
 $lang['report_format_not_available'] = 'Report format not available';
 $lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)';

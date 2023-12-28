@@ -91,7 +91,7 @@ class TransferTest extends CommonUnitTestCase {
         $this->assertNotNull($transfer->id);
         $this->assertTrue($transfer->id > 0);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- Transfer created:' . $transfer->id);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- Transfer created:' . $transfer->id);
 
         return $transfer->id;
     }
@@ -109,7 +109,7 @@ class TransferTest extends CommonUnitTestCase {
 
         $this->assertTrue($transfer->id > 0);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- Transfer got:' . $transfer->id);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- Transfer got:' . $transfer->id);
 
         return $transferId;
     }
@@ -135,13 +135,13 @@ class TransferTest extends CommonUnitTestCase {
         try {
             Transfer::fromId($transferId);
         } catch (TransferNotFoundException $e) {
-            $this->displayInfo(get_class(), __FUNCTION__, '');
+            $this->displayInfo(get_class($this), __FUNCTION__, '');
             $isDeleted = true;
         }
 
         $this->assertTrue($isDeleted);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- Transfer deleted:' . $transferId);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- Transfer deleted:' . $transferId);
 
         return $isDeleted;
     }
@@ -170,7 +170,7 @@ class TransferTest extends CommonUnitTestCase {
             $t = Transfer::fromId($transferId);
             if ($t->isExpired()) $isDeleted = true;
         } catch (TransferNotFoundException $e) {
-            $this->displayInfo(get_class(), __FUNCTION__, ' -- Transfer deleted:' . $transferId);
+            $this->displayInfo(get_class($this), __FUNCTION__, ' -- Transfer deleted:' . $transferId);
             $isDeleted = true;
         }
 

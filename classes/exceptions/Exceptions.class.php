@@ -132,6 +132,7 @@ class DetailedException extends LoggingException
     /**
      * Public exception details
      */
+    private $uid = null;
     private $details = null;
     
     /**

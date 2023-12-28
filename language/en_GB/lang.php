@@ -442,6 +442,7 @@ $lang['report_event_transfer_deleted'] = 'Transfer data was deleted';
 $lang['report_event_transfer_expired'] = 'Transfer expired';
 $lang['report_event_transfer_sent'] = 'Download link sent to recipient(s)';
 $lang['report_event_transfer_started'] = 'Transfer was created';
+$lang['report_event_transfer_decrypt_failed'] = 'Decryption failed';
 $lang['report_event_upload_ended'] = 'Upload ended';
 $lang['report_event_upload_resumed'] = 'Upload was resumed';
 $lang['report_event_upload_started'] = 'Upload started';
