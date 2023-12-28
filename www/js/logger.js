@@ -198,7 +198,12 @@ window.filesender.log = function( msg )
 
 // Capture js errors
 window.addEventListener('error', function(e) {
-    filesender.logger.log('[' + (new Date()).toLocaleTimeString() + '] JS ERROR in ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
+    if( !e?.currentTarget?.location?.origin ) {
+        return;
+    }
+    if( e?.currentTarget?.location?.origin == window.location.origin ) {
+        filesender.logger.log('[' + (new Date()).toLocaleTimeString() + '] JS ERROR in ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
+    }
 });
 
 // Setup "nothing happens" detection
