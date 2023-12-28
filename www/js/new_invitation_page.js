@@ -406,7 +406,9 @@ $(function() {
 
     // special fix for esc key on firefox stopping xhr
     window.addEventListener('keydown', function(e) {
-        (e.keyCode == 27 && e.preventDefault())
+        if( e.isTrusted ) {
+            (e.keyCode == 27 && e.preventDefault())
+        }
     });
 
     // Custom collapse
