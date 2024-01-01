@@ -202,7 +202,7 @@ filesender.ui.elements.nonBusyUpdater = function( uielement, delayMS, initString
         lastUpdate: null,
         update: function( v ) {
             var $this = this;
-            t = (new Date()).getTime();
+            var t = (new Date()).getTime();
             if( $this.lastUpdate && ($this.lastUpdate + delayMS < t )) {
                 $this.e.text( v );
             }
@@ -472,7 +472,7 @@ filesender.ui.files = {
 
     clear_crust_meter_all: function() {
         for (var i = 0; i < filesender.ui.transfer.getFileCount(); i++) {
-            file = filesender.ui.transfer.files[i];
+            var file = filesender.ui.transfer.files[i];
             filesender.ui.files.clear_crust_meter( file );
         }
     },
@@ -548,14 +548,15 @@ filesender.ui.files = {
             return;
         }
 
+        var v = -1;
         var anyOffending = false;
         var maxV = 0;
-        for( i=0; i < imax; i++ ) {
+        for( var i=0; i < imax; i++ ) {
             v = -1;
             if( i < durations.length ) {
                 v = durations[i];
             }
-            b = false;
+            var b = false;
             if( i < offending.length ) {
                 b = offending[i];
             }
@@ -1237,7 +1238,7 @@ filesender.ui.startUpload = function() {
         window.setInterval(function() {
             if( window.filesender.transfer.encryption && !window.filesender.pbkdf2dialog.already_complete ) {
                 filesender.ui.uploading_again_started_at_time_touch();
-                transfer.touchAllUploadStartedInWatchdog();
+                this.transfer.touchAllUploadStartedInWatchdog();
             }
             else
             {
@@ -2030,7 +2031,7 @@ $(function() {
 
             filesender.ui.inactiveDroparea();
 
-            addtree_success = false;
+            var addtree_success = false;
 
             if (filesender.dragdrop &&
                 typeof filesender.dragdrop.addTree === "function") {
@@ -2341,7 +2342,7 @@ $(function() {
 
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
-        password = encoded.value;
+        var password = encoded.value;
         filesender.ui.nodes.encryption.password.val(password);
 
         filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
@@ -2560,7 +2561,7 @@ $(function() {
 
     if(auth == 'guest') {
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
-        for(option in filesender.ui.nodes.options) {
+        for(var option in filesender.ui.nodes.options) {
             if(option == 'undefined' || option == 'expires') continue;
             var i = filesender.ui.nodes.options[option];
             if(i.is('[type="checkbox"]')) {
