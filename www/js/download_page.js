@@ -359,8 +359,8 @@ $(function() {
 
     page.find('.toggle-select-all').trigger('mousedown');
 
-    button_zipdl = page.find('.archive_download_frame');
-    button_tardl = page.find('.archive_tar_download_frame');
+    var button_zipdl = page.find('.archive_download_frame');
+    var button_tardl = page.find('.archive_tar_download_frame');
     if( macos || linuxos ) {
         button_tardl.addClass('btn-success');
     } else {
