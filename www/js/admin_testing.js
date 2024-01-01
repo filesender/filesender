@@ -90,6 +90,7 @@ $(function() {
                 }
                 l.appendTo(hashperftable);
             });
+            return n;
         })
     });
     
@@ -203,6 +204,8 @@ $(function() {
                     }, efunc );
                 }, efunc );
 
+            return n;
+            
         });
     });
 
