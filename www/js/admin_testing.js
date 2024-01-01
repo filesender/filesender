@@ -329,7 +329,7 @@ $(function() {
 
         filesender.ui.maintenance(true);
 
-        timer = setTimeout(function () {
+        setTimeout(function () {
             filesender.ui.maintenance(false);
         }, 2000 );
         
