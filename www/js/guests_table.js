@@ -31,7 +31,9 @@
  */
 
 $(function() {
-    var table = guests = $('table.guests');
+    var table = $('table.guests');
+    var guests = table;
+    
     if(!guests.length) return;
 
     // Expand / retract each transfer's details

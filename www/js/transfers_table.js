@@ -282,6 +282,7 @@ $(function() {
             }
 
             var filterid = null;
+            var filtered = false;
 
             if(filter) {
                 var flt = $('<div class="filtered" />').text(lang.tr('filtered_transfer_log')).prependTo(popup);

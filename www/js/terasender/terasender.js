@@ -5,7 +5,7 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
-noWorkersHaveStarted = function( ts ) {
+var noWorkersHaveStarted = function( ts ) {
     ts.error({message: 'no_workers_have_started'});
     ts.stop();
 };

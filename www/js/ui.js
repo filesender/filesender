@@ -431,7 +431,7 @@ window.filesender.ui = {
             }else title = title.toString();
         }
 
-        t = lang.tr(title).toString();
+        var t = lang.tr(title).toString();
         if( t.length && t[0] != '{' ) {
             title = t;
         }
@@ -812,7 +812,7 @@ window.filesender.ui = {
     handleFlagInvalidOnRegexMatch: function(inputtextareaobj,invalidlabelobj,rexstr) {
 
         if( rexstr.length ) {
-            banned = new RegExp(rexstr, 'g');
+            var banned = new RegExp(rexstr, 'g');
 
             inputtextareaobj.on('keyup', function(e) {
                 var v = $(this).val();
