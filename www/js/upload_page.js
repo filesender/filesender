@@ -1243,7 +1243,7 @@ filesender.ui.startUpload = function() {
             else
             {
                 for (var i = 0; i < filesender.ui.transfer.getFileCount(); i++) {
-                    file = filesender.ui.transfer.files[i];
+                    var file = filesender.ui.transfer.files[i];
                     filesender.ui.files.update_crust_meter( file );
                 }
             }
