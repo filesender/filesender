@@ -411,7 +411,7 @@ window.filesender.client = {
    	        'csrfptoken': filesender.client.getCSRFToken()
             },
             xhr: function() {
-                uxhr = $.ajaxSettings.xhr();
+                var uxhr = $.ajaxSettings.xhr();
                 
                 if((typeof uxhr.upload != 'unknown') && uxhr.upload) uxhr.upload.addEventListener('progress', function(e) {
                     if(!e.lengthComputable) return;
@@ -426,7 +426,7 @@ window.filesender.client = {
         var $this = this;
         if(encrypted){
             var cryptedBlob = null;
-            blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
+            var blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
                 // nothing todo here.. 
             });
             blobReader.blobSlice = blob;
