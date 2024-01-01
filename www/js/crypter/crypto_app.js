@@ -955,7 +955,7 @@ window.filesender.crypto_app = function () {
          */
         handleXHRError: function( xhr, link, defaultMsg )
         {
-            $this = this;
+            var $this = this;
             
             if(xhr.responseURL && xhr.responseURL.includes("/?s=exception&"))
             {
@@ -1118,7 +1118,7 @@ window.filesender.crypto_app = function () {
             // Perhaps we should change the default policy from converting errors
             // to assumed password failures.
             //
-            callbackError = function (error) {
+            var callbackError = function (error) {
                 window.filesender.log("decryptDownloadToBlobSink() explicit error " + error);
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
@@ -1138,7 +1138,7 @@ window.filesender.crypto_app = function () {
                 blobSink.error( error );
             };
 
-            onProgressCallback = function( ts, chunkid, totalrecv, percentComplete, percentOfFileComplete ) {
+            var onProgressCallback = function( ts, chunkid, totalrecv, percentComplete, percentOfFileComplete ) {
 
                 var msg = lang.tr('download_chunk_progress').r({chunkid: chunkid,
                                                                 chunkcount: encryption_details.chunkcount,
@@ -1237,7 +1237,7 @@ window.filesender.crypto_app = function () {
 
             filesender.crypto_encrypted_archive_download = false;
             
-            callbackError = function (error) {
+            var callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
                 filesender.ui.alert("error",window.filesender.config.language.file_encryption_wrong_password);
@@ -1378,7 +1378,7 @@ window.filesender.crypto_app = function () {
 
             var $this = this;
 
-            callbackError = function (error) {
+            var callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
                 filesender.ui.alert("error",window.filesender.config.language.file_encryption_wrong_password);
@@ -1410,8 +1410,8 @@ window.filesender.crypto_app = function () {
                 }
                                                      
                 
-                blobSinkStreamed = window.filesender.archive_sink( $this, link, transferid, archiveName, pass, selectedFiles, callbackError );
-                blobSink = blobSinkStreamed;
+                var blobSinkStreamed = window.filesender.archive_sink( $this, link, transferid, archiveName, pass, selectedFiles, callbackError );
+                var blobSink = blobSinkStreamed;
                 blobSink.init()
                     .then( () => {
                         blobSink.progress = progress;
