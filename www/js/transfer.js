@@ -888,8 +888,8 @@ window.filesender.transfer = function() {
      * value this helps you present the information to the UI.
      */
     this.getMostRecentChunkFineBytes = function(file) {
-        d = [];
-        i = 0;
+        var d = [];
+        var i = 0;
         for(var id in this.watchdog_processes) {
             d[i] = -1;
             if(this.watchdog_processes[id].started != null) {
@@ -917,8 +917,8 @@ window.filesender.transfer = function() {
      * value this helps you present the information to the UI.
      */
     this.getIsWorkerOffending = function(file) {
-        d = [];
-        i = 0;
+        var d = [];
+        var i = 0;
         for(var id in this.watchdog_processes) {
             d[i] = false;
             if(this.watchdog_processes[id].started != null) {
