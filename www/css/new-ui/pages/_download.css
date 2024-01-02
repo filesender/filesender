@@ -83,7 +83,7 @@
     margin-bottom: var(--fs-spacing-2x) !important;
 }
 
-.fs-table__thead {
+.fs-transfer__files__thead {
     display: none;
 }
 
