@@ -183,7 +183,6 @@ class StorageCloudAzure extends StorageFilesystem
      */
     public static function deleteFile(File $file)
     {
-        $chunk_size     = strlen($data);
         $container_name = $file->uid;
 
         try {
