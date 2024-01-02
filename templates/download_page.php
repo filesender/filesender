@@ -198,6 +198,12 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     <div class="fs-transfer__list">
                         <div class="fs-transfer__files" data-count="<?php echo ($canDownloadArchive)?count($sortedFiles):'1' ?>">
                             <table class="fs-table files">
+                                <thead class="fs-table__thead">
+                                    <tr>
+                                        <th scope="col">Selected</th>
+                                        <th scope="col">File information</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                 <?php foreach($sortedFiles as $file) { ?>
                                     <tr class="file" data-id="<?php echo $file->id ?>"
