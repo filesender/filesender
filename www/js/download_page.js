@@ -300,12 +300,11 @@ $(function() {
         verificationCodeObjectThatTiggeredEvent = $(this);
         if( !verificationCodePassed ) {
             verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"));
-            return false;
+        } else {
+            filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
+                dl(id, dl_complete_enabled, encrypted, progress );
+            });
         }
-
-        filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
-            dl(id, dl_complete_enabled, encrypted, progress );
-        });
         return false;
     });
 
@@ -328,13 +327,11 @@ $(function() {
         verificationCodeObjectThatTiggeredEvent = button;
         if( !verificationCodePassed ) {
             verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"));
-            return false;
+        } else {
+            filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
+                dl(ids, dl_complete_enabled, encrypted, null, archive_format );
+            });
         }
-
-        filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
-            dl(ids, dl_complete_enabled, encrypted, null, archive_format );
-        });
-
         return false;
     };
 
@@ -382,42 +379,42 @@ $(function() {
         page.find('.verificationcodesend').button().on('click', function () {
             var pass = $('#verificationcode').val();
             if (!pass.length) {
-                return true;
-            }
-            try {
-                var options = {
-                    error: function (e) {
-                        if (e.message == 'rest_data_stale') {
-                            window.filesender.ui.alert("error", lang.tr("verification_code_is_too_old"));
-                            return;
-                        }
-                        filesender.ui.error(e);
-                    }
-                };
-
-
-                filesender.client.checkVerificationCodeWithServer(
-                    transferid, pass,
-                    function (args) {
-                        if (args.ok === true) {
-                            verificationCodePassed = true;
-                            $(".verify_email_to_download").dialog("close");
-
-                            var encrypted = verificationCodeObjectThatTiggeredEvent.closest('.file').attr('data-encrypted');
-                            var msg = "downloading";
-                            if (!encrypted) {
-                                window.filesender.ui.notify("info", lang.tr(msg));
+                // nothing, could have just returned true here.
+            } else {
+                try {
+                    var options = {
+                        error: function (e) {
+                            if (e.message == 'rest_data_stale') {
+                                window.filesender.ui.alert("error", lang.tr("verification_code_is_too_old"));
+                                return;
                             }
-                            verificationCodeObjectThatTiggeredEvent.click();
-                        } else {
-                            window.filesender.ui.alert("error", lang.tr("verification_code_did_not_match"));
+                            filesender.ui.error(e);
                         }
-                    }
-                    , options
-                );
-            } catch (exception) {
-            }
+                    };
 
+
+                    filesender.client.checkVerificationCodeWithServer(
+                        transferid, pass,
+                        function (args) {
+                            if (args.ok === true) {
+                                verificationCodePassed = true;
+                                $(".verify_email_to_download").dialog("close");
+
+                                var encrypted = verificationCodeObjectThatTiggeredEvent.closest('.file').attr('data-encrypted');
+                                var msg = "downloading";
+                                if (!encrypted) {
+                                    window.filesender.ui.notify("info", lang.tr(msg));
+                                }
+                                verificationCodeObjectThatTiggeredEvent.click();
+                            } else {
+                                window.filesender.ui.alert("error", lang.tr("verification_code_did_not_match"));
+                            }
+                        }
+                        , options
+                    );
+                } catch (exception) {
+                }
+            }
             return true;
         });
     }
