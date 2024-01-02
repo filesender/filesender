@@ -83,6 +83,10 @@
     margin-bottom: var(--fs-spacing-2x) !important;
 }
 
+.fs-transfer__files__thead {
+    display: none;
+}
+
 /* XS */
 @media (max-width: 575px) {
 
