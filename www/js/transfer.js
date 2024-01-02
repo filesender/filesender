@@ -53,10 +53,10 @@ if(!('filesender' in window)) window.filesender = {};
  */
 window.filesender.progresstracker = function() {
 
-    stamp: (new Date()).getTime();
-    mem: [];
-    memToKeep: 5;
-    disabled: false;
+    this.stamp = (new Date()).getTime();
+    this.mem = [];
+    this.memToKeep = 5;
+    this.disabled = false;
 
     /**
      * Reset the tracker for a fresh chunk
