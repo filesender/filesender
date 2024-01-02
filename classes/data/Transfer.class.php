@@ -881,13 +881,12 @@ class Transfer extends DBObject
                         'default' => false
                     );
                 }
-                
+
+                // default is false if not specified
                 foreach (array('available', 'advanced', 'default') as $p) {
                     if (!array_key_exists($p, $options[$name])) {
                         $options[$name][$p] = false;
                     }
-                    
-                    $options[$name][$p] = $options[$name][$p];
                 }
             }
             
