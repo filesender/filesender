@@ -431,7 +431,7 @@ class StorageFilesystem
             }
 
             if ($chunk_size != $written) {
-                Logger::info('writeChunk() Can not write to : '.$chunkFile);
+                Logger::info('writeChunk() Can not write to : '.$file_path);
                 throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
             }
 
