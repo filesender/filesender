@@ -93,10 +93,9 @@ while($inputs) {
         
         $return_path = Config::get('email_return_path');
         if($return_path && preg_match('`^(.+)<verp>(.+)$`i', $return_path, $match)) {
-            $addr = explode('@', (string)$headers->to);
-            $variable = substr($addr[0], strlen($match[1]));
-            
-            if(preg_match('/^(recipient|guest)-([0-9]+)$/', $variable, $m)) {
+            $regex = '`' . preg_replace('`([.+])`', '\\\\${1}', $match[1])
+                . '(recipient|guest)-([0-9]+)' . preg_replace('`([.+])`', '\\\\${1}', $match[2]) . '`';
+            if(preg_match($regex, (string)$headers->to, $m)) {
                 $target_type = $m[1];
                 $target_id = $m[2];
                 
