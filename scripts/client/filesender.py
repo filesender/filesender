@@ -39,7 +39,6 @@ try:
     from enum import Enum
     from collections.abc import MutableMapping
     import hmac
-    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     import concurrent.futures
     import hashlib
     import urllib3
@@ -60,7 +59,12 @@ except Exception as e:
   print('pip3 install requests urllib3 ')
   exit(1)
   
-
+encryption_supported = True
+try:
+  from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+except Exception as e:
+  encryption_supported = False
+  
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 #settings
@@ -226,6 +230,11 @@ class SupportedHashTypes(Enum):
 
 
 if encrypted:
+  if not encryption_supported:
+    print("Failed ot import 'cryptography' library, cannot proceed with encrypted transfer.")
+    print("\npip3 install cryptography")
+    exit(1)
+    
   encryption_details = {}
   try:
     #Regex parsing of filesender-config.js.php to get correct requirements.
