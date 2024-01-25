@@ -831,6 +831,4 @@ $lang['optional_message'] = 'Optional message';
 $lang['enter_transfer_name'] = 'Enter the transfer name (optional)';
 $lang['files_transferred_display'] = '{filecount}';
 $lang['size_transferred_display'] = '{size_human_readable}';
-
-
-
+$lang['an_initiative_by'] = 'An initiative by';
