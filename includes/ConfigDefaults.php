@@ -239,6 +239,8 @@ $default = array(
     'cloud_s3_bucket' => '',
     'cloud_s3_use_daily_bucket' => false,
     'cloud_s3_bucket_prefix' => '',
+    'cloud_s3_bulk_delete' => false,
+    'cloud_s3_bulk_size' => 1000,
 
     'disable_directory_upload' => true,
     'directory_upload_button_enabled' => true,

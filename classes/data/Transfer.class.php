@@ -797,6 +797,7 @@ class Transfer extends DBObject
             // In case we keep audit data for some time only delete actual file data in storage
             foreach ($this->files as $file) {
                 try {
+		    Logger::debug('Attempt to call Storage::deleteFile for ' . $file);
                     Storage::deleteFile($file);
                 } catch (Exception $e) {
                     if( $force ) {
