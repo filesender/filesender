@@ -30,22 +30,24 @@
 
 import argparse
 try:
-  import textwrap #used to format help description and epilog
-  import requests
-  import time
-  import re
-  from collections.abc import Iterable
-  from collections.abc import MutableMapping
-  import hmac
-  import concurrent.futures
-  import hashlib
-  import urllib3
-  import os
-  import sys
-  import json
-  import configparser
-  from os.path import expanduser
-  from math import ceil
+    import textwrap #used to format help description and epilog
+    import requests
+    import base64
+    import time
+    import re
+    from collections.abc import Iterable
+    from enum import Enum
+    from collections.abc import MutableMapping
+    import hmac
+    import concurrent.futures
+    import hashlib
+    import urllib3
+    import os
+    import sys
+    import json
+    import configparser
+    from os.path import expanduser
+    from math import ceil
 except Exception as e:
   print(type(e))
   print(e.args)
@@ -57,7 +59,12 @@ except Exception as e:
   print('pip3 install requests urllib3 ')
   exit(1)
   
-
+encryption_supported = True
+try:
+  from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+except Exception as e:
+  encryption_supported = False
+  
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 #settings
@@ -75,6 +82,8 @@ if 'system' in config:
 if 'user' in config:
   username = config['user'].get('username')
   apikey = config['user'].get('apikey')
+
+
 
 #argv
 parser = argparse.ArgumentParser(
@@ -96,6 +105,7 @@ parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
+parser.add_argument("-e","--encrypted")
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
 parser.add_argument("--retries")
@@ -127,6 +137,8 @@ guest = args.guest
 user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
+encrypted = args.encrypted
+
 if args.username is not None:
   username = args.username
   
@@ -204,6 +216,79 @@ if debug:
   print('files             : '+','.join(args.files))
   print('insecure          : '+str(insecure))
 
+
+
+#Encyption Config
+#These enums let us translate between the names in js and the values python wants whilst also being a nice match object.
+class SupportedCryptTypes(Enum):
+  """Enum of Encryption types implemented in this client"""
+  AESGCM = "AES-GCM"
+
+class SupportedHashTypes(Enum):
+  """Enum of supported Hash Types in clinet"""
+  SHA256 = "SHA-256"
+
+
+if encrypted:
+  if not encryption_supported:
+    print("Failed ot import 'cryptography' library, cannot proceed with encrypted transfer.")
+    print("\npip3 install cryptography")
+    exit(1)
+    
+  encryption_details = {}
+  try:
+    #Regex parsing of filesender-config.js.php to get correct requirements.
+    encryption_details["password_mixed_case_requied"] = (re.search(
+        r"encryption_password_must_have_upper_and_lower_case: (\w+)",config_response.text).group(1)) == 'true'
+    encryption_details["password_numbers_required"] = (re.search(
+        r"encryption_password_must_have_numbers: (\w+)",config_response.text).group(1)) == 'true'
+    encryption_details["password_special_required"] = (re.search(
+        r"encryption_password_must_have_special_characters: (\w+)",config_response.text).group(1)) == 'true'
+
+    encryption_details["iv_len"] = int(re.search(r"crypto_iv_len\D+(\d+)", config_response.text).group(1))
+    encryption_details["password_hash_iterations"] = int(
+      re.search(r"encryption_password_hash_iterations_new_files\D+(\d+)", config_response.text).group(1))
+
+    encryption_details["crypt_type"] = SupportedCryptTypes(re.search(r"crypto_crypt_name: '(.+)'",config_response.text).group(1))
+    encryption_details["hash_name"] = SupportedHashTypes(re.search(r"crypto_hash_name: '(.+)'",config_response.text).group(1))
+    
+    upload_chunk_base64_mode = (re.search(
+      r"encryption_encode_encrypted_chunks_in_base64_during_upload: (\w+)",config_response.text).group(1)) == 'true'
+  except Exception as e:
+    print("Failed to parse encryption requirements, encryption cannot be supported.")
+    if debug:
+      print(e)
+    sys.exit(1)
+  
+  encryption_details["password"] = encrypted
+  encryption_details["password_encoding"] = 'none'
+  encryption_details["password_version"] = "1"
+  
+  if encryption_details["crypt_type"] == SupportedCryptTypes.AESGCM: 
+    encryption_details["key_version"] = "3"
+
+
+
+  if encryption_details["password_mixed_case_requied"]:
+    has_lower = any(map((lambda x: x.islower()) ,encryption_details["password"]))
+    has_upper = any(map((lambda x: x.isupper()) ,encryption_details["password"]))
+    if not (has_lower and has_upper):
+      print("Password does not meet mixed case required")
+      exit(1)
+
+  if encryption_details["password_numbers_required"]:
+    if not any(map(lambda x: x.isdigit(),encryption_details["password"])):
+      print("Password does not meet number requirment")
+      exit(1)
+
+  if encryption_details["password_special_required"]:
+    if all(map(lambda x: x.isalnum(),encryption_details["password"])):
+      print("Password does not meet special character requiremnet")
+      exit(1)
+
+
+
+
 ##########################################################################
 
 def flatten(d, parent_key=''):
@@ -247,6 +332,7 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     "Accept": "application/json",
     "Content-Type": content_type
   }
+
   response = None
   try:
     if method == "get":
@@ -268,14 +354,13 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
       return call(method=method, path=path, data=initData,
                   content=content, rawContent=rawContent,
                    options=options, tryCount=tryCount + 1)
-
     raise _exc
   if response is None:
     raise Exception('Client error')
 
   code = response.status_code
   #print(url)
-  #print(inputcontent)
+  #exit(1)
   #print(code)
   #print(response.text)
 
@@ -312,12 +397,7 @@ def postTransfer(user_id, files, recipients, subject=None, message=None, expires
     expires = round(time.time()) + (default_transfer_days_valid*24*3600)
 
   to = [x.strip() for x in recipients.split(',')]
-  
-  return call(
-    'post',
-    '/transfer',
-    {},
-    {
+  transferContent = {
       'from': from_address,
       'files': files,
       'recipients': to,
@@ -326,7 +406,18 @@ def postTransfer(user_id, files, recipients, subject=None, message=None, expires
       'expires': expires,
       'aup_checked':1,
       'options': options
-    },
+  }
+  if encrypted:
+      transferContent['encryption'] = True
+      transferContent['encryption_key_version'] =  encryption_details['key_version']
+      transferContent['encryption_password_encoding'] =  encryption_details['password_encoding']
+      transferContent['encryption_password_version'] =  encryption_details['password_version']
+      transferContent['encryption_password_hash_iterations'] =  encryption_details['password_hash_iterations']
+  return call(
+    'post',
+    '/transfer',
+    {},
+    transferContent,
     None,
     {}
   )
@@ -401,14 +492,44 @@ def send_file_chunk(transfer_file_index, offset):
     print('putChunks: '+path)
   with open(filepath, mode='rb', buffering=0) as fin:
     fin.seek(offset)
-    fi = fin.read(upload_chunk_size)
-    putChunk(transfer, transfer_file, fi, offset)
+    data = fin.read(upload_chunk_size)
+    if encrypted:
+      data = encrypt_chunk(data,
+                           ceil(offset/upload_chunk_size),
+                           transfer_file['name']+':'+str(transfer_file['size']))
+    putChunk(transfer, transfer_file, data, offset)
   return transfer_file_index
 
 
 def release_list(a):
   del a[:]
   del a
+
+def generate_key():
+  return hashlib.pbkdf2_hmac(
+        encryption_details["hash_name"].name, 
+        encryption_details["password"].encode('ascii'), 
+        encryption_details['salt'] ,
+        encryption_details['password_hash_iterations'] , 
+        256 // 8
+    )
+
+def encrypt_chunk(data,chunkid,fileKey):
+  match encryption_details["crypt_type"]:
+    case SupportedCryptTypes.AESGCM:
+      return encrypt_chunk_aesgcm(data,chunkid,fileKey)
+
+def encrypt_chunk_aesgcm(data,chunkid,files_key):
+  aead = files[files_key]['aead'].encode('ascii')
+  iv = files[files_key]["iv_bytes"]
+  cipher = AESGCM(encryption_details["Key"])
+
+  fulliv = iv + chunkid.to_bytes(4, byteorder = 'little')
+  #aead is used as additional data to properly calculate the tag.
+  #The full IV (IV + Chunk ID) is used as a preamble to the file for verification.
+  cipher_text = cipher.encrypt(fulliv,data,aead)
+  return fulliv + cipher_text
+
 
 ##########################################################################
 
@@ -462,7 +583,28 @@ for fn_abs in fileList:
     'size':size,
     'path':fn_abs
   }
-  filesTransfer.append({'name':fn,'size':size})
+  file_transfer_object = {'name':fn,'size':size}
+
+  if encrypted:
+    if encryption_details["crypt_type"] == SupportedCryptTypes.AESGCM:
+      #we need to generate an IV and AEAD for each file.
+      #file_transfer_object is used to transfer the files to the filesender instance
+      #files is so we can reference the iv and aead later when needed.
+      iv_bytes =  os.urandom(encryption_details["iv_len"]-4)
+      iv = base64.b64encode(iv_bytes).decode("ascii")
+      file_transfer_object["iv"] = iv
+
+      aead_string = "{"
+      aead_string += '"aeadversion":1,'
+      aead_string += '"chunkcount":' + str(ceil( size / upload_chunk_size ))  +','
+      aead_string += '"chunksize":'   + str(upload_chunk_size)   +',' 
+      aead_string += '"iv":'          + '"' + iv + '"' + ','
+      aead_string += '"aeadterminator":1' 
+      aead_string += '}'
+      file_transfer_object["aead"] = base64.b64encode(aead_string.encode("ascii")).decode("ascii")
+      files[fn+':'+str(size)]["iv_bytes"] = iv_bytes
+      files[fn+':'+str(size)]['aead'] = aead_string
+  filesTransfer.append(file_transfer_object)
 release_list(fileList) # don't need it anymore
 
 troptions = {'get_a_link':0}
@@ -475,6 +617,10 @@ transfer = postTransfer( username,
                          expires=None,
                          options=troptions)['created']
 fileIndexQueue = []
+if encrypted:
+  encryption_details['salt'] = transfer['salt'].encode('ascii')
+  encryption_details['Key'] = generate_key()
+
 offsettQueue = []
 try:
   for indexOfFile,f in enumerate(transfer['files']):
