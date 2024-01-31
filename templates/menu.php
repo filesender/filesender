@@ -53,32 +53,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                     pagemenuitem('privacy');
                 }
 
-                if (Auth::isAuthenticated() && Auth::isSP())
-                {
-                    $faicon = 'fa-sign-out';
-                    $icon = '<i class="fa '.$faicon.'"></i> ';
-
-                    $url = AuthSP::logoffURL();
-                    if( Config::get('auth_sp_type') == "saml" ) {
-
-                        $link = Utilities::sanitizeOutput($url);
-                        $txt = Lang::tr('logoff');
-                        echo <<<EOT
-                        <li>
-                          <form action="$link" method="post" >
-                            <button class="fs-link" type="submit" >
-                                ${icon}
-                                <span>$txt</span>
-                            </button>
-                          </form>
-                        </li>
-EOT;
-                    } else {
-                        if($url) {
-                            echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.$icon.Lang::tr('logoff').'</a></li>';
-                        }
-                    }
-                }
+            
                 if (!Auth::isAuthenticated() && !Auth::isSP() && !Auth::isGuest())
                 {
                     $faicon = 'fa-sign-in';
