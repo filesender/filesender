@@ -50,7 +50,8 @@ class DatasetTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
 
-    protected function setUp() {
+    protected function setUp(): void
+    {
         if (Config::get('db_type') == 'mysql' ) {
             $this->markTestSkipped(
                 'The dataset test only runs on pgsql at the moment.'
