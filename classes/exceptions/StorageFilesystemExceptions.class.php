@@ -126,6 +126,10 @@ class StorageFilesystemCannotDeleteException extends StorageFilesystemException
      */
     public function __construct($path, $file = null)
     {
+        $e = error_get_last();
+        if (self::additionalLoggingDesired('StorageFilesystemCannotDeleteException')) {
+            Logger::warn("StorageFilesystemCannotDeleteException reason: " . json_encode($e, JSON_PRETTY_PRINT, 10 ));
+        }
         parent::__construct('cannot_delete', $path, $file);
     }
 }
@@ -143,7 +147,10 @@ class StorageFilesystemCannotWriteException extends StorageFilesystemException
      */
     public function __construct($path, $file = null, $data = null, $offset = 0, $written = 0)
     {
+        $e = error_get_last();
+        
         if (self::additionalLoggingDesired('StorageFilesystemCannotWriteException')) {
+            Logger::warn("StorageFilesystemCannotWriteException reason: " . json_encode($e, JSON_PRETTY_PRINT, 10 ));
             $msg = 'StorageFilesystemCannotWriteException';
             $this->additionalLogFile($msg, $file);
             if ($data) {
