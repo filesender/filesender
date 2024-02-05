@@ -316,6 +316,15 @@ class StorageFilesystem
         
         return $p;
     }
+
+    protected static function appendToPath( $path, $v )
+    {
+        if (substr($path, -1) != '/') {
+            $path .= '/';
+        }
+        $path .= $v;
+        return $path;
+    }
     
     /**
      * Build file storage path (without filename)

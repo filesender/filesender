@@ -53,7 +53,7 @@ class FileTest extends CommonDatabaseTestCase {
 
     protected function setUp(): void
     {
-        echo "FileTest@ " . date("Y-m-d H:i:s") . "\n\n";
+'        echo "FileTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $this->transferSubject = "Subject test";
         $this->transferMessage = "Message test";
@@ -86,7 +86,7 @@ class FileTest extends CommonDatabaseTestCase {
 
         // uploading fake file
         $dest = rtrim(Config::get('storage_filesystem_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        copy($this->srcFile, $dest . $file->uid);
+        copy($this->srcFile, $dest . Storage::buildPath($file) . $file->uid);
 
         $this->displayInfo(get_class($this), __FUNCTION__, ' -- File created:'.$file->id);
 
