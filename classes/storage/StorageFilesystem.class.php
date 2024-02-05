@@ -32,7 +32,7 @@
 if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
-require_once(FILESENDER_BASE.'/vendor/autoload.php');
+require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
 
 /**
  *  Gives access to a file on the filesystem

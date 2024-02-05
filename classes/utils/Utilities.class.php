@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
-require_once(FILESENDER_BASE.'/vendor/autoload.php');
+require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
 
 
 /**
