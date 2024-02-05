@@ -118,6 +118,7 @@ confirm_remind_recipient
 confirm_remind_transfer
 confirm_remove_daily_stats_transfer
 confirm_stop_upload
+confirm_upload_add_to_recipients_with_no_explicit_address
 continue
 copy_text
 core_class_not_found
