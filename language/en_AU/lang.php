@@ -706,3 +706,4 @@ $lang['you_can_report_exception'] = 'When reporting this error please give the f
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
+$lang['confirm_upload_add_to_recipients_with_no_explicit_address'] = 'You have chosen to only send these files to the person who invited you to the system. If this is what you wanted please select ok. If you would like to add another recipient please cancel this dialog and add the recipients before clicking send again.';
