@@ -295,7 +295,8 @@ class StorageFilesystem
         return $file->uid;
     }
 
-    protected static function ensurePath( $path, $subpath )
+    // only for test suite to use
+    public static function ensurePath( $path, $subpath )
     {
         if ($subpath) { // Ensure that subpath exists and is writable
             $p = $path;

@@ -86,6 +86,7 @@ class FileTest extends CommonDatabaseTestCase {
 
         // uploading fake file
         $dest = rtrim(Config::get('storage_filesystem_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        StorageFilesystem::ensurePath( $dest, Storage::buildPath($file));
         copy($this->srcFile, $dest . Storage::buildPath($file) . $file->uid);
 
         $this->displayInfo(get_class($this), __FUNCTION__, ' -- File created:'.$file->id);
