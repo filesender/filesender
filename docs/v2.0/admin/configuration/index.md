@@ -878,7 +878,7 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __description:__ Store files in a subdirectory based on the day they were created.
 * __mandatory:__ no
 * __type:__ **bool** 
-* __default:__ true
+* __default:__ false
 * __available:__ since version 2.45
 * __comment:__ This requires version 7 UUIDs to be in use. The timestamp from the v7 uuid is taken and the seconds since midnight are removed and that is used to create a subdirectory for the stored files. See also storage_filesystem_per_hour_buckets. Note that this works with storage_filesystem_per_hour_buckets, if both are enabled then first a daily directory is made and then an hourly directory is created in the day directory and the files are stored in the hourly subdirectory. This will allow the number of entries in a directory to be controlled by a system administrator and the use of v7 uuid will also permit the kernel filesystem to better index entry lookup.
 
@@ -889,7 +889,7 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __description:__ Store files in a subdirectory based on the hour they were created.
 * __mandatory:__ no
 * __type:__ **bool** 
-* __default:__ true
+* __default:__ false
 * __available:__ since version 2.45
 * __comment:__ This requires version 7 UUIDs to be in use. The timestamp from the v7 uuid is taken and the seconds since the start of the hour are removed and that is used to create a subdirectory for the stored files. See also storage_filesystem_per_day_buckets for an overview of this feature.
 
