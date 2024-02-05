@@ -90,6 +90,9 @@ class FileTest extends CommonDatabaseTestCase {
         copy($this->srcFile, $dest . "/" . Storage::buildPath($file) . "/" . $file->uid);
 
         $this->displayInfo(get_class($this), __FUNCTION__, ' -- File created:'.$file->id);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- File    dest:'.$dest);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- File   uuid:'.$file->uid);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- File   subp:'.Storage::buildPath($file));
 
         return $file->id;
     }
