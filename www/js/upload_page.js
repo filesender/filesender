@@ -71,6 +71,26 @@ function useWebNotifications()
 }
 
 
+function getOption( n )
+{
+    var ret = (n in filesender.ui.nodes.options) ? filesender.ui.nodes.options[n].is(':checked') : false;
+    return ret;
+}
+
+
+function getGuestOption( n )
+{
+    if(auth == 'guest') {
+        return filesender.ui.guest_options[n];
+    }
+    return false;
+}
+
+
+
+
+
+
 /**
  * apply a 'bad' class to the obj if b==true
  * the useExplicitGoodClass can be set to true and a 'good' css class 
@@ -1411,6 +1431,9 @@ $(function() {
 
     // start out asking user for a password
     filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
+
+    // initial value
+    filesender.ui.guest_options = [];
     
     // Register frequently used nodes
     filesender.ui.nodes = {
@@ -1824,7 +1847,18 @@ $(function() {
         return false;
     });
 
-    
+
+    function startUpload()
+    {
+        filesender.ui.switchToUloadingPageConfiguration();
+        filesender.ui.startUpload();
+        filesender.ui.nodes.buttons.start.addClass('not_displayed');
+        if(filesender.supports.reader) {
+            filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+            filesender.ui.nodes.buttons.reconnect_and_continue.removeClass('not_displayed');
+        }
+        filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
+    }
     
     // Bind buttons
     filesender.ui.nodes.buttons.start.on('click', function() {
@@ -1833,14 +1867,27 @@ $(function() {
         
         if(filesender.ui.transfer.status == 'new' && $(this).filter('[aria-disabled="false"]')) {
 
-            filesender.ui.switchToUloadingPageConfiguration();
-            filesender.ui.startUpload();
-            filesender.ui.nodes.buttons.start.addClass('not_displayed');
-            if(filesender.supports.reader) {
-                filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
-                filesender.ui.nodes.buttons.reconnect_and_continue.removeClass('not_displayed');
+            if(auth == 'guest') {
+
+                // confirm that the upload is only intended to the voucher issuer.
+                if( getOption( 'add_me_to_recipients' )
+                    && !getGuestOption( 'can_only_send_to_me' )
+                    && !filesender.ui.transfer.recipients.length )
+                {
+                    filesender.ui.confirm(lang.tr('confirm_upload_add_to_recipients_with_no_explicit_address'),
+                                          function() { // ok
+                                              startUpload();
+                                          },
+                                          function() { // cancel
+                                          });
+                    
+                    // dailog will start the upload if the user confirms the action
+                    // so we fall through here.
+                    return false;
+                }
             }
-            filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
+
+            startUpload();
         }
         return false;
     }).button({disabled: true});
@@ -1964,6 +2011,13 @@ $(function() {
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
     var auth = $('body').attr('data-auth-type');
+
+    if(auth == 'guest') {
+        var goelement = $('#guest_options')[0];
+        const go = JSON.parse( goelement.value );
+        filesender.ui.guest_options = go;
+    }
+
     
     if(auth == 'guest') {
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
