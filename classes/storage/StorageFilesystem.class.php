@@ -347,6 +347,7 @@ class StorageFilesystem
             $path = self::ensurePath( $path, $subpath );
         }
 
+        echo "AA $path fileuid " . $file->uid . "\n";
         if( self::$perDayBuckets || self::$perHourBuckets ) {
             try {
                 $subpath = '';
@@ -376,6 +377,7 @@ class StorageFilesystem
                 return $path;
             }
         }
+        echo "AA $path fileuid " . $file->uid . "\n";
         
         return $path;
     }
