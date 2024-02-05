@@ -298,16 +298,23 @@ class StorageFilesystem
     // only for test suite to use
     public static function ensurePath( $path, $subpath )
     {
+        echo "AAA ensurePath(top)\n";
+        $p = $path;
+        echo "AAA ensurePath(top2) $path\n";
+        
         if ($subpath) { // Ensure that subpath exists and is writable
             $p = $path;
             foreach (array_filter(explode('/', $subpath)) as $sub) {
+                echo "AAA ensurePath(sub) $sub\n";
                 $p .= $sub;
                 
                 if (!is_dir($p) && !mkdir($p)) {
+                    echo "AAA ensurePath(x1) $sub\n";
                     throw new StorageFilesystemCannotCreatePathException($p, $file);
-                            }
+                }
                 
                 if (!is_writable($p)) {
+                    echo "AAA ensurePath(x2) $sub\n";
                     throw new StorageFilesystemCannotWriteException($p, $file);
                 }
                 
@@ -334,11 +341,16 @@ class StorageFilesystem
      *
      * @return string path
      */
-    public static function buildPath(File $file)
+    public static function buildPath(File $file, $fullPath = true )
     {
         self::setup();
+
+        if( $fullPath ) {
+            $path = self::$path;
+        } else {
+            $path = "";
+        }
         
-        $path = self::$path;
         
         // Is storage path hashing enabled
         if (self::$hashing) {
@@ -357,12 +369,14 @@ class StorageFilesystem
             $path = self::ensurePath( $path, $subpath );
         }
 
-        echo "AA $path fileuid " . $file->uid . "\n";
+        echo "AAA buildPath(top) $path fileuid " . $file->uid . "\n";
         if( self::$perDayBuckets || self::$perHourBuckets ) {
             try {
+                echo "AAA buildPath buckets!\n";
                 $subpath = '';
 
                 $uuid = Ramsey\Uuid\Uuid::fromString($file->uid);
+                echo "AAA ver " . $uuid->getFields()->getVersion() . "\n";
                 if( $uuid->getFields()->getVersion() == 7 ) {
                     $tt = $uuid->getDateTime()->getTimestamp();
                     $startOfDay  = $tt - ($tt % (60*60*24));
@@ -377,17 +391,23 @@ class StorageFilesystem
                         $subpath .= "" . $startOfHour;
                     }
 
-                    $path = self::ensurePath( $path, $subpath );
+                    echo "AAA buildPath buckets 21 $path\n";
+                    $path = StorageFilesystem::ensurePath( $path, $subpath );
+
+    
+                    
+                    echo "AAA buildPath buckets 3 $path\n";
                     if (substr($path, -1) != '/') {
                         $path .= '/';
                     }
                 }                    
             } catch (Exception $e) {
                 Logger::error("Issue with per day buckets and UUID");
+                echo "Issue with per day buckets and UUID\n";
                 return $path;
             }
         }
-        echo "AA $path fileuid " . $file->uid . "\n";
+        echo "AAA buildpath(end) $path fileuid " . $file->uid . "\n";
         
         return $path;
     }

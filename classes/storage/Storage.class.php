@@ -333,9 +333,9 @@ class Storage
     }
 
 
-    public static function buildPath(File $file)
+    public static function buildPath(File $file, $fullPath = true )
     {
         self::setup();
-        return call_user_func(self::getStorageClass($file).'::buildPath', $file);
+        return call_user_func(self::getStorageClass($file).'::buildPath', $file, $fullPath );
     }
 }
