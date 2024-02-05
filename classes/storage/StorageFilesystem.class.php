@@ -367,6 +367,9 @@ class StorageFilesystem
                     }
 
                     $path = self::ensurePath( $path, $subpath );
+                    if (substr($path, -1) != '/') {
+                        $path .= '/';
+                    }
                 }                    
             } catch (Exception $e) {
                 Logger::error("Issue with per day buckets and UUID");
