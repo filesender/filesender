@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4421db38cf8f304a96854918a0501cc4",
+    "content-hash": "d5fb23a04b0bdc1eae38ba1818201b21",
     "packages": [
         {
             "name": "appium/php-client",
