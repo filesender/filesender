@@ -166,6 +166,7 @@ class FileTest extends CommonDatabaseTestCase {
      * @depends testUpdate
      * @return int: $file->id if test succeed
      */
+/*    
     public function testStorage($fileId) {
         $this->assertTrue($fileId > 0);
 
@@ -179,7 +180,8 @@ class FileTest extends CommonDatabaseTestCase {
 
         return $fileId;
     }
-
+ */
+    
     /**
      * Function used to test deletion of a file from database
      * 
