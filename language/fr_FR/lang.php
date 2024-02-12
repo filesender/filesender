@@ -428,6 +428,7 @@ $lang['report_event_download_started'] = 'Le destinataire {author.identity} a co
 $lang['report_event_file_uploaded'] = 'Le fichier {file.path} ({size:file.size}) a été téléversé en {time:time_taken}';
 $lang['report_event_transfer_available'] = 'Le dépôt est devenu disponible pour les destinataires (temps total {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Le dépôt a été fermé sur demande';
+$lang['report_event_transfer_decrypt_failed'] = 'Le décryptage a échoué';
 $lang['report_event_transfer_deleted'] = 'Le dépôt a été supprimé';
 $lang['report_event_transfer_expired'] = 'Le dépôt a expiré';
 $lang['report_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
