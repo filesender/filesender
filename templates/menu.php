@@ -52,22 +52,8 @@ $maybe_display_aggregate_statistics_menu = false;
 
             if (Auth::isAuthenticated() && Auth::isSP()) {
                 $url = AuthSP::logoffURL();
-
-                if( Config::get('auth_sp_type') == "saml" ) {
-                    
-                    $link = Utilities::sanitizeOutput($url);
-                    $txt = Lang::tr('logoff');
-                    echo <<<EOT
-                    <li>
-                      <form action="$link" method="post" >
-                        <button class="logoutbutton" type="submit" >$txt</button>
-                      </form>
-                    </li>
-EOT;
-                } else {
-                    if($url) {
-                        echo '<li><a href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
-                    }
+                if($url) {
+                    echo '<li><a href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
                 }
                 
             }else if (!Auth::isGuest()){

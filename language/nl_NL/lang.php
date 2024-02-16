@@ -21,7 +21,7 @@ $lang['admin_page'] = 'Admin';
 $lang['admin_statistics_section'] = 'Statistieken';
 $lang['admin_testing_section'] = 'Testen';
 $lang['admin_transfers_page_description'] = 'Er zijn een aantal secties op deze pagina. Hier zijn enkele links om u te helpen naar de door u gewenste sectie te springen:<ul><li><a href="#search_transfers">Search</a></li><li><a href="#available_transfers">Currently available</a></li><li><a href="#uploading_transfers">Currently uploading</a></li><li><a href="#closed_transfers">Closed</a></li><ul>';
-$lang['admin_transfers_section'] = 'Zendingen';
+$lang['admin_transfers_section'] = 'Transfers';
 $lang['admin_users_section'] = 'Gebruikers';
 $lang['advanced_settings'] = 'Geavanceerde instellingen';
 $lang['aggregate_statistics'] = 'Aggregaat Statistieken';
@@ -438,6 +438,7 @@ $lang['report_event_download_started'] = 'Ontvanger {author.identity} is begonne
 $lang['report_event_file_uploaded'] = 'Bestand {file.path} ({size:file.size}) is ge-upload (dat duurde {time:time_taken})';
 $lang['report_event_transfer_available'] = 'Transfer is beschikbaar gekomen (dat duurde {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Transfer werd op verzoek afgesloten';
+$lang['report_event_transfer_decrypt_failed'] = 'Versleuteling mislukt';
 $lang['report_event_transfer_deleted'] = 'Transfer data werden verwijderd';
 $lang['report_event_transfer_expired'] = 'Transfer verlopen. De bestanden zijn niet langer beschikbaar. Vraag eventueel de verzender deze opnieuw te versturen.';
 $lang['report_event_transfer_sent'] = 'Downloadlink naar ontvanger(s) verstuurd';

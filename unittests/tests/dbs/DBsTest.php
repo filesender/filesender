@@ -44,7 +44,8 @@ class DBsTest extends CommonUnitTestCase {
     /**
      * Init variables, first function called
      */
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "DBsTest@ " . date("Y-m-d H:i:s") . "\n\n";
     }
 

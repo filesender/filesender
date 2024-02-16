@@ -177,6 +177,7 @@ class File extends DBObject
     protected $iv = '';
     protected $aead = null;
     protected $have_avresults = false;
+    protected $storage_class_name = ''; // set in constructor
    
     /**
      * Related objects cache

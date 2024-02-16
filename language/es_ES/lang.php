@@ -428,6 +428,7 @@ $lang['report_event_download_started'] = '{author.identity} comenzó a descargar
 $lang['report_event_file_uploaded'] = '{file.path} ({size:file.size}) cargado en {time:time_taken}';
 $lang['report_event_transfer_available'] = 'Carga disponible. Tiempo empleado en la carga: {time:time_taken}';
 $lang['report_event_transfer_closed'] = 'La carga se cerró bajo petición';
+$lang['report_event_transfer_decrypt_failed'] = 'fallo al descifrar';
 $lang['report_event_transfer_deleted'] = 'Se han borrado los datos de la carga';
 $lang['report_event_transfer_expired'] = 'Carga caducada';
 $lang['report_event_transfer_sent'] = 'Enlace de descarga enviado a los destinatarios';
