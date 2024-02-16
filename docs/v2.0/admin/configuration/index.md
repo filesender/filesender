@@ -78,6 +78,8 @@ A note about colours;
 * [cloud_s3_bucket](#cloud_s3_bucket)
 * [cloud_s3_use_daily_bucket](#cloud_s3_use_daily_bucket)
 * [cloud_s3_bucket_prefix](#cloud_s3_bucket_prefix)
+* [cloud_s3_bulk_delete](#cloud_s3_bulk_delete)
+* [cloud_s3_bulk_size](#cloud_s3_bulk_size)
 
 ## Shredding
 
@@ -977,6 +979,26 @@ php scripts/task/S3bucketmaintenance.php --verbose
 * __comment:__ If cloud_s3_use_daily_bucket has been set, you can define the prefix for daily buckets with
 this option. Daily bucket names are formed by concatenating cloud_s3_bucket_prefix + YYYY-MM-DD,
 for example a prefix of "Test-" could create bucket "Test-2023-04-30". An empty prefix would create "2023-04-30".
+
+### cloud_s3_bulk_delete
+
+* __description:__ Toggle bulk delete or serial chunk delete
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.45
+* __comment:__ When deleting a file, this chooses between deleting one chunk per request, or sending a bulk request
+deleting up to [cloud_s3_bulk_size](#cloud_s3_bulk_size) chunks per request.
+
+### cloud_s3_bulk_size
+
+* __description:__ Maximum number of chunks to delete per bulk delete request
+* __mandatory:__ no.
+* __type:__ integer
+* __default:__ 1000
+* __available:__ since version 2.45
+* __comment:__ When [cloud_s3_bulk_delete](#cloud_s3_bulk_delete) is true, this is the maximum size of the delete request.
+Default value to maintain AWS S3 compatibility is 1000. Other storage platforms may use different defaults. OpenStack Swift defaults to 10000, for instance
 
 
 ---

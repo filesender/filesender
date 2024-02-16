@@ -797,6 +797,7 @@ class Transfer extends DBObject
             // In case we keep audit data for some time only delete actual file data in storage
             foreach ($this->files as $file) {
                 try {
+		    Logger::debug('Attempt to call Storage::deleteFile for ' . $file);
                     Storage::deleteFile($file);
                 } catch (Exception $e) {
                     if( $force ) {
@@ -1551,8 +1552,19 @@ class Transfer extends DBObject
         if (!$this->getOption(TransferOptions::GET_A_LINK)) {
             // Unless get_a_link mode process options
             
-            if ($this->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email)) {
-                $this->addRecipient($this->user_email);
+            if ($this->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS)) {
+                $rcpt = $this->user_email;
+
+                if(Auth::isGuest()) {
+                    $guest = AuthGuest::getGuest();
+                    if($guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                        $rcpt = $guest->user_email;
+                    }
+                }
+
+                if(!$this->isRecipient($rcpt)) {
+                    $this->addRecipient($rcpt);
+                }
             }
             
             // Send notification of availability to recipients

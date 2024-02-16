@@ -48,7 +48,8 @@ class ClientlogTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void
+    {
         echo "ClientlogTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         echo "Client logs stash size: " . ClientLog::stashSize() . "\n";
@@ -63,7 +64,8 @@ class ClientlogTest extends CommonUnitTestCase {
     /**
      * Cleanup in any case
      */
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void
+    {
         // Clean any trash
         DBI::exec('DELETE FROM '.ClientLog::getDBTable());
     }
