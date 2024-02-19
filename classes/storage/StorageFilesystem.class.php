@@ -49,11 +49,6 @@ class StorageFilesystem
      */
     protected static $hashing = null;
 
-    /**
-     * Per day/hour buckets
-     */
-    protected static $perDayBuckets = false;
-    protected static $perHourBuckets = false;
     
     /**
      * Storage setup, loads options from config
@@ -87,8 +82,6 @@ class StorageFilesystem
             self::$hashing = $hashing;
         }
 
-        self::$perDayBuckets  = Config::get('storage_filesystem_per_day_buckets');
-        self::$perHourBuckets = Config::get('storage_filesystem_per_hour_buckets');
     }
     
     /**
@@ -364,7 +357,11 @@ class StorageFilesystem
             $path = self::ensurePath( $path, $subpath );
         }
 
-        if( self::$perDayBuckets || self::$perHourBuckets ) {
+        $perDayBuckets = $file->transfer->storage_filesystem_per_day_buckets;
+        $perHourBuckets = $file->transfer->storage_filesystem_per_hour_buckets;
+        Logger::error("AAA daily $perDayBuckets  hourly $perHourBuckets ");
+        
+        if( $perDayBuckets || $perHourBuckets ) {
             try {
                 $subpath = '';
 
@@ -373,10 +370,10 @@ class StorageFilesystem
                     $tt = $uuid->getDateTime()->getTimestamp();
                     $startOfDay  = $tt - ($tt % (60*60*24));
                     $startOfHour = $tt - ($tt % (60*60   ));
-                    if( self::$perDayBuckets ) {
+                    if( $perDayBuckets ) {
                         $subpath = "" . $startOfDay;
                     }
-                    if( self::$perHourBuckets ) {
+                    if( $perHourBuckets ) {
                         if( $subpath != "" ) {
                             $subpath .= "/";
                         }
@@ -393,7 +390,7 @@ class StorageFilesystem
                 return $path;
             }
         }
-        
+  
         return $path;
     }
     
