@@ -199,6 +199,7 @@ A note about colours;
 * [recipient_reminder_limit](#recipient_reminder_limit)
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
+* [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
 
 ## Graphs
 
@@ -2217,6 +2218,23 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __*Configuration example:*__
    $config['transfer_automatic_reminder'] = 7;
    $config['transfer_automatic_reminder'] = array(7,10);
+
+
+
+### transfers_table_show_admin_full_path_to_each_file
+
+* __description:__ In the transfers table show the local path for the data for each file
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since before version 2.46
+* __comment:__ A debugging option to allow an admin to see where the file content is stored for each
+               file in every transfer. This allows direct inspection of the disk without having to
+               work out the transfer id and uuid for a file in the case that an admin wishes to inspect 
+               the disk. This can be useful when storage_filesystem_per_day_buckets is enabled as there
+               will be subdirectories that are calculated from the timestamp in the uuid which may not
+               be immediately obvious to a human.
+
 
 
 
