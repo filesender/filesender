@@ -67,6 +67,8 @@ A note about colours;
 * [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
 * [storage_usage_warning](#storage_usage_warning)
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
+* [storage_filesystem_per_day_buckets](#storage_filesystem_per_day_buckets)
+* [storage_filesystem_per_hour_buckets](#storage_filesystem_per_hour_buckets)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
 * [cloud_s3_region](#cloud_s3_region)
@@ -197,6 +199,7 @@ A note about colours;
 * [recipient_reminder_limit](#recipient_reminder_limit)
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
+* [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
 
 ## Graphs
 
@@ -869,6 +872,29 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __1.x name:__
 * __comment:__ not tested
 * __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligible. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
+
+
+### storage_filesystem_per_day_buckets
+
+* __description:__ Store files in a subdirectory based on the day they were created.
+* __mandatory:__ no
+* __type:__ **bool** 
+* __default:__ false
+* __available:__ since version 2.45
+* __comment:__ This requires version 7 UUIDs to be in use. The timestamp from the v7 uuid is taken and the seconds since midnight are removed and that is used to create a subdirectory for the stored files. See also storage_filesystem_per_hour_buckets. Note that this works with storage_filesystem_per_hour_buckets, if both are enabled then first a daily directory is made and then an hourly directory is created in the day directory and the files are stored in the hourly subdirectory. This will allow the number of entries in a directory to be controlled by a system administrator and the use of v7 uuid will also permit the kernel filesystem to better index entry lookup.
+
+
+
+### storage_filesystem_per_hour_buckets
+
+* __description:__ Store files in a subdirectory based on the hour they were created.
+* __mandatory:__ no
+* __type:__ **bool** 
+* __default:__ false
+* __available:__ since version 2.45
+* __comment:__ This requires version 7 UUIDs to be in use. The timestamp from the v7 uuid is taken and the seconds since the start of the hour are removed and that is used to create a subdirectory for the stored files. See also storage_filesystem_per_day_buckets for an overview of this feature.
+
+
 
 
 ### storage_filesystem_ignore_disk_full_check
@@ -2192,6 +2218,23 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __*Configuration example:*__
    $config['transfer_automatic_reminder'] = 7;
    $config['transfer_automatic_reminder'] = array(7,10);
+
+
+
+### transfers_table_show_admin_full_path_to_each_file
+
+* __description:__ In the transfers table show the local path for the data for each file
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since before version 2.46
+* __comment:__ A debugging option to allow an admin to see where the file content is stored for each
+               file in every transfer. This allows direct inspection of the disk without having to
+               work out the transfer id and uuid for a file in the case that an admin wishes to inspect 
+               the disk. This can be useful when storage_filesystem_per_day_buckets is enabled as there
+               will be subdirectories that are calculated from the timestamp in the uuid which may not
+               be immediately obvious to a human.
+
 
 
 

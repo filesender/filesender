@@ -388,6 +388,7 @@ window.filesender.ui = {
         return error.message;
     },
     rawError: function (text) {
+        console.log(text);
         var doc = new DOMParser().parseFromString(text, 'text/html');
         if (doc.getElementsByClassName('exception')) { //if this is from our template, pull out the exception only.
                 text = doc.getElementsByClassName('exception')[0].textContent || text;

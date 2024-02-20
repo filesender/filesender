@@ -36,6 +36,8 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
+require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
+
 
 /**
  * Utility functions holder
@@ -83,7 +85,10 @@ class Utilities
             
             return $uid;
         }
-        
+
+        $uuid = Ramsey\Uuid\Uuid::uuid7();
+        return $uuid->toString();
+/*
         // Generate 16 bytes of random data (128 bits)
         $bytes = random_bytes(16);
         // Set bits required for a valid UUIDv4
@@ -101,7 +106,7 @@ class Utilities
                 $parts[4],
                 $parts[5] . $parts[6] . $parts[7]
         ));
-
+*/
     }
 
     /**

@@ -53,6 +53,10 @@
             <file>tests/clientlog/ClientlogTest.php</file>    <!-- Success -->
         </testsuite>
 
+        <testsuite name="t" >
+            <file>tests/file/FileTest.php</file>            
+        </testsuite>
+        
         <testsuite name="selenium">
             <directory>./selenium/tests</directory>
         </testsuite>
