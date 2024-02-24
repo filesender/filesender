@@ -75,6 +75,46 @@ class RestException extends DetailedException
 }
 
 /**
+ * security token is invalid
+ */
+class RestInvalidSecurityTokenException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param mixed $details details about what happened (for logging)
+     */
+    public function __construct($details = '')
+    {
+        parent::__construct(
+            'rest_security_token_did_not_match',
+            400,
+            $details
+        );
+    }
+}
+
+/**
+ * xsrf token is invalid
+ */
+class RestInvalidXSRFTokenException extends RestException
+{
+    /**
+     * Constructor
+     *
+     * @param mixed $details details about what happened (for logging)
+     */
+    public function __construct($details = '')
+    {
+        parent::__construct(
+            'rest_xsrf_token_did_not_match',
+            400,
+            $details
+        );
+    }
+}
+
+/**
  * REST authentication required
  */
 class RestAuthenticationRequiredException extends RestException

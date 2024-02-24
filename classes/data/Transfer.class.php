@@ -161,6 +161,18 @@ class Transfer extends DBObject
             'null'    => true,
             'default' => true,
         ),
+
+        'storage_filesystem_per_day_buckets' => array(
+            'type'    => 'bool',
+            'null'    => false,
+            'default' => false,
+        ),
+        'storage_filesystem_per_hour_buckets' => array(
+            'type'    => 'bool',
+            'null'    => false,
+            'default' => false,
+        ),
+
         
     );
 
@@ -313,6 +325,9 @@ class Transfer extends DBObject
     protected $client_entropy = '';
     protected $roundtriptoken = '';
     protected $guest_transfer_shown_to_user_who_invited_guest = true;
+    protected $storage_filesystem_per_day_buckets = false;
+    protected $storage_filesystem_per_hour_buckets = false;
+
     
     /**
      * Related objects cache
@@ -339,6 +354,9 @@ class Transfer extends DBObject
      */
     protected function __construct($id = null, $data = null)
     {
+        $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
+        $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
+        
         if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
@@ -359,6 +377,7 @@ class Transfer extends DBObject
             CollectionType::initialize();
             $this->collectionsCache = Collection::fromTransfer($this);
         }
+
     }
     
     /**
@@ -797,6 +816,7 @@ class Transfer extends DBObject
             // In case we keep audit data for some time only delete actual file data in storage
             foreach ($this->files as $file) {
                 try {
+		    Logger::debug('Attempt to call Storage::deleteFile for ' . $file);
                     Storage::deleteFile($file);
                 } catch (Exception $e) {
                     if( $force ) {
@@ -1042,6 +1062,8 @@ class Transfer extends DBObject
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
+            , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets'
+            
         ))) {
             return $this->$property;
         }
@@ -1142,6 +1164,9 @@ class Transfer extends DBObject
         }
         
         if ($property == 'upload_time') {
+            if( empty($this->files)) {
+                return 0;
+            }
             return $this->upload_end - $this->upload_start;
         }
 
@@ -1255,6 +1280,10 @@ class Transfer extends DBObject
             $this->client_entropy = $value;
         } elseif ($property == 'guest_transfer_shown_to_user_who_invited_guest') {
             $this->guest_transfer_shown_to_user_who_invited_guest = $value;
+        } elseif ($property == 'storage_filesystem_per_day_buckets') {
+            $this->storage_filesystem_per_day_buckets = $value;
+        } elseif ($property == 'storage_filesystem_per_hour_buckets') {
+            $this->storage_filesystem_per_hour_buckets = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
@@ -1506,6 +1535,9 @@ class Transfer extends DBObject
         if (!count($this->recipients)) {
             throw new TransferNoRecipientsException();
         }
+
+        $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
+        $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
         
         // Update status and log to audit/stat
         $this->status = TransferStatuses::AVAILABLE;
@@ -1554,8 +1586,19 @@ class Transfer extends DBObject
         if (!$this->getOption(TransferOptions::GET_A_LINK)) {
             // Unless get_a_link mode process options
             
-            if ($this->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email)) {
-                $this->addRecipient($this->user_email);
+            if ($this->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS)) {
+                $rcpt = $this->user_email;
+
+                if(Auth::isGuest()) {
+                    $guest = AuthGuest::getGuest();
+                    if($guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                        $rcpt = $guest->user_email;
+                    }
+                }
+
+                if(!$this->isRecipient($rcpt)) {
+                    $this->addRecipient($rcpt);
+                }
             }
             
             // Send notification of availability to recipients

@@ -47,7 +47,7 @@ class FileSendercsrfProtectorErrorHandler {
     
     public function failedValidationAction($requestType) {
         if( $this->canReturnJSON ) {
-            throw new RestException('rest_xsrf_token_did_not_match', 400, 'owasp tokens, see log');
+            throw new RestInvalidXSRFTokenException('owasp tokens, see log');
         }
     }
 }

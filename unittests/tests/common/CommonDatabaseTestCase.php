@@ -144,7 +144,7 @@ abstract class CommonDatabaseTestCase extends TestCase {
      */
     public function displayInfo($class, $test, $message) {
         print_r("Result test : [OK]\n\n");
-        print_r(get_class() . "::" . $test . "\t\t");
+        print_r(get_class($this) . "::" . $test . "\t\t");
         if ($message != "") {
             print_r("\n\Message:\t" . $message);
         }
