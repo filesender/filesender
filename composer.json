@@ -2,8 +2,14 @@
     "require": {
         "sauce/sausage": ">=0.15.2",
         "appium/php-client": "@dev",
-        "phpunit/phpunit-selenium": "^4.1",
+        "phpunit/phpunit-selenium": "^9.0.1",
         "squizlabs/php_codesniffer": "3.*",
-        "friendsofphp/php-cs-fixer": "^2.13.0"
+        "friendsofphp/php-cs-fixer": "^3.49.0",
+        "ramsey/uuid": "^4.7"
+    },
+    "config": {
+        "allow-plugins": {
+            "sauce/sausage-installer": true
+        }
     }
 }

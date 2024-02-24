@@ -106,8 +106,6 @@ window.filesender.config = {
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
     crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
 
-    crypto_use_custom_password_code: '<?php echo GUI::use_webasm_pbkdf2_implementation() ?>',
-
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terareceiver_enabled: <?php  echo value_to_TF(Config::get('terareceiver_enabled')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,

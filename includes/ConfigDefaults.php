@@ -86,7 +86,7 @@ $default = array(
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,
     'max_transfer_files' => 30,
-    'max_transfer_days_valid' => 45,
+    'max_transfer_days_valid' => 20,
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
     'transfer_recipients_lang_selector_enabled' => false,
@@ -168,7 +168,10 @@ $default = array(
     'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
 
     'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',
-
+    'storage_filesystem_per_day_buckets' => false,
+    'storage_filesystem_per_hour_buckets' => false,
+    'transfers_table_show_admin_full_path_to_each_file' => false,
+    
     'email_from' => 'sender',
     'email_return_path' => 'sender',
     'email_subject_prefix' => '{cfg:site_name}:',
@@ -183,7 +186,8 @@ $default = array(
     'statlog_lifetime' => 0,
     'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
-
+    'ratelimithistory_lifetime' => 31,
+    
     'storage_usage_warning' => 20,
 
     'report_format' => ReportFormats::INLINE,
@@ -239,6 +243,8 @@ $default = array(
     'cloud_s3_bucket' => '',
     'cloud_s3_use_daily_bucket' => false,
     'cloud_s3_bucket_prefix' => '',
+    'cloud_s3_bulk_delete' => false,
+    'cloud_s3_bulk_size' => 1000,
 
     'disable_directory_upload' => true,
     'directory_upload_button_enabled' => true,

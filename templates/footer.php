@@ -1,11 +1,9 @@
         <footer>
             <div class="container">
                 <div class="fs-footer-container">
-                    <div class="fs-footer-container--brand-list">
-                        <a href="" class="fs-link fs-link--no-hover">
-                            <img src="{cfg:site_url}/images/filesender-initiative.jpg" alt="Brand">
-                        </a>
-                    </div>
+                    <small>{tr:an_initiative_by}</small>
+                    <img class="fs-footer-container__brand fs-footer-container__brand--desktop" src="{cfg:site_url}/images/filesender-initiative.png" alt="Brand">
+                    <img class="fs-footer-container__brand fs-footer-container__brand--mobile" src="{cfg:site_url}/images/filesender-initiative_mobile.png" alt="Brand">
                 </div>
             </div>
 

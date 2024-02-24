@@ -50,6 +50,7 @@ $body-color: #333;
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/variables";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/variables-dark";
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/mixins";
 @import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/maps";
 
@@ -589,7 +590,6 @@ td .desc {
 
 .uploadthread {
     font-family: monospace;
-    font: "Lucida Console", Monaco, monospace;
     font-size: 10px;
     width: 4em;
     height: 10px;

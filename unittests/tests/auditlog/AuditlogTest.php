@@ -51,7 +51,8 @@ class AuditlogTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
 
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "AuditlogTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $configs = Config::get('auditlog_*');
@@ -93,7 +94,7 @@ class AuditlogTest extends CommonUnitTestCase {
 
         $this->assertNotNull($transfer->id);
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog created');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- AuditLog created');
 
         return $transfer->id;
     }
@@ -116,7 +117,7 @@ class AuditlogTest extends CommonUnitTestCase {
         $this->assertNotNull($auditLog);
         $this->assertTrue($auditLog->id > 0);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog got:'.$auditLog->id);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- AuditLog got:'.$auditLog->id);
 
         return $transferId;
     }
@@ -138,7 +139,7 @@ class AuditlogTest extends CommonUnitTestCase {
         $transfer->close();
         $this->assertNull(AuditLog::fromTarget($transfer));
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog deleted from transfer:'.$transferId);
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- AuditLog deleted from transfer:'.$transferId);
 
         return true;
     }

@@ -50,7 +50,8 @@ class CronTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
 
-    protected function setUp() {
+    protected function setUp(): void
+    {
     }
 
 

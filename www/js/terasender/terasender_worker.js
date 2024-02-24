@@ -348,7 +348,7 @@ var terasender_worker = {
 	    } else {
 		var cryptedBlob = null;
 		var $this = this;
-		blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});
+		var blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});
 		blobReader.blobSlice = blob;
 		blobReader.arrayBuffer().then( function (arrayBuffer)  {
 

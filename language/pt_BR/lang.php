@@ -798,3 +798,4 @@ $lang['see_invitation_details'] = 'Ver detalhes do convite';
 $lang['go_to_invitations'] = 'Ir para todos os meus convites';
 $lang['optional_message'] = 'Mensagem opcional';
 $lang['enter_transfer_name'] = 'Digite o nome da transferência (opcional)';
+$lang['an_initiative_by'] = 'Uma iniciativa por';

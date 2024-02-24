@@ -124,6 +124,7 @@ $lang['confirm_remind_recipient'] = 'Do you really want to send a reminder to th
 $lang['confirm_remind_transfer'] = 'Do you really want to send a reminder to this transfer\'s recipients ?';
 $lang['confirm_remove_daily_stats_transfer'] = 'Are you sure you no longer wish to receive daily statistics for this transfer';
 $lang['confirm_stop_upload'] = 'Do you really want to stop the upload and remove already uploaded data ?';
+$lang['confirm_upload_add_to_recipients_with_no_explicit_address'] = 'You have chosen to only send these files to the person who invited you to the system. If this is what you wanted please select ok. If you would like to add another recipient please cancel this dialog and add the recipients before clicking send again.';
 $lang['continue'] = 'Continue';
 $lang['copy_text'] = 'Copy the text below';
 $lang['core_class_not_found'] = 'Core class not found';
@@ -425,6 +426,7 @@ $lang['report_event_download_started'] = 'Recipient {author.identity} started do
 $lang['report_event_file_uploaded'] = 'File {file.path} ({size:file.size}) uploaded (took {time:time_taken})';
 $lang['report_event_transfer_available'] = 'Transfer became available (took {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Transfer was closed on request';
+$lang['report_event_transfer_decrypt_failed'] = 'Decryption failed';
 $lang['report_event_transfer_deleted'] = 'Transfer data was deleted';
 $lang['report_event_transfer_expired'] = 'Transfer expired. Files are no longer available. Please request sender to send them again.';
 $lang['report_event_transfer_sent'] = 'Download link sent to recipient(s)';
@@ -466,7 +468,8 @@ $lang['rest_ownership_required'] = 'REST resource ownership required';
 $lang['rest_roundtrip_token_invalid'] = 'FileSender checks that the same web browser that started an operation is used for subsequent operations to complete that operation. For example, to upload all the parts of a file. This check has failed.';
 $lang['rest_sanity_check_failed'] = 'REST sanity check failed';
 $lang['rest_updatedsince_bad_format'] = 'REST updatedSince parameter is badly formatted';
-$lang['rest_xsrf_token_did_not_match'] = 'Security token did not match';
+$lang['rest_xsrf_token_did_not_match'] = 'Security token did not match (xsrf)';
+$lang['rest_security_token_did_not_match'] = 'Security token did not match';
 $lang['restart'] = 'Restart';
 $lang['restart_failed_transfer'] = 'Restart failed transfer ?';
 $lang['result'] = 'Result';
@@ -831,6 +834,4 @@ $lang['optional_message'] = 'Optional message';
 $lang['enter_transfer_name'] = 'Enter the transfer name (optional)';
 $lang['files_transferred_display'] = '{filecount}';
 $lang['size_transferred_display'] = '{size_human_readable}';
-
-
-
+$lang['an_initiative_by'] = 'An initiative by';

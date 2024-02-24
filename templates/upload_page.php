@@ -163,6 +163,14 @@ if( !Auth::isGuest()) {
     }
 }
 
+
+$possibleExpireDays = array( 7, 15, 30, 40 );
+$expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
+    return $k < Config::get('max_transfer_days_valid');
+});
+
+
+
 ?>
 
 <div class="container">
@@ -608,10 +616,9 @@ if( !Auth::isGuest()) {
                                                 {tr:expires_after}
                                             </label>
                                             <select id="expires-select" name="expires-select">
-                                                <option value="7" selected>7 {tr:days}</option>
-                                                <option value="15">15 {tr:days}</option>
-                                                <option value="30">30 {tr:days}</option>
-                                                <option value="40">40 {tr:days}</option>
+                                                <?php foreach( $expireDays as $v ) { ?>
+                                                    <option value="<?php echo $v ?>" selected><?php echo $v ?> {tr:days}</option>
+                                                <?php } ?>
                                             </select>
                                         </div>
                                     </div>

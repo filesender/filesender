@@ -164,7 +164,7 @@ class Autoloader
         }
         
         $tokens = array();
-        $bits = preg_split('`([A-Z][a-z0-9]*)`', $class, null, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $bits = preg_split('`([A-Z][a-z0-9]*)`', $class, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         while ($bit = array_shift($bits)) {
             if (preg_match('`^[A-Z]$`', $bit)) {
