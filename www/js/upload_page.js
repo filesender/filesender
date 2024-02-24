@@ -51,10 +51,6 @@ function isEdge()
     }
     return false;
 }
-function use_webasm_pbkdf2_implementation()
-{
-    return isIE11() || isEdge();
-}
 
 function delayAndCallOnlyOnce(callback, ms) {
     var timer = 0;
@@ -116,6 +112,26 @@ function useWebNotifications()
     var ret = ('web_notification_when_upload_is_complete' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.web_notification_when_upload_is_complete.is(':checked') : false;
     return ret;
 }
+
+
+function getOption( n )
+{
+    var ret = (n in filesender.ui.nodes.options) ? filesender.ui.nodes.options[n].is(':checked') : false;
+    return ret;
+}
+
+
+function getGuestOption( n )
+{
+    if(auth == 'guest') {
+        return filesender.ui.guest_options[n];
+    }
+    return false;
+}
+
+
+
+
 
 
 /**
@@ -206,7 +222,7 @@ filesender.ui.elements.nonBusyUpdater = function( uielement, delayMS, initString
         lastUpdate: null,
         update: function( v ) {
             var $this = this;
-            t = (new Date()).getTime();
+            var t = (new Date()).getTime();
             if( $this.lastUpdate && ($this.lastUpdate + delayMS < t )) {
                 $this.e.text( v );
             }
@@ -476,7 +492,7 @@ filesender.ui.files = {
 
     clear_crust_meter_all: function() {
         for (var i = 0; i < filesender.ui.transfer.getFileCount(); i++) {
-            file = filesender.ui.transfer.files[i];
+            var file = filesender.ui.transfer.files[i];
             filesender.ui.files.clear_crust_meter( file );
         }
     },
@@ -552,14 +568,15 @@ filesender.ui.files = {
             return;
         }
 
+        var v = -1;
         var anyOffending = false;
         var maxV = 0;
-        for( i=0; i < imax; i++ ) {
+        for( var i=0; i < imax; i++ ) {
             v = -1;
             if( i < durations.length ) {
                 v = durations[i];
             }
-            b = false;
+            var b = false;
             if( i < offending.length ) {
                 b = offending[i];
             }
@@ -1182,12 +1199,6 @@ filesender.ui.startUpload = function() {
         can_use_terasender = false;
     }
     var v2018_importKey_deriveKey = window.filesender.crypto_app().crypto_key_version_constants.v2018_importKey_deriveKey;
-    if(this.transfer.encryption
-        && filesender.config.encryption_key_version_new_files == v2018_importKey_deriveKey
-        && use_webasm_pbkdf2_implementation()) {
-        can_use_terasender = false;
-        filesender.config.terasender_enabled = can_use_terasender;
-    }
     window.filesender.pbkdf2dialog.setup(!can_use_terasender);
     window.filesender.pbkdf2dialog.reset();
 
@@ -1247,12 +1258,12 @@ filesender.ui.startUpload = function() {
         window.setInterval(function() {
             if( window.filesender.transfer.encryption && !window.filesender.pbkdf2dialog.already_complete ) {
                 filesender.ui.uploading_again_started_at_time_touch();
-                transfer.touchAllUploadStartedInWatchdog();
+                this.transfer.touchAllUploadStartedInWatchdog();
             }
             else
             {
                 for (var i = 0; i < filesender.ui.transfer.getFileCount(); i++) {
-                    file = filesender.ui.transfer.files[i];
+                    var file = filesender.ui.transfer.files[i];
                     filesender.ui.files.update_crust_meter( file );
                 }
             }
@@ -1755,6 +1766,9 @@ $(function() {
     // Stage active class
     filesender.ui.stageActiveClass = 'fs-transfer__step--active';
 
+    // initial value
+    filesender.ui.guest_options = [];
+    
     // Register frequently used nodes
     filesender.ui.nodes = {
         form: form,
@@ -2040,7 +2054,7 @@ $(function() {
 
             filesender.ui.inactiveDroparea();
 
-            addtree_success = false;
+            var addtree_success = false;
 
             if (filesender.dragdrop &&
                 typeof filesender.dragdrop.addTree === "function") {
@@ -2351,7 +2365,7 @@ $(function() {
 
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
-        password = encoded.value;
+        var password = encoded.value;
         filesender.ui.nodes.encryption.password.val(password);
 
         filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
@@ -2391,14 +2405,27 @@ $(function() {
 
         if(filesender.ui.transfer.status == 'new' && $(this).filter('[aria-disabled="false"]')) {
 
-            filesender.ui.switchToUloadingPageConfiguration();
-            filesender.ui.startUpload();
-            filesender.ui.nodes.buttons.start.addClass('not_displayed');
-            if(filesender.supports.reader) {
-                filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
-                filesender.ui.nodes.buttons.reconnect_and_continue.removeClass('not_displayed');
+            if(auth == 'guest') {
+
+                // confirm that the upload is only intended to the voucher issuer.
+                if( getOption( 'add_me_to_recipients' )
+                    && !getGuestOption( 'can_only_send_to_me' )
+                    && !filesender.ui.transfer.recipients.length )
+                {
+                    filesender.ui.confirm(lang.tr('confirm_upload_add_to_recipients_with_no_explicit_address'),
+                                          function() { // ok
+                                              startUpload();
+                                          },
+                                          function() { // cancel
+                                          });
+                    
+                    // dailog will start the upload if the user confirms the action
+                    // so we fall through here.
+                    return false;
+                }
             }
-            filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
+
+            startUpload();
         }
         return false;
     }).button();
@@ -2469,9 +2496,13 @@ $(function() {
         form.find('input[name="get_a_link"]').trigger('change');
 
     // special fix for esc key on firefox stopping xhr
-    window.addEventListener('keydown', function(e) {
-        (e.keyCode == 27 && e.preventDefault())
+    $( "input" ).on( "keydown", function( e ) {
+        // esc key
+        if( e.which == 27 ) {
+            e.stopImmediatePropagation();
+        }
     });
+    
 
     // Set message to display if the user changes pages / close tab / close browser
     window.onbeforeunload = function() {
@@ -2566,7 +2597,7 @@ $(function() {
 
     if(auth == 'guest') {
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
-        for(option in filesender.ui.nodes.options) {
+        for(var option in filesender.ui.nodes.options) {
             if(option == 'undefined' || option == 'expires') continue;
             var i = filesender.ui.nodes.options[option];
             if(i.is('[type="checkbox"]')) {

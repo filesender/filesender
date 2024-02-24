@@ -53,10 +53,10 @@ if(!('filesender' in window)) window.filesender = {};
  */
 window.filesender.progresstracker = function() {
 
-    stamp: (new Date()).getTime();
-    mem: [];
-    memToKeep: 5;
-    disabled: false;
+    this.stamp = (new Date()).getTime();
+    this.mem = [];
+    this.memToKeep = 5;
+    this.disabled = false;
 
     /**
      * Reset the tracker for a fresh chunk
@@ -860,8 +860,8 @@ window.filesender.transfer = function() {
      * value this helps you present the information to the UI.
      */
     this.getMostRecentChunkDurations = function(file) {
-        d = [];
-        i = 0;
+        var d = [];
+        var i = 0;
         for(var id in this.watchdog_processes) {
             d[i] = -1;
             if(this.watchdog_processes[id].started != null) {
@@ -888,8 +888,8 @@ window.filesender.transfer = function() {
      * value this helps you present the information to the UI.
      */
     this.getMostRecentChunkFineBytes = function(file) {
-        d = [];
-        i = 0;
+        var d = [];
+        var i = 0;
         for(var id in this.watchdog_processes) {
             d[i] = -1;
             if(this.watchdog_processes[id].started != null) {
@@ -917,8 +917,8 @@ window.filesender.transfer = function() {
      * value this helps you present the information to the UI.
      */
     this.getIsWorkerOffending = function(file) {
-        d = [];
-        i = 0;
+        var d = [];
+        var i = 0;
         for(var id in this.watchdog_processes) {
             d[i] = false;
             if(this.watchdog_processes[id].started != null) {

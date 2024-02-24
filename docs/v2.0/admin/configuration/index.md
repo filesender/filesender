@@ -67,6 +67,8 @@ A note about colours;
 * [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
 * [storage_usage_warning](#storage_usage_warning)
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
+* [storage_filesystem_per_day_buckets](#storage_filesystem_per_day_buckets)
+* [storage_filesystem_per_hour_buckets](#storage_filesystem_per_hour_buckets)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
 * [cloud_s3_region](#cloud_s3_region)
@@ -78,6 +80,8 @@ A note about colours;
 * [cloud_s3_bucket](#cloud_s3_bucket)
 * [cloud_s3_use_daily_bucket](#cloud_s3_use_daily_bucket)
 * [cloud_s3_bucket_prefix](#cloud_s3_bucket_prefix)
+* [cloud_s3_bulk_delete](#cloud_s3_bulk_delete)
+* [cloud_s3_bulk_size](#cloud_s3_bulk_size)
 
 ## Shredding
 
@@ -195,6 +199,8 @@ A note about colours;
 * [streamsaver_on_safari](#streamsaver_safari)
 * [recipient_reminder_limit](#recipient_reminder_limit)
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
+* [transfer_automatic_reminder](#transfer_automatic_reminder)
+* [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
 
 ## Graphs
 
@@ -273,6 +279,7 @@ A note about colours;
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
 * [auth_sp_fake_additional_attributes_values](#auth_sp_fake_additional_attributes_values)
 * [auditlog_lifetime](#auditlog_lifetime)
+* [ratelimithistory_lifetime](#ratelimithistory_lifetime)
 * [report_format](#report_format)
 * [exception_additional_logging_regex](#exception_additional_logging_regex)
 * [clientlogs_stashsize](#clientlogs_stashsize)
@@ -869,6 +876,29 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligible. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
 
 
+### storage_filesystem_per_day_buckets
+
+* __description:__ Store files in a subdirectory based on the day they were created.
+* __mandatory:__ no
+* __type:__ **bool** 
+* __default:__ false
+* __available:__ since version 2.45
+* __comment:__ This requires version 7 UUIDs to be in use. The timestamp from the v7 uuid is taken and the seconds since midnight are removed and that is used to create a subdirectory for the stored files. See also storage_filesystem_per_hour_buckets. Note that this works with storage_filesystem_per_hour_buckets, if both are enabled then first a daily directory is made and then an hourly directory is created in the day directory and the files are stored in the hourly subdirectory. This will allow the number of entries in a directory to be controlled by a system administrator and the use of v7 uuid will also permit the kernel filesystem to better index entry lookup.
+
+
+
+### storage_filesystem_per_hour_buckets
+
+* __description:__ Store files in a subdirectory based on the hour they were created.
+* __mandatory:__ no
+* __type:__ **bool** 
+* __default:__ false
+* __available:__ since version 2.45
+* __comment:__ This requires version 7 UUIDs to be in use. The timestamp from the v7 uuid is taken and the seconds since the start of the hour are removed and that is used to create a subdirectory for the stored files. See also storage_filesystem_per_day_buckets for an overview of this feature.
+
+
+
+
 ### storage_filesystem_ignore_disk_full_check
 
 * __description:__ Ignore tests to see if new files will fit onto the filesystem.
@@ -977,6 +1007,26 @@ php scripts/task/S3bucketmaintenance.php --verbose
 * __comment:__ If cloud_s3_use_daily_bucket has been set, you can define the prefix for daily buckets with
 this option. Daily bucket names are formed by concatenating cloud_s3_bucket_prefix + YYYY-MM-DD,
 for example a prefix of "Test-" could create bucket "Test-2023-04-30". An empty prefix would create "2023-04-30".
+
+### cloud_s3_bulk_delete
+
+* __description:__ Toggle bulk delete or serial chunk delete
+* __mandatory:__ no.
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.45
+* __comment:__ When deleting a file, this chooses between deleting one chunk per request, or sending a bulk request
+deleting up to [cloud_s3_bulk_size](#cloud_s3_bulk_size) chunks per request.
+
+### cloud_s3_bulk_size
+
+* __description:__ Maximum number of chunks to delete per bulk delete request
+* __mandatory:__ no.
+* __type:__ integer
+* __default:__ 1000
+* __available:__ since version 2.45
+* __comment:__ When [cloud_s3_bulk_delete](#cloud_s3_bulk_delete) is true, this is the maximum size of the delete request.
+Default value to maintain AWS S3 compatibility is 1000. Other storage platforms may use different defaults. OpenStack Swift defaults to 10000, for instance
 
 
 ---
@@ -2159,7 +2209,42 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 
 
+### transfer_automatic_reminder
 
+* __description:__ The number of reminders that a user can send to a recipient
+* __mandatory:__ no
+* __type:__ int, array of int, or false
+* __default:__ false
+* __available:__ since before version 2.40
+* __comment:__ This is used in the cron job to allow notifications to be sent to users
+  who have not downloaded files and the expire time for those files is coming up. The integer
+  is the number of days that remain before the transfer expires. Note that a user will only be notified
+  if they have not already downloaded the file.
+  
+  In the below configurations the first will notify people who have not downloaded a transfer a week from
+  it expiring. The second will result to two potential notifications, one 10 days out and one a week from
+  expiring. Note that if the user receives the first notification and downloads the file they will not receive
+  the notification a week out because they have already downloaded the file.
+  
+* __*Configuration example:*__
+   $config['transfer_automatic_reminder'] = 7;
+   $config['transfer_automatic_reminder'] = array(7,10);
+
+
+
+### transfers_table_show_admin_full_path_to_each_file
+
+* __description:__ In the transfers table show the local path for the data for each file
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since before version 2.46
+* __comment:__ A debugging option to allow an admin to see where the file content is stored for each
+               file in every transfer. This allows direct inspection of the disk without having to
+               work out the transfer id and uuid for a file in the case that an admin wishes to inspect 
+               the disk. This can be useful when storage_filesystem_per_day_buckets is enabled as there
+               will be subdirectories that are calculated from the timestamp in the uuid which may not
+               be immediately obvious to a human.
 
 
 
@@ -2954,6 +3039,16 @@ $config['log_facilities'] =
 * __type:__ boolean/int (days).  Set to false to disable.
 * __default:__ 31
 * __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service.
+
+### ratelimithistory_lifetime
+
+* __description:__ The ratelimithistory entries are kept in the database for this long. Should be at least a day, default is a month.
+* __mandatory:__ no
+* __type:__ boolean/int (days).  Set to false to disable.
+* __default:__ 31
+* __available:__ since version 2.42
 * __1.x name:__
 * __comment:__ Use this setting to control the privacy footprint of your FileSender service.
 

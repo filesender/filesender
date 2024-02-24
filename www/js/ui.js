@@ -431,7 +431,7 @@ window.filesender.ui = {
             }else title = title.toString();
         }
 
-        t = lang.tr(title).toString();
+        var t = lang.tr(title).toString();
         if( t.length && t[0] != '{' ) {
             title = t;
         }
@@ -624,15 +624,19 @@ window.filesender.ui = {
 
     },
     rawError: function (text) {
+        console.log(text);
+        var doc = new DOMParser().parseFromString(text, 'text/html');
+        if (doc.getElementsByClassName('exception')) { //if this is from our template, pull out the exception only.
+                text = doc.getElementsByClassName('exception')[0].textContent || text;
+        } else { //strip html as alert cant process that.
+                text = doc.body.textContent || text;
+        }
 	text = (text.match(/^[a-z][a-z0-9_]+$/i) ? lang.tr(text) : text).trim();
 	if (text!='') {
 	        alert('Error : ' + text);
 	}
     },
-
-
-
-
+    
 
     /**
      * Format size in bytes
@@ -812,7 +816,7 @@ window.filesender.ui = {
     handleFlagInvalidOnRegexMatch: function(inputtextareaobj,invalidlabelobj,rexstr) {
 
         if( rexstr.length ) {
-            banned = new RegExp(rexstr, 'g');
+            var banned = new RegExp(rexstr, 'g');
 
             inputtextareaobj.on('keyup', function(e) {
                 var v = $(this).val();

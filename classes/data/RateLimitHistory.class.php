@@ -298,7 +298,21 @@ class RateLimitHistory extends DBObject
         throw new PropertyAccessException($this, $property);
     }
     
-  
+
+    public static function cleanup()
+    {
+        $dbtype = Config::get('db_type'); 
+
+        // Keep these logs for 31 days
+        $lifetime = Config::get('ratelimithistory_lifetime');
+        if (!is_null($lifetime) && $lifetime > 0) {
+            // delete auditlogs entries that are too old
+            $statement = DBI::prepare("delete from ".self::getDBTable()." where created < :cutoff ");
+            $statement->execute(array(':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))));
+        }
+    }
+
+    
 }
 
     

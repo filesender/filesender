@@ -44,7 +44,8 @@ class DBsTest extends CommonUnitTestCase {
     /**
      * Init variables, first function called
      */
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "DBsTest@ " . date("Y-m-d H:i:s") . "\n\n";
     }
 
@@ -61,9 +62,9 @@ class DBsTest extends CommonUnitTestCase {
             $data = $statement->fetch();
             $this->assertTrue(isset($data['?column?']) ? $data['?column?'] == 1 : $data[1] == 1);
 
-            $this->displayInfo(get_class(), __FUNCTION__, 'Connexion DB OK');
+            $this->displayInfo(get_class($this), __FUNCTION__, 'Connexion DB OK');
         } catch (Exception $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         return true;
@@ -72,9 +73,9 @@ class DBsTest extends CommonUnitTestCase {
     /**
      * Test the Insert/Update "Upsert" class
      */
+/*
     public function testUpsert() {
 
-/*
 // Have to find minimal version of pgsql that can use "ON keyword"
  
         $tableName = 'DBTestingTableStringNumbers';
@@ -89,8 +90,8 @@ class DBsTest extends CommonUnitTestCase {
             "insert into $tableName (id,data,created) values (1,'second',now())",
             "id",
             "id = 1, data = 'second', created = now()" );
-*/        
         
     }
+*/        
     
 }

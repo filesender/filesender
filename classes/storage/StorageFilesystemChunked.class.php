@@ -116,7 +116,8 @@ class StorageFilesystemChunked extends StorageFilesystem
      * @param File $file
      * @return string
      */
-    public static function buildPath(File $file) {
+    public static function buildPath(File $file, $fullPath = true )
+    {
         return parent::buildPath($file).$file->uid;
     }
 
@@ -134,6 +135,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function writeChunk(File $file, $data, $offset = null)
     {
+        
         $chunkSize = \strlen($data);
         $filePath = self::buildPath($file);
 

@@ -331,4 +331,11 @@ class Storage
         self::setup();
         return call_user_func(self::getStorageClass($file).'::getStream', $file);
     }
+
+
+    public static function buildPath(File $file, $fullPath = true )
+    {
+        self::setup();
+        return call_user_func(self::getStorageClass($file).'::buildPath', $file, $fullPath );
+    }
 }
