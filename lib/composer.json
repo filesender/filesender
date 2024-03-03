@@ -4,6 +4,8 @@
         "owasp/csrf-protector-php": "^1.0",
 	"guzzlehttp/guzzle": "7.8.1",
 	"guzzlehttp/psr7": "2.6.2",
-        "maennchen/zipstream-php": "2.4.0"
+        "maennchen/zipstream-php": "2.4.0",
+        "ramsey/uuid": "^4.7"
+        
     }
 }

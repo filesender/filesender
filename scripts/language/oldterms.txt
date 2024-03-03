@@ -485,6 +485,7 @@ rest_missing_parameter
 rest_ownership_required
 rest_roundtrip_token_invalid
 rest_sanity_check_failed
+rest_security_token_did_not_match
 rest_updatedsince_bad_format
 rest_xsrf_token_did_not_match
 restart

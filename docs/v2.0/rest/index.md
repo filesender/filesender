@@ -545,12 +545,13 @@ Accessible to : [users](#user).
 Request body fields :
 
 * `recipient` : (`string`) recipient email addresse
-* `from` : (`string`) choosen sender email address, under [Service Provider](#service-provider) authentication it MUST be one of the authenticated user email addresses and under [Remote Application](#remote-application) or [Remote User](#remote-user) it will be taken as is with just a format check
-* `subject` : (`string`) subject sent to recipient (may be empty)
-* `message` : (`string`) message sent to recipient (may be empty)
-* `options` : (`array of string`) options (values defined in `classes/constants/GuestOptions.class.php`)
-* `transfer_options` : (`array of string`) created [Transfer](#transfer) options (values defined in `classes/constants/TransferOptions.class.php`)
-* `expires` : (`integer`) wanted expiry date as a UNIX timestamp, MUST respect `max_guest_days_valid` configuration parameter
+* `from`     : (`string`) choosen sender email address, under [Service Provider](#service-provider) authentication it MUST be one of the authenticated user email addresses and under [Remote Application](#remote-application) or [Remote User](#remote-user) it will be taken as is with just a format check
+* `subject`  : (`string`) subject sent to recipient (may be empty)
+* `message`  : (`string`) message sent to recipient (may be empty)
+* `options`  : (`array`)
+  * `guest`    : (`array of string`) guest options (values defined in `classes/constants/GuestOptions.class.php`)
+  * `transfer` : (`array of string`) created [Transfer](#transfer) options (values defined in `classes/constants/TransferOptions.class.php`)
+* `expires`  : (`integer`) wanted expiry date as a UNIX timestamp, MUST respect `max_guest_days_valid` configuration parameter
 
 This will send an email to the created [Guest](#guest).
 
