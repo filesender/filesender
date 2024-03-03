@@ -80,6 +80,7 @@ function getOption( n )
 
 function getGuestOption( n )
 {
+    var auth = $('body').attr('data-auth-type');
     if(auth == 'guest') {
         return filesender.ui.guest_options[n];
     }
@@ -1867,6 +1868,7 @@ $(function() {
         
         if(filesender.ui.transfer.status == 'new' && $(this).filter('[aria-disabled="false"]')) {
 
+            var auth = $('body').attr('data-auth-type');
             if(auth == 'guest') {
 
                 // confirm that the upload is only intended to the voucher issuer.

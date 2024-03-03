@@ -64,7 +64,7 @@ class StorageFilesystemPreserveName extends StorageFilesystem
      *
      * @return string path
      */
-    public static function buildPath(File $file)
+    public static function buildPath(File $file, $fullPath = true )
     {
         static::setup();
 

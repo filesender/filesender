@@ -167,6 +167,9 @@ $default = array(
     'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
 
     'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',
+    'storage_filesystem_per_day_buckets' => false,
+    'storage_filesystem_per_hour_buckets' => false,
+    'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',

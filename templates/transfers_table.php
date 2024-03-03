@@ -403,7 +403,7 @@ if (!function_exists('clickableHeader')) {
                                 <td><a class="download_href" href="<?php echo $transfer->first_recipient->download_link ?>">{tr:download_link}</a></td>
                                 <td><input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" /></td>
                             </tr>
-                        <?php } ?>
+                        <?php } ?>                        
                        </tbody>
                     </table>
                 
@@ -490,12 +490,24 @@ if (!function_exists('clickableHeader')) {
                             <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
                                 <?php } ?>
                             <?php } ?>
-                            
+
                             <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                             
                             <?php if($audit) { ?>
                             <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_file_auditlog}"></span>
                             <?php } ?>
+
+                            <?php
+                            if( Config::get('transfers_table_show_admin_full_path_to_each_file')) {
+                                if (Auth::isAuthenticated()) {
+                                    if (Auth::isAdmin()) {
+                                        $fp = StorageFilesystem::buildPath( $file ).StorageFilesystem::buildFilename( $file );
+                                        echo "<br/>";
+                                        echo Template::sanitizeOutput( $fp );
+                                    }
+                                }
+                            }
+                            ?>
                         </div>
                     <?php } ?>
                 </div>
