@@ -380,7 +380,14 @@ class StorageFilesystem
                         $subpath .= "" . $startOfHour;
                     }
 
-                    $path = StorageFilesystem::ensurePath( $path, $subpath );
+                    $now = time();
+                    $npath  = $path .  $subpath . "/";
+                    // only make the directories if it is recent enough
+                    if( $tt > $now - (Config::get("storage_filesystem_per_day_max_age_to_create_directory")*24*3600) ) {
+                        $path = StorageFilesystem::ensurePath( $path, $subpath );
+                    } else {
+                        $path = $npath;
+                    }
                     if (substr($path, -1) != '/') {
                         $path .= '/';
                     }
@@ -565,6 +572,87 @@ class StorageFilesystem
             }
         }
     }
+
+    /**
+     * Check if a directory is empty. If the directory does not exist
+     * or can not be opened for reading then false is returned.
+     */
+    public static function is_dir_empty($path)
+    {
+        if( !is_dir($path)) {
+            return false;
+        }
+        
+        if ($handle = opendir($path)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") {
+                    closedir($handle);
+                    // directory exists and has content in it
+                    return false;
+                }
+            }
+            closedir($handle);
+            // there was no content in the directory
+            return true;
+        }
+        return false;
+    }
+    
+    protected static function deleteEmptyBucketDirectoriesForDay( $tt, $startOfDay )
+    {
+        $perDayBuckets  = Config::get('storage_filesystem_per_day_buckets');
+        $perHourBuckets = Config::get('storage_filesystem_per_hour_buckets');
+
+        // check if the day directory even exists
+        if( !is_dir(self::$path . $startOfDay)) {
+            return;
+        }
+
+        // check for hourly subdirectories
+        if( $perHourBuckets ) {
+            for( $i=0; $i<24; $i++ ) {
+                $startOfHour = $startOfDay + $i*3600;
+                $p = self::$path . $startOfDay . "/" . $startOfHour;
+                
+                if( self::is_dir_empty($p)) {
+                    Logger::info("deleteEmptyBucketDirectoriesForDay() removing empty hourly directory $p ");
+                    rmdir($p);
+                }
+            }
+        }
+
+        // delete daily directory if it is now empty
+        $p = self::$path . $startOfDay;
+        if( self::is_dir_empty($p)) {
+            Logger::info("deleteEmptyBucketDirectoriesForDay() removing empty daily directory $p ");
+            rmdir($p);
+        }
+    }
+
+    public static function deleteEmptyBucketDirectories()
+    {
+        $perDayBuckets  = Config::get('storage_filesystem_per_day_buckets');
+        $perHourBuckets = Config::get('storage_filesystem_per_hour_buckets');
+
+        if( $perDayBuckets || $perHourBuckets ) {
+            try {
+                $uuid = Ramsey\Uuid\Uuid::uuid7();
+                $tt = $uuid->getDateTime()->getTimestamp();
+                $startOfDay  = $tt - ($tt % (60*60*24));
+
+                $daysback = Config::get("storage_filesystem_per_day_min_days_to_clean_empty_directories");
+                $daysbackmax = Config::get("storage_filesystem_per_day_max_days_to_clean_empty_directories");
+                for( ; $daysback < $daysbackmax; $daysback++ ) {
+                    $startOfDay  = ($tt - ($tt % (60*60*24))) - ($daysback *24*3600);
+                    self::deleteEmptyBucketDirectoriesForDay( $tt, $startOfDay );
+                }
+
+            } catch (Exception $e) {
+                Logger::error("Issue with deleting per day buckets");
+            }
+        }        
+    }
+    
     
     /**
      * Tells wether storage support file digests
