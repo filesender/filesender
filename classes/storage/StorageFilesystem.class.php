@@ -359,7 +359,6 @@ class StorageFilesystem
 
         $perDayBuckets = $file->transfer->storage_filesystem_per_day_buckets;
         $perHourBuckets = $file->transfer->storage_filesystem_per_hour_buckets;
-        Logger::error("AAA daily $perDayBuckets  hourly $perHourBuckets ");
         
         if( $perDayBuckets || $perHourBuckets ) {
             try {
@@ -391,7 +390,32 @@ class StorageFilesystem
                     if (substr($path, -1) != '/') {
                         $path .= '/';
                     }
-                }                    
+                } else {
+                    $tt = $file->transfer->created;
+                    $startOfDay  = $tt - ($tt % (60*60*24));
+                    $startOfHour = $tt - ($tt % (60*60   ));
+                    if( $perDayBuckets ) {
+                        $subpath = "" . $startOfDay;
+                    }
+                    if( $perHourBuckets ) {
+                        if( $subpath != "" ) {
+                            $subpath .= "/";
+                        }
+                        $subpath .= "" . $startOfHour;
+                    }
+
+                    $now = time();
+                    $npath  = $path .  $subpath . "/";
+                    // only make the directories if it is recent enough
+                    if( $tt > $now - (Config::get("storage_filesystem_per_day_max_age_to_create_directory")*24*3600) ) {
+                        $path = StorageFilesystem::ensurePath( $path, $subpath );
+                    } else {
+                        $path = $npath;
+                    }
+                    if (substr($path, -1) != '/') {
+                        $path .= '/';
+                    }
+                }
             } catch (Exception $e) {
                 Logger::error("Issue with per day buckets and UUID");
                 return $path;
@@ -636,8 +660,7 @@ class StorageFilesystem
 
         if( $perDayBuckets || $perHourBuckets ) {
             try {
-                $uuid = Ramsey\Uuid\Uuid::uuid7();
-                $tt = $uuid->getDateTime()->getTimestamp();
+                $tt = time();
                 $startOfDay  = $tt - ($tt % (60*60*24));
 
                 $daysback = Config::get("storage_filesystem_per_day_min_days_to_clean_empty_directories");
