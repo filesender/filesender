@@ -52,9 +52,10 @@ class Utilities
     private static $security_token = null;
     
     /**
-     * Generate a unique ID to be used as token
+     * Generate a unique ID to be used as token.
+     * All generated UUID are version 4.
      *
-     * @param bool $timestamped requests a timestamped (uuidv7) or non-timestamped (uuidv4) uid
+     * @param bool $timestamped in the future requests a timestamped (uuidv7) or non-timestamped (uuidv4) uid
      * @param callable $unicity_checker callback used to check for uid unicity (takes uid as sole argument, returns bool telling if uid is unique), null if check not needed
      * @param int $max_tries maximum number of tries before giving up and throwing
      *
@@ -87,27 +88,8 @@ class Utilities
             return $uid;
         }
 
-        $uuid = $timestamped ? Ramsey\Uuid\Uuid::uuid7() : Ramsey\Uuid\Uuid::uuid4();
+        $uuid = Ramsey\Uuid\Uuid::uuid4();
         return $uuid->toString();
-/*
-        // Generate 16 bytes of random data (128 bits)
-        $bytes = random_bytes(16);
-        // Set bits required for a valid UUIDv4
-        $bytes[8] = chr((ord($bytes[8]) & 0x3F) | 0x80); // Eat 2 bits of entropy
-        $bytes[6] = chr((ord($bytes[6]) & 0x4F) | 0x40); // Eat 4 bits of entropy
-        // $bytes has now 122 bits of entropy
-
-        // Convert bytes to hex and split in 4-char strings (hex, so 2 bytes per string)
-        $parts = str_split(bin2hex($bytes), 4);
-        // Add dashes where UUIDs should have dashes
-        return implode('-', array(
-                $parts[0] . $parts[1],
-                $parts[2],
-                $parts[3],
-                $parts[4],
-                $parts[5] . $parts[6] . $parts[7]
-        ));
-*/
     }
 
     /**
