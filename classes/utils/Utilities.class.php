@@ -54,6 +54,7 @@ class Utilities
     /**
      * Generate a unique ID to be used as token
      *
+     * @param bool $timestamped requests a timestamped (uuidv7) or non-timestamped (uuidv4) uid
      * @param callable $unicity_checker callback used to check for uid unicity (takes uid as sole argument, returns bool telling if uid is unique), null if check not needed
      * @param int $max_tries maximum number of tries before giving up and throwing
      *
@@ -62,7 +63,7 @@ class Utilities
      * @throws UtilitiesUidGeneratorBadUnicityCheckerException
      * @throws UtilitiesUidGeneratorTriedTooMuchException
      */
-    public static function generateUID($unicity_checker = null, $max_tries = 1000)
+    public static function generateUID($timestamped = false, $unicity_checker = null, $max_tries = 1000)
     {
         // Do we need to generate a unicity-checked random UID ?
         if ($unicity_checker) {
@@ -86,7 +87,7 @@ class Utilities
             return $uid;
         }
 
-        $uuid = Ramsey\Uuid\Uuid::uuid7();
+        $uuid = $timestamped ? Ramsey\Uuid\Uuid::uuid7() : Ramsey\Uuid\Uuid::uuid4();
         return $uuid->toString();
 /*
         // Generate 16 bytes of random data (128 bits)

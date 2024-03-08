@@ -206,7 +206,7 @@ class TranslatableEmail extends DBObject
         $email->created = time();
         
         // Generate token until it is indeed unique
-        $email->token = Utilities::generateUID(function ($token, $tries) {
+        $email->token = Utilities::generateUID(false, function ($token, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.TranslatableEmail::getDBTable().' WHERE token = :token');
             $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
