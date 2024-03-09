@@ -190,7 +190,7 @@ class Recipient extends DBObject
         $recipient->created = time();
         
         // Generate token until it is indeed unique
-        $recipient->token = Utilities::generateUID(function ($token, $tries) {
+        $recipient->token = Utilities::generateUID(false, function ($token, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.Recipient::getDBTable().' WHERE token = :token');
             $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
