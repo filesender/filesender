@@ -69,6 +69,9 @@ A note about colours;
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_per_day_buckets](#storage_filesystem_per_day_buckets)
 * [storage_filesystem_per_hour_buckets](#storage_filesystem_per_hour_buckets)
+* [storage_filesystem_per_day_max_age_to_create_directory](#storage_filesystem_per_day_min_age_to_create_directory)
+* [storage_filesystem_per_day_min_days_to_clean_empty_directories](#storage_filesystem_per_day_min_days_to_clean_empty_directories)
+* [storage_filesystem_per_day_max_days_to_clean_empty_directories](#storage_filesystem_per_day_max_days_to_clean_empty_directories)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
 * [cloud_s3_region](#cloud_s3_region)
@@ -893,6 +896,37 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __default:__ false
 * __available:__ since version 2.45
 * __comment:__ This requires version 7 UUIDs to be in use. The timestamp from the v7 uuid is taken and the seconds since the start of the hour are removed and that is used to create a subdirectory for the stored files. See also storage_filesystem_per_day_buckets for an overview of this feature.
+
+### storage_filesystem_per_day_max_age_to_create_directory
+
+* __description:__ Mostly internal use. Bucket directories are created automatically. This is the maximum number of days ago to create these subdirectory buckets.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 7
+* __available:__ since version 2.47
+* __comment:__ This is mostly for internal use and likely fine to leave at default. This prevents bucket subdirectories from being recreated if very old files are listed where the file content is already deleted by the cron job.
+
+### storage_filesystem_per_day_min_days_to_clean_empty_directories
+
+* __description:__ Mostly internal use. How many days ago the cron job starts to consider when looking for empty bucket directories to delete
+* __mandatory:__ no
+* __type:__ int
+* __default:__ -1 which means this is set to max_transfer_days_valid
+* __available:__ since version 2.47
+* __comment:__ This is mostly for internal use and likely fine to leave at default. 
+
+
+### storage_filesystem_per_day_max_days_to_clean_empty_directories
+
+* __description:__ Mostly internal use. How far back from storage_filesystem_per_day_min_days_to_clean_empty_directories to consider when trying to delete empty bucket directories
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 150
+* __available:__ since version 2.47
+* __comment:__ This is mostly for internal use and likely fine to leave at default. 
+
+
+
 
 
 
