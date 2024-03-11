@@ -123,6 +123,7 @@ class AuthRemote
             $args = $_GET;
             unset($args['signature']);
             if (count($args)) {
+                unset($args['_']);                
                 $signed .= '?'.implode('&', RestUtilities::flatten($args));
             }
             

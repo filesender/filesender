@@ -198,6 +198,57 @@ class RestEndpointTransfer extends RestEndpoint
                 return $ret;
             }
         }
+
+        if( $id=='fileidsextended' && array_key_exists('token', $_GET)) {
+            $token = $_GET['token'];
+            if (!Utilities::isValidUID($token)) {
+                throw new RestBadParameterException('token');
+            }
+            // Need to be authenticated
+            if (!Auth::isAuthenticated()) {
+                throw new RestAuthenticationRequiredException();
+            }
+            
+            $recipient = Recipient::fromToken($token);
+            if ($recipient->transfer) {
+                $transfer = $recipient->transfer;
+                $files = $recipient->transfer->files;
+                $ret = array();
+                foreach ($files as $file) {
+                    $obj = array( 'id' => $file->id
+                                , 'encrypted' => isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'
+                                , 'mime' =>  $file->mime_type
+                                , 'name' =>  $file->path
+                                , 'size' => $file->size
+                        
+                                , 'encrypted-size' => $file->encrypted_size
+                                , 'key-version'    => $transfer->key_version
+                                , 'key-salt' => $transfer->salt
+                                , 'password-version' => $transfer->password_version
+                                , 'password-encoding' => $transfer->password_encoding_string
+                                , 'password-hash-iterations' => $transfer->password_hash_iterations
+                                , 'client-entropy' => $transfer->client_entropy
+
+                                // underscore versions of the same
+                                , 'encrypted_size' => $file->encrypted_size
+                                , 'key_version'    => $transfer->key_version
+                                , 'key_salt' => $transfer->salt
+                                , 'password_version' => $transfer->password_version
+                                , 'password_encoding' => $transfer->password_encoding_string
+                                , 'password_hash_iterations' => $transfer->password_hash_iterations
+                                , 'client_entropy' => $transfer->client_entropy
+                        
+                                , 'fileiv' => $file->iv
+                                , 'fileaead' => $file->aead
+                                , 'transferid' => $transfer->id
+                    );
+                    
+                    array_push($ret,$obj);
+                }
+                return $ret;
+            }
+        }
+        
         
         // If key was provided we validate it and return the transfer (guest restart)
         if (is_numeric($id) && array_key_exists('key', $_GET) && $_GET['key']) {
