@@ -144,7 +144,6 @@ window.filesender.client = {
                     //Delete all `null` & `undefined` values (== operator vs ===)
                     Object.keys(data).forEach((key) => data[key] == null && delete data[key]);
                     data = JSON.stringify(data);
-                    to_sign += '&' + data;
                     hm.update('&');
                     hm.update(data);
                 } else {
@@ -158,18 +157,12 @@ window.filesender.client = {
                         value = window.filesender.crypto_common().convertArrayBufferViewtoString(data);
                         hm.update(data);
                     }
-                    to_sign += '&'+value;
                 }
             } else {
                 data = undefined;
             }
 
 
-            if( options.force_amp_at_end && !to_sign.endsWith("&")) {
-                to_sign += "&";
-                hm.update("&");
-            }
-            
             let signature = hm.digest().toString('hex');
             urlargs.push('signature' + '=' + signature);
             
@@ -358,10 +351,6 @@ window.filesender.client = {
     },
     
     get: function(resource, callback, options) {
-        // nodejs command line client only
-        if (this.api_key) {
-//            options.force_amp_at_end = true;
-        }
         return this.call('get', resource, undefined, callback, options);
     },
     
