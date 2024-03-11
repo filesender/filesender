@@ -85,6 +85,9 @@ window.filesender.client = {
         if(filesender.terasender && filesender.terasender.security_token != source)
             filesender.terasender.security_token = source;
     },
+
+    setupSSLOptions: function( settings ) {
+    },
     
     // Send a request to the webservice
     call: function(method, resource, data, callback, options) {
@@ -106,13 +109,78 @@ window.filesender.client = {
         var urlargs = [];
         for(var k in args) urlargs.push(k + '=' + args[k]);
         
-        if(urlargs.length) resource += (resource.match(/\?/) ? '&' : '?') + urlargs.join('&');
         
-        if(data) {
-            var raw = options && ('rawdata' in options) && options.rawdata;
+        // API Key based authentication (i.e. CLI)
+        if (this.api_key) {
+            //... if there is an API key then REST CLI
+            var timestamp = Math.floor(Date.now() / 1000);
+
+            urlargs.push('remote_user' + '=' + this.from);
+            urlargs.push('timestamp' + '=' + timestamp);
+
+            var local_resource = resource.split(/\?|\&/);
+            resource = local_resource.shift();
+
+            local_resource.forEach(v => urlargs.push(v));
+
+            urlargs.sort();
+            var to_sign = method.toLowerCase()
+                        +'&'
+                        +this.base_path.replace('https://','',1).replace('http://','',1)
+                        +resource
+                        +'?'
+                        +urlargs.join('&');
+
+            const crypto = require('crypto');
+            var hm = crypto.createHmac("sha1", this.api_key).update(to_sign);
             
-            if(!raw) data = JSON.stringify(data);
-        }else data = undefined;
+            if(data) {
+                var raw = options && ('rawdata' in options) && options.rawdata;
+
+                if(!raw) {
+                    //clean up the data
+                    data.aup_checked = 1;
+
+                    //Delete all `null` & `undefined` values (== operator vs ===)
+                    Object.keys(data).forEach((key) => data[key] == null && delete data[key]);
+                    data = JSON.stringify(data);
+                    hm.update('&');
+                    hm.update(data);
+                } else {
+                    hm.update('&');
+                    value = '';
+                    if( typeof data != 'object' ) {
+                        value = data.buffer;
+                        hm.update(value);
+                    }
+                    else {
+                        value = window.filesender.crypto_common().convertArrayBufferViewtoString(data);
+                        hm.update(data);
+                    }
+                }
+            } else {
+                data = undefined;
+            }
+
+
+            let signature = hm.digest().toString('hex');
+            urlargs.push('signature' + '=' + signature);
+            
+
+        } else {
+
+            if(data) {
+                var raw = options && ('rawdata' in options) && options.rawdata;
+                
+                if(!raw) {
+                    data = JSON.stringify(data);
+                }
+            }else data = undefined;
+            
+        }        
+
+        
+        if(urlargs.length) resource += (resource.match(/\?/) ? '&' : '?') + urlargs.join('&');
         
         var errorhandler = function(error) {
             filesender.ui.error(error);
@@ -135,6 +203,7 @@ window.filesender.client = {
         var settings = {
             cache: false,
             contentType: 'application/json;charset=utf-8',
+            'accept-encoding': 'identity',
             context: window,
             data: data,
             processData: false,
@@ -275,7 +344,9 @@ window.filesender.client = {
             this.pending_requests.push(settings);
             return;
         }
+
         
+        this.setupSSLOptions( settings );
         return jQuery.ajax(settings);
     },
     
@@ -407,13 +478,18 @@ window.filesender.client = {
      * @param callable error
      */
     putChunk: function(file, blob, offset, progress, done, error, encrypted, encryption_details ) {
+        var sz = blob.size;
+        if( typeof blob == "string" ) {
+            sz = blob.length;
+        }
         var opts = {
             contentType: 'application/octet-stream',
+            'accept-encoding': 'identity',
             rawdata: true,
             headers: {
                 'X-Filesender-File-Size': file.size,
                 'X-Filesender-Chunk-Offset': offset,
-                'X-Filesender-Chunk-Size': blob.size,
+                'X-Filesender-Chunk-Size': sz,
                 'X-Filesender-Encrypted': '1',
    	        'csrfptoken': filesender.client.getCSRFToken()
             },
@@ -432,25 +508,25 @@ window.filesender.client = {
         var chunkid = Math.floor(offset / window.filesender.config.upload_chunk_size);
         var $this = this;
         if(encrypted){
-            var cryptedBlob = null;
-            blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
-                // nothing todo here.. 
-            });
-            blobReader.blobSlice = blob;
 
-            blobReader.readArrayBuffer(function(arrayBuffer){
-                window.filesender.crypto_app().encryptBlob(
-                    arrayBuffer,
-                    chunkid,
-                    encryption_details,
-                    function(encrypted_blob) {
-                        var result = $this.put(
-                            file.transfer.authenticatedEndpoint(
-                                '/file/' + file.id + '/chunk/' + offset,
-                                file), encrypted_blob, done, opts);
-                    }
-                );
-            });
+            var origsz = blob.size;
+            var response = new Response(blob);
+            response.arrayBuffer().then(
+                function(arrayBuffer){
+                    arrayBuffer.size = origsz;
+                    window.filesender.crypto_app().encryptBlob(
+                        arrayBuffer,
+                        chunkid,
+                        encryption_details,
+                        function(encrypted_blob) {
+                            var result = $this.put(
+                                file.transfer.authenticatedEndpoint(
+                                    '/file/' + file.id + '/chunk/' + offset,
+                                    file), encrypted_blob, done, opts);
+                        }
+                    );
+                }
+            );
         }else{
             var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
         }
