@@ -482,7 +482,7 @@ class Lang
 
         if( !$tr ) {
             Logger::error("translate() can not find translation for id $id");
-            return new Translation("");
+            return new Translation($id);
         }
         
         // File based ? Then loads it up and cache contents
