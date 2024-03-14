@@ -417,6 +417,7 @@ python_cli_client_heading
 python_cli_client_setup_information
 quota_usage
 rate_limit_exceeded
+read_only_mode
 reader_not_supported
 reason
 recipient_added
