@@ -46,6 +46,7 @@ auth_remote_signature_check_failed
 auth_remote_too_late
 auth_remote_unknown_application
 auth_remote_user_rejected
+auth_sp_attribute_email_hint
 auth_sp_authentication_not_found
 auth_sp_bad_attribute
 auth_sp_missing_attribute
