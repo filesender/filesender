@@ -149,6 +149,7 @@ A note about colours;
 * [can_view_aggregate_statistics](#can_view_aggregate_statistics)
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
+* [read_only_mode](#read_only_mode)
 
 
 
@@ -1585,6 +1586,17 @@ User language detection is done in the following order:
 * __default:__ ""
 * __available:__ since version 2.8
 * __comment:__ See also can_view_statistics
+
+
+### read_only_mode
+* __description:__  Do not allow new transfers and guests to be created.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.48
+* __comment:__ If you are performing a major upgrade you might like to retain an original FileSender installation in read only mode so users can continue to download existing files and redirect visitors to a new site for new uploads. This may be useful for upgrading between major FileSender releases such as the 2.x series to the 3.x series and also for change in infrastructure such as moving to different disk pools or storage back ends.
+
+
 
 
 ---

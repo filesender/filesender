@@ -66,6 +66,8 @@ use ( $new_guests_can_only_send_to_creator,
     }
 };
 
+$read_only_mode = Config::get('read_only_mode');
+
 
 ?>
 
@@ -76,7 +78,13 @@ use ( $new_guests_can_only_send_to_creator,
 // begin html part
 ////////////////////////
 ?>
+<?php if($read_only_mode) { ?>
 <div class="box">
+    {tr:read_only_mode}
+</div>
+<?php } else { ?>
+<div class="box">
+
     <div id="send_voucher" class="box">
         <div class="disclamer">
             {tr:send_new_voucher}
@@ -200,6 +208,7 @@ use ( $new_guests_can_only_send_to_creator,
         </div>
     </div>
 </div>
+<?php } ?>
 
 <div class="box">
     <h1>{tr:guests}</h1>
