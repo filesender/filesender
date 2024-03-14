@@ -439,6 +439,8 @@ class Lang
      */
     public static function translate($id)
     {
+        $tr = null;
+        
         // Load dictionaries if not already done
         self::loadDictionaries();
         
@@ -476,6 +478,11 @@ class Lang
                 Logger::warn('No fallback translation found for '.$id.' in '.$fallbackid.' languages');
                 return new Translation('{'.$id.'}', false); 
             }       
+        }
+
+        if( !$tr ) {
+            Logger::error("translate() can not find translation for id $id");
+            return new Translation($id);
         }
         
         // File based ? Then loads it up and cache contents
