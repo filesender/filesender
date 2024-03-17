@@ -16,7 +16,7 @@
     "promise-polyfill": "^8.3.0",
     "reset": "^0.1.0",
     "streamsaver": "^2.0.6",
-    "web-streams-polyfill": "^3.2.1",
+    "web-streams-polyfill": "^4.0.0",
     "webcrypto-shim": "^0.1.7",
     "xregexp": "^5.1.1"
   }
