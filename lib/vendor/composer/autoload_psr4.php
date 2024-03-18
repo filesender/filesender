@@ -7,14 +7,19 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'ZipStream\\' => array($vendorDir . '/maennchen/zipstream-php/src'),
+    'Svg\\' => array($vendorDir . '/phenx/php-svg-lib/src/Svg'),
+    'Sabberworm\\CSS\\' => array($vendorDir . '/sabberworm/php-css-parser/src'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'Ramsey\\Collection\\' => array($vendorDir . '/ramsey/collection/src'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src'),
     'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
+    'Masterminds\\' => array($vendorDir . '/masterminds/html5/src'),
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
+    'FontLib\\' => array($vendorDir . '/phenx/php-font-lib/src/FontLib'),
+    'Dompdf\\' => array($vendorDir . '/dompdf/dompdf/src'),
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'Barracuda\\ArchiveStream\\' => array($vendorDir . '/barracudanetworks/archivestream-php/src'),
 );
