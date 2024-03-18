@@ -1,10 +1,11 @@
 {
     "require": {
         "barracudanetworks/archivestream-php": "^1.0",
-        "owasp/csrf-protector-php": "^1.0",
+        "dompdf/dompdf": "^2.0.4",
 	"guzzlehttp/guzzle": "7.8.1",
 	"guzzlehttp/psr7": "2.6.2",
         "maennchen/zipstream-php": "2.4.0",
+        "owasp/csrf-protector-php": "^1.0",
         "ramsey/uuid": "^4.7"
         
     }
