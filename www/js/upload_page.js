@@ -1889,6 +1889,7 @@ $(function() {
         // sending the remains of the files to complete the upload.
         if( filesender.ui.reuploading ) {
             filesender.ui.nodes.stages.confirm.click();
+            filesender.ui.setFileList(2, 4);
             return;
         }
 
@@ -2645,6 +2646,10 @@ $(function() {
                 // not be changed for the transfer once it is created.
                 filesender.ui.nodes.stages.nextStep.html( filesender.ui.nodes.stages.confirm.html() );
                 filesender.ui.reuploading = true;
+
+                filesender.ui.goToStage(2);
+
+                window.location.hash = "#uploading";
             };
 
             var forget = function() {
@@ -2668,9 +2673,9 @@ $(function() {
             } else {
 
                 var prompt = filesender.ui.popup( lang.tr('restart_failed_transfer'),
-                    {load:   {callback: load},
-                        forget: {callback: forget, className: 'fs-button fs-button--danger'},
-                        later:  {callback: later}},
+                    {load:   {callback: load, className: 'fs-button fs-button--info'},
+                    forget:  {callback: forget, className: 'fs-button fs-button--danger'},
+                    later:   {callback: later, className: 'fs-button fs-button--info'}},
                     {onclose: later});
                 $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
                 var tctn = $('<div class="failed_transfer" />').appendTo(prompt);
