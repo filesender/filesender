@@ -67,43 +67,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                 }
             ?>
 
-<!--            --><?php //if($LanguageSelectorShown): ?>
-<!---->
-<!--                <li class="nav-item dropdown language-selector">-->
-<!---->
-<!--                    --><?php
-//                    $code = Lang::getCode();
-//                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-//                        if($id == $code) {
-//                            $specificid = $dfn['specific-id'];
-//                            echo '<a class="nav-link dropdown-toggle language-dropdown-toggle" ';
-//                            echo ' href="#" ';
-//                            echo ' id="toplangdropdownlabel" ';
-//                            echo ' data-bs-toggle="dropdown" ';
-//                            echo ' aria-haspopup="true" ';
-//                            echo ' aria-expanded="false"> ';
-//                            echo '  <span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a> ';
-//                        }
-//                    }
-//                    ?>
-<!---->
-<!--                    <div class="dropdown-menu" aria-labelledby="toplangdropdownlabel" id="toplangdropdown">-->
-<!--                        --><?php
-//                        $code = Lang::getCode();
-//                        foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-//                            $specificid = $dfn['specific-id'];
-//                            $selected = ($id == $code) ? 'selected="selected"' : '';
-//                            echo '<a class="dropdown-item toplangdropitem" data-id="'.$id.'"  href="#">';
-//                            echo '<span class="fi fi-'.$specificid.'"> </span> '.Utilities::sanitizeOutput($dfn['name']).'</a>';
-//
-//                        }
-//                        ?>
-<!--                    </div>-->
-<!--                </li>-->
-<!--            --><?php //endif; ?>
         </ul>
     </nav>
 
-
 </header> <!-- New UI header - END -->
-

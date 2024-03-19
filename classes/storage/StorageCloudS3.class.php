@@ -218,6 +218,10 @@ class StorageCloudS3 extends StorageFilesystem
         $offset = 0;
         $bucket_name = self::getBucketName( $file );
         $object_name = self::getObjectName( $file, $offset );
+	$bulk_delete = Config::get('cloud_s3_bulk_delete');
+	$bulk_size = Config::get('cloud_s3_bulk_size');
+
+	Logger::debug('CloudS3 deleteFile(), file_path: ' . $file_path . ' bucket_name: ' . $bucket_name . ' object_name: ' . $object_name . ' bulk: ' . $bulk_delete . '/' . $bulk_size);
         
         try {
             $client = self::getClient();
@@ -228,11 +232,44 @@ class StorageCloudS3 extends StorageFilesystem
                 $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name, 'Prefix' => $file->uid));    
             }
 
-            foreach ($objects as $object) {
-                $result = $client->deleteObject(array(
-                    'Bucket' => $bucket_name,
-                    'Key'    => $object['Key']
-                ));
+	    if( $bulk_delete ) {
+
+	        // Build bulk request the way AWS client wants it
+                foreach ($objects as $object) {
+                    $delete_queue[] = [
+                        'Key' => $object['Key'],
+                    ];
+                }
+
+		if( $delete_queue ) {
+
+		    // Create batches of requested batchsize
+                    $chunked_queue = array_chunk($delete_queue, $bulk_size);
+                    Logger::debug('bulk has ' . count($chunked_queue) . ' requests');
+
+
+                    // Perform actual chunk removal
+                    foreach($chunked_queue as $delete_batch) {
+
+                        Logger::debug('bulk deleting ' . count($delete_batch) . ' chunks');
+                        $result = $client->deleteObjects([
+                           'Bucket' => $bucket_name,
+                           'Delete' => [
+                               'Objects' => $delete_batch,
+                           ],
+                        ]);
+                    }
+		}
+
+            } else {
+
+		Logger::debug('Executing non-bulk delete');
+                foreach ($objects as $object) {
+                    $result = $client->deleteObject(array(
+                        'Bucket' => $bucket_name,
+                        'Key'    => $object['Key']
+                    ));
+                }
             }
             
             if( !self::usingCustomBucketName( $file ) ) {
@@ -394,4 +431,32 @@ class StorageCloudS3 extends StorageFilesystem
         return true;
     }
 
+    /**
+     * Add custom bucket name info to transfer options
+     * 
+     * @param array $options
+     * 
+     * @return array new options
+     * 
+     */
+    public static function augmentTransferOptions( $options )
+    {
+        if( strtolower(Config::get('storage_type')) == 'clouds3' ) {
+            if (Config::get('cloud_s3_use_daily_bucket')) {
+                $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = "";
+                $v = Config::get('cloud_s3_bucket_prefix');
+                if( $v && $v != '' ) {
+                    $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
+                }
+                $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] .= date("Y-m-d");
+            } else {
+                $v = Config::get('cloud_s3_bucket');
+                if( $v && $v != '' ) {
+                    $options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
+                }
+            }
+        }
+
+        return $options;
+    }
 }
