@@ -18,12 +18,16 @@
 
     --fs-bg-color: #000000;
     --fs-bg-color-secondary: #121212;
+    --fs-bg-color-tertiary: #121212;
+    --fs-bg-color-quarternary: #121212;
+    --fs-bg-color-quinary: #121212;
     --fs-border: var(--fs-light);
 
     --fs-text-color: #FBFAFE;
 
     --fs-hightlight-bg: var(--fs-bg-color-secondary);
     --fs-hightlight-bg-alternative: #bb86fc;
+    --fs-hightlight-bg-secondary: #bb86fc;
 
     --fs-accent: #3700b3;
 
@@ -89,4 +93,8 @@
     --fs-spacing-28x: calc(var(--fs-spacing-base) * 28);
     --fs-spacing-29x: calc(var(--fs-spacing-base) * 29);
     --fs-spacing-30x: calc(var(--fs-spacing-base) * 30);
+}
+
+img {
+    filter: invert(1);
 }

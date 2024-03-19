@@ -57,7 +57,7 @@
 .fs-input-group input,
 .fs-input-group textarea {
   flex: 1;
-  border: 1px solid var(--fs-gray-300);
+  border: 1px solid var(--fs-bg-color-quarternary);
   min-height: var(--fs-spacing-6x);
   background: var(--fs-light);
   border-radius: var(--fs-spacing-base);
@@ -94,7 +94,7 @@
   flex-direction: row;
   align-items: center;
   background: var(--fs-light);
-  border: 1px solid var(--fs-gray-300);
+  border: 1px solid var(--fs-bg-color-quarternary);
   border-radius: var(--fs-spacing-4x);
   font-weight: 700;
   margin-top: var(--fs-spacing-2x);
@@ -158,13 +158,13 @@
   left: 0;
   height: var(--fs-spacing-3x);
   width: var(--fs-spacing-3x);
-  background-color: var(--fs-gray-100);
+  background-color: var(--fs-bg-color-tertiary);
   border-radius: var(--fs-spacing-half);
 }
 
 /* On mouse-over, add a grey background color */
 .fs-checkbox:hover input ~ .fs-checkbox__mark {
-  background-color: var(--fs-gray-300);
+  background-color: var(--fs-bg-color-tertiary);
 }
 
 /* When the checkbox is checked, add a blue background */
@@ -189,7 +189,7 @@
   top: 4.5px;
   width: 7px;
   height: 12px;
-  border: solid white;
+  border: solid var(--fs-bg-color-secondary);
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);

@@ -69,7 +69,7 @@ class GUI
             'lib/flag-icons/css/flag-icons.min.css',
             'css/default.css',
             'css/new-ui/styles.css',  // Adding the new-ui styles
-            'css/themes/default.css', // Adding the new-ui theme styles
+            'css/themes/default.css', // Adding the new-ui default/light theme styles
             'skin/styles.css',
             'css/' . Config::get('site_css')
         ));
@@ -145,7 +145,8 @@ class GUI
                     'js/crypter/crypto_app.js',
                     'js/pbkdf2dialog.js',
                     'js/notification.js',
-                    'lib/xregexp/xregexp-all.js'
+                    'lib/xregexp/xregexp-all.js',
+                    'js/theme.js',
         );
 
 
