@@ -314,6 +314,14 @@ window.filesender.terasender = {
         if( this.receiver && this.receiver.onError ) {
             this.receiver.onError( error );
         }
+
+        var doc = new DOMParser().parseFromString(error.message, 'text/html');
+        if (doc.getElementsByClassName('exception')) { //if this is from our template, pull out the exception only.
+            error.message = 'exception';
+        } else {
+            error.message = doc.body.textContent || error.message;
+        }
+
         error.messageTranslated = error.message;
         error.message = 'terasender_' + error.message;
         

@@ -118,6 +118,7 @@ confirm_remind_recipient
 confirm_remind_transfer
 confirm_remove_daily_stats_transfer
 confirm_stop_upload
+confirm_upload_add_to_recipients_with_no_explicit_address
 continue
 copy_text
 core_class_not_found
@@ -441,6 +442,7 @@ report_event_download_started
 report_event_file_uploaded
 report_event_transfer_available
 report_event_transfer_closed
+report_event_transfer_decrypt_failed
 report_event_transfer_deleted
 report_event_transfer_expired
 report_event_transfer_sent
@@ -483,6 +485,7 @@ rest_missing_parameter
 rest_ownership_required
 rest_roundtrip_token_invalid
 rest_sanity_check_failed
+rest_security_token_did_not_match
 rest_updatedsince_bad_format
 rest_xsrf_token_did_not_match
 restart

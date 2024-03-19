@@ -249,14 +249,16 @@ class RestEndpointGuest extends RestEndpoint
         if( $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
             $transfer_options[TransferOptions::GET_A_LINK] = false;
         }
+        
+        if( strtolower(Config::get('storage_type')) == 'clouds3' ) {
+            $options = StorageCloudS3::augmentTransferOptions( $options );
+        }
 
-        if( Config::get('storage_type') == 'CloudS3' ) {
-            $v = Config::get('cloud_s3_bucket');
-            if( $v && $v != '' ) {
-                $transfer_options[TransferOptions::STORAGE_CLOUD_S3_BUCKET] = $v;
+        if(Auth::isRemote()) {
+            if (!array_key_exists(TransferOptions::ADD_ME_TO_RECIPIENTS, $transfer_options)) {
+                $transfer_options[TransferOptions::ADD_ME_TO_RECIPIENTS] = false;
             }
         }
-        
         $guest->transfer_options = $transfer_options;
         
         // Set expiry date
@@ -275,7 +277,6 @@ class RestEndpointGuest extends RestEndpoint
         
         // Make guest available, this saves the object and send email to the guest
         $guest->makeAvailable();
-
         
         return array(
             'path' => '/guest/'.$guest->id,

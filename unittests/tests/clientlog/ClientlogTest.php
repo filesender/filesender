@@ -48,7 +48,8 @@ class ClientlogTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void
+    {
         echo "ClientlogTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         echo "Client logs stash size: " . ClientLog::stashSize() . "\n";
@@ -63,7 +64,8 @@ class ClientlogTest extends CommonUnitTestCase {
     /**
      * Cleanup in any case
      */
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void
+    {
         // Clean any trash
         DBI::exec('DELETE FROM '.ClientLog::getDBTable());
     }
@@ -83,7 +85,7 @@ class ClientlogTest extends CommonUnitTestCase {
         $this->assertEquals($message, $log->message);
         $this->assertEquals(Auth::user()->id, $log->userid);
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- ClientLog created');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- ClientLog created');
         
         return true;
     }
@@ -102,7 +104,7 @@ class ClientlogTest extends CommonUnitTestCase {
         $this->assertTrue(is_array($logs));
         $this->assertNotEmpty($logs);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- ClientLog got:'.count($logs));
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- ClientLog got:'.count($logs));
 
         return count($logs);
     }
@@ -121,7 +123,7 @@ class ClientlogTest extends CommonUnitTestCase {
         
         $this->assertEmpty(ClientLog::fromUser(Auth::user()));
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- ClientLog deleted');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- ClientLog deleted');
         
         return true;
     }
@@ -139,7 +141,7 @@ class ClientlogTest extends CommonUnitTestCase {
         $logs = ClientLog::fromUser(Auth::user());
         $this->assertEquals(self::CREATE, count($logs));
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- '.self::CREATE.' ClientLog stashed');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- '.self::CREATE.' ClientLog stashed');
         
         return true;
     }
@@ -159,7 +161,7 @@ class ClientlogTest extends CommonUnitTestCase {
         $logs = ClientLog::fromUser(Auth::user());
         $this->assertLessThanOrEqual($size, count($logs));
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- '.self::CREATE.' ClientLog stash size applied');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- '.self::CREATE.' ClientLog stash size applied');
         
         return true;
     }
@@ -191,7 +193,7 @@ class ClientlogTest extends CommonUnitTestCase {
         
         $this->assertEmpty(ClientLog::fromUser(Auth::user()));
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- ClientLog cleaned');
+        $this->displayInfo(get_class($this), __FUNCTION__, ' -- ClientLog cleaned');
         
         return true;
     }

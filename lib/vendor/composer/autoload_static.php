@@ -10,12 +10,18 @@ class ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'Z' => 
         array (
             'ZipStream\\' => 10,
+        ),
+        'R' => 
+        array (
+            'Ramsey\\Uuid\\' => 12,
+            'Ramsey\\Collection\\' => 18,
         ),
         'P' => 
         array (
@@ -34,6 +40,7 @@ class ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3
         ),
         'B' => 
         array (
+            'Brick\\Math\\' => 11,
             'Barracuda\\ArchiveStream\\' => 24,
         ),
     );
@@ -42,6 +49,14 @@ class ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3
         'ZipStream\\' => 
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
+        ),
+        'Ramsey\\Uuid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/uuid/src',
+        ),
+        'Ramsey\\Collection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/collection/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -67,6 +82,10 @@ class ComposerStaticInit278b8b2a471333aff04b3f0c8233c3f3
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
         ),
         'Barracuda\\ArchiveStream\\' => 
         array (

@@ -42,7 +42,8 @@ class UtilitiesTest extends CommonUnitTestCase {
     /**
      * Init variables, first function called
      */
-    protected function setUp() {
+    protected function setUp(): void
+    {
         echo "UtilitiesTest@ " . date("Y-m-d H:i:s") . "\n\n";
     }
 
@@ -60,9 +61,9 @@ class UtilitiesTest extends CommonUnitTestCase {
         try {
             $this->assertTrue(Utilities::formatDate($timestamp) == "04 Sep 2014");
 
-            $this->displayInfo(get_class(), __FUNCTION__, '');
+            $this->displayInfo(get_class($this), __FUNCTION__, '');
         } catch (PHPUnit_Framework_AssertionFailedError $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
 
@@ -94,9 +95,9 @@ class UtilitiesTest extends CommonUnitTestCase {
             $size = "9K";
             $this->assertTrue(Utilities::sizeToBytes($size) == "9216");
 
-            $this->displayInfo(get_class(), __FUNCTION__, '');
+            $this->displayInfo(get_class($this), __FUNCTION__, '');
         } catch (PHPUnit_Framework_AssertionFailedError $ex) {
-            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            $this->displayError(get_class($this), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         return true;

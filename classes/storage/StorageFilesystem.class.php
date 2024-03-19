@@ -32,6 +32,7 @@
 if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
+require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
 
 /**
  *  Gives access to a file on the filesystem
@@ -47,6 +48,7 @@ class StorageFilesystem
      * Folder hashing
      */
     protected static $hashing = null;
+
     
     /**
      * Storage setup, loads options from config
@@ -79,6 +81,7 @@ class StorageFilesystem
         if ($hashing) {
             self::$hashing = $hashing;
         }
+
     }
     
     /**
@@ -283,7 +286,41 @@ class StorageFilesystem
         self::setup();
         return $file->uid;
     }
-  
+
+    // only for test suite to use
+    public static function ensurePath( $path, $subpath )
+    {
+        $p = $path;
+        
+        if ($subpath) { // Ensure that subpath exists and is writable
+            $p = $path;
+            foreach (array_filter(explode('/', $subpath)) as $sub) {
+                $p .= $sub;
+                
+                if (!is_dir($p) && !mkdir($p)) {
+                    throw new StorageFilesystemCannotCreatePathException($p, $file);
+                }
+                
+                if (!is_writable($p)) {
+                    throw new StorageFilesystemCannotWriteException($p, $file);
+                }
+                
+                $p .= '/';
+            }
+        }
+        
+        return $p;
+    }
+
+    protected static function appendToPath( $path, $v )
+    {
+        if (substr($path, -1) != '/') {
+            $path .= '/';
+        }
+        $path .= $v;
+        return $path;
+    }
+    
     /**
      * Build file storage path (without filename)
      *
@@ -291,11 +328,16 @@ class StorageFilesystem
      *
      * @return string path
      */
-    public static function buildPath(File $file)
+    public static function buildPath(File $file, $fullPath = true )
     {
         self::setup();
+
+        if( $fullPath ) {
+            $path = self::$path;
+        } else {
+            $path = "";
+        }
         
-        $path = self::$path;
         
         // Is storage path hashing enabled
         if (self::$hashing) {
@@ -310,28 +352,44 @@ class StorageFilesystem
                 // Call self::$hashing with $file to get sub-path
                 $subpath = trim(trim(self::$hashing($file)), '/');
             }
-            
-            if ($subpath) { // Ensure that subpath exists and is writable
-                $p = $path;
-                foreach (array_filter(explode('/', $subpath)) as $sub) {
-                    $p .= $sub;
-                    
-                    if (!is_dir($p) && !mkdir($p)) {
-                        throw new StorageFilesystemCannotCreatePathException($p, $file);
-                    }
-                    
-                    if (!is_writable($p)) {
-                        throw new StorageFilesystemCannotWriteException($p, $file);
-                    }
-                    
-                    $p .= '/';
-                }
-            }
 
-            // caller is expecting the subpath to be in the return value
-            $path = $p;
+            $path = self::ensurePath( $path, $subpath );
         }
+
+        $perDayBuckets = $file->transfer->storage_filesystem_per_day_buckets;
+        $perHourBuckets = $file->transfer->storage_filesystem_per_hour_buckets;
+        Logger::error("AAA daily $perDayBuckets  hourly $perHourBuckets ");
         
+        if( $perDayBuckets || $perHourBuckets ) {
+            try {
+                $subpath = '';
+
+                $uuid = Ramsey\Uuid\Uuid::fromString($file->uid);
+                if( $uuid->getFields()->getVersion() == 7 ) {
+                    $tt = $uuid->getDateTime()->getTimestamp();
+                    $startOfDay  = $tt - ($tt % (60*60*24));
+                    $startOfHour = $tt - ($tt % (60*60   ));
+                    if( $perDayBuckets ) {
+                        $subpath = "" . $startOfDay;
+                    }
+                    if( $perHourBuckets ) {
+                        if( $subpath != "" ) {
+                            $subpath .= "/";
+                        }
+                        $subpath .= "" . $startOfHour;
+                    }
+
+                    $path = StorageFilesystem::ensurePath( $path, $subpath );
+                    if (substr($path, -1) != '/') {
+                        $path .= '/';
+                    }
+                }                    
+            } catch (Exception $e) {
+                Logger::error("Issue with per day buckets and UUID");
+                return $path;
+            }
+        }
+  
         return $path;
     }
     
