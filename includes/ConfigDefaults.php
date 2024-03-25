@@ -286,7 +286,8 @@ $default = array(
 
     // see crypto_app.js for constants in the range crypto_key_version_constants
     // Generally higher is newer + better.
-    'encryption_key_version_new_files' => 1,
+    // UI3 has changed from '1' to '3' as the default (AES-GCM + PBKDF2)
+    'encryption_key_version_new_files' => 3,
 
     // for details of possible values see crypto_password_version_constants
     // in the file js/crypter/crypto_app.js
