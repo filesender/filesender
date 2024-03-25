@@ -1938,8 +1938,8 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __recommend_leaving_at_default:__ true
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ 1
-* __available:__ since version 2.6
+* __default:__ 3
+* __available:__ updated in 3.0 beta7 an above to 3, was 1 since version 2.6
 * __comment:__
 
 
