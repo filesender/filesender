@@ -678,7 +678,7 @@ filesender.ui.files = {
         var crypto = window.filesender.crypto_app();
         return filesender.ui.transfer.encryption_password_version == crypto.crypto_password_version_constants.v2019_generated_password_that_is_full_256bit;
     },
-    
+
     checkEncryptionPassword: function(input,slideMessage) {
         input = $(input);
         var crypto = window.filesender.crypto_app();
@@ -976,7 +976,7 @@ filesender.ui.isUserGettingALink = function() {
     var gal = false;
     if($('.get_a_link_top_selector').length) {
         gal = $('.get_a_link_top_selector').is(':checked');
-    }    
+    }
     return gal;
 }
 filesender.ui.isUserAddMeToRecipients = function() {
@@ -1732,7 +1732,7 @@ filesender.ui.updateSizeInfo = function () {
                  };
 
     filesender.ui.nodes.stats.number_of_files.find('.value').text(lang.tr('files_transferred_display').r( params ));
-    filesender.ui.nodes.stats.size.find('.value').text(lang.tr('size_transferred_display').r( params ));    
+    filesender.ui.nodes.stats.size.find('.value').text(lang.tr('size_transferred_display').r( params ));
     filesender.ui.nodes.stats.filecount.text(filecount);
     filesender.ui.nodes.stats.sendingsize.text(sizetxt);
 
@@ -1912,6 +1912,7 @@ $(function() {
         // sending the remains of the files to complete the upload.
         if( filesender.ui.reuploading ) {
             filesender.ui.nodes.stages.confirm.click();
+            filesender.ui.setFileList(2, 4);
             return;
         }
 
@@ -1923,13 +1924,13 @@ $(function() {
             $('#transfer-link').prop("checked", true);
             filesender.ui.onChangeTransferType("transfer-link");
         }
-        
+
         // If there is only one choice then we should already make it
         if($('.get_a_link_top_selector').length==0) {
             $('#transfer-email').prop("checked", true);
             filesender.ui.onChangeTransferType("transfer-email");
         }
-        
+
         var get_a_link_checked = filesender.ui.isUserGettingALink();
         filesender.ui.handle_get_a_link_change();
         if( get_a_link_checked ) {
@@ -2094,7 +2095,7 @@ $(function() {
             if($('#encryption_password_show_container').is(":hidden")) {
                 $('#encryption_password_show_container').show();
             }
-            
+
             filesender.ui.files.checkEncryptionPassword($(this),true);
             filesender.ui.evalUploadEnabled();
         }, checkEncryptionPassword_delay )
@@ -2502,7 +2503,7 @@ $(function() {
             e.stopImmediatePropagation();
         }
     });
-    
+
 
     // Set message to display if the user changes pages / close tab / close browser
     window.onbeforeunload = function() {
@@ -2584,16 +2585,16 @@ $(function() {
         form.find('.pausebutton').prop("disabled",true);
         return false;
     });
-        
+
     form.find('.resumebutton').on('click', function(e) {
         var force = filesender.ui.automatic_resume_retries > 0;
         resume( force, true );
         form.find('.pausebutton').prop("disabled", false);
         form.find('.resumebutton').prop("disabled", true);
-            
+
         return false;
     });
-    
+
 
     if(auth == 'guest') {
         var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
@@ -2681,6 +2682,10 @@ $(function() {
                 // not be changed for the transfer once it is created.
                 filesender.ui.nodes.stages.nextStep.html( filesender.ui.nodes.stages.confirm.html() );
                 filesender.ui.reuploading = true;
+
+                filesender.ui.goToStage(2);
+
+                window.location.hash = "#uploading";
             };
 
             var forget = function() {
@@ -2704,9 +2709,9 @@ $(function() {
             } else {
 
                 var prompt = filesender.ui.popup( lang.tr('restart_failed_transfer'),
-                    {load:   {callback: load},
-                        forget: {callback: forget, className: 'btn-danger'},
-                        later:  {callback: later}},
+                    {load:   {callback: load, className: 'fs-button fs-button--info'},
+                        forget: {callback: forget, className: 'fs-button fs-button--danger'},
+                        later:  {callback: later, className: 'fs-button fs-button--info'}},
                     {onclose: later});
                 $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
                 var tctn = $('<div class="failed_transfer" />').appendTo(prompt);
