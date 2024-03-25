@@ -2682,13 +2682,13 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ### auth_sp_saml_uid_attribute
 
-* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *eduPersonTargetedID* or *eduPersonPrincipalName* (watch the spelling!).  ePTID is an anonymous identifier making it hard to link FileSender logging to a specific user which may or may not be what you want.  ePTID will protect your users against rogue IdPs.  eduPersonPrincipalName will usually give you an identifier like <username>@<domain>.
+* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *pairwise-id* or *subject-id* (watch the spelling!). 
 * __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
 * __type:__ string
-* __default:__ eduPersonTargetedId
+* __default:__ pairwise-id
 * __available:__ since version 1.0
 * __1.x name:__ saml_uid_attribute
-* __comment:__
+* __comment:__ Note that the default has changed from the deprecated eduPersonTargetedId to pairwise-id in version 2.48.
 
 ### auth_sp_saml_entitlement_attribute
 
@@ -2750,7 +2750,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ### auth_sp_shibboleth_uid_attribute
 
-* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *eduPersonTargetedID* or *eduPersonPrincipalName* (watch the spelling!).  ePTID is an anonymous identifier making it hard to link FileSender logging to a specific user which may or may not be what you want.  ePTID will protect your users against rogue IdPs.  eduPersonPrincipalName will usually give you an identifier like <username>@<domain>.
+* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use pairwise-id.
 * __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
 * __type:__ string
 * __default:__
