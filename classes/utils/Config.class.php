@@ -377,6 +377,19 @@ class Config
 
         self::$parameters['download_verification_code_valid_duration_minutes'] = floor(self::$parameters['download_verification_code_valid_duration'] / 60);
 
+        $k = 'storage_filesystem_per_day_min_days_to_clean_empty_directories';
+        if( -1 == self::$parameters[$k] ) {
+            self::$parameters[$k] = self::$parameters['max_transfer_days_valid'];
+            $kmax = 'storage_filesystem_per_day_max_days_to_clean_empty_directories';
+            if( self::$parameters[$kmax] < self::$parameters[$k] ) {
+                self::$parameters[$kmax] = self::$parameters[$k] + 30;
+            }
+        }
+
+        if( Config::get("storage_filesystem_per_day_max_days_to_clean_empty_directories") < Config::get("storage_filesystem_per_day_min_days_to_clean_empty_directories")) {
+            throw new ConfigBadParameterException("storage_filesystem_per_day_max_days_to_clean_empty_directories must be larger than storage_filesystem_per_day_min_days_to_clean_empty_directories");
+        }
+        
         // verify classes are happy
         Guest::validateConfig();
         ClientLog::validateConfig();

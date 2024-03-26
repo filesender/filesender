@@ -136,6 +136,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 ?>
     valid_filename_regex: '<?php echo $vfregex ?>',
     base_path: '<?php echo GUI::path() ?>',
+    site_url: '<?php echo Config::get('site_url') ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
         enabled:  <?php echo value_to_TF(Config::get('autocomplete')) ?>,

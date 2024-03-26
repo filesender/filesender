@@ -170,7 +170,15 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 });
 
 
+?>
 
+<?php if( Config::get('read_only_mode')) { ?>
+    <div class="box">
+        {tr:read_only_mode}
+    </div>
+<?php
+    return;
+}
 ?>
 
 <div class="container">

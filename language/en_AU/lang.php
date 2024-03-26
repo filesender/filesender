@@ -835,3 +835,7 @@ $lang['enter_transfer_name'] = 'Enter the transfer name (optional)';
 $lang['files_transferred_display'] = '{filecount}';
 $lang['size_transferred_display'] = '{size_human_readable}';
 $lang['an_initiative_by'] = 'An initiative by';
+
+$lang['read_only_mode'] = 'This FileSender is in read only mode. You can continue to download existing files but can not upload new files or create new guests at the moment.';
+$lang['auth_sp_attribute_email_hint'] = 'Your authentication system is missing the required email attribute for the user';
+

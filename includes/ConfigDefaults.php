@@ -170,6 +170,9 @@ $default = array(
     'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',
     'storage_filesystem_per_day_buckets' => false,
     'storage_filesystem_per_hour_buckets' => false,
+    'storage_filesystem_per_day_max_age_to_create_directory' => 7,
+    'storage_filesystem_per_day_min_days_to_clean_empty_directories' => -1,
+    'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'sender',
@@ -364,6 +367,7 @@ $default = array(
     'download_show_download_links' => false,
 
     'upload_show_play_pause' => false,
+    'read_only_mode' => false,
     
     'transfer_options' => array(
         'email_me_copies' => array(

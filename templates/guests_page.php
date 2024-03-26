@@ -80,9 +80,16 @@ use ( $new_guests_can_only_send_to_creator,
     }
 };
 
+$read_only_mode = Config::get('read_only_mode');
+
 
 ?>
 
+<?php if($read_only_mode) { ?>
+<div class="box">
+    {tr:read_only_mode}
+</div>
+<?php } else { ?>
 <div class="fs-invitations">
     <div class="container">
         <div class="row">
@@ -124,5 +131,6 @@ use ( $new_guests_can_only_send_to_creator,
         </div>
     </div>
 </div>
+<?php } ?>
 
 <script type="text/javascript" src="{path:js/guests_page.js}"></script>
