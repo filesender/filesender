@@ -100,7 +100,7 @@ window.filesender.logger = {
         var blob = new Blob([JSON.stringify(obj, null, '\t')], {'type':'text/plain'});
         saveAs(blob, 'filesender-clientlog.txt');
     }
-    
+
 };
 
 filesender.logger.nopwatcher = {
@@ -130,9 +130,11 @@ filesender.logger.nopwatcher = {
                 this.msg.show();
 
             } else {
-                this.msg = $('<div class="nothing_happened_as_of_late_you_can_send_client_logs" />').appendTo('#upload_form');
+                const msgContainer = `<div class="container"><div class="row"><div id="fs-upload__msg_content" class="col-12"></div></div></div>`;
+                $(msgContainer).appendTo('#upload_form');
+                this.msg = $('<div class="nothing_happened_as_of_late_you_can_send_client_logs" />').appendTo('#fs-upload__msg_content');
                 this.msg.append(lang.tr('nothing_happened_as_of_late_you_can_send_client_logs') + ' ');
-                this.msg.append($('<button class="send_client_logs" />').text(lang.tr('send_client_logs').out()).on('click', function () {
+                this.msg.append($('<button class="send_client_logs fs-button fs-button--info" />').text(lang.tr('send_client_logs').out()).on('click', function () {
                     filesender.logger.send(function () {
                         filesender.ui.notify('success', lang.tr('client_logs_sent'));
                     });
