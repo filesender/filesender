@@ -117,6 +117,9 @@ class RestServer
             if (!$type && array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) {
                 $type = $_SERVER['HTTP_CONTENT_TYPE'];
             }
+            if(!$type) {
+                $type = '';
+            }
             
             // Parse content type
             $type_parts = array_map('trim', explode(';', $type));

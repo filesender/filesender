@@ -37,7 +37,7 @@ if (!defined('FILESENDER_BASE')) {
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
-
+use function PHP81_BC\strftime;
 
 /**
  * Utility functions holder
@@ -192,7 +192,8 @@ class Utilities
             $dateFormat = '%d %b %Y %T';
         }
 
-        return utf8_encode(strftime($dateFormat, $timestamp));
+        $ts = strftime($dateFormat, (int)$timestamp);
+        return mb_convert_encoding( $ts, 'UTF-8' );
     }
     
     /**
