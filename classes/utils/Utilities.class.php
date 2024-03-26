@@ -37,7 +37,6 @@ if (!defined('FILESENDER_BASE')) {
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
-use function PHP81_BC\strftime;
 
 /**
  * Utility functions holder
@@ -185,15 +184,45 @@ class Utilities
 
         $lid = $with_time ? 'datetime_format' : 'date_format';
         $dateFormat = Lang::trWithConfigOverride($lid);
+        if( $dateFormat == "%d %b %Y" ) {
+            $dateFormat = 'dd MMM yyyy';
+        }
+        if( $dateFormat == "%d %b %Y %T" ) {
+            $dateFormat = 'dd MMM yyyy HH:mm:ss';
+        }
         if ($dateFormat == '{date_format}') {
-            $dateFormat = '%d %b %Y';
+            $dateFormat = 'dd MMM yyyy';
         }
         if ($dateFormat == '{datetime_format}') {
-            $dateFormat = '%d %b %Y %T';
+            $dateFormat = 'dd MMM yyyy HH:mm:ss';
         }
 
-        $ts = strftime($dateFormat, (int)$timestamp);
-        return mb_convert_encoding( $ts, 'UTF-8' );
+        $timezone = null;
+        $al = Lang::getUserAcceptedLanguages();
+        // use default php.ini value if all else fails
+        $al[] = null; 
+        if( str_contains($dateFormat,'%')) {
+            $dateFormat = null;
+        }
+        
+        foreach ($al as $k => $v) {
+
+            $fmt = new IntlDateFormatter(
+                $v,
+                IntlDateFormatter::MEDIUM,
+                $with_time ? IntlDateFormatter::MEDIUM : IntlDateFormatter::NONE,
+                $timezone,
+                IntlDateFormatter::GREGORIAN,
+                $dateFormat
+            );        
+            $ts = datefmt_format( $fmt , (int)$timestamp );
+            if( false !== $ts ) {
+                return mb_convert_encoding( $ts, 'UTF-8' );
+            }
+        }
+
+        Logger::error("formatDate() did not find a locale which should never happen");
+        return "";
     }
     
     /**
