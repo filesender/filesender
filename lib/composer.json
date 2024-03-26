@@ -6,7 +6,7 @@
 	"guzzlehttp/psr7": "2.6.2",
         "maennchen/zipstream-php": "2.4.0",
         "owasp/csrf-protector-php": "^1.0",
-        "ramsey/uuid": "^4.7"
-        
+        "ramsey/uuid": "^4.7",
+        "php81_bc/strftime": "^0.7.4"
     }
 }

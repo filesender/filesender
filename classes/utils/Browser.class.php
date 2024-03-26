@@ -45,6 +45,7 @@ class Browser
     protected $isChrome  = false;
     protected $isFirefox = false;
     protected $isSafari  = false;
+    protected $isEdge  = false;
     protected $allowStreamSaver  = false;
     protected $allowFileSystemWritableFileStream = false;
     
