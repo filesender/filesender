@@ -368,6 +368,9 @@ $default = array(
 
     'upload_show_play_pause' => false,
     'read_only_mode' => false,
+
+    'date_format_style' => 'medium',
+    'time_format_style' => 'medium',
     
     'transfer_options' => array(
         'email_me_copies' => array(

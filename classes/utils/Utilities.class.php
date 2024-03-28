@@ -182,35 +182,42 @@ class Utilities
 
         Lang::setlocale_fromUserLang( LC_TIME );
 
-        $lid = $with_time ? 'datetime_format' : 'date_format';
-        $dateFormat = Lang::trWithConfigOverride($lid);
-        if( $dateFormat == "%d %b %Y" ) {
-            $dateFormat = 'dd MMM yyyy';
+        $dateFormatStyle = IntlDateFormatter::MEDIUM;
+        $timeFormatStyle = IntlDateFormatter::NONE;
+        if( $with_time ) {
+            $timeFormatStyle = IntlDateFormatter::MEDIUM;
         }
-        if( $dateFormat == "%d %b %Y %T" ) {
-            $dateFormat = 'dd MMM yyyy HH:mm:ss';
+        $v = Config::get("date_format_style");
+        switch($v) {
+            case "full":   $dateFormatStyle = IntlDateFormatter::FULL; break;
+            case "long":   $dateFormatStyle = IntlDateFormatter::LONG; break;
+            case "medium": $dateFormatStyle = IntlDateFormatter::MEDIUM; break;
+            case "short":  $dateFormatStyle = IntlDateFormatter::SHORT; break;
         }
-        if ($dateFormat == '{date_format}') {
-            $dateFormat = 'dd MMM yyyy';
+        if( $with_time ) {
+            $v = Config::get("time_format_style");
+            switch($v) {
+                case "full":   $timeFormatStyle = IntlDateFormatter::FULL; break;
+                case "long":   $timeFormatStyle = IntlDateFormatter::LONG; break;
+                case "medium": $timeFormatStyle = IntlDateFormatter::MEDIUM; break;
+                case "short":  $timeFormatStyle = IntlDateFormatter::SHORT; break;
+            }
         }
-        if ($dateFormat == '{datetime_format}') {
-            $dateFormat = 'dd MMM yyyy HH:mm:ss';
-        }
+
+                
 
         $timezone = null;
         $al = Lang::getUserAcceptedLanguages();
         // use default php.ini value if all else fails
         $al[] = null; 
-        if( str_contains($dateFormat,'%')) {
-            $dateFormat = null;
-        }
+        $dateFormat = null;
         
         foreach ($al as $k => $v) {
 
             $fmt = new IntlDateFormatter(
                 $v,
-                IntlDateFormatter::MEDIUM,
-                $with_time ? IntlDateFormatter::MEDIUM : IntlDateFormatter::NONE,
+                $dateFormatStyle,
+                $timeFormatStyle,
                 $timezone,
                 IntlDateFormatter::GREGORIAN,
                 $dateFormat
