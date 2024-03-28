@@ -255,6 +255,52 @@ class Lang
     }
 
     /**
+     * Uses data from http HTTP_ACCEPT_LANGUAGE header and the explicit user preference from the profile page first.
+     */
+    public static function getUserAcceptedLanguages()
+    {
+        $stack = array();
+        $codes = array();
+        
+        foreach (array_map('trim', explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])) as $part) {
+            $code = $part;
+            $weight = 1;
+            if (strpos($part, ';') !== false) {
+                $part = array_map('trim', explode(';', $part));
+                $code = array_shift($part);
+                foreach ($part as $p) {
+                    if (preg_match('`^q=([0-9]+\.[0-9]+)$`', $p, $m)) {
+                        $weight = (float)$m[1];
+                    }
+                }
+            }
+            $codes[$code] = $weight;
+        }
+        
+        uasort($codes, function ($a, $b) {
+            return ($b > $a) ? 1 : (($b < $a) ? -1 : 0);
+        });
+
+        // user preference first
+        if (Auth::user()) {
+            $stack[] = Auth::user()->lang;
+        }
+
+        foreach ($codes as $code => $weight) {
+            $code = self::realCode($code);
+            if ($code && !in_array($code, $stack)) {
+                $stack[] = $code;
+            }
+        }
+
+        if (!in_array('en', $stack)) {
+            $stack[] = 'en';
+        }
+        
+        return $stack;
+    }
+    
+    /**
      * This is like the PHP setlocale but it respects the language the 
      * user has selected and tries to work with that selection into 
      * something that the php setlocale() can handle.
