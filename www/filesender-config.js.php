@@ -208,6 +208,8 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     encryption_password_must_have_special_characters: <?php echo value_to_TF(Config::get('encryption_password_must_have_special_characters')) ?>,
 
     download_verification_code_enabled: <?php echo value_to_TF(Config::get('download_verification_code_enabled')) ?>,
+
+    make_download_links_clickable: <?php echo value_to_TF(Config::get('make_download_links_clickable')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
