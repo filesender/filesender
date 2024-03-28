@@ -167,7 +167,7 @@ $user = Auth::user();
                                 echo <<<EOT
                                   <form action="$link" method="post" >
                                     <button type="submit" class="fs-button fs-button--danger">
-                                        ${icon}
+                                        {$icon}
                                         <span>$txt</span>
                                     </button>
                                   </form>
