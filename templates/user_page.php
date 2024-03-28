@@ -83,6 +83,16 @@ $user = Auth::user();
                     }
                     ?>
 
+                    <div class='fs-select pt-3'>
+                        <label for='user_theme'>{tr:theme}</label>
+                        <select id="user_theme" name="user_theme">
+                            <option value="device" selected>{tr:device}</option>
+                            <option value="default">{tr:light}</option>
+                            <option value="dark">{tr:dark}</option>
+                        </select>
+                        <small>{tr:theme_info}</small>
+                    </div>
+
                     <div class="fs-switch fs-switch--small">
                         <input id="previous-settings" type="checkbox" name="save_transfer_preferences"  <?php echo isChecked($user->save_transfer_preferences); ?> />
                         <label for="previous-settings">

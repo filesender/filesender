@@ -145,7 +145,8 @@ class GUI
                     'js/crypter/crypto_app.js',
                     'js/pbkdf2dialog.js',
                     'js/notification.js',
-                    'lib/xregexp/xregexp-all.js'
+                    'lib/xregexp/xregexp-all.js',
+                    'js/theme.js',
         );
 
 

@@ -21,7 +21,7 @@
 }
 
 .fs-table.fs-table--striped tbody tr:nth-child(odd) {
-  background-color: var(--fs-blue-100);
+  background-color: var(--fs-hightlight-bg);
 }
 
 .fs-table.fs-table--selectable tbody td:not(.actions) {
@@ -29,7 +29,7 @@
 }
 
 .fs-table.fs-table--selectable tbody tr:hover {
-  background-color: var(--fs-blue-200) !important;
+  background-color: var(--fs-hightlight-bg-secondary) !important;
 }
 
 .fs-table__check-action {

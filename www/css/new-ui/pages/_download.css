@@ -1,6 +1,6 @@
 .fs-download {
     flex: 1;
-    background: var(--fs-light);
+    background: var(--fs-bg-color);
     padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
 }
 

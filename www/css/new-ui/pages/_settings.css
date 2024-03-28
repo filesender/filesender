@@ -1,6 +1,6 @@
 .fs-settings {
     flex: 1;
-    background: var(--fs-light);
+    background: var(--fs-bg-color);
     padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
     justify-content: flex-start;
 }
@@ -19,6 +19,15 @@
     margin-top: var(--fs-spacing-8x);
 }
 
+.fs-settings__preferences .fs-select label,
+.fs-settings__preferences .fs-switch label{
+    min-width: var(--fs-spacing-7x);
+}
+
+.fs-settings__preferences .fs-switch label {
+    padding-left: var(--fs-spacing-10x) !important;
+}
+
 .fs-settings__preferences .fs-switch {
     margin-top: var(--fs-spacing-5x);
 }
@@ -31,7 +40,7 @@
 .fs-settings__account-info {
     display: flex;
     flex-direction: column;
-    background: var(--fs-blue-100);
+    background: var(--fs-hightlight-bg);
     border-radius: var(--fs-spacing-4x);
     padding: var(--fs-spacing-4x);
     margin-top: var(--fs-spacing-4x);

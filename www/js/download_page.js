@@ -359,9 +359,9 @@ $(function() {
     var button_zipdl = page.find('.archive_download_frame');
     var button_tardl = page.find('.archive_tar_download_frame');
     if( macos || linuxos ) {
-        button_tardl.addClass('btn-success');
+        button_tardl.addClass('fs-button fs-button--success');
     } else {
-        button_zipdl.addClass('btn-success');
+        button_zipdl.addClass('fs-button fs-button--success');
     }
 
     if( window.filesender.config.download_verification_code_enabled ) {

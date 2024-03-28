@@ -9,24 +9,24 @@
 //
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *   Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
- * 
+ *
  * *   Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * 
+ *
  * *   Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -117,10 +117,6 @@ img {
     background: $body-bg;
 }
 
-a {
-    color: #333333;
-}
-
 p {
   margin: 1em;
 }
@@ -139,17 +135,13 @@ abbr {
     width: 90%;
 }
 
-    
+
 div.not_displayed {
     display: none;
 }
 
 .crypto_not_supported_message {
     display: none;
-}
-
-.get_a_link_lock {
-    background: #eeeeff;
 }
 
 .number {
@@ -691,7 +683,7 @@ td .desc {
     height: 15em;
     text-align: center;
     max-height: 300em;
-    overflow-y: scroll;   
+    overflow-y: scroll;
 }
 
 
@@ -757,7 +749,7 @@ td .desc {
 }
 
 #upload_form .files_actions {
-    margin: 0.5em -1em 0 -1em; 
+    margin: 0.5em -1em 0 -1em;
 }
 
 #upload_form .files_actions div a {
@@ -1138,7 +1130,7 @@ table.guests .guest .to .errors .details {
     padding-top: 1em;
 }
 .avfile .name {
-    font-size:1.5em;    
+    font-size:1.5em;
     padding-bottom: 1em;
 }
 
@@ -1354,5 +1346,5 @@ table.paginator a {
 }
 
 @import "local-variables.scss";
-             
-                              
+
+
