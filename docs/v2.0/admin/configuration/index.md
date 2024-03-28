@@ -151,6 +151,8 @@ A note about colours;
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
+* [date_format_style](#date_format_style)
+* [time_format_style](#time_format_style)
 
 
 
@@ -1606,6 +1608,25 @@ User language detection is done in the following order:
 * __default:__ false
 * __available:__ since version 2.48
 * __comment:__ If you are performing a major upgrade you might like to retain an original FileSender installation in read only mode so users can continue to download existing files and redirect visitors to a new site for new uploads. This may be useful for upgrading between major FileSender releases such as the 2.x series to the 3.x series and also for change in infrastructure such as moving to different disk pools or storage back ends.
+
+
+### date_format_style
+* __description:__  High level selection of the style to format a date with.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ medium
+* __available:__ since version 3.0beta7
+* __comment:__ This can be one of full, long, medium, or short. This will be used to format dates and times with the locale according to IntlDateFormatter. The local is taken from the user profile, and then from the http accepted languages sent from the browser so it should match which language and locale the user is most confortable with. See for example https://www.php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants This replaces the use of the date_format translation string in the 2.x series of FileSender.
+
+
+### time_format_style
+* __description:__  High level selection of the style to format a date with a time component with.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ medium
+* __available:__ since version 3.0beta7
+* __comment:__ This can be one of full, long, medium, or short. This will be used to format dates and times with the locale according to IntlDateFormatter. The local is taken from the user profile, and then from the http accepted languages sent from the browser so it should match which language and locale the user is most confortable with. See for example https://www.php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants This replaces the use of the datetime_format translation string in the 2.x series of FileSender.
+
 
 
 
