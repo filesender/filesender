@@ -153,7 +153,7 @@ A note about colours;
 * [read_only_mode](#read_only_mode)
 * [date_format_style](#date_format_style)
 * [time_format_style](#time_format_style)
-
+* [make_download_links_clickable](#make_download_links_clickable)
 
 
 ## Transfers
@@ -1627,6 +1627,14 @@ User language detection is done in the following order:
 * __available:__ since version 3.0beta7
 * __comment:__ This can be one of full, long, medium, or short. This will be used to format dates and times with the locale according to IntlDateFormatter. The local is taken from the user profile, and then from the http accepted languages sent from the browser so it should match which language and locale the user is most confortable with. See for example https://www.php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants This replaces the use of the datetime_format translation string in the 2.x series of FileSender.
 
+
+### make_download_links_clickable
+* __description:__  Allow the user to click on links to downloads instead of needing to copy and paste them to navigate to the transfer.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta7
+* __comment:__ The transfer link can be clicked on when get a link is used and an upload is compete.
 
 
 

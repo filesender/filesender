@@ -1311,7 +1311,12 @@ filesender.ui.startUpload = function() {
         filesender.ui.stage = 4;
 
         $('.fs-transfer__upload-link .fs-copy > span').html(filesender.ui.transfer.download_link);
-
+        if( filesender.config.make_download_links_clickable ) {
+            $('.fs-transfer__upload-link .fs-copy > span').on('click', function(e){
+                filesender.ui.redirect(filesender.ui.transfer.download_link);
+            });
+        }
+        
         $('#copy-to-clipboard').on('click', function(e){
             filesender.ui.copyToClipboard(filesender.ui.transfer.download_link);
         });
