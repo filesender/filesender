@@ -165,8 +165,9 @@ class Config
         }
 
         // Load config regex overrides if used and present
+        // if not authenticated then do not throw, just do not load these files
         $auth_config_regex_files = self::get('auth_config_regex_files');
-        if( !empty($auth_config_regex_files) && is_array($auth_config_regex_files) && Auth::isAuthenticated()) {
+        if( !empty($auth_config_regex_files) && is_array($auth_config_regex_files) && Auth::isAuthenticated(false)) {
                 $auth_attrs = Auth::attributes();
                 foreach ($auth_config_regex_files as $attr=>$regex_and_configs) {
                         if (!is_array($regex_and_configs)) {
