@@ -210,6 +210,10 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     download_verification_code_enabled: <?php echo value_to_TF(Config::get('download_verification_code_enabled')) ?>,
 
     make_download_links_clickable: <?php echo value_to_TF(Config::get('make_download_links_clickable')) ?>,
+    client_send_current_timezone_to_server: <?php echo value_to_TF(Config::get('client_send_current_timezone_to_server')) ?>,
+
+
+
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
@@ -233,4 +237,10 @@ window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload = fu
 window.filesender.config.useFileSystemWritableFileStreamForDownload = function() {
     return window.filesender.config.allow_filesystemwritablefilestream
         && window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload();
+}
+
+
+if( filesender.config && filesender.config.client_send_current_timezone_to_server ) {
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = "x-filesender-timezone=" + tz;
 }

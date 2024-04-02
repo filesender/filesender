@@ -371,6 +371,9 @@ $default = array(
 
     'date_format_style' => 'medium',
     'time_format_style' => 'medium',
+
+    'valid_timezone_regex' => '@^[_/a-z]+$@i',
+    'client_send_current_timezone_to_server' => false,
     
     'transfer_options' => array(
         'email_me_copies' => array(

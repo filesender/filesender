@@ -35,3 +35,4 @@ if (window.filesender.supports.workers) {
 window.filesender.log = function( msg ) {
     console.log( msg );
 }
+

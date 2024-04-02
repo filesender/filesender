@@ -204,13 +204,20 @@ class Utilities
             }
         }
 
-                
 
         $timezone = null;
         $al = Lang::getUserAcceptedLanguages();
         // use default php.ini value if all else fails
         $al[] = null; 
         $dateFormat = null;
+
+        if( !empty($_COOKIE["x-filesender-timezone"])) {
+            $tz = $_COOKIE["x-filesender-timezone"];
+            if( !empty(Config::get("valid_timezone_regex"))
+                && preg_match(Config::get("valid_timezone_regex"), $tz)) {
+                $timezone = $tz;
+            }
+        }
         
         foreach ($al as $k => $v) {
 
