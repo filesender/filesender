@@ -154,6 +154,8 @@ A note about colours;
 * [date_format_style](#date_format_style)
 * [time_format_style](#time_format_style)
 * [make_download_links_clickable](#make_download_links_clickable)
+* [valid_timezone_regex](#valid_timezone_regex)
+* [client_send_current_timezone_to_server](#client_send_current_timezone_to_server)
 
 
 ## Transfers
@@ -1637,6 +1639,22 @@ User language detection is done in the following order:
 * __comment:__ The transfer link can be clicked on when get a link is used and an upload is compete.
 
 
+### valid_timezone_regex
+* __description:__  A full php regex expression including the leading and trailing //i type characters to match a valid timezone string sent from the browser
+* __mandatory:__ no
+* __type:__ string (php regex including the leading and trailing //i characters)
+* __default:__ '@^[_/a-z]+$@i'
+* __available:__ since version 3.0beta7
+* __comment:__ This regex is used to match timezone data passed from the browser. If the regex does not match the timezone is considered invalid and ignored.
+
+
+### client_send_current_timezone_to_server
+* __description:__  If enabled the client will send the current timezone to the server. This could be a privacy issue so it is off by default.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta7
+* __comment:__ If enabled the client will share the current timezone setting to the server so it can format dates as the client expects.
 
 
 ---
