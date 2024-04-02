@@ -378,7 +378,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                          </span>
                                                     </div>
                                                     <span class="fs-radio__info">
-                                                        - {tr:a_transfer_link_tip}
+                                                        {tr:a_transfer_link_tip}
                                                     </span>
                                                 </label>
                                             </div>
@@ -395,7 +395,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                     </span>
                                                 </div>
                                                 <span class="fs-radio__info">
-                                                    - {tr:an_email_tip}
+                                                    {tr:an_email_tip}
                                                 </span>
                                             </label>
                                         </div>
