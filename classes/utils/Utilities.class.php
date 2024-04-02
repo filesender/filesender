@@ -213,7 +213,8 @@ class Utilities
 
         if( !empty($_COOKIE["x-filesender-timezone"])) {
             $tz = $_COOKIE["x-filesender-timezone"];
-            if( preg_match(Config::get("valid_timezone_regex"), $tz)) {
+            if( !empty(Config::get("valid_timezone_regex"))
+                && preg_match(Config::get("valid_timezone_regex"), $tz)) {
                 $timezone = $tz;
             }
         }

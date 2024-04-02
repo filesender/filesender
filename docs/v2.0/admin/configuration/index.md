@@ -1645,7 +1645,7 @@ User language detection is done in the following order:
 * __type:__ string (php regex including the leading and trailing //i characters)
 * __default:__ '@^[_/a-z]+$@i'
 * __available:__ since version 3.0beta7
-* __comment:__ This regex is used to match timezone data passed from the browser. If the regex does not match the timezone is considered invalid and ignored.
+* __comment:__ This regex is used to match timezone data passed from the browser. If the regex does not match the timezone is considered invalid and ignored. Set this to '' to explicitly disable this feature.
 
 
 ### client_send_current_timezone_to_server
