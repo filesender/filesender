@@ -221,7 +221,7 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
                     <div class="fs-transfer-detail__link">
                         <h2>{tr:download_link}</h2>
                         <div class="fs-copy">
-                            <span><?php echo $transfer->first_recipient->download_link ?></span>
+                            <span class="download_link"><?php echo $transfer->first_recipient->download_link ?></span>
 
                             <button id="copy-to-clipboard" type="button" class="fs-button">
                                 <i class="fa fa-copy"></i>

@@ -308,4 +308,11 @@ $(function() {
             copyToClipboard(value);
         }
     });
+
+    if( filesender.config.make_download_links_clickable ) {
+        $('.download_link').on('click', function() {
+            filesender.ui.redirect($(this).text());
+        });
+    }
+    
 });
