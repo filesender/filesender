@@ -834,8 +834,12 @@ $lang['optional_message'] = 'Optional message';
 $lang['enter_transfer_name'] = 'Enter the transfer name (optional)';
 $lang['files_transferred_display'] = '{filecount}';
 $lang['size_transferred_display'] = '{size_human_readable}';
-$lang['an_initiative_by'] = 'An initiative by';
-
+$lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
 $lang['read_only_mode'] = 'This FileSender is in read only mode. You can continue to download existing files but can not upload new files or create new guests at the moment.';
 $lang['auth_sp_attribute_email_hint'] = 'Your authentication system is missing the required email attribute for the user';
+$lang['theme'] = 'Theme';
+$lang['device'] = 'Device';
+$lang['light'] = 'Light';
+$lang['dark'] = 'Dark';
+$lang['theme_info'] = "The theme is only saved in the browser";
 
