@@ -128,6 +128,7 @@ A note about colours;
 ## General UI
 
 * [theme](#theme)
+* [theme_userpref_enabled](#theme_userpref_enabled)
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
@@ -1404,6 +1405,14 @@ User language detection is done in the following order:
 * __available:__ since version 2.8
 * __comment:__ You can not select absolute or relative paths using this parameter. Your theme directory must exist inside the existing template directory.
 
+### theme_userpref_enabled
+
+* __description:__ allow user to change theme.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.0
+* __comment:__ allow user to select theme in user_page
 
 
 ### autocomplete

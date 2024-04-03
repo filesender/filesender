@@ -45,22 +45,23 @@ const THEMES = {
  * Change UI theme
  */
 filesender.ui.changeTheme = function(theme) {
-    let themeStyle = `<link type='text/css' rel='stylesheet' href='/filesender/css/themes/${THEMES.LIGHT_THEME}.css'>`;
+    let path = filesender.config.site_url.replace(/(https?:\/\/)?([^/]+)/, '');
+    let themeStyle = `<link type='text/css' rel='stylesheet' href='${path}css/themes/${THEMES.LIGHT_THEME}.css'>`;
 
     if (theme !== THEMES.DEVICE_THEME) {
-        let currentTheme = $(`link[href='/filesender/css/themes/${THEMES.LIGHT_THEME}.css']`);
+        let currentTheme = $(`link[href='${path}css/themes/${THEMES.LIGHT_THEME}.css']`);
 
         if (!currentTheme || currentTheme.length === 0) {
-            currentTheme = $(`link[href='/filesender/css/themes/${THEMES.DARK_THEME}.css']`);
+            currentTheme = $(`link[href='${path}css/themes/${THEMES.DARK_THEME}.css']`);
         }
 
         if (currentTheme && currentTheme.length > 0) {
             currentTheme[0].remove();
-            themeStyle = `<link type='text/css' rel='stylesheet' href='/filesender/css/themes/${theme}.css'>`;
+            themeStyle = `<link type='text/css' rel='stylesheet' href='${path}css/themes/${theme}.css'>`;
         }
     } else {
         if (filesender.ui.getSystemTheme() === THEMES.DARK_THEME) {
-            themeStyle = `<link type='text/css' rel='stylesheet' href='/filesender/css/themes/${THEMES.DARK_THEME}.css'>`;
+            themeStyle = `<link type='text/css' rel='stylesheet' href='${path}css/themes/${THEMES.DARK_THEME}.css'>`;
         }
     }
 
