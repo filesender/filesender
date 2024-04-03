@@ -128,7 +128,7 @@ A note about colours;
 ## General UI
 
 * [theme](#theme)
-* [thmem_userpref_enabled](#theme_userpref_enabled)
+* [theme_userpref_enabled](#theme_userpref_enabled)
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
