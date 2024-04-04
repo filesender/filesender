@@ -858,7 +858,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">100%</strong>
                                 <span class="fs-progress-bar__progress">
-                                <span class="fs-progress-bar__indicator" style="width: 100%"></span>
+                                <span class="fs-progress-bar__indicator"></span>
                             </span>
                             </div>
                             <div class="fs-transfer__upload-speed-info">
