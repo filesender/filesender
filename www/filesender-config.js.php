@@ -240,7 +240,7 @@ window.filesender.config.useFileSystemWritableFileStreamForDownload = function()
 }
 
 
-if( filesender.config && filesender.config.client_send_current_timezone_to_server ) {
+if( window.filesender.config && window.filesender.config.client_send_current_timezone_to_server ) {
     var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     document.cookie = "x-filesender-timezone=" + tz;
 }
