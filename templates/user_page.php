@@ -423,7 +423,7 @@ $user = Auth::user();
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://sam/filesender/rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
+                                        <a href="{config:site_url}/rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
                                             {tr:download_python_cli_configuration}
                                         </a>
                                     </li>
