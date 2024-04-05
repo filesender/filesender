@@ -218,11 +218,12 @@ class RestEndpointUser extends RestEndpoint
             $username = $user->saml_user_identification_uid;
             $authsecret = $user->auth_secret;
             $site_url = Config::get('site_url');
+            $days_valid = Config::get('default_transfer_days_valid');
             
             $doc = <<<END
-[system]            
+[system]
 base_url = $site_url/rest.php
-default_transfer_days_valid = 10
+default_transfer_days_valid = $days_valid
 
 [user]
 username = $username
