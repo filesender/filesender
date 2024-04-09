@@ -368,7 +368,7 @@ class File extends DBObject
     public function beforeDelete()
     {
         Storage::deleteFile($this);
-        
+        FileCollection::removeFile( $this );
         Logger::info($this.' deleted');
     }
     
