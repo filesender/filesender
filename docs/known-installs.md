@@ -54,6 +54,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Country/Region | NREN  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 5 April 2023 |
+| Bangladesh  | BdREN  | [https://filesender.aarnet.edu.au/](https://filesender.bdren.net.bd/)    | April 2024 | 10 April 2024 |
 | Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017| 5 April 2023 |
 | Korea    | KISTI  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014|5 April 2023 |
 | Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017|5 April 2023 |
