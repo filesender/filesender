@@ -515,9 +515,8 @@ def generate_key():
     )
 
 def encrypt_chunk(data,chunkid,fileKey):
-  match encryption_details["crypt_type"]:
-    case SupportedCryptTypes.AESGCM:
-      return encrypt_chunk_aesgcm(data,chunkid,fileKey)
+  if encryption_details["crypt_type"] == SupportedCryptTypes.AESGCM:
+    return encrypt_chunk_aesgcm(data,chunkid,fileKey)
 
 def encrypt_chunk_aesgcm(data,chunkid,files_key):
   aead = files[files_key]['aead'].encode('ascii')
