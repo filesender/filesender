@@ -658,6 +658,30 @@ class Utilities
         return false;
     }
 
+    /**    
+     * This is like configMatch but expects the config key to be an array and will
+     * need an explicit string match of the $needle in the value for the key to be
+     * considered a match.
+     */
+    public static function configMatchInArray($configkey, $needle)
+    {
+        $cfg = Config::get($configkey);
+        if( !$cfg ) {
+            return false;
+        }
+        if (!is_array($cfg) && !strlen($cfg)) {
+            return false;
+        }
+        
+        // we now know the key is active, so get it as an array
+        $a = Config::getArray($configkey);
+        
+        if (in_array( $needle, $a )) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Read a value from an array validating the result.
      * If the array doesn't have the key or validation fails

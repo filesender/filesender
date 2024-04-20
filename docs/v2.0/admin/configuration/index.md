@@ -296,6 +296,7 @@ A note about colours;
 * [logs_limit_messages_from_same_ip_address](#logs_limit_messages_from_same_ip_address)
 * [trackingevents_lifetime](#trackingevents_lifetime)
 * [client_ip_key](#client_ip_key)
+* [exception_skip_logging](#exception_skip_logging)
 
 ## Webservices API
 
@@ -3203,6 +3204,20 @@ $config['log_facilities'] =
 * __default__: REMOTE_ADDR
 * __available:__ v2.2
 * __comment:__ Client identifier. Usually the default is fine, however when you have reverse proxy setups, you may need to change this to HTTP_CLIENT_IP, HTTP_X_REAL_IP, HTTP_X_FORWARDED_FOR, depending on your setup.
+
+
+### exception_skip_logging
+
+* __description:__ An array of exception class names to ignore during logging
+* __mandatory:__ no
+* __type:__ array of string
+* __default__: 
+* __available:__ v2.48
+* __comment:__ A list of php exception class names to not trigger logging messages. For example:
+	<pre><code>
+      $config['exception_skip_logging'] = array('AuthRemoteSignatureCheckFailedException');
+    </code></pre>
+
 
 
 ### logs_limit_messages_from_same_ip_address

@@ -29,6 +29,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016| 5 April 2023 |
 | Netherlands  | SURF  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010| 5 April 2023 |
 | Norway  | Sikt  | [https://filesender.sikt.no/](https://filesender.sikt.no/)    | 2009| 5 April 2023 |
+| Oman  | OMREN  | [https://mirsal.omren.om/](https://mirsal.omren.om/)   | 2020 | 15 April 2024 |
 | Poland  | PSNC/PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013| 5 April 2023 |
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011| 5 April 2023 |
 | Romania | RoEduNet | [https://fisiere.roedu.net/](https://fisiere.roedu.net/) | 2013 | 5 April 2023 |
@@ -54,6 +55,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Country/Region | NREN  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 5 April 2023 |
+| Bangladesh  | BdREN  | [https://filesender.aarnet.edu.au/](https://filesender.bdren.net.bd/)    | April 2024 | 10 April 2024 |
 | Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017| 5 April 2023 |
 | Korea    | KISTI  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014|5 April 2023 |
 | Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017|5 April 2023 |
@@ -72,7 +74,8 @@ If you want to add your FileSender installation to this list, send an email to f
 | Brazil  | RNP    | [https://filesender.rnp.br](https://filesender.rnp.br)      | Oct 2014| 5 April 2023 |
 | Chili    | REUNA    | [https://filesender.reuna.cl](https://filesender.reuna.cl)      | Sep 2013|5 April 2023 |
 | Equador   | CEDIA    | [https://filesender.cedia.org.ec](https://filesender.cedia.org.ec)  | Jun 2017|5 April 2023 |
-| Latin America  | ELCIRA  | [https://filesender.redclara.net/filesender/](https://filesender.redclara.net/filesender/)  | Oct 2013|5 April 2023 |
+| Latin America  | RedCLARA  | [https://filesender.redclara.net/filesender/](https://filesender.redclara.net/filesender/)  | Oct 2013|5 April 2023 |
+| Mexico | CUDI  | [https://cudi.edu.mx/servicios/envio](https://cudi.edu.mx/servicios/envio)   | 2016 | 15 April 2024 |
 
 
 ## NREN installations - Africa
