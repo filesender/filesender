@@ -172,7 +172,7 @@ except requests.exceptions.SSLError as exc:
     print(exc)
     print('Running with --insecure flag, ignoring warning...')
     info_response = requests.get(base_url+'/info', verify=False)
-    config_response = requests.get(base_url[-9]+'/filesender-config.js.php',verify=False)
+    config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
 
 upload_chunk_size = info_response.json()['upload_chunk_size']
 
@@ -489,7 +489,7 @@ def send_file_chunk(transfer_file_index, offset):
   filepath = files[transfer_file['name']+':'+str(transfer_file['size'])]['path']
   #putChunks
   if debug:
-    print('putChunks: '+path)
+    print('putChunks: '+filepath)
   with open(filepath, mode='rb', buffering=0) as fin:
     fin.seek(offset)
     data = fin.read(upload_chunk_size)
@@ -515,9 +515,8 @@ def generate_key():
     )
 
 def encrypt_chunk(data,chunkid,fileKey):
-  match encryption_details["crypt_type"]:
-    case SupportedCryptTypes.AESGCM:
-      return encrypt_chunk_aesgcm(data,chunkid,fileKey)
+  if encryption_details["crypt_type"] == SupportedCryptTypes.AESGCM:
+    return encrypt_chunk_aesgcm(data,chunkid,fileKey)
 
 def encrypt_chunk_aesgcm(data,chunkid,files_key):
   aead = files[files_key]['aead'].encode('ascii')

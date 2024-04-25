@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Dompdf\\Cpdf' => $vendorDir . '/dompdf/dompdf/lib/Cpdf.php',
     'LoggerInterface' => $vendorDir . '/owasp/csrf-protector-php/libs/csrf/LoggerInterface.php',
     'Stringable' => $vendorDir . '/myclabs/php-enum/stubs/Stringable.php',
     'alreadyInitializedException' => $vendorDir . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',

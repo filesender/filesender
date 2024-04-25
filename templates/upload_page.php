@@ -69,8 +69,20 @@ if(Auth::isGuest()) {
 
 
 
-
 ?>
+
+
+<?php if( Config::get('read_only_mode')) { ?>
+    <div class="box">
+        {tr:read_only_mode}
+    </div>
+<?php
+    return;
+}
+?>
+
+
+
 
 <div class="box">
     <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" autocomplete="off" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
