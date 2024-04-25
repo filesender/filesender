@@ -52,7 +52,7 @@ jobs:
       SAUCE_DONT_VERIFY_CERTS: 1
       php_extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql, mysqlnd
       php_cache_key: cache_setup_php_key_v8
-      php_version: '8.0'
+      php_version: '8.1'
       TESTINGUI: 0
 
     strategy:

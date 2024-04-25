@@ -35,6 +35,7 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
+require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
 
 /**
  * Report class
@@ -165,8 +166,7 @@ class Report
             if ($css) {
                 $html = '<style type="text/css">'.$css.'</style>'.$html;
             }
-            
-            $pdf = new DOMPDF();
+            $pdf = new Dompdf\Dompdf();
             $pdf->load_html($html);
             $pdf->render();
             

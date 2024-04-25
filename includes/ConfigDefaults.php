@@ -170,6 +170,9 @@ $default = array(
     'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',
     'storage_filesystem_per_day_buckets' => false,
     'storage_filesystem_per_hour_buckets' => false,
+    'storage_filesystem_per_day_max_age_to_create_directory' => 7,
+    'storage_filesystem_per_day_min_days_to_clean_empty_directories' => -1,
+    'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'sender',
@@ -281,12 +284,14 @@ $default = array(
     'owasp_csrf_protector_enabled' => false,
 
     'theme' => '',
+    'theme_userpref_enabled' => true,
 
     'user_can_only_view_guest_transfers_shared_with_them' => false,
 
     // see crypto_app.js for constants in the range crypto_key_version_constants
     // Generally higher is newer + better.
-    'encryption_key_version_new_files' => 1,
+    // UI3 has changed from '1' to '3' as the default (AES-GCM + PBKDF2)
+    'encryption_key_version_new_files' => 3,
 
     // for details of possible values see crypto_password_version_constants
     // in the file js/crypter/crypto_app.js
@@ -363,6 +368,13 @@ $default = array(
     'download_show_download_links' => false,
 
     'upload_show_play_pause' => false,
+    'read_only_mode' => false,
+
+    'date_format_style' => 'medium',
+    'time_format_style' => 'medium',
+
+    'valid_timezone_regex' => '@^[_/a-z]+$@i',
+    'client_send_current_timezone_to_server' => false,
     
     'transfer_options' => array(
         'email_me_copies' => array(

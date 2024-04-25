@@ -256,6 +256,8 @@ if( Config::get("download_verification_code_enabled")) {
     DownloadOneTimePassword::cleanup();
 }
 
+StorageFilesystem::deleteEmptyBucketDirectories();
+
 // If we are configured to send aggregate (anonymous) statistics
 // to a central server then we should check if it is time to do that.
 AggregateStatistic::maybeSendReport();

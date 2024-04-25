@@ -50,7 +50,7 @@
     width: var(--fs-spacing-5x);
     border-radius: 100%;
     color: var(--fs-accent) !important;
-    background: var(--fs-blue-100) !important;
+    background: var(--fs-hightlight-bg) !important;
 }
 
 .fs-link--disabled {
@@ -61,5 +61,5 @@
 
 .fs-link--disabled:hover {
     color: var(--fs-accent) !important;
-    background: var(--fs-blue-100) !important;
+    background: var(--fs-hightlight-bg) !important;
 }

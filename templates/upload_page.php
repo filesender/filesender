@@ -170,7 +170,15 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 });
 
 
+?>
 
+<?php if( Config::get('read_only_mode')) { ?>
+    <div class="box">
+        {tr:read_only_mode}
+    </div>
+<?php
+    return;
+}
 ?>
 
 <div class="container">
@@ -370,7 +378,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                          </span>
                                                     </div>
                                                     <span class="fs-radio__info">
-                                                        - {tr:a_transfer_link_tip}
+                                                        {tr:a_transfer_link_tip}
                                                     </span>
                                                 </label>
                                             </div>
@@ -387,7 +395,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                     </span>
                                                 </div>
                                                 <span class="fs-radio__info">
-                                                    - {tr:an_email_tip}
+                                                    {tr:an_email_tip}
                                                 </span>
                                             </label>
                                         </div>
@@ -850,7 +858,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">100%</strong>
                                 <span class="fs-progress-bar__progress">
-                                <span class="fs-progress-bar__indicator" style="width: 100%"></span>
+                                <span class="fs-progress-bar__indicator"></span>
                             </span>
                             </div>
                             <div class="fs-transfer__upload-speed-info">

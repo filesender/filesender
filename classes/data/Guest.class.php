@@ -285,7 +285,7 @@ class Guest extends DBObject
         $guest->created = $time;
         
         // Generate token until it is indeed unique
-        $guest->token = Utilities::generateUID(function ($token, $tries) {
+        $guest->token = Utilities::generateUID(false, function ($token, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.Guest::getDBTable().' WHERE token = :token');
             $statement->execute(array(':token' => $token));
             $data = $statement->fetch();

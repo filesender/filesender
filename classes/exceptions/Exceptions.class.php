@@ -67,16 +67,25 @@ class LoggingException extends Exception
         if ($log && (!is_array($log) || !preg_match('`[a-z]`', key($log)))) {
             $log = array('exception' => $log);
         }
+
+        $exceptionClassName = get_class($this);
+        if (Utilities::configMatchInArray(
+            'exception_skip_logging',
+            $exceptionClassName
+        )) {
+            // skip logging this
+        } else {
         
-        // Log info
-        if ($log) {
-            foreach ($log as $category => $lines) {
-                if (!is_array($lines)) {
-                    $lines = array($lines);
-                }
-                
-                foreach ($lines as $line) {
-                    $this->log($category, $line);
+            // Log info
+            if ($log) {
+                foreach ($log as $category => $lines) {
+                    if (!is_array($lines)) {
+                        $lines = array($lines);
+                    }
+                    
+                    foreach ($lines as $line) {
+                        $this->log($category, $line);
+                    }
                 }
             }
         }

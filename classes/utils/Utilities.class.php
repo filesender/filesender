@@ -38,7 +38,6 @@ if (!defined('FILESENDER_BASE')) {
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
 
-
 /**
  * Utility functions holder
  */
@@ -52,8 +51,10 @@ class Utilities
     private static $security_token = null;
     
     /**
-     * Generate a unique ID to be used as token
+     * Generate a unique ID to be used as token.
+     * All generated UUID are version 4.
      *
+     * @param bool $timestamped in the future requests a timestamped (uuidv7) or non-timestamped (uuidv4) uid
      * @param callable $unicity_checker callback used to check for uid unicity (takes uid as sole argument, returns bool telling if uid is unique), null if check not needed
      * @param int $max_tries maximum number of tries before giving up and throwing
      *
@@ -62,7 +63,7 @@ class Utilities
      * @throws UtilitiesUidGeneratorBadUnicityCheckerException
      * @throws UtilitiesUidGeneratorTriedTooMuchException
      */
-    public static function generateUID($unicity_checker = null, $max_tries = 1000)
+    public static function generateUID($timestamped = false, $unicity_checker = null, $max_tries = 1000)
     {
         // Do we need to generate a unicity-checked random UID ?
         if ($unicity_checker) {
@@ -86,27 +87,8 @@ class Utilities
             return $uid;
         }
 
-        $uuid = Ramsey\Uuid\Uuid::uuid7();
+        $uuid = Ramsey\Uuid\Uuid::uuid4();
         return $uuid->toString();
-/*
-        // Generate 16 bytes of random data (128 bits)
-        $bytes = random_bytes(16);
-        // Set bits required for a valid UUIDv4
-        $bytes[8] = chr((ord($bytes[8]) & 0x3F) | 0x80); // Eat 2 bits of entropy
-        $bytes[6] = chr((ord($bytes[6]) & 0x4F) | 0x40); // Eat 4 bits of entropy
-        // $bytes has now 122 bits of entropy
-
-        // Convert bytes to hex and split in 4-char strings (hex, so 2 bytes per string)
-        $parts = str_split(bin2hex($bytes), 4);
-        // Add dashes where UUIDs should have dashes
-        return implode('-', array(
-                $parts[0] . $parts[1],
-                $parts[2],
-                $parts[3],
-                $parts[4],
-                $parts[5] . $parts[6] . $parts[7]
-        ));
-*/
     }
 
     /**
@@ -200,16 +182,61 @@ class Utilities
 
         Lang::setlocale_fromUserLang( LC_TIME );
 
-        $lid = $with_time ? 'datetime_format' : 'date_format';
-        $dateFormat = Lang::trWithConfigOverride($lid);
-        if ($dateFormat == '{date_format}') {
-            $dateFormat = '%d %b %Y';
+        $dateFormatStyle = IntlDateFormatter::MEDIUM;
+        $timeFormatStyle = IntlDateFormatter::NONE;
+        if( $with_time ) {
+            $timeFormatStyle = IntlDateFormatter::MEDIUM;
         }
-        if ($dateFormat == '{datetime_format}') {
-            $dateFormat = '%d %b %Y %T';
+        $v = Config::get("date_format_style");
+        switch($v) {
+            case "full":   $dateFormatStyle = IntlDateFormatter::FULL; break;
+            case "long":   $dateFormatStyle = IntlDateFormatter::LONG; break;
+            case "medium": $dateFormatStyle = IntlDateFormatter::MEDIUM; break;
+            case "short":  $dateFormatStyle = IntlDateFormatter::SHORT; break;
+        }
+        if( $with_time ) {
+            $v = Config::get("time_format_style");
+            switch($v) {
+                case "full":   $timeFormatStyle = IntlDateFormatter::FULL; break;
+                case "long":   $timeFormatStyle = IntlDateFormatter::LONG; break;
+                case "medium": $timeFormatStyle = IntlDateFormatter::MEDIUM; break;
+                case "short":  $timeFormatStyle = IntlDateFormatter::SHORT; break;
+            }
         }
 
-        return utf8_encode(strftime($dateFormat, $timestamp));
+
+        $timezone = null;
+        $al = Lang::getUserAcceptedLanguages();
+        // use default php.ini value if all else fails
+        $al[] = null; 
+        $dateFormat = null;
+
+        if( !empty($_COOKIE["x-filesender-timezone"])) {
+            $tz = $_COOKIE["x-filesender-timezone"];
+            if( !empty(Config::get("valid_timezone_regex"))
+                && preg_match(Config::get("valid_timezone_regex"), $tz)) {
+                $timezone = $tz;
+            }
+        }
+        
+        foreach ($al as $k => $v) {
+
+            $fmt = new IntlDateFormatter(
+                $v,
+                $dateFormatStyle,
+                $timeFormatStyle,
+                $timezone,
+                IntlDateFormatter::GREGORIAN,
+                $dateFormat
+            );        
+            $ts = datefmt_format( $fmt , (int)$timestamp );
+            if( false !== $ts ) {
+                return mb_convert_encoding( $ts, 'UTF-8' );
+            }
+        }
+
+        Logger::error("formatDate() did not find a locale which should never happen");
+        return "";
     }
     
     /**
@@ -626,6 +653,30 @@ class Utilities
             return false;
         }
         if (preg_match('/' . $cfg . '/', $needle)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**    
+     * This is like configMatch but expects the config key to be an array and will
+     * need an explicit string match of the $needle in the value for the key to be
+     * considered a match.
+     */
+    public static function configMatchInArray($configkey, $needle)
+    {
+        $cfg = Config::get($configkey);
+        if( !$cfg ) {
+            return false;
+        }
+        if (!is_array($cfg) && !strlen($cfg)) {
+            return false;
+        }
+        
+        // we now know the key is active, so get it as an array
+        $a = Config::getArray($configkey);
+        
+        if (in_array( $needle, $a )) {
             return true;
         }
         return false;

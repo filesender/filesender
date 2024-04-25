@@ -86,7 +86,7 @@
 
             $tr_url = Utilities::http_build_query($qa);
             echo '<a href="' . $tr_url . '" ';
-            if( strlen($title)) {
+            if( !empty($title)) {
                 echo ' title="' . $title . '" ';
             }
             echo ' >';

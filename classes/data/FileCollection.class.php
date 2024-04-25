@@ -280,6 +280,12 @@ class FileCollection extends DBObject
         $s->execute(array(':collection_id' => $this->collection_id,
                           ':file_id' => $this->file_id));
     }
+
+    public static function removeFile( $file )
+    {
+        $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE file_id = :file_id');
+        $s->execute(array(':file_id' => $file->id));
+    }   
     
     /**
      * Getter

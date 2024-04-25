@@ -150,7 +150,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     <h2>{tr:transfer_details}</h2>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_sent_on}:</strong>
-                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></span>
+                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created,true)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}:</strong>
