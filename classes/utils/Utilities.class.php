@@ -37,7 +37,7 @@ if (!defined('FILESENDER_BASE')) {
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
-
+use function PHP81_BC\strftime;
 
 /**
  * Utility functions holder
@@ -192,7 +192,8 @@ class Utilities
             $dateFormat = '%d %b %Y %T';
         }
 
-        return utf8_encode(strftime($dateFormat, $timestamp));
+        $ts = strftime($dateFormat, (int)$timestamp);
+        return mb_convert_encoding( $ts, 'UTF-8' );
     }
     
     /**
@@ -609,6 +610,30 @@ class Utilities
             return false;
         }
         if (preg_match('/' . $cfg . '/', $needle)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**    
+     * This is like configMatch but expects the config key to be an array and will
+     * need an explicit string match of the $needle in the value for the key to be
+     * considered a match.
+     */
+    public static function configMatchInArray($configkey, $needle)
+    {
+        $cfg = Config::get($configkey);
+        if( !$cfg ) {
+            return false;
+        }
+        if (!is_array($cfg) && !strlen($cfg)) {
+            return false;
+        }
+        
+        // we now know the key is active, so get it as an array
+        $a = Config::getArray($configkey);
+        
+        if (in_array( $needle, $a )) {
             return true;
         }
         return false;

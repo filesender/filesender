@@ -353,6 +353,8 @@ $default = array(
     'download_verification_code_random_bytes_used' => 8,
 
     'download_show_download_links' => false,
+
+    'read_only_mode' => false,
     
     'transfer_options' => array(
         'email_me_copies' => array(

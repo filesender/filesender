@@ -65,10 +65,6 @@ class Lang
      */
     private $translation = '';
     
-    /**
-     * Does the translation allows replacements
-     */
-    private $allow_replace = true;
     
     /**
      * Get available languages
@@ -439,6 +435,8 @@ class Lang
      */
     public static function translate($id)
     {
+        $tr = null;
+        
         // Load dictionaries if not already done
         self::loadDictionaries();
         
@@ -476,6 +474,11 @@ class Lang
                 Logger::warn('No fallback translation found for '.$id.' in '.$fallbackid.' languages');
                 return new Translation('{'.$id.'}', false); 
             }       
+        }
+
+        if( !$tr ) {
+            Logger::error("translate() can not find translation for id $id");
+            return new Translation($id);
         }
         
         // File based ? Then loads it up and cache contents
@@ -533,7 +536,7 @@ class Lang
     public static function trWithConfigOverride($id)
     {
         $v = Config::get('tr_' . $id);
-        if( strlen($v)) {
+        if( $v && strlen($v)) {
             return new Translation($v);
         }
         return self::tr($id);
@@ -716,6 +719,11 @@ class Translation
      * Raw mode
      */
     private $raw = false;
+
+    /**
+     * Does the translation allows replacements
+     */
+    private $allow_replace = true;
     
     /**
      * Constructor
