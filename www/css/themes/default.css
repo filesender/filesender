@@ -18,12 +18,16 @@
 
     --fs-bg-color: var(--fs-gray-50);
     --fs-bg-color-secondary: var(--fs-white);
+    --fs-bg-color-tertiary: var(--fs-gray-100);
+    --fs-bg-color-quarternary: var(--fs-gray-200);
+    --fs-bg-color-quinary: var(--fs-gray-300);
     --fs-border: var(--fs-gray-200);
 
     --fs-text-color: var(--fs-gray-900);
 
     --fs-hightlight-bg: var(--fs-blue-100);
     --fs-hightlight-bg-alternative:  var(--fs-blue-100);
+    --fs-hightlight-bg-secondary:  var(--fs-blue-200);
 
     --fs-accent: var(--fs-blue);
 
@@ -55,7 +59,7 @@
 
     /* SPACING */
 
-    -fs-spacing-base: 8px;
+    --fs-spacing-base: 8px;
     --fs-spacing-half: calc(var(--fs-spacing-base) / 2);
     --fs-spacing-quarter: calc(var(--fs-spacing-base) / 4);
 

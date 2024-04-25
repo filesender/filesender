@@ -24,7 +24,7 @@ catch( e ) {
     postMessage({
         command: 'error',
         worker_id: -1,
-        data: {message: 'worker_failed_to_start' + e }
+        data: {message: 'worker_failed_to_start: ' + e }
     });
 }
 

@@ -23,3 +23,7 @@ simplesaml
 simplesamlphp-*
 /.phpactor.json
 /docs/.bundle/
+
+scripts/client/nodeclient/node_modules/
+scripts/client/nodeclient/package-lock.json
+

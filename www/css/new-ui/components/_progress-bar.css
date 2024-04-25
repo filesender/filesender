@@ -18,7 +18,7 @@
   flex: 1;
   height: var(--fs-spacing-2x);
   border-radius: var(--fs-spacing-2x);
-  background: var(--fs-gray-200);
+  background: var(--fs-bg-color-quarternary);
   margin: 0 !important;
 }
 

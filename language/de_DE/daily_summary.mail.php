@@ -20,7 +20,7 @@ hier finden Sie eine Zusammenfassung der Downloads Ihrer Dateiübertragung Nr. {
   - Empfänger {event.who} hat heruntergeladen {if:event.what == "archive"}archive{else}file {event.what_name}{endif} am {datetime:event.when}
 {endeach}
 {else}
-Keine Downlads
+Keine Downloads
 {endif}
 
 Weitere Details finden Sie unter {transfer.link}
@@ -46,7 +46,7 @@ Mit freundlichen Grüßen
 </ul>
 {else}
 <p>
-    Keine Downlaods
+    Keine Downloads
 </p>
 {endif}
 

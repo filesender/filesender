@@ -63,14 +63,25 @@ FileSender has no user database and has no concept of user accounts.
 
 ## IdP attributes
 
-By default FileSender looks at the SAML attributes `mail`, `cn`, and `eduPersonTargetedId`.
-The SAML attributes eduPersonTargetedId and mail are *required* to login.
+There are two attributes from SAML that are *required* to login: an
+identifier for the user and an email address. An optional name is also
+taken from the SAML attributes.
 
-The auth_sp_additional_attributes config.php setting can be used to allow access to other SAML attributes as well.
-
-The AuthSPSaml.class.php file processes the attributes. It looks for uid, name, and email. The uid and email must be present. The name will be taken from the email if it is not present.
-These uid, name, and email are found using the filesender config.php settings auth_sp_saml_email_attribute https://docs.filesender.org/filesender/v2.0/admin/configuration/#auth_sp_saml_email_attribute and the like. 
+The exact SAML attributes that are used to obtain these values is
+defined by the FileSender config.php settings such as
+auth_sp_saml_uid_attribute, auth_sp_saml_email_attribute and the like.
+For example see
+https://docs.filesender.org/filesender/v2.0/admin/configuration/#auth_sp_saml_email_attribute
 The filesender config.php settings let you change what SAML attribute to inspect (or a list of them) to obtain these values.
+
+By default FileSender looks at the SAML attributes `pairwise-id`,
+`mail`, and `cn`. These are taken as the identifier, email address,
+and optional name values by FileSender.
+
+The auth_sp_additional_attributes config.php setting can be used to
+allow access to other SAML attributes as well.
+
+
 
 
 

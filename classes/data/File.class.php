@@ -339,8 +339,8 @@ class File extends DBObject
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
 
-        // Generate uid until it is indeed unique
-        $file->uid = Utilities::generateUID(function ($uid, $tries) {
+        // Generate timestamped uid until it is indeed unique
+        $file->uid = Utilities::generateUID(true, function ($uid, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
             $statement->execute(array(':uid' => $uid));
             $data = $statement->fetch();
@@ -368,7 +368,7 @@ class File extends DBObject
     public function beforeDelete()
     {
         Storage::deleteFile($this);
-        
+        FileCollection::removeFile( $this );
         Logger::info($this.' deleted');
     }
     
@@ -426,9 +426,11 @@ class File extends DBObject
             $t->execute(array(':transfer_id' => $transfer->id,
                               ':collection_type' => CollectionType::DIRECTORY_ID));
             foreach ($t->fetchAll() as $data) {
-                $file = $files[$data['id']];
-                $file->pathCache = $data['dirpath'].'/'.$file->name;
-                $file->directoryCache = $directories[$data['dir_id']];
+                if( array_key_exists($data['id'],$files)) {
+                    $file = $files[$data['id']];
+                    $file->pathCache = $data['dirpath'].'/'.$file->name;
+                    $file->directoryCache = $directories[$data['dir_id']];
+                }
             }
         }
         return $files;

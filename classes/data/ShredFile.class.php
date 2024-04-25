@@ -135,7 +135,7 @@ class ShredFile extends DBObject
         }
 
         // Generate uid until it is indeed unique
-        $file->name = Utilities::generateUID(function ($uid, $tries) {
+        $file->name = Utilities::generateUID(true, function ($uid, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
             $statement->execute(array(':uid' => $uid));
             $data = $statement->fetch();
@@ -250,6 +250,6 @@ class ShredFile extends DBObject
     public static function shouldUseShredFile()
     {
         $cmd = Config::get('storage_filesystem_file_shred_command');
-        return strlen($cmd) > 0;
+        return $cmd && strlen($cmd) > 0;
     }
 }
