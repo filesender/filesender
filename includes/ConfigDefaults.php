@@ -189,6 +189,7 @@ $default = array(
     'statlog_lifetime' => 0,
     'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
+    'auditlog_must_be_n_days_longer_than_max_transfer_days_valid' => 14,
     'ratelimithistory_lifetime' => 31,
     
     'storage_usage_warning' => 20,

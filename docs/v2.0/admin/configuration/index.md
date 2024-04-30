@@ -288,6 +288,7 @@ A note about colours;
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
 * [auth_sp_fake_additional_attributes_values](#auth_sp_fake_additional_attributes_values)
 * [auditlog_lifetime](#auditlog_lifetime)
+* [auditlog_must_be_n_days_longer_than_max_transfer_days_valid](#auditlog_must_be_n_days_longer_than_max_transfer_days_valid)
 * [ratelimithistory_lifetime](#ratelimithistory_lifetime)
 * [report_format](#report_format)
 * [exception_additional_logging_regex](#exception_additional_logging_regex)
@@ -3143,7 +3144,19 @@ $config['log_facilities'] =
 * __default:__ 31
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ Use this setting to control the privacy footprint of your FileSender service.
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service. NOTE: this value can not be less than max_transfer_days.
+
+
+### auditlog_must_be_n_days_longer_than_max_transfer_days_valid
+
+* __description:__ In order to retain auditlogs for an expected amount of time, it is enforced that auditlog_lifetime = max_transfer_days + this setting.
+* __mandatory:__ no
+* __type:__ int (days)
+* __default:__ 14
+* __available:__ since version 3.0beta8/rc1
+* __1.x name:__
+* __comment:__ It is highly recommended that you leave this setting as the default value. 
+
 
 ### ratelimithistory_lifetime
 
