@@ -392,7 +392,7 @@ class Config
         }
 
 
-        if( self::isEnabled(self::$parameters['auditlog_lifetime'])) {
+        if( self::isEnabled('auditlog_lifetime')) {
             // make sure auditlogs are at least as long as max_transfer_days
             if( self::$parameters['max_transfer_days_valid'] > self::$parameters['auditlog_lifetime'] ) {
                 self::$parameters['auditlog_lifetime'] = self::$parameters['max_transfer_days_valid'];
