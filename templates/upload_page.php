@@ -578,8 +578,8 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-5">
                                                             <div class="fs-transfer__generate-password">
-                                                                <span>{tr:or}</span>
-                                                                <a id="encryption_generate_password" href="javascript:void(0);" class="fs-link">{tr:generate_password}</a>
+                                                                <span>{tr:or} &nbsp;</span>
+                                                                <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -749,7 +749,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             <div class="fs-transfer__right">
                                 <button type="button" id="fs-transfer__confirm" class="fs-button fs-button--info fs-button--icon-right">
                                     {tr:confirm}
-                                    <i class="fa fa-check"></i>
+                                    <i class="fa fa-arrow-right"></i>
                                 </button>
                             </div>
                         </div>
