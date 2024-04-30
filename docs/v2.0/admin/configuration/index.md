@@ -3140,7 +3140,7 @@ $config['log_facilities'] =
 
 * __description:__ The auditlog is kept in the database and contains all events for a transfer.  This information can be used to tell the user what happened to their transfer when.  This directive specifies the maximum lifetime of auditlog entries (in days).  If set to 0 we remove data when the transfer is closed, after sending reports (if user indicated they wanted).  As long as transfer is live you have this data, as soon as transfer expires the log disappears.  If you set it to "false" we don't log anything and a user can't even see the logs when a transfer is live.
 * __mandatory:__ no
-* __type:__ boolean/int (days).  Set to false to disable.
+* __type:__ boolean/int (days).  Set to null to disable.
 * __default:__ 31
 * __available:__ since version 2.0
 * __1.x name:__
