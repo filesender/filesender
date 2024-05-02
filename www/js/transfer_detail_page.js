@@ -191,7 +191,7 @@ $(function() {
     };
 
     $('.fs-transfer-detail__files span[data-action="auditlog"]').on('click', function(e) {
-        auditlogs($(this).closest('tr').attr('data-id'));
+        auditlogs($(this).closest('tr').attr('data-transferid'), 'target/file/' + $(this).closest('.file').attr('data-id'));
     });
 
     $('.fs-transfer-detail__actions button[data-action="auditlog"]').on('click', function(e) {
