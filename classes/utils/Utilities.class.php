@@ -343,7 +343,7 @@ class Utilities
             return '127.0.0.1';
         }
         
-        return $ips[0];
+        return array_shift($ips);
     }
     
     /**
