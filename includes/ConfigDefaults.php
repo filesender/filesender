@@ -211,7 +211,7 @@ $default = array(
 
     'upload_graph_bulk_display' => true, 
     'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
-
+    'upload_graph_use_cache_table' => false,
 
     'support_email' => '',
 
