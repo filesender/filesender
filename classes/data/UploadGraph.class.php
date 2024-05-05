@@ -46,14 +46,9 @@ class UploadGraph extends DBObject
      * Database map
      */
     protected static $dataMap = array(
-        'id' => array(
-            'type' => 'uint',
-            'size' => 'big',
-            'primary' => true,
-            'autoinc' => true
-        ),
         'date' => array(
-            'type' => 'datetime'
+            'type' => 'datetime',
+            'primary' => true,
         ),
         'speed' => array(
             'type' => 'numeric',
@@ -153,46 +148,83 @@ class UploadGraph extends DBObject
 
     public static function update()
     {
-        DBI::beginTransaction();
+        $dbtype = Config::get('db_type');
 
         
 
-        $statement = DBI::prepare('delete from ' . self::getDBTable() );
-        $statement->execute(array());
         
         $minSz = Config::get('upload_graph_bulk_min_file_size_to_consider');
 
         $encO = Config::get('encryption_mandatory');
         $encF = 'additional_attributes LIKE \'%\"encryption\":false%\'';
         $encT = 'additional_attributes LIKE \'%\"encryption\":true%\'';
-        
-        $sql =
-            ' INSERT INTO ' . self::getDBTable() . ' (date,speed,enspeed,count,encount) ' 
-            . ' SELECT days.date as date, speed.speed as speed, speed.enspeed as enspeed, speed.count as count, speed.encount as encount '
-            . 'FROM (SELECT (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
-          . DBLayer::toIntervalDays("a+b") . ' date '
-                   . '        FROM (SELECT 0 a UNION SELECT 1 a UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 '
-                   . '                     UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 ) d, '
-                   . '             (SELECT 0 b UNION SELECT 10 UNION SELECT 20 UNION SELECT 30 UNION SELECT 40) m '
-                   . '        WHERE (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
-                   . DBLayer::toIntervalDays("a+b") . ' <= (select date(now())) '
-                            . '        ORDER BY a + b) as days LEFT '
-                            . ' JOIN (SELECT DATE(created) as date, '
-                             .($encO ? '0 as speed, ' : '   AVG(case WHEN time_taken > 0 AND ' . $encF . ' THEN size/time_taken ELSE null END) as speed, ' )
-                            . '   AVG(case WHEN time_taken > 0 AND ' . $encT . ' THEN size/time_taken ELSE null END) as enspeed, '
-                             .($encO ? '0 as count, ' : '   AVG(case WHEN ' . $encF . ' THEN id ELSE null END) as count, ' )
-                            . '   AVG(case WHEN ' . $encT . ' THEN id ELSE null END) as encount '
-                            . '       from StatLogs '
-                            . '      WHERE event=\'file_uploaded\' '
-                            . '            AND created>NOW() - INTERVAL \'31\' DAY '
-                            . '            AND size > ' . $minSz . ' '
-                            . '      GROUP BY Date) as speed on days.date=speed.date '
-                            . ' ORDER BY days.date';
 
+        $statement = DBI::prepare("delete from " . self::getDBTable() . " where date < NOW() - INTERVAL '31' DAY  " );
+        $statement->execute(array());
+        
+        if( $dbtype == "mysql" ) { 
+        
+            $sql =
+                ' INSERT INTO ' . self::getDBTable() . ' (date,speed,enspeed,count,encount) ' 
+                                      . ' SELECT days.date as date, speed.speed as speed, speed.enspeed as enspeed, speed.count as count, speed.encount as encount '
+                                      . 'FROM (SELECT (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
+                                      . DBLayer::toIntervalDays("a+b") . ' date '
+                                               . '        FROM (SELECT 0 a UNION SELECT 1 a UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 '
+                                               . '                     UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 ) d, '
+                                               . '             (SELECT 0 b UNION SELECT 10 UNION SELECT 20 UNION SELECT 30 UNION SELECT 40) m '
+                                               . '        WHERE (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
+                                               . DBLayer::toIntervalDays("a+b") . ' <= (select date(now())) '
+                                                        . '        ORDER BY a + b) as days LEFT '
+                                                        . ' JOIN (SELECT DATE(created) as date, '
+                                                         .($encO ? '0 as speed, ' : '   AVG(case WHEN time_taken > 0 AND ' . $encF . ' THEN size/time_taken ELSE null END) as speed, ' )
+                                                        . '   AVG(case WHEN time_taken > 0 AND ' . $encT . ' THEN size/time_taken ELSE null END) as enspeed, '
+                                                         .($encO ? '0 as count, ' : '   AVG(case WHEN ' . $encF . ' THEN id ELSE null END) as count, ' )
+                                                        . '   AVG(case WHEN ' . $encT . ' THEN id ELSE null END) as encount '
+                                                        . '       from StatLogs '
+                                                        . '      WHERE event=\'file_uploaded\' '
+                                                        . '            AND created>NOW() - INTERVAL \'31\' DAY '
+                                                        . '            AND size > ' . $minSz . ' '
+                                                        . '      GROUP BY Date) as speed on days.date=speed.date '
+                                                        . ' ORDER BY days.date'
+                                                        . ' ON DUPLICATE KEY UPDATE speed=speed.speed, enspeed = speed.enspeed, count = speed.count, encount = speed.encount ';
+        }
+        
+        if( $dbtype == 'pgsql' ) {        
+            $sql = '' 
+                 . ' MERGE INTO ' . self::getDBTable() . ' ug  '
+                                        . ' USING ( '
+                                        . '   SELECT days.date as date, speed.speed as speed, speed.enspeed as enspeed, speed.count as count, speed.encount as encount '
+                                        . '    FROM (SELECT (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
+                                        . DBLayer::toIntervalDays("a+b") . ' date '
+                                                 . '        FROM (SELECT 0 a UNION SELECT 1 a UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 '
+                                                 . '                     UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 ) d, '
+                                                 . '             (SELECT 0 b UNION SELECT 10 UNION SELECT 20 UNION SELECT 30 UNION SELECT 40) m '
+                                                 . '        WHERE (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
+                                                 . DBLayer::toIntervalDays("a+b") . ' <= (select date(now())) '
+                                                          . '        ORDER BY a + b) as days LEFT '
+                                                          . ' JOIN (SELECT DATE(created) as date, '
+                                                           .($encO ? '0 as speed, ' : '   AVG(case WHEN time_taken > 0 AND ' . $encF . ' THEN size/time_taken ELSE null END) as speed, ' )
+                                                          . '   AVG(case WHEN time_taken > 0 AND ' . $encT . ' THEN size/time_taken ELSE null END) as enspeed, '
+                                                           .($encO ? '0 as count, ' : '   AVG(case WHEN ' . $encF . ' THEN id ELSE null END) as count, ' )
+                                                          . '   AVG(case WHEN ' . $encT . ' THEN id ELSE null END) as encount '
+                                                          . '       from StatLogs '
+                                                          . '      WHERE event=\'file_uploaded\' '
+                                                          . '            AND created>NOW() - INTERVAL \'31\' DAY '
+                                                          . '            AND size > ' . $minSz . ' '
+                                                          . '      GROUP BY Date) as speed on days.date=speed.date '
+                                                          . ' ORDER BY days.date ) as newdata '
+                                                          . 'ON ug.date = newdata.date '
+                                                          . ' WHEN MATCHED THEN ' 
+                                                          . '    UPDATE SET speed = newdata.speed, enspeed = newdata.enspeed '
+                                                          . ' WHEN NOT MATCHED THEN '
+                                                          . '    INSERT (date,speed,enspeed) '
+                                                          . '       VALUES (newdata.date,newdata.speed,newdata.enspeed) ';
+        }                 
+
+        
         $statement = DBI::prepare($sql);
         $statement->execute(array());
 
-        DBI::commit();
         
     }
     
