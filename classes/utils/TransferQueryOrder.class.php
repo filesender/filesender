@@ -145,17 +145,13 @@ class TransferQueryOrder
                 break;
             case self::SORT_DOWNLOAD_DESC:
                 $this->usedSort    = $order;
-                $this->viewname    = 'transfersauditlogsdlcountview';
-                $this->orderclause = ' count DESC, created DESC ';
+                $this->orderclause = ' download_count DESC, created DESC ';
                 $this->columnname  = self::COLUMN_DOWNLOAD;
-//                $this->whereclause = " ( event = 'download_ended' or event = 'archive_download_ended' ) ";
                 break;
             case self::SORT_DOWNLOAD_ASC:
                 $this->usedSort    = $order;
-                $this->viewname    = 'transfersauditlogsdlcountview';
-                $this->orderclause = ' count ASC, created DESC ';
+                $this->orderclause = ' download_count ASC, created DESC ';
                 $this->columnname  = self::COLUMN_DOWNLOAD;
-//                $this->whereclause = " ( event = 'download_ended' or event = 'archive_download_ended' ) ";
                 break;
                 
             default:
