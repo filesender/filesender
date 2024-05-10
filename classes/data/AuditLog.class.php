@@ -244,6 +244,9 @@ class AuditLog extends DBObject
      */
     public function save()
     {
+        if (is_null($this->ip)) {
+            $this->ip = Utilities::getClientIP();
+        }
         $this->insertRecord($this->toDBData());
     }
     
