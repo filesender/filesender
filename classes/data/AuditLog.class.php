@@ -185,6 +185,8 @@ class AuditLog extends DBObject
         // Fill properties from provided data
         if ($data) {
             $this->fillFromDBData($data);
+        } else {
+            $this->ip = Utilities::getClientIP();
         }
     }
     
