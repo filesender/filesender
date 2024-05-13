@@ -215,6 +215,7 @@ A note about colours;
 
 * [upload_graph_bulk_display](#upload_graph_bulk_display)
 * [upload_graph_bulk_min_file_size_to_consider](#upload_graph_bulk_min_file_size_to_consider)
+* [upload_graph_use_cache_table](#upload_graph_use_cache_table)
 
 ## TeraSender (high speed upload module)
 
@@ -2378,6 +2379,15 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __available:__ since version 2.0
 * __comment:__ only useful when you enable upload_graph_bulk_display
 
+
+### upload_graph_use_cache_table
+
+* __description:__ Use a cache table to present the upload speed graphs
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.49
+* __comment:__ If you enable this option you will need to schedule scripts/task/update-upload-graph-table.php to execute periodically to update the cache table. This can be useful on very large installations.
 
 
 
