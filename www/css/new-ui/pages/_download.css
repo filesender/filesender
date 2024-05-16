@@ -114,3 +114,8 @@
         margin-left: 0;
     }
 }
+
+.verify_email_to_download {
+    display: none;
+}
+
