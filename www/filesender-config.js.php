@@ -213,6 +213,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     client_send_current_timezone_to_server: <?php echo value_to_TF(Config::get('client_send_current_timezone_to_server')) ?>,
 
 
+    ui_use_datepicker_for_transfer_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_transfer_expire_time_selection')) ?>,
 
 };
 

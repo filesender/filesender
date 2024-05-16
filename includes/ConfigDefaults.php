@@ -87,6 +87,7 @@ $default = array(
     'max_transfer_recipients' => 50,
     'max_transfer_files' => 30,
     'max_transfer_days_valid' => 20,
+    'ui_use_datepicker_for_transfer_expire_time_selection' => false,
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
     'transfer_recipients_lang_selector_enabled' => false,
