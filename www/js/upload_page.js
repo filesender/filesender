@@ -1620,6 +1620,13 @@ filesender.ui.goToStage = function (stage) {
     const stageElement = $(`[data-step="${stage}"`);
     stageElement.addClass(filesender.ui.stageActiveClass);
     filesender.ui.stage = stage;
+    if( stage == 3 || stage == 4 ) {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "auto",
+        });
+    }
 }
 
 filesender.ui.removeFile = function (e) {
