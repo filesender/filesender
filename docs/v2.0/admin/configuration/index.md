@@ -157,6 +157,7 @@ A note about colours;
 * [make_download_links_clickable](#make_download_links_clickable)
 * [valid_timezone_regex](#valid_timezone_regex)
 * [client_send_current_timezone_to_server](#client_send_current_timezone_to_server)
+* [ui_use_datepicker_for_transfer_expire_time_selection](#ui_use_datepicker_for_transfer_expire_time_selection)
 
 
 ## Transfers
@@ -1668,6 +1669,14 @@ User language detection is done in the following order:
 * __available:__ since version 3.0beta7
 * __comment:__ If enabled the client will share the current timezone setting to the server so it can format dates as the client expects.
 
+
+### ui_use_datepicker_for_transfer_expire_time_selection
+* __description:__  If enabled the expire date selection on the upload page will use a date picker.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta8
+* __comment:__ 
 
 ---
 

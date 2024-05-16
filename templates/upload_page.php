@@ -619,7 +619,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="fs-select">
+                                        <div class="fs-select expires-select-by-days">
                                             <label for="expires-select">
                                                 {tr:expires_after}
                                             </label>
@@ -629,6 +629,17 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php } ?>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="fs-select fieldcontainer expires-select-by-picker">
+                                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+                                            
+                                            <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
+                                                   title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
+                                                   data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
+                                            />
+                                        </div>
+                                        
                                     </div>
                                 </div>
 
@@ -898,6 +909,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     {tr:expires_in} <span id="expires-days">7</span> {tr:days}.
                                 </span>
                             </div>
+                            
                             <div class="fs-transfer__upload-custom-name">
                                 <label for="transfer-name">
                                     {tr:add_transfer_custom_name}
