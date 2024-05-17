@@ -184,7 +184,7 @@ class AuthSPSaml
             //
             // Let the javascript warn the user of possible end of session time
             //
-            if( Config::get('auth_warn_expire_time')) {
+            if( Config::get('auth_warn_session_expired')) {
                 if ($v = $ssp->getAuthData('Expire')) {
                     if( !headers_sent()) {
                         // Unset the PHPSESSID cookie, so that the user will get a new session ID on their next request.

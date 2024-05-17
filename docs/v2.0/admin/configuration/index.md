@@ -259,7 +259,7 @@ A note about colours;
 	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
     * [using_local_saml_dbauth](#using_local_saml_dbauth)
-    * [auth_warn_expire_time](#auth_warn_expire_time)
+    * [auth_warn_session_expired](#auth_warn_session_expired)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -2779,7 +2779,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ 
 
 
-### auth_warn_expire_time
+### auth_warn_session_expired
 
 * __description:__ When turned on the expire time for SAML sessions is sent to the browser so the user can be warned when the session has expired.
 * __mandatory:__ no

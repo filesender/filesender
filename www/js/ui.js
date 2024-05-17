@@ -708,7 +708,7 @@ $(function() {
         $(".download_decryption_disabled").show();
     }
 
-    if( window.filesender.config.auth_warn_expire_time ) {
+    if( window.filesender.config.auth_warn_session_expired ) {
 
         var sessionExpires = getCookie('X-FileSender-Session-Expires');
         if( !sessionExpires ) {

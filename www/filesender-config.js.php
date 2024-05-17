@@ -209,7 +209,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 
     download_verification_code_enabled: <?php echo value_to_TF(Config::get('download_verification_code_enabled')) ?>,
 
-    auth_warn_expire_time: <?php echo value_to_TF(Config::get('auth_warn_expire_time')) ?>,
+    auth_warn_session_expired: <?php echo value_to_TF(Config::get('auth_warn_session_expired')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
