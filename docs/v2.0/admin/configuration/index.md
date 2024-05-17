@@ -258,7 +258,8 @@ A note about colours;
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
-        * [using_local_saml_dbauth](#using_local_saml_dbauth)
+    * [using_local_saml_dbauth](#using_local_saml_dbauth)
+    * [auth_warn_expire_time](#auth_warn_expire_time)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -2776,6 +2777,17 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __default:__ 0
 * __available:__ since version 2.16
 * __comment:__ 
+
+
+### auth_warn_expire_time
+
+* __description:__ When turned on the expire time for SAML sessions is sent to the browser so the user can be warned when the session has expired.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.49
+* __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
+               The warning does not happen during an upload because the session may expire there and the upload can still complete.
 
 
 

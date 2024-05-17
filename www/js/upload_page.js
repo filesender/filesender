@@ -1088,6 +1088,7 @@ filesender.ui.cancelAutomaticResume = function() {
 
 filesender.ui.startUpload = function() {
 
+    window.filesender.ui.uploading = true;
     this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
     this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
@@ -1168,6 +1169,7 @@ filesender.ui.startUpload = function() {
     
     this.transfer.oncomplete = function(time) {
 
+        window.filesender.ui.uploading = false;       
         filesender.ui.files.clear_crust_meter_all();
         window.filesender.pbkdf2dialog.ensure_onPBKDF2AllEnded();
 

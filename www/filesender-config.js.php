@@ -178,6 +178,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
                 , download_complete:       "<?php echo Lang::tr('download_complete')->out(); ?>"
 /**/            , download_chunk_progress: "<?php echo Lang::tr('download_chunk_progress')->out(); ?>"
                 , file_not_found:          "<?php echo Lang::tr('file_not_found')->out(); ?>"
+                , session_expired_warning: "<?php echo Lang::tr('session_expired_warning')->out(); ?>"
 	},
     
     clientlogs: {
@@ -207,6 +208,8 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     encryption_password_must_have_special_characters: <?php echo value_to_TF(Config::get('encryption_password_must_have_special_characters')) ?>,
 
     download_verification_code_enabled: <?php echo value_to_TF(Config::get('download_verification_code_enabled')) ?>,
+
+    auth_warn_expire_time: <?php echo value_to_TF(Config::get('auth_warn_expire_time')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
