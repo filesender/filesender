@@ -305,19 +305,28 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
 
     <?php if( Browser::instance()->allowStreamSaver ) { ?>
 
-        <div class="form-check form-switch custom-control custom-switch" data-option="options">
-            <input id="streamsaverenabled" class="form-check-input" name="streamsaverenabled" type="checkbox" checked="checked" />
-            <label for="streamsaverenabled" class="form-check-label">{tr:use_streamsaver_for_download}</label>
+<div class="fs-download form-check form-switch custom-control custom-switch" data-option="options">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+              <input id="streamsaverenabled" class="form-check-input" name="streamsaverenabled" type="checkbox" checked="checked" />
+              <label for="streamsaverenabled" class="form-check-label">{tr:use_streamsaver_for_download}</label>
+            </div>
         </div>
+    </div>
+</div>
     <?php } ?>
 
 
     <?php if($have_av) { ?>
-        <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
-            <div class="avdesc">{tr:av_results_description}
+<div class="fs-download general2 box" data-transfer-size="<?php echo $transfer->size ?>">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="avdesc">{tr:av_results_description}
             <?php foreach($sortedFiles as $file) { ?>
-                <div class="avfile" data-avid="<?php echo $file->id ?>" >
-                    <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
+                    <div class="avfile" data-avid="<?php echo $file->id ?>" >
+                        <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
                     <?php if(!$file->have_avresults) { ?>
                         <span class="desc">{tr:no_av_scans_performed}</span>
                     <?php } else { ?>
@@ -337,83 +346,85 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         </table>
                     <?php } ?>
 
-                </div>
+                    </div>
             <?php } ?>
+                </div>
             </div>
         </div>
+    </div>
+</div>
     <?php } ?>
 
 
-    <div class="verify_email_to_download">
-        <h2>{tr:verify_your_email_address_to_download}</h2>
-        <table columns="2" border="1">
-            <col style="width:25%">
-            <col style="width:75%">
-            <tr>
-                <td>
-                    <a href="#" class="verificationcodesendtoemail">
-                        <span class="fa fa-paper-plane fa-lg"></span>&nbsp;{tr:send}
-                    </a>
-                </td>
-                <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <p>{tr:then_enter_verification_code_below}</p>
-                </td>
-            </tr>
-            <tr class="verificationcodesendpage">
-                <td>
-                    <a class="verificationcodesend verificationcodesendelement" href="#">
-                        <span class="fa fa-unlock fa-lg"></span>&nbsp;{tr:verify}
-                    </a>
-                </td>
-                <td class="verify_labels2">
-                    <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
-                </td>
-            </tr>
-        </table>
+<div class="fs-download verify_email_to_download">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>{tr:verify_your_email_address_to_download}</h2>
+                <table columns="2" border="1">
+                    <col style="width:25%">
+                    <col style="width:75%">
+                    <tr>
+                        <td>
+                            <a href="#" class="verificationcodesendtoemail">
+                                <span class="fa fa-paper-plane fa-lg"></span>&nbsp;{tr:send}
+                            </a>
+                        </td>
+                        <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p>{tr:then_enter_verification_code_below}</p>
+                        </td>
+                    </tr>
+                    <tr class="verificationcodesendpage">
+                        <td>
+                            <a class="verificationcodesend verificationcodesendelement" href="#">
+                                <span class="fa fa-unlock fa-lg"></span>&nbsp;{tr:verify}
+                            </a>
+                        </td>
+                        <td class="verify_labels2">
+                            <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
 
-    <table class="table borderless general" data-transfer-size="<?php echo $transfer->size ?>">
-        <tbody>
+<div class="fs-download">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table borderless general" data-transfer-size="<?php echo $transfer->size ?>">
+                    <tbody>
         <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
             !$transfer->options['hide_sender_email']) { ?>
-            <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td></tr>
+                        <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td></tr>
         <?php } ?>
-        <tr>
-            <td align="right" class="created">{tr:created}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></td>
-            <td align="right" class="expires">{tr:expires}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></td>
-            <td align="right" class="size">{tr:size}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></td>
-        </tr>
+                        <tr>
+                            <td align="right" class="created">{tr:created}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></td>
+                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></td>
+                            <td align="right" class="size">{tr:size}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></td>
+                        </tr>
         <?php if($transfer->subject) { ?>
-            <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Utilities::sanitizeOutput($transfer->subject) ?></td></tr>
+                        <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Utilities::sanitizeOutput($transfer->subject) ?></td></tr>
         <?php } ?>
 
         <?php if($transfer->message) { ?>
-            <tr><td align="right" class="message">{tr:message}</td><td><p><?php echo Utilities::sanitizeOutput($transfer->message) ?></p></td></tr>
+                        <tr><td align="right" class="message">{tr:message}</td><td><p><?php echo Utilities::sanitizeOutput($transfer->message) ?></p></td></tr>
         <?php } ?>
-        </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="transfer_is_encrypted not_displayed">
-        <?php echo $isEncrypted ? 1 : 0;  ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
+
+
+<div class="transfer_is_encrypted not_displayed">
+    <?php echo $isEncrypted ? 1 : 0;  ?>
+</div>
 
 <script type="text/javascript" src="{path:js/download_page.js}"></script>
