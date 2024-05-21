@@ -100,17 +100,17 @@
 
 .fs-button--success {
   color: var(--fs-light);
-  background: var(--fs-success);
+  background: var(--fs-btn);
 }
 
 .fs-button--success:hover {
-  background: var(--fs-success-hover) !important;
   color: var(--fs-light) !important;
+  background: var(--fs-btn-hover);
 }
 
 .fs-button--success:active {
-  background: var(--fs-success-active) !important;
   color: var(--fs-light) !important;
+  background: var(--fs-btn-active) !important;
 }
 
 .fs-button--success:disabled,
