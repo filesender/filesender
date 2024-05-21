@@ -158,7 +158,7 @@ A note about colours;
 * [valid_timezone_regex](#valid_timezone_regex)
 * [client_send_current_timezone_to_server](#client_send_current_timezone_to_server)
 * [ui_use_datepicker_for_transfer_expire_time_selection](#ui_use_datepicker_for_transfer_expire_time_selection)
-
+* [ui_use_datepicker_for_guest_expire_time_selection](#ui_use_datepicker_for_guest_expire_time_selection)
 
 ## Transfers
 
@@ -1677,6 +1677,16 @@ User language detection is done in the following order:
 * __default:__ false
 * __available:__ since version 3.0beta8
 * __comment:__ 
+
+### ui_use_datepicker_for_guest_expire_time_selection
+* __description:__  If enabled the expire date selection on the new guest page will use a date picker.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta8
+* __comment:__ 
+
+
 
 ---
 

@@ -210,13 +210,19 @@ filesender.ui.evalSendEnabled = function() {
 filesender.ui.send = function() {
     var options = {guest: {}, transfer: {}};
 
-    const expiresDays = $('#expires-select').find(":selected").val();
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
+    var expires = 0;
+    
+    if( filesender.config.ui_use_datepicker_for_guest_expire_time_selection ) {
+        expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+    } else {
+        const expiresDays = $('#expires-select').find(":selected").val();
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
 
-    const expires = expiresDate / 1000;
-
+        expires = expiresDate / 1000;
+    }
+    
     var from = null;
     if(filesender.ui.nodes.from.length)
         from = filesender.ui.nodes.from.val();
@@ -271,6 +277,7 @@ filesender.ui.send = function() {
 $(function() {
     var send_voucher = $('#send_voucher');
     if(!send_voucher.length) return;
+    var form = $('#send_voucher');
 
     // Register frequently used nodes
     filesender.ui.nodes = {
@@ -300,29 +307,46 @@ $(function() {
 
     filesender.ui.recipients.autocomplete();
 
-    // Setup date picker
-    // $.datepicker.setDefaults({
-    //     closeText: lang.tr('dp_close_text').out(),
-    //     prevText: lang.tr('dp_prev_text').out(),
-    //     nextText: lang.tr('dp_next_text').out(),
-    //     currentText: lang.tr('dp_current_text').out(),
-    //
-    //     monthNames: lang.tr('dp_month_names').values(),
-    //     monthNamesShort: lang.tr('dp_month_names_short').values(),
-    //     dayNames: lang.tr('dp_day_names').values(),
-    //     dayNamesShort: lang.tr('dp_day_names_short').values(),
-    //     dayNamesMin: lang.tr('dp_day_names_min').values(),
-    //
-    //     weekHeader: lang.tr('dp_week_header').out(),
-    //     dateFormat: lang.trWithConfigOverride('dp_date_format').out(),
-    //
-    //     firstDay: parseInt(lang.tr('dp_first_day').out()),
-    //     isRTL: lang.tr('dp_is_rtl').out().match(/true/),
-    //     showMonthAfterYear: lang.tr('dp_show_month_after_year').out().match(/true/),
-    //
-    //     yearSuffix: lang.tr('dp_year_suffix').out()
-    // });
+    if( filesender.config.ui_use_datepicker_for_guest_expire_time_selection ) {
 
+        form.find('.guest-expires-select-by-days').hide();
+        form.find('.guest-expires-select-by-picker').show();
+        
+        // Setup date picker
+        $.datepicker.setDefaults({
+            closeText: lang.tr('dp_close_text').out(),
+            prevText: lang.tr('dp_prev_text').out(),
+            nextText: lang.tr('dp_next_text').out(),
+            currentText: lang.tr('dp_current_text').out(),
+            
+            monthNames: lang.tr('dp_month_names').values(),
+            monthNamesShort: lang.tr('dp_month_names_short').values(),
+            dayNames: lang.tr('dp_day_names').values(),
+            dayNamesShort: lang.tr('dp_day_names_short').values(),
+            dayNamesMin: lang.tr('dp_day_names_min').values(),
+            
+            weekHeader: lang.tr('dp_week_header').out(),
+            dateFormat: lang.trWithConfigOverride('dp_date_format').out(),
+            
+            firstDay: parseInt(lang.tr('dp_first_day').out()),
+            isRTL: lang.tr('dp_is_rtl').out().match(/true/),
+            showMonthAfterYear: lang.tr('dp_show_month_after_year').out().match(/true/),
+            
+            yearSuffix: lang.tr('dp_year_suffix').out()
+        });
+
+        // Bind picker
+        filesender.ui.nodes.expires.datepicker({
+            minDate: filesender.config.min_guest_days_valid,
+            maxDate: filesender.config.max_guest_days_valid
+        });
+        // set value from epoch time
+        filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
+        filesender.ui.nodes.expires.on('change', function() {
+            filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
+        });
+    }
+    
     // Bind recipients events
     filesender.ui.nodes.recipients.input.on('keydown', function(e) {
         if(e.keyCode != 13) return;
@@ -345,16 +369,6 @@ $(function() {
         $('#message_can_not_contain_urls'),
         filesender.config.message_can_not_contain_urls_regex );
 
-    // Bind picker
-    // filesender.ui.nodes.expires.datepicker({
-    //     minDate: filesender.config.min_guest_days_valid,
-    //     maxDate: filesender.config.max_guest_days_valid
-    // });
-    // set value from epoch time
-    // filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
-    // filesender.ui.nodes.expires.on('change', function() {
-    //     filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
-    // });
 
     /**
      * It doesn't make sense to allow only send to me when the guest is getting a link

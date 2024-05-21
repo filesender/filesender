@@ -74,3 +74,8 @@
 .fs-new-invitation .remove {
     color: var(--fs-danger);
 }
+
+
+.guest-expires-select-by-picker {
+    display: none;
+}
