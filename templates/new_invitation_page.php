@@ -164,7 +164,7 @@ use ( $new_guests_can_only_send_to_creator,
                                     ?>
                                     </div>
 
-                                    <div class="fs-select">
+                                    <div class="fs-select guest-expires-select-by-days">
                                         <label for="expires-select">
                                             {tr:expires_after}
                                         </label>
@@ -174,6 +174,15 @@ use ( $new_guests_can_only_send_to_creator,
                                             <option value="30">30 {tr:days}</option>
                                             <option value="40">40 {tr:days}</option>
                                         </select>
+                                    </div>
+
+                                    <div class="fs-select guest_options options_box guest-expires-select-by-picker">
+                                        <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+                        
+                                        <input id="expires" name="expires" type="text" autocomplete="off"
+                                               title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_guest_days_valid'))) ?>"
+                                               data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
+                                        />
                                     </div>
 
                                     <div class="fs-collapse">

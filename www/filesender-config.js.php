@@ -214,6 +214,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 
 
     ui_use_datepicker_for_transfer_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_transfer_expire_time_selection')) ?>,
+    ui_use_datepicker_for_guest_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_guest_expire_time_selection')) ?>,
 
 };
 
