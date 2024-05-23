@@ -173,18 +173,7 @@ $user = Auth::user();
                             $icon = '<i class="fa '.$faicon.'"></i> ';
 
                             $url = AuthSP::logoffURL();
-                            if(Config::get('auth_sp_type') == "saml") {
-                                $link = Utilities::sanitizeOutput($url);
-                                $txt = Lang::tr('logoff');
-                                echo <<<EOT
-                                  <form action="$link" method="post" >
-                                    <button type="submit" class="fs-button fs-button--danger">
-                                        {$icon}
-                                        <span>$txt</span>
-                                    </button>
-                                  </form>
-                                EOT;
-                            } else if($url) {
+                            if($url) {
                                 echo '<a class="fs-button fs-button--danger" href="'.Utilities::sanitizeOutput($url).'">'.$icon.Lang::tr('logoff').'</a>';
                             }
                         }
