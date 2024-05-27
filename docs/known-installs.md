@@ -108,7 +108,6 @@ If you want to add your FileSender installation to this list, send an email to f
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016| 3 May 2024 - unreachable |
 | Australia | BARNET - Legal sector ISP | [https://filesender.barnet.com.au/](https://filesender.barnet.com.au/) | March 2018 | 13 May 2024 - unreachable |
 | Spain/Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| 3 May 2024 - unreachable |
-| UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| 3 May 2024 - unreachable |
 | Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013| 3 May 2024 - unreachable |
 
 ## Verified decommissioned installations
@@ -116,4 +115,5 @@ If you want to add your FileSender installation to this list, send an email to f
 | Country/Region| Organisation | Service URL | Known since | Last checked |
 | --- | --- | --- |---|---|
 | Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012| May 2024 - unreachable |
+| UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| May 2024 - unreachable |
 | USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| November 2020 - unreachable |
