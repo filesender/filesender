@@ -2,7 +2,7 @@ name: SonarQube CI
 on: push
 jobs:
   sonarQubeTrigger:
-    if: github.repository == "filesender/filesender"
+    if: github.repository == 'filesender/filesender'
     name: SonarQube Trigger
     runs-on: ubuntu-latest
     steps:
