@@ -210,9 +210,10 @@ class GUI
     public static function logo()
     {
         $locations = self::filterSources(array(
-            'images/logo.png',
-            'skin/logo.png',
-            Config::get('site_logo')
+	    'images/logo.png',
+	    'images/filesender-logo.svg',
+	    'skin/logo.png',
+	    Config::get('site_logo')
         ));
 
         return array_pop($locations);
@@ -228,7 +229,7 @@ class GUI
             return;
         }
 
-        echo '<img id="logo" src="'.self::path($location).'" alt="'.Config::get('site_name').'" />'."\n";
+        echo '<img id="logo" class="fs-link fs-link--no-hover" src="'.self::path($location).'" alt="'.Config::get('site_name').'" />'."\n";
     }
 
     /**
