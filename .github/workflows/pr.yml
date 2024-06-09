@@ -3,6 +3,7 @@ on: [ pull_request_target ]
 
 jobs:
   add_comment_pr:
+    if: github.repository == 'filesender/filesender'
     runs-on: ubuntu-latest
     name: Add link to selenium testing repo as a comment on PRs
     steps:
