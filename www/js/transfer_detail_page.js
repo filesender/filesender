@@ -33,7 +33,7 @@
 $(function() {
 
     // Transfer delete buttons
-    $('.fs-transfer-detail [data-action="delete"]').on('click', function() {
+    $('.fs-transfer-detail .fs-transfer-detail__actions [data-action="delete"]').on('click', function() {
         var id = $(this).closest('.fs-transfer-detail').attr('data-id');
         if(!id || isNaN(id)) return;
 
@@ -278,9 +278,9 @@ $(function() {
     });
 
     // Remind buttons
-    $('[data-recipients-enabled=""] [data-action="remind"]').addClass('disabled');
+    $('[data-recipients-enabled=""] .fs-transfer-detail__actions [data-action="remind"]').addClass('disabled');
 
-    $('[data-recipients-enabled="1"] [data-action="remind"]').on('click', function() {
+    $('[data-recipients-enabled="1"] .fs-transfer-detail__actions [data-action="remind"]').on('click', function() {
         var id = $(this).closest('.fs-transfer-detail').attr('data-id');
         if(!id || isNaN(id)) return;
 
@@ -291,6 +291,43 @@ $(function() {
         });
     });
 
+    $('.transfer_details .recipient [data-action="remind"]').on('click', function() {
+        var rcpt = $(this).closest('.recipient');
+        var id = rcpt.attr('data-id');
+        if(!id || isNaN(id)) return;
+        
+        filesender.ui.confirm(lang.tr('confirm_remind_recipient'), function() {
+            filesender.client.remindRecipient(id, function() {
+                filesender.ui.notify('success', lang.tr('recipient_reminded'));
+            });
+        });
+    });
+    
+    $('.transfer_details .recipient [data-action="delete"]').on('click', function() {
+        var rcpt = $(this).closest('.recipient');
+        var id = rcpt.attr('data-id');
+        var transfer = rcpt.closest('.transfer_details');
+        if(!id || isNaN(id)) return;
+        
+        filesender.ui.confirm(lang.tr('confirm_delete_recipient'), function() {
+            filesender.client.deleteRecipient(id, function() {
+                rcpt.remove();
+                if(!transfer.find('.recipients .recipient').length) {
+                    transfer.prev('.transfer').remove();
+                    transfer.remove();
+                }
+                filesender.ui.notify('success', lang.tr('recipient_deleted'));
+            });
+        });
+    });
+
+    $('.transfer_details .recipient [data-action="auditlog"]').on('click', function(e) {
+        var trid = $(this).closest('.transfer_details').attr('data-id');
+        var rid  = $(this).closest('.recipient').attr('data-id');
+        auditlogs(trid, 'author/recipient/' + rid);
+    });
+    
+    
     // Copy download link
     const copyToClipboard = (value) => {
         navigator.clipboard.writeText(value).then((x) => {

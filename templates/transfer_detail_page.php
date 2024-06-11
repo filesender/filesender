@@ -18,7 +18,7 @@ if ($transfer_id) {
 $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
 ?>
 
-<div class="fs-transfer-detail"
+<div class="fs-transfer-detail transfer_details"
      id="transfer_<?php echo $transfer->id ?>"
      data-id="<?php echo $transfer->id ?>"
      data-status="<?php echo $transfer->status ?>"
@@ -191,9 +191,9 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
                                 Your transfer has been sent to the following email addresses
                             </span>
 
-                            <div class="fs-badge-list">
+                            <div class="fs-badge-buttons-list recipients">
                                 <?php foreach($transfer->recipients as $recipient) { ?>
-                                    <div class="fs-badge" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                                    <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
                                         <?php
                                         if(in_array($recipient->email, Auth::user()->email_addresses)) {
                                             echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
@@ -201,6 +201,13 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
                                             echo '<span>'.Template::sanitizeOutput($recipient->identity).'</span>';
                                         }
                                         ?>
+
+                                        <span class="fs-badge-buttons-shell" >
+                                            <span data-action="remind" class="fa    fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                                            <span data-action="delete" class="fa    fa-lg fa-trash-o" title="{tr:delete}"></span>
+                                            <span data-action="auditlog" class="fa  fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
+                                        </span>
+                                        
                                     </div>
                                 <?php } ?>
 
