@@ -113,6 +113,18 @@
     }
 
     $showPager = $havePrev || $haveNext;
+
+if(!function_exists("makeAction")) {
+    function makeAction( $da, $ex, $title, $faicon )
+    {
+        echo <<<EOF
+               <button data-action="$da" type="button" class="fs-button fs-button--circle fs-button--no-text $ex" title="$title">
+                  <i class="fa $faicon" ></i>
+               </button>
+EOF;
+    }
+}
+
 ?>
 
 <table class="fs-table fs-table--responsive fs-table--selectable fs-table--striped" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>" data-audit="<?php echo $audit ?>">
@@ -241,16 +253,25 @@
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
 
-            <td class="actions">
-                <div id="marg3">
-                    <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
-                    <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
-                    <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
+            
+            <td class="actions  fs-table__actions">
+                <div id="marg3" class="actionsblock">
+                    <?php
+
+                    makeAction("delete", "fs-button--danger delete", "{tr:delete_invitation}", "fa-trash" );  
+                    if($extend) { makeAction("extend", "", "", "fa-calendar-plus-o" ); }  
+                    makeAction("add_recipient", "", "{tr:add_recipient}", "fa-envelope-o" );
+                    
+                    ?>
                 </div>
-                <div id="marg3">
-                    <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                    <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
-                    <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o adminaction" title="{tr:extend_expires}"></span><?php } ?>
+                <div id="marg3.2"  class="actionsblock">
+                    <?php
+
+                    makeAction("remind", "", "{tr:send_reminder}", "fa-repeat" );
+                    if($audit) { makeAction("auditlog", "", "{tr:open_auditlog}", "fa-history" ); }
+                    if($showAdminExtend) { makeAction("extendexpires", "", "{tr:extend_expires}", "fa-clock-o" ); }
+                    
+                     ?>
                 </div>
             </td>
             
