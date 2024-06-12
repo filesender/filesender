@@ -190,8 +190,9 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
                             <span>
                                 Your transfer has been sent to the following email addresses
                             </span>
-
-                            <div class="fs-badge-buttons-list recipients">
+                            <div class="fs-badge-buttons-listv recipients">
+                                <br/>
+                                
                                 <?php foreach($transfer->recipients as $recipient) { ?>
                                     <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
                                         <?php
@@ -209,12 +210,14 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
                                         </span>
                                         
                                     </div>
+                                    <br/>
                                 <?php } ?>
 
                                 <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
                                     <i class="fa fa-lg fa-envelope-o"></i>
                                     <span>Add recipient</span>
                                 </button>
+                                <br/>
                             </div>
                         </div>
                     </div>
