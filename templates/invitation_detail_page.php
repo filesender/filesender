@@ -95,13 +95,13 @@ if ($guest_id) {
                         <ul class="fs-list fs-list--inline">
                             <li>
                                 <button type="button" class="fs-button remind">
-                                    <i class="fa fa-mail-forward"></i>
+                                    <i class="fa fa-repeat"></i>
                                     <span>{tr:send_a_reminder}</span>
                                 </button>
                             </li>
                             <li>
                                 <button type="button" class="fs-button forward">
-                                    <i class="fa fa-repeat"></i>
+                                    <i class="fa fa-envelope-o"></i>
                                     <span>{tr:resend_invitation}</span>
                                 </button>
                             </li>
