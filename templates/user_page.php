@@ -146,12 +146,15 @@ $user = Auth::user();
                     echo "<span>".Utilities::formatDate($value)."</span>";
                     echo "</div>";
 
-                    $value = Auth::user()->quota;
+                    if( Config::get('user_quota') > 0 ) {
+                        $value = Auth::user()->quota;
 
-                    echo "<div class='fs-info'>";
-                    echo "<strong>{tr:current_quota_storage}:</strong>";
-                    echo "<span>".$value."</span>";
-                    echo "</div>";
+                        echo "<div class='fs-info'>";
+                        echo "<strong>{tr:current_quota_storage}:</strong>";
+                        echo "<span>".$value."</span>";
+                        echo "</div>";
+                    }
+                    
                     ?>
 
                     <div class="fs-settings__account-actions">
