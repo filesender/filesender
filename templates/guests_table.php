@@ -71,20 +71,22 @@
 
             <td class="actions fs-table__actions" data-label="{tr:actions}">
                 <div class="actionsblock">
-                    <?php if($mode == 'user' && $guest->status == 'available') { ?>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="{tr:send_a_reminder}">
-                            <i class="fa fa-mail-forward"></i>
-                        </button>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="{tr:resend_invitation}">
-                            <i class="fa fa-repeat"></i>
-                        </button>
-                    <?php } ?>
-
                     <?php if ($guest->status == 'available') { ?>
                         <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="{tr:delete_invitation}">
                             <i class="fa fa-trash"></i>
                         </button>
                     <?php } ?>
+                    <?php if($mode == 'user' && $guest->status == 'available') { ?>
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="{tr:send_a_reminder}">
+                            <i class="fa fa-repeat"></i>
+                        </button>
+                        <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="{tr:resend_invitation}">
+                            <i class="fa fa-envelope-o"></i>
+                        </button>
+                    <?php } ?>
+                    <button type="button" class="fs-button fs-button--circle fs-button--no-text details" title="{tr:details}">
+                        <i class="fa fa-info" ></i>
+                    </button>
                 </div>
             </td>
         </tr>

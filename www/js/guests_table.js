@@ -51,6 +51,14 @@ $(function() {
             var td = $(this);
             var ab = td.find('.actionsblock');
 
+            // Details button
+            td.find('.details').on('click', function() {
+                const parent = $(this).parent().parent().parent();
+                const guest_id = $(parent).data("id");
+                if (guest_id) {
+                    window.location.href = `?s=invitation_detail&guest_id=${guest_id}`;
+                }
+            });
 
             // Delete button
             td.find('.delete').on('click', function() {
