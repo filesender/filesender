@@ -96,7 +96,7 @@ parser = argparse.ArgumentParser(
       A config file can be added to {homepath}/.filesender/filesender.py.ini to avoid having to specify base URL, username and apikey on the command line.
 
       Example (Config file is present): 
-      python filesender.py -r reciever@example.com file1.txt''')
+      python filesender.py -r recipient@example.com file1.txt''')
 )
 parser.add_argument("files", help="path to file(s) to send", nargs='+')
 parser.add_argument("-v", "--verbose", action="store_true")
@@ -233,20 +233,20 @@ class SupportedCryptTypes(Enum):
   AESGCM = "AES-GCM"
 
 class SupportedHashTypes(Enum):
-  """Enum of supported Hash Types in clinet"""
+  """Enum of supported Hash Types in client"""
   SHA256 = "SHA-256"
 
 
 if encrypted:
   if not encryption_supported:
-    print("Failed ot import 'cryptography' library, cannot proceed with encrypted transfer.")
+    print("Failed to import 'cryptography' library, cannot proceed with encrypted transfer.")
     print("\npip3 install cryptography")
     exit(1)
     
   encryption_details = {}
   try:
     #Regex parsing of filesender-config.js.php to get correct requirements.
-    encryption_details["password_mixed_case_requied"] = (re.search(
+    encryption_details["password_mixed_case_required"] = (re.search(
         r"encryption_password_must_have_upper_and_lower_case: (\w+)",config_response.text).group(1)) == 'true'
     encryption_details["password_numbers_required"] = (re.search(
         r"encryption_password_must_have_numbers: (\w+)",config_response.text).group(1)) == 'true'
@@ -277,7 +277,7 @@ if encrypted:
 
 
 
-  if encryption_details["password_mixed_case_requied"]:
+  if encryption_details["password_mixed_case_required"]:
     has_lower = any(map((lambda x: x.islower()) ,encryption_details["password"]))
     has_upper = any(map((lambda x: x.isupper()) ,encryption_details["password"]))
     if not (has_lower and has_upper):
