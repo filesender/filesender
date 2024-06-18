@@ -1,12 +1,12 @@
 ---
-title: Upgrade to a newer 2.x release
+title: Upgrade to a newer 3.x release
 ---
 
-## Upgrade to a newer 2.x release
+## Upgrade to a newer 3.x release
 
-This page provides details of how to update from a 2.x series release
+This page provides details of how to update from a 3.x series release
 that you may have installed using the 
-[installation](https://docs.filesender.org/filesender/v2.0/install/) process.
+[installation](https://docs.filesender.org/filesender/v3.0/install/) process.
 
 You will notice that the release notes starts out mentioning in the 
 "Major changes" section if the database update script needs to be run
@@ -37,7 +37,7 @@ like to turn on or configure in your config.php.
 The following two subsections provide information about updating the
 source code using either the source tar balls or directly with git.
 Note that whichever method you use you should ensure that the file
-[permissions](https://docs.filesender.org/filesender/v2.0/install/#step-3---setup-the-filesender-configuration)
+[permissions](https://docs.filesender.org/filesender/v3.0/install/#step-3---setup-the-filesender-configuration)
 are set properly after the update.
 
 #### Installing from source archives
@@ -53,7 +53,7 @@ tar to strip the leading filesender-filesender-2.41.
 su -l
 cd  /opt/filesender
 tar --extract \
-    --file ~/src/filesender-filesender-2.41.tar.gz \
+    --file ~/src/filesender-filesender-3.0.tar.gz \
     --strip-components=1  \
     --verbose
 
@@ -62,12 +62,12 @@ tar --extract \
 
 #### Using FileSender using git
 
-For the 2.x series the master branch tracks the releases. This means
-that if 2.41 is the latest release the master should also be version
-2.41. Each release has a tag and git commit associated with it and you
+For the 3.x series the master branch tracks the releases. This means
+that if 3.0 is the latest release the master should also be version
+3.0. Each release has a tag and git commit associated with it and you
 can use that to checkout the source code for an exact version if you
-like. The two last git commands below checkout version 2.41 and the
-current 2.x series release respectively. You may receive an error message
+like. The two last git commands below checkout version 3.0 and the
+current 3.x series release respectively. You may receive an error message
 trying to switch to another version if you have modified the templates directory. 
 This is considered in the next section.
 
@@ -75,7 +75,7 @@ This is considered in the next section.
 cd  /opt/filesender
 git fetch origin
 
-git checkout filesender-2.41
+git checkout filesender-30.
 git checkout master
 ```
 
@@ -87,11 +87,11 @@ something like the below message when you try to upgrade this section
 might help.
 
 ```
-((filesender-2.40))]$ vi templates/upload_page.php
+((filesender-3.0))]$ vi templates/upload_page.php
 
 ... make changes ...
 
-((filesender-2.40))]$ git checkout filesender-2.41
+((filesender-3.0))]$ git checkout filesender-3.1
 error: Your local changes to the following files would be overwritten by checkout:
         templates/upload_page.php
 Please commit your changes or stash them before you switch branches.
@@ -103,11 +103,11 @@ checkout the release you would like to use, and try applying your
 local changes again as shown below.
 
 ```
-((filesender-2.40))]$ git checkout -b filesender-2.40-local
-((filesender-2.40))]$ git commit -a -m 'my changes'
-((filesender-2.40))]$ git diff filesender-2.40 > ~/tmp/filesender-local-changes.patch
-((filesender-2.40))]$ git checkout filesender-2.41
-((filesender-2.41))]$ patch -p1 < ~/tmp/filesender-local-changes.patch
+((filesender-3.0))]$ git checkout -b filesender-3.0-local
+((filesender-3.0))]$ git commit -a -m 'my changes'
+((filesender-3.0))]$ git diff filesender-3.0 > ~/tmp/filesender-local-changes.patch
+((filesender-3.0))]$ git checkout filesender-3.1
+((filesender-3.1))]$ patch -p1 < ~/tmp/filesender-local-changes.patch
 ```
 
 ### The database script
@@ -117,7 +117,7 @@ existing database and make the required changes for a release. For
 example, adding a new table or column. If you are running MySQL or
 MariaDB you will need to ensure that the drop permission is available
 to the script as shown in the
-[installation](https://docs.filesender.org/filesender/v2.0/install/#option-b---mysql).
+[installation](https://docs.filesender.org/filesender/v3.0/install/#option-b---mysql).
 This is unfortunate as only views should be dropped and it is hoped
 that a less aggressive permission can be used in the future.
 
@@ -130,7 +130,7 @@ php /opt/filesender/filesender/scripts/upgrade/database.php
 
 The release notes will mention the new conifg.php key items and they
 should have associated documentation in the
-[configuration](https://docs.filesender.org/filesender/v2.0/admin/configuration/)
+[configuration](https://docs.filesender.org/filesender/v3.0/admin/configuration/)
 page.
 
 ### Test and enjoy!

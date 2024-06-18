@@ -7,16 +7,20 @@ title: FileSender Roadmap
 
 Filesender has seen dozens of stable [releases](https://github.com/filesender/filesender/releases) of the v2 software.
 
-The Filesender team is starting to collate items for roadmap development beyond Filesenderv2.0. Further features are entirely dependent on the funding that the project can attract.  To find out more about how you can donate to the project visit the Filesender pages at the [nlnet Foundation](https://nlnet.nl/project/filesender/).
+With the release of v3 of the software, active development for v2 will stop.
+FileSender v2 will receive security fixes only until it's EOL date.
 
-Current priorities for the post 2.0 Filesender Roadmap are:
+The EOL date for FileSender 2.x is currently unknown.
+
+The FileSender team is starting to collate items for roadmap development beyond the FileSender v3.0. Further features are entirely dependent on the funding that the project can attract.  To find out more about how you can donate to the project visit the Filesender pages at the [nlnet Foundation](https://nlnet.nl/project/filesender/).
+
+Current priorities for the post 3.0 Filesender Roadmap are:
 
 ### Priority 1
 
 * Bugfix release
-* Object-store storage
 * Complete automated CI tests
-* Translation portal
+* Security related updates
 * Packaging and documentation
 
 
@@ -24,7 +28,6 @@ Current priorities for the post 2.0 Filesender Roadmap are:
 
 * Smooth UI
 * Statistics
-* Download link protection
 * Improve TeraSender speed and robustness
 * Address-book: link with group info sources
 
@@ -167,7 +170,7 @@ Selenium tests, More selenium tests!
 
 Clearly documentation is an issue for this. It seems that the bounce
 handling is a great example of an area that documentation can still
-improve. The current [admin configuration](v2.0/admin/configuration/)
+improve. The current [admin configuration](v3.0/admin/configuration/)
 still has much orange "to be checked" areas relating to email.
 
 It seems that the cited bounce script is this one scripts/task/

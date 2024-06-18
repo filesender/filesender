@@ -1,8 +1,8 @@
 ---
-title: F.A.Q/troubleshooting for version 2.0
+title: F.A.Q/troubleshooting for version 3.0
 ---
 
-## Frequently Asked Questions for version 2.0
+## Frequently Asked Questions for version 3.0
 
 
 ### No session after logging in via SimpleSAMLphp

@@ -1,8 +1,8 @@
 ---
-title: Documentation v2
+title: Documentation v3
 ---
 
-# FileSender 2
+# FileSender 3
 
 ## Overview
 
@@ -12,7 +12,7 @@ title: Documentation v2
 
 ## Installation
 
-* [Linux source (from Git for 2.x)](install/)
+* [Linux source (from Git for 3.x)](install/)
 * [Upgrade notes](development-upgrade-notes/)
 
 ## Administration
@@ -24,7 +24,7 @@ title: Documentation v2
 ## Language handling
 
 * [Language handling and localisation reference](i18n/)
-* [How to contribute to the FileSender translation effort](i18n/#how_to_contribute_to_the_filesender_2.0_translation_effort)
+* [How to contribute to the FileSender translation effort](i18n/#how_to_contribute_to_the_filesender_3.0_translation_effort)
 
 ## FAQ
 

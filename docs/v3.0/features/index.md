@@ -2,9 +2,9 @@
 title: Detailed feature list
 ---
 
-# Version 2.0 detailed feature list (draft)
+# Version 3.0 detailed feature list (draft)
 
-This document lists most of the features currently implemented in the 2.0-beta1 code.  Please note that while most of the features are stable, some features may disappear or change.
+This document lists most of the features currently implemented in the 3.0 code.  Please note that while most of the features are stable, some features may disappear or change.
 
 ## User visible features
 

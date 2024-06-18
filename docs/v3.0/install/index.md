@@ -1,11 +1,11 @@
 ---
-title: Installation - Linux Source 2.x from Git
+title: Installation - Linux Source 3.x from Git
 ---
 
 ## About this documentation
 
 This is the installation documentation for installing the FileSender
-2.x releases on Linux. See the
+3.x releases on Linux. See the
 [releases](https://github.com/filesender/filesender/releases) page for
 up to date information about recent releases. This guide is written
 for installation from source on the RedHat/CentOS or Debian platform
@@ -25,13 +25,12 @@ you can report issues with and update the documentation.
 
 ### This documentation was tested with
 
-* RedHat/CentOS (7)
-* Debian (9, Stretch with [apache and postgresql] and [apache and mariadb])
-* Fedora (28 with apache and postgresql)
+* Rocky 9
+* Debian (12 with [apache and postgresql] and [apache and mariadb])
 
 ### Dependencies
 
-* Apache (or nginx) and PHP version 7.3 or later.
+* Apache (or nginx) and PHP version 8.1 or later.
 * A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
 * [SimpleSamlPhp](https://simplesamlphp.org/download/) 1.19.7 or
@@ -118,8 +117,8 @@ might like. So in the below the filesender directory is renamed.
 su -l
 mkdir -p /opt/filesender
 cd       /opt/filesender
-tar xzvf /tmp/filesender-2.0.tar.gz
-mv filesender-filesender-2.0  filesender
+tar xzvf /tmp/filesender-3.0.tar.gz
+mv filesender-filesender-3.0  filesender
 ```
 
 
@@ -128,7 +127,7 @@ mv filesender-filesender-2.0  filesender
 Install the Git package with one of the following commands.
 
 ```
-# on RedHat/CentOS
+# on Rocky
 dnf install -y git
 
 # on Debian:
@@ -136,7 +135,7 @@ apt-get install -y git
 ```
 
 
-Install the FileSender 2.0 from the GIT repository use the following
+Install the FileSender 3.0 from the GIT repository use the following
 commands. The `master` branch will always contain the latest release.
 You can select explicit versions using the release tag of the version
 you wish to run from the
@@ -145,13 +144,8 @@ you wish to test a feature that is in development and has been merged
 but is not part of any release yet you might like to checkout the
 `development` branch which contains all merged updates.
 
-The version 3.0 alpha series has an updated UI using Bootstrap.
-Similar to the master and development there are `master3` and
-`development3` which are the latest release and current development
-code respectively.
-
 In the example code below I am going to use the latest release in the
-2.x series. You can see the tag (version string) that you need for git
+3.x series. You can see the tag (version string) that you need for git
 to get an explicit version by looking on the
 [Releases](https://github.com/filesender/filesender/releases) page and
 on the left will be the tag shown for every release next to a little
@@ -557,7 +551,7 @@ listen = 127.0.0.1:9090
 
 ## Option a - PostgreSQL
 
-On RedHat/CentOS, run:
+On Rocky, run:
 
 	dnf install -y php-pgsql postgresql-server
 

@@ -8,12 +8,12 @@ Filesender includes a translation engine which allows for flexible user language
 
 ## How to contribute to the FileSender 2.0 translation effort
 
-Starting with version 2.0 we are using www.poeditor.com to manage the different languages
+Starting with version 3.0 we are using www.poeditor.com to manage the different languages
 FileSender supports.  If you want to contribute to a translation please follow the public
-link to the FileSender 2.0 project in poeditor.com and follow the instructions you get
+link to the FileSender 3.0 project in poeditor.com and follow the instructions you get
 there:
 
-[https://poeditor.com/join/project/RqXr9WBJwU](https://poeditor.com/join/project/RqXr9WBJwU)
+[https://poeditor.com/join/project/eRy7gOnoQh](https://poeditor.com/join/project/eRy7gOnoQh)
 
 After completing the sign-up process you should be able to add yourself to the language
 you want to contribute to or add a new language and start translating right away!
@@ -53,7 +53,7 @@ FileSender UI / emails translation engine includes a simple markup language with
 
 Variables come from the various replacement calls done on the translated content during it's processing.
 
-Variables available in UI translations can be found in the `en_AU` language files most of the time.
+Variables available in UI translations can be found in the `en` language files, as this is the "base" language to translate from.
 
 Variables available in emails are described [a bit further](#email-variables)
 
@@ -649,7 +649,7 @@ git checkout with the information from the exported translation file.
 
 ```
 $ cd ./scripts/language/
-$ php import-translation-for-language.php  en_AU /tmp/FileSender_2.0_English_AU.php
+$ php import-translation-for-language.php  en_AU /tmp/FileSender_3.0_English_AU.php
 ```
 
 Once you are happy with the update, by using git diff for example, you

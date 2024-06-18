@@ -4,7 +4,7 @@ title: FileSender Shredding deleted files
 
 # FileSender Shredding deleted files
 
-FileSender 2.0 can execute shred or other long running tasks to
+FileSender 3.0 can execute shred or other long running tasks to
 securely delete user files when they are discarded by the user.
 Explicit support was added in FileSender 2.0 beta 4 for this
 functionality.

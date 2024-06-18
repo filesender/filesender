@@ -59,17 +59,11 @@ The 1.6.x series (with its latest release `1.6.1` from 2015 CE) is considered de
 
 ### Documentation
 
-As of late 2021 the documentation for FileSender 3.x is the same as
-that of the 2.x series. The same options are available in both
-versions of FileSender and setup and configuration is the same. Both
-FileSender 2.x and 3.x also share the same database schema and you
-should be able to migrate a version from 2.x to 3.x retaining active
-file uploads and all the information in the database.
+The documentation of FileSender depends on the version you are using.
+To date, there are two supported versions of FileSender:
 
-Perhaps in 2022 FileSender 3.x will become the major release at which
-point the documentation for 2.x will be cloned to a 3.x series.
-
-Please see the [documentation for versions 2.x](v2.0/).
+[Documentation for versions 2.x](v2.0/).
+[Documentation for versions 3.x](v3.0/).
 
 ### License
 
@@ -91,8 +85,7 @@ page if you have a feature you would like to see added to FileSender.
 ### Features
 
 For a more detailed list of version 2.x features see the [v2.0 features page](v2.0/features/).
-The functionality of the 3.x alpha release are the same as the 2.x features but a new Bootstrap
-UI is used to present the site.
+For a more detailed list of version 3.x features see the [v3.0 features page](v3.0/features/).
 
 * light-weight server footprint, optimized for least possible dependencies
 * share arbitrarily large files from standard desktop environments, no client-side deployment required
@@ -114,12 +107,11 @@ UI is used to present the site.
 * PDO-based multi-database support for PostgreSQL, MySQL and sqlite
 
 
-
 ### Requirements
 
 Some storage, either MariaDB or PostgreSQL for database, either Apache
 or nginx for web server, PHP and SimpleSamlPhp. Please see the
-[installation](v2.0/install/) page for minimum version requirements
+[installation](v3.0/install/) page for minimum version requirements
 and advice.
 
 
