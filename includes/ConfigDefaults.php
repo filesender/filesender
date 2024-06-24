@@ -69,6 +69,8 @@ $default = array(
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
 
+    'auth_warn_session_expired' => false,
+
     'auth_remote_user_enabled' => false, //disables remote user auth
 
     'aup_default' => false,

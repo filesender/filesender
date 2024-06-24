@@ -24,14 +24,17 @@ about the project [please visit our homepage](https://filesender.org).
 
 ### Which version should you choose
 
-There are 3 releases, of which 2 are maintained:
+The 2.x stream is a long standing release stream and is the current
+stable release as at June 2024. The latest version can be obtained
+from the [github releases
+page](https://github.com/filesender/filesender/releases).
 
-- Version 1 is an archived, older version of FileSender which is not maintained
-- Version 2 is the current mainstream version with active feature developmet
-- Version 3 is in development, with alpha releases. This version features a new UI
+There are two active release streams; a version 2.x stream and a 3.x
+stream. The 3.x beta release steam has a different UI and will become
+the stable release at some stage.
 
 Version 3 and Version 2 should have the same functionality but version
-3 uses Bootstrap to present a more modern UI. The uploaded files
+3 uses custom CSS to present a more modern UI. The uploaded files
 storage handling is the same in version 2 and version 3. The database
 schema is very similar between the two and should be identical at
 specific release. For example, version 3.0alpha2 [explicitly
@@ -40,36 +43,23 @@ that it is feature compatible with 2.30. So you should be able to
 direct 3.0alpha2 at the same uploaded files and database and have the
 system function.
 
-The version 2.x series is the recommended choice in late 2021. Perhaps
-in 2022 version 3.x will become the recommended choice. The latest
-version can be obtained from the [github releases
-page](https://github.com/filesender/filesender/releases).
+The release numbering for the 2.x series follows the pattern 2.1, 2.2,
+2.30 etc. Each of these releases builds on version 2.0 adding bugfixes
+and features. Each new release in the 2.x series will describe if
+database updates are needed (most often by running a script) and if
+web page templates have been updated in case you customize those on
+your site. If is intended that you can migrate an active site to new
+releases with very minimal downtime.
 
-The release numbering for the 2.x series follows the
-pattern 2.1, 2.2, 2.30 etc. Each of these releases builds on
-version 2.0 adding bugfixes and features. Each new
-release in the 2.x series will describe if database updates are needed
-(most often by running a script) and if web page templates have been
-updated in case you customize those on your site. If is intended that
-you can migrate an active site to new releases with very minimal downtime.
-
-The 1.6.x series (with its latest release `1.6.1` from 2015 CE) is considered deprecated. It is still
-[available](https://github.com/filesender/filesender/releases/tag/1.6.1)
-(see "Assets" at the very end of that page for source code download links).
+The very old 1.6.x series should not be used.
 
 ### Documentation
 
-As of late 2021 the documentation for FileSender 3.x is the same as
-that of the 2.x series. The same options are available in both
-versions of FileSender and setup and configuration is the same. Both
-FileSender 2.x and 3.x also share the same database schema and you
-should be able to migrate a version from 2.x to 3.x retaining active
-file uploads and all the information in the database.
-
-Perhaps in 2022 FileSender 3.x will become the major release at which
-point the documentation for 2.x will be cloned to a 3.x series.
-
-Please see the [documentation for versions 2.x](v2.0/).
+There are two distinct trees of documentation, one for [documentation
+for versions 2.x](v2.0/) and one for [documentation for versions
+3.x](v3.0/). These were identical as of June 2024 and will diverge as
+updates are made to better describe the changes in the 3.x series over
+time.
 
 ### License
 
@@ -90,9 +80,8 @@ page if you have a feature you would like to see added to FileSender.
 
 ### Features
 
-For a more detailed list of version 2.x features see the [v2.0 features page](v2.0/features/).
-The functionality of the 3.x alpha release are the same as the 2.x features but a new Bootstrap
-UI is used to present the site.
+For a more detailed list of version 2.x features see the [v2.0
+features page](v2.0/features/).
 
 * light-weight server footprint, optimized for least possible dependencies
 * share arbitrarily large files from standard desktop environments, no client-side deployment required
