@@ -13,6 +13,7 @@
                     <?php echo Version::code() ?>
                 </div>
             <?php } ?>
+
         </footer>
     </body>
 </html>

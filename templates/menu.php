@@ -14,7 +14,6 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
 <!-- New UI header - BEGIN -->
 <header>
-
     <nav>
         <a class="fs-link fs-link--no-hover" href="<?php echo GUI::path() ?>">
             <?php GUI::includeLogo() ?>
@@ -69,5 +68,4 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
         </ul>
     </nav>
-
 </header> <!-- New UI header - END -->
