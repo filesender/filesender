@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Tiedostosiirto valmistui
+subject: Tiedosto{if:transfer.files>1}ja{endif} noudettavissa
 
 {alternative:plain}
 
 Hei!
 
-Seuraava tiedosto tai tiedostot on siirretty onnistuneesti palveluun {cfg:site_name}.
+Käyttäjä {transfer.user_email} on jakanut palveluun {cfg:site_name} yhden tai useampia tiedostoja ja merkinnyt sinut vastaanottajaksi:
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -21,7 +21,15 @@ Seuraava tiedosto tai tiedostot on siirretty onnistuneesti palveluun {cfg:site_n
 {transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
-Lisätietoja: {transfer.link}
+Latauslinkki: {recipient.download_link}
+
+Tiedostojako on saatavilla {date:transfer.expires} asti, minkä jälkeen tiedostot poistetaan palvelusta automaattisesti. Muista siis noutaa tiedostot ajoissa!
+
+{if:transfer.message || transfer.subject}
+Henkilökohtainen viesti lähettäjältä {transfer.user_email}: {transfer.subject}
+
+{transfer.message}
+{endif}
 
 Terveisin,
 {cfg:site_name}
@@ -33,13 +41,13 @@ Terveisin,
 </p>
 
 <p>
-    Seuraava tiedosto tai tiedostot on siirretty onnistuneesti palveluun <a href="{cfg:site_url}">{cfg:site_name}</a>.
+    Käyttäjä {transfer.user_email} on jakanut palveluun {cfg:site_name} yhden tai useampia tiedostoja ja merkinnyt sinut vastaanottajaksi:
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Tiedonsiirto</th>
+            <th colspan="2">Tiedostojaon tiedot</th>
         </tr>
     </thead>
     <tbody>
@@ -57,19 +65,33 @@ Terveisin,
                 {endif}
             </td>
         </tr>
+        {if:transfer.files>1}
         <tr>
             <td>Koko</td>
             <td>{size:transfer.size}</td>
         </tr>
+        {endif}
         <tr>
-            <td>Lisätietoja</td>
-            <td><a href="{transfer.link}">{transfer.link}</a></td>
+            <td>Erääntyy</td>
+            <td>{date:transfer.expires}</td>
+        </tr>
+        <tr>
+            <td>Latauslinkki</td>
+            <td><a href="{recipient.download_link}">{recipient.download_link}</a></td>
         </tr>
     </tbody>
 </table>
+
+{if:transfer.message}
+<p>
+    Henkilökohtainen viesti lähettäjältä {transfer.user_email}:
+</p>
+<p class="message">
+    {transfer.message}
+</p>
+{endif}
 
 <p>
     Terveisin,<br />
     {cfg:site_name}
 </p>
-
