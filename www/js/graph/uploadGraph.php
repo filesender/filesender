@@ -8,31 +8,44 @@ $encO = Config::get('encryption_mandatory');
 $encF = 'additional_attributes LIKE \'%\"encryption\":false%\'';
 $encT = 'additional_attributes LIKE \'%\"encryption\":true%\'';
 
-$sql =
-    'SELECT days.date, speed.speed, speed.enspeed '
-  . 'FROM (SELECT (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
-                     . DBLayer::toIntervalDays("a+b") . ' date '
-  . '        FROM (SELECT 0 a UNION SELECT 1 a UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 '
-  . '                     UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 ) d, '
-  . '             (SELECT 0 b UNION SELECT 10 UNION SELECT 20 UNION SELECT 30 UNION SELECT 40) m '
-  . '        WHERE (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
-                            . DBLayer::toIntervalDays("a+b") . ' <= (select date(now())) '
-  . '        ORDER BY a + b) as days LEFT '
-  . ' JOIN (SELECT DATE(created) as date, '
-  .($encO ? '0 as speed, ' : '   AVG(case WHEN time_taken > 0 AND ' . $encF . ' THEN size/time_taken ELSE null END) as speed, ' )
-  . '   AVG(case WHEN time_taken > 0 AND ' . $encT . ' THEN size/time_taken ELSE null END) as enspeed, '
-  .($encO ? '0 as count, ' : '   AVG(case WHEN ' . $encF . ' THEN id ELSE null END) as count, ' )
-  . '   AVG(case WHEN ' . $encT . ' THEN id ELSE null END) as encount '
-  . '       from StatLogs '
-  . '      WHERE event=\'file_uploaded\' '
-  . '            AND created>NOW() - INTERVAL \'31\' DAY '
-  . '            AND size > ' . $minSz . ' '
-  . '      GROUP BY Date) as speed on days.date=speed.date '
-  . ' ORDER BY days.date';
 
-$statement = DBI::prepare($sql);
-$statement->execute(array());
-$result = $statement->fetchAll();
+if( Utilities::isTrue( Config::get('upload_graph_use_cache_table'))) {
+
+    $sql = 'SELECT date,speed,enspeed from UploadGraphs order by date asc';
+    $statement = DBI::prepare($sql);
+    $statement->execute(array());
+    $result = $statement->fetchAll();
+
+} else {
+
+    $sql =
+        'SELECT days.date, speed.speed, speed.enspeed '
+        . 'FROM (SELECT (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
+      . DBLayer::toIntervalDays("a+b") . ' date '
+               . '        FROM (SELECT 0 a UNION SELECT 1 a UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 '
+               . '                     UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 ) d, '
+               . '             (SELECT 0 b UNION SELECT 10 UNION SELECT 20 UNION SELECT 30 UNION SELECT 40) m '
+               . '        WHERE (SELECT Date(NOW() - INTERVAL \'30\' DAY)) + '
+               . DBLayer::toIntervalDays("a+b") . ' <= (select date(now())) '
+                        . '        ORDER BY a + b) as days LEFT '
+                        . ' JOIN (SELECT DATE(created) as date, '
+                         .($encO ? '0 as speed, ' : '   AVG(case WHEN time_taken > 0 AND ' . $encF . ' THEN size/time_taken ELSE null END) as speed, ' )
+                        . '   AVG(case WHEN time_taken > 0 AND ' . $encT . ' THEN size/time_taken ELSE null END) as enspeed, '
+                         .($encO ? '0 as count, ' : '   AVG(case WHEN ' . $encF . ' THEN id ELSE null END) as count, ' )
+                        . '   AVG(case WHEN ' . $encT . ' THEN id ELSE null END) as encount '
+                        . '       from StatLogs '
+                        . '      WHERE event=\'file_uploaded\' '
+                        . '            AND created>NOW() - INTERVAL \'31\' DAY '
+                        . '            AND size > ' . $minSz . ' '
+                        . '      GROUP BY Date) as speed on days.date=speed.date '
+                        . ' ORDER BY days.date';
+    
+    $statement = DBI::prepare($sql);
+    $statement->execute(array());
+    $result = $statement->fetchAll();
+}
+
+
 
 $data = array(
     'type' => 'line',

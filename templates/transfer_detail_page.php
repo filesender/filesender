@@ -5,20 +5,41 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
 $haveNext = 0;
 $havePrev = 0;
 
+$transfer_not_found = <<<HEREDOC
+      <div class="fs-transfer-detail transfer_details">
+        <div class="container">
+            {tr:transfer_not_found}
+        </div>
+      </div>
+HEREDOC;
+
 $transfer_id  = Utilities::arrayKeyOrDefault($_GET, 'transfer_id',  0, FILTER_VALIDATE_INT  );
 $isEncrypted = false;
 $downloadsCount = 0;
 $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
+$transfer = null;
 
 if ($transfer_id) {
-    $transfer = Transfer::fromId($transfer_id);
-    $downloadsCount = count($transfer->downloads);
+    try {
+        $transfer = Transfer::fromId($transfer_id);
+        $downloadsCount = count($transfer->downloads);
+    } catch( Exception  $e ) {
+        echo $transfer_not_found;
+        return;
+    }
 }
 
 $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
+
+
+$user = Auth::user();
+if( !Auth::isAuthenticated() || !$transfer || $transfer->userid != $user->id ) {
+    echo $transfer_not_found;
+    return;
+}
 ?>
 
-<div class="fs-transfer-detail"
+<div class="fs-transfer-detail transfer_details"
      id="transfer_<?php echo $transfer->id ?>"
      data-id="<?php echo $transfer->id ?>"
      data-status="<?php echo $transfer->status ?>"
@@ -190,10 +211,11 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
                             <span>
                                 Your transfer has been sent to the following email addresses
                             </span>
-
-                            <div class="fs-badge-list">
+                            <div class="fs-badge-buttons-listv recipients">
+                                <br/>
+                                
                                 <?php foreach($transfer->recipients as $recipient) { ?>
-                                    <div class="fs-badge" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                                    <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
                                         <?php
                                         if(in_array($recipient->email, Auth::user()->email_addresses)) {
                                             echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
@@ -201,13 +223,22 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
                                             echo '<span>'.Template::sanitizeOutput($recipient->identity).'</span>';
                                         }
                                         ?>
+
+                                        <span class="fs-badge-buttons-shell" >
+                                            <span data-action="remind" class="fa    fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                                            <span data-action="delete" class="fa    fa-lg fa-trash-o" title="{tr:delete}"></span>
+                                            <span data-action="auditlog" class="fa  fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
+                                        </span>
+                                        
                                     </div>
+                                    <br/>
                                 <?php } ?>
 
                                 <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
                                     <i class="fa fa-lg fa-envelope-o"></i>
                                     <span>Add recipient</span>
                                 </button>
+                                <br/>
                             </div>
                         </div>
                     </div>

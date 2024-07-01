@@ -38,6 +38,7 @@
 
     --fs-hover: #DCE3F2;
 
+    --fs-btn:  var(--fs-blue);
     --fs-btn-hover: #3E6DC1;
     --fs-btn-active: #81A0D6;
 

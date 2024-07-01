@@ -177,6 +177,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
                 , download_complete:       "<?php echo Lang::tr('download_complete')->out(); ?>"
 /**/            , download_chunk_progress: "<?php echo Lang::tr('download_chunk_progress')->out(); ?>"
                 , file_not_found:          "<?php echo Lang::tr('file_not_found')->out(); ?>"
+                , session_expired_warning: "<?php echo Lang::tr('session_expired_warning')->out(); ?>"
 	},
     
     clientlogs: {
@@ -213,7 +214,10 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     client_send_current_timezone_to_server: <?php echo value_to_TF(Config::get('client_send_current_timezone_to_server')) ?>,
 
 
+    ui_use_datepicker_for_transfer_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_transfer_expire_time_selection')) ?>,
+    ui_use_datepicker_for_guest_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_guest_expire_time_selection')) ?>,
 
+    auth_warn_session_expired: <?php echo value_to_TF(Config::get('auth_warn_session_expired')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

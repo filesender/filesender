@@ -56,13 +56,13 @@ for the Web server setup, one for each supported server.
 On RedHat/CentOS, run:
 
 ```
-dnf install -y httpd mod_ssl php php-mbstring php-xml php-json
+dnf install -y httpd mod_ssl php php-mbstring php-xml php-json php-intl
 ```
 
 On Debian, run:
 
 ```
-apt-get install -y apache2 php php-mbstring php-xml php-json libapache2-mod-php
+apt-get install -y apache2 libapache2-mod-php php php-mbstring php-xml php-json php-intl
 ```
 
 # Step 1-nginx - Install NGINX and PHP

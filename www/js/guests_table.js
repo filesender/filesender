@@ -51,6 +51,14 @@ $(function() {
             var td = $(this);
             var ab = td.find('.actionsblock');
 
+            // Details button
+            td.find('.details').on('click', function() {
+                const parent = $(this).parent().parent().parent();
+                const guest_id = $(parent).data("id");
+                if (guest_id) {
+                    window.location.href = `?s=invitation_detail&guest_id=${guest_id}`;
+                }
+            });
 
             // Delete button
             td.find('.delete').on('click', function() {
@@ -68,7 +76,7 @@ $(function() {
             if(table.is('[data-mode!="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 if( days > 0 ) {
-                    var extend = $('<span data-action="extendguestexpires" class="extend clickable fa fa-lg fa-clock-o" />');
+                    var extend = $('<span data-action="extendguestexpires" class="extend fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock-o" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({
                             days: $(this).closest('.objectholder').attr('data-expiry-extension')
@@ -83,7 +91,7 @@ $(function() {
             if(table.is('[data-mode="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 if( days > 0 ) {
-                    var extend = $('<span data-action="extendexpires" class="extend adminaction clickable fa fa-lg fa-clock-o" />');
+                    var extend = $('<span data-action="extendexpires" class="extend adminaction fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock-o" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({
                             days: $(this).closest('.objectholder').attr('data-expiry-extension')

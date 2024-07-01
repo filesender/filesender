@@ -379,14 +379,14 @@ class Utilities
             return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
         });
         
-        if(!count($ips)) {
+        $ip = array_shift($ips);
+        if (is_null($ip)) {
             if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
                 return $_SERVER['REMOTE_ADDR']; // fallback
             }
             return '127.0.0.1';
         }
-        
-        return $ips[0];
+        return $ip;
     }
     
     /**

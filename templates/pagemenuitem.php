@@ -53,6 +53,9 @@ function pagemenuitem($page) {
     if($page == 'help') {
         $faicon = 'fa-question-circle';
     }
+    if($page == 'statistics') {
+        $faicon = 'fa-bar-chart';
+    }
 
     if($faicon) {
         $icon = '<i class="fa '.$faicon.'"></i> ';

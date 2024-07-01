@@ -244,7 +244,9 @@ filesender.ui.elements.preventEmpty = function(el) {
     el.on( 'focus', function(e) { originalValue = e.target.value; } );
     el.on( 'blur',  function(e) {
         if( e.target.value == '' ) {
-            // filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
+            if( filesender.config.ui_use_datepicker_for_transfer_expire_time_selection ) {
+                filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
+            }
         }
     });
     return this;
@@ -1190,7 +1192,8 @@ filesender.ui.cancelAutomaticResume = function() {
 
 filesender.ui.startUpload = function() {
 
-    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
+    window.filesender.ui.uploading = true;
+    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
     this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
 
@@ -1204,12 +1207,16 @@ filesender.ui.startUpload = function() {
     window.filesender.pbkdf2dialog.reset();
 
     if(!filesender.ui.nodes.required_files) {
-        const expiresDays = $('#expires-select').find(":selected").val();
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
 
-        this.transfer.expires = expiresDate / 1000;
+        if( filesender.config.ui_use_datepicker_for_transfer_expire_time_selection ) {
+            this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+        } else {
+            const expiresDays = $('#expires-select').find(":selected").val();
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
+            this.transfer.expires = expiresDate / 1000;
+        }
 
         if(filesender.ui.nodes.from.length)
             this.transfer.from = filesender.ui.nodes.from.val();
@@ -1275,7 +1282,8 @@ filesender.ui.startUpload = function() {
     this.transfer.oncomplete = function(time) {
 
         filesender.ui.uploadLogPrependRAW( lang.tr('upload_completed'), 0 );
-
+        window.filesender.ui.uploading = false;       
+ 
         filesender.ui.files.clear_crust_meter_all();
         window.filesender.pbkdf2dialog.ensure_onPBKDF2AllEnded();
 
@@ -1614,6 +1622,13 @@ filesender.ui.goToStage = function (stage) {
     const stageElement = $(`[data-step="${stage}"`);
     stageElement.addClass(filesender.ui.stageActiveClass);
     filesender.ui.stage = stage;
+    if( stage == 3 || stage == 4 ) {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "auto",
+        });
+    }
 }
 
 filesender.ui.removeFile = function (e) {
@@ -2207,6 +2222,51 @@ $(function() {
         );
     }
 
+    
+    if( filesender.config.ui_use_datepicker_for_transfer_expire_time_selection ) {
+
+        form.find('.expires-select-by-days').hide();
+        form.find('.expires-select-by-picker').show();
+
+            
+        // Setup date picker
+        $.datepicker.setDefaults({
+            closeText: lang.tr('dp_close_text').out(),
+            prevText: lang.tr('dp_prev_text').out(),
+            nextText: lang.tr('dp_next_text').out(),
+            currentText: lang.tr('dp_current_text').out(),
+            
+            monthNames: lang.tr('dp_month_names').values(),
+            monthNamesShort: lang.tr('dp_month_names_short').values(),
+            dayNames: lang.tr('dp_day_names').values(),
+            dayNamesShort: lang.tr('dp_day_names_short').values(),
+            dayNamesMin: lang.tr('dp_day_names_min').values(),
+            
+            weekHeader: lang.tr('dp_week_header').out(),
+            dateFormat: lang.trWithConfigOverride('dp_date_format').out(),
+            
+            firstDay: parseInt(lang.tr('dp_first_day').out()),
+            isRTL: lang.tr('dp_is_rtl').out().match(/true/),
+            showMonthAfterYear: lang.tr('dp_show_month_after_year').out().match(/true/),
+            
+            yearSuffix: lang.tr('dp_year_suffix').out()
+        });
+        // Bind picker
+        filesender.ui.nodes.expires.datepicker({
+            minDate: 1,
+            maxDate: filesender.config.max_transfer_days_valid
+        });
+        // set value from epoch time
+        filesender.ui.setDateFromEpochData( filesender.ui.nodes.expires );
+        filesender.ui.nodes.expires.on('change', function() {
+            filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
+        });
+
+        // prevent the datepicker from having an empty string.
+        filesender.ui.nodes.expires.preventEmpty = filesender.ui.elements.preventEmpty(
+            filesender.ui.nodes.expires);
+    }
+    
     // Custom collapse
     $('.fs-collapse__open').on('click', function() {
         $(this.parentElement).addClass('fs-collapse--open');
@@ -2672,6 +2732,10 @@ $(function() {
 
                 filesender.ui.nodes.aup.prop('checked', true);
 
+                if( filesender.config.ui_use_datepicker_for_transfer_expire_time_selection ) {
+                    filesender.ui.nodes.expires.datepicker('setDate', new Date(failed.expires * 1000));
+                }
+                
                 for(var o in failed.options) {
                     var i = filesender.ui.nodes.options[o];
                     if(i.is('[type="checkbox"]')) {

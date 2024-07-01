@@ -5,11 +5,13 @@ title: FileSender Roadmap
 ## FileSender Roadmap
 
 
-Filesender has seen dozens of stable [releases](https://github.com/filesender/filesender/releases) of the v2 software.
+The Filesender team is starting to collate items for roadmap
+development beyond Filesender v3.0. Further features are entirely
+dependent on the funding that the project can attract. To find out
+more about how you can donate to the project visit the Filesender
+pages at the [nlnet Foundation](https://nlnet.nl/project/filesender/).
 
-The Filesender team is starting to collate items for roadmap development beyond Filesenderv2.0. Further features are entirely dependent on the funding that the project can attract.  To find out more about how you can donate to the project visit the Filesender pages at the [nlnet Foundation](https://nlnet.nl/project/filesender/).
-
-Current priorities for the post 2.0 Filesender Roadmap are:
+Current priorities for the Filesender Roadmap are:
 
 ### Priority 1
 
@@ -27,6 +29,13 @@ Current priorities for the post 2.0 Filesender Roadmap are:
 * Download link protection
 * Improve TeraSender speed and robustness
 * Address-book: link with group info sources
+
+### Unofficial
+
+The developers have proposed these possible features in the past
+
+* Upload efficiency gains. On local networks some modifications would boost upload performance from 100 to 500+mb/sec speed. One of these gains is obtained by using less CPU which will likely offer lower CPU loads on servers even if the overall upload speed is network bound.
+* Public key integration. For example using PGP. This will for example allow somebody to elect to upload their public key and then have their guests be able to send encrytped files to them without needing to also send the passphrase used. The passphrase would be encrypted in the browser and sent by email.
 
 
 ## Community Proposals
@@ -136,32 +145,9 @@ stored in the same filesender database.
 https://github.com/filesender/filesender/issues/100
 
 
-### Travis CI
+### Selenium
 
-For FileSender 2.0 we should consider PHP 7.2 to be the minimum
-version. This will mean the CI can be moved to that version and use
-the more recent Ubuntu operating system to run the CI. This is
-starting to become a problem as travis CI has moved to more recent
-operating systems that no longer offer php 5.3. Some of the current
-selenium tests fail when executed in php 5.6 and must be updated.
-
-Currently the CI executes exclusively on a postgresql database. It
-would be useful to perform on both mysql and postgresql to catch SQL
-query issues specific to either.
-
-Widen the scope of the php that is tested by CI
-
-Add more selenium tests.
-
-Which PHP versions are in stock Debian + Red Hat?
-```
-  Fedora 24 is php 5.6.31
-  Fedora 26 is php 7.1
-  Debian Stretch is php 7.0 https://packages.debian.org/stretch/php
-```
-
-Add Travis work, Update Travis to newer Ubuntu to newer php, Fix
-Selenium tests, More selenium tests!
+Improved UI testing with Selenium and renabling this in github actions.
 
 ### Better documentation and email handling
 

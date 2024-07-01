@@ -390,6 +390,21 @@ class Config
         if( Config::get("storage_filesystem_per_day_max_days_to_clean_empty_directories") < Config::get("storage_filesystem_per_day_min_days_to_clean_empty_directories")) {
             throw new ConfigBadParameterException("storage_filesystem_per_day_max_days_to_clean_empty_directories must be larger than storage_filesystem_per_day_min_days_to_clean_empty_directories");
         }
+
+
+        if( self::isEnabled('auditlog_lifetime')) {
+            // make sure auditlogs are at least as long as max_transfer_days
+            if( self::$parameters['max_transfer_days_valid'] > self::$parameters['auditlog_lifetime'] ) {
+                self::$parameters['auditlog_lifetime'] = self::$parameters['max_transfer_days_valid'];
+            }
+
+            // make sure auditlogs outlive transfers by nominated number of days
+            $minv = self::$parameters['auditlog_lifetime']
+                  + self::$parameters['auditlog_must_be_n_days_longer_than_max_transfer_days_valid'];
+            if( self::$parameters['auditlog_lifetime'] < $minv ) {
+                self::$parameters['auditlog_lifetime'] = $minv;
+            }
+        }
         
         // verify classes are happy
         Guest::validateConfig();
@@ -407,6 +422,15 @@ class Config
         $v = Utilities::isTrue($v);
         self::$parameters[$k] = $v;
         return $v;
+    }
+
+    public static function isEnabled($k)
+    {
+        $v = Config::get($k);
+        if( is_null($v) || $v === false ) {
+            return false;
+        }
+        return true;
     }
     
     public static function performLongerValidation()
