@@ -5,17 +5,38 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
 $haveNext = 0;
 $havePrev = 0;
 
+$transfer_not_found = <<<HEREDOC
+      <div class="fs-transfer-detail transfer_details">
+        <div class="container">
+            {tr:transfer_not_found}
+        </div>
+      </div>
+HEREDOC;
+
 $transfer_id  = Utilities::arrayKeyOrDefault($_GET, 'transfer_id',  0, FILTER_VALIDATE_INT  );
 $isEncrypted = false;
 $downloadsCount = 0;
 $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
+$transfer = null;
 
 if ($transfer_id) {
-    $transfer = Transfer::fromId($transfer_id);
-    $downloadsCount = count($transfer->downloads);
+    try {
+        $transfer = Transfer::fromId($transfer_id);
+        $downloadsCount = count($transfer->downloads);
+    } catch( Exception  $e ) {
+        echo $transfer_not_found;
+        return;
+    }
 }
 
 $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
+
+
+$user = Auth::user();
+if( !Auth::isAuthenticated() || !$transfer || $transfer->userid != $user->id ) {
+    echo $transfer_not_found;
+    return;
+}
 ?>
 
 <div class="fs-transfer-detail transfer_details"
