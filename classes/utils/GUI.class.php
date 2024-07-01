@@ -81,7 +81,7 @@ class GUI
     public static function includeStylesheets()
     {
         foreach (self::path(self::stylesheets()) as $path) {
-            echo '<link type="text/css" rel="stylesheet" href="'.$path.'" />'."\n";
+            echo '        <link type="text/css" rel="stylesheet" href="'.$path.'" />'."\n";
         }
     }
 
@@ -166,7 +166,7 @@ class GUI
     public static function includeScripts()
     {
         foreach (self::path(self::scripts()) as $path) {
-            echo '<script type="text/javascript" src="'.$path.'"></script>'."\n";
+            echo '        <script type="text/javascript" src="'.$path.'"></script>'."\n";
         }
     }
 
@@ -199,7 +199,7 @@ class GUI
             return;
         }
 
-        echo '<link type="'.Mime::getFromFile($location).'" rel="icon" href="'.self::path($location).'" />'."\n";
+        echo '        <link type="'.Mime::getFromFile($location).'" rel="icon" href="'.self::path($location).'" />'."\n";
     }
 
     /**
@@ -211,6 +211,7 @@ class GUI
     {
         $locations = self::filterSources(array(
             'images/logo.png',
+            'images/filesender-logo.svg',
             'skin/logo.png',
             Config::get('site_logo')
         ));
@@ -228,7 +229,7 @@ class GUI
             return;
         }
 
-        echo '<img id="logo" src="'.self::path($location).'" alt="'.Config::get('site_name').'" />'."\n";
+        echo '<img id="logo" class="fs-link fs-link--no-hover" src="'.self::path($location).'" alt="'.Config::get('site_name').'" />'."\n";
     }
 
     /**

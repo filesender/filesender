@@ -97,8 +97,6 @@ class RestInput
      */
     private $data = array();
 
-    public $mime_type = '';
-    
     /**
      * Recursive crawler that converts raw data into browsable data
      *

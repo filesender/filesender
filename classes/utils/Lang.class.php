@@ -259,6 +259,10 @@ class Lang
      */
     public static function getUserAcceptedLanguages()
     {
+        if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            return array();
+        }
+
         $stack = array();
         $codes = array();
         

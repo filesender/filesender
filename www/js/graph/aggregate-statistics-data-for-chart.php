@@ -86,6 +86,7 @@ foreach($result as $row) {
         $maxValue = max($maxValue,$row['sizesum']);
     }
 }
+$valdiv = 1;
 $x_per_second = 'size_tb';
 if( $maxValue < 1024*1024*1024*1024 ) {
     $x_per_second = 'size_gb';

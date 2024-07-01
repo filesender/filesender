@@ -113,6 +113,18 @@
     }
 
     $showPager = $havePrev || $haveNext;
+
+if(!function_exists("makeAction")) {
+    function makeAction( $da, $ex, $title, $faicon )
+    {
+        echo <<<EOF
+               <button data-action="$da" type="button" class="fs-button fs-button--circle fs-button--no-text $ex" title="$title">
+                  <i class="fa $faicon" ></i>
+               </button>
+EOF;
+    }
+}
+
 ?>
 
 <table class="fs-table fs-table--responsive fs-table--selectable fs-table--striped" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>" data-audit="<?php echo $audit ?>">
@@ -148,9 +160,9 @@
             <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort,$nosort); ?>
         </th>
 
-<!--        <th>-->
-<!--            {tr:actions}-->
-<!--        </th>-->
+       <th class="actions">
+           {tr:actions}
+       </th>
     </tr>
     </thead>
     <tbody>
@@ -240,6 +252,30 @@
             <td data-label="{tr:expires}">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
+
+            
+            <td class="actions  fs-table__actions">
+                <div id="marg3" class="actionsblock">
+                    <?php
+
+                    makeAction("delete", "fs-button--danger delete", "{tr:delete_invitation}", "fa-trash" );  
+                    if($extend) { makeAction("extend", "", "", "fa-calendar-plus-o" ); }  
+                    makeAction("add_recipient", "", "{tr:add_recipient}", "fa-envelope-o" );
+                    makeAction("details", "", "{tr:details}", "fa-info" );
+                    
+                    ?>
+                </div>
+                <div id="marg3.2"  class="actionsblock">
+                    <?php
+
+                    makeAction("remind", "", "{tr:send_reminder}", "fa-repeat" );
+                    if($audit) { makeAction("auditlog", "", "{tr:open_auditlog}", "fa-history" ); }
+                    if($showAdminExtend) { makeAction("extendexpires", "", "{tr:extend_expires}", "fa-clock-o" ); }
+                    
+                     ?>
+                </div>
+            </td>
+            
         </tr>
     <?php } ?>
 

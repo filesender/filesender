@@ -578,8 +578,8 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-5">
                                                             <div class="fs-transfer__generate-password">
-                                                                <span>{tr:or}</span>
-                                                                <a id="encryption_generate_password" href="javascript:void(0);" class="fs-link">{tr:generate_password}</a>
+                                                                <span>{tr:or} &nbsp;</span>
+                                                                <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -619,7 +619,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="fs-select">
+                                        <div class="fs-select expires-select-by-days">
                                             <label for="expires-select">
                                                 {tr:expires_after}
                                             </label>
@@ -629,6 +629,17 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php } ?>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="fs-select fieldcontainer expires-select-by-picker">
+                                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+                                            
+                                            <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
+                                                   title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
+                                                   data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
+                                            />
+                                        </div>
+                                        
                                     </div>
                                 </div>
 
@@ -749,7 +760,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             <div class="fs-transfer__right">
                                 <button type="button" id="fs-transfer__confirm" class="fs-button fs-button--info fs-button--icon-right">
                                     {tr:confirm}
-                                    <i class="fa fa-check"></i>
+                                    <i class="fa fa-arrow-right"></i>
                                 </button>
                             </div>
                         </div>
@@ -898,6 +909,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     {tr:expires_in} <span id="expires-days">7</span> {tr:days}.
                                 </span>
                             </div>
+                            
                             <div class="fs-transfer__upload-custom-name">
                                 <label for="transfer-name">
                                     {tr:add_transfer_custom_name}

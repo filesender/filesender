@@ -844,4 +844,5 @@ $lang['device'] = 'Device';
 $lang['light'] = 'Light';
 $lang['dark'] = 'Dark';
 $lang['theme_info'] = "The theme is only saved in the browser";
-
+$lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at: {datetime}';
+$lang['session_expired_warning'] = 'Your session has expired. Please logon to contiunue.';

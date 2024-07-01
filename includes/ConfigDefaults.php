@@ -69,6 +69,8 @@ $default = array(
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
 
+    'auth_warn_session_expired' => false,
+
     'auth_remote_user_enabled' => false, //disables remote user auth
 
     'aup_default' => false,
@@ -87,6 +89,7 @@ $default = array(
     'max_transfer_recipients' => 50,
     'max_transfer_files' => 30,
     'max_transfer_days_valid' => 20,
+    'ui_use_datepicker_for_transfer_expire_time_selection' => false,
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
     'transfer_recipients_lang_selector_enabled' => false,
@@ -189,6 +192,7 @@ $default = array(
     'statlog_lifetime' => 0,
     'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
+    'auditlog_must_be_n_days_longer_than_max_transfer_days_valid' => 14,
     'ratelimithistory_lifetime' => 31,
     
     'storage_usage_warning' => 20,
@@ -212,7 +216,7 @@ $default = array(
 
     'upload_graph_bulk_display' => true,
     'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024,
-
+    'upload_graph_use_cache_table' => false,
 
     'support_email' => '',
 

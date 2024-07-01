@@ -7,7 +7,7 @@ if(!isset($guest_id)) $guest_id = 0;
 
 $guest_id = Utilities::arrayKeyOrDefault($_GET, 'guest_id',  0, FILTER_VALIDATE_INT  );
 
-
+$guest = null;
 $found = 0;
 if ($guest_id) {
     try {
@@ -17,6 +17,12 @@ if ($guest_id) {
     catch( Exception $e ) {
     }
 }
+
+$user = Auth::user();
+if( !Auth::isAuthenticated() || !$guest || $guest->userid != $user->id ) {
+    $found = false;
+}
+
 ?>
 
 
@@ -95,13 +101,13 @@ if ($guest_id) {
                         <ul class="fs-list fs-list--inline">
                             <li>
                                 <button type="button" class="fs-button remind">
-                                    <i class="fa fa-mail-forward"></i>
+                                    <i class="fa fa-repeat"></i>
                                     <span>{tr:send_a_reminder}</span>
                                 </button>
                             </li>
                             <li>
                                 <button type="button" class="fs-button forward">
-                                    <i class="fa fa-repeat"></i>
+                                    <i class="fa fa-envelope-o"></i>
                                     <span>{tr:resend_invitation}</span>
                                 </button>
                             </li>

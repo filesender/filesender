@@ -157,7 +157,8 @@ A note about colours;
 * [make_download_links_clickable](#make_download_links_clickable)
 * [valid_timezone_regex](#valid_timezone_regex)
 * [client_send_current_timezone_to_server](#client_send_current_timezone_to_server)
-
+* [ui_use_datepicker_for_transfer_expire_time_selection](#ui_use_datepicker_for_transfer_expire_time_selection)
+* [ui_use_datepicker_for_guest_expire_time_selection](#ui_use_datepicker_for_guest_expire_time_selection)
 
 ## Transfers
 
@@ -215,6 +216,7 @@ A note about colours;
 
 * [upload_graph_bulk_display](#upload_graph_bulk_display)
 * [upload_graph_bulk_min_file_size_to_consider](#upload_graph_bulk_min_file_size_to_consider)
+* [upload_graph_use_cache_table](#upload_graph_use_cache_table)
 
 ## TeraSender (high speed upload module)
 
@@ -264,7 +266,8 @@ A note about colours;
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
-        * [using_local_saml_dbauth](#using_local_saml_dbauth)
+    * [using_local_saml_dbauth](#using_local_saml_dbauth)
+    * [auth_warn_session_expired](#auth_warn_session_expired)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -288,6 +291,7 @@ A note about colours;
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
 * [auth_sp_fake_additional_attributes_values](#auth_sp_fake_additional_attributes_values)
 * [auditlog_lifetime](#auditlog_lifetime)
+* [auditlog_must_be_n_days_longer_than_max_transfer_days_valid](#auditlog_must_be_n_days_longer_than_max_transfer_days_valid)
 * [ratelimithistory_lifetime](#ratelimithistory_lifetime)
 * [report_format](#report_format)
 * [exception_additional_logging_regex](#exception_additional_logging_regex)
@@ -1667,6 +1671,24 @@ User language detection is done in the following order:
 * __comment:__ If enabled the client will share the current timezone setting to the server so it can format dates as the client expects.
 
 
+### ui_use_datepicker_for_transfer_expire_time_selection
+* __description:__  If enabled the expire date selection on the upload page will use a date picker.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta8
+* __comment:__ 
+
+### ui_use_datepicker_for_guest_expire_time_selection
+* __description:__  If enabled the expire date selection on the new guest page will use a date picker.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta8
+* __comment:__ 
+
+
+
 ---
 
 ## Transfers
@@ -2378,6 +2400,15 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ only useful when you enable upload_graph_bulk_display
 
 
+### upload_graph_use_cache_table
+
+* __description:__ Use a cache table to present the upload speed graphs
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.49
+* __comment:__ If you enable this option you will need to schedule scripts/task/update-upload-graph-table.php to execute periodically to update the cache table. This can be useful on very large installations.
+
 
 
 
@@ -2844,6 +2875,17 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ 
 
 
+### auth_warn_session_expired
+
+* __description:__ When turned on the expire time for SAML sessions is sent to the browser so the user can be warned when the session has expired.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.49
+* __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
+               The warning does not happen during an upload because the session may expire there and the upload can still complete.
+
+
 
 
 
@@ -3139,11 +3181,23 @@ $config['log_facilities'] =
 
 * __description:__ The auditlog is kept in the database and contains all events for a transfer.  This information can be used to tell the user what happened to their transfer when.  This directive specifies the maximum lifetime of auditlog entries (in days).  If set to 0 we remove data when the transfer is closed, after sending reports (if user indicated they wanted).  As long as transfer is live you have this data, as soon as transfer expires the log disappears.  If you set it to "false" we don't log anything and a user can't even see the logs when a transfer is live.
 * __mandatory:__ no
-* __type:__ boolean/int (days).  Set to false to disable.
+* __type:__ boolean/int (days).  Set to null to disable.
 * __default:__ 31
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ Use this setting to control the privacy footprint of your FileSender service.
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service. NOTE: this value can not be less than max_transfer_days.
+
+
+### auditlog_must_be_n_days_longer_than_max_transfer_days_valid
+
+* __description:__ In order to retain auditlogs for an expected amount of time, it is enforced that auditlog_lifetime = max_transfer_days + this setting.
+* __mandatory:__ no
+* __type:__ int (days)
+* __default:__ 14
+* __available:__ since version 3.0beta8/rc1
+* __1.x name:__
+* __comment:__ It is highly recommended that you leave this setting as the default value. 
+
 
 ### ratelimithistory_lifetime
 

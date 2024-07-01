@@ -14,10 +14,9 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
 <!-- New UI header - BEGIN -->
 <header>
-
     <nav>
-        <a class="fs-link fs-link--no-hover" href="{cfg:site_url}">
-            <img src="{cfg:site_url}images/filesender-logo.svg" alt="Filesender Logo">
+        <a class="fs-link fs-link--no-hover" href="<?php echo GUI::path() ?>">
+            <?php GUI::includeLogo() ?>
         </a>
         <ul>
             <?php
@@ -69,5 +68,4 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 
         </ul>
     </nav>
-
 </header> <!-- New UI header - END -->
