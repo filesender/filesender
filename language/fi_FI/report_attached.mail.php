@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Tiedostojako poistettu
+subject: Raportti tiedostojaosta {target.type} #{target.id}
 
 {alternative:plain}
 
 Hei!
 
-Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+Ohessa pyytämäsi raportti tiedostojaosta #{target.id}.
 
 Terveisin,
 {cfg:site_name}
@@ -25,10 +25,8 @@ Terveisin,
 </p>
 
 <p>
-    Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+    Ohessa pyytämäsi raportti tiedostojaosta #{target.id}.
 </p>
 
-<p>
-    Terveisin,<br />
-    {cfg:site_name}
-</p>
+<p>Terveisin,<br/>
+{cfg:site_name}</p>

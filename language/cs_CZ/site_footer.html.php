@@ -7,4 +7,4 @@
 // 
 // 
 ?>
- 
+Máte otázky? Kontaktujte podporu ve své organizaci. 

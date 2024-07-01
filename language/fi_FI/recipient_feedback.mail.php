@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Tiedostojako poistettu
+subject: Olet saanut palautetta
 
 {alternative:plain}
 
 Hei!
 
-Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+Ohessa saamasi palaute käyttäjältä {target.email}.
 
 Terveisin,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Terveisin,
 </p>
 
 <p>
-    Tiedostojakosi #{transfer.id} on poistettu, eikä ole enää noudettavissa palvelusta.
+    Ohessa saamasi palaute käyttäjältä {target.email}.
 </p>
 
 <p>

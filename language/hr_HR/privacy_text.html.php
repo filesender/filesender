@@ -7,26 +7,4 @@
 // 
 // 
 ?>
-<h1>Dobrodošli na {cfg:site_name}</h1>
-<p>
-     Da bi ova usluga funkcionirala mora zadržati neke
-     informacije o datotekama, tko im može pristupiti i što se s njima
-     događa. Datoteke će se automatski ukloniti iz sustava kada
-     isteknu, a ostale zadržane informacije bit će uklonjene iz
-     sustava i baza podataka nakon što protekne neko vrijeme. Ova
-     stranica omogućuje Vam uvid u to koliko dugo traju razni podaci
-     zadržani na ovoj usluzi.
-</p>
-<p>
-     Kada se prijenos izbriše, sve povezane datoteke se
-     također brišu, zajedno s kopijama svih e-mail poruka koje su poslane a
-     odnose se na prijenos.
-</p>
-<?php
-if( ShredFile::shouldUseShredFile()) {
-    echo "<p>Ova usluga je podešena da sigurno obriše datoteke (wipe). ";
-    echo "Sigurno brisanje datoteka uključuje upisivanje slučajnih podataka na istu lokaciju na disku";
-    echo " gdje se nalazila datoteka više puta čime je datoteka potpuno uklonjena sa sustava. ";
-    echo "Na ovaj način je osigurana dodatna privatnost za korisnike ove usluge.</p>";
-}
-?>
+<p> Kako bi {cfg:site_name} radio, mora zadržati neke informacije o datotekama, tko im može pristupiti i što se dogodilo. Datoteke će se automatski ukloniti iz sustava kada isteknu, a ostale zadržane informacije bit će uklonjene iz sustava i baze podataka nakon određenog vremena. Ova vam stranica omogućuje da vidite koliko se dugo različite informacije zadržavaju ovom instalacijom. </p><p> Imajte na umu da kada se prijenos izbriše, brišu se i sve povezane datoteke zajedno s kopijama svih poruka e-pošte koje su poslane, a koje se odnose na prijenos. </p>

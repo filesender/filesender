@@ -7,53 +7,56 @@
 // 
 // 
 ?>
-subject: Soubor{if:transfer.files>1}y{endif} ke stažení
-subject: {transfer.subject}
+subject: Muistutus: Tiedosto{if:transfer.files>1}ja{endif} noudettavissa
 
 {alternative:plain}
 
-Vážený uživateli,
+Hei!
 
-Následující {if:transfer.files>1}soubory byly nahrány{else}soubor byl nahrán{endif} na {cfg:site_name} uživatelem {transfer.user_email} a Vám bylo uděleno oprávnění ke stažení {if:transfer.files>1}jejich{else}jeho{endif} obsahu:
+Tämä on muistutukseksi uusintaviesti aiemmasta ilmoituksesta.
+
+Käyttäjä {transfer.user_email} on jakanut palveluun {cfg:site_name} yhden tai useampia tiedostoja ja merkinnyt sinut vastaanottajaksi:
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().name} ({size:transfer.files.first().size})
+{transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
-Odkaz ke stažení: {recipient.download_link}
+Latauslinkki: {recipient.download_link}
 
-Přenos je dostupný do {date:transfer.expires}, poté bude automaticky odstraněn.
+Tiedostojako on saatavilla {date:transfer.expires} asti, minkä jälkeen tiedostot poistetaan palvelusta automaattisesti. Muista siis noutaa tiedostot ajoissa!
 
 {if:transfer.message || transfer.subject}
-Zpráva od {transfer.user_email}: {transfer.subject}
+Henkilökohtainen viesti lähettäjältä {transfer.user_email}: {transfer.subject}
 
 {transfer.message}
 {endif}
 
-S pozdravem,
+Terveisin,
 {cfg:site_name}
 
 {alternative:html}
 
 <p>
-    Vážený uživateli,
+    Hei!
 </p>
 
+<p>Tämä on muistutukseksi uusintaviesti aiemmasta ilmoituksesta.</p>
+
 <p>
-    Následující {if:transfer.files>1}soubory byly nahrány{else}soubor byl nahrán{endif} na <a href="{cfg:site_url}">{cfg:site_name}</a> uživatelem <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> a Vám bylo uděleno oprávnění ke stažení {if:transfer.files>1}jejich{else}jeho{endif} obsahu.
+    Käyttäjä {transfer.user_email} on jakanut palveluun {cfg:site_name} yhden tai useampia tiedostoja ja merkinnyt sinut vastaanottajaksi:
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Detaily</th>
+            <th colspan="2">Tiedostojaon tiedot</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Soubor{if:transfer.files>1}y{endif}</td>
+            <td>Tiedosto{if:transfer.files>1}t{endif}</td>
             <td>
                 {if:transfer.files>1}
                 <ul>
@@ -62,22 +65,22 @@ S pozdravem,
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {transfer.files.first().path} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>
         {if:transfer.files>1}
         <tr>
-            <td>Velikost</td>
+            <td>Koko</td>
             <td>{size:transfer.size}</td>
         </tr>
         {endif}
         <tr>
-            <td>Expirace</td>
+            <td>Erääntyy</td>
             <td>{date:transfer.expires}</td>
         </tr>
         <tr>
-            <td>Odkaz ke stažení</td>
+            <td>Latauslinkki</td>
             <td><a href="{recipient.download_link}">{recipient.download_link}</a></td>
         </tr>
     </tbody>
@@ -85,7 +88,7 @@ S pozdravem,
 
 {if:transfer.message}
 <p>
-    Zpráva od {transfer.user_email}:
+    Henkilökohtainen viesti lähettäjältä {transfer.user_email}:
 </p>
 <p class="message">
     {transfer.message}
@@ -93,7 +96,6 @@ S pozdravem,
 {endif}
 
 <p>
-    S pozdravem,<br />
+    Terveisin,<br />
     {cfg:site_name}
 </p>
-
