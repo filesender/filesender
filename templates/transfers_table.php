@@ -258,7 +258,7 @@ EOF;
                 <div id="marg3" class="actionsblock">
                     <?php
 
-                    makeAction("delete", "fs-button--danger delete", "{tr:delete_invitation}", "fa-trash" );  
+                    makeAction("delete", "fs-button--danger delete", "{tr:delete_transfer}", "fa-trash" );
                     if($extend) { makeAction("extend", "", "", "fa-calendar-plus-o" ); }  
                     makeAction("add_recipient", "", "{tr:add_recipient}", "fa-envelope-o" );
                     makeAction("details", "", "{tr:details}", "fa-info" );
