@@ -63,7 +63,7 @@ filesender.dragdrop = {
                 this.alert = filesender.ui.alert;
                 errorhandler = filesender.ui.error;
                 errorhandler({ message: 'directory_issue',
-                               details: { path: item.name }});
+                               details: { storage_paths: item.name }});
             });
         }
     },
