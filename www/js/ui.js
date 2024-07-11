@@ -594,14 +594,14 @@ window.filesender.ui = {
         }
 
         if(error.details) {
-            msgtail += '<div class="details" />';
             $.each(error.details, function(k, v) {
-                if(isNaN(k)) v = lang.tr(k) + ': ' + v;
-                msgtail += '<div class="detail" />';
+                msgtail += '<div class="details">';
+                if (!isNaN(k)) msgtail += lang.tr(k) + ': ';
+                msgtail +=  v + '</div>';
             });
         }
 
-        msgtail += '<div class="report" />';
+        msgtail += '<div class="report">';
         if(filesender.config.support_email) {
             msgtail += lang.tr('you_can_report_exception_by_email') + ' : ';
             $('<a />').attr({
@@ -610,6 +610,7 @@ window.filesender.ui = {
         } else if(error.uid) {
             msgtail += lang.tr('you_can_report_exception') + ' : "' + error.uid + '"';
         }
+        msgtail += '</div>';
 
         msgtail += '<br /><br />' + lang.tr('you_can_send_client_logs') + ' ';
         msgtail += '<button class="send_client_logs btn btn-secondary" id="send_client_logs">' + lang.tr('send_client_logs').out() + '</button>';

@@ -56,7 +56,15 @@ filesender.dragdrop = {
                 dirReader.readEntries( handleitems );
             };
                 
-            dirReader.readEntries(handleitems);
+            dirReader.readEntries(handleitems,function(error){
+                this.log = function(message) {
+                    filesender.ui.log(message);
+                };
+                this.alert = filesender.ui.alert;
+                errorhandler = filesender.ui.error;
+                errorhandler({ message: 'directory_issue',
+                               details: { storage_paths: item.name }});
+            });
         }
     },
 
