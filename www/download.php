@@ -259,7 +259,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
                             if ($end > 0) {
                                 $start = 0;
                             } else if ($end < 0) {
-                                $start = $file - size + $end;
+                                $start = $file->size + $end;
                                 $end = $file->size;
                             } else
                                 throw new DownloadInvalidRangeException($part); // end can't be O
