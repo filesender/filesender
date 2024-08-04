@@ -250,7 +250,7 @@ class RestEndpointGuest extends RestEndpoint
         }
         
         if( strtolower(Config::get('storage_type')) == 'clouds3' ) {
-            $options = StorageCloudS3::augmentTransferOptions( $options );
+            $transfer_options = StorageCloudS3::augmentTransferOptions( $transfer_options );
         }
 
         if(Auth::isRemote()) {
