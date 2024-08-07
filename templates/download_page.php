@@ -209,14 +209,14 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <div class="size">{tr:size} : <?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></div>
         
         <?php if($transfer->subject) { ?>
-            <div class="subject">{tr:subject} : <?php echo Utilities::sanitizeOutput($transfer->subject) ?></div>
+            <div class="subject">{tr:subject} : <?php echo Template::replaceTainted($transfer->subject) ?></div>
         <?php } ?>
         
         <?php if($transfer->message) { ?>
             <div class="message">
                 {tr:message} :
                 <p>
-                    <?php echo Utilities::sanitizeOutput($transfer->message) ?>
+                    <?php echo Template::replaceTainted($transfer->message) ?>
                 </p>
             </div>
         <?php } ?>

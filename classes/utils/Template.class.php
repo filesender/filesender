@@ -40,6 +40,9 @@ if (!defined('FILESENDER_BASE')) {
  */
 class Template
 {
+    /* template processor depth, reflect inclusions */
+    protected static $depth = 0;
+
     private static function resolve_addPossibleLocation(&$possibleLocations,$rpath)
     {
         $base = FILESENDER_BASE;
@@ -91,6 +94,9 @@ class Template
      */
     public static function process($id, $vars = array())
     {
+        // We are processing another depth of template layering
+        self::$depth++;
+
         // Are we asked to not output context related html comments ?
         $addctx = true;
         if (substr($id, 0, 1) == '!') {
@@ -146,12 +152,22 @@ class Template
         $content = preg_replace_callback('`\{(path):([^}]*)\}`', function ($m) {
             return Utilities::sanitizeOutput(GUI::path($m[2]));
         }, $content);
-        
+
+        // Replace tainted vars last
+        if(self::$depth <= 1) {
+            $content = preg_replace_callback('`\{tainted:([^}]*)\}`', function($m) {
+                return self::getTaintedFromReplacement($m[1]);
+            }, $content);
+        }
+
         // Add context as a html comment if required
         if ($addctx) {
             $content = "\n".'<!-- template:'.$id.' start -->'."\n".$content."\n".'<!-- template:'.$id.' end -->'."\n";
         }
-        
+
+        // Getting out of the current layer
+        self::$depth--;
+
         if ($important && $exception) {
             return (object)array('content' => $content, 'exception' => $exception);
         }
@@ -163,7 +179,29 @@ class Template
         
         return $content;
     }
-    
+
+    /**
+     * Replace tainted var with custom syntax for later replacement when it is safe to do so
+     *
+     * @param mixed $data
+     * @return string
+     */
+    public static function replaceTainted($data) {
+        $uid = uniqid('', true);
+        $_SESSION['tainted_'.$uid] = $data;
+        return '{tainted:'.$uid.'}';
+    }
+
+    /**
+     * Get original value of replaced tainted var
+     *
+     * @param string $uid
+     * @return string
+     */
+    public static function getTaintedFromReplacement($uid) {
+        return self::sanitizeOutput($_SESSION['tainted_'.$uid]);
+    }
+
     /**
      * Sanitize data to avoid tag replacement
      *

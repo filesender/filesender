@@ -173,8 +173,9 @@ try {
         manageOptions($ret, $transfer, $recipient, $recently_downloaded);
     
 } catch (Exception $e) {
-    $storable = new StorableException($e);
-    $path = GUI::path() . '?s=exception&exception=' . $storable->serialize();
+    $sid = uniqid();
+    $_SESSION['exception_'.$sid] = $e;
+    $path = GUI::path() . '?s=exception&sid=' . $sid;
     header('Location: ' . $path);
 }
 
