@@ -17,6 +17,7 @@ composer.phar
 bak/
 git-switch-to-current-latest-development.sh
 import-all-poeditor-langs-and-push.sh
+import-all-poeditor-langs-and-push3.sh
 scripts/client/test.php
 scripts/testing/test1.php
 
@@ -25,4 +26,8 @@ scripts/testing/test1.php
 
 scripts/client/nodeclient/node_modules/
 scripts/client/nodeclient/package-lock.json
+
+scripts/testing/show-authsp-logonurl.php
+scripts/upgrade/validate.php
+vm-sync-to-local-filesenderci39.sh
 

@@ -35,18 +35,18 @@
             
             <td class="subject">
                 <?php if(strlen($guest->subject) > 15) { ?>
-                <span class="short"><?php echo Template::sanitizeOutput(mb_substr($guest->subject, 0, 15)) ?></span>
+                <span class="short"><?php echo Template::replaceTainted(mb_substr($guest->subject, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo Template::sanitizeOutput($guest->subject) ?></div>
-                <?php } else echo Template::sanitizeOutput($guest->subject) ?>
+                <div class="full"><?php echo Template::replaceTainted($guest->subject) ?></div>
+                <?php } else echo Template::replaceTainted($guest->subject) ?>
             </td>
             
             <td class="message">
                 <?php if(strlen($guest->message) > 15) { ?>
-                <span class="short"><?php echo Template::sanitizeOutput(mb_substr($guest->message, 0, 15)) ?></span>
+                <span class="short"><?php echo Template::replaceTainted(mb_substr($guest->message, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo Template::sanitizeOutput($guest->message) ?></div>
-                <?php } else echo Template::sanitizeOutput($guest->message) ?>
+                <div class="full"><?php echo Template::replaceTainted($guest->message) ?></div>
+                <?php } else echo Template::replaceTainted($guest->message) ?>
             </td>
             
             <td class="created"><?php echo Utilities::formatDate($guest->created) ?></td>

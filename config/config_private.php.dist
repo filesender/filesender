@@ -1,0 +1,21 @@
+<?php
+
+$config = array();
+
+////////////////////////////////
+// Mandatory to be here if used.
+//
+//$config['cloud_s3_key'] = 'key';
+//$config['cloud_s3_secret'] = 'secret';
+//$config['cloud_azure_connection_string'] = 'constring';
+
+
+/////////////
+// Optional
+//
+//$config['db_username'] = 'user';
+//$config['db_password'] = 'password';
+
+
+// NOTE: This return is required!
+return $config;

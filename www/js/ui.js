@@ -41,6 +41,8 @@ if(!('filesender' in window)) window.filesender = {};
  * UI methods
  */
 window.filesender.ui = {
+    uploading: false,
+    
     /**
      * Log to console if enabled
      * 
@@ -657,6 +659,14 @@ window.filesender.ui = {
     
 };
 
+function getCookie( name ) {
+    const cookieValue = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith(name + "="))
+    ?.split("=")[1];
+    return cookieValue;
+}
+
 $(function() {
     $('#topmenu_help[href="#"]').on('click', function() {
         $('#dialog-help').dialog({
@@ -697,4 +707,31 @@ $(function() {
         $(".files.box .file[data-encrypted='1'] .download").hide();
         $(".download_decryption_disabled").show();
     }
+
+    if( window.filesender.config.auth_warn_session_expired ) {
+
+        var sessionExpires = getCookie('X-FileSender-Session-Expires');
+        if( !sessionExpires ) {
+            return;
+        }
+        const n = Math.floor(Date.now() / 1000);
+        console.log("session expire check, top cookie:" + sessionExpires + " n " + n + " time to go " + (sessionExpires-n) );
+        const timeout = (sessionExpires-n);
+        console.log("session expire check, timeout function in " + timeout );
+
+        window.filesender.ui.check_expired = window.setTimeout(function() {
+            console.log("session expire check: your session has expired!");
+            document.cookie = "X-FileSender-Session-Expires=0;path=/;";
+
+            if( window.filesender.ui.uploading ) {
+                console.log("session expire check: user is uploading, not showing warning about session expired");
+            } else {
+                window.filesender.ui.alert('info', filesender.config.language.session_expired_warning, function() {
+                    window.filesender.ui.reload();
+                });
+            }
+        }, timeout * 1000  );
+        
+    }
+    
 });
