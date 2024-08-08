@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Poziv za korištenje {cfg:site_name}
+predmet: Poziv za korištenje {cfg:site_name}
 
 {alternative:plain}
 
@@ -16,7 +16,7 @@ Pozdrav,
 Pozvani ste da koristite {cfg:site_name} na {cfg:site_url}.
 Vaša početna lozinka za prijavu je {password}.
 
-Pozivamo Vas da posjetite stranicu Moj profil i promijenite lozinku kada počnete koristiti stranicu.
+Molimo Vas da posjetite stranicu Moj profil i promijenite lozinku kada počnete koristiti stranicu.
 
 Lijepi Pozdrav,
 {cfg:site_name}
@@ -24,17 +24,17 @@ Lijepi Pozdrav,
 {alternative:html}
 
 <p>
-     Pozdrav,
+    Pozdrav,
 </p>
 
 <p>
 Pozvani ste da koristite {cfg:site_name} na {cfg:site_url}.
 Vaša početna lozinka za prijavu je {password}.</p>
 <p>
-Pozivamo Vas da posjetite stranicu Moj profil i promijenite lozinku kada počnete koristiti stranicu.
+Molimo Vas da posjetite stranicu Moj profil i promijenite lozinku kada počnete koristiti stranicu.
 </p>
 
 <p>
-     Srdačan pozdrav,<br />
-     {cfg:site_name}
+    Srdačan pozdrav,<br />
+    {cfg:site_name}
 </p>

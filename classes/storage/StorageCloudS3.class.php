@@ -53,17 +53,18 @@ class StorageCloudS3 extends StorageFilesystem
         if (self::$client) {
             return self::$client;
         }
-        
+
         self::$client = S3Client::factory(array(
             'region'   => Config::get('cloud_s3_region'),
             'version'  => Config::get('cloud_s3_version'),
             'endpoint' => Config::get('cloud_s3_endpoint'),
             'use_path_style_endpoint' => Config::get('cloud_s3_use_path_style_endpoint'),
             'credentials' => array(
-                'key'    => Config::get('cloud_s3_key'),
-                'secret' => Config::get('cloud_s3_secret'),
+                'key'    => ConfigPrivate::get('cloud_s3_key'),
+                'secret' => ConfigPrivate::get('cloud_s3_secret'),
             )
         ));
+        
         return self::$client;
     }
     
@@ -142,6 +143,10 @@ class StorageCloudS3 extends StorageFilesystem
         } catch (ServiceException $e) {
             $msg = 'S3: readChunk() Can not read to object_name: ' . $object_name . ' offset ' . $offset;
             Logger::info($msg);
+            if (is_a($e, 'ConfigMissingParameterException')) {
+                Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
+                $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
+            }
             throw new StorageFilesystemCannotReadException($msg);
         }
 
@@ -189,6 +194,10 @@ class StorageCloudS3 extends StorageFilesystem
         } catch (Exception $e) {
             $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
             Logger::info($msg);
+            if (is_a($e, 'ConfigMissingParameterException')) {
+                Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
+                $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
+            }
             throw new StorageFilesystemCannotWriteException($msg);
         }
     }

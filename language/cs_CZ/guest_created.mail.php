@@ -19,7 +19,11 @@ Níže naleznete pozvánku, která Vám umožní přístup k {cfg:site_name}. M�
 Odesílatel: {guest.user_email}
 Odkaz na pozvánku: {guest.upload_link}
 
+{if:guest.does_not_expire}
+Tato pozvánka neexpiruje.
+{else}
 Pozvánka je platná do {date:guest.expires}, poté bude automaticky vymazána.
+{endif}
 
 {if:guest.message}Zpráva od {guest.user_email}: {guest.message}{endif}
 

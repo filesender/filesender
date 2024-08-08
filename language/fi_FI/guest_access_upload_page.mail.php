@@ -11,9 +11,9 @@ subject: Vierailija avasi lataussivun
 
 {alternative:plain}
 
-Hei,
+Hei!
 
-tiedoksesi, että vierailija {guest.email} on avannut lataussivun lähettämääsi voucheria käyttäen.
+Tiedoksesi, että vierailija {guest.email} on avannut lataussivun lähettämääsi kutsua käyttäen.
 
 Terveisin,
 {cfg:site_name}
@@ -21,11 +21,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
-    tiedoksesi, että vierailija <a href="mailto:{guest.email}">{guest.email}</a> on avannut lataussivun lähettämääsi voucheria käyttäen.
+    Tiedoksesi, että vierailija <a href="mailto:{guest.email}">{guest.email}</a> on avannut lataussivun lähettämääsi kutsua käyttäen.
 </p>
 
 <p>

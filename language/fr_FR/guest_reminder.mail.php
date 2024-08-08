@@ -16,10 +16,9 @@ Madame, Monsieur,
 
 Madame, Monsieur,
 
-Ceci est un rappel.
+Ceci est un rappel. Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un group de personnes.
 
-Veuillez trouver ci-dessous une invitation de {guest.user_email} pour déposer des fichiers sur {cfg:site_name}.
-
+Emetteur: {guest.user_email}
 Lien de dépôt: {guest.upload_link}
 
 Cette invitation est valable jusqu'au {date:guest.expires} après quoi elle sera automatiquement revoquée.
@@ -36,21 +35,30 @@ Cordialement,
 </p>
 
 <p>
-    Ceci est un rappel.
+    Ceci est un rappel. Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un group de personnes.
 </p>
 
-<p>
-    Veuillez trouver ci-dessous une invitation de {guest.user_email} pour déposer des fichiers sur <a href="{cfg:site_url}">{cfg:site_name}</a>.
-</p>
-
-
-<p>
-    Lien de dépôt: <a href="{guest.upload_link}">{guest.upload_link}</a>
-</p>
-
-<p>
-    Cette invitation est valable jusqu'au {date:guest.expires} après quoi elle sera automatiquement revoquée.
-</p>
+<table rules="rows">
+    <thead>
+        <tr>
+            <th colspan="2">Détails de l'invitation</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Emetteur</td>
+            <td><a href="mailto:{guest.user_email}">{guest.user_email}</a></td>
+        </tr>
+        <tr>
+            <td>Lien de dépôt</td>
+            <td><a href="{guest.upload_link}">{guest.upload_link}</a></td>
+        </tr>
+        <tr>
+            <td>Valide jusqu'au</td>
+            <td>{date:guest.expires}</td>
+        </tr>
+    </tbody>
+</table>
 
 {if:guest.message}
 <p>

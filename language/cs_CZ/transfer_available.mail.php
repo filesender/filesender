@@ -24,7 +24,7 @@ Následující {if:transfer.files>1}soubory byly nahrány{else}soubor byl nahrá
 
 Odkaz ke stažení: {recipient.download_link}
 
-Přenos je dostupný do {date:transfer.expires},poté bude automaticky odstraněn.
+Přenos je dostupný do {date:transfer.expires}, poté bude automaticky odstraněn.
 
 {if:transfer.message || transfer.subject}
 Zpráva od {transfer.user_email}: {transfer.subject}

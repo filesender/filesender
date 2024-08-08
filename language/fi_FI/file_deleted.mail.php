@@ -11,9 +11,9 @@ subject: Tiedosto ei ole enää saatavilla
 
 {alternative:plain}
 
-Hei,
+Hei!
 
-Tiedosto {file.path} ({size:file.size}) on poistettu (siirto n°{transfer.id}) eikä ole enää ladattavissa palvelusta.
+Tiedosto {file.path} ({size:file.size}) on poistettu (tiedostojako #{transfer.id}) eikä ole enää ladattavissa palvelusta.
 
 Terveisin,
 {cfg:site_name}
@@ -21,11 +21,11 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>
-    Tiedosto {file.path} ({size:file.size}) on poistettu (siirto n°{transfer.id}) eikä ole enää ladattavissa palvelusta.
+    Tiedosto {file.path} ({size:file.size}) on poistettu (tiedostojako #{transfer.id}) eikä ole enää ladattavissa palvelusta.
 </p>
 
 <p>
