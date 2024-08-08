@@ -78,18 +78,18 @@ if( !Auth::isAuthenticated() || !$transfer || $transfer->userid != $user->id ) {
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:from}:</strong>
-                        <span><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></span>
+                        <span><?php echo Template::replaceTainted($transfer->user_email) ?></span>
                     </div>
                     <?php if($transfer->subject) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:subject}:</strong>
-                            <span><?php echo Utilities::sanitizeOutput($transfer->subject) ?></span>
+                            <span><?php echo Template::replaceTainted($transfer->subject) ?></span>
                         </div>
                     <?php } ?>
                     <?php if($transfer->message) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:message}:</strong>
-                            <span><?php echo Utilities::sanitizeOutput($transfer->message) ?></span>
+                            <span><?php echo Template::replaceTainted($transfer->message) ?></span>
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">

@@ -71,13 +71,13 @@ if( !Auth::isAuthenticated() || !$guest || $guest->userid != $user->id ) {
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:subject}:</strong>
                         <span>
-                            <?php echo Template::sanitizeOutput($guest->subject) ?>
+                            <?php echo Template::replaceTainted($guest->subject) ?>
                         </span>
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:message}:</strong>
                         <span>
-                            <?php echo Template::sanitizeOutput($guest->message) ?>
+                            <?php echo Template::replaceTainted($guest->message) ?>
                         </span>
                     </div>
 <!--                    <div class="fs-info fs-info--aligned">-->

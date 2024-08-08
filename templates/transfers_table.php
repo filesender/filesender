@@ -193,7 +193,7 @@ EOF;
 
             <?php if($show_guest) { ?>
                 <td data-label="{tr:guest}">
-                    <?php if($transfer->guest) echo '<abbr title="'.Template::sanitizeOutput($transfer->guest->identity).'">'.Template::sanitizeOutput($transfer->guest->name).'</abbr>' ?>
+                    <?php if($transfer->guest) echo '<abbr title="'.Template::replaceTainted($transfer->guest->identity).'">'.Template::replaceTainted($transfer->guest->name).'</abbr>' ?>
                 </td>
             <?php } ?>
 
@@ -204,7 +204,7 @@ EOF;
                     if(in_array($recipient->email, Auth::user()->email_addresses)) {
                         $items[] = '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
                     } else if($recipient->email) {
-                        $items[] = '<a href="mailto:'.Template::sanitizeOutputEmail($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
+                        $items[] = '<a href="mailto:'.Template::sanitizeOutputEmail($recipient->email).'">'.Template::replaceTainted($recipient->identity).'</a>';
                     } else {
                         $items[] = '<abbr title="'.Lang::tr('anonymous_details').'">'.Lang::tr('anonymous').'</abbr>';
                     }
@@ -232,7 +232,7 @@ EOF;
                         if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
                         else $name = mb_substr($name, 0, 23).'...';
                     }
-                    $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::sanitizeOutput($name).'</span>';
+                    $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::replaceTainted($name).'</span>';
                 }
 
                 if(count($transfer->files) > 3)
