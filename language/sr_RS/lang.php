@@ -579,4 +579,4 @@ $lang['yes'] = 'Da';
 $lang['you_can_report_exception'] = 'Kada prijavljujete ovu grešku, navedite sledeći kôd da biste pomogli oko pronalaženja uzroka';
 $lang['you_can_report_exception_by_email'] = 'Ovu grešku možete prijaviti e-mail porukom';
 $lang['you_can_send_client_logs'] = 'Da biste pomogli timu za podršku da otkrije što se dogodilo, kliknite na ovaj taster za slanje zadnjih unosa sa svog korisničkog interfejsa :';
-$lang['you_generated_this_auth_secret_at'] = 'Generisali ste ovu autentikacijsku šifru dana: <strong>{datetime}</strong>';
+$lang['you_generated_this_auth_secret_at'] = 'Generisali ste ovu autentikacijsku šifru dana: {datetime}';

@@ -68,6 +68,15 @@ class DBI
         // Get config, check mandatory parameters
         $config = Config::get('db_*');
         $config['dsn'] = Config::get('dsn');
+
+        if(ConfigPrivate::havekey('db_username')) {
+            $config['username'] = ConfigPrivate::get('db_username');
+        }
+        if(ConfigPrivate::havekey('db_password')) {
+            $config['password'] = ConfigPrivate::get('db_password');
+        }
+
+        
         foreach (array('type', 'host', 'database', 'port', 'username', 'password', 'driver_options', 'charset', 'collation') as $p) {
             if (!array_key_exists($p, $config)) {
                 $config[$p] = null;

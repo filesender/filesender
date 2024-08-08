@@ -6,7 +6,7 @@
 }
 
 .fs-progress-bar__value {
-  width: var(--fs-spacing-6x);
+  width: var(--fs-spacing-7x);
 }
 
 .fs-progress-bar__value + .fs-progress-bar__indicator {

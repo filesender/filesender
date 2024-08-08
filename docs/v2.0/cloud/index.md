@@ -21,6 +21,25 @@ $config['upload_crypted_chunk_size'] = $config['upload_chunk_size'] + $config['u
 Increasing upload_chunk_size also requires you to verify PHP's memory
 limit is equal or bigger than about 5x upload_chunk_size.
 
+### Configuration file
+
+The main configuration keys for cloud back ends are the connection
+string or other passwords to use to connect. You need to store the
+these sensitive settings in the config/config_private.php file to keep it
+separate from your config.php file and reduce the risk of accidentally
+sharing sensitive information.
+
+The config_private.php has the same format as config.php but allows
+you to keep passwords (databases, clouds, etc) out of the main
+config.php file. You must have the final `return` statement in the 
+config_private.php file as only the variables explicitly returned from
+that file will be used for the intended purpose.
+
+See the distribution config/config_private.php.dist for a template to see
+what your config/config_private.php should look like and what new keys
+might be used in that file in the current release. 
+
+
 ## Azure
 
 At the moment a new container is created for each file and files are
@@ -82,51 +101,13 @@ $ ./start.sh
 
 ### Configuration
 
-The main configuration keys for Azure are the connection string to use
-to connect and maybe other settings to use to store your data. You
-might like to store the first in the optional config-passwords.php
-file to keep it separate from your config.php file and reduce the risk
-of accidentally sharing sensitive information.
+See the note about Configuration file at the top of this page.
 
-The config-passwords.php has the same format as config.php but allows
-you to keep passwords (databases, clouds, etc) out of the main
-config.php file.
-
-You might like to also have a switch in your config-passwords.php to
-allow local testing without opening or editing the
-config-passwords.php file. One option here is to setup the test config
-in config-passwords.php. Since the test azure server is for local use
-only and on 127.0.0.1 you can also put that into your main config.php
-and only include the sensitive 'real' server setup in
-config-passwords.php. The config-passwords.php file is loaded after
-config.php so you can set a personal setting in config.php to switch
-to a test connection string in config-passwords.php. Note that you have
-to use Config::get() to access your sysadmin_setting_testcloud setting in
-config-passwords.php.
-
-This has the added plus of not having to open config-passwords.php to
-see the local only test connection settings. Note that there should be
-no closing `?>` in either the config.php or config-passwords.php
-files.
-
+Other settinggs might look like
 ```
-# cat config.php
-... since this is a local only test server, security is less interesting
-
-$config['cloud_azure_connection_string'] = 'DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;';
 $config['cloud_azure_other_settings'] = 'something public is ok';
 $config['sysadmin_setting_testcloud'] = true;
-
-
-# cat config-passwords.php
-... the less you have to see this file the better ...
-<?php
-
-if( !Config::get('sysadmin_setting_testcloud') ) {
-  $config['cloud_azure_connection_string'] = 'DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://myrealazure-provider:10000/devstoreaccount1;';
-}
 ```
-
 
 
 ### Running a test
@@ -193,38 +174,14 @@ npm start
 
 ### Configuration
 
-The main configuration keys for S3 are the connection string to use
-to connect and maybe other settings to use to store your data. You
-might like to store the first in the optional config-passwords.php
-file to keep it separate from your config.php file and reduce the risk
-of accidentally sharing sensitive information.
+See the note about Configuration file at the top of this page.
 
-The config-passwords.php has the same format as config.php but allows
-you to keep passwords (databases, clouds, etc) out of the main
-config.php file. If the config-passwords.php file exists then it is
-loaded after config.php.
-
-See the configuration section for Azure above for information about how
-you might setup the config.php and config-passwords.php so that you can
-avoid opening the later file.
-
+The endpoint can be set in config.php like;
 ```
 $config['cloud_s3_endpoint'] = 'http://localhost:8000';
-$config['cloud_s3_key']      = 'accessKey1';
-$config['cloud_s3_secret']   = 'verySecretKey1';
-
-// optional, Ensure that the bucket exists if you want to use a
-// single bucket. 
-// $config['cloud_s3_bucket']   = 'filesender';
-
-// optional, if you wish to have a bucket-a-day configure these options
-// please note that the buckets are created/deleted via cronjob, so make
-// sure you are running cron.php regularly!
-// after turning this on, create the daily buckets with
-// php scripts/task/S3bucketmaintenance.php --verbose
-// $config['cloud_s3_use_daily_bucket'] = true;
-// $config['cloud_s3_bucket_prefix'] = "FileSenderDaily-";
 ```
+
+
 
 ### Running a test
 

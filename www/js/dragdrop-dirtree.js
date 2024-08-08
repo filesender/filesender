@@ -38,15 +38,22 @@ filesender.dragdrop = {
         if (item.isFile) {
             item.file(function(file) {
               filesender.ui.files.addFile(path + file.name, file);
+            },function(error){
+                this.log = function(message) {
+                    filesender.ui.log(message);
+                };
+                this.alert = filesender.ui.alert;
+                errorhandler = filesender.ui.error;
+                errorhandler({ message: 'file_issue',
+                               details: { storage_paths: item.name }});
             });
-        }
-        else if (item.isDirectory) {
+        } else if (item.isDirectory) {
             // Get folder contents
             let dirReader = item.createReader();
 
-            // In chrome you have to keep calling readEntries() until zero are returned
-            // if you want to get them all.
             var handleitems = function(entries) {
+                // In chrome you have to keep calling readEntries() until zero are returned
+                // if you want to get them all.
                 if( !entries.length ) {
                     return;
                 }
@@ -55,8 +62,16 @@ filesender.dragdrop = {
                 }
                 dirReader.readEntries( handleitems );
             };
-                
-            dirReader.readEntries(handleitems);
+
+            dirReader.readEntries(handleitems,function(error){
+                this.log = function(message) {
+                    filesender.ui.log(message);
+                };
+                this.alert = filesender.ui.alert;
+                errorhandler = filesender.ui.error;
+                errorhandler({ message: 'directory_issue',
+                               details: { storage_paths: item.name }});
+            });
         }
     },
 
@@ -64,10 +79,10 @@ filesender.dragdrop = {
         if(typeof dataTransfer.items !== "object") return false;
 
         let items = dataTransfer.items;
-        
+
         if(!items.length) return false;
         if(typeof items[0].webkitGetAsEntry !== "function") return false;
-        
+
         for (let i=0; i<items.length; i++) {
             // webkitGetAsEntry enables the recursive dirtree magic
             let tree = items[i].webkitGetAsEntry();
@@ -83,7 +98,7 @@ filesender.dragdrop = {
         window.setTimeout(
             function() { filesender.ui.files.sortErrorLinesToTop(); },
             1000 );
-        
+
         return true;
     },
 };

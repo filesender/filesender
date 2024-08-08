@@ -7,11 +7,4 @@
 // 
 // 
 ?>
-<h1>About {cfg:site_name} privacy</h1>
-<p>
-This service stores information about files in log files, including data about who is allowed to do something and what happens to files.
-</p>
-<p>
- Note that expired files are automatically deleted. If you delete a transfer, you also delete all related files and e-mails.
-</p>
-<p> {cfg:site_name} 'shreds' deleted files. Shredding involves overwriting the physical location of files. The actual data disappears. This gives you extra privacy. On this page you will find information about the retention period for log files.</p>
+<p> In order for {cfg:site_name} to operate it must retain some information about files, who can access them, and what has happened. Files will be automatically removed from the system when they expire and other retained information will be removed from the system and database after some amount of time has passed. This page allows you to see how long various pieces of information are retained by this installation. </p><p> Note that when a transfer is deleted, all the related files are also deleted along with the copies of any emails that have been sent out which relate to the transfer. </p>

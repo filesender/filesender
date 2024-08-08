@@ -173,8 +173,9 @@ try {
         manageOptions($ret, $transfer, $recipient, $recently_downloaded);
     
 } catch (Exception $e) {
-    $storable = new StorableException($e);
-    $path = GUI::path() . '?s=exception&exception=' . $storable->serialize();
+    $sid = uniqid();
+    $_SESSION['exception_'.$sid] = $e;
+    $path = GUI::path() . '?s=exception&sid=' . $sid;
     header('Location: ' . $path);
 }
 
@@ -259,7 +260,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
                             if ($end > 0) {
                                 $start = 0;
                             } else if ($end < 0) {
-                                $start = $file - size + $end;
+                                $start = $file->size + $end;
                                 $end = $file->size;
                             } else
                                 throw new DownloadInvalidRangeException($part); // end can't be O

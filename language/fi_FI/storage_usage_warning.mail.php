@@ -11,7 +11,7 @@ subject: Levytilahälytys
 
 {alternative:plain}
 
-Hei,
+Hei!
 
 Palvelun {cfg:site_name} vapaa levytila saattaa olla vähissä:
 
@@ -27,7 +27,7 @@ Terveisin,
 {alternative:html}
 
 <p>
-    Hei,
+    Hei!
 </p>
 
 <p>

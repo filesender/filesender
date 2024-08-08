@@ -46,8 +46,6 @@ ConfigValidator::addCheck('email_reply_to', 'string');
 ConfigValidator::addCheck('db_type', 'string');
 ConfigValidator::addCheck('db_host', 'string');
 ConfigValidator::addCheck('db_database', 'string');
-ConfigValidator::addCheck('db_username', 'string');
-ConfigValidator::addCheck('db_password', 'string');
 
 ConfigValidator::addCheck('chunk_upload_security', 'string', function($value, &$error) {
     if(in_array($value, array('auth', 'key'), true))
