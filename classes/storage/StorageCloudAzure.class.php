@@ -62,7 +62,7 @@ class StorageCloudAzure extends StorageFilesystem
 {
     public static function getBlobService()
     {
-        $connectionString = Config::get('cloud_azure_connection_string');
+        $connectionString = ConfigPrivate::get('cloud_azure_connection_string');
         $blobClient = BlobRestProxy::createBlobService($connectionString);
         return $blobClient;
     }
@@ -114,6 +114,10 @@ class StorageCloudAzure extends StorageFilesystem
             $msg = 'Azure: readChunk() Can not read to blob: ' . $blob_name . ' offset ' . $offset
                  . $e->getErrorText() . ' ' . $e->getErrorReason();
             Logger::info($msg);
+            if (is_a($e, 'ConfigMissingParameterException')) {
+                Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
+                $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
+            }
             throw new StorageFilesystemCannotReadException($msg);
         }
 
@@ -159,6 +163,10 @@ class StorageCloudAzure extends StorageFilesystem
             $msg = 'Azure: writeChunk() Can not write to blob: ' . $blob_name . ' offset ' . $offset
                . $e->getErrorText() . ' ' . $e->getErrorReason();
             Logger::info($msg);
+            if (is_a($e, 'ConfigMissingParameterException')) {
+                Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
+                $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
+            }
             throw new StorageFilesystemCannotWriteException($msg);
         }
     }

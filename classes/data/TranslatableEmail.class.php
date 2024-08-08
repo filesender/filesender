@@ -87,6 +87,12 @@ class TranslatableEmail extends DBObject
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
+
+    protected static $secondaryIndexMap = array(
+        'token' => array(
+            'token' => array()
+        )
+    );
     
     /**
      * Properties

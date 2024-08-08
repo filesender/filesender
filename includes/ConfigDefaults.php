@@ -69,6 +69,8 @@ $default = array(
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
 
+    'auth_warn_session_expired' => false,
+
     'auth_remote_user_enabled' => false, //disables remote user auth
     
     'aup_default' => false,
@@ -211,7 +213,7 @@ $default = array(
 
     'upload_graph_bulk_display' => true, 
     'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
-
+    'upload_graph_use_cache_table' => false,
 
     'support_email' => '',
 

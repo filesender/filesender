@@ -349,10 +349,10 @@ if (!function_exists('clickableHeader')) {
                         <?php if( !$transfer->get_a_link ) { ?>
                             <tr>
                                 <td class="desc">{tr:subject}</td>
-                                <td><?php echo $transfer->subject ?></td>
+                                <td><?php echo Template::replaceTainted($transfer->subject) ?></td>
                             </tr><tr>
                                 <td class="desc">{tr:message}</td>
-                                <td><?php echo $transfer->message ?></td>
+                                <td><?php echo Template::replaceTainted($transfer->message) ?></td>
                             </tr>
                         <?php } ?>
 

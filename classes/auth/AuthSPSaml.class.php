@@ -92,7 +92,8 @@ class AuthSPSaml
             if (!self::isAuthenticated()) {
                 throw new AuthSPAuthenticationNotFoundException();
             }
-            
+
+            $ssp = self::loadSimpleSAML();
             $raw_attributes = self::loadSimpleSAML()->getAttributes();
             
             $attributes = array();
@@ -177,6 +178,29 @@ class AuthSPSaml
                     }
                     
                     $attributes['additional'][is_numeric($key) ? $from : $key] = $value;
+                }
+            }
+
+            //
+            // Let the javascript warn the user of possible end of session time
+            //
+            if( Config::get('auth_warn_session_expired')) {
+                if ($v = $ssp->getAuthData('Expire')) {
+                    if( !headers_sent()) {
+                        // Unset the PHPSESSID cookie, so that the user will get a new session ID on their next request.
+                        $params = session_get_cookie_params();
+                        
+                        setcookie(
+                            'X-FileSender-Session-Expires',
+                            $v,
+                            0,
+                            "/",
+                            Config::get('cookie_domain'),
+                            false, // $params['secure'],
+                            false, // $params['httponly']
+                        );
+                        
+                    }
                 }
             }
             

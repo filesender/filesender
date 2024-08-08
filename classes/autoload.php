@@ -85,6 +85,7 @@ class Autoloader
         'AVResult' => 'data/',
         'DownloadOneTimePassword' => 'data/',
         'RateLimitHistory' => 'data/',
+        'UploadGraph' => 'data/',
         
         'AVProgram*' => 'avprograms/',
         
