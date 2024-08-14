@@ -84,7 +84,25 @@ class ApplicationMail extends Mail
             $this->writePlain($content->plain);
             
             if ($use_html) {
-                $this->writeHTML($content->html);
+                // Do we have images in the html that should be attachments? Eg: <img src="cid:<name>;<filepath>">
+                $html = explode("\n",$content->html);
+                $htmlLength = count($html);
+                for ($i = 0; $i < $htmlLength; $i++) {
+                    $pos = strpos($html[$i],'"cid:');
+                    if ($pos === false) continue;
+                    $topos = strpos($html[$i],'"',$pos+1);
+                    if ($topos === false) continue;
+                    $adata = explode(';',substr($html[$i], $pos+5, $topos-$pos-5));
+                    if (count($adata) != 2) continue;
+
+                    // Update img src and create file attachment
+                    $html[$i]=substr($html[$i],0,$pos+1).'cid:'.$adata[0].substr($html[$i],$topos);
+                    $a = new MailAttachment($adata[0]);
+                    $a->path = $adata[1];
+                    $a->cid = '<'.$adata[0].'>';
+                    $this->attach($a);
+                }
+                $this->writeHTML(implode("\n",$html));
             }
         }
     }
