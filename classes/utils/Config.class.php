@@ -586,10 +586,10 @@ class Config
      */
     public static function getTemplateCIDImagePath($cid)
     {
-        if(!self::exists('template-email-images'))
+        if(!self::exists('template_email_images'))
             return null;
 
-        $m = self::get('template-email-images');
+        $m = self::get('template_email_images');
         if(!array_key_exists($cid, $m))
             return null;
 
