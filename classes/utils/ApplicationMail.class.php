@@ -85,26 +85,26 @@ class ApplicationMail extends Mail
             
             if ($use_html) {
                 // Do we have images in the html that should be attachments? Eg: <img src="cid:<name>;<filepath>">
-                $html = explode("\n",$content->html);
+                $html = explode("\n", $content->html);
                 $htmlLength = count($html);
                 for ($i = 0; $i < $htmlLength; $i++) {
-                    $pos=-4;
-                    while (strpos($html[$i],'"cid:',$pos+4) !== false) {
-                        $pos = strpos($html[$i],'"cid:', $pos+1);
-                        $topos = strpos($html[$i],'"',$pos+1);
+                    $pos = -4;
+                    while (strpos($html[$i], '"cid:', $pos+4) !== false) {
+                        $pos = strpos($html[$i], '"cid:', $pos+1);
+                        $topos = strpos($html[$i], '"', $pos+1);
                         if ($topos === false) continue;
-                        $adata = explode(';',substr($html[$i], $pos+5, $topos-$pos-5));
+                        $adata = explode(';', substr($html[$i], $pos+5, $topos-$pos-5));
                         if (count($adata) != 2) continue;
 
                         // Update img src and create file attachment
-                        $html[$i]=substr($html[$i],0,$pos+1).'cid:'.$adata[0].substr($html[$i],$topos);
+                        $html[$i] = substr($html[$i], 0, $pos+1).'cid:'.$adata[0].substr($html[$i], $topos);
                         $a = new MailAttachment($adata[0]);
                         $a->path = $adata[1];
                         $a->cid = '<'.$adata[0].'>';
                         $this->attach($a);
                     }
                 }
-                $this->writeHTML(implode("\n",$html));
+                $this->writeHTML(implode("\n", $html));
             }
         }
     }
