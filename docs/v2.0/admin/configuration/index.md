@@ -124,6 +124,7 @@ A note about colours;
 * [email_send_with_minus_r_option](#email_send_with_minus_r_option)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 * [translatable_emails_lifetime](#translatable_emails_lifetime)
+* [template_email_images](#template_email_images)
 
 ## General UI
 
@@ -1379,6 +1380,21 @@ User language detection is done in the following order:
 * __type:__ int
 * __default:__ 30
 * __available:__ since before version 2.30
+
+
+### template_email_images
+
+* __description:__ A list of CID to image paths for use in email attachments from the mail translation files. Note that these will be relative to the www/images directory by default. To use these images place something like <img src="cid:mylogo"/> into your files_downloaded.mail.php for example. Note that the cid can only contain the lower case characters 'a' through 'z'.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ null
+* __available:__ since version 2.50
+* __Examples:__
+$config['template_email_images'] = [
+    'mylogo' => 'mylogo.png',
+];
+
+
 
 
 ### trackingevents_lifetime

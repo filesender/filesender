@@ -575,6 +575,30 @@ class Config
         
         return $value;
     }
+
+    /**
+     * If there is a CID image mapping in the configuration lookup the $cid
+     * and return the path for the image if it is set or null
+     *
+     * @param string $cid The CID to lookup
+     *
+     * @return ?string
+     */
+    public static function getTemplateCIDImagePath($cid)
+    {
+        if(!self::exists('template-email-images'))
+            return null;
+
+        $m = self::get('template-email-images');
+        if(!array_key_exists($cid, $m))
+            return null;
+
+        $p = FILESENDER_BASE.'/www/images/' . $m[$cid];
+        if(!file_exists($p)) {
+            return null;
+        }
+        return $p;
+    }
     
     /**
      * Check if parameter exists

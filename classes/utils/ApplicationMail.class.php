@@ -84,6 +84,21 @@ class ApplicationMail extends Mail
             $this->writePlain($content->plain);
             
             if ($use_html) {
+                
+                // Do we have images in the html that should be attachments? Eg: <img src="cid:<name>;<filepath>">
+                preg_match_all('/<img src="cid:([a-z]+)"/', $content->html, $allmatches, PREG_SET_ORDER);
+
+                foreach ($allmatches as $match) {
+                    $cid = $match[1];
+                    if($imagePath = Config::getTemplateCIDImagePath($cid)) {
+                        $a = new MailAttachment($cid);
+                        $a->path = $imagePath;
+                        $a->cid = '<'.$cid.'>';
+                        $this->attach($a);
+                        
+                    }
+                }
+                
                 $this->writeHTML($content->html);
             }
         }
