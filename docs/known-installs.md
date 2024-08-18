@@ -23,7 +23,6 @@ If you want to add your FileSender installation to this list, send an email to f
 | Hungary  | KIFÜ    | [https://filesender.hu](https://filesender.hu)      | Feb 2012| 3 May 2024 |
 | Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016| 3 May 2024 |
 | Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 | 3 May 2024, version 1.x |
-| Israel  | IUCC/HUJI  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 3 May 2024 |
 | Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012| 3 May 2024 |
 | Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012| 3 May 2024, version 1.x |
 | Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011| 3 May 2024 | 
@@ -51,6 +50,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Cyprus  | University of Cyprus | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| 3 May 2024 |
 | Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://filesender.hifis.dkfz.de/](https://filesender.hifis.dkfz.de/) | Aug 2023| 3 May 2024 |
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018| 3 May 2024 |
+| Israel  | Hebrew University of Jerusalem (HUJI)  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 3 May 2024 |
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 3 May 2024, version 1.x |
 | Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://consigna.upo.es](https://consigna.upo.es)  | May 2014| 6 May 2024, version 1.x |
 
@@ -58,11 +58,13 @@ If you want to add your FileSender installation to this list, send an email to f
 
 | Country/Region | NREN  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
+| Asia Pacific  | APAN  | [https://apacfilesender.asia/](https://apacfilesender.asia/)   | July 2024 | 27 July 2024 |
 | Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 3 May 2024 |
-| Bangladesh  | BdREN  | [https://filesender.aarnet.edu.au/](https://filesender.bdren.net.bd/)    | April 2024 | 3 May 2024 |
+| Bangladesh  | BdREN  | [https://filesender.bdren.net.bd/](https://filesender.bdren.net.bd/)    | April 2024 | 3 May 2024 |
 | Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017| 3 May 2024 |
 | Korea    | KISTI  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014| 3 May 2024, version 1.x |
 | Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017| 8 May 2024 |
+| New Zealand  | REANNZ  | [https://filesender.reannz.co.nz](https://filesender.reannz.co.nz)    | August 2024 | 18 August 2024 |
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016| 3 May 2024 |
 
 ## HE&R Community installations - Asia - Pacific
