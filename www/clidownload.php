@@ -63,7 +63,7 @@ if( array_key_exists('config',$_GET) && $_GET['config']=='1' ) {
 $script=file_get_contents('../scripts/client/filesender.py');
 
 
-$script=preg_replace('\[base_url\]',$apipath,$script,1,$one);
+$script=preg_replace('/\[base_url\]/',$apipath,$script,1,$one);
 $script=preg_replace("/\ndefault_transfer_days_valid[ ]*=[ ]*[0-9]+\n/",
                      "\ndefault_transfer_days_valid = $daysvalid\n",
                      $script);
