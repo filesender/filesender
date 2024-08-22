@@ -139,7 +139,7 @@ use ( $new_guests_can_only_send_to_creator,
                                         <textarea id="message" name="message" rows="4" placeholder="{tr:optional_message}"></textarea>
                                     </div>
 
-                                    <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
+                                    <label class="invalid hidden-at-page-load" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
 
                                     <h2>{tr:transfer_settings}</h2>
 
