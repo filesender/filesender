@@ -362,8 +362,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <div class="col">
                 <h2>{tr:verify_your_email_address_to_download}</h2>
                 <table columns="2" border="1">
-                    <col style="width:25%">
-                    <col style="width:75%">
+                    <col class="width25">
+                    <col class="width75">
                     <tr>
                         <td>
                             <a href="#" class="verificationcodesendtoemail">
