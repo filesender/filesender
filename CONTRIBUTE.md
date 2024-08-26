@@ -77,7 +77,7 @@ You can help us diagnose and fix bugs by asking and providing answers to the fol
 ## Translations
 
 FileSender is translated to many languages, though it needs constant updates from translators, as well as new
-translations to other languages. Translations can be contributed through [POEditor](https://poeditor.com/join/project/RqXr9WBJwU).
+translations to other languages. Translations can be contributed through POEditor for either [version 2.x](https://poeditor.com/join/project/RqXr9WBJwU) or [version 3.x](https://poeditor.com/join/project/eRy7gOnoQh) of FileSender.
 
 Before starting a new translation, decide what style you want to use, whether you want to address the user using a formal
 tone, etc. Be coherent and keep that style through all your translations. If there is already a translation and
