@@ -60,4 +60,3 @@ L'invité suivant a terminé le téléversement en utilisant une invitation :
     Cordialement,<br />
     {cfg:site_name}
 </p>
-',
