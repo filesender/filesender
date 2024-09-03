@@ -124,8 +124,6 @@ window.filesender.config = {
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
-    legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
-    legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
 
 <?php
 $vfregex = Config::get('valid_filename_regex');

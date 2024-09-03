@@ -1741,23 +1741,23 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 ## force_legacy_mode
 
-* __description:__ Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. The max. number of files and total transfer size limit is the same as for HTML5 mode.  This function is available for testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.
+* __description:__ Deprecated and ignored in 3.0rc4. Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. The max. number of files and total transfer size limit is the same as for HTML5 mode.  This function is available for testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ false
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ for testing purposes.
+* __comment:__ Deprecated and ignored in 3.0rc4. for testing purposes.
 
 ### legacy_upload_progress_refresh_period
 
-* __description:__ when uploading in legacy mode (non-HTML5 uploads) this indicates in seconds how often the client-side progress bar is refreshed.
+* __description:__ Deprecated and ignored in 3.0rc4. when uploading in legacy mode (non-HTML5 uploads) this indicates in seconds how often the client-side progress bar is refreshed.
 * __mandatory:__ no
 * __type:__ int (seconds)
 * __default:__ 5.  Setting this to 0 is not a wise choice as it will make the timer refresh every millisecond (the min. value for a JavaScript timer)
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  This uses a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</span>
+* __comment:__ Deprecated and ignored in 3.0rc4. Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  This uses a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</span>
 
 ### max_legacy_file_size
 
