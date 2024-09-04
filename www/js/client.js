@@ -818,10 +818,6 @@ window.filesender.client = {
         return this.get('/transfer/' + id + '/auditlog/mail' + tailer, callback);
     },
     
-    getLegacyUploadProgress: function(key, callback, error) {
-        return this.get('/legacyuploadprogress/' + key, callback, {error: error});
-    },
-    
     updateUserPreferences: function(preferences, callback) {
         return this.put('/user', preferences, callback);
     },
