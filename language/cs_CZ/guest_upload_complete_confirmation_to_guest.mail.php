@@ -7,18 +7,18 @@
 // 
 // 
 ?>
-subject: Host zahájil nahrávání souborů
+subject: Host ukončil nahrávání souborů
 
 {alternative:plain}
 
 Vážený uživateli,
 
-Následující host zahájil nahrávání souborů na Vaši pozvánku :
+Host ukončil nahrávání souborů za použití pozvánky :
 
 Host: {guest.email}
 Odkaz na pozvánku: {cfg:site_url}?s=upload&vid={guest.token}
 
-Pozvánka je platná do {date:guest.expires}, poté bude automaticky vymazána.
+Pozvánka je platná do {date:guest.expires}, poté bude automaticky smazána.
 
 S pozdravem,
 {cfg:site_name}
@@ -30,13 +30,13 @@ S pozdravem,
 </p>
 
 <p>
-    Následující host zahájil nahrávání souborů na Vaši pozvánku :
+Host ukončil nahrávání souborů za použití pozvánky :
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Podrobnosti pozvánky</th>
+            <th colspan="2">Detaily pozvánky</th>
         </tr>
     </thead>
     <tbody>
@@ -49,7 +49,7 @@ S pozdravem,
             <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
         </tr>
         <tr>
-            <td>Platnost do</td>
+            <td>Platná do</td>
             <td>{date:guest.expires}</td>
         </tr>
     </tbody>
@@ -59,4 +59,5 @@ S pozdravem,
     S pozdravem,<br />
     {cfg:site_name}
 </p>
+',
 
