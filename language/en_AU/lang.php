@@ -335,6 +335,7 @@ $lang['file_size_does_not_match'] = 'File size does not match';
 $lang['files'] = 'Files';
 $lang['files_lowercase'] = 'files';
 $lang['files_transferred_display'] = '{filecount}';
+$lang['filesender_requires_browser_with_FileReader'] = 'FileSender 3.x does not support very old Web Browsers';
 $lang['filtered_transfer_log'] = 'This is a filtered view of the transfer logs.';
 $lang['find_users_who_might_be_abusing_the_system'] = 'Find users who might be abusing the system';
 $lang['forget'] = 'Forget about it';
@@ -847,5 +848,3 @@ $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at:
 $lang['your_download_link'] = 'Here\'s your download link';
 $lang['your_invitation_was_sent_to'] = 'Your invitation was sent to';
 $lang['your_transfer_was_sent'] = 'Your transfer was sent to the following email addresses';
-$lang['filesender_requires_browser_with_FileReader'] = 'FileSender 3.x does not support very old Web Browsers';
-
