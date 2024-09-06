@@ -4,6 +4,23 @@ title: Downloading Files
 
 # Downloading Files
 
+## Through the Web Browser
+
+If a transfer has multiple files you can download each file
+individually using the download button to the right of each file.
+
+You might like to download all the files in a transfer by clicking on
+"Click here to select all files" and below the file list there are
+options to download either a zip or tar archive containing the
+selected files.
+
+You can also select just the files you are interested in and download
+those as a zip or tar archive.
+
+If files are encrypted you will be prompted for the password when you 
+start a download.
+
+
 
 ## Files without encryption
 
