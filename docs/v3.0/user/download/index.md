@@ -66,6 +66,8 @@ There is a Python client in `scripts/client/filesender.py` and a nodejs client i
 `scripts/client/nodeclient/download.js` and 
 `scripts/client/nodeclient/upload.js`.
 
-For more information about the Python client 
+For more information about the Python client go to the "My Profile" tab
+and read about the API secret and the information about the "Python CLI Client"
+on that page.
 
 
