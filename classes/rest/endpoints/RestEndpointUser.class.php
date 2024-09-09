@@ -222,7 +222,7 @@ class RestEndpointUser extends RestEndpoint
             
             $doc = <<<END
 [system]
-base_url = $site_url/rest.php
+base_url = {$site_url}rest.php
 default_transfer_days_valid = $days_valid
 
 [user]
