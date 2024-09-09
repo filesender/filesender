@@ -56,5 +56,10 @@ Then right click the downloading file and copy the link location.
 The link will contain many files_ids entries as well as an archive_format
 and possibly a transaction_id.
 
+## Command line REST clients
+
+The filesender distribution comes with some command line clients which
+allow uploading and downloading encrypted files. The cryptography is
+performed on your computer to protect your files.
 
 
