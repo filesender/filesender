@@ -62,4 +62,10 @@ The filesender distribution comes with some command line clients which
 allow uploading and downloading encrypted files. The cryptography is
 performed on your computer to protect your files.
 
+There is a Python client in `scripts/client/filesender.py` and a nodejs client in 
+`scripts/client/nodeclient/download.js` and 
+`scripts/client/nodeclient/upload.js`.
+
+
+
 
