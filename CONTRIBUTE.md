@@ -19,7 +19,7 @@ Big thanks to you all!
 Before embarking yourself in a contribution, please make sure you are familiar with the way FileSender is written,
 the way it works, and what is required or not.
 
-* Make sure to read [the documentation](http://docs.filesender.org/).
+* Make sure to read [the documentation](https://docs.filesender.org/).
 * If you have a question about FileSender, please ask in the [development mailing list](https://sympa.uninett.no/lists/filesender.org/info/filesender-dev).
 * If you think you have discovered a bug, please check the [issue tracker](https://github.com/filesender/filesender/issues)
 and the [pull requests](https://github.com/filesender/filesender/pulls) to verify it hasn't been reported before.
@@ -56,7 +56,7 @@ but also by following this guidelines.
 
 ## Reporting bugs
 
-Before reporting a bug, please make sure it is indeed a bug. Check [the documentation](http://docs.filesender.org/)
+Before reporting a bug, please make sure it is indeed a bug. Check [the documentation](https://docs.filesender.org/)
 to verify what the intended behaviour is. Review the [list of issues](https://github.com/filesender/filesender/issues)
 and the [pull requests](https://github.com/filesender/filesender/pulls) to see if someone has already reported the
 same issue.
