@@ -1476,7 +1476,7 @@ $(function() {
         message_contains_password_warning: form.find('#password_can_not_be_part_of_message_warning'),
         message_contains_password_error:   form.find('#password_can_not_be_part_of_message_error'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
-        lang: form.find('input[name="lang"]'),
+        lang: form.find('#lang'),
         aup: form.find('input[name="aup"]'),
         expires: form.find('input[name="expires"]'),
         options: {
