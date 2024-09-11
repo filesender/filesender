@@ -1231,6 +1231,9 @@ filesender.ui.startUpload = function() {
             this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
         }
 
+        if(filesender.ui.nodes.lang.length)
+            this.transfer.lang = filesender.ui.nodes.lang.val();
+        
         for(var o in filesender.ui.nodes.options) {
             var i = filesender.ui.nodes.options[o];
             var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
