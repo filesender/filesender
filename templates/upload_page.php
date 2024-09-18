@@ -643,6 +643,24 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     </div>
                                 </div>
 
+                                <?php
+                                if(Config::get('transfer_recipients_lang_selector_enabled')) {
+                                    $opts = array();
+                                    $code = Lang::getBaseCode();
+                                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                        $selected = ($id == $code) ? 'selected="selected"' : '';
+                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                    }
+                                    
+                                    echo '<div class="fs-select">';
+                                    echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
+                                    echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
+                                    echo '</div>';
+
+                                    
+                                }
+                                ?>
+                                
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="fs-collapse">
