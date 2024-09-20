@@ -44,16 +44,16 @@ are set properly after the update.
 
 Download the source archive into a directory, for example ~/src. Lets
 assume you have downloaded a release and have a file at
-~/src/filesender-2.41.tar.gz. This can be directly extracted into your
+~/src/filesender-2.49.tar.gz. This can be directly extracted into your
 /opt/filesender directory by being in the right directory and telling
-tar to strip the leading filesender-filesender-2.41.
+tar to strip the leading filesender-filesender-2.49.
 
 
 ```
 su -l
 cd  /opt/filesender
 tar --extract \
-    --file ~/src/filesender-filesender-2.41.tar.gz \
+    --file ~/src/filesender-filesender-2.49.tar.gz \
     --strip-components=1  \
     --verbose
 
@@ -63,10 +63,10 @@ tar --extract \
 #### Using FileSender using git
 
 For the 2.x series the master branch tracks the releases. This means
-that if 2.41 is the latest release the master should also be version
-2.41. Each release has a tag and git commit associated with it and you
+that if 2.49 is the latest release the master should also be version
+2.49. Each release has a tag and git commit associated with it and you
 can use that to checkout the source code for an exact version if you
-like. The two last git commands below checkout version 2.41 and the
+like. The two last git commands below checkout version 2.49 and the
 current 2.x series release respectively. You may receive an error message
 trying to switch to another version if you have modified the templates directory. 
 This is considered in the next section.
@@ -75,7 +75,7 @@ This is considered in the next section.
 cd  /opt/filesender
 git fetch origin
 
-git checkout filesender-2.41
+git checkout filesender-2.49
 git checkout master
 ```
 
@@ -91,7 +91,7 @@ might help.
 
 ... make changes ...
 
-((filesender-2.40))]$ git checkout filesender-2.41
+((filesender-2.40))]$ git checkout filesender-2.49
 error: Your local changes to the following files would be overwritten by checkout:
         templates/upload_page.php
 Please commit your changes or stash them before you switch branches.
@@ -106,8 +106,8 @@ local changes again as shown below.
 ((filesender-2.40))]$ git checkout -b filesender-2.40-local
 ((filesender-2.40))]$ git commit -a -m 'my changes'
 ((filesender-2.40))]$ git diff filesender-2.40 > ~/tmp/filesender-local-changes.patch
-((filesender-2.40))]$ git checkout filesender-2.41
-((filesender-2.41))]$ patch -p1 < ~/tmp/filesender-local-changes.patch
+((filesender-2.40))]$ git checkout filesender-2.49
+((filesender-2.49))]$ patch -p1 < ~/tmp/filesender-local-changes.patch
 ```
 
 ### The database script
