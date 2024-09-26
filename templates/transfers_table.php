@@ -255,25 +255,36 @@ EOF;
 
             
             <td class="actions  fs-table__actions">
-                <div id="marg3" class="actionsblock">
-                    <?php
-
-                    makeAction("delete", "fs-button--danger delete", "{tr:delete_transfer}", "fa-trash" );
-                    if($extend) { makeAction("extend", "", "", "fa-calendar-plus-o" ); }  
-                    makeAction("add_recipient", "", "{tr:add_recipient}", "fa-envelope-o" );
+                <?php
+                if( $status != 'available' ) {
+                    echo ' <div id="marg3" class="actionsblock"> ';
                     makeAction("details", "", "{tr:details}", "fa-info" );
-                    
-                    ?>
-                </div>
-                <div id="marg3.2"  class="actionsblock">
-                    <?php
-
-                    makeAction("remind", "", "{tr:send_reminder}", "fa-repeat" );
                     if($audit) { makeAction("auditlog", "", "{tr:open_auditlog}", "fa-history" ); }
-                    if($showAdminExtend) { makeAction("extendexpires", "", "{tr:extend_expires}", "fa-clock-o" ); }
+                    echo '</div> ';
+                } else {
+                ?>
+                
+                    <div id="marg3" class="actionsblock">
+                        <?php
+                        
+                        makeAction("delete", "fs-button--danger delete", "{tr:delete_transfer}", "fa-trash" );
+                        if($extend) { makeAction("extend", "", "", "fa-calendar-plus-o" ); }  
+                        makeAction("add_recipient", "", "{tr:add_recipient}", "fa-envelope-o" );
+                        makeAction("details", "", "{tr:details}", "fa-info" );
+                        
+                        ?>
+                    </div>
+                    <div id="marg3.2"  class="actionsblock">
+                        <?php
+                        
+                        makeAction("remind", "", "{tr:send_reminder}", "fa-repeat" );
+                        if($audit) { makeAction("auditlog", "", "{tr:open_auditlog}", "fa-history" ); }
+                        if($showAdminExtend) { makeAction("extendexpires", "", "{tr:extend_expires}", "fa-clock-o" ); }
+                        
+                        ?>
+                    </div>
                     
-                     ?>
-                </div>
+                <?php } ?>
             </td>
             
         </tr>
