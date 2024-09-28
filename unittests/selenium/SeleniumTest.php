@@ -234,7 +234,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setUserPage()
     {
-        $this->changeConfigValue('user_page', 'array(\'lang\'=>true,\'auth_secret\'=>true,\'id\'=>true,\'created\'=>true)');
+        $this->changeConfigValue('user_page',
+                                 'array(\'lang\'=>true,\'auth_secret\'=>true,\'id\'=>true,\'created\'=>true)');
         sleep(2);
         $this->refresh();
         sleep(2);
@@ -242,7 +243,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function unsetUserPage()
     {
-        $this->changeConfigValue('user_page', 'array()');
+        $this->changeConfigValue('user_page',
+                                 'array()');
         sleep(2);
         $this->refresh();
         sleep(2);
@@ -250,7 +252,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setMaxTransferFileSize($max_file_size = 2107374182400)
     {
-        $this->changeConfigValue('max_transfer_size', $max_file_size);
+        $this->changeConfigValue('max_transfer_size',
+                                 $max_file_size);
         sleep(2);
         $this->refresh();
         sleep(2);
@@ -260,7 +263,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setInvalidExtensions($invalid_extensions = "'exe,bat'")
     {
-        $this->changeConfigValue('ban_extension', $invalid_extensions);
+        $this->changeConfigValue('ban_extension',
+                                 $invalid_extensions);
         sleep(2);
         $this->refresh();
         sleep(2);
