@@ -6,9 +6,9 @@ title: Known FileSender installations
 
 If you want to add your FileSender installation to this list, send an email to filesender-dev@filesender.org or edit the file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request.
 
-## NREN installations - Europe and Middle East
+## National R&E Services - Europe and Middle East
 
-| Country/Region|NREN  | Service URL          | Known since| Last checked |
+| Country/Region|NREN/Organisation  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Albania  | RASH  | [https://filesender.rash.al/](https://filesender.rash.al/)      | Nov 2020| 3 May 2024 |
 | Austria  | ACOnet  | [https://filesender.aco.net/](https://filesender.aco.net/)      | Nov 2012| 3 May 2024 |
@@ -54,28 +54,30 @@ If you want to add your FileSender installation to this list, send an email to f
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 3 May 2024, version 1.x |
 | Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://consigna.upo.es](https://consigna.upo.es)  | May 2014| 6 May 2024, version 1.x |
 
-## NREN installations - Asia - Pacific
+## National R&E Services - Asia - Pacific
 
-| Country/Region | NREN  | Service URL          | Known since| Last checked |
+| Country/Region | NREN/Organisation  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
-| Asia Pacific  | APAN  | [https://apacfilesender.asia/](https://apacfilesender.asia/)   | July 2024 | 27 July 2024 |
+| Asia Pacific  | APAN  | [https://apacfilesender.asia/](https://apacfilesender.asia/)   | Jul 2024 | 27 Jul 2024 |
 | Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 3 May 2024 |
-| Bangladesh  | BdREN  | [https://filesender.bdren.net.bd/](https://filesender.bdren.net.bd/)    | April 2024 | 3 May 2024 |
+| Bangladesh  | BdREN  | [https://filesender.bdren.net.bd/](https://filesender.bdren.net.bd/)    | Apr 2024 | 3 May 2024 |
 | Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017| 3 May 2024 |
 | Korea    | KISTI  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014| 3 May 2024, version 1.x |
+| Kyrgyzstan | KRENA | [https://filesender.kif.kg/](https://filesender.kif.kg/) | Sep 2024 | 20 Sep 2024 |
 | Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017| 8 May 2024 |
-| New Zealand  | REANNZ  | [https://filesender.reannz.co.nz](https://filesender.reannz.co.nz)    | August 2024 | 18 August 2024 |
+| New Zealand  | REANNZ  | [https://filesender.reannz.co.nz](https://filesender.reannz.co.nz)    | Aug 2024 | 18 Aug 2024 |
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016| 3 May 2024 |
 
 ## HE&R Community installations - Asia - Pacific
 
 | Country/Region | Organisation  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
+| Japan | Kanazawa University | [https://send.kains.kanazawa-u.ac.jp/](https://send.kains.kanazawa-u.ac.jp/) | Sep 2024 | 20 Sep 2024 |
 | Japan/Okinawa| Okinawa Institute of Science and Technology  | [https://filesender.oist.jp](https://filesender.oist.jp)  | Sep 2013 | 3 May 2024 |
 
-## NREN installations - Americas
+## National R&E Services - Americas
 
-| Country/Region|NREN  | Service URL | Known since| Last checked |
+| Country/Region|NREN/Organisation  | Service URL | Known since| Last checked |
 | --- | --- | --- |---|---|
 | Brazil  | RNP    | [https://filesender.rnp.br](https://filesender.rnp.br)      | Oct 2014| 3 May 2024 |
 | Chili    | REUNA    | [https://filesender.reuna.cl](https://filesender.reuna.cl)      | Sep 2013| 3 May 2024 |
@@ -84,11 +86,11 @@ If you want to add your FileSender installation to this list, send an email to f
 | Mexico | CUDI  | [https://cudi.edu.mx/servicios/envio](https://cudi.edu.mx/servicios/envio)   | 2016 | 3 May 2024 |
 
 
-## NREN installations - Africa
+## National R&E Services - Africa
 
-| Country/Region | NREN  | Service URL | Known since|Last checked |
+| Country/Region | NREN/Organisation  | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
-| East Africa | UBUNTUNET | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | March 2018| 13 May 2024 |
+| East Africa | UBUNTUNET | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | Mar 2018| 13 May 2024 |
 | Ethiopia | EthERNet | [https://filesender.ethernet.edu.et/](https://filesender.ethernet.edu.et/) | Oct 2023 | 3 May 2024 |
 | Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 | 3 May 2024 |
 | Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015| 3 May 2024 |
@@ -108,7 +110,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Country/Region| Organisation | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016| 3 May 2024 - unreachable |
-| Australia | BARNET - Legal sector ISP | [https://filesender.barnet.com.au/](https://filesender.barnet.com.au/) | March 2018 | 13 May 2024 - unreachable |
+| Australia | BARNET - Legal sector ISP | [https://filesender.barnet.com.au/](https://filesender.barnet.com.au/) | Mar 2018 | 13 May 2024 - unreachable |
 | Spain/Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| 3 May 2024 - unreachable |
 | Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013| 3 May 2024 - unreachable |
 
@@ -118,4 +120,4 @@ If you want to add your FileSender installation to this list, send an email to f
 | --- | --- | --- |---|---|
 | Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012| May 2024 - unreachable |
 | UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| May 2024 - unreachable |
-| USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| November 2020 - unreachable |
+| USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| Nov 2020 - unreachable |
