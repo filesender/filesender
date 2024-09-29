@@ -337,6 +337,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     /**
      * unzip and check file contents
+     * @param file_datas_to_check is an array of file contents that should be found inside the zip at zip_location.
+     *        each file contents can only match a file once.
      */
     private function zipTest($zip_location, $file_datas_to_check)
     {
