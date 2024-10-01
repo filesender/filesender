@@ -255,7 +255,8 @@ filesender.ui.elements.preventEmpty = function(el) {
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
-
+    duplicateFiles: [],
+    
     // Sort error cases to the top
     sortErrorLinesToTop: function() {
         var $selector = $("#fileslistdirectparent");

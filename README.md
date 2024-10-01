@@ -9,10 +9,10 @@ FileSender is a web based application that allows authenticated users to securel
 The purpose of the software is to send a large file to someone, have that file available for download for a certain number of downloads and/or a certain amount of time, and after that automatically delete the file.  The software is not intended as a permanent file publishing platform.
 
 ## Mailing Lists
-The FileSender project uses a number of mailinglists to support people deploying FileSender software and to coordinate development. Please go to the [Support and Mailinglists](http://filesender.org) page and subscribe yourself to those lists relevant for you.
+The FileSender project uses a number of mailinglists to support people deploying FileSender software and to coordinate development. Please go to the [Support and Mailinglists](https://filesender.org) page and subscribe yourself to those lists relevant for you.
 
 ## Documentation
-Installation and administrator documentation for FileSender 2.0 is provided at [docs.filesender.org](http://docs.filesender.org).
+Installation and administrator documentation for FileSender 2.0 is provided at [docs.filesender.org](https://docs.filesender.org).
 
 ## Developer
 Development documentation is provided in the [contribution guide](CONTRIBUTE.md).
