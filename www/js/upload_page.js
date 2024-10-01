@@ -212,7 +212,8 @@ filesender.ui.elements.preventEmpty = function(el) {
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
-
+    duplicateFiles: [],
+    
     // Sort error cases to the top
     sortErrorLinesToTop: function() {
         var $selector = $("#fileslist");
@@ -295,19 +296,42 @@ filesender.ui.files = {
                     var el = $(this).parent();
                     var cid = el.attr('data-cid');
                     var name = el.attr('data-name');
-                    
+                    var iidx = -1;
+
                     var total_size = 0;
                     for(var j=0; j<filesender.ui.transfer.files.length; j++)
                         total_size += filesender.ui.transfer.files[j].size;
-                    
-                    if(cid) filesender.ui.transfer.removeFile(cid);
-                    
-                    $(this).parent().remove();
+
+                    iidx = filesender.ui.files.duplicateFiles.indexOf(name);
+                    if (iidx != -1) {
+                        var dups = filesender.ui.nodes.files.list.find(".file[data-name='" + name + "']");
+                        dups.each( function() {
+                            var e = $(this);
+                            if( e.hasClass('duplicate_file_entry')) {
+                                e.remove();
+                                
+                            }
+                        });
+                        while( iidx != -1 ) {
+                            filesender.ui.files.duplicateFiles.splice(iidx, 1);
+                            iidx = filesender.ui.files.duplicateFiles.indexOf(name);
+                        }
+                        iidx = filesender.ui.files.invalidFiles.indexOf(name);
+                        while( iidx != -1 ) {
+                            filesender.ui.files.invalidFiles.splice(iidx, 1);
+                            iidx = filesender.ui.files.invalidFiles.indexOf(name);
+                        }
+                        filesender.ui.notify('success', lang.tr('files_removed_from_upload'));
+                        
+                    } else {
+                        if(cid) filesender.ui.transfer.removeFile(cid);
+                        $(this).parent().remove();
+                    }
                     
                     if(!filesender.ui.nodes.files.list.find('div').length)
                         filesender.ui.nodes.files.clear.button('disable');
                     
-                    var iidx = filesender.ui.files.invalidFiles.indexOf(name);
+                    iidx = filesender.ui.files.invalidFiles.indexOf(name);
                     if (iidx === -1){
                         var size = 0;
                         for(var j=0; j<filesender.ui.transfer.files.length; j++)
@@ -324,6 +348,12 @@ filesender.ui.files = {
                 
                 var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, function(error) {
                     var tt = 1;
+                    if(error.message && error.message == 'duplicate_file' ) {
+                        filesender.ui.files.duplicateFiles.push(error.details.filename);
+                        node.attr('data-cid-dup', added_cid);
+                        node.addClass('duplicate_file_entry');
+                    }
+                    
                     if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                     node.addClass('invalid');
                     node.addClass(error.message);
