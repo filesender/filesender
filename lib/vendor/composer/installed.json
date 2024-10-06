@@ -854,17 +854,17 @@
         },
         {
             "name": "php81_bc/strftime",
-            "version": "0.7.4",
-            "version_normalized": "0.7.4.0",
+            "version": "0.7.5",
+            "version_normalized": "0.7.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alphp/strftime.git",
-                "reference": "10c13faf2f65bfaec17dfa769918e0c7a4c9b3cc"
+                "reference": "bb8a957858303b22db6f6cd9caac1d18031a4971"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alphp/strftime/zipball/10c13faf2f65bfaec17dfa769918e0c7a4c9b3cc",
-                "reference": "10c13faf2f65bfaec17dfa769918e0c7a4c9b3cc",
+                "url": "https://api.github.com/repos/alphp/strftime/zipball/bb8a957858303b22db6f6cd9caac1d18031a4971",
+                "reference": "bb8a957858303b22db6f6cd9caac1d18031a4971",
                 "shasum": ""
             },
             "require": {
@@ -874,7 +874,7 @@
             "require-dev": {
                 "phpunit/phpunit": "@stable"
             },
-            "time": "2024-03-12T11:46:29+00:00",
+            "time": "2024-05-15T08:33:19+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
