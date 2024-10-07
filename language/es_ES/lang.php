@@ -159,7 +159,7 @@ $lang['disable_terasender'] = 'Desactivar la carga paralela (marque si tiene una
 $lang['does_not_expire'] = 'Sin caducidad';
 $lang['done'] = 'Listo';
 $lang['done_uploading'] = 'Carga finalizada';
-$lang['done_uploading_guest'] = 'Gracias por usar {cfg:site_name}. Si tu invitado está habilitado para varias cargas, puedes usar el enlace de nuevo para enviar otros archivos.';
+$lang['done_uploading_guest'] = 'Gracias por usar {cfg:site_name}. Si tu invitado está habilitado para varias subidas, puedes usar tu enlace de subida de nuevo para enviar otros archivos.';
 $lang['done_uploading_redirect'] = 'Su carga se ha completado y se le redirige a <a href="{url}"> {url} </a>. La redirección tarda más de lo esperado.';
 $lang['download'] = 'Descargar';
 $lang['download_bad_files_ids'] = 'Identificador (IDs) de descarga no válido';
