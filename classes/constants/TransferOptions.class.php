@@ -52,7 +52,8 @@ class TransferOptions extends Enum
     const HIDE_SENDER_EMAIL                         = 'hide_sender_email';
     
     const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
-
+    const POPUP_ON_COMPLETE                         = 'popup_on_complete';
+    
     const ENCRYPTION                                = 'encryption';
     const COLLECTION                                = 'collection';
     const MUST_BE_LOGGED_IN_TO_DOWNLOAD             = 'must_be_logged_in_to_download';
