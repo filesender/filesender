@@ -17,7 +17,6 @@ If you want to add your FileSender installation to this list, send an email to f
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010| 3 May 2024 |
 | Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012| 3 May 2024 |
 | Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012| 3 May 2024 |
-| Europe  | GÉANT    | [https://filesender.geant.org/](https://filesender.geant.org/)      | Sep 2010| 3 May 2024 |
 | Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012| 3 May 2024 |
 | France  | RENATER  | [https://filesender.renater.fr/](https://filesender.renater.fr/)    | Nov 2013| 3 May 2024 |
 | Hungary  | KIFÜ    | [https://filesender.hu](https://filesender.hu)      | Feb 2012| 3 May 2024 |
