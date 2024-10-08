@@ -1314,6 +1314,9 @@ filesender.ui.startUpload = function() {
 
             return;
         }
+        if(filesender.ui.transfer.options.popup_on_complete) {
+            filesender.ui.alert("info",lang.tr('upload_completed')) 
+        }
 
         var close = function() {
             window.filesender.notification.clear();
