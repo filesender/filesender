@@ -285,6 +285,7 @@ A note about colours;
 * [log_facilities](#log_facilities)!!
 * [maintenance](#maintenance)
 * [statlog_lifetime](#statlog_lifetime)
+* [statlog_log_user_organization](#statlog_log_user_organization)
 * [auth_sp_additional_attributes](#auth_sp_additional_attributes)
 * [auth_sp_save_user_additional_attributes](#auth_sp_save_user_additional_attributes)
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
