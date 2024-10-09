@@ -439,7 +439,7 @@ $default = array(
         'popup_on_complete' => array(
             'available' => false,
             'advanced' => true,
-            'default' => ''
+            'default' => false
         ),
         'must_be_logged_in_to_download' => array(
             'available' => true,
