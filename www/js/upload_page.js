@@ -1316,7 +1316,7 @@ filesender.ui.startUpload = function() {
         }
 
         if(filesender.ui.transfer.options.popup_on_complete){
-           filesender.ui.confirmTitle(lang.tr('uploaded'),' ✔ '+lang.tr('upload_completed'))
+           filesender.ui.confirmTitle(lang.tr('uploaded'),' <i class="fa fa-check" aria-hidden="true"></i> '+lang.tr('upload_completed'))
         }
 
 
