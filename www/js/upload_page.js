@@ -1315,6 +1315,11 @@ filesender.ui.startUpload = function() {
             return;
         }
 
+        if(filesender.ui.transfer.options.popup_on_complete){
+           filesender.ui.confirmTitle(lang.tr('uploaded'),' <i class="fa fa-check" aria-hidden="true"></i> '+lang.tr('upload_completed'))
+        }
+
+
         var close = function() {
             window.filesender.notification.clear();
             if( filesender.ui.transfer.guest_token ) {
