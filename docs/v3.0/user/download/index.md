@@ -4,6 +4,23 @@ title: Downloading Files
 
 # Downloading Files
 
+## Through the Web Browser
+
+If a transfer has multiple files you can download each file
+individually using the download button to the right of each file.
+
+You might like to download all the files in a transfer by clicking on
+"Click here to select all files" and below the file list there are
+options to download either a zip or tar archive containing the
+selected files.
+
+You can also select just the files you are interested in and download
+those as a zip or tar archive.
+
+If files are encrypted you will be prompted for the password when you 
+start a download.
+
+
 
 ## Files without encryption
 
@@ -39,5 +56,19 @@ Then right click the downloading file and copy the link location.
 The link will contain many files_ids entries as well as an archive_format
 and possibly a transaction_id.
 
+## Command line REST clients
+
+The filesender distribution comes with some command line clients which
+allow uploading and downloading encrypted files. The cryptography is
+performed on your computer to protect your files.
+
+There is a Python client in `scripts/client/filesender.py` and a nodejs client in 
+`scripts/client/nodeclient/download.js` and 
+`scripts/client/nodeclient/upload.js`.
+
+More information about the Python client can be found on your
+FileSender server in the "My Profile" tab. In there you may find
+information about the API secret and the information about the "Python
+CLI Client" on that page.
 
 

@@ -343,6 +343,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $this->assertContains('Transfer expired', $this->byCssSelector('.exception .message')->text());
     }
 
+    /**
+     * Download a zip given the token and the array of file ids to include.
+     */
     public function downloadZip($token, $data_ids)
     {
         stream_context_set_default(array("ssl"=>array("allow_self_signed"=>true)));
@@ -355,9 +358,13 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     }
 
+    /**
+     * unzip and check file contents
+     * @param file_datas_to_check is an array of file contents that should be found inside the zip at zip_location.
+     *        each file contents can only match a file once.
+     */
     private function zipTest($zip_location, $file_datas_to_check)
     {
-        // unzip and check file contents
 
         $zip = new ZipArchive;
         $this->assertTrue($zip->open($zip_location), "Error reading zip-archive!");

@@ -376,6 +376,8 @@ class StatLog extends DBObject
      */
     public static function clean()
     {
+        $dbtype = Config::get('db_type'); 
+        
         // Check if statlog is enabled
         $lt = Config::get('statlog_lifetime');
         if (!is_null($lt) && !is_bool($lt) && !is_numeric($lt)) {
@@ -397,7 +399,12 @@ class StatLog extends DBObject
         }
         
         Logger::info('Removing statlogs older than '.(int)$lt.' days');
-        $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < DATE_SUB(NOW(), INTERVAL :days DAY)');
-        $s->execute(array(':days' => (int)$lt));
+        if ($dbtype == 'pgsql') {
+            $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < NOW() - MAKE_INTERVAL( DAYS => :days )');
+            $s->execute(array(':days' => (string)$lt));
+        } else {
+            $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < DATE_SUB(NOW(), INTERVAL :days DAY)');
+            $s->execute(array(':days' => (int)$lt));
+        }
     }
 }

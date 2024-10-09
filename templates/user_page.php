@@ -228,7 +228,7 @@ $user = Auth::user();
                                     </li>
                                     <li>
                                         <span>
-                                            {tr:clear_stores_recipients_emails}
+                                            {tr:clear_stored_recipients_emails}
                                         </span>
                                     </li>
                                 </ul>
