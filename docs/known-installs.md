@@ -4,7 +4,10 @@ title: Known FileSender installations
 
 # Known FileSender installations
 
-If you want to add your FileSender installation to this list, send an email to filesender-dev@filesender.org or edit the file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request.
+If you want to add your FileSender installation to this list use one of the following options:
+* edit this file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request
+* [subscribe to the support mailinglist filesender-dev@filesender.org](https://docs.filesender.org/filesender/mailinglist) and send it an email to let the FileSender community know your installation exists!. The FileSender communications team will pick it up from there. 
+* send an email to filesender.board@commonsconservancy.org
 
 ## National R&E Services - Europe and Middle East
 
