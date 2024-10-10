@@ -115,6 +115,7 @@ $lang['clear_client_logs'] = 'Clear client logs';
 $lang['clear_frequent_recipients'] = 'Clear stored email recipients from past use that is used to help you complete email fields.';
 $lang['clear_logs'] = 'Clear logs';
 $lang['clear_recipients_emails'] = 'Clear recipients emails';
+$lang['clear_stored_recipients_emails'] = 'Clear stored recipients emails from past use (used to automatically complete email fields).';
 $lang['clear_stored_transfer_settings'] = 'Clear stored transfer settings from last upload.';
 $lang['clear_stores_recipients_emails'] = 'Clear stored recipients emails from past use (used to automatically complete email fields).';
 $lang['clear_transfer_settings'] = 'Clear transfer settings';
