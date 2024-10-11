@@ -481,7 +481,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php } ?>
                                             </div>
 
-                                            <div data-related-to="message">
+                                            <div data-related-to="message" class="emailonly">
                                                 <div class="fs-input-group">
                                                     <label for="subject">
                                                         {tr:subject}
@@ -501,7 +501,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 </label>
                                             </div>
 
-                                            <div data-related-to="message">
+                                            <div data-related-to="message" class="emailonly">
                                                 <div class="fs-input-group">
                                                     <label for="message">
                                                         {tr:message}
