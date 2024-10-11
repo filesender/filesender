@@ -6,7 +6,7 @@ title: Known FileSender installations
 
 If you want to add your FileSender installation to this list use one of the following options:
 * edit this file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request
-* [subscribe to the support mailinglist filesender-dev@filesender.org](https://docs.filesender.org/filesender/mailinglist) and send it an email to let the FileSender community know your installation exists!. The FileSender communications team will pick it up from there. 
+* [subscribe to the support mailinglist filesender-dev@filesender.org](https://docs.filesender.org/filesender/mailinglist) and send it an email to let the FileSender community know your installation exists! The FileSender communications team will pick it up from there. 
 * send an email to filesender.board@commonsconservancy.org
 
 ## National R&E Services - Europe and Middle East
@@ -25,6 +25,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Hungary  | KIFÜ    | [https://filesender.hu](https://filesender.hu)      | Feb 2012| 3 May 2024 |
 | Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016| 3 May 2024 |
 | Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 | 3 May 2024, version 1.x |
+| Israel  | IUCC  | [https://filesender.iucc.ac.il](https://filesender.iucc.ac.il)      | Jun 2024 | 11 Oct 2024 |
 | Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012| 3 May 2024 |
 | Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012| 3 May 2024, version 1.x |
 | Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011| 3 May 2024 | 
@@ -120,6 +121,7 @@ If you want to add your FileSender installation to this list use one of the foll
 
 | Country/Region| Organisation | Service URL | Known since | Last checked |
 | --- | --- | --- |---|---|
+| Europe	| GÉANT | [https://filesender.geant.org/](https://filesender.geant.org/)	| Sep 2010	| Oct 2024 - unreachable |
 | Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012| May 2024 - unreachable |
 | UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| May 2024 - unreachable |
 | USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| Nov 2020 - unreachable |
