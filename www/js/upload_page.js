@@ -1607,6 +1607,8 @@ filesender.ui.handle_get_a_link_change = function() {
         ' .fieldcontainer[data-related-to="verify_email_to_download"]'
     ).toggle(!choice);
 
+    $('hr[data-related-to="emailfrom"]').toggle(!choice);
+
     form.find(
         ' .fieldcontainer[data-option="hide_sender_email"]'
     ).toggle(!choice);
@@ -2352,6 +2354,8 @@ $(function() {
             ' .custom-checkbox[data-option="add_me_to_recipients"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
+
+        $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
         form.find(
             ' .fieldcontainer[data-option="hide_sender_email"]'
