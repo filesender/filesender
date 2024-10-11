@@ -54,11 +54,14 @@ A note about colours;
 * [crypto_gcm_max_chunk_size](#crypto_gcm_max_chunk_size)
 * [crypto_gcm_max_chunk_count](#crypto_gcm_max_chunk_count)
 * [crypto_crypt_name](#crypto_crypt_name)
+* [crypto_hash_name](#crypto_hash_name)
+* [crypto_use_custom_password_code](#crypto_use_custom_password_code)
 * [upload_crypted_chunk_padding_size](#upload_crypted_chunk_padding_size)
 * [upload_crypted_chunk_size](#upload_crypted_chunk_size)
 * [cookie_domain](#cookie_domain)
-* [rate_limits](#rate_limits) (rate limits for some actions)
+* [rate_limits](#rate_limits)
 * [valid_filename_regex](#valid_filename_regex)
+* [message_cannot_contain_urls_regex](#message_cannot_contain_urls_regex)
 
 
 ## Backend storage
@@ -282,6 +285,7 @@ A note about colours;
 * [log_facilities](#log_facilities)!!
 * [maintenance](#maintenance)
 * [statlog_lifetime](#statlog_lifetime)
+* [statlog_log_user_organization](#statlog_log_user_organization)
 * [auth_sp_additional_attributes](#auth_sp_additional_attributes)
 * [auth_sp_save_user_additional_attributes](#auth_sp_save_user_additional_attributes)
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
@@ -318,6 +322,7 @@ A note about colours;
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
+* [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
 
 ## Data Protection
 
@@ -713,6 +718,20 @@ $config['avprogram_list'] = array( 'always_pass',
 is stored as part of the metadata for each transfer when it is created. When a transfer is to be downloaded the key version used for that transfer will be used to set the crypto_crypt_name.
 This way the encryption_key_version_new_files can be updated and existing uploads will continue to be able to be downloaded.
 
+### crypto_hash_name
+* __description:__ Internal use. The name of the hash currently used
+* __mandatory:__ no
+* __type:__ string
+* __default:__ calculated
+* __comment:__ This is an internal setting.
+
+### crypto_use_custom_password_code
+* __description:__ Internal use. Enable FileSender custom password generation code
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __comment:__ This enables strong encryption of passwords. This setting is deprecated and will be removed in a future version.
+
 ### upload_crypted_chunk_size
 * __description:__ Internal only setting. This is the entire size of an encrypted chunk, including any padding for per chunk IV
 * __mandatory:__ no
@@ -805,7 +824,13 @@ $config['rate_limits'] = array(
   //  adds special character areas, for example MIDDLE DOT U+30FB
 $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
 
-
+### message_cannot_contain_urls_regex
+* __description:__ Regular exression to detect a URL was embedded in a message
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.0
+* __comment:__ Example: (ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
 
 ---
 
@@ -3065,6 +3090,16 @@ $config['log_facilities'] =
 * __1.x name:__
 * __comment:__ The statlog is always enabled.  If you don't want anything logged, set this lifetime to 0.  Use this setting to control the privacy footprint of your FileSender service.
 
+### statlog_log_user_organization
+
+* __description:__ Also log the users organization in the statlog
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service.
+
 ### auth_sp_additional_attributes
 
 * __description:__ Allows to define additional user attributes that will be asked for, such as organisation, that can then be propagated to the statistic log table in the database for use in creating statistics.  This configuration parameter defines the additional attributes to get. definition of additional attributes to get, array of either attributes names or final name to raw attribute name pair or final name to callable getter pair
@@ -3391,7 +3426,13 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
 	
-###
+### show_storage_statistics_in_admin
+* __description:__ Lists used and free diskspace in admin section
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ Shows a section in the administrator interface showing basic disk statistics.
 
 ---
 
