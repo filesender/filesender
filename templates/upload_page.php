@@ -404,7 +404,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             </div>
 
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
-                                <hr />
+                                <hr data-related-to="emailfrom" />
 
                                 <div class="row">
                                     <div class="col-12">
