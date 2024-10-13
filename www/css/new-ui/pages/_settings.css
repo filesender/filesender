@@ -1,7 +1,7 @@
 .fs-settings {
     flex: 1;
-    background: var(--fs-bg-color);
-    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+    background: var(--fs-settings-background);
+    padding: var(--fs-spacing-11x) var(--fs-spacing-2x);
     justify-content: flex-start;
 }
 
@@ -10,13 +10,21 @@
     margin-left: 0;
 }
 
-.fs-settings__admin,
 .fs-settings__preferences,
+.fs-settings__account-info {
+    margin-top: var(--fs-spacing-4x);
+}
+
+.fs-settings__admin,
 .fs-settings__actions,
 .fs-settings__about,
 .fs-settings__privacy,
 .fs-settings__remote-authentication  {
     margin-top: var(--fs-spacing-8x);
+}
+
+.fs-settings__actions h4 {
+    margin-bottom: var(--fs-spacing-4x);
 }
 
 .fs-settings__preferences .fs-select label,
@@ -28,10 +36,6 @@
     padding-left: var(--fs-spacing-10x) !important;
 }
 
-.fs-settings__preferences .fs-switch {
-    margin-top: var(--fs-spacing-5x);
-}
-
 .fs-settings__preferences .fs-button {
     width: 100%;
     margin-top: var(--fs-spacing-3x);
@@ -40,10 +44,27 @@
 .fs-settings__account-info {
     display: flex;
     flex-direction: column;
-    background: var(--fs-hightlight-bg);
     border-radius: var(--fs-spacing-4x);
-    padding: var(--fs-spacing-4x);
-    margin-top: var(--fs-spacing-4x);
+}
+
+.fs-settings__preferences,
+.fs-settings__saved-info,
+.fs-settings__general,
+.fs-settings__api-secret,
+.fs-settings__privacy,
+.fs-settings__about {
+    padding-right: var(--fs-spacing-2x);
+}
+
+.fs-settings__account-info,
+.fs-settings__logs,
+.fs-settings__cli {
+    padding-left: var(--fs-spacing-2x);
+}
+
+.fs-settings__preferences h4,
+.fs-settings__account-info h4 {
+    margin-bottom: var(--fs-spacing-3x);
 }
 
 .fs-settings__account-actions {
@@ -87,16 +108,36 @@
     margin-top: var(--fs-spacing-3x);
 }
 
+.fs-settings__preferences select {
+    width: 200px;
+}
+
+.fs-settings__saved-info button{
+    min-width: 260px;
+}
+
+.fs-settings__saved-info strong,
+.fs-settings__logs strong,
+.fs-settings__general strong {
+    display: block;
+    margin-bottom: var(--fs-spacing-2x);
+}
+
+.fs-settings__logs button {
+    min-width: 180px;
+}
+
+.fs-settings__api-secret button {
+    min-width: 200px;
+}
+
 /* XS */
 @media (max-width: 575px) {
 
     .fs-settings {
         flex: 1;
-        background: var(--fs-light);
     }
 }
-
-
 
 /* XS,SM,MD */
 @media (max-width: 991px) {

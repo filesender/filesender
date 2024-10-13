@@ -100,15 +100,15 @@ $read_only_mode = Config::get('read_only_mode');
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-6 offset-lg-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                 <div class="fs-invitations__action">
-                    <h2>{tr:invitation_title}</h2>
+                    <h4>{tr:invitation_title}</h4>
                     <p>
                         {tr:invitation_description}
                     </p>
 
                     <a href="?s=new_invitation" class="fs-button">
-                        <i class="fa fa-plus"></i>
+                        <i class="fi fi-add"></i>
                         <span>{tr:new_invitation}</span>
                     </a>
                 </div>
@@ -117,11 +117,7 @@ $read_only_mode = Config::get('read_only_mode');
         <div class="row">
             <div class="col">
                 <div class="fs-invitations__list">
-                    <h2>{tr:all_my_invitations}</h2>
-                    <p>
-                        {tr:invitation_overview}
-                    </p>
-
+                    <h4>{tr:all_sent_invitations}</h4>
                     <?php
                     Template::display('guests_table',
                         array('guests' => Guest::fromUserAvailable(Auth::user())));

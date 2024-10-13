@@ -1,7 +1,6 @@
 .fs-collapse--open {
-  background: var(--fs-hightlight-bg-alternative);
-  border-radius: var(--fs-spacing-base);
-  border: 1px solid var(--fs-accent);
+  background: var(--fs-collapse-open-background);
+  border-radius: var(--fs-spacing-half);
 }
 
 .fs-collapse--open .fs-collapse__open {
@@ -9,12 +8,10 @@
 }
 
 .fs-collapse--open .fs-collapse__close {
-  display: block;
-}
-
-.fs-collapse--open .fs-collapse__open,
-.fs-collapse--open .fs-collapse__close {
-  border: 1px solid transparent;
+  display: flex;
+  width: 100%;
+  border-radius: 0;
+  justify-content: space-between;
 }
 
 .fs-collapse--open .fs-collapse__content {
@@ -22,19 +19,20 @@
 }
 
 .fs-collapse__open, .fs-collapse__close {
-  font-size: 0.9rem;
-  background: var(--fs-hightlight-bg-alternative);
-  color: var(--fs-accent) !important;
-  border: 1px solid var(--fs-accent);
+  background: var(--fs-collapse-button-background);
+  color: var(--fs-collapse-button-color) !important;
 }
 
 .fs-collapse .row {
   width: 100%;
 }
 
-.fs-collapse__open:hover, .fs-collapse__close:hover,
+.fs-collapse__open:hover, .fs-collapse__close:hover {
+  background: var(--fs-collapse-button-hover-background);
+}
+
 .fs-collapse__open:active, .fs-collapse__close:active {
-  background: transparent;
+  background: var(--fs-collapse-button-active-background);
 }
 
 .fs-collapse__close {
@@ -46,4 +44,9 @@
   flex-direction: column;
   justify-content: space-between;
   padding: var(--fs-spacing-4x);
+}
+
+.fs-collapse__content strong {
+  display: inline-block;
+  margin-bottom: var(--fs-spacing-2x);
 }

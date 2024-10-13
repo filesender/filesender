@@ -18,7 +18,7 @@ $encryption_mandatory = Principal::isEncryptionMandatory();
 $encryption_checkbox_checked = '';
 $encryption_checkbox_classes = '';
 $expire_time_is_editable = true;
-$upload_directory_button_enabled = false;
+$upload_directory_button_enabled = true;
 
 if( !Config::get('disable_directory_upload')
     && Config::get('directory_upload_button_enabled')
@@ -125,10 +125,11 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
         echo '</div>';
 
     } else {
-        echo '<div id="fs-transfer__add-me-to-recipients" class="fs-switch">';
-        echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
-        echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
-        echo '</div>';
+        echo '<label id="fs-transfer__add-me-to-recipients" class="fs-checkbox">';
+        echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
+        echo '    <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
+        echo '    <span class="fs-checkbox__mark"></span>';
+        echo '</label>';
     }
 
     if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
@@ -194,62 +195,39 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 
         <div class="fs-transfer">
             <h1>
-                {tr:transfer_files}
+                {tr:upload_page}
             </h1>
 
             <div class="fs-transfer__step fs-transfer__step--active" data-step="1">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                         <div class="fs-transfer__droparea">
                             <input id="files" class="fs-transfer__input" type="file" name="file" multiple />
+
                             <label for="files">
-                                <strong>{tr:start_selection_files}</strong>
-                                <span class="fs-button">
-                                <i class="fa fa-plus"></i>
-                                {tr:drag_drop_select}
-                            </span>
+                                <span class="fs-link fs-link--primary fs-link--no-hover">
+                                    {tr:select_files}
+                                </span>
                             </label>
 
                             <?php if ($upload_directory_button_enabled) { ?>
                                 <div class="fs-transfer__directory">
                                     <span>
-                                        {tr:or}
+                                        &nbsp;{tr:or}&nbsp;
                                     </span>
                                     <label for="selectdir">
-                                        <span class="fs-button">
-                                            <i class="fa fa-folder"></i>
-                                            {tr:send_an_entire_directory}
+                                        <span class="fs-link fs-link--primary fs-link--no-hover">
+                                            {tr:or_a_folder}
                                         </span>
                                     </label>
                                     <input type="file" name="selectdir" id="selectdir" class="fs-transfer__input" webkitdirectory directory multiple mozdirectory />
                                 </div>
                             <?php } ?>
+
+                            &nbsp;{tr:or_use_drag_and_drop}
                         </div>
-                    </div>
-                </div>
 
-                <!--            <div class="row">-->
-                <!--                <div class="col-12">-->
-                <!--                    --><?php //if (Config::get('upload_graph_bulk_display')) { ?>
-                <!--                        <div class="row">-->
-                <!--                            <div class="col-12">-->
-                <!--                                <div id="graph" class="uploadbulkgraph"><div id="graphDiv"><canvas id="speedChart"></canvas></div></div>-->
-                <!--                                <script type="text/javascript" src="{path:lib/chart.js/chart.min.js}"></script>-->
-                <!--                                <script type="text/javascript" src="{path:js/graph.js}"></script>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                    --><?php //} ?>
-                <!--                </div>-->
-                <!--            </div>-->
-            </div>
-
-            <div class="fs-transfer__step" data-step="2">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="fs-transfer__list">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
+                        <div class="fs-transfer__list fs-transfer__list--hidden">
                             <div class="fs-transfer__files">
                                 <table class="fs-table">
                                     <thead hidden="true">
@@ -265,10 +243,16 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <span class="filename"></span>
                                                 <span class="filesize"></span>
                                                 <span class="remove stage1">
-                                                <button type="button" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text removebutton" alt="{tr:click_to_delete_file}">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </span>
+                                                    <button type="button" class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text removebutton" alt="{tr:click_to_delete_file}">
+                                                        <i class="fi fi-close"></i>
+                                                    </button>
+                                                </span>
+                                                <span class="fs-progress-circle">
+                                                    <span class="fs-progress-circle__value">0</span>
+                                                </span>
+                                                <span class="fs-transfer__file-uploaded">
+                                                    <i class="fi fi-valid"></i>
+                                                </span>
                                             </div>
                                             <div>
                                                 <span class="error"></span>
@@ -289,13 +273,6 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 </span>
                                                 <?php } ?>
                                             </div>
-                                            <div>
-                                            <span class="progressbar">
-                                                <div class="progress">
-                                                    <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </span>
-                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -304,15 +281,15 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 
                             <div class="fs-transfer__add-buttons">
                                 <label for="files">
-                                    <span class="fs-button">
-                                        <i class="fa fa-plus"></i>
-                                        {tr:add_files}
+                                    <span class="fs-link fs-link--primary fs-link--no-hover">
+                                        <i class="fi fi-add"></i>
+                                        {tr:add_more_files}
                                     </span>
                                 </label>
                                 <?php if ($upload_directory_button_enabled) { ?>
                                     <label for="selectdir">
-                                        <span class="fs-button">
-                                            <i class="fa fa-folder"></i>
+                                        <span class="fs-link fs-link--primary fs-link--no-hover">
+                                        <i class="fi fi-add"></i>
                                             {tr:add_directory}
                                         </span>
                                     </label>
@@ -320,50 +297,14 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <hr />
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="fs-transfer__actions">
-                            <div class="fs-transfer__left">
-                                <button type="button" class="fs-button fs-button--danger fs-transfer__clear-all">
-                                    <i class="fa fa-trash"></i>
-                                    {tr:clear_all}
-                                </button>
-                            </div>
-                            <div class="fs-transfer__right">
-                                <button type="button" id="fs-transfer__next-step" class="fs-button fs-button--info fs-button--icon-right fs-transfer__next">
-                                    {tr:next}
-                                    <i class="fa fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="fs-transfer__step" data-step="3">
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-transfer__list fs-transfer__list--full">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
-                            <div class="fs-transfer__files">
-                                <table></table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                         <div class="fs-transfer__options">
                             <div class="fs-transfer__send-options">
                                 <div class="row">
                                     <div class="col-12">
-                                        <h5>
+                                        <h4>
                                             {tr:choose_files}
-                                        </h5>
+                                        </h4>
 
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
@@ -374,12 +315,9 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                     <div class="fs-radio__option">
                                                         <span class="fs-radio__circle"></span>
                                                         <span class="fs-radio__text">
-                                                            {tr:a_transfer_link}
+                                                            {tr:get_a_transfer_link}
                                                          </span>
                                                     </div>
-                                                    <span class="fs-radio__info">
-                                                        {tr:a_transfer_link_tip}
-                                                    </span>
                                                 </label>
                                             </div>
                                         <?php } ?>
@@ -391,12 +329,9 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <div class="fs-radio__option">
                                                     <span class="fs-radio__circle"></span>
                                                     <span class="fs-radio__text">
-                                                        {tr:an_email}
+                                                        {tr:send_an_email_transfer}
                                                     </span>
                                                 </div>
-                                                <span class="fs-radio__info">
-                                                    {tr:an_email_tip}
-                                                </span>
                                             </label>
                                         </div>
                                     </div>
@@ -404,42 +339,6 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             </div>
 
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
-                                <hr />
-
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div data-related-to="emailfrom">
-
-                                            <?php $emails = Auth::isGuest() ? array(AuthGuest::getGuest()->email) : Auth::user()->email_addresses ?>
-
-                                            <?php if (count($emails) > 1) { ?>
-                                                <div class="fs-select">
-                                                    <label for="form">
-                                                        {tr:from}
-                                                    </label>
-                                                    <select id="from" name="from">
-                                                        <?php foreach ($emails as $email) { ?>
-                                                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                            <?php } else { ?>
-                                                <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
-                                                    <label for="from">
-                                                        {tr:from}
-                                                    </label>
-
-                                                    <input name="to" id="to" type="email"
-                                                           title="{tr:from}"
-                                                           value=""
-                                                           placeholder="<?php echo Template::sanitizeOutputEmail($emails[0]) ?>" disabled />
-
-                                                </div>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="row">
                                     <div class="col-12">
                                         <?php
@@ -452,13 +351,13 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 col-sm-12 col-md-7 col-lg-8">
                                         <?php if($allow_recipients) { ?>
                                             <div data-related-to="message">
                                                 <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
-                                                            {tr:send_transfer_to}
+                                                            {tr:email_to}
                                                         </label>
 
                                                         <?php echo AuthGuest::getGuest()->user_email ?>
@@ -466,7 +365,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php } else { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
-                                                            {tr:send_transfer_to}
+                                                            {tr:email_to}
                                                         </label>
 
                                                         <div>
@@ -483,28 +382,8 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 
                                             <div data-related-to="message">
                                                 <div class="fs-input-group">
-                                                    <label for="subject">
-                                                        {tr:subject}
-                                                    </label>
-                                                    <input name="subject" id="subject" type="text"
-                                                           title="{tr:subject}"
-                                                           value=""
-                                                           placeholder="{tr:enter_to_subject}" />
-                                                </div>
-
-                                                <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
-                                                <label class="invalid" id="password_can_not_be_part_of_message_warning">
-                                                    {tr:password_can_not_be_part_of_message_warning}
-                                                </label>
-                                                <label class="invalid" id="password_can_not_be_part_of_message_error">
-                                                    {tr:password_can_not_be_part_of_message_error}
-                                                </label>
-                                            </div>
-
-                                            <div data-related-to="message">
-                                                <div class="fs-input-group">
                                                     <label for="message">
-                                                        {tr:message}
+                                                        {tr:your_message}
                                                     </label>
                                                     <textarea id="message" name="message" rows="3" placeholder="{tr:optional_message}"></textarea>
                                                 </div>
@@ -525,6 +404,12 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
                                             </div>
                                         <?php } ?>
+                                    </div>
+
+                                    <div class="col-12 col-sm-12 col-md-5 col-lg-4 fs-transfer__actions">
+                                        <button type="button" id="fs-transfer__confirm" class="fs-button fs-button--icon-right">
+                                            {tr:transfer_files}
+                                        </button>
                                     </div>
                                 </div>
 
@@ -552,131 +437,119 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             </div>
 
                             <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
-                                <hr />
-
-
-
-                                <strong>Transfer settings</strong>
-
-                                <?php if(Config::get('encryption_enabled')) {  ?>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="fs-switch" data-related-to="encryption">
-                                                <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
-                                                <label for="encryption">
-                                                    {tr:encrypt_files_with_password}
-                                                </label>
-                                            </div>
-
-                                            <div id="encgroup1" class="fs-transfer__password">
-                                                <div class="fs-transfer__password-top" id="encryption_password_container">
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-7">
-                                                            <div class="fs-input-group">
-                                                                <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-5">
-                                                            <div class="fs-transfer__generate-password">
-                                                                <span>{tr:or} &nbsp;</span>
-                                                                <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="fieldcontainer" id="encryption_password_show_container">  
-                                                    <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >  
-                                                    <label class="cursor" for="encryption_show_password">{tr:file_encryption_show_password}</label>
-                                                </div>
-                                                
-                                                <div class="fs-transfer__password-bottom">
-                                                    <small>{tr:password_share_tip}</small>
-                                                </div>
-
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">
-                                                    <small>{tr:file_encryption_password_too_short}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">
-                                                    <small>{tr:file_encryption_password_must_have_numbers}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">
-                                                    <small>{tr:file_encryption_password_must_have_upper_and_lower_case}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">
-                                                    <small>{tr:file_encryption_password_must_have_special_characters}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">
-                                                    <small>{tr:encryption_password_container_can_have_text_only_min_password_length_message}</small>
-                                                </div>
-                                                <div class="fieldcontainer" id="encryption_description_disabled_container">
-                                                    <small>{tr:file_encryption_description_disabled}</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-
-
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="fs-select expires-select-by-days">
-                                            <label for="expires-select">
-                                                {tr:expires_after}
-                                            </label>
-                                            <select id="expires-select" name="expires-select">
-                                                <?php foreach( $expireDays as $v ) { ?>
-                                                    <option value="<?php echo $v ?>" selected><?php echo $v ?> {tr:days}</option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="fs-select fieldcontainer expires-select-by-picker">
-                                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
-                                            
-                                            <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
-                                                   title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
-                                                   data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
-                                            />
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-
-                                <?php
-                                if(Config::get('transfer_recipients_lang_selector_enabled')) {
-                                    $opts = array();
-                                    $code = Lang::getBaseCode();
-                                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                                        $selected = ($id == $code) ? 'selected="selected"' : '';
-                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
-                                    }
-                                    
-                                    echo '<div class="fs-select">';
-                                    echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
-                                    echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
-                                    echo '</div>';
-
-                                    
-                                }
-                                ?>
-                                
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="fs-collapse">
                                             <button type="button" class="fs-button fs-collapse__open">
-                                                <i class="fa fa-chevron-down"></i>
-                                                <span>
-                                                    {tr:show_advanced_settings}
-                                                </span>
+                                                <span>{tr:settings}</span>
+                                                <i class="fi fi-chevron-down"></i>
                                             </button>
                                             <button type="button" class="fs-button fs-collapse__close">
-                                                <i class="fa fa-chevron-up"></i>
-                                                <span>
-                                                    {tr:hide_advanced_settings}
-                                                </span>
+                                                <span>{tr:settings}</span>
+                                                <i class="fi fi-chevron-up"></i>
                                             </button>
                                             <div class="fs-collapse__content">
+                                                <?php if(Config::get('encryption_enabled')) {  ?>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <label class="fs-checkbox" data-related-to="encryption">
+                                                                <label for="encryption">
+                                                                    {tr:encrypt_files_with_password}
+                                                                </label>
+                                                                <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
+                                                                <span class="fs-checkbox__mark"></span>
+                                                            </label>
+
+                                                            <div id="encgroup1" class="fs-transfer__password">
+                                                                <div class="fs-transfer__password-top" id="encryption_password_container">
+                                                                    <div class="fs-input-group">
+                                                                        <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
+                                                                    </div>
+                                                                    <div class="fs-transfer__generate-password">
+                                                                        <span>{tr:or} &nbsp;</span>
+                                                                        <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="fieldcontainer" id="encryption_password_show_container">
+                                                                    <label class="fs-checkbox">
+                                                                        <label for="encryption_show_password">{tr:file_encryption_show_password}</label>
+                                                                        <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >
+                                                                        <span class="fs-checkbox__mark"></span>
+                                                                    </label>
+                                                                </div>
+
+                                                                <div class="fs-transfer__password-bottom">
+                                                                    <small>{tr:password_share_tip}</small>
+                                                                </div>
+
+                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">
+                                                                    <small>{tr:file_encryption_password_too_short}</small>
+                                                                </div>
+                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">
+                                                                    <small>{tr:file_encryption_password_must_have_numbers}</small>
+                                                                </div>
+                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">
+                                                                    <small>{tr:file_encryption_password_must_have_upper_and_lower_case}</small>
+                                                                </div>
+                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">
+                                                                    <small>{tr:file_encryption_password_must_have_special_characters}</small>
+                                                                </div>
+                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">
+                                                                    <small>{tr:encryption_password_container_can_have_text_only_min_password_length_message}</small>
+                                                                </div>
+                                                                <div class="fieldcontainer" id="encryption_description_disabled_container">
+                                                                    <small>{tr:file_encryption_description_disabled}</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="fs-select expires-select-by-days">
+                                                            <label for="expires-select">
+                                                                {tr:expires_after}
+                                                            </label>
+                                                            <select id="expires-select" name="expires-select">
+                                                                <?php foreach( $expireDays as $v ) { ?>
+                                                                    <option value="<?php echo $v ?>" selected><?php echo $v ?> {tr:days}</option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="fs-input-group expires-select-by-picker">
+                                                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+
+                                                            <div>
+                                                                <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
+                                                                       title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
+                                                                       data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <?php
+                                                if(Config::get('transfer_recipients_lang_selector_enabled')) {
+                                                    $opts = array();
+                                                    $code = Lang::getBaseCode();
+                                                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                                        $selected = ($id == $code) ? 'selected="selected"' : '';
+                                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                                    }
+
+                                                    echo '<div class="fs-select">';
+                                                    echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
+                                                    echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
+                                                    echo '</div>';
+
+
+                                                }
+                                                ?>
+
                                                 <div class="row">
                                                     <div class="col-12 basic_options">
                                                         <strong>
@@ -701,10 +574,10 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                                                     <div class="row">
                                                         <div class="col-12 advanced_options">
-                                                            <strong>
-                                                                {tr:terasender_settings}
-                                                            </strong>
                                                             <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
+                                                                <strong>
+                                                                    {tr:terasender_settings}
+                                                                </strong>
                                                                 <div class="fs-input-group fs-input-group--vertical">
                                                                     <label for="terasender_worker_count">
                                                                         {tr:terasender_worker_count}
@@ -736,12 +609,13 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                 <?php if (Config::get('aup_enabled')) { ?>
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="fs-switch">
-                                                <input id="aup" name="aup" type="checkbox" <?php echo $aupChecked; ?> value="true" required />
+                                            <label class="fs-checkbox">
                                                 <label for="aup">
                                                     {tr:accepttoc}
                                                 </label>
-                                            </div>
+                                                <input id="aup" name="aup" type="checkbox" <?php echo $aupChecked; ?> value="true" required />
+                                                <span class="fs-checkbox__mark"></span>
+                                            </label>
 
                                             <div class="aupbox">
                                                 <div name="aupshowhide" id="aupshowhide" class="fs-link">
@@ -759,50 +633,22 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                         </div>
                     </div>
                 </div>
-
-                <hr />
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="fs-transfer__actions">
-                            <div class="fs-transfer__left">
-                                <button type="button" id="fs-transfer__previous-step" class="fs-button fs-button--info">
-                                    <i class="fa fa-arrow-left"></i>
-                                    {tr:previous}
-                                </button>
-                                <button type="button" id="fs-transfer__cancel" class="fs-button fs-button--danger">
-                                    <i class="fa fa-ban"></i>
-                                    {tr:cancel}
-                                </button>
-                            </div>
-                            <div class="fs-transfer__right">
-                                <button type="button" id="fs-transfer__confirm" class="fs-button fs-button--info fs-button--icon-right">
-                                    {tr:confirm}
-                                    <i class="fa fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <div class="fs-transfer__step" data-step="4">
+            <div class="fs-transfer__step" data-step="2">
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                         <div class="fs-transfer__list fs-transfer__list--full">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
                             <div class="fs-transfer__files">
                                 <table class="fs-table"></table>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                         <div class="fs-transfer__upload-detail fs-transfer__upload-uploading">
-                            <h5>
-
-                            </h5>
+                            <h4>
+                                {tr:uploading_your_transfer}
+                            </h4>
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">0%</strong>
                                 <span class="fs-progress-bar__progress">
@@ -828,7 +674,10 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                         </tr>
                                         <tr class="fs-transfer__number-of-files number_of_files">
                                             <td>{tr:number_of_files}</td>
-                                            <td id="fs-transfer__total-files" class="value">0 {tr:files_lowercase}</td>
+                                            <td id="fs-transfer__total-files">
+                                                <span class="value">0</span>
+                                                {tr:files_lowercase}
+                                            </td>
                                         </tr>
                                         <tr class="fs-transfer__estimated-info estimated_completion">
                                             <td>
@@ -846,16 +695,16 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     </table>
                                 </div>
                                 <?php if(Config::get('upload_show_play_pause')) { ?>
-                                <div class="buttons">
-                                    <button type="button" id="fs-transfer__pause" class="fs-button fs-button--info fs-button--icon-right pausebutton">
+                                <div class="fs-transfer__resume-buttons buttons">
+                                    <button type="button" id="fs-transfer__pause" class="fs-button fs-button--icon-right pausebutton">
                                         {tr:pause}
                                         <i class="fa fa-pause"></i>
                                     </button>
-                                    <button type="button" id="fs-transfer__resume" class="fs-button fs-button--info fs-button--icon-right resumebutton" disabled="1">
+                                    <button type="button" id="fs-transfer__resume" class="fs-button fs-button--icon-right resumebutton" disabled="1">
                                         {tr:resume}
                                         <i class="fa fa-play"></i>
                                     </button>
-                                    <button type="button" id="fs-transfer__stop" class="fs-button fs-button--info fs-button--icon-right stopbutton">
+                                    <button type="button" id="fs-transfer__stop" class="fs-button fs-button--icon-right stopbutton">
                                         {tr:stop}
                                         <i class="fa fa-stop"></i>
                                     </button>
@@ -867,23 +716,20 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                 </div>
             </div>
 
-            <div class="fs-transfer__step" data-step="5">
+            <div class="fs-transfer__step" data-step="3">
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                         <div class="fs-transfer__list fs-transfer__list--full">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
                             <div class="fs-transfer__files">
                                 <table class="fs-table"></table>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                         <div class="fs-transfer__upload-detail fs-transfer__upload-finished">
-                            <h5>
+                            <h4>
                                 {tr:transfer_completed}
-                            </h5>
+                            </h4>
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">100%</strong>
                                 <span class="fs-progress-bar__progress">
@@ -894,6 +740,13 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                 <div class="stats">
                                     <table class="fs-table">
                                         <tbody>
+                                        <tr class="fs-transfer__number-of-files number_of_files">
+                                             <td>{tr:number_of_files}</td>
+                                             <td id="fs-transfer__total-files">
+                                                 <span class="value">0</span>
+                                                 {tr:files_lowercase}
+                                             </td>
+                                         </tr>
                                         <tr class="fs-transfer__total-info size">
                                             <td>{tr:ui2_total_size}</td>
                                             <td id="fs-transfer__total-size" class="value">0 MB</td>
@@ -909,15 +762,14 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                 <div class="fs-copy">
                                     <span></span>
 
-                                    <button id="copy-to-clipboard" type="button" class="fs-button">
-                                        <i class="fa fa-copy"></i>
-                                        {tr:copy}
-                                    </button>
+                                    <button id="copy-to-clipboard" type='button'>
+                                       <i class='fi fi-copy'></i>
+                                   </button>
                                 </div>
                             </div>
                             <div class="fs-transfer__upload-recipients">
                                 <span>
-                                    {tr:your_transfer_was_sent}
+                                    {tr:your_transfer_was_sent}:
                                 </span>
                                 <div class="fs-badge-list">
                                 </div>
@@ -945,13 +797,11 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                 </div>
 
                 <div class="fs-transfer__upload-actions">
-                    <a id="detail-link" href=""type="button" class="fs-button fs-button--info" role="button">
-                        <i class="fa fa-file-text-o"></i>
-                        {tr:transfer_details}
+                    <a id="detail-link" href=""type="button" class="fs-button fs-button--primary" role="button">
+                        {tr:see_transfer_details}
                     </a>
-                    <a href="?s=transfers" class="fs-button fs-button--info" role="button">
-                        <i class="fa fa-exchange"></i>
-                        {tr:all_my_transfers}
+                    <a href="?s=transfers" class="fs-button fs-button--inverted" role="button">
+                        {tr:go_to_all_my_transfers}
                     </a>
                 </div>
             </div>

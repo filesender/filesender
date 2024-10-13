@@ -83,28 +83,23 @@ jQuery.fn.extend({
     }
 });
 
-function setFileProgress( bar, v, complete ) {
+function setFileProgress( progress, v, complete ) {
     var origv = v;
     var upload_progress = Math.floor(1000 * v);
 
     v = Math.floor( 100*v );
 
     if (upload_progress < 1000 || complete === true) {
+        progress[1].style.background = `conic-gradient(var(--fs-success) ${v * 3.6}deg, var(--fs-border-color) 0deg)`;
 
-        bar.removeClass('progress-bar-animated');
-        bar.css('width', v+'%').attr('aria-valuenow', v);
         if( v >= 100 ) {
-            bar.closest('.file').addClass('done');
+            progress.closest('.file').addClass('done');
         }
     }
-    else
-    {
-        // Go stripey for validation
-        bar.addClass('progress-bar-animated');
-    }
 
-    var lv = Math.floor( 1000*origv );
-    bar.text((lv/10).toFixed(1) + '%');
+    const lv = Math.floor(1000 * origv);
+    const progressValue = progress[1].querySelector(".fs-progress-circle__value");
+    progressValue.textContent = Math.trunc(lv/10);
 }
 
 function useWebNotifications()
@@ -339,7 +334,7 @@ filesender.ui.files = {
     },
 
     addFile: function(filepath, fileblob, isSingleOperation, source_node) {
-        filesender.ui.goToStage(2);
+        filesender.ui.hideDragAndDropUpload();
 
         var filesize = fileblob.size;
 
@@ -641,8 +636,8 @@ filesender.ui.files = {
         if(this.status != 'paused')
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
 
-        var bar = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .progress-bar');
-        setFileProgress( bar, (file.fine_progress ? file.fine_progress : file.uploaded) / file.size, complete );
+        const progress = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .fs-progress-circle');
+        setFileProgress( progress, (file.fine_progress ? file.fine_progress : file.uploaded) / file.size, complete );
     },
 
     // Clear the file box
@@ -653,7 +648,6 @@ filesender.ui.files = {
         filesender.ui.nodes.files.input.val('');
 
         filesender.ui.nodes.files.list.find('.file').remove();
-
 
         filesender.ui.nodes.files.clear.button('disable');
 
@@ -1081,11 +1075,11 @@ filesender.ui.evalUploadEnabled = function() {
     }
 
 
-    if (filesender.ui.stage == 2) {
-        filesender.ui.nodes.stages.nextStep.prop('disabled', !uploadFileStageOk);
-    }
+    // if (filesender.ui.stage == 2) {
+    //     filesender.ui.nodes.stages.nextStep.prop('disabled', !uploadFileStageOk);
+    // }
 
-    if (filesender.ui.stage == 3) {
+    if (filesender.ui.stage == 1) {
         filesender.ui.nodes.stages.confirm.prop('disabled', !configStageOk);
     }
 
@@ -1351,8 +1345,8 @@ filesender.ui.startUpload = function() {
         );
         filesender.ui.nodes.form.find('.mytransferslink').attr('href',link);
 
-        filesender.ui.goToStage(5);
-        filesender.ui.setFileList(4, 5);
+        filesender.ui.goToStage(3);
+        filesender.ui.setFileList(2, 3);
 
         filesender.ui.updateSizeInfo();
 
@@ -1637,13 +1631,11 @@ filesender.ui.goToStage = function (stage) {
     const stageElement = $(`[data-step="${stage}"`);
     stageElement.addClass(filesender.ui.stageActiveClass);
     filesender.ui.stage = stage;
-    if( stage == 3 || stage == 4 ) {
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: "auto",
-        });
-    }
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto",
+    });
 }
 
 filesender.ui.removeFile = function (e) {
@@ -1684,6 +1676,7 @@ filesender.ui.removeFile = function (e) {
         // The last file was removed,
         // this may hide some UI elements like clear all
         filesender.ui.files.clear();
+        filesender.ui.showDragAndDropUpload();
     }
 
     iidx = filesender.ui.files.invalidFiles.indexOf(name);
@@ -1743,9 +1736,6 @@ filesender.ui.onChangeTransferType = function (transferType) {
         TRANSFER_EMAIL: 'transfer-email'
     }
     if (transferType) {
-        $('.fs-transfer__transfer-fields').addClass('fs-transfer__transfer-fields--show');
-        $('.fs-transfer__transfer-settings').addClass('fs-transfer__transfer-settings--show');
-
         const emailField = $(`[data-transfer-type='${TRANSFER_TYPES.TRANSFER_EMAIL}']`);
         const addMeToRecipientsField = $(`#fs-transfer__add-me-to-recipients`);
 
@@ -1810,6 +1800,16 @@ filesender.ui.copyToClipboard = function(value) {
     });
 };
 
+filesender.ui.hideDragAndDropUpload = function () {
+    filesender.ui.nodes.files.dragdrop.hide();
+    filesender.ui.nodes.files.list.show();
+};
+
+filesender.ui.showDragAndDropUpload = function () {
+    filesender.ui.nodes.files.dragdrop.show();
+    filesender.ui.nodes.files.list.hide();
+};
+
 $(function() {
     var form = $('#upload_form');
     if(!form.length) return;
@@ -1849,10 +1849,9 @@ $(function() {
         stage1: form.find('[data-step="1"'),
         stage2: form.find('[data-step="2"'),
         stage3: form.find('[data-step="3"'),
-        stage4: form.find('[data-step="4"'),
         stages: {
-            nextStep: form.find('#fs-transfer__next-step'),
-            previousStep: form.find('#fs-transfer__previous-step'),
+            // nextStep: form.find('#fs-transfer__next-step'),
+            // previousStep: form.find('#fs-transfer__previous-step'),
             confirm: form.find('#fs-transfer__confirm'),
             cancel: form.find('#fs-transfer__cancel'),
         },
@@ -1919,8 +1918,11 @@ $(function() {
         need_recipients: form.attr('data-need-recipients') == '1'
     };
 
-    filesender.ui.getALink = false;
-    filesender.ui.nodes.gal.checkbox.prop('checked', false);
+    filesender.ui.getALink = true;
+    filesender.ui.nodes.gal.checkbox.prop('checked', true);
+
+    $('.fs-transfer__transfer-fields').addClass('fs-transfer__transfer-fields--show');
+    $('.fs-transfer__transfer-settings').addClass('fs-transfer__transfer-settings--show');
 
     form.find('.basic_options [data-option] input, .advanced_options [data-option] input').each(function() {
         var i = $(this);
@@ -1963,69 +1965,19 @@ $(function() {
     filesender.ui.nodes.gal.checkboxcontainer.hide(); //check no remove
     form.find('.terms').hide();
 
-    filesender.ui.nodes.stages.nextStep.prop('disabled', true);
+    // filesender.ui.nodes.stages.nextStep.prop('disabled', true);
     filesender.ui.nodes.stages.confirm.prop('disabled', true);
-
-    // move to stage2
-    filesender.ui.nodes.stages.nextStep.on('click',function() {
-
-        // The user can not change options for the transfer when they are
-        // sending the remains of the files to complete the upload.
-        if( filesender.ui.reuploading ) {
-            filesender.ui.nodes.stages.confirm.click();
-            filesender.ui.setFileList(2, 4);
-            return;
-        }
-
-        filesender.ui.goToStage(3);
-
-        filesender.ui.setFileList(2, 3);
-
-        if( form.attr('data-user-has-gal-preference') == '1' ) {
-            $('#transfer-link').prop("checked", true);
-            filesender.ui.onChangeTransferType("transfer-link");
-        }
-
-        // If there is only one choice then we should already make it
-        if($('.get_a_link_top_selector').length==0) {
-            $('#transfer-email').prop("checked", true);
-            filesender.ui.onChangeTransferType("transfer-email");
-        }
-
-        var get_a_link_checked = filesender.ui.isUserGettingALink();
-        filesender.ui.handle_get_a_link_change();
-        if( get_a_link_checked ) {
-            form.find('.galmodelink').show();
-            form.find('.galmodeemail').hide();
-        } else {
-            form.find('.galmodelink').hide();
-            form.find('.galmodeemail').show();
-        }
-        window.location.hash = "#stage3";
-
-        return false;
-    });
-
-    // move to stage1
-    filesender.ui.nodes.stages.previousStep.on('click',function() {
-        window.location.hash = "";
-        filesender.ui.goToStage(2);
-
-        //force graph to redraw
-        $("#speedChart").resize();
-        return false;
-    });
 
     // handle browser back and forward buttons as best as we can
     window.onpopstate = function(event) {
         if( filesender.ui.lasthash == "" || filesender.ui.lasthash == "#stage1" ) {
             if( document.location.hash == "#stage2" ) {
-                filesender.ui.nodes.stages.nextStep.click();
+                // filesender.ui.nodes.stages.nextStep.click();
             }
         }
         if( filesender.ui.lasthash == "#stage2" ) {
             if( !document.location.hash.length || document.location.hash == "#stage1" ) {
-                filesender.ui.nodes.stages.previousStep.click();
+                // filesender.ui.nodes.stages.previousStep.click();
             }
         }
         if( filesender.ui.lasthash == "#uploading" && window.location.hash == "#uploading" ) {
@@ -2041,11 +1993,11 @@ $(function() {
         filesender.ui.lasthash = document.location.hash;
     }
 
-    // move to stage3
+    // move to stage2
     filesender.ui.nodes.stages.confirm.on('click',function() {
-        filesender.ui.goToStage(4);
+        filesender.ui.goToStage(2);
 
-        filesender.ui.setFileList(3, 4);
+        filesender.ui.setFileList(1, 2);
         filesender.ui.deleteRemoveButton();
 
         // best to use a selector because there are dynamic items in list
@@ -2791,10 +2743,11 @@ $(function() {
 
                 // We do not show the stage2 page in this case as the options can
                 // not be changed for the transfer once it is created.
-                filesender.ui.nodes.stages.nextStep.html( filesender.ui.nodes.stages.confirm.html() );
+                // filesender.ui.nodes.stages.nextStep.html( filesender.ui.nodes.stages.confirm.html() );
                 filesender.ui.reuploading = true;
 
-                filesender.ui.goToStage(2);
+                filesender.ui.hideDragAndDropUpload();
+                filesender.ui.goToStage(1);
 
                 window.location.hash = "#uploading";
             };
@@ -2820,9 +2773,9 @@ $(function() {
             } else {
 
                 var prompt = filesender.ui.popup( lang.tr('restart_failed_transfer'),
-                    {load:   {callback: load, className: 'fs-button fs-button--info'},
-                        forget: {callback: forget, className: 'fs-button fs-button--danger'},
-                        later:  {callback: later, className: 'fs-button fs-button--info'}},
+                    {load:   {callback: load, className: 'fs-button fs-button--inverted'},
+                        forget: {callback: forget, className: 'fs-button fs-button--inverted'},
+                        later:  {callback: later, className: 'fs-button fs-button--primary'}},
                     {onclose: later});
                 $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
                 var tctn = $('<div class="failed_transfer" />').appendTo(prompt);

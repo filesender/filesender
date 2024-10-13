@@ -100,6 +100,24 @@ class GUI
         }
     }
 
+    public static function includeGoogleFonts()
+    {
+        $fonts = array(
+            array(
+                "family" => "Nunito+Sans",
+                "weight" => "0,6..12,200..1000;1,6..12,200..1000"
+            )
+        );
+
+        echo '        <link rel="preconnect" href="https://fonts.googleapis.com">'."\n";
+        echo '        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'."\n";
+
+
+        foreach ($fonts as $font) {
+            echo '        <link href="https://fonts.googleapis.com/css2?family='.$font["family"].':ital,opsz,wght@'.$font["weight"].'&display=swap" rel="stylesheet">'."\n";
+        }
+    }
+
 
     /**
      * Get script(s)
@@ -211,7 +229,7 @@ class GUI
     {
         $locations = self::filterSources(array(
             'images/logo.png',
-            'images/filesender-logo.svg',
+            'images/filesender-symbol.svg',
             'skin/logo.png',
             Config::get('site_logo')
         ));

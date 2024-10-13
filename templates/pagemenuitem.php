@@ -29,36 +29,37 @@ function pagemenuitem($page) {
     }
     $icon = '';
     $faicon = '';
-    if($page == 'guests') {
-        $faicon = 'fa-users';
-    }
-    if($page == 'upload') {
-        $faicon = 'fa-send';
-    }
-    if($page == 'user') {
-        $faicon = 'fa-user';
-    }
-    if($page == 'privacy') {
-        $faicon = 'fa-lock';
+
+
+    // PUBLIC MENU
+    if($page == 'help') {
+        $icon = '<i class="fa fa-question-circle"></i> ';
     }
     if($page == 'about') {
-        $faicon = 'fa-info-circle';
+        $icon = '<i class="fa fa-info-circle"></i> ';
     }
-    if($page == 'admin') {
-        $faicon = 'fa-cogs';
-    }
-    if($page == 'transfers') {
-        $faicon = 'fa-list';
-    }
-    if($page == 'help') {
-        $faicon = 'fa-question-circle';
-    }
-    if($page == 'statistics') {
-        $faicon = 'fa-bar-chart';
+    if($page == 'privacy') {
+        $icon = '<i class="fa fa-lock"></i> ';
     }
 
-    if($faicon) {
-        $icon = '<i class="fa '.$faicon.'"></i> ';
+    // PRIVATE MENU
+    if($page == 'upload') {
+        $icon = '<i class="fi fi-add"></i> ';
+    }
+    if($page == 'transfers') {
+        $icon = '<i class="fi fi-box"></i> ';
+    }
+    if($page == 'guests') {
+        $icon = '<i class="fi fi-list"></i> ';
+    }
+    if($page == 'user') {
+        $icon = '<i class="fi fi-settings"></i> ';
+    }
+    if($page == 'admin') {
+        $icon = '<i class="fi fi-settings"></i> ';
+    }
+    if($page == 'statistics') {
+        $icon = '<i class="fa fa-bar-chart"></i> ';
     }
 
     echo '<li>';

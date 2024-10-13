@@ -169,7 +169,7 @@ $(function() {
         filesender.client.changeLocalAuthDBPassword( saml_id );
     });
 
-    $('#save-preferences').on('click', function(e) {
+    var savePreferences = () => {
         let hasError = false;
 
         const inputs = $(':input');
@@ -198,14 +198,14 @@ $(function() {
             hasError = true;
         });
 
-        
+
         if (!hasError) {
             filesender.ui.notify('success', lang.tr('preferences_updated'));
             location.reload();
         } else {
             filesender.ui.notify('error', lang.tr('Could not save user preferences.'));
         }
-    });
+    };
 
     var user_lang = page.find('select[name="user_lang"]');
     if( user_lang.length ) {
@@ -215,6 +215,7 @@ $(function() {
             if( menu_language_selector ) {
                 menu_language_selector.val( i.val() );
             }
+            savePreferences();
         });
     }
 
@@ -241,6 +242,10 @@ $(function() {
             const value = element.textContent;
             copyToClipboard(value);
         }
+    });
+
+    $('#user_theme, #previous-settings, #save-recipients-emails').on('change', function(e) {
+        savePreferences();
     });
 
     window.filesender.log("window.filesender.log() from user page ");

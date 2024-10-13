@@ -137,60 +137,51 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <div class="col">
                 <div class="fs-download__title">
                     <h1><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?> {tr:transferred_these_files}</h1>
-                    <p><?php  echo Lang::tr('transfer_expires_in_x_days')->r(array('days_to_expire' => $days_to_expire, 'days' => $days_to_expire)) ?></p>
                 </div>
             </div>
         </div>
 
-        <hr />
-
         <div class="row">
             <div class="col col-sm-12 col-md-5 col-lg-4">
-                <div class="fs-download__details">
-                    <h2>{tr:transfer_details}</h2>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:transfer_sent_on}:</strong>
+                <div class="fs-download__details mt-5">
+                    <h4>{tr:transfer_details}</h4>
+                    <div class="fs-info fs-info--aligned mt-5">
+                        <strong>{tr:transfer_sent_on}</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created,true)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:expiration_date}:</strong>
+                        <strong>{tr:expiration_date}</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:from}:</strong>
+                        <strong>{tr:from}</strong>
                         <span><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></span>
                     </div>
                     <?php if($transfer->subject) { ?>
                         <div class="fs-info fs-info--aligned">
-                            <strong>{tr:subject}:</strong>
+                            <strong>{tr:subject}</strong>
                             <span><?php echo Template::replaceTainted($transfer->subject) ?></span>
                         </div>
                     <?php } ?>
                     <?php if($transfer->message) { ?>
                         <div class="fs-info fs-info--aligned">
-                            <strong>{tr:message}:</strong>
+                            <strong>{tr:message}</strong>
                             <span><?php echo Template::replaceTainted($transfer->message) ?></span>
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:transfer_size}:</strong>
+                        <strong>{tr:transfer_size}</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></span>
-                    </div>
-                    <div  class="fs-info">
-                        <a href="https://docs.filesender.org/filesender/v3.0/user/download/">{tr:more_information_about_downloading_files}</a>
                     </div>
                 </div>
             </div>
             <div class="col col-sm-12 col-md-7 col-lg-8">
                 <div class="fs-download__files">
-                    <h2>{tr:download_files}</h2>
-                    <p>{tr:select_files_to_download}</p>
-
                     <?php if($canDownloadArchive) { ?>
                         <div class="fs-download__check-all select_all">
                             <label class="fs-checkbox">
                                 <label for="check-all" class="select_all_text">
-                                    {tr:click_to_check_all}
+                                    {tr:select_all_files}
                                 </label>
                                 <input id="check-all" type="checkbox">
                                 <span class="fs-checkbox__mark toggle-select-all"></span>
@@ -240,8 +231,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                                                 <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
-                                                    <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
-                                                        <i class="fa fa-download"></i>
+                                                    <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text download" title="{tr:download_file}">
+                                                        <i class="fi fi-download"></i>
                                                     </a>
                                                 </span>
                                             </div>
@@ -270,12 +261,10 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     <?php if($canDownloadArchive) { ?>
                         <div class="fs-download__actions archive">
                             <button type="button" class="fs-button archive_download_frame archive_download" title="{tr:archive_download}">
-                                <i class="fa fa-download"></i>
                                 <span>{tr:archive_download}</span>
                             </button>
                             <?php if($canDownloadAsTar) { ?>
                                 <button type="button" class="fs-button archive_tar_download_frame archive_tar_download" title="{tr:archive_tar_download}">
-                                    <i class="fa fa-download"></i>
                                     <span>{tr:archive_tar_download}</span>
                                 </button>
 
@@ -363,7 +352,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
     <div class="container">
         <div class="row">
             <div class="col">
-                <h2>{tr:verify_your_email_address_to_download}</h2>
+                <h4>{tr:verify_your_email_address_to_download}</h4>
                 <table columns="2" border="1">
                     <col class="width25">
                     <col class="width75">
@@ -395,36 +384,6 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         </div>
     </div>
 </div>
-
-<div class="fs-download">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <table class="table borderless general" data-transfer-size="<?php echo $transfer->size ?>">
-                    <tbody>
-        <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
-            !$transfer->options['hide_sender_email']) { ?>
-                        <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td></tr>
-        <?php } ?>
-                        <tr>
-                            <td align="right" class="created">{tr:created}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></td>
-                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></td>
-                            <td align="right" class="size">{tr:size}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></td>
-                        </tr>
-        <?php if($transfer->subject) { ?>
-                        <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Utilities::sanitizeOutput($transfer->subject) ?></td></tr>
-        <?php } ?>
-
-        <?php if($transfer->message) { ?>
-                        <tr><td align="right" class="message">{tr:message}</td><td><p><?php echo Utilities::sanitizeOutput($transfer->message) ?></p></td></tr>
-        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="transfer_is_encrypted not_displayed">
     <?php echo $isEncrypted ? 1 : 0;  ?>

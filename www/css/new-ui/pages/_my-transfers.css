@@ -1,15 +1,15 @@
 .fs-my-transfers {
     flex: 1;
-    background: var(--fs-bg-color);
-    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+    background: var(--fs-my-transfers-background);
+    padding: var(--fs-spacing-11x) var(--fs-spacing-2x);
 }
 
 .fs-my-transfers table th a {
     color: var(--fs-text-color);
 }
 
-.fs-my-transfers__title {
-    text-align: center;
+.fs-my-transfers h4 {
+    margin-top: var(--fs-spacing-2x) !important;
 }
 
 .fs-my-transfers__title p {
@@ -29,12 +29,15 @@
     margin-top: var(--fs-spacing-3x);
 }
 
+.fs-my-transfers .actions {
+    text-align: right;
+}
+
 /* XS */
 @media (max-width: 575px) {
 
     .fs-my-transfers {
         font-size: 0.8rem;
         flex: 1;
-        background: var(--fs-bg-color);
     }
 }

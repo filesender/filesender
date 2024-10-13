@@ -1,101 +1,206 @@
 :root {
     /* COLORS */
 
-    --fs-black: #000000;
+    --fs-black: #333333;
     --fs-white: #FFFFFF;
 
-    --fs-gray-100: #f0f0f0;
-    --fs-gray-200: #E9E9E9;
-    --fs-gray-300: #ccc;
-    --fs-gray-500: #adadad;
-    --fs-gray-900: #333333;
-    --fs-gray-alpha-50: rgba(238, 238, 238, .50);
+    --fs-grey: #DEDEDE;
+    --fs-dark-grey: #666666;
+    --fs-light-grey: #E9E9E9;
 
-    --fs-blue-100: #edf5ff;
-    --fs-blue-200: #adcdff;
-    --fs-blue-300: #5992ed;
-    --fs-blue: #1351b4;
+    --fs-blue: #0077C8;
 
-    --fs-bg-color: #000000;
-    --fs-bg-color-secondary: #121212;
-    --fs-bg-color-tertiary: #121212;
-    --fs-bg-color-quarternary: #121212;
-    --fs-bg-color-quinary: #121212;
-    --fs-border: var(--fs-light);
+    --fs-hover: #0269AF;
+    --fs-pressed: #045C98;
 
-    --fs-text-color: #FBFAFE;
+    --fs-success: #037834;
+    --fs-success-bg: #D0F7E0;
 
-    --fs-hightlight-bg: var(--fs-bg-color-secondary);
-    --fs-hightlight-bg-alternative: #bb86fc;
-    --fs-hightlight-bg-secondary: #bb86fc;
+    --fs-warning: #CE530E;
+    --fs-warning-bg: #FFE9D0;
 
-    --fs-accent: #3700b3;
+    --fs-error: #BF1F16;
+    --fs-error-bg: #FFD9D6;
 
-    --fs-primary: #bb86fc;
+    --fs-info: #2575AC;
+    --fs-info-bg: #DBF3FF;
+
+    --fs-primary: var(--fs-blue);
+    --fs-accent: var(--fs-primary);
 
     --fs-light: var(--fs-white);
-    --fs-bg-light: var(--fs-bg-color);
+    --fs-dark: var(--fs-black);
 
-    --fs-hover: #bb86fc;
+    --fs-background: #191919;
+    --fs-secondary-background: #000000;
 
-    --fs-btn: #3700b3;
-    --fs-btn-hover: #3700b3;
-    --fs-btn-active: #C08FFB;
+    --fs-text-color: var(--fs-light);
 
-    --fs-success: #018786;
-    --fs-success-hover: #02ADAD;
-    --fs-success-active: #47E6E6;
+    --fs-divider-color: var(--fs-grey);
 
-    --fs-info: #155BCB;
-    --fs-info-hover: #4177D3;
-    --fs-info-active: #84A5E4;
+    --fs-border-color: var(--fs-grey);
 
-    --fs-warning: #FFCD05;
-    --fs-warning-hover: #DFB41E;
-    --fs-warning-active: #A3882D;
+    --fs-dark-border-color: var(--fs-dark-grey);
 
-    --fs-danger: #EA4D3C;
-    --fs-danger-hover: #EA4D3C;
-    --fs-danger-active: #F48D82;
+    --fs-alternative-hover: var(--fs-light-grey);
 
-    /* SPACING */
+    --fs-alternative-pressed: var(--fs-grey);
 
-    -fs-spacing-base: 8px;
-    --fs-spacing-half: calc(var(--fs-spacing-base) / 2);
-    --fs-spacing-quarter: calc(var(--fs-spacing-base) / 4);
+    --fs-remove-color: var(--fs-error);
 
-    --fs-spacing-1x: var(--fs-spacing-base);
-    --fs-spacing-2x: calc(var(--fs-spacing-base) * 2);
-    --fs-spacing-3x: calc(var(--fs-spacing-base) * 3);
-    --fs-spacing-4x: calc(var(--fs-spacing-base) * 4);
-    --fs-spacing-5x: calc(var(--fs-spacing-base) * 5);
-    --fs-spacing-6x: calc(var(--fs-spacing-base) * 6);
-    --fs-spacing-7x: calc(var(--fs-spacing-base) * 7);
-    --fs-spacing-8x: calc(var(--fs-spacing-base) * 8);
-    --fs-spacing-9x: calc(var(--fs-spacing-base) * 9);
-    --fs-spacing-10x: calc(var(--fs-spacing-base) * 10);
-    --fs-spacing-11x: calc(var(--fs-spacing-base) * 11);
-    --fs-spacing-12x: calc(var(--fs-spacing-base) * 12);
-    --fs-spacing-13x: calc(var(--fs-spacing-base) * 13);
-    --fs-spacing-14x: calc(var(--fs-spacing-base) * 14);
-    --fs-spacing-15x: calc(var(--fs-spacing-base) * 15);
-    --fs-spacing-16x: calc(var(--fs-spacing-base) * 16);
-    --fs-spacing-17x: calc(var(--fs-spacing-base) * 17);
-    --fs-spacing-18x: calc(var(--fs-spacing-base) * 18);
-    --fs-spacing-19x: calc(var(--fs-spacing-base) * 19);
-    --fs-spacing-20x: calc(var(--fs-spacing-base) * 20);
-    --fs-spacing-21x: calc(var(--fs-spacing-base) * 21);
-    --fs-spacing-22x: calc(var(--fs-spacing-base) * 22);
-    --fs-spacing-23x: calc(var(--fs-spacing-base) * 23);
-    --fs-spacing-24x: calc(var(--fs-spacing-base) * 24);
-    --fs-spacing-25x: calc(var(--fs-spacing-base) * 25);
-    --fs-spacing-26x: calc(var(--fs-spacing-base) * 26);
-    --fs-spacing-27x: calc(var(--fs-spacing-base) * 27);
-    --fs-spacing-28x: calc(var(--fs-spacing-base) * 28);
-    --fs-spacing-29x: calc(var(--fs-spacing-base) * 29);
-    --fs-spacing-30x: calc(var(--fs-spacing-base) * 30);
-}
+    --fs-exclamation-circle-color: var(--fs-accent);
 
-img {
-    filter: invert(1);
+    --fs-files-background: var(--fs-secondary-background);
+
+    /* COMPONENTS */
+
+    /* Badge */
+    --fs-badge-color: var(--fs-accent);
+    --fs-badge-background: var(--fs-info-bg);
+    --fs-badge-btn-text-color: var(--fs-text-color);
+    --fs-badge-btn-text-background: var(--fs-info-bg);
+
+    /* Buttons */
+    --fs-button-color: var(--fs-dark);
+    --fs-button-background: var(--fs-accent);
+    --fs-button-hover-color: var(--fs-dark);
+    --fs-button-hover-background: var(--fs-hover);
+    --fs-button-active-color: var(--fs-dark);
+    --fs-button-active-background: var(--fs-pressed);
+    --fs-button-disabled-color: var(--fs-dark);
+    --fs-button-disabled-background: var(--fs-grey);
+    --fs-button-transparent-color: var(--fs-dark);
+    --fs-button-primary-color: var(--fs-accent);
+    --fs-button-inverted-color: var(--fs-accent);
+    --fs-button-inverted-border-color: var(--fs-accent);
+
+    /* Checkbox */
+    --fs-checkbox-background: var(--fs-dark);
+    --fs-checkbox-border-color: var(--fs-dark-border-color);
+    --fs-checkbox-hover-background: var(--fs-alternative-hover);
+    --fs-checkbox-checked-background: var(--fs-accent);
+    --fs-checkbox-check-color: var(--fs-dark);
+
+    /* Collapse */
+    --fs-collapse-open-background: var(--fs-dark);
+    --fs-collapse-button-background: var(--fs-dark);
+    --fs-collapse-button-color: var(--fs-text-color);
+    --fs-collapse-button-hover-background: var(--fs-alternative-hover);
+    --fs-collapse-button-active-background: var(--fs-alternative-pressed);
+
+    /* Copy */
+    --fs-copy-background: var(--fs-secondary-background);
+    --fs-copy-button-color: var(--fs-accent);
+
+    /* Footer */
+
+    --fs-footer-background: var(--fs-secondary-background);
+    --fs-footer-color: var(--fs-text-color);
+    --fs-footer-version-background: var(--fs-background);
+
+    /* Form */
+    --fs-form-selection-background: var(--fs-accent);
+    --fs-form-focus-border-color: var(--fs-accent);
+
+    /* Header */
+    --fs-header-background: var(--fs-secondary-background);
+    --fs-header-link-background: var(--fs-dark);
+    --fs-header-link-active-color: var(--fs-text-color);
+    --fs-header-link-active-background: var(--fs-dark);
+    --fs-header-hover-color: var(--fs-text-color);
+    --fs-header-hover-background: var(--fs-light-grey);
+
+    /* Input */
+    --fs-input-background: var(--fs-dark);
+    --fs-input-border-color: var(--fs-border-color);
+    --fs-input-invalid-border-color: var(--fs-error);
+    --fs-input-focus-border-color: var(--fs-accent);
+
+    /* Link */
+    --fs-link-color: var(--fs-text-color);
+    --fs-link-primary-color: var(--fs-accent);
+    --fs-link-hover-color: var(--fs-text-color);
+    --fs-link-hover-background: var(--fs-background);
+    --fs-link-icon-color: var(--fs-light);
+
+    /* Paginator */
+    --fs-paginator-link-background: var(--fs-dark);
+    --fs-paginator-link-border-color: var(--fs-dark);
+    --fs-paginator-link-hover-background: var(--fs-light-grey);
+    --fs-paginator-link-hover-border-color: var(--fs-light-grey);
+    --fs-paginator-link-active-background: var(--fs-dark);
+    --fs-paginator-link-active-border-color: var(--fs-accent);
+    --fs-paginator-link-disabled-background: var(--fs-grey);
+    --fs-paginator-link-disabled-border-color: var(--fs-grey);
+
+    /* Progress-bar */
+    --fs-progress-bar-background: var(--fs-border-color);
+    --fs-progress-bar-indicator-background: var(--fs-success);
+    --fs-progress-bar-indicator-border-color: var(--fs-border-color);
+
+    /* Progress-circle */
+    --fs-progress-circle-background: var(--fs-border-color);
+    --fs-progress-circle-indicator-background: var(--fs-dark);
+    --fs-progress-circle-value-color: var(--fs-text-color);
+
+    /* Radio */
+    --fs-radio-group-checked-border-color: var(--fs-accent);
+    --fs-radio-hover-border-color: var(--fs-dark-border-color);
+    --fs-radio-hover-background: var(--fs-alternative-hover);
+    --fs-radio-circle-background: var(--fs-dark);
+    --fs-radio-circle-border-color: var(--fs-dark-border-color);
+    --fs-radio-checked-background: var(--fs-accent);
+
+    /* Select */
+    --fs-select-border-color: var(--fs-dark-border-color);
+    --fs-select-background: var(--fs-accent);
+    --fs-select-focus-border-color: var(--fs-accent);
+
+    /* Switch */
+    --fs-switch-label-color: var(--fs-text-color);
+    --fs-switch-border-color: var(--fs-dark-border-color);
+    --fs-switch-checked-background: var(--fs-accent);
+    --fs-switch-focus-border-color: var(--fs-accent);
+    --fs-switch-hover-checked-background: var(--fs-hover);
+    --fs-switch-hover-background: var(--fs-alternative-hover);
+
+    /* Table */
+    --fs-table-background: var(--fs-secondary-background);
+    --fs-table-th-background: var(--fs-background);
+    --fs-table-striped-even-background: var(--fs-background);
+    --fs-table-striped-odd-background: var(--fs-dark);
+    --fs-table-selectable-hover-background: var(--fs-grey);
+    --fs-table-actions-color: var(--fs-accent);
+    --fs-table-button-hover-color: var(--fs-accent);
+    --fs-table-responsive-tr-background: var(--fs-dark);
+    --fs-table-responsive-td-border-color: var(--fs-background);
+
+    /* PAGES */
+
+    /* Base-page */
+    --fs-base-page-background: var(--fs-background);
+
+    /* Download */
+    --fs-download-background: var(--fs-base-page-background);
+
+    /* Invitation-detail */
+    --fs-invitation-detail-background: var(--fs-base-page-background);
+
+    /* Invitations */
+    --fs-invitation-background: var(--fs-base-page-background);
+
+    /* My-transfers */
+    --fs-my-transfers-background: var(--fs-base-page-background);
+
+    /* New-invitation */
+    --fs-new-invitation-background: var(--fs-base-page-background);
+
+    /* Settings */
+    --fs-settings-background: var(--fs-base-page-background);
+
+    /* Transfer */
+    --fs-transfer-background: var(--fs-base-page-background);
+
+    /* Transfer-detail */
+    --fs-transfer-detail-background: var(--fs-base-page-background);
 }

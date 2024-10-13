@@ -120,9 +120,9 @@ class AuthSPFake
                 }
             }
             
-            if (!$attributes['name']) {
-                $attributes['name'] = substr($attributes['email'], 0, strpos($attributes['email'], '@'));
-            }
+//             if (!$attributes['name']) {
+//                 $attributes['name'] = substr($attributes['email'], 0, strpos($attributes['email'], '@'));
+//             }
             
             // Build additional attributes
             $additional_attributes = Config::get('auth_sp_additional_attributes');
