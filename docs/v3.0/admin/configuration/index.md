@@ -1290,13 +1290,12 @@ User language detection is done in the following order:
 
 ### email_from
 
-* __description:__ <span style="background-color:orange">sets the email From: header to either an explicit value or fills it with the sender's email address as received from the identity service provider in the "mail" attribute.  Is this the body From:?</span>
+* __description:__ sets the email From: header to either an explicit value, an explicit user name at the domain contained in site_url, or fills it with the sender's email address as received from the identity service provider in the "mail" attribute.
 * __mandatory:__ no
-* __type:__ string or keyword. Permissible value for keyword: "sender"
-* __default:__ -
+* __type:__ string or keyword. Permissible value for keyword: "sender", if the value ends in '@' then the domain name is appended.
+* __default:__ no-reply@
 * __available:__ since version 2.0
-* __1.x name:__
-* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@example.org" and use the bounce-handler script to deal with email bounces.
+* __comment:__ The domain name is taken from site_hostname if that is set. Otherwise the site_url is parsed and the domain name is taken from the result of parsing that url. To be SPF compliant set this to an address like "filesender-bounces@" and use the bounce-handler script to deal with email bounces.
 
 ### email_from_name
 
@@ -1310,13 +1309,12 @@ User language detection is done in the following order:
 
 ### email_reply_to
 
-* __description:__ <span style="background-color:orange">adds a reply-to: header to emails sent by FileSender.  When users reply to such an email usually the reply is then sent to the reply_to address.  A user would typically reply to an email to ask a question about a file transfer which should go directly to the sender as the sender is the only one who knows.</span>
+* __description:__ adds a reply-to: header to emails sent by FileSender. See email_from for more information on the format of this variable.
 * __mandatory:__ no
-* __type:__ string or keyword.  Permissible values for keyword: "sender"
-* __default:__ -
+* __type:__ string or keyword. Permissible value for keyword: "sender", if the value ends in '@' then the domain name is appended.
+* __default:__ no-reply@
 * __available:__ since version 2.0
-* __1.x name:__
-* __comment:__ To be SPF compliant set this to "sender"
+* __comment:__ The default append the hostname from your site_url configuraiton directive to the prefix 'no-reply@'
 
 ### email_reply_to_name
 
