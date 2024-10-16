@@ -59,7 +59,7 @@ A note about colours;
 * [cookie_domain](#cookie_domain)
 * [rate_limits](#rate_limits) (rate limits for some actions)
 * [valid_filename_regex](#valid_filename_regex)
-
+* [validate_csrf_token_for_guests](#validate_csrf_token_for_guests)
 
 ## Backend storage
 
@@ -804,6 +804,15 @@ $config['rate_limits'] = array(
   //  adds '+' in ASCII
   //  adds special character areas, for example MIDDLE DOT U+30FB
 $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
+
+
+### validate_csrf_token_for_guests
+* __description:__ If CSRF token checks are performed for guest users.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.50
+* __comment:__ 
 
 
 
