@@ -210,7 +210,7 @@ class ApplicationMail extends Mail
             } else {
 
                 if( $config_key == 'email_return_path' ) {
-                    if( !Utilities::validateEmail(str_replace('<verp>', 'verp', $return_path))) {
+                    if( !Utilities::validateEmail(str_replace('<verp>', 'verp', Config::get('email_return_path')))) {
                         throw new ConfigBadParameterException($config_key);
                     }
                 } else {
