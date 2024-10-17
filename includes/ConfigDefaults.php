@@ -35,6 +35,7 @@
 $default = array(
     'testing'   => false,   // TODO
     'debug'   => false,   // TODO
+    'site_hostname' => '', // may be used by email_from
     'default_timezone' => 'Europe/London', // Default timezone to use
     'default_language' => 'en', // Default language to user
     'lang_browser_enabled' => true, // Take language from user's browser's accept-language header if provided
@@ -178,8 +179,9 @@ $default = array(
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
-    'email_from' => 'sender',
-    'email_return_path' => 'sender',
+    'email_from' => 'no-reply@',
+    'email_return_path' => 'no-reply@',
+    
     'email_subject_prefix' => '{cfg:site_name}:',
     'email_headers' => false,
     'email_send_with_minus_r_option' => true,
