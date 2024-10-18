@@ -8,7 +8,7 @@ if(!isset($guest_id)) $guest_id = 0;
 $guest_id = Utilities::arrayKeyOrDefault($_GET, 'guest_id',  0, FILTER_VALIDATE_INT  );
 
 $guest = null;
-$found = 0;
+$found = false;
 if ($guest_id) {
     try {
         $guest = Guest::fromId($guest_id);
@@ -19,10 +19,9 @@ if ($guest_id) {
 }
 
 $user = Auth::user();
-if( !Auth::isAuthenticated() || !$guest || $guest->userid != $user->id ) {
+if(!Auth::isAdmin() && (!Auth::isAuthenticated() || !$guest || $guest->userid != $user->id)) {
     $found = false;
 }
-
 ?>
 
 
