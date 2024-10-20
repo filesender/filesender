@@ -22,14 +22,15 @@ $user = Auth::user();
 if( !Auth::isAuthenticated() || !$guest ) {
     $found = false;
 }
-if( Auth::isAdmin()) {
-    // admin is superuser.
-} else {
-    if( $guest->userid != $user->id ) {
-        $found = false;
+if( $found ) {
+    if( Auth::isAdmin()) {
+        // admin is superuser.
+    } else {
+        if( $guest->userid != $user->id ) {
+            $found = false;
+        }
     }
 }
-
 
 ?>
 
