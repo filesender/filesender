@@ -31,9 +31,22 @@ if ($transfer_id) {
 
 $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
 
-
+$found = true;
 $user = Auth::user();
-if( !Auth::isAuthenticated() || !$transfer || $transfer->userid != $user->id ) {
+if( !Auth::isAuthenticated() || !$transfer ) {
+    $found = false;
+}
+if( $found ) {
+    if( !Auth::isAdmin()) {
+        // non admin user can only view their own stuff
+        if( $transfer->userid != $user->id ) {
+            $found = false;
+        }
+        
+    }
+}
+
+if( !$found ) {
     echo $transfer_not_found;
     return;
 }

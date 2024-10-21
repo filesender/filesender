@@ -340,17 +340,6 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
                                 <div class="row">
-                                    <div class="col-12">
-                                        <?php
-                                            $ops = Transfer::availableOptions();
-                                            if( array_key_exists( 'hide_sender_email', $ops )) {
-                                                $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), false, array() );
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="col-12 col-sm-12 col-md-7 col-lg-8">
                                         <?php if($allow_recipients) { ?>
                                             <div data-related-to="message">
@@ -380,7 +369,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php } ?>
                                             </div>
 
-                                            <div data-related-to="message">
+                                            <div data-related-to="message" class="emailonly">
                                                 <div class="fs-input-group">
                                                     <label for="message">
                                                         {tr:your_message}
