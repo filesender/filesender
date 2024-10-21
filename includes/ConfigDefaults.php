@@ -35,6 +35,7 @@
 $default = array(
     'testing'   => false,   // TODO
     'debug'   => false,   // TODO
+    'site_hostname' => '', // may be used by email_from
     'default_timezone' => 'Europe/London', // Default timezone to use
     'default_language' => 'en', // Default language to user
     'lang_browser_enabled' => true, // Take language from user's browser's accept-language header if provided
@@ -71,7 +72,7 @@ $default = array(
 
     'auth_warn_session_expired' => false,
 
-    'auth_remote_user_enabled' => true, //disables remote user auth
+    'auth_remote_user_enabled' => false, //disables remote user auth
 
     'aup_default' => false,
     'aup_enabled' => false,
@@ -89,10 +90,10 @@ $default = array(
     'max_transfer_recipients' => 50,
     'max_transfer_files' => 30,
     'max_transfer_days_valid' => 20,
-    'ui_use_datepicker_for_transfer_expire_time_selection' => true,
+    'ui_use_datepicker_for_transfer_expire_time_selection' => false,
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
-    'transfer_recipients_lang_selector_enabled' => true,
+    'transfer_recipients_lang_selector_enabled' => false,
     'max_transfer_file_size' => 0,
     'max_transfer_encrypted_file_size' => 0,
 
@@ -177,13 +178,14 @@ $default = array(
     'storage_filesystem_per_day_min_days_to_clean_empty_directories' => -1,
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
     'transfers_table_show_admin_full_path_to_each_file' => false,
-
-    'email_from' => 'sender',
-    'email_return_path' => 'sender',
+    
+    'email_from' => 'no-reply@',
+    'email_return_path' => 'no-reply@',
+    
     'email_subject_prefix' => '{cfg:site_name}:',
     'email_headers' => false,
     'email_send_with_minus_r_option' => true,
-
+    
     'report_bounces' => 'asap',
     'report_bounces_asap_then_daily_range' => 15 * 60,
 
@@ -194,7 +196,7 @@ $default = array(
     'auditlog_lifetime' => 31,
     'auditlog_must_be_n_days_longer_than_max_transfer_days_valid' => 14,
     'ratelimithistory_lifetime' => 31,
-
+    
     'storage_usage_warning' => 20,
 
     'report_format' => ReportFormats::INLINE,
@@ -366,12 +368,12 @@ $default = array(
 
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
 
-    'download_verification_code_enabled' => true,
+    'download_verification_code_enabled' => false,
     'download_verification_code_valid_duration' => 60*15,
     'download_verification_code_random_bytes_used' => 8,
-    'download_show_download_links' => true,
+    'download_show_download_links' => false,
 
-    'upload_show_play_pause' => true,
+    'upload_show_play_pause' => false,
     'read_only_mode' => false,
 
     'date_format_style' => 'medium',
@@ -379,7 +381,7 @@ $default = array(
 
     'valid_timezone_regex' => '@^[_/a-z]+$@i',
     'client_send_current_timezone_to_server' => false,
-
+    
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,
