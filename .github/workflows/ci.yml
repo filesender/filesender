@@ -205,7 +205,7 @@ jobs:
         echo "testing $TESTSUITE on database $DB "
         if [ "$TESTSUITE" != "selenium" ]; then
           sudo -u www-data id
-          sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --cache-result-file /$HOME/phpunit.cache --testsuite=$TESTSUITE
+          sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --do-not-cache-result --testsuite=$TESTSUITE
         fi
 
     - name: Run Primary Selenium Tests (MAIN JOB)
