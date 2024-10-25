@@ -221,20 +221,20 @@ jobs:
 
 
 
-    - name: Debug Information
-      if: ${{ always() }}
-      run: |
-        ls -l log
-        echo "-------------------"
-        echo "FileSender logs...."
-        echo "-------------------"
-        sudo cat log/*.log
-        echo "--------------------"
-        echo "Apache logs....     "
-        echo "--------------------"
-        cat /var/log/apache2/access.log
-        cat /var/log/apache2/error.log
-        echo "--------------------"
+    # - name: Debug Information
+    #   if: ${{ always() }}
+    #   run: |
+    #     ls -l log
+    #     echo "-------------------"
+    #     echo "FileSender logs...."
+    #     echo "-------------------"
+    #     sudo cat log/*.log
+    #     echo "--------------------"
+    #     echo "Apache logs....     "
+    #     echo "--------------------"
+    #     cat /var/log/apache2/access.log
+    #     cat /var/log/apache2/error.log
+    #     echo "--------------------"
         
 
 
