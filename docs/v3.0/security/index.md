@@ -46,11 +46,9 @@ echo "secret stuff" > data-to-send.txt
 gpg2 --output data-to-send-encrypted.gpg --encrypt --armor --recipient 903F8814517E7747ED080AD518F3FDAE968ACDEA data-to-send.txt
 ```
 
-## How-to reach the lead developer
+## How-to reach the team
 
-email: monkeyiq@gmail.com
+Please email your findings the FileSender Board and they will be 
+handled from there. 
 
-Please put the FileSender Board in cc: filesender.board@commonsconservancy.org 
-
-
-
+filesender.board@commonsconservancy.org 
