@@ -552,7 +552,7 @@ if debug:
   print('postTransfer')
 
 if transfer_timeout is not None:
-  assert transfer_timeout <=  max_transfer_days_valid, f"(-t/--time) value needs to be less than {max_transfer_days_valid} days"
+  assert transfer_timeout <=  max_transfer_days_valid, f"(--days) value needs to be less than {max_transfer_days_valid} days"
   transfer_timeout = round(time.time()) + (transfer_timeout*24*3600)
 
 if guest:
