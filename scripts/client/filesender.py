@@ -106,7 +106,7 @@ parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("-e", "--encrypted")
-parser.add_argument("-t", "--time", type=int)
+parser.add_argument("--days", type=int)
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
 parser.add_argument("--retries")
@@ -144,7 +144,7 @@ user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
 encrypted = args.encrypted
-transfer_timeout = args.time
+transfer_timeout = args.days
 
 if args.username is not None:
   username = args.username
@@ -197,6 +197,8 @@ try:
     terasender_enabled = regex_match.group(1) == "true"
     regex_match = re.search(r"max_transfer_files\D*(\d+)",config_response.text)
     max_transfer_files = int(regex_match.group(1))
+    regex_match =  re.search(r"max_transfer_days_valid\D*(\d+)",config_response.text)
+    max_transfer_days_valid = int(regex_match.group(1))
 except Exception as e:
     print("Failed to parse match")
     print(e)
@@ -550,6 +552,7 @@ if debug:
   print('postTransfer')
 
 if transfer_timeout is not None:
+  assert transfer_timeout <=  max_transfer_days_valid, f"(-t/--time) value needs to be less than {max_transfer_days_valid} days"
   transfer_timeout = round(time.time()) + (transfer_timeout*24*3600)
 
 if guest:
