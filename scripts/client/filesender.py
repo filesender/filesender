@@ -106,6 +106,7 @@ parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("-e", "--encrypted")
+parser.add_argument("-t", "--time", type=int)
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
 parser.add_argument("--retries")
@@ -143,6 +144,7 @@ user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
 encrypted = args.encrypted
+transfer_timeout = args.time
 
 if args.username is not None:
   username = args.username
@@ -544,14 +546,18 @@ def encrypt_chunk_aesgcm(data,chunkid,files_key):
 if debug:
   print('postTransfer')
 
+if transfer_timeout is not None:
+  transfer_timeout = round(time.time()) + (transfer_timeout*24*3600)
+
 if guest:
   print('creating new guest ' + args.recipients)
   troptions = {'get_a_link':0}
+ 
   r = postGuest( username,
                  args.recipients,
                  subject=args.subject,
                  message=args.message,
-                 expires=None,
+                 expires=transfer_timeout,
                  options=troptions)
   exit(0)
 
@@ -615,13 +621,12 @@ for fn_abs in fileList:
 release_list(fileList) # don't need it anymore
 
 troptions = {'get_a_link':0}
-
 transfer = postTransfer( username,
                          filesTransfer,
                          args.recipients,
                          subject=args.subject,
                          message=args.message,
-                         expires=None,
+                         expires=transfer_timeout,
                          options=troptions)['created']
 fileIndexQueue = []
 if encrypted:
