@@ -360,7 +360,7 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     if debug:
       print(_exc)
     if tryCount < worker_retries:
-      time.sleep(300)
+      time.sleep(5)
       return call(method=method, path=path, data=initData,
                   content=content, rawContent=rawContent,
                    options=options, tryCount=tryCount + 1)
@@ -378,17 +378,20 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     if method!='post' or code!=201:
       if tryCount > worker_retries:
         raise Exception('Http error '+str(code)+' '+response.text)
-      else:
-        if progress or debug:
-          print("Failure when attempting to call: " + url)
-          print("Retry attempt " + str((tryCount + 1)))
-        if debug:
-          print("Fail Reason: " + str(code))
-          print(response.text)          
-        time.sleep(300)
-        return call(method=method, path=path, data=initData,
-                  content=content, rawContent=rawContent,
-                   options=options, tryCount=tryCount + 1)
+      
+      if response.status_code == 500 and "auth_remote_signature_check_failed" in response.text:
+        raise  ValueError("Authentication failed, check API token")
+    
+      if progress or debug:
+        print("Failure when attempting to call: " + url)
+        print("Retry attempt " + str((tryCount + 1)))
+      if debug:
+        print("Fail Reason: " + str(code))
+        print(response.text)          
+      time.sleep(5)
+      return call(method=method, path=path, data=initData,
+                content=content, rawContent=rawContent,
+                  options=options, tryCount=tryCount + 1)
 
   if response.text=="":
     raise Exception('Http error '+str(code)+' Empty response')
