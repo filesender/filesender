@@ -17,9 +17,7 @@ to encrypt that data. GPG is available on many platforms, see https://www.gnupg.
 ## Getting the GPG public key
 
 As of October 2024 the public key can be found at
-```
-[
-https://keys.openpgp.org/search?q=filesender.security@commonsconservancy.org](https://keys.openpgp.org/search?q=filesender.security%40commonsconservancy.org)```
+https://keys.openpgp.org/search?q=filesender.security%40commonsconservancy.org.
 
 Key ID: 0xAD26FBC14881B8E1
 Fingerprint: BC9D CF2B 086D 915A F1D6 D8FE AD26 FBC1 4881 B8E1
