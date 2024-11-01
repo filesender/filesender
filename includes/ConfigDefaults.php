@@ -357,6 +357,8 @@ $default = array(
     'download_show_download_links' => false,
 
     'read_only_mode' => false,
+
+    'validate_csrf_token_for_guests' => true,
     
     'transfer_options' => array(
         'email_me_copies' => array(

@@ -16,10 +16,11 @@ to encrypt that data. GPG is available on many platforms, see https://www.gnupg.
 
 ## Getting the GPG public key
 
-As of December 2019 the public key can be found at
-```
-https://github.com/monkeyiq.gpg
-```
+As of October 2024 the public key can be found at
+https://keys.openpgp.org/search?q=filesender.security%40commonsconservancy.org.
+
+Key ID: 0xAD26FBC14881B8E1
+Fingerprint: BC9D CF2B 086D 915A F1D6 D8FE AD26 FBC1 4881 B8E1
 
 ## Import the key
 
@@ -27,13 +28,8 @@ On Linux you might find the GPG command is gpg2 for the most recent version.
 You should only have to import the key once.
 
 ```
-gpg2 --import monkeyiq.gpg
-gpg2 --fingerprint 903F8814517E7747ED080AD518F3FDAE968ACDEA
+gpg2 --import <public-keyfile>
 
-   pub   rsa4096 2019-12-17 [SC]
-         903F 8814 517E 7747 ED08  0AD5 18F3 FDAE 968A CDEA
-   uid           [ultimate] Ben Martin <...>
-   sub   rsa4096 2019-12-17 [E]
 ```
 
 ## Encrypt the sensitive data and send it
@@ -43,14 +39,11 @@ Whenever you want to send sensitive data you can encrypt it with the following c
 ```
 echo "secret stuff" > data-to-send.txt
 
-gpg2 --output data-to-send-encrypted.gpg --encrypt --armor --recipient 903F8814517E7747ED080AD518F3FDAE968ACDEA data-to-send.txt
+gpg2 --output data-to-send-encrypted.gpg --encrypt --armor --recipient BC9DCF2B086D915AF1D6D8FEAD26FBC14881B8E1 data-to-send.txt
 ```
 
-## How-to reach the lead developer
+## How-to reach the team
 
-email: monkeyiq@gmail.com
+Please email your findings to this email-address and we'll handle your report carefully:
 
-Please put the FileSender Board in cc: filesender.board@commonsconservancy.org 
-
-
-
+filesender.security@commonsconservancy.org 

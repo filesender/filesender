@@ -19,7 +19,7 @@ Big thanks to you all!
 Before embarking yourself in a contribution, please make sure you are familiar with the way FileSender is written,
 the way it works, and what is required or not.
 
-* Make sure to read [the documentation](http://docs.filesender.org/).
+* Make sure to read [the documentation](https://docs.filesender.org/).
 * If you have a question about FileSender, please ask in the [development mailing list](https://sympa.uninett.no/lists/filesender.org/info/filesender-dev).
 * If you think you have discovered a bug, please check the [issue tracker](https://github.com/filesender/filesender/issues)
 and the [pull requests](https://github.com/filesender/filesender/pulls) to verify it hasn't been reported before.
@@ -56,7 +56,7 @@ but also by following this guidelines.
 
 ## Reporting bugs
 
-Before reporting a bug, please make sure it is indeed a bug. Check [the documentation](http://docs.filesender.org/)
+Before reporting a bug, please make sure it is indeed a bug. Check [the documentation](https://docs.filesender.org/)
 to verify what the intended behaviour is. Review the [list of issues](https://github.com/filesender/filesender/issues)
 and the [pull requests](https://github.com/filesender/filesender/pulls) to see if someone has already reported the
 same issue.
@@ -77,7 +77,7 @@ You can help us diagnose and fix bugs by asking and providing answers to the fol
 ## Translations
 
 FileSender is translated to many languages, though it needs constant updates from translators, as well as new
-translations to other languages. Translations can be contributed through [POEditor](https://poeditor.com/join/project/RqXr9WBJwU).
+translations to other languages. Translations can be contributed through POEditor for either [version 2.x](https://poeditor.com/join/project/RqXr9WBJwU) or [version 3.x](https://poeditor.com/join/project/eRy7gOnoQh) of FileSender.
 
 Before starting a new translation, decide what style you want to use, whether you want to address the user using a formal
 tone, etc. Be coherent and keep that style through all your translations. If there is already a translation and

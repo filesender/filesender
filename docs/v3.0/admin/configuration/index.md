@@ -59,7 +59,7 @@ A note about colours;
 * [cookie_domain](#cookie_domain)
 * [rate_limits](#rate_limits) (rate limits for some actions)
 * [valid_filename_regex](#valid_filename_regex)
-
+* [validate_csrf_token_for_guests](#validate_csrf_token_for_guests)
 
 ## Backend storage
 
@@ -127,6 +127,7 @@ A note about colours;
 * [email_send_with_minus_r_option](#email_send_with_minus_r_option)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 * [translatable_emails_lifetime](#translatable_emails_lifetime)
+* [template_email_images](#template_email_images)
 
 ## General UI
 
@@ -805,6 +806,15 @@ $config['rate_limits'] = array(
 $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
 
 
+### validate_csrf_token_for_guests
+* __description:__ If CSRF token checks are performed for guest users.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.50
+* __comment:__ 
+
+
 
 ---
 
@@ -1382,6 +1392,29 @@ User language detection is done in the following order:
 * __type:__ int
 * __default:__ 30
 * __available:__ since before version 2.30
+
+### template_email_images
+
+* __description:__ A list of CID to image paths for use in email attachments from the mail translation files. Note that these will be relative to the www/images directory. The image *MUST* be contained in the www/images directory or it will be logged and ignored. To use these images place something like <img src="cid:mylogo"/> into your files_downloaded.mail.php. Note that the cid can only contain the lower case characters 'a' through 'z' and the digits '0' through '9'. To aid in matching the cid is only sought on img elements and the src attribute *MUST* the the first attribute with only a single space between the img and src. If you wish to have other attributes on the img tag please but those after the src attribute. Attempts to use cid values outside of this scope will be silently ignored. Attempts to reference a CID that is not set in this configuration variable will be shown as an error in your logs and silently ignored. If the path to an image does not exist you will see an error in your logs and that cid will be silently ignored. If an image file is not readable you will see an error in your logs and it will be silently ignored. Attempts to access images outside of www/images will be logged and silently ignored.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ null
+* __available:__ since version 2.50
+* __Examples:__
+$config['template_email_images'] = [
+    'mylogo' => 'mylogo.png',
+    'footer2' => 'my-fancy-footer-2.png',
+];
+
+Inside of files_downloaded.mail.php for example
+
+<p>
+    You can access your files and view detailed download...
+</p>
+...
+<img src="cid:mylogo"/><img src="cid:footer2"/>
+...
+
 
 
 ### trackingevents_lifetime

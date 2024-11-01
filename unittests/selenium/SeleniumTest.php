@@ -234,7 +234,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setUserPage()
     {
-        $this->changeConfigValue('user_page', 'array(\'lang\'=>true,\'auth_secret\'=>true,\'id\'=>true,\'created\'=>true)');
+        $this->changeConfigValue('user_page',
+                                 'array(\'lang\'=>true,\'auth_secret\'=>true,\'id\'=>true,\'created\'=>true)');
         sleep(2);
         $this->refresh();
         sleep(2);
@@ -242,7 +243,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function unsetUserPage()
     {
-        $this->changeConfigValue('user_page', 'array()');
+        $this->changeConfigValue('user_page',
+                                 'array()');
         sleep(2);
         $this->refresh();
         sleep(2);
@@ -250,7 +252,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setMaxTransferFileSize($max_file_size = 2107374182400)
     {
-        $this->changeConfigValue('max_transfer_size', $max_file_size);
+        $this->changeConfigValue('max_transfer_size',
+                                 $max_file_size);
         sleep(2);
         $this->refresh();
         sleep(2);
@@ -260,7 +263,8 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setInvalidExtensions($invalid_extensions = "'exe,bat'")
     {
-        $this->changeConfigValue('ban_extension', $invalid_extensions);
+        $this->changeConfigValue('ban_extension',
+                                 $invalid_extensions);
         sleep(2);
         $this->refresh();
         sleep(2);
@@ -316,6 +320,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $this->assertContains('Transfer expired', $this->byCssSelector('.exception .message')->text());
     }
 
+    /**
+     * Download a zip given the token and the array of file ids to include.
+     */
     public function downloadZip($token, $data_ids)
     {
         stream_context_set_default(array("ssl"=>array("allow_self_signed"=>true)));
@@ -328,9 +335,13 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     }
 
+    /**
+     * unzip and check file contents
+     * @param file_datas_to_check is an array of file contents that should be found inside the zip at zip_location.
+     *        each file contents can only match a file once.
+     */
     private function zipTest($zip_location, $file_datas_to_check)
     {
-        // unzip and check file contents
 
         $zip = new ZipArchive;
         $this->assertTrue($zip->open($zip_location), "Error reading zip-archive!");
