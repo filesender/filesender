@@ -575,6 +575,49 @@ class Config
         
         return $value;
     }
+
+    /**
+     * If there is a CID image mapping in the configuration lookup the $cid
+     * and return the path for the image if it is set or null
+     *
+     * This method will issue warnings to the logs in case of a cid which does not have
+     * and associated image or the image is not existing. If the return value is not null
+     * the caller can continue to use the image or just do nothing for null return values.
+     * The use of CID images is seen as something to warn the sysadmin about if they are
+     * not found but is not considered a fatal error.
+     *
+     * @param string $cid The CID to lookup
+     *
+     * @return ?string The path for the image or null.
+     */
+    public static function getTemplateCIDImagePath($cid)
+    {
+        if(!self::exists('template_email_images'))
+            return null;
+
+        $m = self::get('template_email_images');
+        if(!array_key_exists($cid, $m)) {
+            Logger::warn("Mail processing: A CID was used to select an image but there is no associated image for that cid in your config.php. cid: $cid");
+            return null;
+        }
+
+        $p = FILESENDER_BASE.'/www/images/' . $m[$cid];
+
+        $prefix = realpath(FILESENDER_BASE.'/www/images/');
+        if(!str_starts_with(realpath($p), $prefix )) {
+            Logger::warn("Mail processing: Your configuration references an image file that is not under the www/images directory for the cid $cid. Prefix $prefix Offending path $p rp " . realpath($p));
+            return null;
+        }
+        if(!file_exists($p)) {
+            Logger::warn("Mail processing: An image has been setup for the cid $cid but it does not exist on the system! The path should be $p");
+            return null;
+        }
+        if(!is_readable($p)) {
+            Logger::warn("Mail processing: An image has been setup for the cid $cid but it is not readable! The path is be $p");
+            return null;
+        }
+        return $p;
+    }
     
     /**
      * Check if parameter exists
