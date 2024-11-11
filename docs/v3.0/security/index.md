@@ -4,17 +4,13 @@ title: Reporting security issues
 
 # Reporting security issues
 
-If you have found a bug or issue that might be security sensitive you
-can report that bug directly to the maintainer. You might like to
-encrypt an attached file and either send it directly or send the file
-encrypted with filesender and then encrypt and send the passphrase to
-the maintainer.
+We are committed to maintaining the security and integrity of our project. If you discover a bug or issue that may pose a security risk, please report it directly to the project maintainer following the guidelines below.
 
-If you want to send something encrypted please use the below GPG key
-to encrypt that data. GPG is available on many platforms, see https://www.gnupg.org/download/index.html.
-
+For enhanced security, you may use FileSender to upload encrypted files. If you choose this method, please send the passphrase separately and securely to filesender.security@commonsconservancy.org, preferably using GPG encryption. Alternatively, you can contact us via email to request another secure channel for transmitting the passphrase, such as Signal.
 
 ## Getting the GPG public key
+
+GPG is available on many platforms, see https://www.gnupg.org/download/index.html.
 
 As of October 2024 the public key can be found at
 https://keys.openpgp.org/search?q=filesender.security%40commonsconservancy.org.
