@@ -117,7 +117,20 @@ class TarArchive extends Archive
 			array('a8',   str_pad('777', 7, '0', STR_PAD_LEFT)),
 			array('a8',   decoct(str_pad('0', 7, '0', STR_PAD_LEFT))),
 			array('a8',   decoct(str_pad('0', 7, '0', STR_PAD_LEFT))),
-			array('a12',  decoct(str_pad($size, 11, '0', STR_PAD_LEFT))),
+                );
+       	        // The $size can be plain binary data in network byte order
+                // with a special 4 byte pad to indicate this for large files
+                if( $size < ( 2^63 - 1 )) {
+                    $fields = array_merge( $fields, array(                
+                        array('a12',  decoct(str_pad($size, 11, '0', STR_PAD_LEFT)))
+                        ));
+                } else {
+                    $fields = array_merge( $fields, array(                
+                        array('N',  0x80<<24 ),
+                        array('J',  $size ),
+                        ));
+                }
+                $fields = array_merge( $fields, array(
 			array('a12',  decoct(str_pad($time, 11, '0', STR_PAD_LEFT))),
 			array('a8',   ''),
 			array('a1',   $type),
@@ -130,7 +143,7 @@ class TarArchive extends Archive
 			array('a8',   ''),
 			array('a155', substr($dirname, 0, 155)),
 			array('a12',  ''),
-		);
+		));
 
 		// pack fields and calculate "total" length
 		$header = $this->pack_fields($fields);

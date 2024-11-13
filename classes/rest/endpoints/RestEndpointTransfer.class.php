@@ -561,9 +561,12 @@ class RestEndpointTransfer extends RestEndpoint
             
             foreach ($allOptions as $name => $dfn) {
                 if (in_array($name, $allowed_options)) {
-                    if (method_exists($data->options, 'exists')) {
-                        if ($data->options->exists($name)) {
-                            $options[$name] = $data->options->$name;
+                    // check if options is object
+                    if (is_object( $data->options) ) {
+                        if (method_exists($data->options, 'exists')) {
+                            if ($data->options->exists($name)) {
+                                $options[$name] = $data->options->$name;
+                            }
                         }
                     } else {
                         if (array_search($name, $data->options) !== false) {

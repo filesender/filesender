@@ -62,7 +62,7 @@ A note about colours;
 * [rate_limits](#rate_limits)
 * [valid_filename_regex](#valid_filename_regex)
 * [message_cannot_contain_urls_regex](#message_cannot_contain_urls_regex)
-
+* [validate_csrf_token_for_guests](#validate_csrf_token_for_guests)
 
 ## Backend storage
 
@@ -831,6 +831,16 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __default:__ ''
 * __available:__ since version 2.0
 * __comment:__ Example: (ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
+
+### validate_csrf_token_for_guests
+* __description:__ If CSRF token checks are performed for guest users.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.50
+* __comment:__ 
+
+
 
 ---
 

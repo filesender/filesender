@@ -382,6 +382,8 @@ $default = array(
     'valid_timezone_regex' => '@^[_/a-z]+$@i',
     'client_send_current_timezone_to_server' => false,
     
+    'validate_csrf_token_for_guests' => true,
+    
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,
