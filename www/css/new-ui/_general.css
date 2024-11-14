@@ -1,13 +1,19 @@
 html {
   height: 100%;
+  /* 1rem = 10px */
+  font-size: 62.5%;
 }
 
 body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--fs-bg-color);
+  background: var(--fs-background);
   color: var(--fs-text-color);
+  font-size: 1.6rem;
+  font-family: "Nunito Sans", sans-serif !important;
+  font-weight: 400;
+  font-style: normal;
 }
 
 main {
@@ -18,16 +24,16 @@ main {
   padding: var(--fs-spacing-12x) 0 0 0;
 }
 
-main .core {
-  background: var(--fs-white);
-  border: 1px solid var(--fs-gray-200);
-  border-radius: var(--fs-spacing-base);
+main .core, main .box {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
 }
 
 hr {
   margin-top: var(--fs-spacing-3x) !important;
   margin-bottom: var(--fs-spacing-3x) !important;
-  border-top: 1px solid var(--fs-gray-200);
+  border-top: 1px solid var(--fs-grey);
   opacity: 1;
 }
 
@@ -52,8 +58,8 @@ hr {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  color: var(--fs-light);
-  background: var(--fs-btn-hover);
+  color: var(--fs-white);
+  background: var(--fs-hover);
   border-top-left-radius: 48px;
   border-bottom-left-radius: 48px;
   align-items: center;
@@ -77,7 +83,7 @@ hr {
 }
 
 .fs-theme ul li a {
-  color: var(--fs-light) !important;
+  color: var(--fs-white) !important;
   padding: 4px 10px;
 }
 
@@ -86,7 +92,7 @@ hr {
 }
 
 .modal-content {
-  background: var(--fs-bg-color-secondary);
+  background: var(--fs-white);
   white-space: pre-wrap;      /* CSS3 */   
   white-space: -moz-pre-wrap; /* Firefox */    
   white-space: -pre-wrap;     /* Opera <7 */   
@@ -95,7 +101,7 @@ hr {
 }
 
 .modal-content .btn-close, .modal-content .btn-close * {
-  color: var(--fs-danger) !important;
+  color: var(--fs-error) !important;
   background: transparent url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='red'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") center / 1em auto no-repeat !important;
 }
 

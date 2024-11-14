@@ -13,6 +13,28 @@
     justify-content: flex-end;
 }
 
+.fs-paginator .fs-link {
+    background: var(--fs-paginator-link-background) !important;
+    border: 1px solid var(--fs-paginator-link-border-color) !important;
+}
+
+.fs-paginator .fs-link:hover {
+    background: var(--fs-paginator-link-hover-background) !important;
+    border: 1px solid var(--fs-paginator-link-hover-border-color) !important;
+}
+
+.fs-paginator .fs-link:active {
+    background: var(--fs-paginator-link-active-background) !important;
+    border: 1px solid var(--fs-paginator-link-active-border-color) !important;
+}
+
+.fs-paginator .fs-link--disabled,
+.fs-paginator .fs-link--disabled:hover,
+.fs-paginator .fs-link--disabled:active {
+    background: var(--fs-paginator-link-disabled-background) !important;
+    border: 1px solid var(--fs-paginator-link-disabled-border-color) !important;
+}
+
 .fs-paginator .fs-link + .fs-link {
     margin-left: var(--fs-spacing-base);
 }

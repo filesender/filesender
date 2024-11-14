@@ -1,7 +1,7 @@
 .fs-invitation-detail {
     flex: 1;
-    background: var(--fs-bg-color);
-    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+    background: var(--fs-invitation-detail-background);
+    padding: var(--fs-spacing-7x) var(--fs-spacing-2x);
 }
 
 .fs-invitation-detail__header .fs-link {
@@ -23,8 +23,6 @@
 }
 
 .fs-invitation-detail__information,
-.fs-invitation-detail__recipients,
-.fs-invitation-detail__guest-list,
 .fs-invitation-detail__options,
 .fs-invitation-detail__actions {
     margin-top: var(--fs-spacing-5x);

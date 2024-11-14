@@ -10,6 +10,7 @@
 @import "_select.css";
 @import "_collapse.css";
 @import "_progress-bar.css";
+@import "_progress-circle.css";
 @import "_table.css";
 @import "_copy.css";
 @import "_badge.css";
@@ -17,3 +18,4 @@
 @import "_paginator.css";
 @import "_info.css";
 @import "_list.css";
+@import "_checkbox.css";

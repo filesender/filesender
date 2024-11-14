@@ -9,7 +9,7 @@
     <thead>
     <tr>
         <th class="created">
-            {tr:invitation_was_sent_on}
+            {tr:date}
         </th>
         <th class="to">
             {tr:recipients}
@@ -71,22 +71,22 @@
 
             <td class="actions fs-table__actions" data-label="{tr:actions}">
                 <div class="actionsblock">
-                    <?php if ($guest->status == 'available') { ?>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text fs-button--danger delete" title="{tr:delete_invitation}">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    <?php } ?>
                     <?php if($mode == 'user' && $guest->status == 'available') { ?>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text remind" title="{tr:send_a_reminder}">
-                            <i class="fa fa-repeat"></i>
+                        <button type="button" class="fs-button remind" title="{tr:send_a_reminder}">
+                            <i class="fi fi-reminder"></i>
+                            <span>{tr:send_reminder}</span>
                         </button>
-                        <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="{tr:resend_invitation}">
-                            <i class="fa fa-envelope-o"></i>
+                        <button type="button" class="fs-button forward" title="{tr:resend_invitation}">
+                            <i class="fi fi-resend"></i>
+                            <span>{tr:resend_invitation}</span>
                         </button>
                     <?php } ?>
-                    <button type="button" class="fs-button fs-button--circle fs-button--no-text details" title="{tr:details}">
-                        <i class="fa fa-info" ></i>
-                    </button>
+                    <?php if ($guest->status == 'available') { ?>
+                        <button type="button" class="fs-button delete" title="{tr:delete_invitation}">
+                            <i class="fi fi-trash"></i>
+                            <span>{tr:delete_invitation}</span>
+                        </button>
+                    <?php } ?>
                 </div>
             </td>
         </tr>

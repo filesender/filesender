@@ -2,18 +2,21 @@ header {
   position: fixed;
   height: var(--fs-spacing-12x);
   width: 100%;
-  padding: 0 var(--fs-spacing-base);
-  background: var(--fs-bg-color-secondary);
-  border-bottom: 1px solid var(--fs-border);
+  padding: 0 var(--fs-spacing-8x);
+  background: var(--fs-header-background);
   z-index: 1;
 }
 
-header nav {
+header .container, header nav {
   display: flex;
   height: 100%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+header nav {
+  width: 100%;
   margin: 0;
   padding: 0;
 }
@@ -30,6 +33,16 @@ header nav ul {
 header nav a {
   display: inline-block;
   height: 100%;
+  padding: var(--fs-spacing-base) var(--fs-spacing-2x);
+  background: var(--fs-header-link-background);
+}
+
+header nav a h2 {
+  margin-top: var(--fs-spacing-base) !important;
+}
+
+header nav a img + h2 {
+  margin-left: calc(var(--fs-spacing-base) + var(--fs-spacing-half)) !important;
 }
 
 header nav ul li + li {
@@ -40,26 +53,15 @@ header nav img {
   max-height: var(--fs-spacing-8x);
 }
 
-header .fs-link {
-  padding: var(--fs-spacing-base) calc(var(--fs-spacing-2x) + var(--fs-spacing-half));
-}
-
 header nav .fs-link--active {
-  color: var(--fs-accent);
-  background: var(--fs-hover);
-}
-
-header nav .fs-link--active i {
-  color: var(--fs-accent) !important;
-}
-
-header nav .fs-link--active span {
-  text-shadow: 0.5px 0px 0px black;
+  color: var(--fs-header-link-active-color);
+  background: var(--fs-header-link-active-background);
+  font-style: italic;
 }
 
 header nav > .fs-link:hover {
-  color: var(--fs-text-color) !important;
-  background: transparent !important;
+  color: var(--fs-header-hover-color);
+  background: var(--fs-header-hover-background);
 }
 
 header nav > .fs-link {

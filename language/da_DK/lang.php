@@ -493,7 +493,7 @@ $lang['privacy_title'] = 'Privatlivsbeskyttelse';
 $lang['profile_page_text_linking_to_admin_page'] = 'Du må godt besøge <a href="{cfg:site_url}/?s=admin">administratorsiden</a>.';
 $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender tager dit privatliv alvorligt. Se venligst <a href="{cfg:site_url}/?s=privacy">her</a> hvor længe data opbevares i den her installation af FileSender.';
 $lang['python_cli_client_heading'] = 'Python-CLI-klient';
-$lang['python_cli_client_setup_information'] = 'For at bruge Pyhton-CLI-klientkonfigurationen skal du oprette et katalog ~/.filesender og kopiere konfigurationsfilen filesender.py.ini ind i kataloget ~/.filesender. Det er valgfrit at have konfigurationsfilen, men anbefales, fordi du dermed ikke behøver angive alle parametre på kommandolinjen hver gang. Pyhton-CLI-klienten kan hentes til hvor det skal være, og kræver Python version 3 for at kunne køre.<p>Med konfigurationsfilen på plads kan du uploade en fil vha. <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>';
+$lang['python_cli_client_setup_information'] = 'For at bruge Pyhton-CLI-klientkonfigurationen skal du oprette et katalog ~/.filesender og kopiere konfigurationsfilen filesender.py.ini ind i kataloget ~/.filesender. Det er valgfrit at have konfigurationsfilen, men anbefales, fordi du dermed ikke behøver angive alle parametre på kommandolinjen hver gang. Pyhton-CLI-klienten kan hentes til hvor det skal være, og kræver Python version 3 for at kunne køre.<p>Med konfigurationsfilen på plads kan du uploade en fil vha.';
 $lang['quota_usage'] = '
 {size:used} af i alt {size:total} brugt; {size:available} tilbage
 ';

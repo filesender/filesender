@@ -2,22 +2,37 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: var(--fs-hightlight-bg);
-  border: 1px solid var(--fs-accent);
+  background: var(--fs-copy-background);
   border-radius: var(--fs-spacing-4x);
-  font-weight: 700;
   margin-top: var(--fs-spacing-2x);
 }
 
 .fs-copy span {
   flex: 1;
-  font-size: 0.9rem;
+  font-size: 1.35rem;
   padding: 0 var(--fs-spacing-3x);
   word-break: break-word;
 }
 
 .fs-copy button {
-  font-size: 0.9rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--fs-spacing-half) !important;
+  font-size: 2.4rem;
+  min-width: auto !important;
+  background: transparent !important;
+  color: var(--fs-copy-button-color) !important;
+  border: 0;
+  border-radius: var(--fs-spacing-4x);
+  cursor: pointer;
+  height: var(--fs-spacing-5x);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  margin-right: var(--fs-spacing-base);
 }
 
 /* XS,SM */

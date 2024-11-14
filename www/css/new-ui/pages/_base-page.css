@@ -1,7 +1,7 @@
 .fs-base-page {
     flex: 1;
-    background: var(--fs-bg-color);
-    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+    background: var(--fs-base-page-background);
+    padding: var(--fs-spacing-11x) var(--fs-spacing-2x);
 }
 
 .fs-base-page__header {
@@ -20,7 +20,7 @@
 .fs-base-page__header h1 {
     text-align: left !important;
     margin-left: 0;
-    margin-bottom: var(--fs-spacing-8x);
+    margin-bottom: var(--fs-spacing-3x);
 }
 
 .fs-base-page__content {

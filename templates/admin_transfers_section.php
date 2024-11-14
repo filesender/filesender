@@ -104,7 +104,7 @@ $transfers_page = function($status) {
     if($offset) {
         $po = max(0, $offset - $page_size);
         $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fi fi-chevron-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $start_index = $offset - $page_size * $display_page_num;
@@ -133,7 +133,7 @@ $transfers_page = function($status) {
     if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
         $lo = $total_count - ($total_count % $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fi fi-chevron-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
         $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     

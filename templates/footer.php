@@ -1,7 +1,7 @@
         <footer>
             <div class="container">
                 <div class="fs-footer-container">
-                    <small>{tr:an_initiative_by}</small>
+                    <small>{tr:copyright}</small>
                     <img class="fs-footer-container__brand fs-footer-container__brand--desktop" src="{cfg:site_url}/images/filesender-initiative.png" alt="Brand">
                     <img class="fs-footer-container__brand fs-footer-container__brand--mobile" src="{cfg:site_url}/images/filesender-initiative_mobile.png" alt="Brand">
                 </div>
