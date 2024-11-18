@@ -461,7 +461,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                             {tr:send_transfer_to}
                                                         </label>
 
-                                                        <?php echo AuthGuest::getGuest()->user_email ?>
+                                                        <?php echo Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email) ?>
                                                     </div>
                                                 <?php } else { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
@@ -520,9 +520,9 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                         <?php } ?> <!-- closing if($allow_recipients) -->
                                         <?php if(Auth::isGuest()) { ?>
                                             <div>
-                                                <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
-                                                <input type="hidden" id="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
-                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
+                                                <input type="hidden" name="guest_token" value="<?php echo Template::Q(AuthGuest::getGuest()->token) ?>" />
+                                                <input type="hidden" id="guest_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
                                             </div>
                                         <?php } ?>
                                     </div>
@@ -649,7 +649,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     $code = Lang::getBaseCode();
                                     foreach(Lang::getAvailableLanguages() as $id => $dfn) {
                                         $selected = ($id == $code) ? 'selected="selected"' : '';
-                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Template::Q($dfn['name']).'</option>';
                                     }
                                     
                                     echo '<div class="fs-select">';

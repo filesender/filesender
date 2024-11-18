@@ -157,7 +157,7 @@ A note about colours;
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
-
+* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
 
 
 ## Transfers
@@ -1660,6 +1660,37 @@ Inside of files_downloaded.mail.php for example
 * __comment:__ If you are performing a major upgrade you might like to retain an original FileSender installation in read only mode so users can continue to download existing files and redirect visitors to a new site for new uploads. This may be useful for upgrading between major FileSender releases such as the 2.x series to the 3.x series and also for change in infrastructure such as moving to different disk pools or storage back ends.
 
 
+### template_config_values_that_can_be_read_in_templates
+* __description:__  An array of configuration keys that can be exposed to the templates. If this setting is 'false' it will be ignored. If a key is not listed here it should not be readable through the cfg: mechanism in the language translations.
+* __mandatory:__ no
+* __type:__ array of string
+* __default:__ Something like array(
+        'default_guest_days_valid',
+        'default_transfer_days_valid',
+        'encryption_password_text_only_min_password_length',
+        'guest_reminder_limit_per_day',
+        'mac_unzip_link',
+        'mac_unzip_name',
+        'max_guest_days_valid',
+        'max_transfer_days_valid',
+        'max_transfer_files',
+        'max_transfer_recipients',
+        'site_name',
+        'site_url',
+    ),
+* __available:__ since version 2.51
+* __comment:__ 
+     A starting list can be found with a command like the following. The cfg: keys in that tmp file can be inspected and added to your config.php.
+     ```
+     grep -Roh  '{cfg:.*}' language/en_AU/ | sort |uniq > /tmp/configwhite.txt
+     ```
+     It should be noted that the use of `false` to disable this feature is deprecated from day 1. 
+     It will become mandatory at some point so it is best to test and validate for that now. If there are reasonable
+     items that you think should be in this setting for your language please make a pull request or mail the dev
+     list and they can be added to the default.
+
+
+* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
 
 
 ---
