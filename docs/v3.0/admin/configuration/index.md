@@ -54,12 +54,15 @@ A note about colours;
 * [crypto_gcm_max_chunk_size](#crypto_gcm_max_chunk_size)
 * [crypto_gcm_max_chunk_count](#crypto_gcm_max_chunk_count)
 * [crypto_crypt_name](#crypto_crypt_name)
+* [crypto_hash_name](#crypto_hash_name)
+* [crypto_use_custom_password_code](#crypto_use_custom_password_code)
 * [upload_crypted_chunk_padding_size](#upload_crypted_chunk_padding_size)
 * [upload_crypted_chunk_size](#upload_crypted_chunk_size)
 * [cookie_domain](#cookie_domain)
-* [rate_limits](#rate_limits) (rate limits for some actions)
+* [rate_limits](#rate_limits)
 * [valid_filename_regex](#valid_filename_regex)
-
+* [message_cannot_contain_urls_regex](#message_cannot_contain_urls_regex)
+* [validate_csrf_token_for_guests](#validate_csrf_token_for_guests)
 
 ## Backend storage
 
@@ -127,6 +130,7 @@ A note about colours;
 * [email_send_with_minus_r_option](#email_send_with_minus_r_option)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 * [translatable_emails_lifetime](#translatable_emails_lifetime)
+* [template_email_images](#template_email_images)
 
 ## General UI
 
@@ -153,7 +157,7 @@ A note about colours;
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
-
+* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
 
 
 ## Transfers
@@ -281,6 +285,7 @@ A note about colours;
 * [log_facilities](#log_facilities)!!
 * [maintenance](#maintenance)
 * [statlog_lifetime](#statlog_lifetime)
+* [statlog_log_user_organization](#statlog_log_user_organization)
 * [auth_sp_additional_attributes](#auth_sp_additional_attributes)
 * [auth_sp_save_user_additional_attributes](#auth_sp_save_user_additional_attributes)
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
@@ -317,6 +322,7 @@ A note about colours;
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
+* [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
 
 ## Data Protection
 
@@ -712,6 +718,20 @@ $config['avprogram_list'] = array( 'always_pass',
 is stored as part of the metadata for each transfer when it is created. When a transfer is to be downloaded the key version used for that transfer will be used to set the crypto_crypt_name.
 This way the encryption_key_version_new_files can be updated and existing uploads will continue to be able to be downloaded.
 
+### crypto_hash_name
+* __description:__ Internal use. The name of the hash currently used
+* __mandatory:__ no
+* __type:__ string
+* __default:__ calculated
+* __comment:__ This is an internal setting.
+
+### crypto_use_custom_password_code
+* __description:__ Internal use. Enable FileSender custom password generation code
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __comment:__ This enables strong encryption of passwords. This setting is deprecated and will be removed in a future version.
+
 ### upload_crypted_chunk_size
 * __description:__ Internal only setting. This is the entire size of an encrypted chunk, including any padding for per chunk IV
 * __mandatory:__ no
@@ -803,6 +823,22 @@ $config['rate_limits'] = array(
   //  adds '+' in ASCII
   //  adds special character areas, for example MIDDLE DOT U+30FB
 $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
+
+### message_cannot_contain_urls_regex
+* __description:__ Regular exression to detect a URL was embedded in a message
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ''
+* __available:__ since version 2.0
+* __comment:__ Example: (ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
+
+### validate_csrf_token_for_guests
+* __description:__ If CSRF token checks are performed for guest users.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.50
+* __comment:__ 
 
 
 
@@ -1264,13 +1300,12 @@ User language detection is done in the following order:
 
 ### email_from
 
-* __description:__ <span style="background-color:orange">sets the email From: header to either an explicit value or fills it with the sender's email address as received from the identity service provider in the "mail" attribute.  Is this the body From:?</span>
+* __description:__ sets the email From: header to either an explicit value, an explicit user name at the domain contained in site_url, or fills it with the sender's email address as received from the identity service provider in the "mail" attribute.
 * __mandatory:__ no
-* __type:__ string or keyword. Permissible value for keyword: "sender"
-* __default:__ -
+* __type:__ string or keyword. Permissible value for keyword: "sender", if the value ends in '@' then the domain name is appended.
+* __default:__ no-reply@
 * __available:__ since version 2.0
-* __1.x name:__
-* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@example.org" and use the bounce-handler script to deal with email bounces.
+* __comment:__ The domain name is taken from site_hostname if that is set. Otherwise the site_url is parsed and the domain name is taken from the result of parsing that url. To be SPF compliant set this to an address like "filesender-bounces@" and use the bounce-handler script to deal with email bounces.
 
 ### email_from_name
 
@@ -1284,13 +1319,12 @@ User language detection is done in the following order:
 
 ### email_reply_to
 
-* __description:__ <span style="background-color:orange">adds a reply-to: header to emails sent by FileSender.  When users reply to such an email usually the reply is then sent to the reply_to address.  A user would typically reply to an email to ask a question about a file transfer which should go directly to the sender as the sender is the only one who knows.</span>
+* __description:__ adds a reply-to: header to emails sent by FileSender. See email_from for more information on the format of this variable.
 * __mandatory:__ no
-* __type:__ string or keyword.  Permissible values for keyword: "sender"
-* __default:__ -
+* __type:__ string or keyword. Permissible value for keyword: "sender", if the value ends in '@' then the domain name is appended.
+* __default:__ no-reply@
 * __available:__ since version 2.0
-* __1.x name:__
-* __comment:__ To be SPF compliant set this to "sender"
+* __comment:__ The default append the hostname from your site_url configuraiton directive to the prefix 'no-reply@'
 
 ### email_reply_to_name
 
@@ -1382,6 +1416,29 @@ User language detection is done in the following order:
 * __type:__ int
 * __default:__ 30
 * __available:__ since before version 2.30
+
+### template_email_images
+
+* __description:__ A list of CID to image paths for use in email attachments from the mail translation files. Note that these will be relative to the www/images directory. The image *MUST* be contained in the www/images directory or it will be logged and ignored. To use these images place something like <img src="cid:mylogo"/> into your files_downloaded.mail.php. Note that the cid can only contain the lower case characters 'a' through 'z' and the digits '0' through '9'. To aid in matching the cid is only sought on img elements and the src attribute *MUST* the the first attribute with only a single space between the img and src. If you wish to have other attributes on the img tag please but those after the src attribute. Attempts to use cid values outside of this scope will be silently ignored. Attempts to reference a CID that is not set in this configuration variable will be shown as an error in your logs and silently ignored. If the path to an image does not exist you will see an error in your logs and that cid will be silently ignored. If an image file is not readable you will see an error in your logs and it will be silently ignored. Attempts to access images outside of www/images will be logged and silently ignored.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ null
+* __available:__ since version 2.50
+* __Examples:__
+$config['template_email_images'] = [
+    'mylogo' => 'mylogo.png',
+    'footer2' => 'my-fancy-footer-2.png',
+];
+
+Inside of files_downloaded.mail.php for example
+
+<p>
+    You can access your files and view detailed download...
+</p>
+...
+<img src="cid:mylogo"/><img src="cid:footer2"/>
+...
+
 
 
 ### trackingevents_lifetime
@@ -1603,6 +1660,37 @@ User language detection is done in the following order:
 * __comment:__ If you are performing a major upgrade you might like to retain an original FileSender installation in read only mode so users can continue to download existing files and redirect visitors to a new site for new uploads. This may be useful for upgrading between major FileSender releases such as the 2.x series to the 3.x series and also for change in infrastructure such as moving to different disk pools or storage back ends.
 
 
+### template_config_values_that_can_be_read_in_templates
+* __description:__  An array of configuration keys that can be exposed to the templates. If this setting is 'false' it will be ignored. If a key is not listed here it should not be readable through the cfg: mechanism in the language translations.
+* __mandatory:__ no
+* __type:__ array of string
+* __default:__ Something like array(
+        'default_guest_days_valid',
+        'default_transfer_days_valid',
+        'encryption_password_text_only_min_password_length',
+        'guest_reminder_limit_per_day',
+        'mac_unzip_link',
+        'mac_unzip_name',
+        'max_guest_days_valid',
+        'max_transfer_days_valid',
+        'max_transfer_files',
+        'max_transfer_recipients',
+        'site_name',
+        'site_url',
+    ),
+* __available:__ since version 2.51
+* __comment:__ 
+     A starting list can be found with a command like the following. The cfg: keys in that tmp file can be inspected and added to your config.php.
+     ```
+     grep -Roh  '{cfg:.*}' language/en_AU/ | sort |uniq > /tmp/configwhite.txt
+     ```
+     It should be noted that the use of `false` to disable this feature is deprecated from day 1. 
+     It will become mandatory at some point so it is best to test and validate for that now. If there are reasonable
+     items that you think should be in this setting for your language please make a pull request or mail the dev
+     list and they can be added to the default.
+
+
+* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
 
 
 ---
@@ -1717,23 +1805,23 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 ## force_legacy_mode
 
-* __description:__ Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. The max. number of files and total transfer size limit is the same as for HTML5 mode.  This function is available for testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.
+* __description:__ Deprecated and ignored in 3.0rc4. Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. The max. number of files and total transfer size limit is the same as for HTML5 mode.  This function is available for testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ false
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ for testing purposes.
+* __comment:__ Deprecated and ignored in 3.0rc4. for testing purposes.
 
 ### legacy_upload_progress_refresh_period
 
-* __description:__ when uploading in legacy mode (non-HTML5 uploads) this indicates in seconds how often the client-side progress bar is refreshed.
+* __description:__ Deprecated and ignored in 3.0rc4. when uploading in legacy mode (non-HTML5 uploads) this indicates in seconds how often the client-side progress bar is refreshed.
 * __mandatory:__ no
 * __type:__ int (seconds)
 * __default:__ 5.  Setting this to 0 is not a wise choice as it will make the timer refresh every millisecond (the min. value for a JavaScript timer)
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  This uses a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</span>
+* __comment:__ Deprecated and ignored in 3.0rc4. Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  This uses a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</span>
 
 ### max_legacy_file_size
 
@@ -1800,6 +1888,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can see the download count, but not who downloaded it (obviously, as there are no recipients defined).
 	* __hide\_sender\_email:__ If checked it will hide the sender's email address on the download page. The option is only displayed if the __get\_a\_link__ option is checked. This is useful when sending download links to mailing lists, etc., and you do not want your personal email account to be displayed on the download page.
 	* __redirect_url_on_complete:__ When the transfer upload completes, instead of showing a success message, redirect the user to a URL. This interferes with __get\_a\_link__ in that the uploader will not see the link after the upload completes. Additionally, if the uploader is a guest, there is no way straightforward way for the uploader to learn the download link, although this must not be used as a security feature.
+ 	* __popup_on_complete:__ When the transfer upload completes, prompts the user with an additional confirmation modal. This should not be configured as available, as no translation exist.
 	* __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
 	* __web_notification_when_upload_is_complete__: Added in release 2.32. Options include available, advanced, and default. If you wish to use this feature you should set available=true to allow the user to see the option. Some browsers such as Firefox require the user to explicitly click a link to start the acceptance dialog so being able to see the option (available=true) on the web page is very useful. Using notifications will require the user to accept them for the site. Currently as of release 2.32 a notification can be sent when the upload is complete.
 
@@ -3040,6 +3129,16 @@ $config['log_facilities'] =
 * __1.x name:__
 * __comment:__ The statlog is always enabled.  If you don't want anything logged, set this lifetime to 0.  Use this setting to control the privacy footprint of your FileSender service.
 
+### statlog_log_user_organization
+
+* __description:__ Also log the users organization in the statlog
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service.
+
 ### auth_sp_additional_attributes
 
 * __description:__ Allows to define additional user attributes that will be asked for, such as organisation, that can then be propagated to the statistic log table in the database for use in creating statistics.  This configuration parameter defines the additional attributes to get. definition of additional attributes to get, array of either attributes names or final name to raw attribute name pair or final name to callable getter pair
@@ -3366,7 +3465,13 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
 	
-###
+### show_storage_statistics_in_admin
+* __description:__ Lists used and free diskspace in admin section
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ Shows a section in the administrator interface showing basic disk statistics.
 
 ---
 

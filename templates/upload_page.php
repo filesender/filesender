@@ -404,7 +404,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             </div>
 
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
-                                <hr />
+                                <hr data-related-to="emailfrom" />
 
                                 <div class="row">
                                     <div class="col-12">
@@ -461,7 +461,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                             {tr:send_transfer_to}
                                                         </label>
 
-                                                        <?php echo AuthGuest::getGuest()->user_email ?>
+                                                        <?php echo Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email) ?>
                                                     </div>
                                                 <?php } else { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
@@ -481,7 +481,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php } ?>
                                             </div>
 
-                                            <div data-related-to="message">
+                                            <div data-related-to="message" class="emailonly">
                                                 <div class="fs-input-group">
                                                     <label for="subject">
                                                         {tr:subject}
@@ -501,7 +501,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 </label>
                                             </div>
 
-                                            <div data-related-to="message">
+                                            <div data-related-to="message" class="emailonly">
                                                 <div class="fs-input-group">
                                                     <label for="message">
                                                         {tr:message}
@@ -520,9 +520,9 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                         <?php } ?> <!-- closing if($allow_recipients) -->
                                         <?php if(Auth::isGuest()) { ?>
                                             <div>
-                                                <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
-                                                <input type="hidden" id="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
-                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
+                                                <input type="hidden" name="guest_token" value="<?php echo Template::Q(AuthGuest::getGuest()->token) ?>" />
+                                                <input type="hidden" id="guest_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
                                             </div>
                                         <?php } ?>
                                     </div>
@@ -643,6 +643,24 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     </div>
                                 </div>
 
+                                <?php
+                                if(Config::get('transfer_recipients_lang_selector_enabled')) {
+                                    $opts = array();
+                                    $code = Lang::getBaseCode();
+                                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                        $selected = ($id == $code) ? 'selected="selected"' : '';
+                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Template::Q($dfn['name']).'</option>';
+                                    }
+                                    
+                                    echo '<div class="fs-select">';
+                                    echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
+                                    echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
+                                    echo '</div>';
+
+                                    
+                                }
+                                ?>
+                                
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="fs-collapse">

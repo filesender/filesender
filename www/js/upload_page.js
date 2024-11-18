@@ -255,7 +255,8 @@ filesender.ui.elements.preventEmpty = function(el) {
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
-
+    duplicateFiles: [],
+    
     // Sort error cases to the top
     sortErrorLinesToTop: function() {
         var $selector = $("#fileslistdirectparent");
@@ -390,6 +391,12 @@ filesender.ui.files = {
 
             var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, function(error) {
                 var tt = 1;
+                if(error.message && error.message == 'duplicate_file' ) {
+                    filesender.ui.files.duplicateFiles.push(error.details.filename);
+                    tr.attr('data-cid-dup', added_cid);
+                    tr.addClass('duplicate_file_entry');
+                }
+                
                 if(error.details && error.details.filename) {
                     filesender.ui.files.invalidFiles.push(error.details.filename);
                 }
@@ -1231,6 +1238,9 @@ filesender.ui.startUpload = function() {
             this.transfer.lang = filesender.ui.nodes.lang.attr('data-id');
         }
 
+        if(filesender.ui.nodes.lang.length)
+            this.transfer.lang = filesender.ui.nodes.lang.val();
+        
         for(var o in filesender.ui.nodes.options) {
             var i = filesender.ui.nodes.options[o];
             var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
@@ -1304,6 +1314,11 @@ filesender.ui.startUpload = function() {
 
             return;
         }
+
+        if(filesender.ui.transfer.options.popup_on_complete){
+           filesender.ui.confirmTitle(lang.tr('uploaded'),' <i class="fa fa-check" aria-hidden="true"></i> '+lang.tr('upload_completed'))
+        }
+
 
         var close = function() {
             window.filesender.notification.clear();
@@ -1581,6 +1596,7 @@ filesender.ui.handle_get_a_link_change = function() {
     var form = $('#upload_form');
     var gal = form.find('input[id="get_a_link"]');
     var choice = gal.is(':checked');
+    
     form.find(
         '.fieldcontainer[data-related-to="message"], .recipients,' +
         ' .fieldcontainer[data-option="add_me_to_recipients"],' +
@@ -1591,10 +1607,20 @@ filesender.ui.handle_get_a_link_change = function() {
         ' .fieldcontainer[data-related-to="verify_email_to_download"]'
     ).toggle(!choice);
 
+    $('hr[data-related-to="emailfrom"]').toggle(!choice);
+
     form.find(
         ' .fieldcontainer[data-option="hide_sender_email"]'
     ).toggle(!choice);
-
+    
+    form.find(
+        ' .emailonly'
+    ).toggle(!choice);
+    
+    if( choice ) {
+        form.find('#subject').val('');
+        form.find('#message').val('');
+    }
     filesender.ui.evalUploadEnabled();
 }
 
@@ -1635,10 +1661,35 @@ filesender.ui.removeFile = function (e) {
     var el   = $(e).parents('.file');
     var cid  = el.attr('data-cid');
     var name = el.attr('data-name');
+    var iidx = -1;
 
-    if(cid) filesender.ui.transfer.removeFile(cid);
+    iidx = filesender.ui.files.duplicateFiles.indexOf(name);
+    if (iidx != -1) {
+        var dups = filesender.ui.nodes.files.list.find(".file[data-name='" + name + "']");
+        dups.each( function() {
+            var e = $(this);
+            if( e.hasClass('duplicate_file_entry')) {
+                e.remove();
+                
+            }
+        });
+        while( iidx != -1 ) {
+            filesender.ui.files.duplicateFiles.splice(iidx, 1);
+            iidx = filesender.ui.files.duplicateFiles.indexOf(name);
+        }
+        iidx = filesender.ui.files.invalidFiles.indexOf(name);
+        while( iidx != -1 ) {
+            filesender.ui.files.invalidFiles.splice(iidx, 1);
+            iidx = filesender.ui.files.invalidFiles.indexOf(name);
+        }
+        filesender.ui.notify('success', lang.tr('files_removed_from_upload'));
+        
+    } else {
+    
+        if(cid) filesender.ui.transfer.removeFile(cid);
+        el.remove();
 
-    el.remove();
+    }
 
     if(!filesender.ui.nodes.files.list.find('.file').length) {
         // The last file was removed,
@@ -1646,7 +1697,7 @@ filesender.ui.removeFile = function (e) {
         filesender.ui.files.clear();
     }
 
-    var iidx = filesender.ui.files.invalidFiles.indexOf(name);
+    iidx = filesender.ui.files.invalidFiles.indexOf(name);
     if (iidx === -1) {
         // not an invalid file name
         filesender.ui.files.updateTotalFileSizeAndCountStats();
@@ -2303,6 +2354,8 @@ $(function() {
             ' .custom-checkbox[data-option="add_me_to_recipients"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
+
+        $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
         form.find(
             ' .fieldcontainer[data-option="hide_sender_email"]'

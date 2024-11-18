@@ -619,7 +619,6 @@ window.filesender.ui = {
         var d = this.alert('error', msg + msgtail, callback);
 
         $("#send_client_logs").on('click', function() {
-            alert("hi there");
             filesender.logger.send(function() {
                 filesender.ui.notify('success', lang.tr('client_logs_sent'));
             });

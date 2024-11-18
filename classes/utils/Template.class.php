@@ -137,10 +137,21 @@ class Template
         $content = preg_replace_callback('`\{(loc|tr|translate):([^}]+)\}`', function ($m) {
             return (string)Lang::translate($m[2]);
         }, $content);
-        
+
         // Config syntax
         $content = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function ($m) {
-            return Utilities::sanitizeOutput(Config::get($m[2]));
+            $k = $m[2];
+            $configWhiteList = Config::getArray("template_config_values_that_can_be_read_in_templates");
+
+            if( !is_array(Config::get("template_config_values_that_can_be_read_in_templates"))) {
+                // deprecated.
+                return Utilities::sanitizeOutput(Config::get($k));
+            } else {
+                if( array_search($k,$configWhiteList)) { 
+                    return Utilities::sanitizeOutput(Config::get($k));
+                }
+            }
+            return "";
         }, $content);
         
         // Image syntax
@@ -230,6 +241,23 @@ class Template
     {
         return self::sanitize(Utilities::sanitizeOutput($data));
     }
+    /**
+     * THIS IS THE MAIN QUOTE METHOD.
+     *
+     * Some call sites are still using replaceTainted and if needed 
+     * QTainted method will be added to help limit the number of quote methods.
+     *
+     * As there were a number of quote methods, this one was introduced
+     * to reduce the number of possibilities. 
+     *
+     * If you have specific data types your might like
+     * to use sanitizeOutputEmail() for example.
+     */
+    public static function Q($data)
+    {
+        return self::sanitizeOutput($data);
+    }
+    
 
     /**
      * Sanitize data to avoid tag replacement for email addresses

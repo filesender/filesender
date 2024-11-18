@@ -60,7 +60,7 @@ S pozdravem,
 
 {if:guest.message}
 <p>
-    Zpráva od {guest.user_email}:
+    Osobní zpráva od {guest.user_email}:
 </p>
 <p class="message">
     {guest.message}

@@ -103,6 +103,18 @@ a {
   color: var(--fs-accent);
 }
 
+.hidden-at-page-load {
+  display: none;
+}
+
+.width25 {
+    width:25%;
+}
+
+.width75 {
+    width:75%;
+}
+
 /* XS */
 @media (max-width: 575px) {
 
