@@ -15,6 +15,9 @@ if(!isset($trsort))  $nosort = true;
     $haveNext = 0;
     $havePrev = 0;
 
+    $status = Template::Q($status);
+    $mode   = Template::Q($mode);
+
 
     $isAdmin = false;
     $showAdminExtend = false;
@@ -114,21 +117,23 @@ if (!function_exists('clickableHeader')) {
     }
 
     $showPager = $havePrev || $haveNext;
-    
+
     if( $havePrev || $haveNext ) {
         echo '<table class="paginator" border="1"><tr>';
-        $base = '?s=' . $_GET['s'];
-        $cgioffset = $pagerprefix . 'offset';
-        $cgilimit  = $pagerprefix . 'limit';
-        $nextPage  = $offset+$limit;
-        $transfersort = Utilities::getGETparam('transfersort','');
-        $cgias = Utilities::getGETparam('as','');
-        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax&nextlink=1";
+        $base = '?s=' . Template::Q($_GET['s']);
+        $cgioffset = Template::Q($pagerprefix) . 'offset';
+        $cgilimit  = Template::Q($pagerprefix) . 'limit';
+        $nextPage  = Template::Q($offset+$limit);
+        $transfersort = Template::Q(Utilities::getGETparam('transfersort',''));
+        $cgias = Template::Q(Utilities::getGETparam('as',''));
+        $cgilimit = Template::Q($limit);
+        $as = $cgias . Template::Q($cgiuid) . Template::Q($cgiminmax);
+        $nextLink  = Template::Q("$base&$cgioffset=$nextPage&$cgilimit=$cgilimit&transfersort=$transfersort&as=$as&nextlink=1");
         
         if( $havePrev ) {
-           $prevPage = max(0,$offset-$limit);
-           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
-           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           $prevPage = Template::Q(max(0,$offset-$limit));
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
         }
@@ -191,17 +196,17 @@ if (!function_exists('clickableHeader')) {
     
     <tbody>
         <?php foreach($transfers as $transfer) { ?>
-        <tr class="transfer objectholder" id="transfer_<?php echo $transfer->id ?>"
-            data-id="<?php echo $transfer->id ?>"
-            data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
-            data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
-            data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
-            data-key-version="<?php echo $transfer->key_version; ?>"
-            data-key-salt="<?php echo $transfer->salt; ?>"
-            data-password-version="<?php echo $transfer->password_version; ?>"
-            data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
-            data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
-            data-client-entropy="<?php echo $transfer->client_entropy; ?>"
+        <tr class="transfer objectholder" id="transfer_<?php echo Template::Q($transfer->id) ?>"
+            data-id="<?php                       echo Template::Q($transfer->id) ?>"
+            data-recipients-enabled="<?php       echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
+            data-errors="<?php                   echo count($transfer->recipients_with_error) ? '1' : '' ?>"
+            data-expiry-extension="<?php         echo Template::Q($transfer->expiry_date_extension) ?>"
+            data-key-version="<?php              echo Template::Q($transfer->key_version); ?>"
+            data-key-salt="<?php                 echo Template::Q($transfer->salt); ?>"
+            data-password-version="<?php         echo Template::Q($transfer->password_version); ?>"
+            data-password-encoding="<?php        echo Template::Q($transfer->password_encoding_string); ?>"
+            data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
+            data-client-entropy="<?php           echo Template::Q($transfer->client_entropy); ?>"
         >
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
@@ -209,7 +214,7 @@ if (!function_exists('clickableHeader')) {
             
             <td class="transfer_id">
                 <?php
-                    echo $transfer->id;
+                    echo Template::Q($transfer->id);
                     if( $transfer->is_encrypted ) {
                         echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
                     }
@@ -218,7 +223,7 @@ if (!function_exists('clickableHeader')) {
             
             <?php if($show_guest) { ?>
             <td class="guest">
-                <?php if($transfer->guest) echo '<abbr title="'.Template::sanitizeOutput($transfer->guest->identity).'">'.Template::sanitizeOutput($transfer->guest->name).'</abbr>' ?>
+                <?php if($transfer->guest) echo '<abbr title="'.Template::Q($transfer->guest->identity).'">'.Template::Q($transfer->guest->name).'</abbr>' ?>
             </td>
             <?php } ?>
             
@@ -256,7 +261,7 @@ if (!function_exists('clickableHeader')) {
                         if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
                         else $name = mb_substr($name, 0, 23).'...';
                     }
-                    $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::sanitizeOutput($name).'</span>';
+                    $items[] = '<span title="'.Template::Q($file->path).'">'.Template::Q($name).'</span>';
                 }
                 
                 if(count($transfer->files) > 3)
@@ -322,7 +327,7 @@ if (!function_exists('clickableHeader')) {
                         <tr>
                             <td class="desc">{tr:transfer_id}</td>
                             <td><?php
-                                echo $transfer->id;
+                                echo Template::Q($transfer->id);
                                 if( $transfer->is_encrypted ) {
                                     echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
                                 }
@@ -400,8 +405,8 @@ if (!function_exists('clickableHeader')) {
                     
                         <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
                             <tr class="download_link desc">
-                                <td><a class="download_href" href="<?php echo $transfer->first_recipient->download_link ?>">{tr:download_link}</a></td>
-                                <td><input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" /></td>
+                                <td><a class="download_href" href="<?php echo Template::Q($transfer->first_recipient->download_link) ?>">{tr:download_link}</a></td>
+                                <td><input readonly="readonly" type="text" value="<?php echo Template::Q($transfer->first_recipient->download_link) ?>" /></td>
                             </tr>
                         <?php } ?>                        
                        </tbody>
@@ -422,7 +427,7 @@ if (!function_exists('clickableHeader')) {
                     <h2>{tr:recipients}</h2>
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
-                    <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                    <div class="recipient" data-id="<?php echo Template::Q($recipient->id) ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
                         <?php
                         if(in_array($recipient->email, Auth::user()->email_addresses)) {
                             echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
@@ -453,41 +458,41 @@ if (!function_exists('clickableHeader')) {
                     <h2>{tr:files}</h2>
                     
                     <?php foreach($transfer->files as $file) { ?>
-                        <div class="file" data-id="<?php echo $file->id ?>"
-                             data-key-version="<?php echo $transfer->key_version; ?>"
-                             data-key-salt="<?php echo $transfer->salt; ?>"
-                             data-password-version="<?php echo $transfer->password_version; ?>"
-                             data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
-                             data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
-                             data-client-entropy="<?php echo $transfer->client_entropy; ?>"
-                             data-fileiv="<?php echo $file->iv; ?>"
-                             data-fileaead="<?php echo $file->aead; ?>"
-                             data-transferid="<?php echo $transfer->id; ?>"
+                        <div class="file" data-id="<?php          echo Template::Q($file->id) ?>"
+                             data-key-version="<?php              echo Template::Q($transfer->key_version); ?>"
+                             data-key-salt="<?php                 echo Template::Q($transfer->salt); ?>"
+                             data-password-version="<?php         echo Template::Q($transfer->password_version); ?>"
+                             data-password-encoding="<?php        echo Template::Q($transfer->password_encoding_string); ?>"
+                             data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
+                             data-client-entropy="<?php           echo Template::Q($transfer->client_entropy); ?>"
+                             data-fileiv="<?php                   echo Template::Q($file->iv); ?>"
+                             data-fileaead="<?php                 echo Template::Q($file->aead); ?>"
+                             data-transferid="<?php               echo Template::Q($transfer->id); ?>"
                         >
-                            <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            <?php echo Template::Q($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
                             <?php if(!$transfer->is_expired) { ?>
                                
                                 <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
-                                <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo $file->id ?>" 
-                                        data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
-                                        data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>" 
-                                        data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
-                                        data-size="<?php echo $file->size; ?>"
-                                        data-encrypted-size="<?php echo $file->encrypted_size; ?>"
-                                        data-key-version="<?php echo $transfer->key_version; ?>"
-                                        data-key-salt="<?php echo $transfer->salt; ?>"
-                                        data-password-version="<?php echo $transfer->password_version; ?>"
-                                        data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
-                                        data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
-                                        data-client-entropy="<?php echo $transfer->client_entropy; ?>"
-                                        data-fileiv="<?php echo $file->iv; ?>"
-                                        data-fileaead="<?php echo $file->aead; ?>"
-                                        data-transferid="<?php echo $transfer->id; ?>"
+                                <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo Template::Q($file->id) ?>" 
+                                        data-encrypted="<?php echo isset($transfer->options['encryption'])?Template::Q($transfer->options['encryption']):'false'; ?>" 
+                                        data-mime="<?php              echo Template::Q($file->mime_type); ?>" 
+                                        data-name="<?php              echo Template::Q($file->path); ?>"
+                                        data-size="<?php              echo Template::Q($file->size); ?>"
+                                        data-encrypted-size="<?php    echo Template::Q($file->encrypted_size); ?>"
+                                        data-key-version="<?php       echo Template::Q($transfer->key_version); ?>"
+                                        data-key-salt="<?php          echo Template::Q($transfer->salt); ?>"
+                                        data-password-version="<?php  echo Template::Q($transfer->password_version); ?>"
+                                        data-password-encoding="<?php echo Template::Q($transfer->password_encoding_string); ?>"
+                                        data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
+                                        data-client-entropy="<?php    echo Template::Q($transfer->client_entropy); ?>"
+                                        data-fileiv="<?php            echo Template::Q($file->iv); ?>"
+                                        data-fileaead="<?php          echo Template::Q($file->aead); ?>"
+                                        data-transferid="<?php        echo Template::Q($transfer->id); ?>"
                                 ></span>
                                         
                                 <?php } else {?>
-                            <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
+                            <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo Template::Q($file->id) ?>"></a>
                                 <?php } ?>
                             <?php } ?>
 
@@ -503,7 +508,7 @@ if (!function_exists('clickableHeader')) {
                                     if (Auth::isAdmin()) {
                                         $fp = StorageFilesystem::buildPath( $file ).StorageFilesystem::buildFilename( $file );
                                         echo "<br/>";
-                                        echo Template::sanitizeOutput( $fp );
+                                        echo Template::Q( $fp );
                                     }
                                 }
                             }

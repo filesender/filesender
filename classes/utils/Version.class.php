@@ -43,7 +43,7 @@ class Version
     /**
      * Code version
      */
-    const CODE_VERSION = '2.50';
+    const CODE_VERSION = '2.51';
     
     /**
      * Version file path
