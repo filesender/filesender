@@ -7,4 +7,9 @@
 // 
 // 
 ?>
-Pozvánka umožňuje zaslání souboru. <br /> Pro vytvoření pozvánky vložte emailovou adresu adresáta a klikněte Odeslat pozvánku.<br /> Adresátovi bude odeslán email s odkazem na pozvánku.
+<h2>Pozvání hostujícího uživatele</h2>
+<p>Uživateli bez účtu můžete posílat soubory na pozvánku:
+<li>Zadejte e-mailovou adresu hostujícího uživatele.</li> 
+<li>V případě potřeby zadejte předmět a zprávu.</li> 
+<li>Klikněte na tlačítko 'Odeslat pozvánku'.</li></p>
+<p>Hostující uživatel obdrží e-mail obsahující odkaz na pozvánku.</p>

@@ -18,7 +18,7 @@ Následující host zahájil nahrávání souborů na Vaši pozvánku :
 Host: {guest.email}
 Odkaz na pozvánku: {cfg:site_url}?s=upload&vid={guest.token}
 
-Pozvání je k dispozici do {date:guest.expires},poté bude automaticky vymazáno.
+Pozvánka je platná do {date:guest.expires}, poté bude automaticky vymazána.
 
 S pozdravem,
 {cfg:site_name}

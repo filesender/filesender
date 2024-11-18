@@ -18,7 +18,7 @@ class UploadAutoResumeTest extends SeleniumTest
 
     public function testclearServerSideTestLog()
     {
-        $this->url(Config::get('site_url') . '/rest.php/utility/cleartestlog');
+        $this->url(Config::get('site_url') . 'rest.php/utility/cleartestlog');
         sleep(2);
         $this->assertEquals(1,1);
     }

@@ -109,7 +109,12 @@ class Security
         }
 
         if (Auth::isGuest()) {
+
             $checkToken = true;
+            
+            if( Utilities::isFalse(Config::get('validate_csrf_token_for_guests'))) {
+                $checkToken = false;
+            }
         }
         
         if( $checkToken ) {

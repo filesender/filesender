@@ -35,6 +35,7 @@
 $default = array(
     'testing'   => false,   // TODO
     'debug'   => false,   // TODO
+    'site_hostname' => '', // may be used by email_from
     'default_timezone' => 'Europe/London', // Default timezone to use
     'default_language' => 'en', // Default language to user
     'lang_browser_enabled' => true, // Take language from user's browser's accept-language header if provided
@@ -178,8 +179,9 @@ $default = array(
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
-    'email_from' => 'sender',
-    'email_return_path' => 'sender',
+    'email_from' => 'no-reply@',
+    'email_return_path' => 'no-reply@',
+    
     'email_subject_prefix' => '{cfg:site_name}:',
     'email_headers' => false,
     'email_send_with_minus_r_option' => true,
@@ -280,7 +282,7 @@ $default = array(
                                                                 , 'email_daily_statistics', 'email_report_on_closing'
                                                                 , 'enable_recipient_email_download_complete'
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
-                                                                , 'hide_sender_email'
+                                                                , 'hide_sender_email', 'popup_on_complete'
     ),
 
     'header_x_frame_options' => 'sameorigin',
@@ -380,6 +382,23 @@ $default = array(
     'valid_timezone_regex' => '@^[_/a-z]+$@i',
     'client_send_current_timezone_to_server' => false,
     
+    'validate_csrf_token_for_guests' => true,
+
+    'template_config_values_that_can_be_read_in_templates' => array(
+        'default_guest_days_valid',
+        'default_transfer_days_valid',
+        'encryption_password_text_only_min_password_length',
+        'guest_reminder_limit_per_day',
+        'mac_unzip_link',
+        'mac_unzip_name',
+        'max_guest_days_valid',
+        'max_transfer_days_valid',
+        'max_transfer_files',
+        'max_transfer_recipients',
+        'site_name',
+        'site_url',
+    ),
+
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,
@@ -435,6 +454,11 @@ $default = array(
             'available' => false,
             'advanced' => true,
             'default' => ''
+        ),
+        'popup_on_complete' => array(
+            'available' => false,
+            'advanced' => true,
+            'default' => false
         ),
         'must_be_logged_in_to_download' => array(
             'available' => true,
