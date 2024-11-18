@@ -32,7 +32,7 @@ function presentAVName( $v )
             }
         }
     }
-    return $ret;
+    return Template::Q($ret);
 }
 
 $rid = 0;
@@ -196,17 +196,17 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
     </div>
     
     
-    <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
+    <div class="general box" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
         <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
                  !$transfer->options['hide_sender_email']) { ?>
         <div class="from">{tr:from} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></div>
         <?php } ?>
         
-        <div class="created">{tr:created} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></div>
+        <div class="created">{tr:created} : <?php echo Template::Q(Utilities::formatDate($transfer->created)) ?></div>
         
-        <div class="expires">{tr:expires} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></div>
+        <div class="expires">{tr:expires} : <?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></div>
         
-        <div class="size">{tr:size} : <?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></div>
+        <div class="size">{tr:size} : <?php echo Template::Q(Utilities::formatBytes($transfer->size)) ?></div>
         
         <?php if($transfer->subject) { ?>
             <div class="subject">{tr:subject} : <?php echo Template::replaceTainted($transfer->subject) ?></div>
@@ -222,11 +222,11 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <?php } ?>
     </div>
     <?php if($have_av) { ?>
-        <div class="general2 box" data-transfer-size="<?php echo $transfer->size ?>">
+        <div class="general2 box" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
             <div class="avdesc">{tr:av_results_description}
             <?php foreach($sortedFiles as $file) { ?>
-                <div class="avfile" data-avid="<?php echo $file->id ?>" >
-                    <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
+                <div class="avfile" data-avid="<?php echo Template::Q($file->id) ?>" >
+                    <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Template::Q($file->path) ?></span>
                     <?php if(!$file->have_avresults) { ?>
                         <span class="desc">{tr:no_av_scans_performed}</span>
                     <?php } else { ?>
@@ -238,7 +238,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                             </tr>
                         <?php foreach($file->scan_results as $res) { $resultdesc = passErrToDesc($res->passes,$res->error); ?>
                             <tr class="avresult">
-                                <td class="created"><?php echo Utilities::sanitizeOutput(Utilities::formatDate($res->created)) ?></td>
+                                <td class="created"><?php echo Template::Q(Utilities::formatDate($res->created)) ?></td>
                                 <td class="result avresult<?php echo $resultdesc ?>"><?php echo Lang::tr($resultdesc) ?></td>
                                 <td class="app_name"><?php echo presentAVName($res->name) ?></td>
                             </tr>
@@ -262,30 +262,30 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         </div>
         <?php } ?>
     <?php foreach($sortedFiles as $file) { ?>
-        <div class="file" data-id="<?php echo $file->id ?>"
-             data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
-             data-mime="<?php echo $file->mime_type; ?>"
-             data-name="<?php echo $file->path; ?>"
-             data-size="<?php echo $file->size; ?>"
-             data-encrypted-size="<?php echo $file->encrypted_size; ?>"
-             data-key-version="<?php echo $transfer->key_version; ?>"
-             data-key-salt="<?php echo $transfer->salt; ?>"
-             data-password-version="<?php echo $transfer->password_version; ?>"
-             data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
-             data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
-             data-client-entropy="<?php echo $transfer->client_entropy; ?>"
-             data-fileiv="<?php echo $file->iv; ?>"
-             data-fileaead="<?php echo $file->aead; ?>"
-             data-transferid="<?php echo $transfer->id ?>"
+        <div class="file" data-id="<?php   echo Template::Q($file->id) ?>"
+             data-encrypted="<?php         echo isset($transfer->options['encryption'])?Utilities::isTrue($transfer->options['encryption']):'false'; ?>"
+             data-mime="<?php              echo Template::Q($file->mime_type); ?>"
+             data-name="<?php              echo Template::Q($file->path); ?>"
+             data-size="<?php              echo Template::Q($file->size); ?>"
+             data-encrypted-size="<?php    echo Template::Q($file->encrypted_size); ?>"
+             data-key-version="<?php       echo Template::Q($transfer->key_version); ?>"
+             data-key-salt="<?php          echo Template::Q($transfer->salt); ?>"
+             data-password-version="<?php  echo Template::Q($transfer->password_version); ?>"
+             data-password-encoding="<?php echo Template::Q($transfer->password_encoding_string); ?>"
+             data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
+             data-client-entropy="<?php    echo Template::Q($transfer->client_entropy); ?>"
+             data-fileiv="<?php            echo Template::Q($file->iv); ?>"
+             data-fileaead="<?php          echo Template::Q($file->aead); ?>"
+             data-transferid="<?php        echo Template::Q($transfer->id); ?>"
         >
             
             <?php if($canDownloadArchive) { ?>
                 <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
             <?php } ?>
-            <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
+            <span class="name"><?php echo Template::Q($file->path) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
             <span class="download_decryption_disabled"><br/>{tr:file_encryption_disabled}</span>
-            <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">
+            <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:download}
             </a>
@@ -297,7 +297,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
               if (isSet($transfer->options['encryption']) && $transfer->options['encryption']) {
                 echo 'Direct Links are not avaliable for encrypted files';
               } else {
-                echo 'Direct Link: '.Config::get('site_url').'download.php?token='.$token.'&files_ids='.$file->id;
+                echo 'Direct Link: '.Config::get('site_url').'download.php?token='.Template::Q($token).'&files_ids='.Template::Q($file->id);
               }
             ?>
             </span>
@@ -313,7 +313,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             </div>
             
             <div class="archive_download_frame">
-            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_download" title="{tr:archive_download}">
+            <a rel="nofollow" href="<?php echo Template::Q($archiveDownloadLink) ?>" class="archive_download" title="{tr:archive_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_download}
             </a>
@@ -325,7 +325,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
               if ($isEncrypted) {
                 echo 'Direct Links are not avaliable for encrypted files';
               } else {
-                echo 'Direct Link: '.Utilities::sanitizeOutput($archiveDownloadLink);
+                echo 'Direct Link: '.Template::Q($archiveDownloadLink);
               }
             ?>
             </span>
@@ -333,7 +333,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <?php } ?>
             <?php if($canDownloadAsTar) { ?>
             <div class="archive_tar_download_frame">
-            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_tar_download" title="{tr:archive_tar_download}">
+            <a rel="nofollow" href="<?php echo Template::Q($archiveDownloadLink) ?>" class="archive_tar_download" title="{tr:archive_tar_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_tar_download}
             </a>
@@ -345,7 +345,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
               if ($isEncrypted) {
                 echo 'Direct Links are not avaliable for encrypted files';
               } else {
-                echo 'Direct Link: '.Utilities::sanitizeOutput($archiveDownloadLink);
+                echo 'Direct Link: '.Template::Q($archiveDownloadLink);
               }
             ?>
             </span>
@@ -353,8 +353,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <?php } ?>
 
             <div class="archive_download_framex hidden">
-                <form id="dlarchivepost" action="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" method="post">
-                    <input class="hidden archivefileids" name="files_ids" value="<?php echo $archiveDownloadLinkFileIDs; ?>" />
+                <form id="dlarchivepost" action="<?php echo Template::Q($archiveDownloadLink) ?>" method="post">
+                    <input class="hidden archivefileids" name="files_ids" value="<?php echo Template::Q($archiveDownloadLinkFileIDs); ?>" />
                     <input id="dlarchivepostformat" class="hidden " name="archive_format" value="zip" />
                     <button type="submit"
                             name="your_name" value="your_value"
@@ -366,8 +366,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <span class="downloadprogress"/>
         </div>
     <?php } ?>    
-        <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
-        <div class="rid" data-id="<?php echo $rid ?>"></div>
+        <div class="transfer" data-id="<?php echo Template::Q($transfer->id); ?>"></div>
+        <div class="rid" data-id="<?php echo Template::Q($rid); ?>"></div>
     </div>
 </div>
 
