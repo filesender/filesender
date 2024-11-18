@@ -84,7 +84,7 @@ if(Auth::isGuest()) {
 
 
 
-<div class="box">
+    <div class="box">
     <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" autocomplete="off" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
         <div class="box">
             <div class="files" id="fileslist"></div>
@@ -265,7 +265,7 @@ if(Auth::isGuest()) {
                         <label for="to" class="mandatory">{tr:to} :</label>
                         
                         <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
-                        <?php echo AuthGuest::getGuest()->user_email ?>
+                        <?php echo Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email) ?>
                         <?php } else { ?>
                         <div class="recipients"></div>
                         
@@ -339,9 +339,9 @@ if(Auth::isGuest()) {
                     
                     <div>
                         <?php if(Auth::isGuest()) { ?>
-                        <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
-                        <input type="hidden" id="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
-                        <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
+                        <input type="hidden" name="guest_token" value="<?php          echo Template::Q(AuthGuest::getGuest()->token) ?>" />
+                        <input type="hidden" id="guest_options" value="<?php          echo Template::Q(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                        <input type="hidden" id="guest_transfer_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
                         <?php } ?>
                         
                     </div>
@@ -364,7 +364,7 @@ if(Auth::isGuest()) {
                                 $code = Lang::getBaseCode();
                                 foreach(Lang::getAvailableLanguages() as $id => $dfn) {
                                     $selected = ($id == $code) ? 'selected="selected"' : '';
-                                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Template::Q($dfn['name']).'</option>';
                                 }
                                 
                                 echo '<div class="fieldcontainer">';

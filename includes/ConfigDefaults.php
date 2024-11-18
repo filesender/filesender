@@ -359,7 +359,22 @@ $default = array(
     'read_only_mode' => false,
 
     'validate_csrf_token_for_guests' => true,
-    
+
+    'template_config_values_that_can_be_read_in_templates' => array(
+        'default_guest_days_valid',
+        'default_transfer_days_valid',
+        'encryption_password_text_only_min_password_length',
+        'guest_reminder_limit_per_day',
+        'mac_unzip_link',
+        'mac_unzip_name',
+        'max_guest_days_valid',
+        'max_transfer_days_valid',
+        'max_transfer_files',
+        'max_transfer_recipients',
+        'site_name',
+        'site_url',
+    ),
+
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,
