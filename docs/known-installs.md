@@ -20,6 +20,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Croatia  | SRCE    | [https://filesender.srce.hr/](https://filesender.srce.hr/)      | Oct 2010| 3 May 2024 |
 | Czech Republic| CESNET  | [https://filesender.cesnet.cz](https://filesender.cesnet.cz)      | Feb 2012| 3 May 2024 |
 | Denmark  | DeiC    | [https://filesender.deic.dk](https://filesender.deic.dk)      | Mar 2012| 3 May 2024 |
+| Europe   | EOSC EU Node | [https://open-science-cloud.ec.europa.eu/services/large-file-transfer](https://open-science-cloud.ec.europa.eu/services/large-file-transfer) | Oct 2024| 22 Oct 2024 |
 | Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012| 3 May 2024 |
 | France  | RENATER  | [https://filesender.renater.fr/](https://filesender.renater.fr/)    | Nov 2013| 3 May 2024 |
 | Hungary  | KIFÜ    | [https://filesender.hu](https://filesender.hu)      | Feb 2012| 3 May 2024 |
@@ -27,6 +28,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 | 3 May 2024, version 1.x |
 | Israel  | IUCC  | [https://filesender.iucc.ac.il](https://filesender.iucc.ac.il)      | Jun 2024 | 11 Oct 2024 |
 | Italy    | GARR    | [https://filesender.garr.it/](https://filesender.garr.it/)      | Apr 2012| 3 May 2024 |
+| Latvia   | VPC    | [https://filesender.vpc.lv/](https://filesender.vpc.lv/)   | Dec 2023 | 16 Oct 2024 |
 | Lithuania  | LITNET  | [https://filesender.vu.lt](https://filesender.vu.lt)      | Feb 2012| 3 May 2024, version 1.x |
 | Luxembourg  | RESTENA  | [https://fs.restena.lu](https://fs.restena.lu)        | Feb 2011| 3 May 2024 | 
 | Moldova  | RENAM    | [https://filesender.renam.md](https://filesender.renam.md)      | Aug 2016| 3 May 2024 |
