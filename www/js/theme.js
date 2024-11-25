@@ -108,9 +108,6 @@ filesender.ui.setTheme = function() {
 
         filesender.ui.setUserTheme(selectedTheme);
         filesender.ui.nodes.themeSelector.val(selectedTheme);
-        console.log('1');
-        console.log(filesender.ui.nodes.themeSelector);
-        console.log(filesender.ui.nodes.themeSelector.val());
     } else {
         filesender.ui.clearUserTheme();
 
@@ -120,7 +117,6 @@ filesender.ui.setTheme = function() {
     }
 
     filesender.ui.changeTheme(selectedTheme);
-    console.log(selectedTheme);
 };
 
 filesender.ui.handleThemeChange = function() {
