@@ -32,7 +32,7 @@ function presentAVName( $v )
             }
         }
     }
-    return $ret;
+    return Template::Q($ret);
 }
 
 $rid = 0;
@@ -137,7 +137,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <div class="col">
                 <div class="fs-download__title">
                     <h1><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?> {tr:transferred_these_files}</h1>
-                    <p><?php  echo Lang::tr('transfer_expires_in_x_days')->r(array('days_to_expire' => $days_to_expire, 'days' => $days_to_expire)) ?></p>
+                    <p><?php  echo Lang::tr('transfer_expires_in_x_days')->r(array('days_to_expire' => Template::Q($days_to_expire), 'days' => Template::Q($days_to_expire))) ?></p>
                 </div>
             </div>
         </div>
@@ -150,11 +150,11 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     <h2>{tr:transfer_details}</h2>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_sent_on}:</strong>
-                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created,true)) ?></span>
+                        <span><?php echo Template::Q(Utilities::formatDate($transfer->created,true)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}:</strong>
-                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
+                        <span><?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:from}:</strong>
@@ -174,7 +174,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_size}:</strong>
-                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></span>
+                        <span><?php echo Template::Q(Utilities::formatBytes($transfer->size)) ?></span>
                     </div>
                     <div  class="fs-info">
                         <a href="https://docs.filesender.org/filesender/v3.0/user/download/">{tr:more_information_about_downloading_files}</a>
@@ -209,26 +209,26 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                                 </thead>
                                 <tbody>
                                 <?php foreach($sortedFiles as $file) { ?>
-                                    <tr class="file" data-id="<?php echo $file->id ?>"
-                                        data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
-                                        data-mime="<?php echo $file->mime_type; ?>"
-                                        data-name="<?php echo $file->path; ?>"
-                                        data-size="<?php echo $file->size; ?>"
-                                        data-encrypted-size="<?php echo $file->encrypted_size; ?>"
-                                        data-key-version="<?php echo $transfer->key_version; ?>"
-                                        data-key-salt="<?php echo $transfer->salt; ?>"
-                                        data-password-version="<?php echo $transfer->password_version; ?>"
-                                        data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
-                                        data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
-                                        data-client-entropy="<?php echo $transfer->client_entropy; ?>"
-                                        data-fileiv="<?php echo $file->iv; ?>"
-                                        data-fileaead="<?php echo $file->aead; ?>"
-                                        data-transferid="<?php echo $transfer->id ?>"
+                                    <tr class="file" data-id="<?php          echo Template::Q($file->id) ?>"
+                                        data-encrypted="<?php                echo Template::Q(isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'); ?>"
+                                        data-mime="<?php                     echo Template::Q($file->mime_type); ?>"
+                                        data-name="<?php                     echo Template::Q($file->path); ?>"
+                                        data-size="<?php                     echo Template::Q($file->size); ?>"
+                                        data-encrypted-size="<?php           echo Template::Q($file->encrypted_size); ?>"
+                                        data-key-version="<?php              echo Template::Q($transfer->key_version); ?>"
+                                        data-key-salt="<?php                 echo Template::Q($transfer->salt); ?>"
+                                        data-password-version="<?php         echo Template::Q($transfer->password_version); ?>"
+                                        data-password-encoding="<?php        echo Template::Q($transfer->password_encoding_string); ?>"
+                                        data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
+                                        data-client-entropy="<?php           echo Template::Q($transfer->client_entropy); ?>"
+                                        data-fileiv="<?php                   echo Template::Q($file->iv); ?>"
+                                        data-fileaead="<?php                 echo Template::Q($file->aead); ?>"
+                                        data-transferid="<?php               echo Template::Q($transfer->id); ?>"
                                     >
                                         <td class="fs-table__check-action">
                                             <?php if($canDownloadArchive) { ?>
                                                 <label class="fs-checkbox select" title="{tr:select_for_archive_download}">
-                                                    <input id="check-<?php echo $file->id ?>" type="checkbox">
+                                                    <input id="check-<?php echo Template::Q($file->id) ?>" type="checkbox">
                                                     <span class="fs-checkbox__mark"></span>
                                                 </label>
                                             <?php } ?>
@@ -236,11 +236,11 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                                         </td>
                                         <td>
                                             <div>
-                                                <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
-                                                <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
+                                                <span class="name"><?php echo Template::Q($file->path) ?></span>
+                                                <span class="size"><?php echo Template::Q(Utilities::formatBytes($file->size)) ?></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
-                                                    <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
+                                                    <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
                                                         <i class="fa fa-download"></i>
                                                     </a>
                                                 </span>
@@ -253,8 +253,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                                 </tbody>
                             </table>
 
-                            <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
-                            <div class="rid" data-id="<?php echo $rid ?>"></div>
+                            <div class="transfer" data-id="<?php echo Template::Q($transfer->id) ?>"></div>
+                            <div class="rid" data-id="<?php echo Template::Q($rid) ?>"></div>
                         </div>
                     </div>
 
@@ -282,8 +282,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                             <?php } ?>
 
                             <div class="archive_download_framex hidden">
-                                <form id="dlarchivepost" action="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" method="post">
-                                    <input class="hidden archivefileids" name="files_ids" value="<?php echo $archiveDownloadLinkFileIDs; ?>" />
+                                <form id="dlarchivepost" action="<?php echo Template::Q($archiveDownloadLink) ?>" method="post">
+                                    <input class="hidden archivefileids" name="files_ids" value="<?php echo Template::Q($archiveDownloadLinkFileIDs); ?>" />
                                     <input id="dlarchivepostformat" class="hidden " name="archive_format" value="zip" />
                                     <button type="submit"
                                             name="your_name" value="your_value"
@@ -322,14 +322,14 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
 
 
     <?php if($have_av) { ?>
-<div class="fs-download general2 box" data-transfer-size="<?php echo $transfer->size ?>">
+<div class="fs-download general2 box" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
     <div class="container">
         <div class="row">
             <div class="col">
                 <div class="avdesc">{tr:av_results_description}
             <?php foreach($sortedFiles as $file) { ?>
-                    <div class="avfile" data-avid="<?php echo $file->id ?>" >
-                        <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Utilities::sanitizeOutput($file->path) ?></span>
+                    <div class="avfile" data-avid="<?php echo Template::Q($file->id) ?>" >
+                        <span class="name avheader<?php outputBool($file->av_all_good)?> "><?php echo Template::Q($file->path) ?></span>
                     <?php if(!$file->have_avresults) { ?>
                         <span class="desc">{tr:no_av_scans_performed}</span>
                     <?php } else { ?>
@@ -341,8 +341,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                             </tr>
                         <?php foreach($file->scan_results as $res) { $resultdesc = passErrToDesc($res->passes,$res->error); ?>
                             <tr class="avresult">
-                                <td class="created"><?php echo Utilities::sanitizeOutput(Utilities::formatDate($res->created)) ?></td>
-                                <td class="result avresult<?php echo $resultdesc ?>"><?php echo Lang::tr($resultdesc) ?></td>
+                                <td class="created"><?php echo Template::Q(Utilities::formatDate($res->created)) ?></td>
+                                <td class="result avresult<?php echo Template::Q($resultdesc) ?>"><?php echo Lang::tr($resultdesc) ?></td>
                                 <td class="app_name"><?php echo presentAVName($res->name) ?></td>
                             </tr>
                         <?php } ?>
@@ -400,23 +400,23 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
     <div class="container">
         <div class="row">
             <div class="col">
-                <table class="table borderless general" data-transfer-size="<?php echo $transfer->size ?>">
+                <table class="table borderless general" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
                     <tbody>
         <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
             !$transfer->options['hide_sender_email']) { ?>
                         <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td></tr>
         <?php } ?>
                         <tr>
-                            <td align="right" class="created">{tr:created}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></td>
-                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></td>
-                            <td align="right" class="size">{tr:size}</td><td><?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></td>
+                            <td align="right" class="created">{tr:created}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->created)) ?></td>
+                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></td>
+                            <td align="right" class="size">{tr:size}</td><td><?php echo       Template::Q(Utilities::formatBytes($transfer->size)) ?></td>
                         </tr>
         <?php if($transfer->subject) { ?>
-                        <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Utilities::sanitizeOutput($transfer->subject) ?></td></tr>
+                        <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Template::Q($transfer->subject) ?></td></tr>
         <?php } ?>
 
         <?php if($transfer->message) { ?>
-                        <tr><td align="right" class="message">{tr:message}</td><td><p><?php echo Utilities::sanitizeOutput($transfer->message) ?></p></td></tr>
+                        <tr><td align="right" class="message">{tr:message}</td><td><p><?php echo Template::Q($transfer->message) ?></p></td></tr>
         <?php } ?>
                     </tbody>
                 </table>

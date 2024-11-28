@@ -358,7 +358,7 @@ END;
         if( $data->apisecretdelete ) {
             if ($id && $id=='@all')
             {
-                if (!$user->is(Auth::user()) && !Auth::isAdmin()) {
+                if (!Auth::isAdmin()) {
                     throw new RestAdminRequiredException();
                 }
                 User::authSecretDeleteAll();
