@@ -696,6 +696,11 @@ class User extends DBObject
             $a = Authentication::fromId($this->authid);
             return $a->saml_user_identification_uid;
         }
+
+        if ($property == 'saml_user_identification_idp') {
+            $a = Authentication::fromId($this->authid);
+            return $a->saml_user_identification_idp;
+        }
         
         if ($property == 'email') {
             return count($this->email_addresses) ? $this->email_addresses[0] : null;

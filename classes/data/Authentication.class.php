@@ -60,6 +60,11 @@ class Authentication extends DBObject
             'size' => 200,
             'null' => true
         ),
+        'saml_user_identification_idp' => array(
+            'type' => 'string',
+            'size' => 200,
+            'null' => true
+        ),
         'created' => array(
             'type' => 'datetime',
             'null' => true
@@ -97,6 +102,7 @@ class Authentication extends DBObject
     protected $id = null;
     protected $saml_user_identification_uid = null;
     protected $saml_user_identification_uid_hash = 0;
+    protected $saml_user_identification_idp = null;
     protected $created = 0;
     protected $last_activity = 0;
     protected $comment = null;
@@ -189,7 +195,7 @@ class Authentication extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'created','last_activity','passwordhash'
+            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'saml_user_identification_idp', 'created','last_activity','passwordhash'
         ))) {
             return $this->$property;
         }
@@ -212,6 +218,8 @@ class Authentication extends DBObject
     {
         if ($property == 'saml_user_identification_uid_hash') {
             $this->saml_user_identification_uid_hash = $value;
+        } elseif ($property == 'saml_user_identification_idp') {
+            $this->saml_user_identification_idp = $value;
         } elseif ($property == 'passwordhash') {
             $this->passwordhash = $value;
         } elseif ($property == 'password') {

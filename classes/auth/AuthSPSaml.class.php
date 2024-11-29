@@ -98,6 +98,8 @@ class AuthSPSaml
             
             $attributes = array();
 
+            // Get IDP from SSP
+            $attributes['idp'] = parse_url(trim($ssp->getAuthData('saml:sp:IdP')), PHP_URL_HOST);
             
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
