@@ -135,10 +135,10 @@ class Authentication extends DBObject
     /**
      * Create or return the auth object
      */
-    public static function ensure($saml_auth_uid, $comment = null)
+    public static function ensure($saml_auth_uid, $comment = null, $saml_auth_idp = null)
     {
         $saml_uid = $saml_auth_uid;
-        Logger::info('authentication::create(1) saml_uid ' . $saml_uid);
+        Logger::info('authentication::create(1) saml_uid ' . $saml_uid . ' saml_idp '. $saml_auth_idp);
 
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE saml_user_identification_uid = :samluid');
         $statement->execute(array(':samluid' => $saml_uid));
@@ -146,6 +146,10 @@ class Authentication extends DBObject
         if ($data) {
             $ret = static::createFactory(null, $data);
             $ret->fillFromDBData($data);
+            if (!is_null($saml_auth_idp) && $saml_auth_idp!=$ret->saml_user_identification_idp) {
+                $ret->saml_user_identification_idp = $saml_auth_idp;
+                $ret->save();
+            }
             Logger::info('authentication::create(2) FOUND AND RETURNING ' . $data['id']);
             return $ret;
         }
@@ -159,6 +163,10 @@ class Authentication extends DBObject
         $ret->updateHash();
         Logger::info('authentication::create(4) ' . $ret->id);
         Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash);
+        if (!is_null($saml_auth_idp)) {
+            $ret->saml_user_identification_idp = $saml_auth_idp;
+            Logger::info('authentication::create(6) ' . $ret->saml_user_identification_idp);
+        }
         $ret->save();
         return $ret;
     }
@@ -171,9 +179,9 @@ class Authentication extends DBObject
      *
      * @return self
      */
-    public static function ensureAuthIDFromSAMLUID($saml_auth_uid)
+    public static function ensureAuthIDFromSAMLUID($saml_auth_uid, $saml_auth_idp = null)
     {
-        return self::ensure($saml_auth_uid)->id;
+        return self::ensure($saml_auth_uid,null,$saml_auth_idp)->id;
     }
 
     private function updateHash()

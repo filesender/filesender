@@ -276,7 +276,7 @@ class User extends DBObject
         }
         
         // Get matching user
-        $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid']);
+        $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid'],$attributes['idp']);
         $user = self::fromAuthId($authid);
         
         // Add metadata from attributes
