@@ -60,6 +60,11 @@ class Authentication extends DBObject
             'size' => 200,
             'null' => true
         ),
+        'saml_user_identification_idp' => array(
+            'type' => 'string',
+            'size' => 200,
+            'null' => true
+        ),
         'created' => array(
             'type' => 'datetime',
             'null' => true
@@ -97,6 +102,7 @@ class Authentication extends DBObject
     protected $id = null;
     protected $saml_user_identification_uid = null;
     protected $saml_user_identification_uid_hash = 0;
+    protected $saml_user_identification_idp = null;
     protected $created = 0;
     protected $last_activity = 0;
     protected $comment = null;
@@ -129,10 +135,10 @@ class Authentication extends DBObject
     /**
      * Create or return the auth object
      */
-    public static function ensure($saml_auth_uid, $comment = null)
+    public static function ensure($saml_auth_uid, $comment = null, $saml_auth_idp = null)
     {
         $saml_uid = $saml_auth_uid;
-        Logger::info('authentication::create(1) saml_uid ' . $saml_uid);
+        Logger::info('authentication::create(1) saml_uid ' . $saml_uid . ' saml_idp '. $saml_auth_idp);
 
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE saml_user_identification_uid = :samluid');
         $statement->execute(array(':samluid' => $saml_uid));
@@ -140,6 +146,13 @@ class Authentication extends DBObject
         if ($data) {
             $ret = static::createFactory(null, $data);
             $ret->fillFromDBData($data);
+            if (!is_null($saml_auth_idp)) {
+                // only update if the idp has changed
+                if ($saml_auth_idp!=$ret->saml_user_identification_idp) {
+                    $ret->saml_user_identification_idp = $saml_auth_idp;
+                    $ret->save();
+                }
+            }
             Logger::info('authentication::create(2) FOUND AND RETURNING ' . $data['id']);
             return $ret;
         }
@@ -153,6 +166,10 @@ class Authentication extends DBObject
         $ret->updateHash();
         Logger::info('authentication::create(4) ' . $ret->id);
         Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash);
+        if (!is_null($saml_auth_idp)) {
+            $ret->saml_user_identification_idp = $saml_auth_idp;
+            Logger::info('authentication::create(6) ' . $ret->saml_user_identification_idp);
+        }
         $ret->save();
         return $ret;
     }
@@ -165,9 +182,9 @@ class Authentication extends DBObject
      *
      * @return self
      */
-    public static function ensureAuthIDFromSAMLUID($saml_auth_uid)
+    public static function ensureAuthIDFromSAMLUID($saml_auth_uid, $saml_auth_idp = null)
     {
-        return self::ensure($saml_auth_uid)->id;
+        return self::ensure($saml_auth_uid,null,$saml_auth_idp)->id;
     }
 
     private function updateHash()
@@ -189,7 +206,7 @@ class Authentication extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'created','last_activity','passwordhash'
+            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'saml_user_identification_idp', 'created','last_activity','passwordhash'
         ))) {
             return $this->$property;
         }
@@ -212,6 +229,8 @@ class Authentication extends DBObject
     {
         if ($property == 'saml_user_identification_uid_hash') {
             $this->saml_user_identification_uid_hash = $value;
+        } elseif ($property == 'saml_user_identification_idp') {
+            $this->saml_user_identification_idp = $value;
         } elseif ($property == 'passwordhash') {
             $this->passwordhash = $value;
         } elseif ($property == 'password') {

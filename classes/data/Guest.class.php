@@ -740,6 +740,10 @@ class Guest extends DBObject
             return $user->saml_user_identification_uid;
         }
         
+        if ($property == 'saml_user_identification_idp') {
+            $user = User::fromId($this->userid);
+            return $user->saml_user_identification_idp;
+        }
         
         if ($property == 'upload_link') {
             return Utilities::http_build_query(
