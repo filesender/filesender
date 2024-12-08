@@ -146,9 +146,12 @@ class Authentication extends DBObject
         if ($data) {
             $ret = static::createFactory(null, $data);
             $ret->fillFromDBData($data);
-            if (!is_null($saml_auth_idp) && $saml_auth_idp!=$ret->saml_user_identification_idp) {
-                $ret->saml_user_identification_idp = $saml_auth_idp;
-                $ret->save();
+            if (!is_null($saml_auth_idp)) {
+                // only update if the idp has changed
+                if ($saml_auth_idp!=$ret->saml_user_identification_idp) {
+                    $ret->saml_user_identification_idp = $saml_auth_idp;
+                    $ret->save();
+                }
             }
             Logger::info('authentication::create(2) FOUND AND RETURNING ' . $data['id']);
             return $ret;
