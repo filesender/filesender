@@ -274,6 +274,10 @@ class User extends DBObject
         if (!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) {
             throw new UserMissingUIDException();
         }
+        // Check if idp attribute exists, if it doesn't make it null
+        if (!array_key_exists('idp', $attributes) || !$attributes['idp']) {
+            $attributes['idp'] = null;
+        }
         
         // Get matching user
         $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid'],$attributes['idp']);
