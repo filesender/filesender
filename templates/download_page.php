@@ -36,7 +36,10 @@ function presentAVName( $v )
 }
 
 $rid = 0;
-if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
+
+$verificationCodeEnabled =  Utilities::isTrue(Config::get('download_verification_code_enabled'));
+
+if($verificationCodeEnabled) {
     if(array_key_exists('token', $_REQUEST)) {
         $token = $_REQUEST['token'];
         
@@ -162,6 +165,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         </div>
     <?php } ?>
                             
+    <?php if($verificationCodeEnabled) { ?>
     <div class="verify_email_to_download">
         <h2>{tr:verify_your_email_address_to_download}</h2>
 
@@ -194,7 +198,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         </table>
         
     </div>
-    
+    <?php } ?>    
     
     <div class="general box" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
         <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
