@@ -1012,10 +1012,13 @@ filesender.ui.evalUploadEnabled = function() {
     // Check if there is no files with banned extension
     if (filesender.ui.files.invalidFiles.length > 0) {
         ok  = false;
+        configStageOk = false;
         uploadFileStageOk = false;
     }
+
     if(!filesender.ui.transfer.getFileCount()) {
         ok = false;
+        configStageOk = false;
         uploadFileStageOk = false;
     }
 
@@ -1605,10 +1608,6 @@ filesender.ui.handle_get_a_link_change = function() {
 
     form.find(
         ' .fieldcontainer[data-option="hide_sender_email"]'
-    ).toggle(!choice);
-    
-    form.find(
-        ' .emailonly'
     ).toggle(!choice);
     
     if( choice ) {
