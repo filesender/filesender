@@ -597,6 +597,10 @@ for fn_abs in fileList:
 
   size = os.path.getsize(fn_abs)
 
+  if size == 0 and not os.path.isdir(fn_abs):
+    print(f"Error: empty file '{fn_abs}' cannot continue")
+    sys.exit(1)
+
   files[fn+':'+str(size)] = {
     'name':fn,
     'size':size,
