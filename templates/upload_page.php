@@ -77,12 +77,17 @@ if(Auth::isGuest()) {
     }
 }
 
+if( $encryption_mandatory ) {
+    $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
+    $encryption_checkbox_classes = '';
+}
+
 /**
  * @param optionsToFilter is an array of options which we do not want to
  *                        show in the default panels on the left. This allows
  *                        some options to be displayed in other locations on the page.
  */
-$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email')) use ($guest_can_only_send_to_creator) {
+$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email')) use ($guest_can_only_send_to_creator, $encryption_checkbox_checked) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
 
     if( in_array($name, $optionsToFilter)) {
@@ -125,8 +130,13 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
         echo '</div>';
 
     } else {
-        echo '<label id="fs-transfer__add-me-to-recipients" class="fs-checkbox">';
-        echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
+        $inputTex = $name;
+        if ($name === TransferOptions::ENCRYPTION) {
+            $inputTex = 'encrypt_files_with_password';
+        }
+
+        echo '<label class="fs-checkbox">';
+        echo '    <label for="'.$name.'">'.Lang::tr($inputTex).'</label>';
         echo '    <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
         echo '    <span class="fs-checkbox__mark"></span>';
         echo '</label>';
@@ -137,14 +147,51 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
     if($name == TransferOptions::WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE && Browser::instance()->isFirefox)
         echo '<div class="info message"><a class="enable_web_notifications" href="#">'.Lang::tr('click_to_enable_web_notifications').'</a></div>';
 
+
+    if ($name === TransferOptions::ENCRYPTION) {
+        echo '<div id="encgroup1" class="fs-transfer__password">';
+        echo '    <div class="fs-transfer__password-top" id="encryption_password_container">';
+        echo '        <div class="fs-input-group">';
+        echo '          <input type="text" id="encryption_password" name="encryption_password" placeholder="'.Lang::tr('enter_your_password').'">';
+        echo '        </div>';
+        echo '        <div class="fs-transfer__generate-password">';
+        echo '            <span>'.Lang::tr('or').'&nbsp;</span>';
+        echo '            <button type="button" id="encryption_generate_password" class="fs-button">'.Lang::tr('generate_password').'</button>';
+        echo '        </div>';
+        echo '    </div>';
+        echo '    <div class="fieldcontainer" id="encryption_password_show_container">';
+        echo '        <label class="fs-checkbox">';
+        echo '            <label for="encryption_show_password">'.Lang::tr('file_encryption_show_password').'</label>';
+        echo '            <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >';
+        echo '            <span class="fs-checkbox__mark"></span>';
+        echo '        </label>';
+        echo '    </div>';
+        echo '    <div class="fs-transfer__password-bottom">';
+        echo '        <small>'.Lang::tr('password_share_tip').'</small>';
+        echo '    </div>';
+        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">';
+        echo '        <small>'.Lang::tr('file_encryption_password_too_short').'</small>';
+        echo '    </div>';
+        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">';
+        echo '        <small>'.Lang::tr('file_encryption_password_must_have_numbers').'</small>';
+        echo '    </div>';
+        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">';
+        echo '        <small>'.Lang::tr('file_encryption_password_must_have_upper_and_lower_case').'</small>';
+        echo '    </div>';
+        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">';
+        echo '        <small>'.Lang::tr('file_encryption_password_must_have_special_characters').'</small>';
+        echo '    </div>';
+        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">';
+        echo '        <small>'.Lang::tr('encryption_password_container_can_have_text_only_min_password_length_message').'</small>';
+        echo '    </div>';
+        echo '    <div class="fieldcontainer" id="encryption_description_disabled_container">';
+        echo '        <small>'.Lang::tr('file_encryption_description_disabled').'</small>';
+        echo '    </div>';
+        echo '</div>';
+    }
+
     echo '</div>';
 };
-
-
-if( $encryption_mandatory ) {
-    $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
-    $encryption_checkbox_classes = '';
-}
 
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
@@ -428,7 +475,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="fs-collapse">
+                                        <div class="fs-collapse mt-4">
                                             <button type="button" class="fs-button fs-collapse__open">
                                                 <span>{tr:settings}</span>
                                                 <i class="fi fi-chevron-down"></i>
@@ -438,62 +485,6 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <i class="fi fi-chevron-up"></i>
                                             </button>
                                             <div class="fs-collapse__content">
-                                                <?php if(Config::get('encryption_enabled')) {  ?>
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <label class="fs-checkbox" data-related-to="encryption">
-                                                                <label for="encryption">
-                                                                    {tr:encrypt_files_with_password}
-                                                                </label>
-                                                                <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
-                                                                <span class="fs-checkbox__mark"></span>
-                                                            </label>
-
-                                                            <div id="encgroup1" class="fs-transfer__password">
-                                                                <div class="fs-transfer__password-top" id="encryption_password_container">
-                                                                    <div class="fs-input-group">
-                                                                        <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
-                                                                    </div>
-                                                                    <div class="fs-transfer__generate-password">
-                                                                        <span>{tr:or} &nbsp;</span>
-                                                                        <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="fieldcontainer" id="encryption_password_show_container">
-                                                                    <label class="fs-checkbox">
-                                                                        <label for="encryption_show_password">{tr:file_encryption_show_password}</label>
-                                                                        <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >
-                                                                        <span class="fs-checkbox__mark"></span>
-                                                                    </label>
-                                                                </div>
-
-                                                                <div class="fs-transfer__password-bottom">
-                                                                    <small>{tr:password_share_tip}</small>
-                                                                </div>
-
-                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">
-                                                                    <small>{tr:file_encryption_password_too_short}</small>
-                                                                </div>
-                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">
-                                                                    <small>{tr:file_encryption_password_must_have_numbers}</small>
-                                                                </div>
-                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">
-                                                                    <small>{tr:file_encryption_password_must_have_upper_and_lower_case}</small>
-                                                                </div>
-                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">
-                                                                    <small>{tr:file_encryption_password_must_have_special_characters}</small>
-                                                                </div>
-                                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">
-                                                                    <small>{tr:encryption_password_container_can_have_text_only_min_password_length_message}</small>
-                                                                </div>
-                                                                <div class="fieldcontainer" id="encryption_description_disabled_container">
-                                                                    <small>{tr:file_encryption_description_disabled}</small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
-
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="fs-select expires-select-by-days">
@@ -534,8 +525,6 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                     echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
                                                     echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
                                                     echo '</div>';
-
-
                                                 }
                                                 ?>
 
