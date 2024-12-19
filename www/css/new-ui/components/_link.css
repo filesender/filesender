@@ -71,7 +71,7 @@ a-visible {
     width: var(--fs-spacing-5x);
     border-radius: 100%;
     color: var(--fs-accent) !important;
-    background: var(--fs-hightlight-bg) !important;
+    background: var(--fs-accent) !important;
 }
 
 .fs-link--disabled {
