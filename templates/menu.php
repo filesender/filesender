@@ -18,7 +18,6 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
         <nav>
                 <a class="fs-link fs-link--no-hover" href="<?php echo GUI::path() ?>">
                     <?php GUI::includeLogo() ?>
-                    <h2>FileSender</h2>
                 </a>
                 <ul>
                     <?php

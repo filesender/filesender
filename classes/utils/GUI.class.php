@@ -230,6 +230,7 @@ class GUI
         $locations = self::filterSources(array(
             'images/logo.png',
             'images/filesender-symbol.svg',
+            'images/filesender-logo.svg',
             'skin/logo.png',
             Config::get('site_logo')
         ));
