@@ -5,7 +5,6 @@
     align-items: center;
     text-decoration: none;
     font-size: 1.6rem;
-    border-radius: var(--fs-spacing-3x);
     color: var(--fs-link-color);
     background: transparent;
     border: none;
