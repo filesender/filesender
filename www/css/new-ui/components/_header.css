@@ -72,6 +72,16 @@ header nav > .fs-link img + * {
   margin-left: var(--fs-spacing-base);
 }
 
+body[data-theme='dark'] {
+
+  header {
+
+    #logo {
+      filter: brightness(0) saturate(100%) invert(100%) sepia(80%) saturate(1%) hue-rotate(117deg) brightness(108%) contrast(101%);
+    }
+  }
+}
+
 /* XS */
 @media (max-width: 575px) {
 
