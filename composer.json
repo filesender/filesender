@@ -11,5 +11,14 @@
         "allow-plugins": {
             "sauce/sausage-installer": true
         }
-    }
+    },
+    "require-dev": {
+        "codeception/codeception": "^5.1",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-asserts": "*",
+        "codeception/module-webdriver": "^3.2"
+    },
+    "autoload-dev": {
+        "classmap": ["unittests/codeception/_support/FileSenderTrait.php"]
+    }    
 }
