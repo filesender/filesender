@@ -70,6 +70,11 @@ class Auth
     private static $isAdmin = null;
 
     /**
+     * Tenant Admin status of the current user.
+     */
+    private static $isTenantAdmin = null;
+
+    /**
      * If current user is authorized to view aggregate statistics.
      */
     private static $canViewAggregateStats = null;
@@ -451,6 +456,30 @@ class Auth
     }
 
     /**
+     * Tells if the current user is a tenant admin.
+     *
+     * @retrun bool
+     */
+    public static function isTenantAdmin()
+    {
+        if (is_null(self::$isTenantAdmin)) {
+            self::$isTenantAdmin = false;
+
+            if (self::user()) {
+                $tenant_admin = Config::get('tenant_admin');
+                // Tenant Admin UID from config file only
+                if (!is_array($tenant_admin)) {
+                    $tenant_admin = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$tenant_admin)));
+                }
+
+                self::$isTenantAdmin = in_array(self::user()->saml_user_identification_uid, $tenant_admin);
+            }
+        }
+
+        return self::$isTenantAdmin && !self::isGuest();
+    }
+
+    /**
      * Current user is not an admin, not remote, not guest.
      */
     public static function isRegularUser()
@@ -471,8 +500,8 @@ class Auth
     public static function canViewStatistics()
     {
         if (is_null(self::$canViewStats)) {
-            self::$canViewStats = self::isPrivilegeAllowed( 'can_view_statistics' )
-                               && !self::isGuest();
+            self::$canViewStats = (self::isPrivilegeAllowed( 'can_view_statistics' ) || self::isAdmin() || self::isTenantAdmin())
+                                   && !self::isGuest();
         }
 
         return self::$canViewStats;
