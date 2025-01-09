@@ -1,9 +1,11 @@
 <?php
-      include_once "pagemenuitem.php"
+include_once "pagemenuitem.php"
+$idp = Auth::getTenantAdminIDP();
+
 ?>
 
 <div class="core">
-<h2>{tr:admin_statistics_section}</h2>
+<h2>{tr:admin_statistics_section}<?php if ($idp !=== false) echo '('.$idp.')' ?></h2>
 
 <?php
 if (AggregateStatistic::enabled()) {

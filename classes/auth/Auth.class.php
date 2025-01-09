@@ -480,6 +480,16 @@ class Auth
     }
 
     /**
+     * Get tenant of Tenant Admin
+     */
+    public static function getTenantAdminIDP()
+    {
+        if (!self::isTenantAdmin())
+            return false;
+        return self::user()->saml_user_identification_idp;
+    }
+
+    /**
      * Current user is not an admin, not remote, not guest.
      */
     public static function isRegularUser()
