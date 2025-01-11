@@ -1,11 +1,11 @@
 {
     "require": {
-        "sauce/sausage": ">=0.15.2",
-        "appium/php-client": "@dev",
+        "ramsey/uuid": "^4.7"
+    },
+    "require-dev": {
         "phpunit/phpunit-selenium": "^9.0.1",
         "squizlabs/php_codesniffer": "3.*",
-        "friendsofphp/php-cs-fixer": "^3.49.0",
-        "ramsey/uuid": "^4.7"
+        "friendsofphp/php-cs-fixer": "^3.49.0"
     },
     "config": {
         "allow-plugins": {
