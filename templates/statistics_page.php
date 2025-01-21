@@ -2,9 +2,11 @@
 include_once "pagemenuitem.php";
 $idp = Auth::getTenantAdminIDP();
 ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
 
-<div class="core">
-<h2>{tr:admin_statistics_section}<?php if ($idp !== false) { echo ' ('.$idp.')'; } ?></h2>
+<h1>{tr:admin_statistics_section}<?php if ($idp !== false) { echo ' ('.$idp.')'; } ?></h1>
 
 <?php
 if (AggregateStatistic::enabled()) {
@@ -13,7 +15,7 @@ if (AggregateStatistic::enabled()) {
     echo "<br/>";
 }
 ?>
-    
+
 <h3>{tr:global_statistics}</h3>
 
 <table class="table global_statistics">
@@ -64,14 +66,13 @@ if(Config::get('show_storage_statistics_in_admin')) {
     $global_warning = false;
     if($level) {
         if($free_space <= $level * $total_space / 100) $global_warning = true;
-        
+
         foreach($storage_usage as $block => $info) {
             if($info['free_space'] > $level * $info['total_space'] / 100) continue;
             $block_warnings[] = $block;
         }
     }
 ?>
-
 
 <h3>{tr:storage_usage}</h3>
 
@@ -91,10 +92,17 @@ if ($idp===false) {
 }
 ?>
 </table>
+            </div>
+        </div>
+    </div>
 
 <?php
 if ($idp===false) {
 ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
 <table class="table storage_usage_blocks">
     <thead>
         <tr>
@@ -105,7 +113,7 @@ if ($idp===false) {
             <th>{tr:storage_available}</th>
         </tr>
     </thead>
-    
+
     <tbody>
     <?php foreach($storage_usage as $block => $info) { ?>
         <tr class="<?php echo in_array($block, $block_warnings) ? 'warning' : '' ?>">
@@ -118,6 +126,9 @@ if ($idp===false) {
     <?php } ?>
     </tbody>
 </table>
+            </div>
+        </div>
+    </div>
 <?php
     }
 }
@@ -125,9 +136,13 @@ if ($idp===false) {
 ?>
 
 <?php
-
 if ($idp===false) {
+?>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
 
+<?php
 function os_name_to_html( $v )
 {
     if( $v == 'iPad'   )  return '<i class="fa fa-apple"></i> iPad';
@@ -168,7 +183,7 @@ $createdTS = DBLayer::timeStampToEpoch('created');
 $createdDD = DBLayer::datediff('NOW()','MIN(created)');
 
 $sql=<<<EOF
-SELECT 
+SELECT
     MAX(additional_attributes) as "additional_attributes",
     AVG(CASE WHEN time_taken > 0 THEN size/time_taken ELSE 0 END) as speed,
     AVG(CASE WHEN time_taken > 0 AND size>1073741824 THEN size/time_taken ELSE NULL END) as gspeed,
@@ -217,7 +232,7 @@ foreach($result as $row) {
         echo '<td>';
         if ($row['additional_attributes'] === '{"encryption":true}')  {
             echo is_encrypted_to_html(1);
-        } 
+        }
         elseif ($row['additional_attributes'] === '{"encryption":false}') {
             echo is_encrypted_to_html(0);
         } else {
@@ -238,11 +253,11 @@ foreach($result as $row) {
     echo '<td>'.$row['count'].'</td>';
     echo '<td>'.round($row['countperday']).'</td>';
     echo '</tr>';
-    
+
     //echo '<tr><td colspan="11">'.nl2br(str_replace(' ','&nbsp;',json_encode($a,JSON_PRETTY_PRINT))).'</td></tr>';
     $transfered+=$row['transfered'];
     $transfers+=$row['count'];
-    $firstTransfer=min($firstTransfer,$row['firsttransfer']);    
+    $firstTransfer=min($firstTransfer,$row['firsttransfer']);
 }
 echo '</table>';
 echo '<h3>Per Day</h3>';
@@ -253,10 +268,13 @@ echo '<td>'.Utilities::formatBytes($transfered).'</td><td>('.Utilities::formatBy
 echo '<tr><td>File Transfers</td>';
 echo '<td>'.number_format($transfers).'</td><td>('.number_format($transfers/$days,1).' per day)</td></tr>';
 echo '</table>';
-
+?>
+            </div>
+        </div>
+    </div>
+<?php
 }
 ?>
 
 
 <script type="text/javascript" src="{path:js/admin_statistics.js}"></script>
-</div>
