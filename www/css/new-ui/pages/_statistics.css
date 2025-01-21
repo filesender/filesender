@@ -1,0 +1,6 @@
+table.table.global_statistics,
+table.table.storage_usage,
+table.table.storage_usage_blocks,
+table.table.per_day {
+    width:auto;
+}

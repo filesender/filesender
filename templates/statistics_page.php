@@ -17,13 +17,24 @@ if (AggregateStatistic::enabled()) {
 <h3>{tr:global_statistics}</h3>
 
 <table class="table global_statistics">
-    <tr><th>{tr:user_count_estimate}</th><td><?php echo User::countEstimate() ?></td></tr>
-    <tr><th>{tr:available_transfers}</th><td><?php echo count(Transfer::all(Transfer::AVAILABLE)) ?></td></tr>
-    <tr><th>{tr:uploading_transfers}</th><td><?php echo count(Transfer::all(Transfer::UPLOADING)) ?></td></tr>
-    
-    <?php $creations = StatLog::getEventCount(LogEventTypes::TRANSFER_AVAILABLE); if(!is_null($creations)) { ?>
+    <tr><th>{tr:user_count_estimate}</th><td><?php echo User::users($idp) ?></td></tr>
+    <tr><th>{tr:recipient_count_estimate}</th><td><?php echo Recipient::getRecipients($idp) ?></td></tr>
+    <tr><th>{tr:guest_count_estimate}</th><td><?php echo Guest::getGuests($idp) ?></td></tr>
+    <tr><th>{tr:user_aup_count_estimate}</th><td><?php echo User::usersSignedAUP($idp) ?></td></tr>
+    <tr><th>{tr:user_apikey_count_estimate}</th><td><?php echo User::usersWithAPIKey($idp) ?></td></tr>
+    <tr><th>{tr:uploading_transfers}</th><td><?php echo count(Transfer::allUploading($idp)) ?></td></tr>
+    <tr><th>{tr:available_transfers}</th><td><?php echo count(Transfer::allAvailable($idp)) ?></td></tr>
+<?php
+if ($idp===false) {
+    $creations = StatLog::getEventCount(LogEventTypes::TRANSFER_AVAILABLE);
+    if (!is_null($creations)) {
+?>
     <tr><th>{tr:created_transfers}</th><td><?php echo Lang::tr('count_from_date_to_date')->r($creations) ?></td></tr>
-    <?php } ?>
+<?php
+    }
+}
+?>
+    <tr><th>{tr:expired_transfers}</th><td><?php echo count(Transfer::allExpired($idp)) ?></td></tr>
 </table>
 
 <?php
@@ -65,11 +76,25 @@ if(Config::get('show_storage_statistics_in_admin')) {
 <h3>{tr:storage_usage}</h3>
 
 <table class="table storage_usage <?php echo $global_warning ? 'warning' : '' ?>">
+<?php
+if ($idp===false) {
+?>
     <tr data-metric="total"><th>{tr:storage_total}</th><td><?php echo Utilities::formatBytes($total_space) ?></td></tr>
     <tr data-metric="used"><th>{tr:storage_used}</th><td><?php echo Utilities::formatBytes($total_space - $free_space).' ('.sprintf('%.1d', 100 * ($total_space - $free_space) / $total_space).'%)' ?></td></tr>
     <tr data-metric="available"><th>{tr:storage_available}</th><td><?php echo Utilities::formatBytes($free_space).' ('.sprintf('%.1d', 100 * $free_space / $total_space).'%)' ?></td></tr>
+<?php
+} else {
+    $usage = Transfer::getUsage($idp);
+?>
+    <tr data-metric="used"><th>{tr:storage_used}</th><td><?php echo Utilities::formatBytes($usage['idpused']) ?></td></tr>
+<?php
+}
+?>
 </table>
 
+<?php
+if ($idp===false) {
+?>
 <table class="table storage_usage_blocks">
     <thead>
         <tr>
@@ -96,10 +121,12 @@ if(Config::get('show_storage_statistics_in_admin')) {
 <?php
     }
 }
+}
 ?>
 
-
 <?php
+
+if ($idp===false) {
 
 function os_name_to_html( $v )
 {
@@ -136,7 +163,6 @@ function is_encrypted_to_html( $v )
         return '<i class="fa fa-lock"></i>';
     return '<i class="fa fa-unlock"></i>';
 }
- 
 
 $createdTS = DBLayer::timeStampToEpoch('created');
 $createdDD = DBLayer::datediff('NOW()','MIN(created)');
@@ -168,9 +194,8 @@ $transfered=0;
 $transfers=0;
 $now=time();
 $firstTransfer=$now;
-echo '<br><br>';
 echo '<h3>Browser Stats</h3>';
-echo '<table class="table storage_usage_blocks">';
+echo '<table class="table browser_stats">';
 echo '<thead class="thead-light"><tr><th>Browser</th><th>OS</th><th>Encrypted</th><th>Average Speed</th><th>Average Speed of &gt;1GB</th><th>Min Size</th><th>Average Size</th><th>Max Size</th><th>Transfered</th><th>File Transfers</th><th>Average Transfers per Day</th></tr></thead>';
 foreach($result as $row) {
     echo '<tr>';
@@ -220,14 +245,16 @@ foreach($result as $row) {
     $firstTransfer=min($firstTransfer,$row['firsttransfer']);    
 }
 echo '</table>';
-echo '<br><br>';
+echo '<h3>Per Day</h3>';
 $days=($now-$firstTransfer)/86400;
-echo '<table>';
+echo '<table class="table per_day">';
 echo '<tr><td>Transfered</td>';
 echo '<td>'.Utilities::formatBytes($transfered).'</td><td>('.Utilities::formatBytes($transfered/$days).'/day)</td></tr>';
 echo '<tr><td>File Transfers</td>';
 echo '<td>'.number_format($transfers).'</td><td>('.number_format($transfers/$days,1).' per day)</td></tr>';
 echo '</table>';
+
+}
 ?>
 
 

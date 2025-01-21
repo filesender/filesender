@@ -916,4 +916,58 @@ class User extends DBObject
         return $ret;
     }
 
+    /*
+     * Count how many users we have or a tenant has
+     */
+    public static function users($idp=false)
+    {
+        if ($idp===false)
+            return self::countEstimate();
+        $statement = DBI::prepare('SELECT COUNT(*) as userscount FROM '.call_user_func('Authentication::getDBTable').' WHERE saml_user_identification_idp = :idp');
+        $statement->execute(array(':idp' => $idp));
+        $data = $statement->fetch();
+        return $data['userscount'];
+    }
+
+    /*
+     * Count how many signed AUPs we have or a tenant has
+     */
+    public static function usersSignedAUP($idp=false)
+    {
+        if ($idp===false) {
+            $sql='SELECT COUNT(service_aup_accepted_version) as aupcount FROM '.self::getDBTable().' WHERE UserPreferences.service_aup_accepted_version >= :aup';
+            $statement = DBI::prepare($sql);
+            $statement->execute(array(':aup' => Config::get('service_aup_min_required_version')));
+            $data = $statement->fetch();
+            return $data['aupcount'];
+        }
+        
+        $sql='SELECT COUNT(service_aup_accepted_version) as aupcount FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.authid = '.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::getDBTable().'.service_aup_accepted_version >= :aup';
+
+        $statement = DBI::prepare($sql);
+        $statement->execute(array(':idp' => $idp, ':aup' => Config::get('service_aup_min_required_version')));
+        $data = $statement->fetch();
+        return $data['aupcount'];
+    }
+
+    /*
+     * Count how many API Keys we have or a tenant has
+     */
+    public static function usersWithAPIKey($idp=false)
+    {
+        if ($idp===false) {
+            $sql='SELECT COUNT(auth_secret) as apicount FROM '.self::getDBTable().' WHERE auth_secret IS NOT NULL';
+            $statement = DBI::prepare($sql);
+            $statement->execute();
+            $data = $statement->fetch();
+            return $data['apicount'];
+        }
+
+        $sql='SELECT COUNT(auth_secret) as apicount FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.authid = '.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::getDBTable().'.auth_secret IS NOT NULL';
+        $statement = DBI::prepare($sql);
+        $statement->execute(array(':idp' => $idp));
+        $data = $statement->fetch();
+        return $data['apicount'];
+    }
+
 }
