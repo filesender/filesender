@@ -2,12 +2,22 @@
 include_once "pagemenuitem.php";
 $idp = Auth::getTenantAdminIDP();
 ?>
+<div class="fs-statistics">
     <div class="container">
         <div class="row">
+            <div class="col">
+                <div class="fs-statistics__title">
+                    <h1>{tr:admin_statistics_section}<?php if ($idp !== false) { echo ' ('.$idp.')'; } ?></h1>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
             <div class="col-12">
-
-<h1>{tr:admin_statistics_section}<?php if ($idp !== false) { echo ' ('.$idp.')'; } ?></h1>
-
+            </div>
+         </div>
+        <div class="row">
+            <div class="col-4">
 <?php
 if (AggregateStatistic::enabled()) {
     echo "<h3>{tr:aggregate_statistics}</h3>";
@@ -92,6 +102,22 @@ if ($idp===false) {
 }
 ?>
 </table>
+            </div>
+            <div class="col-4">
+                <div class="row graph">
+                    <canvas id="graph_transfers_vouchers" height="200"></canvas>
+                </div>
+                <div class="row graph">
+                    <canvas id="graph_transfers_speeds" height="200"></canvas>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row graph">
+                    <canvas id="graph_data_per_day" height="200"></canvas>
+                </div>
+                <div class="row graph">
+                    <canvas id="graph_encryption_split" height="200"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -272,9 +298,9 @@ echo '</table>';
             </div>
         </div>
     </div>
+</div>
 <?php
 }
 ?>
-
-
+<script type="text/javascript" src="{path:lib/chart.js/chart.min.js}"></script>
 <script type="text/javascript" src="{path:js/admin_statistics.js}"></script>

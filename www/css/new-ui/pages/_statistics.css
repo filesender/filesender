@@ -1,6 +1,9 @@
-table.table.global_statistics,
-table.table.storage_usage,
-table.table.storage_usage_blocks,
-table.table.per_day {
-    width:auto;
+.fs-statistics {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-istatistics__title {
+    text-align: center;
 }

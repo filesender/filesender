@@ -74,3 +74,29 @@ $(function() {
     
     q.remove();
 });
+
+$.ajax({
+    url: "js/graph/statistics_transfers_vouchers_graph.php"
+}).done(function(json) {
+    var graph = new Chart($("#graph_transfers_vouchers"),$.parseJSON(json));
+});
+
+$.ajax({
+    url: "js/graph/statistics_transfers_speeds_graph.php"
+}).done(function(json) {
+    var graph = new Chart($("#graph_transfers_speeds"),$.parseJSON(json));
+});
+
+$.ajax({
+    url: "js/graph/statistics_data_per_day_graph.php"
+}).done(function(json) {
+    var graph = new Chart($("#graph_data_per_day"),$.parseJSON(json));
+});
+
+$.ajax({
+    url: "js/graph/statistics_encryption_split_graph.php"
+}).done(function(json) {
+    var graph = new Chart($("#graph_encryption_split"),$.parseJSON(json));
+});
+
+$(".graph").delay(1500).animate({height:400}, 1000, "easeOutSine");
