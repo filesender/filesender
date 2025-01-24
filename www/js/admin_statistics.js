@@ -30,16 +30,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-$(function() {
+function quotabars() {
     var q = $('#page.admin_page .statistics_section .host_quota');
     if(!q.length) return;
-    
+
     var quota = {
         total: parseInt(q.attr('data-total')),
         used: parseInt(q.attr('data-used')),
         available: parseInt(q.attr('data-available'))
     };
-    
+
     var bar = $('<div class="progressbar quota" />').insertAfter(q);
     $('<div class="progress-label" />').appendTo(bar);
     bar.progressbar({
@@ -48,16 +48,16 @@ $(function() {
         change: function() {
             var bar = $(this);
             var v = bar.progressbar('value');
-            
+
             var classes = [];
-            
+
             var pct = parseInt(v / 10);
-            
+
             var tens = parseInt(pct / 10);
             if(tens) classes.push('quota_' + tens + '0');
-            
+
             if(pct % 10 >= 5) classes.push('quota_plus_5');
-            
+
             bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
             bar.addClass(classes.join(' '));
         },
@@ -66,37 +66,46 @@ $(function() {
             bar.find('.progress-label').text(lang.tr('full'));
         }
     });
-    
+
     bar.progressbar('value', Math.floor(1000 * quota.used / quota.total));
-    
+
     var info = lang.tr('quota_usage').r(quota);
     bar.find('.progress-label').text(info);
-    
+
     q.remove();
-});
+}
 
-$.ajax({
-    url: "js/graph/statistics_transfers_vouchers_graph.php"
-}).done(function(json) {
-    var graph = new Chart($("#graph_transfers_vouchers"),$.parseJSON(json));
-});
+$(function() {
+    quotabars();
 
-$.ajax({
-    url: "js/graph/statistics_transfers_speeds_graph.php"
-}).done(function(json) {
-    var graph = new Chart($("#graph_transfers_speeds"),$.parseJSON(json));
-});
+    $("#idpbutton").click(function(){
+        $(location).prop('href', '?s=statistics&idp='+$("#idpselect").val());
+    });
 
-$.ajax({
-    url: "js/graph/statistics_data_per_day_graph.php"
-}).done(function(json) {
-    var graph = new Chart($("#graph_data_per_day"),$.parseJSON(json));
-});
+    $.ajax({
+        url: "js/graph/statistics_transfers_vouchers_graph.php"
+    }).done(function(json) {
+        var graph = new Chart($("#graph_transfers_vouchers"),$.parseJSON(json));
+    });
 
-$.ajax({
-    url: "js/graph/statistics_encryption_split_graph.php"
-}).done(function(json) {
-    var graph = new Chart($("#graph_encryption_split"),$.parseJSON(json));
-});
+    $.ajax({
+        url: "js/graph/statistics_transfers_speeds_graph.php"
+    }).done(function(json) {
+        var graph = new Chart($("#graph_transfers_speeds"),$.parseJSON(json));
+    });
 
-$(".graph").delay(1500).animate({height:400}, 1000, "easeOutSine");
+    $.ajax({
+        url: "js/graph/statistics_data_per_day_graph.php"
+    }).done(function(json) {
+        var graph = new Chart($("#graph_data_per_day"),$.parseJSON(json));
+    });
+
+    $.ajax({
+        url: "js/graph/statistics_encryption_split_graph.php"
+    }).done(function(json) {
+        var graph = new Chart($("#graph_encryption_split"),$.parseJSON(json));
+    });
+
+    $(".graph").delay(1500).animate({height:400}, 1000, "easeOutSine")
+
+});

@@ -23,6 +23,25 @@ if (AggregateStatistic::enabled() && GUI::isUserAllowedToAccessPage('aggregate_s
     echo "<h3>{tr:aggregate_statistics}</h3>";
     pagelink('aggregate_statistics');
     echo "<br/>";
+if (Auth::isAdmin()) {
+?>
+    <h3>IDP:
+    <select id="idpselect">
+        <option value="all">All</option>
+<?php
+$sql='SELECT DISTINCT saml_user_identification_idp FROM '.call_user_func('Authentication::getDBTable').' WHERE saml_user_identification_idp IS NOT NULL ORDER BY saml_user_identification_idp';
+$statement = DBI::prepare($sql);
+$statement->execute(array());
+$result = $statement->fetchAll();
+foreach($result as $row) {
+    echo '        <option value="'.$row['saml_user_identification_idp'].'"'.($idp==$row['saml_user_identification_idp']?' selected':'').'>'.$row['saml_user_identification_idp'].'</option>'."\n";
+}
+?>
+    </select>
+    <button id="idpbutton">Go</button>
+    </h3>
+    <br/>
+<?php
 }
 ?>
 

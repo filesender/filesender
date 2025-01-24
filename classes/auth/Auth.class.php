@@ -484,6 +484,11 @@ class Auth
      */
     public static function getTenantAdminIDP()
     {
+        // Admins can pretend to be tenant admins (like in the statistics page)
+        if (self::isAdmin() && array_key_exists('idp', $_GET))
+            if ($_GET['idp']!='all')
+                return $_GET['idp'];
+
         if (!self::isTenantAdmin())
             return false;
         return self::user()->saml_user_identification_idp;
