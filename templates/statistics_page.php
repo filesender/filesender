@@ -23,6 +23,7 @@ if (AggregateStatistic::enabled() && GUI::isUserAllowedToAccessPage('aggregate_s
     echo "<h3>{tr:aggregate_statistics}</h3>";
     pagelink('aggregate_statistics');
     echo "<br/>";
+}
 if (Auth::isAdmin()) {
 ?>
     <h3>IDP:
