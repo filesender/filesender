@@ -106,6 +106,6 @@ $(function() {
         var graph = new Chart($("#graph_encryption_split"),$.parseJSON(json));
     });
 
-    $(".graph").delay(1500).animate({height:400}, 1000, "easeOutSine")
+    $(".graph").delay(800).animate({height:400}, 1000, "easeOutSine")
 
 });
