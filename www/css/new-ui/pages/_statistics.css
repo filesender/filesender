@@ -7,3 +7,12 @@
 .fs-istatistics__title {
     text-align: center;
 }
+
+i.fa {
+    color: var(--fs-accent);
+    cursor: pointer;
+}
+
+i.fa-inverse {
+    color: #fff;
+}

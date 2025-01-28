@@ -75,6 +75,40 @@ function quotabars() {
     q.remove();
 }
 
+function graph(g) {
+    if (!$("#graph_"+g).length) return;
+    $.ajax({
+        url: "js/graph/statistics_"+g+"_graph.php"
+    }).done(function(json) {
+        var graph = new Chart($("#graph_"+g),$.parseJSON(json));
+    });
+}
+
+function table(t,start=0) {
+    if (!$("#"+t).length) return;
+    $.ajax({
+        url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start
+    }).done(function(rows) {
+        $("#"+t).html(rows);
+
+        $("#nav_"+t).remove();
+        $("#"+t).after('<div id="nav_'+t+'"></div>');
+        var trs=$("#"+t+" tr");
+        if (parseInt(trs[1].attributes['data-row'].value)>0) {
+            $("#nav_"+t).append('<span id="nav_'+t+'_back" class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span>');
+            $("#nav_"+t+"_back").click(function(){
+                table(t,2*parseInt(trs[1].attributes['data-row'].value)-parseInt(trs[trs.length-1].attributes['data-row'].value)-1);
+            });
+        }
+        if (!trs[trs.length-1].attributes['data-row-blank']) {
+            $("#nav_"+t).append('<span id="nav_'+t+'_forward" class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span>');
+            $("#nav_"+t+"_forward").click(function(){
+                table(t,parseInt(trs[trs.length-1].attributes['data-row'].value)+1);
+            });
+        }
+    });
+}
+
 $(function() {
     quotabars();
 
@@ -82,30 +116,13 @@ $(function() {
         $(location).prop('href', '?s=statistics&idp='+$("#idpselect").val());
     });
 
-    $.ajax({
-        url: "js/graph/statistics_transfers_vouchers_graph.php"
-    }).done(function(json) {
-        var graph = new Chart($("#graph_transfers_vouchers"),$.parseJSON(json));
-    });
-
-    $.ajax({
-        url: "js/graph/statistics_transfers_speeds_graph.php"
-    }).done(function(json) {
-        var graph = new Chart($("#graph_transfers_speeds"),$.parseJSON(json));
-    });
-
-    $.ajax({
-        url: "js/graph/statistics_data_per_day_graph.php"
-    }).done(function(json) {
-        var graph = new Chart($("#graph_data_per_day"),$.parseJSON(json));
-    });
-
-    $.ajax({
-        url: "js/graph/statistics_encryption_split_graph.php"
-    }).done(function(json) {
-        var graph = new Chart($("#graph_encryption_split"),$.parseJSON(json));
-    });
-
+    graph("transfers_vouchers");
+    graph("transfers_speeds");
+    graph("data_per_day");
+    graph("encryption_split");
     $(".graph").delay(800).animate({height:400}, 1000, "easeOutSine")
 
+    table("top_users");
+    table("transfer_per_user");
+    table("users_with_api_keys");
 });
