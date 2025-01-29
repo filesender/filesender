@@ -90,9 +90,8 @@ function table(t,start=0) {
         url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start
     }).done(function(rows) {
         $("#"+t).html(rows);
-
         $("#nav_"+t).remove();
-        $("#"+t).after('<div id="nav_'+t+'"></div>');
+        $("#"+t).after('<div id="nav_'+t+'" class="table-nav"></div>');
         var trs=$("#"+t+" tr");
         if (parseInt(trs[1].attributes['data-row'].value)>0) {
             $("#nav_"+t).append('<span id="nav_'+t+'_back" class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span>');
