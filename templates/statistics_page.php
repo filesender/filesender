@@ -324,15 +324,22 @@ echo '</table>';
     <br><br>
     <div class="container">
         <div class="row">
-            <div class="col-4">
+            <div class="col-6">
                 <h3>{tr:top_users}</h3>
                 <table id="top_users" class="fs-table fs-table--thin"></table>
             </div>
-            <div class="col-4">
+            <div class="col-6">
                 <h3>{tr:top_users_include_expired}</h3>
                 <table id="transfer_per_user" class="fs-table fs-table--thin"></table>
             </div>
-            <div class="col-4">
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-6">
+                <h3>{tr:mime_types}</h3>
+                <table id="mime_types" class="fs-table fs-table--thin"></table>
+            </div>
+            <div class="col-6">
                 <h3>{tr:users_with_api_keys}</h3>
                 <table id="users_with_api_keys" class="fs-table fs-table--thin"></table>
             </div>

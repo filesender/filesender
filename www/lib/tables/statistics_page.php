@@ -16,12 +16,13 @@ $start = array_key_exists('start', $_GET) ? $_GET['start'] : 0;
 
 switch ($_GET['t']) {
     case 'top_users':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th></tr>'."\n";
+        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  '.call_user_func('Transfer::getDBTable').'.user_email as "User", '
            .'  COUNT(DISTINCT '.call_user_func('Transfer::getDBTable').'.id) AS "Transfers", '
-           .'  SUM(IF('.call_user_func('Transfer::getDBTable').'.options LIKE \'%\\"encryption\\":true%\','.call_user_func('File::getDBTable').'.encrypted_size,'.call_user_func('File::getDBTable').'.size)) AS "Size" '
+           .'  SUM(IF('.call_user_func('Transfer::getDBTable').'.options LIKE \'%\\"encryption\\":true%\','.call_user_func('File::getDBTable').'.encrypted_size,'.call_user_func('File::getDBTable').'.size)) AS "Size", '
+           .'  SUM('.call_user_func('Transfer::getDBTable').'.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' JOIN '.call_user_func('File::getDBTable').' ON '.call_user_func('File::getDBTable').'.transfer_id='.call_user_func('Transfer::getDBTable').'.id '
            .(($idp===false) ?
@@ -52,21 +53,22 @@ switch ($_GET['t']) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Transfers'].'</td><td>'.Utilities::formatBytes($row['Size']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Transfers'].'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.$row['Downloads'].'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
-            echo '<tr data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td></tr>'."\n";
+            echo '<tr data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td><td></td></tr>'."\n";
         }
         break;
 
     case 'transfer_per_user':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th></tr>'."\n";
+        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  '.call_user_func('Transfer::getDBTable').'.user_email as "User", '
            .'  COUNT(DISTINCT '.call_user_func('Transfer::getDBTable').'.id) AS "Transfers", '
-           .'  SUM(IF('.call_user_func('Transfer::getDBTable').'.options LIKE \'%\\"encryption\\":true%\','.call_user_func('File::getDBTable').'.encrypted_size,'.call_user_func('File::getDBTable').'.size)) AS "Size" '
+           .'  SUM(IF('.call_user_func('Transfer::getDBTable').'.options LIKE \'%\\"encryption\\":true%\','.call_user_func('File::getDBTable').'.encrypted_size,'.call_user_func('File::getDBTable').'.size)) AS "Size", '
+           .'  SUM('.call_user_func('Transfer::getDBTable').'.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' JOIN '.call_user_func('File::getDBTable').' ON '.call_user_func('File::getDBTable').'.transfer_id='.call_user_func('Transfer::getDBTable').'.id '
            .(($idp===false) ?
@@ -96,11 +98,48 @@ switch ($_GET['t']) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Transfers'].'</td><td>'.Utilities::formatBytes($row['Size']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Transfers'].'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.$row['Downloads'].'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
-            echo '<tr data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td></tr>'."\n";
+            echo '<tr data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td><td></td></tr>'."\n";
+        }
+        break;
+
+    case 'mime_types':
+        echo '<tr><th>'.Lang::translate('mime_types').'</th><th></th></tr>'."\n";
+        $sql=
+            'SELECT '
+           .'  mime_type as "Mime Type", count(*) as Total '
+           .'FROM '
+           .'  filesbywhoview LEFT JOIN '.call_user_func('Authentication::getDBTable').' on filesbywhoview.userid='.call_user_func('Authentication::getDBTable').'.id '
+           .'WHERE '
+           .(($idp===false) ?
+             ''
+             :
+             call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
+           )
+           .'    ((DATE(filesbywhoview.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+           .'     (DATE(filesbywhoview.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(filesbywhoview.expires) <= NOW())) '
+           .'GROUP BY mime_type '
+           .'ORDER BY Total DESC '
+           .'LIMIT '.$start.', '.$pagelimit;
+        $placeholders=array();
+        if ($idp!==false)
+            $placeholders[':idp'] = $idp;
+
+        //error_log($sql);
+
+        $statement = DBI::prepare($sql);
+        $statement->execute($placeholders);
+        $result = $statement->fetchAll();
+        $i=$start;
+        foreach($result as $row) {
+            echo '<tr data-row="'.$i.'"><td>'.$row['Mime Type'].'</td><td>'.$row['Total'].'</td></tr>'."\n";
+            $i++;
+        }
+        for($i-=$start;$i<$pagelimit;$i++) {
+            echo '<tr data-row="'.($i+$start).'"data-row-blank="1"><td>&nbsp;</td><td></td></tr>'."\n";
         }
         break;
 
