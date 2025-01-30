@@ -8,15 +8,15 @@
     text-align: center;
 }
 
-i.fa {
+.table-nav {
+    text-align: center;
+}
+
+.table-nav i.fa {
     color: var(--fs-accent);
     cursor: pointer;
 }
 
-i.fa-inverse {
+.table-nav i.fa-inverse {
     color: #fff;
-}
-
-.table-nav {
-    text-align: center;
 }
