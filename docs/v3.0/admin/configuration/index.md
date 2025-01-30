@@ -323,6 +323,7 @@ A note about colours;
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
+* [statistics_table_rows_per_page](#statistics_table_rows_per_page)
 * [tenant_admin](#tenant_admin)
 
 ## Data Protection
@@ -3478,6 +3479,13 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __default:__ true
 * __available:__ since version 2.0
 * __comment:__ Shows a section in the administrator interface showing basic disk statistics.
+
+### statistics_table_rows_per_page
+* __description:__ Number of rows to show in statistics page
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 3.1
 
 ### tenant_admin
 * __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender tenant administrators. Accounts with these UIDs can access the Statistics page through the web UI and view stats realed to the IDP they are a teant admin of. Separate multiple entries with a comma (',').

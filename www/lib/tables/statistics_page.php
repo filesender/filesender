@@ -7,7 +7,7 @@ if (!Auth::isAdmin() && !Auth::isTenantAdmin()) {
 }
 
 $idp = Auth::getTenantAdminIDP();
-$pagelimit=10;
+$pagelimit=Config::get('statistics_table_rows_per_page'));
 
 if (!array_key_exists('t', $_GET))
     exit(0);
