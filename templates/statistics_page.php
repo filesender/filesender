@@ -1,49 +1,5 @@
 <?php
 $idp = Auth::getTenantAdminIDP();
-
-if (array_key_exists('t', $_GET)) {
-    if ($_GET['t']=='transfer_per_user') {
-?>
-        <tr><th>{tr:admin_users_section}</th><th>{tr:admin_transfers_section}</th><th>{tr:size}</th></tr>
-<?php
-        $sql=
-            'SELECT '
-           .'  '.call_user_func('Transfer::getDBTable').'.user_email as "User", '
-           .'  COUNT(DISTINCT '.call_user_func('Transfer::getDBTable').'.id) AS "Transfers", '
-           .'  SUM(IF('.call_user_func('Transfer::getDBTable').'.options LIKE \'%\\"encryption\\":true%\','.call_user_func('File::getDBTable').'.encrypted_size,'.call_user_func('File::getDBTable').'.size)) AS "Size" '
-           .'FROM '
-           .'  '.call_user_func('Transfer::getDBTable').' JOIN '.call_user_func('File::getDBTable').' ON '.call_user_func('File::getDBTable').'.transfer_id='.call_user_func('Transfer::getDBTable').'.id '
-           .(($idp===false) ?
-             ''
-             :
-             'LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.call_user_func('Transfer::getDBTable').'.userid='.call_user_func('Authentication::getDBTable').'.id '
-           )
-           .'WHERE '
-           .(($idp===false) ?
-             ''
-             :
-             call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
-           )
-           .'    ((DATE('.call_user_func('Transfer::getDBTable').'.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-           .'     (DATE('.call_user_func('Transfer::getDBTable').'.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE('.call_user_func('Transfer::getDBTable').'.expires) <= NOW())) '
-           .'GROUP BY '.call_user_func('Transfer::getDBTable').'.user_email '
-           .'ORDER BY Transfers DESC '
-           .'LIMIT 20';
-        $placeholders=array();
-        if ($idp!==false)
-            $placeholders[':idp'] = $idp;
-
-        //error_log($sql);
-
-        $statement = DBI::prepare($sql);
-        $statement->execute($placeholders);
-        $result = $statement->fetchAll();
-        foreach($result as $row) {
-            echo '<tr><td>'.$row['User'].'</td><td>'.$row['Transfers'].'</td><td>'.Utilities::formatBytes($row['Size']).'</td></tr>';
-        }
-        exit(0);
-    }
-}
 include_once "pagemenuitem.php";
 ?>
 <div class="fs-statistics">
