@@ -3459,11 +3459,16 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 		'uid' => [
 			'@mydomain.com$' => 'mydomainfile',
 			'@myotherdomain.com$|@yetanotherdomain.com$' => 'myotherdomainfile',
-		];
+		],
+		'idp' => [
+			'idp.customer2.com' => 'customer2',
+		],
+	];
 	</code></pre>
 
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
+        If the idp is 'idp.customer2.com', the config file config-customer2.php in the config subdir will be loaded.
 	
 ### show_storage_statistics_in_admin
 * __description:__ Lists used and free diskspace in admin section
