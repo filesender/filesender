@@ -32,3 +32,5 @@ scripts/testing/show-authsp-logonurl.php
 scripts/upgrade/validate.php
 vm-sync-to-local-filesenderci39.sh
 
+unittests/codeception/_output
+

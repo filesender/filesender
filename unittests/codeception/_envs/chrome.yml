@@ -1,0 +1,5 @@
+modules:
+  config:
+    - WebDriver:
+        browser: 'chrome'
+        url: 'http://localhost/filesender'
