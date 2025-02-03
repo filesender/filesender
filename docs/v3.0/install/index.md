@@ -117,6 +117,9 @@ mkdir -p /opt/filesender
 cd       /opt/filesender
 tar xzvf /tmp/filesender-3.0.tar.gz
 mv filesender-filesender-3.0  filesender
+cd filesender
+composer install --no-dev
+
 ```
 
 
@@ -163,6 +166,8 @@ git clone --depth 1 --branch master https://github.com/filesender/filesender.git
 
 cd /opt/filesender/filesender
 git checkout master
+
+composer install --no-dev
 ```
 
 You can bring down new releases to an existing git repository and then
