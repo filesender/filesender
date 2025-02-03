@@ -3488,7 +3488,7 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __available:__ since version 3.1
 
 ### tenant_admin
-* __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender tenant administrators. Accounts with these UIDs can access the Statistics page through the web UI and view stats realed to the IDP they are a teant admin of. Separate multiple entries with a comma (',').
+* __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender tenant administrators. Accounts with these UIDs can access the Statistics page through the web UI and view stats related to the IDP they are a tenant admin of. Separate multiple entries with a comma (',').
 * __mandatory:__ no
 * __type:__ string
 * __default:__ -
