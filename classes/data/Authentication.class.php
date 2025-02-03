@@ -62,7 +62,7 @@ class Authentication extends DBObject
         ),
         'saml_user_identification_idp' => array(
             'type' => 'string',
-            'size' => 200,
+            'size' => 170,
             'null' => true
         ),
         'created' => array(
