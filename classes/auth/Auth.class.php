@@ -227,7 +227,9 @@ class Auth
                 
                 // Save user additional attributes if enabled
                 if (self::isSP() && Config::get('auth_sp_save_user_additional_attributes')) {
-                    $forceSave = json_encode(self::$user->additional_attributes) !== json_encode(self::$attributes['additional']);
+                    if(!$forceSave) {
+                        $forceSave = json_encode(self::$user->additional_attributes) !== json_encode(self::$attributes['additional']);
+                    }
                     self::$user->additional_attributes = self::$attributes['additional'];
                 }
                 
