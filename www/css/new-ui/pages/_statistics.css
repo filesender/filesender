@@ -24,3 +24,7 @@
 .statistics_page .blank_row {
     display: none;
 }
+
+.statistics_page h3 {
+    padding-top: 1.2em !important;
+}

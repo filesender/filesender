@@ -22,7 +22,6 @@ include_once "pagemenuitem.php";
 if (AggregateStatistic::enabled() && GUI::isUserAllowedToAccessPage('aggregate_statistics')) {
     echo "<h3>{tr:aggregate_statistics}</h3>";
     pagelink('aggregate_statistics');
-    echo "<br/>";
 }
 if (Auth::isAdmin()) {
 ?>
@@ -41,7 +40,6 @@ foreach($result as $row) {
     </select>
     <button id="idpbutton">Go</button>
     </h3>
-    <br/>
 <?php
 }
 ?>
@@ -215,7 +213,6 @@ if ($idp===false) {
 <?php
 }
 ?>
-    <br><br>
     <div class="container">
         <div class="row">
             <div class="col-6">
@@ -227,7 +224,6 @@ if ($idp===false) {
                 <table id="transfer_per_user" class="fs-table fs-table--thin"></table>
             </div>
         </div>
-        <br><br>
         <div class="row">
             <div class="col-6">
                 <h3>{tr:mime_types}</h3>
