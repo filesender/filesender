@@ -125,4 +125,5 @@ $(function() {
     table("transfer_per_user");
     table("mime_types");
     table("users_with_api_keys");
+    table("browser_stats");
 });

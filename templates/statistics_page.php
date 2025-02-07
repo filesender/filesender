@@ -122,6 +122,27 @@ if ($idp===false) {
 }
 ?>
 </table>
+
+<h3>Per Day</h3>
+<table class="fs-table fs-table--striped per_day">
+<?php
+$sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(created) as day,SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY DATE(created)) t';
+$placeholders=array();
+if ($idp!==false) {
+    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(transfersfilesview.created) as day, SUM(transfersfilesview.filesize) as size, COUNT(transfersfilesview.id) as count FROM transfersfilesview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transfersfilesview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp GROUP BY DATE(transfersfilesview.created)) t';
+$placeholders=array();
+    $placeholders[':idp'] = $idp;
+}
+$statement = DBI::prepare($sql);
+$statement->execute($placeholders);
+$row = array_pop($statement->fetchAll());
+
+echo '<tr><td>Transfered</td>';
+echo '<td>'.Utilities::formatBytes($row['s']).'/day</td></tr>';
+echo '<tr><td>File Transfers</td>';
+echo '<td>'.number_format($row['c']).'/day</td></tr>';
+?>
+</table>
             </div>
             <div class="col-4">
                 <div class="row graph">
@@ -143,7 +164,7 @@ if ($idp===false) {
     </div>
 
 <?php
-if ($idp===false) {
+    if ($idp===false) {
 ?>
     <div class="container">
         <div class="row">
@@ -187,134 +208,7 @@ if ($idp===false) {
     <div class="container">
         <div class="row">
             <div class="col-12">
-
-<?php
-function os_name_to_html( $v )
-{
-    if( $v == 'iPad'   )  return '<i class="fa fa-apple"></i> iPad';
-    if( $v == 'iPod'   )  return '<i class="fa fa-apple"></i> iPod';
-    if( $v == 'iPhone' )  return '<i class="fa fa-apple"></i> iPhone';
-    if( $v == 'Mac' )     return '<i class="fa fa-apple"></i> Mac';
-    if( $v == 'OSX' )     return '<i class="fa fa-apple"></i> Mac OSX';
-    if( $v == 'Android' ) return '<i class="fa fa-android"></i> Android';
-    if( $v == 'Linux' )   return '<i class="fa fa-linux"></i> Linux';
-    if( $v == 'Windows 10' )      return '<i class="fa fa-windows"></i> Windows 10';
-    if( $v == 'Windows 8.1' )     return '<i class="fa fa-windows"></i> Windows 8.1';
-    if( $v == 'Windows 8.0' )     return '<i class="fa fa-windows"></i> Windows 8.0';
-    if( $v == 'Windows 7.0' )     return '<i class="fa fa-windows"></i> Windows 7.0';
-    if( $v == 'Windows (Other)' ) return '<i class="fa fa-windows"></i> Windows Other';
-    return $v;
-}
-
-function browser_name_to_html( $v )
-{
-    if( $v == 'Edge' )              return '<i class="fa fa-edge"></i> Edge';
-    if( $v == 'Internet Explorer' ) return '<i class="fa fa-internet-explorer"></i> Internet Explorer';
-    if( $v == 'Mozilla Firefox' )   return '<i class="fa fa-firefox"></i> Mozilla Firefox';
-    if( $v == 'Opera' )             return '<i class="fa fa-opera"></i> Opera';
-    if( $v == 'Google Chrome' )     return '<i class="fa fa-chrome"></i> Google Chrome';
-    if( $v == 'Apple Safari' )      return '<i class="fa fa-safari"></i> Apple Safari';
-    if( $v == 'Outlook'     )       return '<i class="fa "></i> Outlook';
-    return $v;
-}
-
-function is_encrypted_to_html( $v )
-{
-    if( $v == '1' )
-        return '<i class="fa fa-lock"></i>';
-    return '<i class="fa fa-unlock"></i>';
-}
-
-$createdTS = DBLayer::timeStampToEpoch('created');
-$createdDD = DBLayer::datediff('NOW()','MIN(created)');
-
-$sql=<<<EOF
-SELECT
-    MAX(additional_attributes) as "additional_attributes",
-    AVG(CASE WHEN time_taken > 0 THEN size/time_taken ELSE 0 END) as speed,
-    AVG(CASE WHEN time_taken > 0 AND size>1073741824 THEN size/time_taken ELSE NULL END) as gspeed,
-    AVG(size) as avgsize,
-    MIN(size) as minsize,
-    MAX(size) as maxsize,
-    SUM(size) as transfered,
-    COUNT(ID) as count,
-    MIN($createdTS) as firsttransfer,
-    (CASE WHEN $createdDD > 0 THEN COUNT(ID)/$createdDD ELSE NULL END) as countperday,
-    os_name, browser_name, is_encrypted
-FROM statlogsview
-WHERE event='file_uploaded'
-GROUP BY is_encrypted,os_name,browser_name
-ORDER BY COUNT(ID) DESC, maxsize DESC
-EOF;
-
-$statement = DBI::prepare($sql);
-$statement->execute(array());
-$result = $statement->fetchAll();
-
-$transfered=0;
-$transfers=0;
-$now=time();
-$firstTransfer=$now;
-echo '<h3>Browser Stats</h3>';
-echo '<table class="fs-table fs-table--striped browser_stats">';
-echo '<thead class="thead-light"><tr><th>Browser</th><th>OS</th><th>Encrypted</th><th>Average Speed</th><th>Average Speed of &gt;1GB</th><th>Min Size</th><th>Average Size</th><th>Max Size</th><th>Transfered</th><th>File Transfers</th><th>Average Transfers per Day</th></tr></thead>';
-foreach($result as $row) {
-    echo '<tr>';
-    if (empty($row['browser_name'])) {
-        echo '<td>';
-        if ((empty($row['browser'])))  {
-            echo 'Unknown';
-        } else {
-            echo $row['browser'];
-        }
-        echo '</td>';
-        echo '<td>';
-        if (empty($row['os']))  {
-            echo 'Unknown';
-        } else {
-            echo $row['os'];
-        }
-        echo '</td>';
-        echo '<td>';
-        if ($row['additional_attributes'] === '{"encryption":true}')  {
-            echo is_encrypted_to_html(1);
-        }
-        elseif ($row['additional_attributes'] === '{"encryption":false}') {
-            echo is_encrypted_to_html(0);
-        } else {
-            echo $row['additional_attributes'];
-        }
-        echo '</td>';
-    } else {
-        echo '<td>'.browser_name_to_html($row['browser_name']).'</td>';
-        echo '<td>'.os_name_to_html($row['os_name']).'</td>';
-        echo '<td>'.is_encrypted_to_html($row['is_encrypted']).'</td>';
-    }
-    echo '<td>'.($row['speed']>0?(Utilities::formatBytes($row['speed']).'/s'):'&nbsp;').'</td>';
-    echo '<td>'.($row['gspeed']>0?(Utilities::formatBytes($row['gspeed']).'/s'):'&nbsp;').'</td>';
-    echo '<td>'.($row['minsize']>0?Utilities::formatBytes($row['minsize']):'&nbsp;').'</td>';
-    echo '<td>'.($row['avgsize']>0?Utilities::formatBytes($row['avgsize']):'&nbsp;').'</td>';
-    echo '<td>'.($row['maxsize']>0?Utilities::formatBytes($row['maxsize']):'&nbsp;').'</td>';
-    echo '<td>'.Utilities::formatBytes($row['transfered']).'</td>';
-    echo '<td>'.$row['count'].'</td>';
-    echo '<td>'.round($row['countperday']).'</td>';
-    echo '</tr>';
-
-    //echo '<tr><td colspan="11">'.nl2br(str_replace(' ','&nbsp;',json_encode($a,JSON_PRETTY_PRINT))).'</td></tr>';
-    $transfered+=$row['transfered'];
-    $transfers+=$row['count'];
-    $firstTransfer=min($firstTransfer,$row['firsttransfer']);
-}
-echo '</table>';
-echo '<h3>Per Day</h3>';
-$days=($now-$firstTransfer)/86400;
-echo '<table class="fs-table fs-table--striped per_day">';
-echo '<tr><td>Transfered</td>';
-echo '<td>'.Utilities::formatBytes($transfered).'</td><td>('.Utilities::formatBytes($transfered/$days).'/day)</td></tr>';
-echo '<tr><td>File Transfers</td>';
-echo '<td>'.number_format($transfers).'</td><td>('.number_format($transfers/$days,1).' per day)</td></tr>';
-echo '</table>';
-?>
+                <table id="browser_stats" class="fs-table fs-table--striped browser_stats"></table>
             </div>
         </div>
     </div>
