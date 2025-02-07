@@ -8,15 +8,19 @@
     text-align: center;
 }
 
-.table-nav {
+.statistics_page .table-nav {
     text-align: center;
 }
 
-.table-nav i.fa {
+.statistics_page .table-nav i.fa {
     color: var(--fs-accent);
     cursor: pointer;
 }
 
-.table-nav i.fa-inverse {
+.statistics_page .table-nav i.fa-inverse {
     color: #fff;
+}
+
+.statistics_page .blank_row {
+    display: none;
 }

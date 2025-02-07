@@ -90,7 +90,7 @@ switch ($_GET['t']) {
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
-            echo '<tr data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td><td></td></tr>'."\n";
+            echo '<tr class="blank_row" data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td><td></td></tr>'."\n";
         }
         break;
 
@@ -135,7 +135,7 @@ switch ($_GET['t']) {
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
-            echo '<tr data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td><td></td></tr>'."\n";
+            echo '<tr class="blank_row" data-row="'.($i+$start).'" data-row-blank="1"><td>&nbsp;</td><td></td><td></td><td></td></tr>'."\n";
         }
         break;
 
@@ -172,7 +172,7 @@ switch ($_GET['t']) {
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
-            echo '<tr data-row="'.($i+$start).'"data-row-blank="1"><td>&nbsp;</td><td></td></tr>'."\n";
+            echo '<tr class="blank_row" data-row="'.($i+$start).'"data-row-blank="1"><td>&nbsp;</td><td></td></tr>'."\n";
         }
         break;
 
@@ -208,7 +208,7 @@ switch ($_GET['t']) {
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
-            echo '<tr data-row="'.($i+$start).'"data-row-blank="1"><td>&nbsp;</td><td></td></tr>'."\n";
+            echo '<tr class="blank_row" data-row="'.($i+$start).'"data-row-blank="1"><td>&nbsp;</td><td></td></tr>'."\n";
         }
         break;
 
@@ -288,7 +288,7 @@ EOF;
             //echo '<tr><td colspan="11">'.nl2br(str_replace(' ','&nbsp;',json_encode($a,JSON_PRETTY_PRINT))).'</td></tr>';
         }
         for($i-=$start;$i<$pagelimit;$i++) {
-            echo '<tr data-row="'.($i+$start).'"data-row-blank="1"><td>&nbsp;</td><td></td></tr>'."\n";
+            echo '<tr class="blank_row" data-row="'.($i+$start).'"data-row-blank="1"><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'."\n";
         }
         break;
 }
