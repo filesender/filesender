@@ -47,24 +47,25 @@ foreach($result as $row) {
 <h3>{tr:global_statistics}</h3>
 
 <table class="fs-table fs-table--striped global_statistics">
-    <tr><th>{tr:user_count_estimate}</th><td><?php echo User::users($idp) ?></td></tr>
-    <tr><th>{tr:recipient_count_estimate}</th><td><?php echo Recipient::getRecipients($idp) ?></td></tr>
-    <tr><th>{tr:guest_count_estimate}</th><td><?php echo Guest::getGuests($idp) ?></td></tr>
-    <tr><th>{tr:user_aup_count_estimate}</th><td><?php echo User::usersSignedAUP($idp) ?></td></tr>
-    <tr><th>{tr:user_apikey_count_estimate}</th><td><?php echo User::usersWithAPIKey($idp) ?></td></tr>
-    <tr><th>{tr:uploading_transfers}</th><td><?php echo count(Transfer::allUploading($idp)) ?></td></tr>
-    <tr><th>{tr:available_transfers}</th><td><?php echo count(Transfer::allAvailable($idp)) ?></td></tr>
+    <tr><th>{tr:user_count_estimate}</th><td><?php echo number_format(User::users($idp)) ?></td></tr>
+    <tr><th>{tr:recipient_count_estimate}</th><td><?php echo number_format(Recipient::getRecipients($idp)) ?></td></tr>
+    <tr><th>{tr:guest_count_estimate}</th><td><?php echo number_format(Guest::getGuests($idp)) ?></td></tr>
+    <tr><th>{tr:user_aup_count_estimate}</th><td><?php echo number_format(User::usersSignedAUP($idp)) ?></td></tr>
+    <tr><th>{tr:user_apikey_count_estimate}</th><td><?php echo number_format(User::usersWithAPIKey($idp)) ?></td></tr>
+    <tr><th>{tr:uploading_transfers}</th><td><?php echo number_format(count(Transfer::allUploading($idp))) ?></td></tr>
+    <tr><th>{tr:available_transfers}</th><td><?php echo number_format(count(Transfer::allAvailable($idp))) ?></td></tr>
 <?php
 if ($idp===false) {
     $creations = StatLog::getEventCount(LogEventTypes::TRANSFER_AVAILABLE);
     if (!is_null($creations)) {
+        $creations['count']=number_format($creations['count']);
 ?>
     <tr><th>{tr:created_transfers}</th><td><?php echo Lang::tr('count_from_date_to_date')->r($creations) ?></td></tr>
 <?php
     }
 }
 ?>
-    <tr><th>{tr:expired_transfers}</th><td><?php echo count(Transfer::allExpired($idp)) ?></td></tr>
+    <tr><th>{tr:expired_transfers}</th><td><?php echo number_format(count(Transfer::allExpired($idp))) ?></td></tr>
 </table>
 
 <?php

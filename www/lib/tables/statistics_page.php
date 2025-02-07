@@ -86,7 +86,7 @@ switch ($_GET['t']) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Transfers'].'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.$row['Downloads'].'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.number_format($row['Transfers']).'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.number_format($row['Downloads']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -131,7 +131,7 @@ switch ($_GET['t']) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Transfers'].'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.$row['Downloads'].'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.number_format($row['Transfers']).'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.number_format($row['Downloads']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -168,7 +168,7 @@ switch ($_GET['t']) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['Mime Type'].'</td><td>'.$row['Total'].'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['Mime Type'].'</td><td>'.number_format($row['Total']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -280,8 +280,8 @@ EOF;
             echo '<td>'.($row['avgsize']>0?Utilities::formatBytes($row['avgsize']):'&nbsp;').'</td>';
             echo '<td>'.($row['maxsize']>0?Utilities::formatBytes($row['maxsize']):'&nbsp;').'</td>';
             echo '<td>'.Utilities::formatBytes($row['transfered']).'</td>';
-            echo '<td>'.$row['count'].'</td>';
-            echo '<td>'.round($row['countperday']).'</td>';
+            echo '<td>'.number_format($row['count']).'</td>';
+            echo '<td>'.number_format(round($row['countperday'])).'</td>';
             echo '</tr>';
             $i++;
 
