@@ -255,6 +255,21 @@ class Recipient extends DBObject
             $tracking_event->delete();
         }
     }
+
+    /*
+     * Count how many unique recipients we have or a tenant has
+     */
+    public static function getRecipients($idp=false)
+    {
+        if ($idp===false)
+            return self::countEstimate();
+        $sql = 'SELECT COUNT(DISTINCT '.self::getDBTable().'.id) as recipientscount FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Transfer::getDBTable').' ON '.self::getDBTable().'.transfer_id='.call_user_func('Transfer::getDBTable').'.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.call_user_func('Transfer::getDBTable').'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp';
+        $statement = DBI::prepare($sql);
+        $placeholders =  array(':idp' => $idp);
+        $statement->execute($placeholders);
+        $data = $statement->fetch();
+        return $data['recipientscount'];
+    }
     
     /**
      * Getter

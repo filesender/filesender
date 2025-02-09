@@ -159,7 +159,6 @@ $default = array(
     // There are not so many options here, so they are listed
     // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',
-//    'storage_type' => 'filesystemChunked',
 
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
     'storage_filesystem_df_command' => 'df {path}',
@@ -242,6 +241,7 @@ $default = array(
 
     'admin_can_view_user_transfers_page' => true,
     'show_storage_statistics_in_admin' => true,
+    'statistics_table_rows_per_page' => 10,
 
     'cloud_s3_region'   => 'us-east-1',
     'cloud_s3_version'  => 'latest',

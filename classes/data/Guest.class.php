@@ -700,6 +700,21 @@ class Guest extends DBObject
         
         return $options;
     }
+
+    /*
+     * Count how many guests we have or a tenant has
+     */
+    public static function getGuests($idp=false)
+    {
+        if ($idp===false)
+            return self::countEstimate();
+        $sql = 'SELECT COUNT(userid) as guestscount FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp';
+        $statement = DBI::prepare($sql);
+        $placeholders =  array(':idp' => $idp);
+        $statement->execute($placeholders);
+        $data = $statement->fetch();
+        return $data['guestscount'];
+    }
     
     /**
      * Getter
