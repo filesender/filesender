@@ -636,7 +636,7 @@ class Transfer extends DBObject
      *
      * @return array
      */
-    public static function getUsage($idp=false)
+    public static function getUsage( $idp = null )
     {
         $quota = Config::get('host_quota');
         
@@ -648,7 +648,7 @@ class Transfer extends DBObject
         }
 
         $idpused = false;
-        if ($idp!==false) {
+        if ($idp) {
             $sql = 'SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::AVAILABLE_NO_ORDER;
             $statement = DBI::prepare($sql);
             $placeholders =  array(':idp' => $idp);
@@ -672,11 +672,12 @@ class Transfer extends DBObject
      *
      * @return array of Transfer
      */
-    public static function allAvailable($idp=false)
+    public static function allAvailable( $idp = null )
     {
-        if ($idp===false)
+        if (!$idp) {
             return self::all(self::AVAILABLE);
-
+        }
+        
         $sql = 'SELECT '.self::getDBTable().'.* FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::AVAILABLE;
         $statement = DBI::prepare($sql);
         $placeholders =  array(':idp' => $idp);
@@ -689,10 +690,11 @@ class Transfer extends DBObject
      *
      * @return array of Transfer
      */
-    public static function allUploading($idp=false)
+    public static function allUploading( $idp = null )
     {
-        if ($idp===false)
+        if (!$idp) {
             return self::all(self::UPLOADING);
+        }
 
         $sql = 'SELECT '.self::getDBTable().'.* FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::UPLOADING;
         $statement = DBI::prepare($sql);
@@ -706,10 +708,11 @@ class Transfer extends DBObject
      *
      * @return array of Transfer
      */
-    public static function allExpired($idp=false)
+    public static function allExpired( $idp = null )
     {
-        if ($idp===false)
+        if (!$idp) {
             return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+        }
 
         $sql = 'SELECT '.self::getDBTable().'.* FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::EXPIRED;
         $statement = DBI::prepare($sql);

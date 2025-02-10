@@ -60,7 +60,7 @@ $data = array(
 $sql =
     'SELECT '
    .'  Date.date, '
-   .(($idp===false) ?
+   .((!$idp) ?
         '  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
        .'  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
      :
@@ -77,7 +77,7 @@ $sql =
    .'ORDER BY date';
 
 $placeholders = array();
-if ($idp!==false)
+if ($idp)
     $placeholders[':idp'] = $idp;
 
 //error_log($sql);

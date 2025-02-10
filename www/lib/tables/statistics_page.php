@@ -58,13 +58,13 @@ switch ($_GET['t']) {
            .'  SUM('.call_user_func('Transfer::getDBTable').'.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' JOIN '.call_user_func('File::getDBTable').' ON '.call_user_func('File::getDBTable').'.transfer_id='.call_user_func('Transfer::getDBTable').'.id '
-           .(($idp===false) ?
+           .((!$idp) ?
              ''
              :
              'LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.call_user_func('Transfer::getDBTable').'.userid='.call_user_func('Authentication::getDBTable').'.id '
            )
            .'WHERE '
-           .(($idp===false) ?
+           .((!$idp) ?
              ''
              :
              call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
@@ -76,7 +76,7 @@ switch ($_GET['t']) {
            .'ORDER BY Transfers DESC '
            .'LIMIT '.$start.', '.$pagelimit;
         $placeholders=array();
-        if ($idp!==false)
+        if ($idp)
             $placeholders[':idp'] = $idp;
 
         //error_log($sql);
@@ -104,13 +104,13 @@ switch ($_GET['t']) {
            .'  SUM('.call_user_func('Transfer::getDBTable').'.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' JOIN '.call_user_func('File::getDBTable').' ON '.call_user_func('File::getDBTable').'.transfer_id='.call_user_func('Transfer::getDBTable').'.id '
-           .(($idp===false) ?
+           .((!$idp) ?
              ''
              :
              'LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.call_user_func('Transfer::getDBTable').'.userid='.call_user_func('Authentication::getDBTable').'.id '
            )
            .'WHERE '
-           .(($idp===false) ?
+           .((!$idp) ?
              ''
              :
              call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
@@ -121,7 +121,7 @@ switch ($_GET['t']) {
            .'ORDER BY Transfers DESC '
            .'LIMIT '.$start.', '.$pagelimit;
         $placeholders=array();
-        if ($idp!==false)
+        if ($idp)
             $placeholders[':idp'] = $idp;
 
         //error_log($sql);
@@ -147,7 +147,7 @@ switch ($_GET['t']) {
            .'FROM '
            .'  filesbywhoview LEFT JOIN '.call_user_func('Authentication::getDBTable').' on filesbywhoview.userid='.call_user_func('Authentication::getDBTable').'.id '
            .'WHERE '
-           .(($idp===false) ?
+           .((!$idp) ?
              ''
              :
              call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
@@ -158,7 +158,7 @@ switch ($_GET['t']) {
            .'ORDER BY Total DESC '
            .'LIMIT '.$start.', '.$pagelimit;
         $placeholders=array();
-        if ($idp!==false)
+        if ($idp)
             $placeholders[':idp'] = $idp;
 
         //error_log($sql);
@@ -186,7 +186,7 @@ switch ($_GET['t']) {
            .'  '.call_user_func('Authentication::getDBTable').' LEFT JOIN '.call_user_func('User::getDBTable').' on '.call_user_func('Authentication::getDBTable').'.id='.call_user_func('User::getDBTable').'.authid '
            .'WHERE '
            .'  '.call_user_func('User::getDBTable').'.auth_secret IS NOT NULL '
-           .(($idp===false) ?
+           .((!$idp) ?
              ''
              :
              'AND '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp '
@@ -194,7 +194,7 @@ switch ($_GET['t']) {
            .'ORDER BY Date DESC '
            .'LIMIT '.$start.', '.$pagelimit;
         $placeholders=array();
-        if ($idp!==false)
+        if ($idp)
             $placeholders[':idp'] = $idp;
 
         //error_log($sql);

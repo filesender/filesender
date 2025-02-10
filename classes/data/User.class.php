@@ -919,10 +919,12 @@ class User extends DBObject
     /*
      * Count how many users we have or a tenant has
      */
-    public static function users($idp=false)
+    public static function users( $idp = null )
     {
-        if ($idp===false)
+        if ( !$idp ) {
             return self::countEstimate();
+        }
+        
         $statement = DBI::prepare('SELECT COUNT(*) as userscount FROM '.call_user_func('Authentication::getDBTable').' WHERE saml_user_identification_idp = :idp');
         $statement->execute(array(':idp' => $idp));
         $data = $statement->fetch();
@@ -932,9 +934,9 @@ class User extends DBObject
     /*
      * Count how many signed AUPs we have or a tenant has
      */
-    public static function usersSignedAUP($idp=false)
+    public static function usersSignedAUP( $idp = null )
     {
-        if ($idp===false) {
+        if ( !$idp ) {
             $sql='SELECT COUNT(service_aup_accepted_version) as aupcount FROM '.self::getDBTable().' WHERE UserPreferences.service_aup_accepted_version >= :aup';
             $statement = DBI::prepare($sql);
             $statement->execute(array(':aup' => Config::get('service_aup_min_required_version')));
@@ -953,9 +955,9 @@ class User extends DBObject
     /*
      * Count how many API Keys we have or a tenant has
      */
-    public static function usersWithAPIKey($idp=false)
+    public static function usersWithAPIKey( $idp = null )
     {
-        if ($idp===false) {
+        if (!$idp) {
             $sql='SELECT COUNT(auth_secret) as apicount FROM '.self::getDBTable().' WHERE auth_secret IS NOT NULL';
             $statement = DBI::prepare($sql);
             $statement->execute();
