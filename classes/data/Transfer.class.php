@@ -256,6 +256,14 @@ class Transfer extends DBObject
                                        . self::getDBTable() . ' t '
                                              . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
+            
+            $idpviewsize[$dbtype] = 'SELECT SUM(size) AS sizesum, a.saml_user_identification_idp '
+                                  . ' FROM '.File::getDBTable().' f '
+                                  . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
+                                  . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                  . ' LEFT JOIN '.Authentication::getDBTable().' a ON u.authid=a.id '
+                                  . ' GROUP BY a.saml_user_identification_idp ';
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -265,6 +273,7 @@ class Transfer extends DBObject
                     , 'transfersauditlogsview' => $auditlogsview
                     , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
+                    , 'transferidpviewsize' => $idpviewsize
         );
     }
 
@@ -306,6 +315,7 @@ class Transfer extends DBObject
     const CLOSED_NO_ORDER = "status = 'closed' ";
     const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
     const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
+    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -649,14 +659,16 @@ class Transfer extends DBObject
 
         $idpused = false;
         if ($idp) {
-            $sql = 'SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::AVAILABLE_NO_ORDER;
-            $statement = DBI::prepare($sql);
-            $placeholders =  array(':idp' => $idp);
-            $statement->execute($placeholders);
+
             $idpused = 0;
-            foreach ($statement->fetchAll() as $r) {
-                $idpused += $r['size'];
-            }
+            $d = self::pick('sizesum',
+                array(
+                    'view'  => 'transferidpviewsize',
+                    'where' => self::FROM_IDP_NO_ORDER
+                ),
+                array(':idp' => $idp)
+            );
+            $idpused = $d['sizesum'];
         }
         
         return array(
