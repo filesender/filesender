@@ -323,6 +323,8 @@ A note about colours;
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
+* [statistics_table_rows_per_page](#statistics_table_rows_per_page)
+* [tenant_admin](#tenant_admin)
 
 ## Data Protection
 
@@ -3459,11 +3461,16 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 		'uid' => [
 			'@mydomain.com$' => 'mydomainfile',
 			'@myotherdomain.com$|@yetanotherdomain.com$' => 'myotherdomainfile',
-		];
+		],
+		'idp' => [
+			'idp.customer2.com' => 'customer2',
+		],
+	];
 	</code></pre>
 
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
+        If the idp is 'idp.customer2.com', the config file config-customer2.php in the config subdir will be loaded.
 	
 ### show_storage_statistics_in_admin
 * __description:__ Lists used and free diskspace in admin section
@@ -3472,6 +3479,21 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __default:__ true
 * __available:__ since version 2.0
 * __comment:__ Shows a section in the administrator interface showing basic disk statistics.
+
+### statistics_table_rows_per_page
+* __description:__ Number of rows to show in statistics page
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 3.1
+
+### tenant_admin
+* __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender tenant administrators. Accounts with these UIDs can access the Statistics page through the web UI and view stats related to the IDP they are a tenant admin of. Separate multiple entries with a comma (',').
+* __mandatory:__ no
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.1
+* __comment:__ see [auth_config_regex_files](#auth_config_regex_files) on how to setup differnt config files per idp. Within that file set $config['tenant_admin'].
 
 ---
 
