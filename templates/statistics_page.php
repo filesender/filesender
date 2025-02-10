@@ -215,6 +215,7 @@ if (!$idp) {
 ?>
     <div class="container">
         <div class="row">
+            <h3>Browser Stats</h3>
             <div class="col-12">
                 <table id="browser_stats" class="fs-table fs-table--striped browser_stats"></table>
             </div>
