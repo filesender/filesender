@@ -73,9 +73,9 @@ $sql =
        .'  (SELECT AVG(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
        .'  (SELECT MIN(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
      :
-        '  (SELECT MAX(transferssizeview.size) FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND DATE(transferssizeview.created) <= Date.date AND DATE(transferssizeview.expires) >= Date.date) as max, '
-       .'  (SELECT AVG(transferssizeview.size) FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND DATE(transferssizeview.created) <= Date.date AND DATE(transferssizeview.expires) >= Date.date) as avg, '
-       .'  (SELECT MIN(transferssizeview.size) FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND DATE(transferssizeview.created) <= Date.date AND DATE(transferssizeview.expires) >= Date.date) as min '
+        '  (SELECT MAX(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
+       .'  (SELECT AVG(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
+       .'  (SELECT MIN(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
     )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '
