@@ -220,6 +220,14 @@ class Transfer extends DBObject
                                         . ' where '
                                         . ' f.transfer_id=t.id '
                                         . '  group by t.id ';
+
+            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,a.saml_user_identification_idp from '
+                                     . self::getDBTable().' t '
+                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON t.userid=a.id, '
+                                           . call_user_func('File::getDBTable').' f '
+                                           . ' where '
+                                           . ' f.transfer_id=t.id '
+                                           . '  group by t.id ';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
                                        . self::getDBTable().' t, '
@@ -268,6 +276,7 @@ class Transfer extends DBObject
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
                     , 'transferssizeview' => $sizeviewdev
+                    , 'transferssizeidpview' => $sizeidpviewdev
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
                     , 'transfersauditlogsview' => $auditlogsview

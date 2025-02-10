@@ -15,14 +15,6 @@ $data = array(
         'labels' => array(),
         'datasets' => array(
             array(
-                'label' => Lang::tr('transfers_total')->out(),
-                'data' => array(),
-                'borderColor' => 'rgba(115,191,105,0.6)',
-                'backgroundColor' => 'rgba(115,191,105,0.6)',
-                'fill' => false,
-                'spanGaps' => true
-            ),
-            array(
                 'label' => Lang::tr('transfers_largest')->out(),
                 'data' => array(),
                 'borderColor' => 'rgba(242, 204, 12,0.6)',
@@ -77,15 +69,13 @@ $sql =
     'SELECT '
    .'  Date.date, '
    .((!$idp) ?
-        '  (SELECT SUM(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as total, '
-       .'  (SELECT MAX(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
+        '  (SELECT MAX(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
        .'  (SELECT AVG(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
        .'  (SELECT MIN(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
      :
-        '  (SELECT SUM(transferssizeview.size) FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND DATE(transferssizeview.created) <= Date.date AND DATE(transferssizeview.expires) >= Date.date) as total, '
-       .'  (SELECT MAX(transferssizeview.size) FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND DATE(transferssizeview.created) <= Date.date AND DATE(transferssizeview.expires) >= Date.date) as max, '
-       .'  (SELECT AVG(transferssizeview.size) FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND DATE(transferssizeview.created) <= Date.date AND DATE(transferssizeview.expires) >= Date.date) as avg, '
-       .'  (SELECT MIN(transferssizeview.size) FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND DATE(transferssizeview.created) <= Date.date AND DATE(transferssizeview.expires) >= Date.date) as min '
+        '  (SELECT MAX(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
+       .'  (SELECT AVG(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
+       .'  (SELECT MIN(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
     )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '
@@ -110,11 +100,10 @@ foreach($result as $row) {
     $label = $row['date'];
     $label = preg_replace('/ 00:00:00/','',$label);
     $data['data']['labels'][]=$label;
-    $data['data']['datasets'][0]['data'][]=$row['total'];
-    $data['data']['datasets'][1]['data'][]=$row['max'];
-    $data['data']['datasets'][2]['data'][]=$row['avg'];
-    $data['data']['datasets'][3]['data'][]=$row['min'];
-    $max=max($max,$row['total']);
+    $data['data']['datasets'][0]['data'][]=$row['max'];
+    $data['data']['datasets'][1]['data'][]=$row['avg'];
+    $data['data']['datasets'][2]['data'][]=$row['min'];
+    $max=max($max,$row['max']);
 }
 
 //Scale values
@@ -126,7 +115,6 @@ for($i=0; $i<count($data['data']['datasets'][0]['data']); $i++) {
     $data['data']['datasets'][0]['data'][$i] /= pow(1024, $pow);
     $data['data']['datasets'][1]['data'][$i] /= pow(1024, $pow);
     $data['data']['datasets'][2]['data'][$i] /= pow(1024, $pow);
-    $data['data']['datasets'][3]['data'][$i] /= pow(1024, $pow);
 }
 
 echo json_encode($data);
