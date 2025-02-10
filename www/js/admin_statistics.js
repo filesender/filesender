@@ -77,15 +77,18 @@ function quotabars() {
 
 function graph(g) {
     if (!$("#graph_"+g).length) return;
+    $("#graph_"+g).html('<tr><td class="text-center"><strong>Loading...</strong><br><div class="spinner-grow m-5" role="status"></div></td></tr>');
     $.ajax({
         url: "js/graph/statistics_"+g+"_graph.php"
     }).done(function(json) {
-        var graph = new Chart($("#graph_"+g),$.parseJSON(json));
+        $("#graph_"+g).html('<canvas id="graph_canvas_'+g+'" height="200"></canvas>');
+        var graph = new Chart($("#graph_canvas_"+g),$.parseJSON(json));
     });
 }
 
 function table(t,start=0) {
     if (!$("#"+t).length) return;
+    $("#"+t).html('<tr><td class="text-center"><strong>Loading...</strong><br><div class="spinner-grow m-5" role="status"></div></td></tr>');
     $.ajax({
         url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start
     }).done(function(rows) {

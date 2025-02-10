@@ -154,18 +154,18 @@ echo '<td>'.number_format($row['c']).'/day</td></tr>';
             </div>
             <div class="col-4">
                 <div class="row graph">
-                    <canvas id="graph_transfers_vouchers" height="200"></canvas>
+                    <div id="graph_transfers_vouchers" height="200"></div>
                 </div>
                 <div class="row graph">
-                    <canvas id="graph_transfers_speeds" height="200"></canvas>
+                    <div id="graph_transfers_speeds" height="200"></div>
                 </div>
             </div>
             <div class="col-4">
                 <div class="row graph">
-                    <canvas id="graph_data_per_day" height="200"></canvas>
+                    <div id="graph_data_per_day" height="200"></div>
                 </div>
                 <div class="row graph">
-                    <canvas id="graph_encryption_split" height="200"></canvas>
+                    <div id="graph_encryption_split" height="200"></div>
                 </div>
             </div>
         </div>
