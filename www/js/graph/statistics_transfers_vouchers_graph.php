@@ -60,7 +60,7 @@ $data = array(
 $sql =
     'SELECT '
    .'  Date.date, '
-   .(($idp===false) ?
+   .((!$idp) ?
         '  (SELECT COUNT(id) FROM '.call_user_func('Transfer::getDBTable').' WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as transfers, '
        .'  (SELECT COUNT(id) FROM '.call_user_func('Guest::getDBTable').' WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as guests '
      :
@@ -77,7 +77,7 @@ $sql =
    .'ORDER BY date';
 
 $placeholders = array();
-if ($idp!==false)
+if ($idp)
     $placeholders[':idp'] = $idp;
 
 //error_log($sql);

@@ -11,7 +11,7 @@ $idp = Auth::getTenantAdminIDP();
 
 $sql = '';
 $placeholders = array();
-if ($idp===false) {
+if (!$idp) {
     $sql =
         'SELECT '
        .'  SUM(case WHEN options LIKE \'%\\"encryption\\":false%\' THEN 1 ELSE 0 END) as "Unencrypted", '

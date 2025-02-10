@@ -76,7 +76,7 @@ $data = array(
 $sql =
     'SELECT '
    .'  Date.date, '
-   .(($idp===false) ?
+   .((!$idp) ?
         '  (SELECT SUM(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as total, '
        .'  (SELECT MAX(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
        .'  (SELECT AVG(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
@@ -97,7 +97,7 @@ $sql =
    .'ORDER BY date';
 
 $placeholders=array();
-if ($idp!==false)
+if ($idp)
     $placeholders[':idp'] = $idp;
 
 //error_log($sql);

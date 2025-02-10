@@ -1,13 +1,22 @@
 <?php
-$idp = Auth::getTenantAdminIDP();
 include_once "pagemenuitem.php";
+
+$idp = Auth::getTenantAdminIDP();
+
+function html_selectidp( $idp, $row ) {
+    if( $idp == $row['saml_user_identification_idp'] ) {
+        return ' selected';
+    }
+    return '';
+}
+
 ?>
 <div class="fs-statistics">
     <div class="container">
         <div class="row">
             <div class="col">
                 <div class="fs-statistics__title">
-                    <h1>{tr:admin_statistics_section}<?php if ($idp !== false) { echo ' ('.$idp.')'; } ?></h1>
+                    <h1>{tr:admin_statistics_section}<?php if ($idp) { echo ' ('.$idp.')'; } ?></h1>
                 </div>
             </div>
         </div>
@@ -34,7 +43,7 @@ $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
 foreach($result as $row) {
-    echo '        <option value="'.$row['saml_user_identification_idp'].'"'.($idp==$row['saml_user_identification_idp']?' selected':'').'>'.$row['saml_user_identification_idp'].'</option>'."\n";
+    echo '        <option value="'.$row['saml_user_identification_idp'].'"'.html_selectidp( $idp, $row ).'>'.$row['saml_user_identification_idp'].'</option>'."\n";
 }
 ?>
     </select>
@@ -55,7 +64,7 @@ foreach($result as $row) {
     <tr><th>{tr:uploading_transfers}</th><td><?php echo number_format(count(Transfer::allUploading($idp))) ?></td></tr>
     <tr><th>{tr:available_transfers}</th><td><?php echo number_format(count(Transfer::allAvailable($idp))) ?></td></tr>
 <?php
-if ($idp===false) {
+if (!$idp) {
     $creations = StatLog::getEventCount(LogEventTypes::TRANSFER_AVAILABLE);
     if (!is_null($creations)) {
         $creations['count']=number_format($creations['count']);
@@ -107,7 +116,7 @@ if(Config::get('show_storage_statistics_in_admin')) {
 
 <table class="fs-table fs-table--striped storage_usage <?php echo $global_warning ? 'warning' : '' ?>">
 <?php
-if ($idp===false) {
+if (!$idp) {
 ?>
     <tr data-metric="total"><th>{tr:storage_total}</th><td><?php echo Utilities::formatBytes($total_space) ?></td></tr>
     <tr data-metric="used"><th>{tr:storage_used}</th><td><?php echo Utilities::formatBytes($total_space - $free_space).' ('.sprintf('%.1d', 100 * ($total_space - $free_space) / $total_space).'%)' ?></td></tr>
@@ -127,7 +136,7 @@ if ($idp===false) {
 <?php
 $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(created) as day,SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY DATE(created)) t';
 $placeholders=array();
-if ($idp!==false) {
+if ($idp) {
     $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(transfersfilesview.created) as day, SUM(transfersfilesview.filesize) as size, COUNT(transfersfilesview.id) as count FROM transfersfilesview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transfersfilesview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp GROUP BY DATE(transfersfilesview.created)) t';
 $placeholders=array();
     $placeholders[':idp'] = $idp;
@@ -163,7 +172,7 @@ echo '<td>'.number_format($row['c']).'/day</td></tr>';
     </div>
 
 <?php
-    if ($idp===false) {
+    if (!$idp) {
 ?>
     <div class="container">
         <div class="row">
@@ -202,7 +211,7 @@ echo '<td>'.number_format($row['c']).'/day</td></tr>';
 ?>
 
 <?php
-if ($idp===false) {
+if (!$idp) {
 ?>
     <div class="container">
         <div class="row">
