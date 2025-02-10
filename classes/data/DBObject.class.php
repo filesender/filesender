@@ -370,6 +370,25 @@ class DBObject
         $data = $statement->fetch();
         return $data['count'];
     }
+
+    /**
+     * Get a single tuple result for a query
+     *
+     * @param string $criteria sql criteria and/or pagination options
+     * @param array $placeholders
+     *
+     * @return the one tuple
+     */
+    public static function pick($columns = '*', $criteria = null, $placeholders = array())
+    {
+        $statement = self::buildStatement($columns,$criteria, $placeholders);
+        
+        // run it
+        $statement->execute($placeholders);
+
+        $data = $statement->fetch();
+        return $data;
+    }
     
     /**
      * convert the result of an sql query on this table to a set objects
