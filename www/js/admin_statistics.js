@@ -88,12 +88,12 @@ function graph(g) {
 
 function table(t,start=0) {
     if (!$("#"+t).length) return;
+    $("#nav_"+t).remove();
     $("#"+t).html('<tr><td class="text-center"><strong>Loading...</strong><br><div class="spinner-grow m-5" role="status"></div></td></tr>');
     $.ajax({
         url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start
     }).done(function(rows) {
         $("#"+t).html(rows);
-        $("#nav_"+t).remove();
         $("#"+t).after('<div id="nav_'+t+'" class="table-nav"></div>');
         var trs=$("#"+t+" tr");
         if (parseInt(trs[1].attributes['data-row'].value)>0) {
