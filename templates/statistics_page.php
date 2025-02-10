@@ -49,7 +49,7 @@ foreach($result as $row) {
 <table class="fs-table fs-table--striped global_statistics">
     <tr><th>{tr:user_count_estimate}</th><td><?php echo number_format(User::users($idp)) ?></td></tr>
     <tr><th>{tr:recipient_count_estimate}</th><td><?php echo number_format(Recipient::getRecipients($idp)) ?></td></tr>
-    <tr><th>{tr:guest_count_estimate}</th><td><?php echo number_format(Guest::getGuests($idp)) ?></td></tr>
+    <tr><th>{tr:guest_count_estimate}</th><td><?php echo number_format(Guest::getGuestCount($idp)) ?></td></tr>
     <tr><th>{tr:user_aup_count_estimate}</th><td><?php echo number_format(User::usersSignedAUP($idp)) ?></td></tr>
     <tr><th>{tr:user_apikey_count_estimate}</th><td><?php echo number_format(User::usersWithAPIKey($idp)) ?></td></tr>
     <tr><th>{tr:uploading_transfers}</th><td><?php echo number_format(count(Transfer::allUploading($idp))) ?></td></tr>
