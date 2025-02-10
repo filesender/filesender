@@ -257,12 +257,12 @@ class Transfer extends DBObject
                                              . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
             
-            $idpviewsize[$dbtype] = 'SELECT SUM(size) AS sizesum, a.saml_user_identification_idp '
-                                  . ' FROM '.File::getDBTable().' f '
-                                  . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
-                                  . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                  . ' LEFT JOIN '.Authentication::getDBTable().' a ON u.authid=a.id '
-                                  . ' GROUP BY a.saml_user_identification_idp ';
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, a.saml_user_identification_idp '
+                                           . ' FROM '.File::getDBTable().' f '
+                                           . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
+                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                           . ' LEFT JOIN '.Authentication::getDBTable().' a ON u.authid=a.id '
+                                           . ' GROUP BY a.saml_user_identification_idp ';
             
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
@@ -273,7 +273,7 @@ class Transfer extends DBObject
                     , 'transfersauditlogsview' => $auditlogsview
                     , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
-                    , 'transferidpviewsize' => $idpviewsize
+                    , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
         );
     }
 
@@ -663,7 +663,7 @@ class Transfer extends DBObject
             $idpused = 0;
             $d = self::pick('sizesum',
                 array(
-                    'view'  => 'transferidpviewsize',
+                    'view'  => 'transferidpviewsizesumperidp',
                     'where' => self::FROM_IDP_NO_ORDER
                 ),
                 array(':idp' => $idp)
