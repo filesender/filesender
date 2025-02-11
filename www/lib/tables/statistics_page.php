@@ -213,28 +213,15 @@ switch ($_GET['t']) {
         break;
 
     case 'browser_stats':
-        $createdTS = DBLayer::timeStampToEpoch('created');
-        $createdDD = DBLayer::datediff('NOW()','MIN(created)');
-
-        $sql=<<<EOF
-SELECT
-    MAX(additional_attributes) as "additional_attributes",
-    AVG(CASE WHEN time_taken > 0 THEN size/time_taken ELSE 0 END) as speed,
-    AVG(CASE WHEN time_taken > 0 AND size>1073741824 THEN size/time_taken ELSE NULL END) as gspeed,
-    AVG(size) as avgsize,
-    MIN(size) as minsize,
-    MAX(size) as maxsize,
-    SUM(size) as transfered,
-    COUNT(ID) as count,
-    MIN($createdTS) as firsttransfer,
-    (CASE WHEN $createdDD > 0 THEN COUNT(ID)/$createdDD ELSE NULL END) as countperday,
-    os_name, browser_name, is_encrypted
-FROM statlogsview
-WHERE event='file_uploaded'
-GROUP BY is_encrypted,os_name,browser_name
-ORDER BY COUNT(ID) DESC, maxsize DESC
-LIMIT $start, $pagelimit
-EOF;
+        $createdDD = DBLayer::datediff('NOW()','firsttransfer');
+        $sql=
+            'SELECT '
+           .'  additional_attributes, speed, gspeed, avgsize, minsize, maxsize, transfered, count, firsttransfer, os_name, browser_name, is_encrypted, '
+           .'  (CASE WHEN '.$createdDD.' > 0 THEN count/'.$createdDD.' ELSE NULL END) as countperday '
+           .'FROM '
+           .'  browserstatsview '
+           //.'ORDER BY count DESC, maxsize DESC '
+           .'LIMIT '.$start.', '.$pagelimit;
 
         $statement = DBI::prepare($sql);
         $statement->execute(array());
