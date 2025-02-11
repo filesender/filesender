@@ -154,18 +154,18 @@ echo '<td>'.number_format($row['c']).'/day</td></tr>';
             </div>
             <div class="col-4">
                 <div class="row graph">
-                    <canvas id="graph_transfers_vouchers" height="200"></canvas>
+                    <div id="graph_transfers_vouchers"></div>
                 </div>
                 <div class="row graph">
-                    <canvas id="graph_transfers_speeds" height="200"></canvas>
+                    <div id="graph_transfers_speeds"></div>
                 </div>
             </div>
             <div class="col-4">
                 <div class="row graph">
-                    <canvas id="graph_data_per_day" height="200"></canvas>
+                    <div id="graph_data_per_day"></div>
                 </div>
                 <div class="row graph">
-                    <canvas id="graph_encryption_split" height="200"></canvas>
+                    <div id="graph_encryption_split"></div>
                 </div>
             </div>
         </div>
@@ -215,6 +215,7 @@ if (!$idp) {
 ?>
     <div class="container">
         <div class="row">
+            <h3>Browser Stats</h3>
             <div class="col-12">
                 <table id="browser_stats" class="fs-table fs-table--striped browser_stats"></table>
             </div>

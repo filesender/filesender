@@ -220,6 +220,14 @@ class Transfer extends DBObject
                                         . ' where '
                                         . ' f.transfer_id=t.id '
                                         . '  group by t.id ';
+
+            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,a.saml_user_identification_idp from '
+                                     . self::getDBTable().' t '
+                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON t.userid=a.id, '
+                                           . call_user_func('File::getDBTable').' f '
+                                           . ' where '
+                                           . ' f.transfer_id=t.id '
+                                           . '  group by t.id ';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
                                        . self::getDBTable().' t, '
@@ -256,15 +264,25 @@ class Transfer extends DBObject
                                        . self::getDBTable() . ' t '
                                              . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
+            
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, a.saml_user_identification_idp '
+                                           . ' FROM '.File::getDBTable().' f '
+                                           . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
+                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                           . ' LEFT JOIN '.Authentication::getDBTable().' a ON u.authid=a.id '
+                                           . ' GROUP BY a.saml_user_identification_idp ';
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
                     , 'transferssizeview' => $sizeviewdev
+                    , 'transferssizeidpview' => $sizeidpviewdev
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
                     , 'transfersauditlogsview' => $auditlogsview
                     , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
+                    , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
         );
     }
 
@@ -306,6 +324,7 @@ class Transfer extends DBObject
     const CLOSED_NO_ORDER = "status = 'closed' ";
     const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
     const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
+    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -649,14 +668,16 @@ class Transfer extends DBObject
 
         $idpused = false;
         if ($idp) {
-            $sql = 'SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::AVAILABLE_NO_ORDER;
-            $statement = DBI::prepare($sql);
-            $placeholders =  array(':idp' => $idp);
-            $statement->execute($placeholders);
+
             $idpused = 0;
-            foreach ($statement->fetchAll() as $r) {
-                $idpused += $r['size'];
-            }
+            $d = self::pick('sizesum',
+                array(
+                    'view'  => 'transferidpviewsizesumperidp',
+                    'where' => self::FROM_IDP_NO_ORDER
+                ),
+                array(':idp' => $idp)
+            );
+            $idpused = $d['sizesum'];
         }
         
         return array(

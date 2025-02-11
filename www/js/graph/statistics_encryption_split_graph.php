@@ -22,12 +22,12 @@ if (!$idp) {
 } else {
     $sql =
         'SELECT '
-       .'  SUM(case WHEN transferssizeview.options LIKE \'%\\"encryption\\":false%\' THEN 1 ELSE 0 END) as "Unencrypted", '
-       .'  SUM(case WHEN transferssizeview.options LIKE \'%\\"encryption\\":true%\' THEN 1 ELSE 0 END) as "Encrypted" '
-       .'FROM transferssizeview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transferssizeview.userid='.call_user_func('Authentication::getDBTable').'.id '
-       .'WHERE ((DATE(transferssizeview.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-       .'       (DATE(transferssizeview.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(transferssizeview.expires) <= NOW())) '
-       .'  AND '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp';
+       .'  SUM(case WHEN options LIKE \'%\\"encryption\\":false%\' THEN 1 ELSE 0 END) as "Unencrypted", '
+       .'  SUM(case WHEN options LIKE \'%\\"encryption\\":true%\' THEN 1 ELSE 0 END) as "Encrypted" '
+       .'FROM transferssizeidpview '
+       .'WHERE (DATE(created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+       .'      (DATE(expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(expires) <= NOW()) '
+       .'  AND saml_user_identification_idp = :idp';
     $placeholders[':idp'] = $idp;
 }
 
