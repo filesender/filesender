@@ -223,7 +223,8 @@ class Transfer extends DBObject
 
             $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,a.saml_user_identification_idp from '
                                      . self::getDBTable().' t '
-                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON t.userid=a.id, '
+                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id, '
                                            . call_user_func('File::getDBTable').' f '
                                            . ' where '
                                            . ' f.transfer_id=t.id '
