@@ -124,7 +124,7 @@ class StatLog extends DBObject
                                        .'    MAX(size) as maxsize, '
                                        .'    SUM(size) as transfered, '
                                        .'    COUNT(ID) as count, '
-                                       .'    MIN(UNIX_TIMESTAMP(created)) as firsttransfer, '
+                                       .'    MIN('.DBLayer::timeStampToEpoch('created').') as firsttransfer, '
                                        .'    is_encrypted,os_name,browser_name '
                                        .'FROM statlogsview '
                                        .'WHERE event="file_uploaded" '
