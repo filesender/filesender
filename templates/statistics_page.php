@@ -137,7 +137,7 @@ if (!$idp) {
 $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(created) as day,SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY DATE(created)) t';
 $placeholders=array();
 if ($idp) {
-    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(transfersfilesview.created) as day, SUM(transfersfilesview.filesize) as size, COUNT(transfersfilesview.id) as count FROM transfersfilesview LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON transfersfilesview.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp GROUP BY DATE(transfersfilesview.created)) t';
+    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(t.created) as day, SUM(t.filesize) as size, COUNT(t.id) as count FROM transfersfilesview t LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id WHERE a.saml_user_identification_idp = :idp GROUP BY DATE(t.created)) tt';
 $placeholders=array();
     $placeholders[':idp'] = $idp;
 }
