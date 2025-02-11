@@ -52,27 +52,27 @@ switch ($_GET['t']) {
         echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  '.call_user_func('Transfer::getDBTable').'.user_email as "User", '
-           .'  COUNT(DISTINCT '.call_user_func('Transfer::getDBTable').'.id) AS "Transfers", '
-           .'  SUM(IF('.call_user_func('Transfer::getDBTable').'.options LIKE \'%\\"encryption\\":true%\','.call_user_func('File::getDBTable').'.encrypted_size,'.call_user_func('File::getDBTable').'.size)) AS "Size", '
-           .'  SUM('.call_user_func('Transfer::getDBTable').'.download_count) as "Downloads" '
+           .'  t.user_email as "User", '
+           .'  COUNT(DISTINCT t.id) AS "Transfers", '
+           .'  SUM(IF(t.options LIKE \'%\\"encryption\\":true%\',f.encrypted_size,f.size)) AS "Size", '
+           .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
-           .'  '.call_user_func('Transfer::getDBTable').' JOIN '.call_user_func('File::getDBTable').' ON '.call_user_func('File::getDBTable').'.transfer_id='.call_user_func('Transfer::getDBTable').'.id '
+           .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
            .((!$idp) ?
              ''
              :
-             'LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.call_user_func('Transfer::getDBTable').'.userid='.call_user_func('Authentication::getDBTable').'.id '
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
            )
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
+             'a.saml_user_identification_idp = :idp AND '
            )
-           .'    ((DATE('.call_user_func('Transfer::getDBTable').'.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-           .'     (DATE('.call_user_func('Transfer::getDBTable').'.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE('.call_user_func('Transfer::getDBTable').'.expires) <= NOW())) '
-           .'    AND '.call_user_func('Transfer::getDBTable').'.status = "available" '
-           .'GROUP BY '.call_user_func('Transfer::getDBTable').'.user_email '
+           .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+           .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
+           .'    AND t.status = "available" '
+           .'GROUP BY t.user_email '
            .'ORDER BY Transfers DESC '
            .'LIMIT '.$start.', '.$pagelimit;
         $placeholders=array();
@@ -98,26 +98,26 @@ switch ($_GET['t']) {
         echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  '.call_user_func('Transfer::getDBTable').'.user_email as "User", '
-           .'  COUNT(DISTINCT '.call_user_func('Transfer::getDBTable').'.id) AS "Transfers", '
-           .'  SUM(IF('.call_user_func('Transfer::getDBTable').'.options LIKE \'%\\"encryption\\":true%\','.call_user_func('File::getDBTable').'.encrypted_size,'.call_user_func('File::getDBTable').'.size)) AS "Size", '
-           .'  SUM('.call_user_func('Transfer::getDBTable').'.download_count) as "Downloads" '
+           .'  t.user_email as "User", '
+           .'  COUNT(DISTINCT t.id) AS "Transfers", '
+           .'  SUM(IF(t.options LIKE \'%\\"encryption\\":true%\',f.encrypted_size,f.size)) AS "Size", '
+           .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
-           .'  '.call_user_func('Transfer::getDBTable').' JOIN '.call_user_func('File::getDBTable').' ON '.call_user_func('File::getDBTable').'.transfer_id='.call_user_func('Transfer::getDBTable').'.id '
+           .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
            .((!$idp) ?
              ''
              :
-             'LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.call_user_func('Transfer::getDBTable').'.userid='.call_user_func('Authentication::getDBTable').'.id '
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
            )
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
+             'a.saml_user_identification_idp = :idp AND '
            )
-           .'    ((DATE('.call_user_func('Transfer::getDBTable').'.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-           .'     (DATE('.call_user_func('Transfer::getDBTable').'.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE('.call_user_func('Transfer::getDBTable').'.expires) <= NOW())) '
-           .'GROUP BY '.call_user_func('Transfer::getDBTable').'.user_email '
+           .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+           .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
+           .'GROUP BY t.user_email '
            .'ORDER BY Transfers DESC '
            .'LIMIT '.$start.', '.$pagelimit;
         $placeholders=array();
@@ -145,12 +145,12 @@ switch ($_GET['t']) {
             'SELECT '
            .'  mime_type as "Mime Type", count(*) as Total '
            .'FROM '
-           .'  filesbywhoview LEFT JOIN '.call_user_func('Authentication::getDBTable').' on filesbywhoview.userid='.call_user_func('Authentication::getDBTable').'.id '
+           .'  filesbywhoview LEFT JOIN '.call_user_func('Authentication::getDBTable').' a on filesbywhoview.userid=a.id '
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '
+             'a.saml_user_identification_idp = :idp AND '
            )
            .'    ((DATE(filesbywhoview.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(filesbywhoview.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(filesbywhoview.expires) <= NOW())) '
@@ -180,16 +180,16 @@ switch ($_GET['t']) {
         echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('date').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  '.call_user_func('Authentication::getDBTable').'.saml_user_identification_uid as "User", '
-           .'  DATE('.call_user_func('User::getDBTable').'.auth_secret_created) as "Date" '
+           .'  a.saml_user_identification_uid as "User", '
+           .'  DATE(u.auth_secret_created) as "Date" '
            .'FROM '
-           .'  '.call_user_func('Authentication::getDBTable').' LEFT JOIN '.call_user_func('User::getDBTable').' on '.call_user_func('Authentication::getDBTable').'.id='.call_user_func('User::getDBTable').'.authid '
+           .'  '.call_user_func('Authentication::getDBTable').' a LEFT JOIN '.call_user_func('User::getDBTable').' u on a.id=u.authid '
            .'WHERE '
-           .'  '.call_user_func('User::getDBTable').'.auth_secret IS NOT NULL '
+           .'  u.auth_secret IS NOT NULL '
            .((!$idp) ?
              ''
              :
-             'AND '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp '
+             'AND a.saml_user_identification_idp = :idp '
            )
            .'ORDER BY Date DESC '
            .'LIMIT '.$start.', '.$pagelimit;
@@ -213,28 +213,15 @@ switch ($_GET['t']) {
         break;
 
     case 'browser_stats':
-        $createdTS = DBLayer::timeStampToEpoch('created');
-        $createdDD = DBLayer::datediff('NOW()','MIN(created)');
-
-        $sql=<<<EOF
-SELECT
-    MAX(additional_attributes) as "additional_attributes",
-    AVG(CASE WHEN time_taken > 0 THEN size/time_taken ELSE 0 END) as speed,
-    AVG(CASE WHEN time_taken > 0 AND size>1073741824 THEN size/time_taken ELSE NULL END) as gspeed,
-    AVG(size) as avgsize,
-    MIN(size) as minsize,
-    MAX(size) as maxsize,
-    SUM(size) as transfered,
-    COUNT(ID) as count,
-    MIN($createdTS) as firsttransfer,
-    (CASE WHEN $createdDD > 0 THEN COUNT(ID)/$createdDD ELSE NULL END) as countperday,
-    os_name, browser_name, is_encrypted
-FROM statlogsview
-WHERE event='file_uploaded'
-GROUP BY is_encrypted,os_name,browser_name
-ORDER BY COUNT(ID) DESC, maxsize DESC
-LIMIT $start, $pagelimit
-EOF;
+        $createdDD = DBLayer::datediff('NOW()','firsttransfer');
+        $sql=
+            'SELECT '
+           .'  additional_attributes, speed, gspeed, avgsize, minsize, maxsize, transfered, count, firsttransfer, os_name, browser_name, is_encrypted, '
+           .'  (CASE WHEN '.$createdDD.' > 0 THEN count/'.$createdDD.' ELSE NULL END) as countperday '
+           .'FROM '
+           .'  browserstatsview '
+           //.'ORDER BY count DESC, maxsize DESC '
+           .'LIMIT '.$start.', '.$pagelimit;
 
         $statement = DBI::prepare($sql);
         $statement->execute(array());

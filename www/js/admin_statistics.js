@@ -89,7 +89,16 @@ function graph(g) {
 function table(t,start=0) {
     if (!$("#"+t).length) return;
     $("#nav_"+t).remove();
-    $("#"+t).html('<tr><td class="text-center"><strong>Loading...</strong><br><div class="spinner-grow m-5" role="status"></div></td></tr>');
+
+    spinner_width = Math.max(100,$("#"+t)[0].clientWidth/3);
+    spinner_height = Math.max(spinner_width,$("#"+t)[0].clientHeight);
+    $("#"+t).html('<tr><td class="text-center"><strong>Loading...</strong><br><div id="spinner_'+t+'" class="spinner-grow" role="status"></div></td></tr>');
+    $("#spinner_"+t).width(spinner_width).height(spinner_width);
+    if (spinner_height>spinner_width) {
+        var m = Number((spinner_height-spinner_width)/2).toString()+"px";
+        $("#spinner_"+t).css("margin-top", m).css("margin-bottom", m);
+    }
+
     $.ajax({
         url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start
     }).done(function(rows) {
