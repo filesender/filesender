@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: dagstaat van uw transfers
+subject: Dagstaat van uw transfers
 
 {alternative:plain}
 
