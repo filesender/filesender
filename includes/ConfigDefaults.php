@@ -66,6 +66,10 @@ $default = array(
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     'auth_sp_force_session_start_first' => false,  // maybe move session_start() forward.
+    'auth_sp_idp_filters' => array(
+        array('/^https*:\/\//', ''), // get rid of https://
+        array('/\/$/', '') // remove a trailing slash (/)
+    ),
 
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
