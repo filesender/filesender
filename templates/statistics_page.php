@@ -143,7 +143,8 @@ $placeholders=array();
 }
 $statement = DBI::prepare($sql);
 $statement->execute($placeholders);
-$row = array_pop($statement->fetchAll());
+$result = $statement->fetchAll();
+$row = array_pop($result);
 
 echo '<tr><td>Transfered</td>';
 echo '<td>'.Utilities::formatBytes($row['s']).'/day</td></tr>';
