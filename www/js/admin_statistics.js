@@ -79,7 +79,7 @@ function graph(g) {
     if (!$("#graph_"+g).length) return;
     $("#graph_"+g).html('<tr><td class="text-center"><strong>Loading...</strong><br><div class="spinner-grow m-5" role="status"></div></td></tr>');
     $.ajax({
-        url: "js/graph/statistics_"+g+"_graph.php"
+        url: "js/graph/statistics_"+g+"_graph.php"+$(location).attr('search')
     }).done(function(json) {
         $("#graph_"+g).html('<canvas id="graph_canvas_'+g+'" height="200"></canvas>');
         var graph = new Chart($("#graph_canvas_"+g),$.parseJSON(json));
