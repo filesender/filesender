@@ -337,7 +337,7 @@ $lang['later'] = 'Ask me again later';
 $lang['load'] = 'Load failed transfer';
 $lang['logoff'] = 'Log out';
 $lang['logon'] = 'Logon';
-$lang['mac_archive_message'] = 'In order to support large files, all compressed archive (.zip files) are in the zip64 format which unfortunately the standard uncompress utility of Apple OS X can not handle.<br />  You\'ll find a alternative uncompress software here: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
+$lang['mac_archive_message'] = 'In order to support large files, all compressed archive (.zip files) are in the zip64 format which unfortunately the standard uncompress utility of macOS can not handle.<br />  You\'ll find a alternative uncompress software here: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
 $lang['maintenance_autoresume'] = 'Your operations will automatically resume when maintenance ends.';
 $lang['make_default'] = 'Go back to default value';
 $lang['max_email_recipients_exceeded'] = 'Maximum number of recipients is exceeded';
