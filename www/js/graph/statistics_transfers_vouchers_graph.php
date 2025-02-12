@@ -65,7 +65,7 @@ $sql =
        .'  (SELECT COUNT(id) FROM '.call_user_func('Guest::getDBTable').' WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as guests '
      :
         '  (SELECT COUNT(t.id) FROM '.call_user_func('Transfer::getDBTable').' t LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id WHERE a.saml_user_identification_idp = :idp AND DATE(t.created) <= Date.date AND DATE(t.expires) >= Date.date) as transfers, '
-       .'  (SELECT COUNT(g.id) FROM '.call_user_func('Guest::getDBTable').' g LEFT JOIN '.call_user_func('User::getDBTable').' u ON g..userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id WHERE a.saml_user_identification_idp = :idp AND DATE(g.created) <= Date.date AND DATE(g.expires) >= Date.date) as guests '
+       .'  (SELECT COUNT(g.id) FROM '.call_user_func('Guest::getDBTable').' g LEFT JOIN '.call_user_func('User::getDBTable').' u ON g.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id WHERE a.saml_user_identification_idp = :idp AND DATE(g.created) <= Date.date AND DATE(g.expires) >= Date.date) as guests '
     )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '

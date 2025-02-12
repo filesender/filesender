@@ -64,8 +64,8 @@ $sql =
         '  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
        .'  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
      :
-        '  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
-       .'  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
+        '  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
+       .'  (SELECT MAX(size/(UNIX_TIMESTAMP(made_available)-UNIX_TIMESTAMP(created)))/1048576 FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
    )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '
