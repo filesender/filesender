@@ -100,11 +100,11 @@ class AuthSPSaml
 
             // Get IDP from SSP
             $idp = trim($ssp->getAuthData('saml:sp:IdP'));
-            $idp_nice = parse_url($idp, PHP_URL_HOST);
-            if ($idp_nice == '') {
-                $idp_nice = $idp;
+            $idp_filters = Config::get('auth_sp_idp_filters');
+            foreach($idp_filters as $idp_filter) {
+                $idp = preg_replace($idp_filter[0], $idp_filter[1], $idp);
             }
-            $attributes['idp'] = $idp_nice;
+            $attributes['idp'] = $idp;
             
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
