@@ -50,11 +50,6 @@ class StorageFilesystem
     protected static $hashing = null;
 
     /**
-     * Include IDP in path
-     */
-    protected static $idp_in_path = null;
-    
-    /**
      * Storage setup, loads options from config
      */
     protected static function setup()
@@ -84,12 +79,6 @@ class StorageFilesystem
         $hashing = Config::get('storage_filesystem_hashing');
         if ($hashing) {
             self::$hashing = $hashing;
-        }
-
-        // Is storage idp enabled ?
-        $idp_in_path = Config::get('storage_filesystem_idp_in_path');
-        if ($idp_in_path) {
-            self::$idp_in_path = $idp_in_path;
         }
     }
     
@@ -348,7 +337,7 @@ class StorageFilesystem
         }
 
         // Is idp in storage path enabled
-        if (self::$idp_in_path) {
+        if ($file->transfer->storage_filesystem_per_idp) {
             $subpath = '';
             $idp = $file->transfer->owner->saml_user_identification_idp;
             //sanatise idp to safe path

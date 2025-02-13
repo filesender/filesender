@@ -172,7 +172,11 @@ class Transfer extends DBObject
             'null'    => false,
             'default' => false,
         ),
-
+        'storage_filesystem_per_idp' => array(
+            'type'    => 'bool',
+            'null'    => false,
+            'default' => false,
+        ),
 
         'download_count' => array(
             'type'    => 'uint',
@@ -357,6 +361,7 @@ class Transfer extends DBObject
     protected $guest_transfer_shown_to_user_who_invited_guest = true;
     protected $storage_filesystem_per_day_buckets = false;
     protected $storage_filesystem_per_hour_buckets = false;
+    protected $storage_filesystem_per_idp = false;
     protected $download_count = 0;
 
     
@@ -387,6 +392,7 @@ class Transfer extends DBObject
     {
         $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
         $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
+        $this->storage_filesystem_per_idp = Config::get('storage_filesystem_per_idp');
         $this->download_count = 0;
         
         if (!is_null($id)) {
@@ -1144,7 +1150,7 @@ class Transfer extends DBObject
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
-            , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets'
+            , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
             , 'download_count'
             
         ))) {
@@ -1367,6 +1373,8 @@ class Transfer extends DBObject
             $this->storage_filesystem_per_day_buckets = $value;
         } elseif ($property == 'storage_filesystem_per_hour_buckets') {
             $this->storage_filesystem_per_hour_buckets = $value;
+        } elseif ($property == 'storage_filesystem_per_idp') {
+            $this->storage_filesystem_per_idp = $value;
         } elseif ($property == 'download_count') {
             $this->download_count = $value;
         } else {
@@ -1623,6 +1631,7 @@ class Transfer extends DBObject
 
         $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
         $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
+        $this->storage_filesystem_per_idp = Config::get('storage_filesystem_per_idp');
         
         // Update status and log to audit/stat
         $this->status = TransferStatuses::AVAILABLE;
