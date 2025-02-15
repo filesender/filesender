@@ -960,7 +960,7 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __type:__ **bool**
 * __default:__ false
 * __available:__ since version 3.1
-* __comment:__
+* __comment:__ Note that if you change this setting existing transfers may not be available. It only applies to new transfers and old transfers may look in the wrong location unless you have moved the files on disk.
 
 ### storage_filesystem_per_day_min_days_to_clean_empty_directories
 
