@@ -49,7 +49,6 @@ class StorageFilesystem
      */
     protected static $hashing = null;
 
-    
     /**
      * Storage setup, loads options from config
      */
@@ -81,7 +80,6 @@ class StorageFilesystem
         if ($hashing) {
             self::$hashing = $hashing;
         }
-
     }
     
     /**
@@ -337,7 +335,15 @@ class StorageFilesystem
         } else {
             $path = "";
         }
-        
+
+        // Is idp in storage path enabled
+        if ($file->transfer->storage_filesystem_per_idp) {
+            $subpath = '';
+            $idp = $file->transfer->owner->saml_user_identification_idp;
+            //sanatise idp to safe path
+            $subpath = trim(preg_replace('/[^a-z0-9]+/', '_', strtolower($idp)));
+            $path = self::ensurePath( $path, $subpath );
+        }
         
         // Is storage path hashing enabled
         if (self::$hashing) {

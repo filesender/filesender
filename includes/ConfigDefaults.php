@@ -180,6 +180,7 @@ $default = array(
     'storage_filesystem_per_day_max_age_to_create_directory' => 7,
     'storage_filesystem_per_day_min_days_to_clean_empty_directories' => -1,
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
+    'storage_filesystem_per_idp' => false,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'no-reply@',

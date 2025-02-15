@@ -78,6 +78,7 @@ A note about colours;
 * [storage_filesystem_per_day_max_age_to_create_directory](#storage_filesystem_per_day_min_age_to_create_directory)
 * [storage_filesystem_per_day_min_days_to_clean_empty_directories](#storage_filesystem_per_day_min_days_to_clean_empty_directories)
 * [storage_filesystem_per_day_max_days_to_clean_empty_directories](#storage_filesystem_per_day_max_days_to_clean_empty_directories)
+* [storage_filesystem_per_idp](#storage_filesystem_per_idp)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
 * [cloud_s3_region](#cloud_s3_region)
@@ -951,6 +952,15 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __default:__ 7
 * __available:__ since version 2.47
 * __comment:__ This is mostly for internal use and likely fine to leave at default. This prevents bucket subdirectories from being recreated if very old files are listed where the file content is already deleted by the cron job.
+
+###storage_filesystem_per_idp
+
+* __description:__ Store files in a subdirectory based on the IDP the user/owner is from
+* __mandatory:__ no
+* __type:__ **bool**
+* __default:__ false
+* __available:__ since version 3.1
+* __comment:__
 
 ### storage_filesystem_per_day_min_days_to_clean_empty_directories
 
