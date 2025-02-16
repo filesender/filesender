@@ -16,7 +16,7 @@ function html_selectidp( $idp, $row ) {
         <div class="row">
             <div class="col">
                 <div class="fs-statistics__title">
-                    <h1>{tr:admin_statistics_section}<?php if ($idp) { echo ' ('.$idp.')'; } ?></h1>
+                    <h1>{tr:admin_statistics_section}<?php if ($idp) { echo ' ('.Template::Q($idp).')'; } ?></h1>
                 </div>
             </div>
         </div>

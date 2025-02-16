@@ -240,14 +240,14 @@ switch ($topic) {
                 if ((empty($row['browser'])))  {
                     echo 'Unknown';
                 } else {
-                    echo $row['browser'];
+                    echo Template::Q($row['browser'])';
                 }
                 echo '</td>';
                 echo '<td>';
                 if (empty($row['os']))  {
                     echo 'Unknown';
                 } else {
-                    echo $row['os'];
+                    echo Template::Q($row['os']);
                 }
                 echo '</td>';
                 echo '<td>';
@@ -257,7 +257,7 @@ switch ($topic) {
                 elseif ($row['additional_attributes'] === '{"encryption":false}') {
                     echo is_encrypted_to_html(0);
                 } else {
-                    echo $row['additional_attributes'];
+                    echo Template::Q($row['additional_attributes']);
                 }
                 echo '</td>';
             } else {
