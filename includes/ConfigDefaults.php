@@ -181,6 +181,7 @@ $default = array(
     'storage_filesystem_per_day_min_days_to_clean_empty_directories' => -1,
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
     'storage_filesystem_per_idp' => false,
+    'storage_filesystem_explicitly_store_subpath_per_file' => false,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'no-reply@',
