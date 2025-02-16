@@ -196,8 +196,11 @@ class User extends DBObject
     protected $save_transfer_preferences = true;
 
     const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
-    const AUP = " UserPreferences.service_aup_accepted_version >= :aup ";
-    const FROM_IDP_AUP = " saml_user_identification_idp = :idp and service_aup_accepted_version >= :aup ";
+    const AUP             = " service_aup_accepted_version >= :aup ";
+    const FROM_IDP_AUP    = " saml_user_identification_idp = :idp and service_aup_accepted_version >= :aup ";
+    const APIKEY          = " auth_secret IS NOT NULL  ";
+    const FROM_IDP_APIKEY = " saml_user_identification_idp = :idp and auth_secret IS NOT NULL  ";
+
     
     /** 
      * These are not real properties and are used by queries in the
@@ -953,7 +956,7 @@ class User extends DBObject
                     'view'  => self::getDBTable(),
                     'where' => self::AUP
                 ),
-                array(':idp' => $idp, 'aup' => Config::get('service_aup_min_required_version'))
+                array('aup' => Config::get('service_aup_min_required_version'))
             );
         }
 
@@ -972,19 +975,22 @@ class User extends DBObject
      */
     public static function usersWithAPIKey( $idp = null )
     {
-        if (!$idp) {
-            $sql='SELECT COUNT(auth_secret) as apicount FROM '.self::getDBTable().' WHERE auth_secret IS NOT NULL';
-            $statement = DBI::prepare($sql);
-            $statement->execute();
-            $data = $statement->fetch();
-            return $data['apicount'];
+        if ( !$idp ) {
+            return self::count(
+                array(
+                    'view'  => self::getDBTable(),
+                    'where' => self::APIKEY
+                )
+            );
         }
 
-        $sql='SELECT COUNT(auth_secret) as apicount FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.authid = '.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::getDBTable().'.auth_secret IS NOT NULL';
-        $statement = DBI::prepare($sql);
-        $statement->execute(array(':idp' => $idp));
-        $data = $statement->fetch();
-        return $data['apicount'];
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_APIKEY
+            ),
+            array(':idp' => $idp)
+        );        
     }
 
 }
