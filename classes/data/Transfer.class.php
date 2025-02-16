@@ -276,6 +276,12 @@ class Transfer extends DBObject
                                            . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
                                            . ' LEFT JOIN '.Authentication::getDBTable().' a ON u.authid=a.id '
                                            . ' GROUP BY a.saml_user_identification_idp ';
+
+            $idpview[$dbtype] = 'select t.*,a.saml_user_identification_idp as idp, saml_user_identification_idp as saml_user_identification_idp from '
+                              . self::getDBTable() . ' t '
+                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+            
             
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
@@ -288,6 +294,7 @@ class Transfer extends DBObject
                     , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
                     , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
+                    , 'transferidpview' => $idpview
         );
     }
 
@@ -330,6 +337,8 @@ class Transfer extends DBObject
     const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
     const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
     const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+    const FROM_IDP_UPLOADING = "status = 'uploading' and saml_user_identification_idp = :idp ORDER BY created DESC";
+    const FROM_IDP_AVAILABLE = "status = 'available' and saml_user_identification_idp = :idp ORDER BY created DESC";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -705,12 +714,13 @@ class Transfer extends DBObject
         if (!$idp) {
             return self::all(self::AVAILABLE);
         }
-        
-        $sql = 'SELECT '.self::getDBTable().'.* FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::AVAILABLE;
-        $statement = DBI::prepare($sql);
-        $placeholders =  array(':idp' => $idp);
-        $statement->execute($placeholders);
-        return $statement->fetchAll();
+
+        return self::all(array(
+                             'view'  => 'transferidpview',
+                             'where' => self::FROM_IDP_AVAILABLE
+                         ),
+                         array(':idp' => $idp)
+        );
     }
 
     /**
@@ -724,11 +734,13 @@ class Transfer extends DBObject
             return self::all(self::UPLOADING);
         }
 
-        $sql = 'SELECT '.self::getDBTable().'.* FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::UPLOADING;
-        $statement = DBI::prepare($sql);
-        $placeholders =  array(':idp' => $idp);
-        $statement->execute($placeholders);
-        return $statement->fetchAll();
+        return self::all(array(
+                             'view'  => 'transferidpview',
+                             'where' => self::FROM_IDP_UPLOADING
+                         ),
+                         array(':idp' => $idp)
+        );
+        
     }
     
     /**
