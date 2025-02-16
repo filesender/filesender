@@ -6,13 +6,17 @@ if (!Auth::isAdmin() && !Auth::isTenantAdmin()) {
     exit(0);
 }
 
+
 $idp = Auth::getTenantAdminIDP();
 $pagelimit=Config::get('statistics_table_rows_per_page');
 
-if (!array_key_exists('t', $_GET))
-    exit(0);
 
-$start = array_key_exists('start', $_GET) ? $_GET['start'] : 0;
+$topic = Utilities::arrayKeyOrDefaultString( $_GET, 't' );
+$topic = Utilities::filter_regex( $topic, Utilities::FILTER_REGEX_PLAIN_STRING_UNDERSCORE );
+if( !$topic || $topic == '' ) {
+    Logger::haltWithErorr('nefarious activity suspected: attempt made on statistics_page without valid topic!');
+}
+$start = Utilities::arrayKeyOrDefault( $_GET, 'start', 0, FILTER_VALIDATE_INT  );
 
 function os_name_to_html( $v ) {
     if( $v == 'iPad'   )  return '<i class="fa fa-apple"></i> iPad';
@@ -47,7 +51,7 @@ function is_encrypted_to_html( $v ) {
     return '<i class="fa fa-unlock"></i>';
 }
 
-switch ($_GET['t']) {
+switch ($topic) {
     case 'top_users':
         echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
