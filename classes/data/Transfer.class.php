@@ -339,6 +339,7 @@ class Transfer extends DBObject
     const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
     const FROM_IDP_UPLOADING = "status = 'uploading' and saml_user_identification_idp = :idp ORDER BY created DESC";
     const FROM_IDP_AVAILABLE = "status = 'available' and saml_user_identification_idp = :idp ORDER BY created DESC";
+    const FROM_IDP_EXPIRED   = "expires <= :date  and saml_user_identification_idp = :idp ORDER BY expires ASC";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -754,11 +755,14 @@ class Transfer extends DBObject
             return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
         }
 
-        $sql = 'SELECT '.self::getDBTable().'.* FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.userid='.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::EXPIRED;
-        $statement = DBI::prepare($sql);
-        $placeholders =  array(':idp' => $idp, ':date' => date('Y-m-d'));
-        $statement->execute($placeholders);
-        return $statement->fetchAll();
+        return self::all(array(
+                             'view'  => 'transferidpview',
+                             'where' => self::FROM_IDP_EXPIRED
+                         ),
+                         array(':idp' => $idp,
+                               ':date' => date('Y-m-d')
+                         )
+        );
     }
     
     /**
