@@ -158,7 +158,7 @@ class User extends DBObject
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
                                        .self::getDBTable().' up, '.call_user_func('Authentication::getDBTable').' a where up.authid = a.id ';
-            $idpview[$dbtype] = 'select u.*, a.saml_user_identification_uid as saml_user_identification_uid, a.saml_user_identification_uid as idp from '
+            $idpview[$dbtype] = 'select u.*, a.saml_user_identification_idp as saml_user_identification_idp, a.saml_user_identification_idp as idp from '
                                . self::getDBTable().' u '
                                . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
 
@@ -196,6 +196,8 @@ class User extends DBObject
     protected $save_transfer_preferences = true;
 
     const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+    const AUP = " UserPreferences.service_aup_accepted_version >= :aup ";
+    const FROM_IDP_AUP = " saml_user_identification_idp = :idp and service_aup_accepted_version >= :aup ";
     
     /** 
      * These are not real properties and are used by queries in the
@@ -946,19 +948,23 @@ class User extends DBObject
     public static function usersSignedAUP( $idp = null )
     {
         if ( !$idp ) {
-            $sql='SELECT COUNT(service_aup_accepted_version) as aupcount FROM '.self::getDBTable().' WHERE UserPreferences.service_aup_accepted_version >= :aup';
-            $statement = DBI::prepare($sql);
-            $statement->execute(array(':aup' => Config::get('service_aup_min_required_version')));
-            $data = $statement->fetch();
-            return $data['aupcount'];
+            return self::count(
+                array(
+                    'view'  => self::getDBTable(),
+                    'where' => self::AUP
+                ),
+                array(':idp' => $idp, 'aup' => Config::get('service_aup_min_required_version'))
+            );
         }
-        
-        $sql='SELECT COUNT(service_aup_accepted_version) as aupcount FROM '.self::getDBTable().' LEFT JOIN '.call_user_func('Authentication::getDBTable').' ON '.self::getDBTable().'.authid = '.call_user_func('Authentication::getDBTable').'.id WHERE '.call_user_func('Authentication::getDBTable').'.saml_user_identification_idp = :idp AND '.self::getDBTable().'.service_aup_accepted_version >= :aup';
 
-        $statement = DBI::prepare($sql);
-        $statement->execute(array(':idp' => $idp, ':aup' => Config::get('service_aup_min_required_version')));
-        $data = $statement->fetch();
-        return $data['aupcount'];
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_AUP
+            ),
+            array(':idp' => $idp, 'aup' => Config::get('service_aup_min_required_version'))
+        );
+        
     }
 
     /*
