@@ -68,6 +68,7 @@ A note about colours;
 
 * [storage_type](#storage_type)
 * [storage_filesystem_path](#storage_filesystem_path)
+* [storage_filesystem_explicitly_store_subpath_per_file](#storage_filesystem_explicitly_store_subpath_per_file)
 * [storage_filesystem_df_command](#storage_filesystem_df_command)
 * [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
 * [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
@@ -873,6 +874,17 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __available:__ since version 1.0
 * __1.x name:__ site_filestore
 * __comment:__
+
+
+### storage_filesystem_explicitly_store_subpath_per_file
+
+* __description:__ If you are looking to migrate what subpaths are used in the storage for your filesender you might like to enable this feature. It will explicitly store the computed subpath in the database for each file.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.0rc5
+* __comment:__ This will store the computed subpath in the database for each file. As of rc5 only storage of this path is available. In the future it might allow for changing the bucket storage (storage_filesystem_per_day_buckets et al), idp storage (storage_filesystem_per_idp) settings while files previously uploaded will remain available. Being able to store this path is the first step, any migration will require the paths to be explicitly stored in order to work.
+
 
 ### storage_filesystem_df_command
 

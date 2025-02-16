@@ -323,6 +323,8 @@ class StorageFilesystem
      * Build file storage path (without filename)
      *
      * @param File $file
+     * @param string fillPath This is currently only used in the test suite. Using it might break
+     *                        migration of path mangling settings.
      *
      * @return string path
      */
@@ -424,6 +426,15 @@ class StorageFilesystem
             } catch (Exception $e) {
                 Logger::error("Issue with per day buckets and UUID");
                 return $path;
+            }
+        }
+
+        // cache the subpath
+        if( $fullPath ) {
+            if( Config::get('storage_filesystem_explicitly_store_subpath_per_file')) {
+                if( !$file->storage_path ) {
+                    $file->storage_path = $path;
+                }
             }
         }
   

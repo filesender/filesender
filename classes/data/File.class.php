@@ -122,7 +122,17 @@ class File extends DBObject
         'have_avresults' => array(
             'type' => 'bool',
             'default' => false
-        )
+        ),
+
+        // used by storage::buildPath to cache the storage path used for this file
+        // this may allow migration of settings in the future with access
+        // to existing files.
+        'storage_path' => array(
+            'type' => 'string',
+            'size' => 170,
+            'null' => true
+        ),
+        
     );
 
     protected static $secondaryIndexMap = array(
@@ -178,6 +188,7 @@ class File extends DBObject
     protected $aead = null;
     protected $have_avresults = false;
     protected $storage_class_name = ''; // set in constructor
+    protected $storage_path = null;
    
     /**
      * Related objects cache
@@ -502,7 +513,7 @@ class File extends DBObject
     {
         if (in_array($property, array(
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
-          , 'storage_class_name', 'iv', 'aead', 'have_avresults'
+          , 'storage_class_name', 'iv', 'aead', 'have_avresults', 'storage_path'
         ))) {
             return $this->$property;
         }
@@ -614,6 +625,8 @@ class File extends DBObject
             $this->aead = $value;
         } elseif ($property == 'have_avresults') {
             $this->have_avresults = $value;
+        } elseif ($property == 'storage_path') {
+            $this->storage_path = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
