@@ -158,12 +158,17 @@ class User extends DBObject
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
                                        .self::getDBTable().' up, '.call_user_func('Authentication::getDBTable').' a where up.authid = a.id ';
+            $idpview[$dbtype] = 'select u.*, a.saml_user_identification_uid as saml_user_identification_uid, a.saml_user_identification_uid as idp from '
+                               . self::getDBTable().' u '
+                               . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+
         }
 
         
         
         return array( strtolower(self::getDBTable()) . 'view' => $a,
-                      'userauthview' => $userauthviewdef
+                      'userauthview' => $userauthviewdef,
+                      'useridpview' => $idpview,
         );
     }
     
@@ -190,6 +195,7 @@ class User extends DBObject
     protected $save_frequent_email_address = true;
     protected $save_transfer_preferences = true;
 
+    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
     
     /** 
      * These are not real properties and are used by queries in the
@@ -924,11 +930,14 @@ class User extends DBObject
         if ( !$idp ) {
             return self::countEstimate();
         }
-        
-        $statement = DBI::prepare('SELECT COUNT(*) as userscount FROM '.call_user_func('Authentication::getDBTable').' WHERE saml_user_identification_idp = :idp');
-        $statement->execute(array(':idp' => $idp));
-        $data = $statement->fetch();
-        return $data['userscount'];
+
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_NO_ORDER
+            ),
+            array(':idp' => $idp)
+        );
     }
 
     /*
