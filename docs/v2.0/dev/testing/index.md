@@ -25,6 +25,33 @@ vncviewer localhost:5902
 
 # Running the tests locally
 
+Local Selenium testing is now performed using codeception.
+
+You will need some items in your config.php to run the UI tests. The
+first setting enables some code that is only for testing and the
+latter includes an optional config.php file so that the test suite can
+override and revert to your settings as needed. Note that the
+config_custom.php file needs to exist and have permissions allowing
+you and apache to read and write to the file. This is one reason that
+the `config_custom` should only be used during testing!
+
+```
+config['testsuite_run_locally'] = true;
+include 'config_custom.php';
+```
+
+A local selenium test run can be done using the following.
+
+```
+php vendor/bin/codecept run --debug  --env chrome  acceptance
+```
+
+The majority of tests have been worked on to update to the new Selenium API.
+There are 3 tests that remain as at January 2025.
+
+
+The following is the old information about running tests from 2024.
+
 To run the Selenium tests against your local docker image you will need
 to edit your config/config.php file. Note that the test suite makes some
 changes to that file so making a backup of the file before you start is a

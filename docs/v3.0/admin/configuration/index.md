@@ -40,6 +40,7 @@ A note about colours;
 * [download_verification_code_valid_duration](#download_verification_code_valid_duration)
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
 * [download_show_download_links](#download_show_download_links)
+* [disclose](#disclose)
 
 
 ## Security settings
@@ -3307,6 +3308,18 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+### disclose
+
+* __description:__ Some optional information can be disclosed by the FileSender instance. For example, the version number being run.
+* __mandatory:__ no
+* __type:__ boolean/array of strings
+* __default:__ - (disclose nothing)
+* __available:__ since before version 2.50
+* __1.x name:__
+* __comment:__ the parameter needs an array of strings.  Current options include: 'version'
+* __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
+
 
 ### disclosed
 

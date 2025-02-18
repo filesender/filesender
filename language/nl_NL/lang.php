@@ -337,7 +337,7 @@ $lang['later'] = 'Vraag het mij later nogmaals';
 $lang['load'] = 'Laden mislukte overdracht';
 $lang['logoff'] = 'Afmelden';
 $lang['logon'] = 'Aanmelden';
-$lang['mac_archive_message'] = 'Dit gecomprimeerde archief (.zip-bestand) zal te groot uitvalen voor de uitpak-toepassing die met Apple OS X meegeleverd wordt.<br /> U kunt hier een alternatieve uitpak-toepassing vinden: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
+$lang['mac_archive_message'] = 'Dit gecomprimeerde archief (.zip-bestand) zal te groot uitvalen voor de uitpak-toepassing die met macOS meegeleverd wordt.<br /> U kunt hier een alternatieve uitpak-toepassing vinden: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
 $lang['maintenance_autoresume'] = 'Uw opdrachten zullen automatisch hervat worden zodra het onderhoud afgelopen is.';
 $lang['make_default'] = 'Herstel de standaardwaarde';
 $lang['max_email_recipients_exceeded'] = 'Maximaal aantal ontvangers is overschreden';

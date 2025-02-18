@@ -1,9 +1,9 @@
 <?php
 
-include_once('vendor/autoload.php');
-include_once('classes/utils/TestSuiteSupport.class.php');
+include_once(dirname(__FILE__) . '/../../vendor/autoload.php');
+include_once(dirname(__FILE__) . '/../../classes/utils/TestSuiteSupport.class.php');
 
-class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
+class SeleniumTest 
 {
     protected $start_url_path = '';
 
@@ -73,7 +73,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             ]
          ]);
 
-         parent::setUp();
+//         parent::setUp();
     }
 
     public static function browsers() {
@@ -94,7 +94,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             );
         }
 
-        return parent::browsers();
+//        return parent::browsers();
     }
     
     public function __construct($name = NULL, array $data = array(), $dataName = '')
@@ -153,7 +153,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         }
 
 
-        parent::__construct($name, $data, $dataName);
+//        parent::__construct($name, $data, $dataName);
         
     }
 
@@ -169,7 +169,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             }
         });
 
-        return parent::setUpPage();
+//        return parent::setUpPage();
     }
 
     protected function getKeyBindings()
@@ -192,7 +192,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             $this->deleteDirectory('testmails');
         }
 
-        parent::tearDown();
+//        parent::tearDown();
     }
 
     protected function setupUnauthenticated()
