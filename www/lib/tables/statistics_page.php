@@ -147,17 +147,22 @@ switch ($topic) {
         echo '<tr><th>'.Lang::translate('mime_types').'</th><th></th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  mime_type as "Mime Type", count(*) as Total '
+           .'  f.mime_type as "Mime Type", count(f.mime_type) as Total '
            .'FROM '
-           .'  filesbywhoview LEFT JOIN '.call_user_func('Authentication::getDBTable').' a on filesbywhoview.userid=a.id '
+           .'  filesbywhoview f '
+           .((!$idp) ?
+             ''
+             :
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
+           )
            .'WHERE '
            .((!$idp) ?
              ''
              :
              'a.saml_user_identification_idp = :idp AND '
            )
-           .'    ((DATE(filesbywhoview.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-           .'     (DATE(filesbywhoview.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(filesbywhoview.expires) <= NOW())) '
+           .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+           .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
            .'ORDER BY Total DESC '
            .'LIMIT '.$start.', '.$pagelimit;
