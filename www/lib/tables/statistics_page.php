@@ -240,7 +240,7 @@ switch ($topic) {
                 if ((empty($row['browser'])))  {
                     echo 'Unknown';
                 } else {
-                    echo Template::Q($row['browser'])';
+                    echo Template::Q($row['browser']);
                 }
                 echo '</td>';
                 echo '<td>';
