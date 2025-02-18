@@ -157,13 +157,15 @@ class User extends DBObject
                         . ' , id is not null as is_active '
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
-                                       .self::getDBTable().' up, '.call_user_func('Authentication::getDBTable').' a where up.authid = a.id ';
+                                       .self::getDBTable().' up LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON up.authid = a.id';
+            $idpview[$dbtype] = 'select u.*, a.saml_user_identification_idp as saml_user_identification_idp, a.saml_user_identification_idp as idp from '
+                               . self::getDBTable().' u '
+                               . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
         }
-
-        
         
         return array( strtolower(self::getDBTable()) . 'view' => $a,
-                      'userauthview' => $userauthviewdef
+                      'userauthview' => $userauthviewdef,
+                      'useridpview' => $idpview,
         );
     }
     
@@ -189,6 +191,12 @@ class User extends DBObject
     protected $service_aup_accepted_time = null;
     protected $save_frequent_email_address = true;
     protected $save_transfer_preferences = true;
+
+    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+    const AUP             = " service_aup_accepted_version >= :aup ";
+    const FROM_IDP_AUP    = " saml_user_identification_idp = :idp and service_aup_accepted_version >= :aup ";
+    const APIKEY          = " auth_secret IS NOT NULL  ";
+    const FROM_IDP_APIKEY = " saml_user_identification_idp = :idp and auth_secret IS NOT NULL  ";
 
     
     /** 
@@ -274,9 +282,13 @@ class User extends DBObject
         if (!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) {
             throw new UserMissingUIDException();
         }
+        // Check if idp attribute exists, if it doesn't make it null
+        if (!array_key_exists('idp', $attributes) || !$attributes['idp']) {
+            $attributes['idp'] = null;
+        }
         
         // Get matching user
-        $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid']);
+        $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid'],$attributes['idp']);
         $user = self::fromAuthId($authid);
         
         // Add metadata from attributes
@@ -696,6 +708,11 @@ class User extends DBObject
             $a = Authentication::fromId($this->authid);
             return $a->saml_user_identification_uid;
         }
+
+        if ($property == 'saml_user_identification_idp') {
+            $a = Authentication::fromId($this->authid);
+            return $a->saml_user_identification_idp;
+        }
         
         if ($property == 'email') {
             return count($this->email_addresses) ? $this->email_addresses[0] : null;
@@ -905,6 +922,72 @@ class User extends DBObject
         
 
         return $ret;
+    }
+
+    /*
+     * Count how many users we have or a tenant has
+     */
+    public static function users( $idp = null )
+    {
+        if ( !$idp ) {
+            return self::countEstimate();
+        }
+
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_NO_ORDER
+            ),
+            array(':idp' => $idp)
+        );
+    }
+
+    /*
+     * Count how many signed AUPs we have or a tenant has
+     */
+    public static function usersSignedAUP( $idp = null )
+    {
+        if ( !$idp ) {
+            return self::count(
+                array(
+                    'view'  => self::getDBTable(),
+                    'where' => self::AUP
+                ),
+                array('aup' => Config::get('service_aup_min_required_version'))
+            );
+        }
+
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_AUP
+            ),
+            array(':idp' => $idp, 'aup' => Config::get('service_aup_min_required_version'))
+        );
+        
+    }
+
+    /*
+     * Count how many API Keys we have or a tenant has
+     */
+    public static function usersWithAPIKey( $idp = null )
+    {
+        if ( !$idp ) {
+            return self::count(
+                array(
+                    'view'  => self::getDBTable(),
+                    'where' => self::APIKEY
+                )
+            );
+        }
+
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_APIKEY
+            ),
+            array(':idp' => $idp)
+        );        
     }
 
 }

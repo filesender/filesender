@@ -40,6 +40,7 @@ A note about colours;
 * [download_verification_code_valid_duration](#download_verification_code_valid_duration)
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
 * [download_show_download_links](#download_show_download_links)
+* [disclose](#disclose)
 
 
 ## Security settings
@@ -68,6 +69,7 @@ A note about colours;
 
 * [storage_type](#storage_type)
 * [storage_filesystem_path](#storage_filesystem_path)
+* [storage_filesystem_explicitly_store_subpath_per_file](#storage_filesystem_explicitly_store_subpath_per_file)
 * [storage_filesystem_df_command](#storage_filesystem_df_command)
 * [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
 * [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
@@ -78,6 +80,7 @@ A note about colours;
 * [storage_filesystem_per_day_max_age_to_create_directory](#storage_filesystem_per_day_min_age_to_create_directory)
 * [storage_filesystem_per_day_min_days_to_clean_empty_directories](#storage_filesystem_per_day_min_days_to_clean_empty_directories)
 * [storage_filesystem_per_day_max_days_to_clean_empty_directories](#storage_filesystem_per_day_max_days_to_clean_empty_directories)
+* [storage_filesystem_per_idp](#storage_filesystem_per_idp)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
 * [cloud_s3_region](#cloud_s3_region)
@@ -265,8 +268,9 @@ A note about colours;
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
-    * [using_local_saml_dbauth](#using_local_saml_dbauth)
-    * [auth_warn_session_expired](#auth_warn_session_expired)
+	* [using_local_saml_dbauth](#using_local_saml_dbauth)
+	* [auth_warn_session_expired](#auth_warn_session_expired)
+	* [auth_sp_idp_filters](#auth_sp_idp_filters)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -323,6 +327,8 @@ A note about colours;
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
+* [statistics_table_rows_per_page](#statistics_table_rows_per_page)
+* [tenant_admin](#tenant_admin)
 
 ## Data Protection
 
@@ -870,6 +876,17 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __1.x name:__ site_filestore
 * __comment:__
 
+
+### storage_filesystem_explicitly_store_subpath_per_file
+
+* __description:__ If you are looking to migrate what subpaths are used in the storage for your filesender you might like to enable this feature. It will explicitly store the computed subpath in the database for each file.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.0rc5
+* __comment:__ This will store the computed subpath in the database for each file. As of rc5 only storage of this path is available. In the future it might allow for changing the bucket storage (storage_filesystem_per_day_buckets et al), idp storage (storage_filesystem_per_idp) settings while files previously uploaded will remain available. Being able to store this path is the first step, any migration will require the paths to be explicitly stored in order to work.
+
+
 ### storage_filesystem_df_command
 
 * __description:__ Command used to determine available disk space on file system.  Used to perform per-transfer check for sufficient disk space and to trigger disk space usage warnings to the FileSender Admin
@@ -948,6 +965,15 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __default:__ 7
 * __available:__ since version 2.47
 * __comment:__ This is mostly for internal use and likely fine to leave at default. This prevents bucket subdirectories from being recreated if very old files are listed where the file content is already deleted by the cron job.
+
+###storage_filesystem_per_idp
+
+* __description:__ Store files in a subdirectory based on the IDP the user/owner is from
+* __mandatory:__ no
+* __type:__ **bool**
+* __default:__ false
+* __available:__ since version 3.1
+* __comment:__ Note that if you change this setting existing transfers may not be available. It only applies to new transfers and old transfers may look in the wrong location unless you have moved the files on disk.
 
 ### storage_filesystem_per_day_min_days_to_clean_empty_directories
 
@@ -2881,8 +2907,14 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
                The warning does not happen during an upload because the session may expire there and the upload can still complete.
 
+### auth_sp_idp_filters
 
-
+* __description:__ Replacement filters to run on IDP entityIDs to make them read nicer
+* __mandatory:__ no
+* __type:__ array
+* __default:__ 
+* __available:__ since version 3.1
+* __comment:__ Note: setting this will overwrite the default values. If you want them include them in your custom config.
 
 
 ## Authentication: Shibboleth
@@ -3343,6 +3375,18 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __1.x name:__
 * __comment:__
 
+### disclose
+
+* __description:__ Some optional information can be disclosed by the FileSender instance. For example, the version number being run.
+* __mandatory:__ no
+* __type:__ boolean/array of strings
+* __default:__ - (disclose nothing)
+* __available:__ since before version 2.50
+* __1.x name:__
+* __comment:__ the parameter needs an array of strings.  Current options include: 'version'
+* __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
+
+
 ### disclosed
 
 * __description:__ the webservice has an endpoint called "info" which discloses information about the FileSender instance.  By default it gives the URL of the FileSender instance.  This parameter allows you to add more info from the configuration file.  E.g. when using a remote client this client needs the chunk size.
@@ -3459,11 +3503,16 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 		'uid' => [
 			'@mydomain.com$' => 'mydomainfile',
 			'@myotherdomain.com$|@yetanotherdomain.com$' => 'myotherdomainfile',
-		];
+		],
+		'idp' => [
+			'idp.customer2.com' => 'customer2',
+		],
+	];
 	</code></pre>
 
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
+        If the idp is 'idp.customer2.com', the config file config-customer2.php in the config subdir will be loaded.
 	
 ### show_storage_statistics_in_admin
 * __description:__ Lists used and free diskspace in admin section
@@ -3472,6 +3521,21 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __default:__ true
 * __available:__ since version 2.0
 * __comment:__ Shows a section in the administrator interface showing basic disk statistics.
+
+### statistics_table_rows_per_page
+* __description:__ Number of rows to show in statistics page
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 3.1
+
+### tenant_admin
+* __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender tenant administrators. Accounts with these UIDs can access the Statistics page through the web UI and view stats related to the IDP they are a tenant admin of. Separate multiple entries with a comma (',').
+* __mandatory:__ no
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.1
+* __comment:__ see [auth_config_regex_files](#auth_config_regex_files) on how to setup differnt config files per idp. Within that file set $config['tenant_admin'].
 
 ---
 

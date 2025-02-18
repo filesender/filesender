@@ -91,6 +91,31 @@ class Recipient extends DBObject
             'token' => array()
         )
     );
+
+    public static function getViewMap()
+    {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype, 'created')
+                        . DBView::columnDefinition_age($dbtype, 'last_activity', 'last_activity_days_ago')
+                                . '  from ' . self::getDBTable();
+            $idpview[$dbtype] = 'select r.*,u.id as uid,u.authid,a.saml_user_identification_idp from '
+                              . self::getDBTable() . ' r '
+                                    . ' LEFT JOIN '.call_user_func('Transfer::getDBTable').' t ON r.id=t.userid '
+                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+            
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a
+                    , 'recipientsidpview' => $idpview
+        );
+    }
+
+    /**
+     * Set selectors
+     */
+    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
     
 
     /**
@@ -254,6 +279,25 @@ class Recipient extends DBObject
         foreach (TrackingEvent::fromRecipient($this) as $tracking_event) {
             $tracking_event->delete();
         }
+    }
+
+    /*
+     * Count how many unique recipients we have or a tenant has
+     */
+    public static function getRecipientCount( $idp = null )
+    {
+        if (!$idp) {
+            return self::countEstimate();
+        }
+
+        return self::count(
+            array(
+                'view'  => 'recipientsidpview',
+                'where' => self::FROM_IDP_NO_ORDER
+            ),
+            array(':idp' => $idp)
+        );
+        
     }
     
     /**

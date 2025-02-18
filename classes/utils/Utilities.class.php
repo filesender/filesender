@@ -708,6 +708,45 @@ class Utilities
         $r = filter_var($r, $filter, $options);
         return $r;
     }
+    /**
+     * Calls arrayKeyOrDefault for a string. As the filtering for a string might change over time
+     * this one call is created if you want a general purpose string that you might then
+     * call filter_regex on after this call.
+     */
+    public static function arrayKeyOrDefaultString($array, $key, $def = '' )
+    {        
+        return self::arrayKeyOrDefault($array,$key,$def,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
+    
+    /**
+     * Call filter_var with the supplied default value and regular expression
+     * 
+     * @param string v the value to filter
+     * @param string rex to match against. See FILTER_REGEX constants in this class for one
+     * that might work. Feel free to add more of those constants to make it easier to maintain
+     * things and audit in the future. NOTE that an empty, invalid, or null rex value is a terminal
+     * case and control may not return from the function in those cases.
+     * 
+     * @param string def default value if filter fails
+     */
+    public static function filter_regex( $v, $rex, $def = '' )
+    {
+        if( !$rex || $rex == '' ) {
+            Logger::haltWithErorr('filter_regex called without a valid regex. This should never happen');           
+        }
+
+        
+        $r = filter_var($v, FILTER_VALIDATE_REGEXP,
+                        array( 'options' => array('default' => $def,
+                                                  'regexp' => $rex,
+                        )));
+        return $r;
+    }
+    const FILTER_REGEX_PLAIN_STRING = '/^[A-Za-z]+$/';
+    const FILTER_REGEX_PLAIN_STRING_OR_NUMBER = '/^[A-Za-z0-9]+$/';
+    const FILTER_REGEX_PLAIN_STRING_UNDERSCORE = '/^[A-Za-z_]+$/';
+    
 
     /**
      * true if $v is array( array( ... ) )
