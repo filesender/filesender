@@ -322,8 +322,8 @@ class RestEndpointFile extends RestEndpoint
     {
         if (Utilities::isTrue(Config::get('testsuite_run_locally'))) {
             include_once(FILESENDER_BASE . "/vendor/autoload.php");
-            include_once(FILESENDER_BASE . "/unittests/selenium/SeleniumTest.php");
-            include_once(FILESENDER_BASE . "/unittests/selenium/tests/UploadAutoResumeTest.php");
+//            include_once(FILESENDER_BASE . "/unittests/selenium/SeleniumTest.php");
+            include_once(FILESENDER_BASE . "/unittests/codeception/acceptance/UploadAutoResumeCest.php");
             TestSuiteSupport::evalOverride("PUT_PERFORM_TESTSUITE");
         }
     }

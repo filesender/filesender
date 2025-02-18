@@ -47,7 +47,7 @@ Als u tussentijds het bestand <b><i>gewijzigd</i></b> heeft, hernoem het dan eer
     <li><i class="fa-li fa fa-caret-right"></i><strong>Maximum bestandsgrootte per upload: </strong>{size:cfg:max_transfer_size}</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>Maximum bestandsgrootte per bestand voor browsers die geen HTML5 ondersteunen: </strong>{size:cfg:max_legacy_file_size}</li>
     <li><i class="fa-li fa fa-caret-right"></i><strong>Maximale geldigheidsduur van bestanden: </strong> {cfg:max_transfer_days_valid} dagen</li>
-    <li><i class="fa-li fa fa-caret-right"></i><strong>Maximale geldigheidsduur van uitnodigingen: </strong> {fg:max_guest_days_valid} dagen</li>
+    <li><i class="fa-li fa fa-caret-right"></i><strong>Maximale geldigheidsduur van uitnodigingen: </strong> {cfg:max_guest_days_valid} dagen</li>
 </ul>
 
 <h3>Technische details</h3>
