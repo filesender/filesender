@@ -156,12 +156,11 @@ class File extends DBObject
             // to work where they do not allow subqueries in view definitions.
             $transferviewdef[$dbtype] = Transfer::getPrimaryViewDefinition($dbtype);
 
-            $filesbywhodef[$dbtype] = 'select t.id as transferid,name,upload_end,f.id as fileid,mime_type,size,'
-                                . ' t.* from '.self::getDBTable().' f, '
-                                    . ' filestranferviewcopy t '
-                                    . ' where f.transfer_id = t.id order by t.id';
-        }
-        
+            $filesbywhodef[$dbtype] = 'select t.id as transferid, name, upload_end, f.id as fileid, mime_type, size,'
+                                    . ' t.* from '.self::getDBTable().' f LEFT JOIN'
+                                    . ' filestranferviewcopy t ON f.transfer_id = t.id'
+                                    . ' order by t.id';
+        }        
         
         return array( strtolower(self::getDBTable()) . 'view' => $a ,
                       'filestranferviewcopy' => $transferviewdef    ,
