@@ -227,7 +227,7 @@ class Transfer extends DBObject
                                      . self::getDBTable().' t '
                                            . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                            . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id, '
+                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
                                            . '  group by t.id';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
@@ -287,8 +287,10 @@ class Transfer extends DBObject
                     , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
                     , 'transferidpview' => $idpview
         );
+    }
     
-    protected static $secondaryIndexMap = array( 'userid' => array(
+    protected static $secondaryIndexMap = array(
+        'userid' => array(
             'userid' => array()
         ),
         'user_email' => array(
