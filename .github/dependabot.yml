@@ -1,0 +1,13 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    applies-to: security-updates
+    allow:
+      - dependency-type: production
+    commit-message:
+      prefix: "Composer"
+      include: "scope"

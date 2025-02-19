@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Bericht über {if:target.type=="transfer"}Dateiübertragung{endif}{if:target.type=="recipient"}Empfänger{endif}{if:target.type=="guest"}Einladung{endif}{if:target.type=="file"}Datei{endif} Nr. {target.id}
+subject: Bericht über {if:target.type=="Transfer"}Dateiübertragung{endif}{if:target.type=="Recipient"}Empfänger{endif}{if:target.type=="Guest"}Einladung{endif}{if:target.type=="File"}Datei{endif} Nr. {target.id}
 
 {alternative:plain}
 

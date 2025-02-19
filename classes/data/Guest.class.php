@@ -142,9 +142,16 @@ class Guest extends DBObject
                         . DBView::columnDefinition_age($dbtype, 'service_aup_accepted_time', 'service_aup_accepted_time_days_ago')
                         . ' , expires < now() as expired '
                         . " , status = 'available' as is_available "
-                        . '  from ' . self::getDBTable();
+                                . '  from ' . self::getDBTable();
+            $idpview[$dbtype] = 'select t.*,u.id as uid,u.authid,a.saml_user_identification_idp from '
+                              . self::getDBTable() . ' t '
+                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
+                                    . ' WHERE ' . self::AVAILABLE;            
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        return array( strtolower(self::getDBTable()) . 'view' => $a
+                    , 'guestsidpview' => $idpview
+        );
     }
 
     /**
@@ -161,8 +168,9 @@ class Guest extends DBObject
     const EXPIRED = "expires < :date ORDER BY expires ASC";
     // For these fragments we want to find the guests that have
     // expires is null because they are still considered active
-    const FROM_USER = "userid = :userid AND (expires is null or expires > :date) ORDER BY created DESC";
+    const FROM_USER           = "userid = :userid AND (expires is null or expires > :date) ORDER BY created DESC";
     const FROM_USER_AVAILABLE = "userid = :userid AND (expires is null or expires > :date) AND status = 'available' ORDER BY created DESC";
+    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
     
     /**
      * Properties
@@ -700,6 +708,24 @@ class Guest extends DBObject
         
         return $options;
     }
+
+    /*
+     * Count how many guests we have or a tenant has
+     */
+    public static function getGuestCount( $idp = null )
+    {
+        if (!$idp) {
+            return self::countEstimate();
+        }
+        
+        return self::count(
+            array(
+                'view'  => 'guestsidpview',
+                'where' => self::FROM_IDP_NO_ORDER
+            ),
+            array(':idp' => $idp)
+        );
+    }    
     
     /**
      * Getter
@@ -740,6 +766,10 @@ class Guest extends DBObject
             return $user->saml_user_identification_uid;
         }
         
+        if ($property == 'saml_user_identification_idp') {
+            $user = User::fromId($this->userid);
+            return $user->saml_user_identification_idp;
+        }
         
         if ($property == 'upload_link') {
             return Utilities::http_build_query(

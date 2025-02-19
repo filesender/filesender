@@ -1,0 +1,30 @@
+.fs-statistics {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-istatistics__title {
+    text-align: center;
+}
+
+.statistics_page .table-nav {
+    text-align: center;
+}
+
+.statistics_page .table-nav i.fa {
+    color: var(--fs-accent);
+    cursor: pointer;
+}
+
+.statistics_page .table-nav i.fa-inverse {
+    color: #fff;
+}
+
+.statistics_page .blank_row {
+    display: none;
+}
+
+.statistics_page h3 {
+    padding-top: 1.2em !important;
+}

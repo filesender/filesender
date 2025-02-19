@@ -66,6 +66,10 @@ $default = array(
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     'auth_sp_force_session_start_first' => false,  // maybe move session_start() forward.
+    'auth_sp_idp_filters' => array(
+        array('/^https*:\/\//', ''), // get rid of https://
+        array('/\/$/', '') // remove a trailing slash (/)
+    ),
 
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
@@ -159,7 +163,6 @@ $default = array(
     // There are not so many options here, so they are listed
     // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',
-//    'storage_type' => 'filesystemChunked',
 
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
     'storage_filesystem_df_command' => 'df {path}',
@@ -177,6 +180,8 @@ $default = array(
     'storage_filesystem_per_day_max_age_to_create_directory' => 7,
     'storage_filesystem_per_day_min_days_to_clean_empty_directories' => -1,
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
+    'storage_filesystem_per_idp' => false,
+    'storage_filesystem_explicitly_store_subpath_per_file' => false,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'no-reply@',
@@ -242,6 +247,7 @@ $default = array(
 
     'admin_can_view_user_transfers_page' => true,
     'show_storage_statistics_in_admin' => true,
+    'statistics_table_rows_per_page' => 10,
 
     'cloud_s3_region'   => 'us-east-1',
     'cloud_s3_version'  => 'latest',

@@ -76,10 +76,6 @@ if( $testingMode ) {
     Mail::TESTING_SET_DO_NOT_SEND_EMAIL();
 }
 
-
-
-
-
 if( $verbose ) {
     echo "cron.php starting up... --force:$force --testing-mode:$testingMode\n";
     echo "cron.php running as user: " . `id` . "\n";
