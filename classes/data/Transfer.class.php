@@ -228,7 +228,7 @@ class Transfer extends DBObject
                                            . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                            . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
                                            . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
-                                           . '  group by t.id';
+                                           . '  group by t.id, a.saml_user_identification_idp';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
                                        . self::getDBTable().' t LEFT JOIN '
