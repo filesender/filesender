@@ -77,7 +77,7 @@ class DBLayer
     public static function datediff($f1, $f2)
     {
         if (self::isPostgress()) {
-            return "extract(day from " . $f1 . "-" . $f2 . " )";
+            return "(extract(day from " . $f1 . ") - " . $f2 . " )";
         }
         if (self::isMySQL()) {
             return "DATEDIFF(" . $f1 . "," . $f2 . ")";

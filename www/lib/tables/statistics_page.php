@@ -78,7 +78,8 @@ switch ($topic) {
            .'    AND t.status = "available" '
            .'GROUP BY t.user_email '
            .'ORDER BY Transfers DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -123,7 +124,8 @@ switch ($topic) {
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
            .'GROUP BY t.user_email '
            .'ORDER BY Transfers DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -165,7 +167,8 @@ switch ($topic) {
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
            .'ORDER BY Total DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -201,7 +204,9 @@ switch ($topic) {
              'AND a.saml_user_identification_idp = :idp '
            )
            .'ORDER BY Date DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start
+        ;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -230,7 +235,8 @@ switch ($topic) {
            .'FROM '
            .'  browserstatsview '
            //.'ORDER BY count DESC, maxsize DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start
 
         $statement = DBI::prepare($sql);
         $statement->execute(array());
