@@ -127,7 +127,7 @@ class StatLog extends DBObject
                                        .'    MIN('.DBLayer::timeStampToEpoch('created').') as firsttransfer, '
                                        .'    is_encrypted,os_name,browser_name '
                                        .' FROM statlogsview '
-                                       .' WHERE event="file_uploaded" '
+                                       ." WHERE event='file_uploaded' "
                                        .' GROUP BY is_encrypted,os_name,browser_name '
                                        .' ORDER BY count DESC, maxsize DESC ';
         }
