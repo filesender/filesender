@@ -122,5 +122,26 @@ class DBLayer
             'SQLUNIMP toViewVarChar() called on unsupported backend'
         );
     }
-    
+
+
+    public static function IF($expr,$exprtrue,$exprfalse)
+    {
+   //     //           .'  SUM(IF(t.options LIKE \'%\\"encryption\\":true%\',f.encrypted_size,f.size)) AS "Size", '
+   // .'  CASE WHEN (t.options LIKE \'%\\"encryption\\":true%\') THEN f.encrypted_size '
+        if (self::isPostgress()) {
+            return '  CASE WHEN ('
+                 . $expr . ')' 
+                 . ' THEN ' . $exprtrue
+                 . ' ELSE ' . $exprfalse 
+                 . ' END ';
+        }
+
+        if (self::isMySQL()) {
+            return ' IF('.$expr.','.$exprtrue.','.$exprfalse.') ';
+        }
+        throw new DBIBackendExplicitHandlerUnimplementedException(
+            'SQLUNIMP toViewVarChar() called on unsupported backend'
+        );
+        
+    }
 }
