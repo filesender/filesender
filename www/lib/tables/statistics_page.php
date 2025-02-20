@@ -58,7 +58,7 @@ switch ($topic) {
             'SELECT '
            .'  t.user_email as "User", '
            .'  COUNT(DISTINCT t.id) AS "Transfers", '
-          . DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ' as Size, '
+          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as Size, '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
@@ -76,7 +76,7 @@ switch ($topic) {
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
                                                         ."    AND t.status = 'available' "
-            .' GROUP BY t.user_email,t.options,f.encrypted_size,f.size         '
+            .' GROUP BY t.user_email      '
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -104,8 +104,7 @@ switch ($topic) {
             'SELECT '
            .'  t.user_email as "User", '
            .'  COUNT(DISTINCT t.id) AS "Transfers", '
-//           .'  SUM(IF(t.options LIKE \'%\\"encryption\\":true%\',f.encrypted_size,f.size)) AS "Size", '
-          . DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ' as Size, '
+          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as Size, '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
@@ -122,7 +121,7 @@ switch ($topic) {
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-            .' GROUP BY t.user_email,t.options,f.encrypted_size,f.size         '
+            .' GROUP BY t.user_email         '
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
