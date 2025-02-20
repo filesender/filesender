@@ -236,7 +236,7 @@ switch ($topic) {
            .'  browserstatsview '
            //.'ORDER BY count DESC, maxsize DESC '
            .' LIMIT  '.$pagelimit
-           .' OFFSET '.$start
+           .' OFFSET '.$start;
 
         $statement = DBI::prepare($sql);
         $statement->execute(array());
