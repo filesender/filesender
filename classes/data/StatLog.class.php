@@ -126,10 +126,10 @@ class StatLog extends DBObject
                                        .'    COUNT(ID) as count, '
                                        .'    MIN('.DBLayer::timeStampToEpoch('created').') as firsttransfer, '
                                        .'    is_encrypted,os_name,browser_name '
-                                       .'FROM statlogsview '
-                                       ."WHERE event='file_uploaded' "
-                                       .'GROUP BY is_encrypted,os_name,browser_name '
-                                       .'ORDER BY count DESC, maxsize DESC ';
+                                       .' FROM statlogsview '
+                                       ." WHERE event='file_uploaded' "
+                                       .' GROUP BY is_encrypted,os_name,browser_name '
+                                       .' ORDER BY count DESC, maxsize DESC ';
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'browserstatsview' => $browserstatsview

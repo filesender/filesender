@@ -59,7 +59,7 @@ $data = array(
 
 $sql =
     'SELECT '
-   .'  Date.date, '
+   .'  Date.date, Date.date as d2 , '
    .((!$idp) ?
         '  (SELECT COUNT(id) FROM '.call_user_func('Transfer::getDBTable').' WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as transfers, '
        .'  (SELECT COUNT(id) FROM '.call_user_func('Guest::getDBTable').' WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as guests '
