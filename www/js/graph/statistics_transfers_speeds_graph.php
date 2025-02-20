@@ -57,17 +57,16 @@ $data = array(
     )
 );
 
-//extract(epoch from ts)
-
+// FIXME the +0.001 is to avoid division by zero
 $sql =
     'SELECT '
    .'  Date.date, Date.date as d5, '
    .((!$idp) ?
-        '  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
-       .'  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
+        '  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'+0.001))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
+       .'  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'+0.001))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
      :
-        '  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'))/1048576 FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
-       .'  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'))/1048576 FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
+        '  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'+0.001))/1048576 FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
+       .'  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'+0.001))/1048576 FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
    )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '

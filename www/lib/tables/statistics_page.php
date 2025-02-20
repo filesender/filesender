@@ -58,7 +58,7 @@ switch ($topic) {
             'SELECT '
            .'  t.user_email as "User", '
            .'  COUNT(DISTINCT t.id) AS "Transfers", '
-          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as Size, '
+          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
@@ -104,7 +104,7 @@ switch ($topic) {
             'SELECT '
            .'  t.user_email as "User", '
            .'  COUNT(DISTINCT t.id) AS "Transfers", '
-          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as Size, '
+          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
@@ -147,7 +147,7 @@ switch ($topic) {
         echo '<tr><th>'.Lang::translate('mime_types').'</th><th></th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  f.mime_type as "Mime Type", count(f.mime_type) as Total '
+           .'  f.mime_type as mime_type, count(f.mime_type) as total '
            .'FROM '
            .'  filesbywhoview f '
            .((!$idp) ?
@@ -178,7 +178,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['Mime Type'].'</td><td>'.number_format($row['Total']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['mime_type'].'</td><td>'.number_format($row['total']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
