@@ -48,8 +48,8 @@ $default = array(
     'site_logo' => '', // [optional] This allows a different logo image to be used per site using auth_config_regex_files
     'email_use_html' => true,   // By default, use HTML on mails
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
-    'upload_display_bits_per_sec' => true, // By default, do not show bits per seconds
-    'upload_display_per_file_stats' => true, //
+    'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds
+    'upload_display_per_file_stats' => false, //
     'upload_force_transfer_resume_forget_if_encrypted' => false, //
     'upload_considered_too_slow_if_no_progress_for_seconds' => 30, // seconds
     'force_ssl' => true,
@@ -245,7 +245,7 @@ $default = array(
         return Config::get('site_url').'?s=logout';
     },
 
-    'admin_can_view_user_transfers_page' => true,
+    'admin_can_view_user_transfers_page' => false,
     'show_storage_statistics_in_admin' => true,
     'statistics_table_rows_per_page' => 10,
 
