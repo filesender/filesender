@@ -221,7 +221,7 @@ class Transfer extends DBObject
             $sizeviewdev[$dbtype] = 'select t.*,sum(f.size) as size from '
                                   . self::getDBTable().' t LEFT JOIN '
                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                        . '  group by t.id';
+                                        . '  group by t.id,f.size ';
 
             $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,a.saml_user_identification_idp from '
                                      . self::getDBTable().' t '

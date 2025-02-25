@@ -284,7 +284,7 @@ mv acl.php.dist acl.php
 mv authsources.php.dist authsources.php
 mv config.php.dist config.php
 
-cd /opt/filesender/simplesaml/config
+cd /opt/filesender/simplesaml/metadata
 mv saml20-idp-hosted.php.dist saml20-idp-hosted.php
 mv saml20-idp-remote.php.dist saml20-idp-remote.php
 mv saml20-sp-remote.php.dist saml20-sp-remote.php
