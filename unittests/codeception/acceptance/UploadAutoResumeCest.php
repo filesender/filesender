@@ -3,8 +3,8 @@
 
 namespace Tests\Acceptance;
 
-include_once('vendor/autoload.php');
-include_once(dirname(__FILE__) . '/classes/utils/TestSuiteSupport.class.php');
+include_once(FILESENDER_BASE . "/vendor/autoload.php");
+include_once(FILESENDER_BASE . '/classes/utils/TestSuiteSupport.class.php');
 
 use Tests\Support\AcceptanceTester;
 use \Tests\Support\Page\Acceptance\FileSender;
