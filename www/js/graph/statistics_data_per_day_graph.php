@@ -67,7 +67,7 @@ $data = array(
 
 $sql =
     'SELECT '
-   .'  Date.date, '
+   .'  Date.date, Date.date as d2 , '
    .((!$idp) ?
         '  (SELECT MAX(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
        .'  (SELECT AVG(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
