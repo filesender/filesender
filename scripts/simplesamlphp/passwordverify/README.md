@@ -1,7 +1,9 @@
 
-This is a work in progress created in March 2020. This should help
-small deployments of FileSender be created to allow people to share
-files using FileSender.
+This setup was created at the start of the COVID pandemic to help allow
+smaller installations of FileSender to be created. The work "PasswordVerify.php"
+has since had the core of the work merged into the SimpleSAMLphp project.
+
+https://github.com/simplesamlphp/simplesamlphp-module-sqlauth/blob/master/src/Auth/Source/PasswordVerify.php
 
 The idea is to allow authentication against password hashes stored in
 the same database that FileSender is using for other activities.
@@ -13,32 +15,29 @@ I will shortly be looking at how to add new users to the system and
 and initial web interface to set and reset passwords. Having this SAML
 plugin allows the web interface to evolve and improve and be updated.
 
-In order to use this setup you have to do the following steps. Details
-are provided below
+In the most basic form sspsmall will install SimpleSAMLphp 2.3 for you
+and will have the database setup as an authentication method. You
+should replace the database stanza in your sspsmall installation with
+the one generated with filesender-config-to-authsources-fragment.php
+and point your FileSender install at the SP that was setup in your
+sspsmall installation.
 
-* Apply a small (mainly two word) change to SQL.php in your SimpleSAMLphp installation (patch-to-simplesamlphp.patch)
-* Copy PasswordVerify.php to your SimpleSAMLphp installation (/opt/simplesamlphp/modules/sqlauth/lib/Auth/Source)
+In order to use this setup you have to do the following steps. More
+details are provided below
+
+* Use a recent SimpleSAMLphp 2.3 full distribution which includes the PasswordVerify.php file.
 * Run filesender-config-to-authsources-fragment.php and put that output into /opt/simplesamlphp/config/authsources.php
-* Select the filesender-dbauth SAML target in your /opt/filesender/config/config.php file
-  ($config['auth_sp_saml_authentication_source'] ="filesender-dbauth";)
+* Setup SimpleSAMLphp 2.3 as an SP and IdP and using the filesender-dbauth target as your authentication method.
+  To do this you might like to look at the sspsmall project which allows such a configuration of SimpleSAMLphp
+  to be setup on your local machine. https://github.com/monkeyiq/sspsmall
+* Tell FileSender to use your new SSP SP in your /opt/filesender/config/config.php file
+  ($config['auth_sp_saml_authentication_source'] ="filesender-sp";)
 * Enable the filesender Web interface for managing the user passwords in it's web interface. This will be
   an option to turn on in /opt/filesender/config/config.php.
   ($config['using_local_saml_dbauth'] = 1;)
 
 
-# Apply a small (mainly two word) change to SQL.php
 
-```
-cd ./simplesamlphp-1.18.5/
-patch -p1 < /opt/filesender/scripts/simplesamlphp/passwordverify/patch-to-simplesamlphp.patch
-```
-
-# Copy PasswordVerify.php to your SimpleSAMLphp installation
-
-```
-cp /opt/filesender/scripts/simplesamlphp/passwordverify/PasswordVerify.php ./modules/sqlauth/lib/Auth/Source/
-chgrp apache ./modules/sqlauth/lib/Auth/Source/PasswordVerify.php
-```
 
 # Run filesender-config-to-authsources-fragment.php
 
@@ -57,7 +56,7 @@ php filesender-config-to-authsources-fragment.php
 vi /opt/simplesamlphp/config/authsources.php
 
  ...
- 'default-sp' => [
+ 'filesender-sp' => [
         'saml:SP',
  ...
  ],
@@ -66,13 +65,13 @@ vi /opt/simplesamlphp/config/authsources.php
 
 ```
 
-# Select the filesender-dbauth SAML target
+# Select the filesender-sp target
 
 ```
 vi /opt/filesender/config/config.php
    ...
    // move to end of file
-   $config['auth_sp_saml_authentication_source'] ="filesender-dbauth";
+   $config['auth_sp_saml_authentication_source'] ="filesender-sp";
 
 ```
 
