@@ -58,7 +58,7 @@ switch ($topic) {
             'SELECT '
            .'  t.user_email as "User", '
            .'  COUNT(DISTINCT t.id) AS "Transfers", '
-           .'  SUM(IF(t.options LIKE \'%\\"encryption\\":true%\',f.encrypted_size,f.size)) AS "Size", '
+          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
@@ -75,10 +75,10 @@ switch ($topic) {
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-           .'    AND t.status = "available" '
-           .'GROUP BY t.user_email '
-           .'ORDER BY Transfers DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+                                                        ."    AND t.status = 'available' "
+            .' GROUP BY t.user_email      '
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -104,7 +104,7 @@ switch ($topic) {
             'SELECT '
            .'  t.user_email as "User", '
            .'  COUNT(DISTINCT t.id) AS "Transfers", '
-           .'  SUM(IF(t.options LIKE \'%\\"encryption\\":true%\',f.encrypted_size,f.size)) AS "Size", '
+          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
@@ -121,9 +121,9 @@ switch ($topic) {
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-           .'GROUP BY t.user_email '
-           .'ORDER BY Transfers DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+            .' GROUP BY t.user_email         '
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -147,20 +147,26 @@ switch ($topic) {
         echo '<tr><th>'.Lang::translate('mime_types').'</th><th></th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  mime_type as "Mime Type", count(*) as Total '
+           .'  f.mime_type as mime_type, count(f.mime_type) as total '
            .'FROM '
-           .'  filesbywhoview LEFT JOIN '.call_user_func('Authentication::getDBTable').' a on filesbywhoview.userid=a.id '
+           .'  filesbywhoview f '
+           .((!$idp) ?
+             ''
+             :
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
+           )
            .'WHERE '
            .((!$idp) ?
              ''
              :
              'a.saml_user_identification_idp = :idp AND '
            )
-           .'    ((DATE(filesbywhoview.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-           .'     (DATE(filesbywhoview.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(filesbywhoview.expires) <= NOW())) '
+           .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+           .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
            .'ORDER BY Total DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -172,7 +178,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['Mime Type'].'</td><td>'.number_format($row['Total']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['mime_type'].'</td><td>'.number_format($row['total']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -195,8 +201,10 @@ switch ($topic) {
              :
              'AND a.saml_user_identification_idp = :idp '
            )
-           .'ORDER BY Date DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .'ORDER BY "Date" DESC '
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start
+        ;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -225,7 +233,8 @@ switch ($topic) {
            .'FROM '
            .'  browserstatsview '
            //.'ORDER BY count DESC, maxsize DESC '
-           .'LIMIT '.$start.', '.$pagelimit;
+           .' LIMIT  '.$pagelimit
+           .' OFFSET '.$start;
 
         $statement = DBI::prepare($sql);
         $statement->execute(array());

@@ -40,6 +40,7 @@ A note about colours;
 * [download_verification_code_valid_duration](#download_verification_code_valid_duration)
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
 * [download_show_download_links](#download_show_download_links)
+* [disclose](#disclose)
 
 
 ## Security settings
@@ -1280,32 +1281,33 @@ User language detection is done in the following order:
 * __description:__ allow explicit language switching via URL (example: ?lang=en)
 * __mandatory:__ no (required when using lang_browser_enabled)
 * __type:__ boolean
-* __default:__ false
+* __default:__ true
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ Default changed to true in 3.0
 
 ### lang_userpref_enabled
 
 * __description:__ take user's preferred language from user's stored preferences.  These preferences are stored in the FileSender database.
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ false
+* __default:__ true
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ Default switched to true in 3.0
 
 ### lang_selector_enabled
 
 * __description:__ display language selector in UI .  If your FileSender instance only supports 1 language no selector is displayed and no "translate this email" link is present in emails.
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ false
+* __default:__ true
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ requires lang_url_enabled to be true.
 * __comment:__ <span style="background-color:orange">if the lang_selector is disabled a user can still select different translations in the email translation page</span>
 * __comment:__ <span style="background-color:orange">how is determined which language the lang selector defaults to when a user enters a page?  Browser setting?  Order in locale.php? </span>
+* __comment:__ Default changed to true in 3.0
 
 ### lang_save_url_switch_in_userpref
 
@@ -3373,6 +3375,18 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+### disclose
+
+* __description:__ Some optional information can be disclosed by the FileSender instance. For example, the version number being run.
+* __mandatory:__ no
+* __type:__ boolean/array of strings
+* __default:__ - (disclose nothing)
+* __available:__ since before version 2.50
+* __1.x name:__
+* __comment:__ the parameter needs an array of strings.  Current options include: 'version'
+* __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
+
 
 ### disclosed
 

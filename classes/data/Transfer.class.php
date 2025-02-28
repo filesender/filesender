@@ -214,36 +214,29 @@ class Transfer extends DBObject
             $authviewdef[$dbtype] = 'select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
                                   . 't.made_available,t.expires,t.created '
                                   . ' FROM '
-                                      . self::getDBTable().' t, '
-                                            . call_user_func('User::getDBTable').' u, '
-                                            . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
+                                      . self::getDBTable().' t LEFT JOIN '
+                                            . call_user_func('User::getDBTable').' u ON t.userid = u.id LEFT JOIN '
+                                            . call_user_func('Authentication::getDBTable').' a ON u.authid = a.id';
 
             $sizeviewdev[$dbtype] = 'select t.*,sum(f.size) as size from '
-                                  . self::getDBTable().' t, '
-                                        . call_user_func('File::getDBTable').' f '
-                                        . ' where '
-                                        . ' f.transfer_id=t.id '
-                                        . '  group by t.id ';
+                                  . self::getDBTable().' t LEFT JOIN '
+                                        . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
+                                        . '  group by t.id,f.size ';
 
             $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,a.saml_user_identification_idp from '
                                      . self::getDBTable().' t '
+                                           . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                            . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id, '
-                                           . call_user_func('File::getDBTable').' f '
-                                           . ' where '
-                                           . ' f.transfer_id=t.id '
-                                           . '  group by t.id ';
+                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
+                                           . '  group by t.id, a.saml_user_identification_idp';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
-                                       . self::getDBTable().' t, '
-                                             . call_user_func('Recipient::getDBTable').' r '
-                                             . ' where '
-                                             . ' r.transfer_id=t.id ';
+                                       . self::getDBTable().' t LEFT JOIN '
+                                             . call_user_func('Recipient::getDBTable').' r ON t.id=r.transfer_id';
+
             $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
-                                . self::getDBTable().' t, '
-                                      . call_user_func('File::getDBTable').' f '
-                                      . ' where '
-                                      . ' f.transfer_id=t.id ';
+                                . self::getDBTable().' t LEFT JOIN '
+                                      . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
 
             $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
                                     . ' from '
@@ -281,8 +274,6 @@ class Transfer extends DBObject
                               . self::getDBTable() . ' t '
                                     . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
                                     . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
-            
-            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -297,7 +288,7 @@ class Transfer extends DBObject
                     , 'transferidpview' => $idpview
         );
     }
-
+    
     protected static $secondaryIndexMap = array(
         'userid' => array(
             'userid' => array()
