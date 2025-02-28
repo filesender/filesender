@@ -102,7 +102,7 @@ class Recipient extends DBObject
                                 . '  from ' . self::getDBTable();
             $idpview[$dbtype] = 'select r.*,u.id as uid,u.authid,a.saml_user_identification_idp from '
                               . self::getDBTable() . ' r '
-                                    . ' LEFT JOIN '.call_user_func('Transfer::getDBTable').' t ON r.id=t.userid '
+                                    . ' LEFT JOIN '.call_user_func('Transfer::getDBTable').' t ON r.transfer_id=t.id '
                                     . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
                                     . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
             
