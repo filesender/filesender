@@ -143,9 +143,9 @@ class Guest extends DBObject
                         . ' , expires < now() as expired '
                         . " , status = 'available' as is_available "
                                 . '  from ' . self::getDBTable();
-            $idpview[$dbtype] = 'select t.*,u.id as uid,u.authid,a.saml_user_identification_idp from '
-                              . self::getDBTable() . ' t '
-                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+            $idpview[$dbtype] = 'select g.*,u.id as uid,u.authid,a.saml_user_identification_idp from '
+                              . self::getDBTable() . ' g '
+                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON g.userid=u.id '
                                     . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
                                     . ' WHERE ' . self::AVAILABLE;            
         }

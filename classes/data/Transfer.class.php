@@ -238,6 +238,12 @@ class Transfer extends DBObject
                                 . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
 
+            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, a.saml_user_identification_idp from '
+                                   . self::getDBTable().' t LEFT JOIN '
+                                      . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
+                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+
             $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
                                     . ' from '
                                     . self::getDBTable().' t, '
@@ -281,6 +287,7 @@ class Transfer extends DBObject
                     , 'transferssizeidpview' => $sizeidpviewdev
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
+                    , 'transfersfilesidpview' => $filesidpview
                     , 'transfersauditlogsview' => $auditlogsview
                     , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
