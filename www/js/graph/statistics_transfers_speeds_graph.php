@@ -60,7 +60,7 @@ $data = array(
 // FIXME the +0.001 is to avoid division by zero
 $sql =
     'SELECT '
-   .'  Date.date '
+   .'  Date.date, '
    .((!$idp) ?
         '  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'+0.001))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":false%\') as Unencrypted, '
        .'  (SELECT MAX(size/('.DBLayer::timeStampToEpoch('made_available').'-'.DBLayer::timeStampToEpoch('created').'+0.001))/1048576 FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date AND options LIKE \'%\\"encryption\\":true%\') as Encrypted '
