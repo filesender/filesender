@@ -110,7 +110,11 @@ if( $verbose ) echo "cron.php delete failed transfers...\n";
 foreach(Transfer::allFailed() as $transfer) {
     Logger::info($transfer.' failed, deleting it');
     if( $force ) {
-        $transfer->deleteForce = true;
+       try {
+            $transfer->deleteForce = true;
+       } catch (Exception $e) {
+               Logger::warn("Deleting transfer failed. error:" . $e->getMessage());
+       }
     }
     $transfer->delete();
 }
