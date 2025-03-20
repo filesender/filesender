@@ -152,6 +152,7 @@ if( !$found ) {
 
                                                     <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
                                                         <span class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}"
+                                                              data-action="download"
                                                               data-id="<?php echo $file->id ?>"
                                                               data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
                                                               data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>"
@@ -172,7 +173,9 @@ if( !$found ) {
                                                         </span>
 
                                                     <?php } else {?>
-                                                        <a class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>">
+                                                        <a class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}"
+                                                           data-action="download"
+                                                           href="download.php?files_ids=<?php echo $file->id ?>">
                                                             <i class="fa fa-download"></i>
                                                         </a>
                                                     <?php } ?>
