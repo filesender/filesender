@@ -289,6 +289,10 @@ class AuthSPSaml
             }
         }
 
+        if(!array_key_exists("HTTP_HOST",$_SERVER)) {
+            $_SERVER["HTTP_HOST"] = Config::get("site_hostname");
+        }
+        
         Auth::$authClassLoadingCount++;
         if (is_null(self::$simplesamlphp_auth_simple)) {
             $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';
