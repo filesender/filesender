@@ -57,9 +57,10 @@ class StorageFilesystemChunked extends StorageFilesystem
      * @param int $offset
      * @return int
      */
-    public static function getOffsetWithinChunkedFile($offset)
+    public static function getOffsetWithinChunkedFile($file, $offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
+        $file_chunk_size = $file->chunk_size;
         return ($offset % $file_chunk_size);
     }
 
@@ -70,9 +71,10 @@ class StorageFilesystemChunked extends StorageFilesystem
      * @param int $offset
      * @return string
      */
-    public static function getChunkFilename($filePath, $offset)
+    public static function getChunkFilename($file, $filePath, $offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
+        $file_chunk_size = $file->chunk_size;
         $offset = $offset - ($offset % $file_chunk_size);
         return $filePath.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
@@ -91,12 +93,15 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
+        $chunk_size = $file->transfer->chunk_size;
+        $crypted_chunk_size = $file->transfer->crypted_chunk_size;
+
         if ($file->transfer->is_encrypted) {
-            $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+            $offset=$offset / $chunk_size * $crypted_chunk_size;
         }
 
         $filePath = self::buildPath($file);
-        $chunkFile = self::getChunkFilename($filePath, $offset);
+        $chunkFile = self::getChunkFilename( $file, $filePath, $offset);
 
         if (!file_exists($chunkFile)) {
             Logger::error('readChunk() failed: '.$chunkFile.' does not exist.');
@@ -153,7 +158,7 @@ class StorageFilesystemChunked extends StorageFilesystem
             mkdir($filePath, 0770, true);
         }
 
-        $chunkFile = self::getChunkFilename($filePath, $offset);
+        $chunkFile = self::getChunkFilename( $file, $filePath, $offset);
         $validUpload = false;
         for ($attempt = 1; $attempt <= Config::get('storage_filesystem_write_retry'); $attempt++) {
             $isLastAttempt = $attempt >= Config::get('storage_filesystem_write_retry');

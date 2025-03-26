@@ -167,6 +167,8 @@ $(function() {
                         var key_version = $($this).find("[data-id='" + ids[i] + "']").attr('data-key-version');
                         var fileivcoded = $($this).find("[data-id='" + ids[i] + "']").attr('data-fileiv');
                         var transferid = $('.transfer').attr('data-id');
+                        var chunk_size         = $($this).find("[data-id='" + ids[0] + "']").attr('data-chunk-size');
+                        var crypted_chunk_size = $($this).find("[data-id='" + ids[0] + "']").attr('data-crypted-chunk-size');
                         
                         selectedFiles.push({
                             fileid:ids[i]
@@ -193,6 +195,8 @@ $(function() {
                                                      + 'download.php?token=' + token
                                                      + '&files_ids='
                                                      , transferid
+                                                     , chunk_size
+                                                     , crypted_chunk_size
                                                      , selectedFiles
                                                      , progress
                                                      , onFileOpen, onFileClose, onComplete
@@ -204,6 +208,8 @@ $(function() {
                 {
                     // single file download
                     var transferid  = $('.transfer').attr('data-id');
+                    var chunk_size         = $($this).find("[data-id='" + ids[0] + "']").attr('data-chunk-size');
+                    var crypted_chunk_size = $($this).find("[data-id='" + ids[0] + "']").attr('data-crypted-chunk-size');
                     var filename    = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
                     var filesize    = $($this).find("[data-id='" + ids[0] + "']").attr('data-size');
                     var encrypted_filesize=$($this).find("[data-id='" + ids[0] + "']").attr('data-encrypted-size');
@@ -224,7 +230,7 @@ $(function() {
                     crypto_app.decryptDownload( filesender.config.base_path
                                                 + 'download.php?token=' + token
                                                 + '&files_ids=' + ids.join(','),
-                                                transferid,
+                                                transferid, chunk_size, crypted_chunk_size,
                                                 mime, filename, filesize, encrypted_filesize,
                                                 key_version, salt,
                                                 password_version, password_encoding,
