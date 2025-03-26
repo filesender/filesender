@@ -106,6 +106,7 @@ parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("-e", "--encrypted")
+parser.add_argument("--days", type=int)
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
 parser.add_argument("--retries")
@@ -131,7 +132,7 @@ else:
   parser.add_argument("-b", "--base_url")
 
 # if username is not a valid email address then ensure user supplies a valid email address
-if username is None or not bool(re.match("([^@|\s]+@[^@]+\.[^@|\s]+)", username)):
+if username is None or not bool(re.match(r"([^@|\s]+@[^@]+\.[^@|\s]+)", username)):
   requiredNamed.add_argument("-f", "--from_address", help="filesender email from address", required=True)
 
 args = parser.parse_args()
@@ -143,6 +144,7 @@ user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
 encrypted = args.encrypted
+transfer_timeout = args.days
 
 if args.username is not None:
   username = args.username
@@ -195,6 +197,8 @@ try:
     terasender_enabled = regex_match.group(1) == "true"
     regex_match = re.search(r"max_transfer_files\D*(\d+)",config_response.text)
     max_transfer_files = int(regex_match.group(1))
+    regex_match =  re.search(r"max_transfer_days_valid\D*(\d+)",config_response.text)
+    max_transfer_days_valid = int(regex_match.group(1))
 except Exception as e:
     print("Failed to parse match")
     print(e)
@@ -358,7 +362,7 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     if debug:
       print(_exc)
     if tryCount < worker_retries:
-      time.sleep(300)
+      time.sleep(5)
       return call(method=method, path=path, data=initData,
                   content=content, rawContent=rawContent,
                    options=options, tryCount=tryCount + 1)
@@ -376,17 +380,20 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     if method!='post' or code!=201:
       if tryCount > worker_retries:
         raise Exception('Http error '+str(code)+' '+response.text)
-      else:
-        if progress or debug:
-          print("Failure when attempting to call: " + url)
-          print("Retry attempt " + str((tryCount + 1)))
-        if debug:
-          print("Fail Reason: " + str(code))
-          print(response.text)          
-        time.sleep(300)
-        return call(method=method, path=path, data=initData,
-                  content=content, rawContent=rawContent,
-                   options=options, tryCount=tryCount + 1)
+      
+      if response.status_code == 500 and "auth_remote_signature_check_failed" in response.text:
+        raise  ValueError("Authentication failed, check API token")
+    
+      if progress or debug:
+        print("Failure when attempting to call: " + url)
+        print("Retry attempt " + str((tryCount + 1)))
+      if debug:
+        print("Fail Reason: " + str(code))
+        print(response.text)          
+      time.sleep(5)
+      return call(method=method, path=path, data=initData,
+                content=content, rawContent=rawContent,
+                  options=options, tryCount=tryCount + 1)
 
   if response.text=="":
     raise Exception('Http error '+str(code)+' Empty response')
@@ -544,14 +551,19 @@ def encrypt_chunk_aesgcm(data,chunkid,files_key):
 if debug:
   print('postTransfer')
 
+if transfer_timeout is not None:
+  assert transfer_timeout <=  max_transfer_days_valid, f"(--days) value needs to be less than {max_transfer_days_valid} days"
+  transfer_timeout = round(time.time()) + (transfer_timeout*24*3600)
+
 if guest:
   print('creating new guest ' + args.recipients)
   troptions = {'get_a_link':0}
+ 
   r = postGuest( username,
                  args.recipients,
                  subject=args.subject,
                  message=args.message,
-                 expires=None,
+                 expires=transfer_timeout,
                  options=troptions)
   exit(0)
 
@@ -585,6 +597,10 @@ for fn_abs in fileList:
 
   size = os.path.getsize(fn_abs)
 
+  if size == 0 and not os.path.isdir(fn_abs):
+    print(f"Error: empty file '{fn_abs}' cannot continue")
+    sys.exit(1)
+
   files[fn+':'+str(size)] = {
     'name':fn,
     'size':size,
@@ -615,13 +631,12 @@ for fn_abs in fileList:
 release_list(fileList) # don't need it anymore
 
 troptions = {'get_a_link':0}
-
 transfer = postTransfer( username,
                          filesTransfer,
                          args.recipients,
                          subject=args.subject,
                          message=args.message,
-                         expires=None,
+                         expires=transfer_timeout,
                          options=troptions)['created']
 fileIndexQueue = []
 if encrypted:

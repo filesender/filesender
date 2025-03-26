@@ -1,0 +1,21 @@
+.fs-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.fs-info + .fs-info {
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-info span {
+  display: inline-block;
+  word-break: break-word;
+}
+
+.fs-info strong + span {
+  margin-left: var(--fs-spacing-half);
+}
+
+.fs-info--aligned strong {
+  width: var(--fs-spacing-20x);
+}

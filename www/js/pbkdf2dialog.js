@@ -62,15 +62,15 @@ window.filesender.pbkdf2dialog = {
     encryption_password_hash_iterations: 0,
 
     reset: function() {
-        $this = this
+        var $this = this
         $this.already_complete = false;
     },
     usingGeneratedKey: function() {
-        $this = this
+        var $this = this
         return $this.encryption_password_hash_iterations < 10;
     },
     setup: function( only_one_pbkdf2_process_v ) {
-        $this = this;
+        var $this = this;
         $this.only_one_pbkdf2_process = only_one_pbkdf2_process_v;
 
         $this.delay_to_show_dialog = window.filesender.config.crypto_pbkdf2_delay_to_show_dialog;
@@ -80,7 +80,7 @@ window.filesender.pbkdf2dialog = {
         window.filesender.onPBKDF2Starting = function() {
             window.filesender.log("pbkdf2dialog onPBKDF2Starting()");
             $this.time_start = Date.now();
-            expected_delay = window.localStorage.getItem('crypto_pbkdf2_delay_seconds');
+            var expected_delay = window.localStorage.getItem('crypto_pbkdf2_delay_seconds');
             
             window.setTimeout(function() {
                 if( !$this.already_complete ) {
@@ -105,7 +105,7 @@ window.filesender.pbkdf2dialog = {
 
         window.filesender.onPBKDF2Ended = function() {
             
-            window.filesender.log("ended() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            window.filesender.log("pbkdf2 ended() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
             if( $this.only_one_pbkdf2_process ) {
                 $this.onPBKDF2Over();
             }
@@ -114,12 +114,12 @@ window.filesender.pbkdf2dialog = {
         // Chain this out so the UI can still get it.
         var allEnded = window.filesender.onPBKDF2AllEnded;
         window.filesender.onPBKDF2AllEnded = function() {
-            window.filesender.log("ending() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
+            window.filesender.log("pbkdf2 ending() only_one_pbkdf2_process: " + $this.only_one_pbkdf2_process );
             if( !($this.only_one_pbkdf2_process)) {
                 $this.onPBKDF2Over();
             }
             
-            window.filesender.log("pbkdf2dialog onPBKDF2AllEnded()");
+            window.filesender.log("pbkdf2 pbkdf2dialog onPBKDF2AllEnded()");
             allEnded();
         };
     },
@@ -128,6 +128,7 @@ window.filesender.pbkdf2dialog = {
      * This will call onPBKDF2AllEnded() if it has not already been called.
      **/
     ensure_onPBKDF2AllEnded: function() {
+        var $this = this;
         if( $this.already_complete && !$this.dialog ) {
             return;
         }
@@ -135,13 +136,16 @@ window.filesender.pbkdf2dialog = {
     },
 
     onPBKDF2Over: function() {
-        $this = this;
+        var $this = this;
         $this.time_end = Date.now();
         window.filesender.log("pbkdf2dialog onPBKDF2Over()");
         $this.already_complete = true;
-        if( $this.dialog && $this.dialog['0'].id!="" ) {
-            $this.dialog.dialog('close');
-            $this.dialog.remove();
+        if( $this.dialog ) {
+            var d = $this.dialog;
+            window.setTimeout(function() {
+                filesender.ui.closeDialog( d );
+            }, 1000 );
+            filesender.ui.closeDialog( $this.dialog );
             $this.dialog = null;
         }
         if( window.filesender.supports.localStorage ) {

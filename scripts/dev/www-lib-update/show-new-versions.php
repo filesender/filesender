@@ -1,10 +1,14 @@
 <?php
 
 $packages = array(
+    'bootstrap'            => array(),
+    'bootbox'              => array(),
     'chart.js'             => array(),
+    'flag-icons'           => array(),
     'font-awesome'         => array(),
     'jquery'               => array(),
     'jquery-ui-dist'       => array(),
+    '@popperjs/core'       => array(),
     'promise-polyfill'     => array(),
     'streamsaver'          => array(),
     'webcrypto-shim'       => array(),

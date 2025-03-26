@@ -9,137 +9,118 @@ class ConfigurationOptionsTest extends SeleniumTest {
 
     public function testSendingToRecipients() {
         $this->setupAuthenticated();
-
         $current_email_address = Config::get('auth_sp_fake_email');
 
-        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
-            $this->clickCheckbox('[name="get_a_link"]');
-        }
 
+        $this->showFileUploader();
+        $fp1 = $this->addFile( "124bytes.txt" );
+        $fp2 = $this->addFile( "125bytes.txt" );
+        $this->stageXContinue(1);
+        
+        $this->ensureTransferByEmail();
+        $this->uploadPageStage2ShowAdvancedOptions();
+        $this->ensureOptions( array(
+            'add_me_to_recipients' => false,
+            'email_me_on_expire' => true,
+            'email_daily_statistics' => true,
+            'email_me_copies' => false,
+            'email_upload_complete' => true,
+            'email_download_complete' => true,
+            'enable_recipient_email_download_complete' => false
+            ));
 
-        $this->byClassName('toggle_advanced_options')->click();
-        sleep(10);
-
-        $this->checkCheckBox('add_me_to_recipients', false);
-        sleep(2);
-        $this->checkCheckBox('email_me_on_expire', true);
-        sleep(2);
-        $this->checkCheckBox('email_daily_statistics', true);
-        sleep(2);
-        $this->checkCheckbox('email_me_copies', false);
-        sleep(2);
-        $this->checkCheckbox('email_upload_complete', true);
-        sleep(2);
-        $this->checkCheckbox('email_download_complete', true);
-        sleep(2);
-        $this->checkCheckbox('enable_recipient_email_download_complete', false);
-        sleep(2);
-
-        // check expired
-        if ($this->isCheckBoxSelected('[name="add_me_to_recipients"]')) {
-            $this->clickCheckbox('[name="add_me_to_recipients"]');
-        }
-
-
+            
         $recipients = array('usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test');
         $subject = 'testSubject_' . rand(0, 100);
         $content = 'testContent_' . rand(0, 100);
 
-        $file_data_contents = $this->uploadFiles();
-
         $this->sendMessageToRecipients($recipients, $subject, $content);
+
+        $this->waitForUploadCompleteDialog( false );
+
+        // if no time outs from above we assert ok
+        $this->assertTrue(true);
+
     }
 
     public function testSendingToRecipientsAndMyself() {
         $this->setupAuthenticated();
-
         $current_email_address = Config::get('auth_sp_fake_email');
 
-        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
-            $this->clickCheckbox('[name="get_a_link"]');
-        }
+        $this->showFileUploader();
+        $fp1 = $this->addFile( "124bytes.txt" );
+        $fp2 = $this->addFile( "125bytes.txt" );
+        $this->stageXContinue(1);
 
-        //$this->checkCheckbox('toggle_advanced_options', true);
-        $this->byClassName('toggle_advanced_options')->click();
-        sleep(10);
+        $this->ensureTransferByEmail();
+        $this->uploadPageStage2ShowAdvancedOptions();
+        $this->ensureOptions( array(
+            'add_me_to_recipients' => true,
+            'email_me_on_expire' => false,
+            'email_daily_statistics' => false,
+            'email_me_copies' => false,
+            'email_upload_complete' => false,
+            'email_download_complete' => false,
+            'enable_recipient_email_download_complete' => true
+            ));
+
+
+
         
-        $this->checkCheckBox('add_me_to_recipients', true);
-
-        $this->checkCheckBox('email_me_on_expire', false);
-
-        $this->checkCheckBox('email_daily_statistics', false);
-
-        $this->checkCheckbox('email_me_copies', false);
-
-        $this->checkCheckbox('email_upload_complete', false);
-
-        $this->checkCheckbox('email_download_complete', false);
-
-        $this->checkCheckbox('enable_recipient_email_download_complete', true);
-
-
         $recipients = array('usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test');
         $subject = 'testSubject_' . rand(0, 100);
         $content = 'testContent_' . rand(0, 100);
-
-        $file_data_contents = $this->uploadFiles();
-
-
         $this->sendMessageToRecipients($recipients, $subject, $content);
 
-      
+        $this->waitForUploadCompleteDialog( false );
+
+        // if no time outs from above we assert ok
+        $this->assertTrue(true);
     }
+
+    
 
     public function testSendingToRecipientsSendCopies() {
         $this->setupAuthenticated();
-
         $current_email_address = Config::get('auth_sp_fake_email');
 
-        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
-            $this->clickCheckbox('[name="get_a_link"]');
-        }
+        $this->showFileUploader();
+        $fp1 = $this->addFile( "124bytes.txt" );
+        $fp2 = $this->addFile( "125bytes.txt" );
+        $this->stageXContinue(1);
 
-        //$this->checkCheckbox('toggle_advanced_options', true);
-        $this->byClassName('toggle_advanced_options')->click();
-        sleep(10);
+        $this->ensureTransferByEmail();
+        $this->uploadPageStage2ShowAdvancedOptions();
+        $this->ensureOptions( array(
+            'add_me_to_recipients' => false,
+            'email_me_on_expire' => false,
+            'email_daily_statistics' => false,
+            'email_me_copies' => true,
+            'email_upload_complete' => false,
+            'email_download_complete' => false,
+            'enable_recipient_email_download_complete' => false
+            ));
 
-        $this->checkCheckBox('add_me_to_recipients', false);
-
-        $this->checkCheckBox('email_me_on_expire', false);
-
-        $this->checkCheckBox('email_daily_statistics', false);
-
-        $this->checkCheckbox('email_me_copies', true);
-
-        $this->checkCheckbox('email_upload_complete', false);
-
-        $this->checkCheckbox('email_download_complete', false);
-
-        $this->checkCheckbox('enable_recipient_email_download_complete', false);
-
-        // check expired
-        if ($this->isCheckBoxSelected('[name="add_me_to_recipients"]')) {
-            $this->clickCheckbox('[name="add_me_to_recipients"]');
-        }
-
+        
 
         $recipients = array('usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test');
         $subject = 'testSubject_' . rand(0, 100);
         $content = 'testContent_' . rand(0, 100);
 
-        $file_data_contents = $this->uploadFiles();
-
         $this->sendMessageToRecipients($recipients, $subject, $content);
 
-        sleep(2);
+        $this->waitForUploadCompleteDialog( false );
+
+        // if no time outs from above we assert ok
+        $this->assertTrue(true);
+        
     }
 
+    
     private function sendMessageToRecipients(array $recipients, $subject, $content) {
 
-        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
-            $this->clickCheckbox('[name="get_a_link"]');
-        }
-
+        $this->ensureTransferByEmail();
+        
         foreach ($recipients as $recipient) {
             $this->byId('to')->value($recipient);
             $this->byId('subject')->click();
@@ -147,7 +128,8 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $this->byId('subject')->value($subject);
         $this->byCss('[name="message"]')->value($content);
 
-        $this->byCssSelector('.start.ui-button')->click();
+        $this->stageXContinue(2);
+        
     }
 
     private function checkMessageSent($current_email_address) {
@@ -162,30 +144,6 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $this->assertTrue($mail_found);
     }
 
-    private function uploadFiles() {
-        ${"temp"} = $this->execute(array('script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args' => array()));
-
-        $test1_file = "unittests/selenium/assets/124bytes.txt";
-        $test1_file_data = file_get_contents($test1_file);
-        $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test1_file);
-
-        $test2_file = "unittests/selenium/assets/125bytes.txt";
-        $test2_file_data = file_get_contents($test2_file);
-        $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test2_file);
-
-        return array($test1_file_data, $test2_file_data);
-    }
-
-    private function checkCheckbox($name, $checked = true) {
-//        $checkbox = $this->byCssSelector('[name="' . $name . '"]');
-//        if ($checkbox->selected() != $checked) {
-//            $checkbox->click();
-//        }
-
-        if ($checked != $this->isCheckBoxSelected('[name="'.$name.'"]')) {
-            $this->clickCheckbox('[name="'.$name.'"]');
-        }
-    }
 
     private function checkRecipientDownloads($recipients, $subject, $content, $current_email_address, $file_data_contents, $check_email_copies, $check_email_download_complete, $check_recipients_email_download_complete) {
         $current_user_email_count = count($this->yieldRecipientMails($current_email_address));

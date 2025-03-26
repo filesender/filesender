@@ -1,0 +1,1350 @@
+//
+//
+//  NOTE: default.css is generated from the SASS file default.scss
+//        please make sure you are editing default.scss
+//
+//  See the scss-start-compiler.sh script
+//  in the top level of this distribution to compile the scss file
+//
+//
+/*
+ * FileSender www.filesender.org
+ *
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * *   Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ * *   Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ * *   Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ *     names of its contributors may be used to endorse or promote products
+ *     derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/functions";
+
+// 2. Include any default variable overrides here
+$body-bg: #fff3eb;
+$core-bg: #ffffff;
+$body-color: #333;
+
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/variables";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/variables-dark";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/mixins";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/maps";
+
+// 4. Include any optional Bootstrap components as you like
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/root";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/reboot";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/type";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/images";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/containers";
+@import "../../scripts/dev/www-lib-update/node_modules/bootstrap/scss/grid";
+
+// 5. Add additional custom code here
+
+$invalid-color: #f00;
+$error-notice-color: #faa;
+$bad-color: #900;
+$good-color: #090;
+
+$custom-colors: (
+  "bad-color":  $bad-color,
+  "good-color": $good-color,
+  "success-dialog-color":#CFC,
+  "warning-dialog-color":#fcc,
+  "error-dialog-color":  #faa,
+  "invalid-color":       $invalid-color,
+  "error-notice-color":  $error-notice-color
+);
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+/* Global rules */
+
+.tpl {
+    display: none;
+}
+
+
+.nav-tabs-coretop,
+.nav-link-coretop {
+    background: $body-bg !important;
+}
+.nav-tabs-coretop {
+    border-bottom: 0px solid #dee2e6;
+}
+
+
+.navbar-bg {
+    background: #efe3db;
+}
+
+.nav-item a {
+    color: black !important;
+}
+
+.navbar-fixed-top .nav-item a.active {
+    background-color: #fff3f3 !important;
+}
+
+
+img {
+    display: block;
+}
+
+.filesender-topcontent {
+    background: $body-bg;
+}
+
+p {
+  margin: 1em;
+}
+
+th, td {
+    vertical-align: top;
+    padding: 0.5em;
+}
+
+abbr {
+    border-bottom: 1px dashed #aaa;
+    cursor: help;
+}
+
+.earl {
+    width: 90%;
+}
+
+
+div.not_displayed {
+    display: none;
+}
+
+.crypto_not_supported_message {
+    display: none;
+}
+
+.number {
+    text-align: right;
+}
+.active {
+    font-weight: bold;
+}
+
+.warning {
+    background: #eeeeff;
+}
+
+
+.transfersactionsicons {
+    margin: 3em;
+}
+
+
+
+.ui-datepicker-calendar a.ui-state-default,
+.ui-datepicker-calendar span.ui-state-default
+{
+    border: 0px solid #D8D8D8 !important;
+}
+
+
+.file.invalid {
+    background-color: $error-notice-color;
+}
+
+#fileslist {
+        display: none;
+}
+#please_readd_files_message {
+        display: none;
+}
+
+.actions .actionsblock {
+    margin:3px;
+    white-space: nowrap;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+
+.div3 {
+    width: 33%;
+}
+.div4 {
+     width: 25%;
+}
+.hidden {
+    display: none;
+}
+
+.collapse.navbar-collapse {
+    flex-wrap: wrap;
+}
+.navbar-light .navbar-toggler {
+    border: 0;
+}
+
+#senderemail_full_match_label {
+    cursor: pointer;
+}
+
+#message_can_not_contain_urls {
+    display:none;
+}
+
+#marg3 {
+    margin:3px;
+}
+
+
+#graphDiv {
+    width:400px;
+    height:200px;
+    margin:0 auto
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+
+
+/* color based classes */
+
+.colorffaa00 {
+    color: #FFAA00;
+}
+
+.adminaction {
+    background: #ffeeee;
+}
+
+.good {
+    background: #1cff1c;
+}
+
+.paused {
+    background: #6c666c;
+}
+
+.middle {
+    background: #ffff1c;
+}
+
+.slow {
+    background: #ff1c1c;
+}
+
+.bad {
+    background: #ff0000;
+}
+
+
+
+/* Main layout rules */
+
+#wrap {
+    background: $body-bg !important;
+    padding-bottom: 2em;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.mainbox {
+    background: $core-bg !important;
+    padding: 0.5em;
+ }
+
+
+#header {
+    background: url(../images/banner900fff3eb.png) no-repeat 60px 0px;
+    height: 60px;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+#headeruid {
+    background: #666 url(../images/banner-uid-900.png) no-repeat top left;
+    height: 60px;
+    margin-bottom: 1em;
+}
+
+#notifications {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 30%;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+}
+
+
+#content {
+    padding: 0.5em 2em 1em 2em;
+}
+
+#page .logon {
+    margin: 1em;
+    text-align: center;
+}
+
+#footer {
+    text-align: center;
+    font-size: 1em;
+    color: #666;
+}
+
+
+/* Page elements */
+
+%page-header {
+    width: 100%;
+    font-weight: bold;
+}
+
+#page h1 {
+    @extend %page-header;
+    font-size: 1.3em;
+    padding-bottom: 1em;
+    padding-top: 4px;
+}
+
+#page h2 {
+    @extend %page-header;
+    font-size: 1.15em;
+    padding-bottom: 0.8em;
+    padding-top: 1.5em;
+}
+
+#page h3 {
+    @extend %page-header;
+    font-size: 1.05em;
+    padding-bottom: 0.7em;
+    padding-top: 1.2em;
+}
+
+
+%core {
+    padding: 1em;
+    background: $core-bg;
+    border: 0px solid #aaa;
+    border-radius:0.5em;
+    -moz-border-radius: 0.5em;
+}
+.core {
+    @extend %core;
+}
+.core-tabbed {
+    @extend %core;
+    border-radius: 0em 0.5em 0.5em 0.5em;
+}
+
+.box {
+    @extend %core;
+    border: 1px solid #aaa;
+}
+.boxnoframe {
+    padding: 0.5em;
+}
+
+
+.clickable, [data-action] {
+    cursor: pointer;
+}
+
+.disabled[data-action] {
+    color: #ccc;
+    cursor: default;
+}
+
+span.clickable {
+    text-decoration: underline;
+}
+
+span.clickable.fa {
+    text-decoration: none;
+}
+
+.two_columns {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.two_columns td {
+    width: 50%;
+}
+
+.fieldcontainer {
+    padding: 0.5em;
+}
+
+.remove {
+    margin-left: 0.5em;
+    cursor: pointer;
+}
+
+.remove:hover {
+    color: #900;
+}
+
+div.invalid {
+    -webkit-box-shadow:0 0 4px red;
+    -moz-box-shadow: 0 0 4px red;
+    box-shadow:0 0 4px red;
+}
+
+span.invalid {
+    color: #f00;
+    margin-right: 0.5em;
+}
+
+input.invalid, textarea.invalid {
+    border: 1px solid #f00;
+}
+
+label.invalid {
+    color: #f00;
+}
+
+.languages {
+    overflow-x: auto;
+}
+
+
+
+.buttons {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 0.5em;
+    margin: 0.5em auto;
+    text-align: center;
+}
+
+.buttons a, .buttons .spaced {
+    display: table-cell;
+    padding: 0.7em;
+    font-size: 1em;
+}
+
+.buttons a {
+    font-weight: bold;
+}
+
+.buttons a.not_displayed {
+    display: none;
+}
+
+.buttons a span.fa {
+    font-size: 1.5em;
+}
+
+
+td .desc {
+    text-align: right;
+}
+
+
+.pager_bottom_nav {
+    background-color: #eee;
+    text-align: right;
+}
+
+
+
+.progressbar {
+    position: relative;
+    margin: 0.4em 0.25em;
+    width: 60%;
+    height: 1.3333em;
+}
+
+.progressbar .progress-label {
+    position: absolute;
+    top: 0.2em;
+    font-size: 0.9em;
+    text-align: center;
+    width: 100%;
+}
+
+
+.progressbar.quota {
+    margin: 0.4em auto;
+    width: 90%;
+}
+
+.progressbar.quota .ui-progressbar-value {
+    background-image: none;
+    background-color: #0f0;
+}
+
+.progressbar.quota.quota_70.quota_plus_5 .ui-progressbar-value,
+.progressbar.quota.quota_80 .ui-progressbar-value {
+    background-color: #ff0;
+}
+
+.progressbar.quota.quota_90 .ui-progressbar-value {
+    background-color: #f80;
+}
+
+.progressbar.quota.quota_90.quota_plus_5 .ui-progressbar-value {
+    background-color: #f00;
+}
+
+.custom-control-label {
+    cursor: pointer;
+}
+
+
+////////////////////////////////////////////////////////////
+/* Upload page */
+////////////////////////////////////////////////////////////
+
+.selectdir_hidden_input_element {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+
+.stage2,
+.stage3,
+.stage4,
+.stage3only,
+.clearandstats,
+.stageh,
+#encgroup1, #encgroup2, #encgroup3,
+#encryption_password_container_generate_again {
+    display: none;
+}
+
+/* Encryption */
+
+#encryption_password {
+    width: 48ch;
+}
+
+#encryption_password_container_too_short_message,
+#encryption_password_container_must_have_numbers_message,
+#encryption_password_container_must_have_upper_and_lower_case_message,
+#encryption_password_container_must_have_special_characters_message,
+#encryption_password_container_can_have_text_only_min_password_length_message,
+#encryption_description_container_disabled,
+#encryption_description_not_supported,
+.download_decryption_disabled,
+#encryption_description_disabled_container,
+#encryption_description_container {
+    display: none;
+}
+
+#password_can_not_be_part_of_message_error,
+#password_can_not_be_part_of_message_warning,
+#message_can_not_contain_urls {
+    display:none
+}
+
+#encryption_password_container_too_short_message,
+#encryption_password_container_must_have_numbers_message,
+#encryption_password_container_must_have_upper_and_lower_case_message,
+#encryption_password_container_must_have_special_characters_message {
+    color: #f00;
+}
+#encryption_password_container_can_have_text_only_min_password_length_message {
+    color: #0a0;
+}
+
+
+.uploadthread {
+    font-family: monospace;
+    font-size: 10px;
+    width: 4em;
+    height: 10px;
+}
+
+.workercrust {
+    width: 100%;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding: 3px;
+}
+
+.crust {
+       float:right;
+}
+
+#upload_form .file_selector {
+    display: none;
+    margin-bottom: 0.5em;
+}
+
+#upload_form .required_files .file {
+    background-color: $error-notice-color;
+}
+
+
+
+#upload_form .files .file .remove {
+    text-align: right;
+    line-height: 1.3333em;
+}
+
+#upload_form .files .file .done_icon {
+    position: relative;
+    display: none;
+    float: right;
+    margin: 0.0333em 0 0.2333em 1em;
+    font-size: 2em;
+    color: #0a0;
+}
+
+#upload_form .files .file.done {
+    background-color: #afa;
+}
+
+#upload_form .files .file.done .done_icon {
+    display: inline;
+}
+
+#upload_form .files .file.done .progressbar {
+    display: none !important;
+}
+
+#upload_form .files .file input {
+    display: none;
+}
+
+#upload_form .files_dragdrop {
+    border: 1px dashed #666;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.5em 0;
+    background-color: #FFF;
+    font-weight: bold;
+}
+
+#upload_form .files_dragdrop .instructions {
+    font-size: 1.2em;
+    color: #666;
+    font-weight: bold;
+    padding: 0.3em;
+    padding-bottom: 0.4em;
+    line-height: 5em;
+    text-align: center;
+}
+
+#upload_form .files_uploadlogtop {
+    border: 1px dashed #666;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.5em 0;
+    background-color: #FFF;
+}
+
+#upload_form .uploadlogheader {
+    font-weight: bold;
+    background-color: #FFF;
+    text-align: center;
+    width: 100%;
+}
+
+#upload_form .files_uploadlogtop .uploadlogbox {
+    font-size: 1.2em;
+    color: #666;
+    font-weight: bold;
+    padding: 0.3em;
+    padding-bottom: 0.4em;
+    height: 15em;
+    text-align: center;
+    max-height: 300em;
+    overflow-y: scroll;
+}
+
+
+
+#upload_form .uploading_actions {
+    display: table;
+    width: 100%;
+    margin: 0.25em 1em 0 0;
+}
+
+#upload_form .uploading_actions div {
+    display: table-cell;
+    width: 100%;
+}
+
+#upload_form .uploading_actions .msg {
+    display: table-cell;
+    width: 100%;
+}
+
+.uploading_actions .auto_resume_timer_top {
+    background-color: #fcc;
+    display: none;
+}
+
+.uploading_actions .auto_resume_timer_top .auto_resume_timer {
+    font-size: 1.0em;
+    font-weight: bold;
+    display: none;
+}
+
+.uploading_actions .resumetable {
+    display: table;
+    width: 100%;
+    margin: 0.25em 1em 0 0;
+}
+
+.uploading_actions .resumetable tr {
+    padding: 0.0em;
+    width: 100%;
+    font-size: 1em;
+}
+
+.uploading_actions .resumetable td {
+    padding: 0.0em;
+    width: 100%;
+}
+
+#upload_form .uploading_actions .msg {
+    display: table-cell;
+    width: 100%;
+}
+
+
+.seconds_since_data_sent
+{
+    font-size: 1.0em;
+}
+
+#upload_form .uploading_actions .stats {
+    display: table-cell;
+    width: 33%;
+}
+
+#upload_form .files_actions {
+    margin: 0.5em -1em 0 -1em;
+}
+
+#upload_form .files_actions div a {
+    width: 45%;
+    min-width: 100px;
+}
+
+#upload_form .files_actions div+div {
+    text-align: center;
+}
+
+#upload_form .files_actions .stats {
+    width: 33%;
+}
+
+#upload_form .files_actions .stats div {
+    text-align: right;
+    font-size: 1em;
+    vertical-align: middle;
+    width: 100%;
+}
+
+#upload_form .files_actions .stats .number_of_files,
+#upload_form .files_actions .stats .size
+{
+    display: none;
+}
+
+#upload_form .uploading_actions .stats div {
+    text-align: right;
+    font-size: 1em;
+    vertical-align: middle;
+    width: 100%;
+}
+
+#upload_form .uploading_actions .msg,
+#upload_form .uploading_actions .stats .uploaded,
+#upload_form .uploading_actions .stats .average_speed,
+#upload_form .uploading_actions .stats .estimated_completion
+{
+    display: none;
+}
+
+
+#upload_form .hidden_options {
+    display: none;
+}
+
+
+#upload_form .aup .terms {
+    display: none;
+    margin-top: 0.5em;
+    padding: 0.5em;
+}
+
+#upload_form .buttons {
+    margin: 1em auto;
+}
+
+#upload_form .buttons a {
+    padding: 1em;
+    font-size: 1.5em;
+}
+
+#upload_form .buttons a span.fa {
+    font-size: 2em;
+}
+
+#upload_form .fieldcontainer .info.message {
+    margin: 0.5em 1em;
+}
+
+#legacy_uploader {
+    display: none;
+}
+
+
+
+
+////////////////////////////////////////////////////////////
+/* transfers page */
+////////////////////////////////////////////////////////////
+/* transfers table */
+
+table.transfers .expand,
+table.transfers .collapse {
+    width: 2em;
+    text-align: center;
+}
+
+table.transfers .th.size,
+table.transfers td.downloads,
+table.transfers .expires,
+table.transfers .transfer_id,
+table.transfers .downloads {
+    text-align: center;
+}
+
+table.transfers .size {
+    text-align: right;
+}
+
+table.transfers tbody .transfer[data-errors="1"] td {
+    background-color: $error-notice-color;
+}
+
+table.transfers[data-status="uploading"] tbody tr .actions [data-action],
+table.transfers[data-status="closed"] tbody tr .actions [data-action] {
+    display: none;
+}
+
+table.transfers[data-status="uploading"] tbody tr .actions [data-action="delete"],
+table.transfers[data-status="uploading"][data-audit="1"] tbody tr .actions [data-action="auditlog"],
+table.transfers[data-status="closed"][data-audit="1"] tbody tr .actions [data-action="auditlog"] {
+    display: inline;
+}
+
+table.transfers tbody tr.transfer_details {
+    display: none;
+}
+
+table.transfers .transfer_details div {
+    margin: 0.5em;
+}
+
+table.transfers .transfer_details .collapse,
+table.transfers .transfer_details .actions {
+    margin: 0.5em 0;
+}
+
+table.transfers .transfer_details .actions {
+    float: right;
+}
+
+table.transfers .transfer_details .general .options ul {
+    list-style-type: disc;
+    margin-left: 2em;
+}
+
+table.transfers .transfer_details h2 {
+    font-size: 1.3em;
+    margin-bottom: 0.3em;
+}
+
+.transfer-download {
+    cursor: pointer;
+}
+
+table.transfers .transfer_details .recipients .recipient .errors {
+    background-color: $error-notice-color;
+    padding: 0.1em;
+}
+
+table.transfers .transfer_details .recipients .recipient .errors [data-action="details"] {
+    margin-left: 0.25em;
+}
+
+table.transfers[data-status="closed"] .transfer_details .recipients .recipient [data-action="delete"],
+table.transfers[data-status="closed"] .transfer_details .files .file [data-action="delete"] {
+    display: none;
+}
+
+table.transfers .transfer_details .download_link input {
+    display: block;
+    width: 80%;
+    margin: 0.4em auto;
+}
+
+.transfers_list_page_navigation {
+    margin: 0.25em;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.transfers_list_page_navigation span,
+.transfers_list_page_navigation a {
+    margin: 0 0.25em;
+}
+
+.transfers_list_page_navigation a {
+    text-decoration: underline;
+}
+.transfers_list_page_navigation span {
+    font-weight: bold;
+}
+
+
+////////////////////////////////////////////////////////////
+/* Guests page */
+////////////////////////////////////////////////////////////
+
+
+/* Guests table */
+
+table.guests tbody .guest[data-errors="1"] td {
+    background-color: $error-notice-color;
+}
+
+table.guests .guest .to .errors .details {
+    margin-left: 0.25em;
+}
+
+
+////////////////////////////////////////////////////////////
+/* Admin page */
+////////////////////////////////////////////////////////////
+/* Admin statistics */
+
+.admin_page .statistics_section .storage_usage_blocks {
+    margin-top: 1em;
+}
+
+.admin_page .statistics_section .storage_usage.warning tr[data-metric="available"],
+.admin_page .statistics_section .storage_usage_blocks tr.warning {
+    background-color: #fcc;
+}
+
+
+/** Admin users */
+
+.admin_page .users_section .searching,
+.admin_page .users_section .no_results,
+.admin_page .users_section .client-logs {
+    display: none;
+}
+
+.admin_page .users_section .searching .searching,
+.admin_page .users_section .no_results .no_results {
+    display: table-row;
+    text-align: center;
+}
+
+.admin_page .users_section table {
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.admin_page .users_section th {
+    border: 1px solid silver;
+    text-align: center;
+    font-weight: bold;
+}
+
+.admin_page .users_section td {
+    border: 1px solid silver;
+}
+
+.admin_page .users_section .results th+th,
+.admin_page .users_section .results td+td,
+.admin_page .users_section .client-logs th:first-child,
+.admin_page .users_section .client-logs td:first-child {
+    width: 8rem;
+}
+
+
+
+
+
+/* Admin sections */
+
+.admin_page .section h2 {
+    width: 100%;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 1em;
+    padding-top: 4px;
+}
+
+/* Admin config section */
+
+.admin_page .config_section .parameter {
+    margin: 0.5em 0;
+}
+
+.admin_page .config_section .parameter .is_default {
+    display: none;
+    font-style: italic;
+    color: #ccc;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] .is_default {
+    display: inline;
+}
+
+.admin_page .config_section .parameter .make_default {
+    display: inline;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] .make_default {
+    display: none;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] input,
+.admin_page .config_section .parameter[data-is-default="1"] textarea,
+.admin_page .config_section .parameter[data-is-default="1"] select {
+    color: #777;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] input:focus,
+.admin_page .config_section .parameter[data-is-default="1"] textarea:focus,
+.admin_page .config_section .parameter[data-is-default="1"] select:focus {
+    color: #000;
+}
+
+.admin_page .config_section .box+.box {
+    text-align: center;
+}
+
+////////////////////////////////////////////////////////////
+/* Download page */
+////////////////////////////////////////////////////////////
+
+.download_page {
+    @extend %core;
+}
+
+%download_page_section {
+    margin: 1em;
+}
+
+.download_page .disclamer {
+    @extend %download_page_section;
+}
+.download_page .archive {
+    @extend %download_page_section;
+    text-align: center;
+}
+
+
+// select all arrow
+.download_page .files .select_all {
+    margin-left: 1.2em;
+}
+.download_page .files .select_all span:first-child {
+    vertical-align: bottom;
+}
+.download_page .files .select_all .select {
+    text-decoration: none;
+}
+.download_page .files .select_all .select span {
+    vertical-align: middle;
+}
+
+
+// main file listing
+.download_page .files .file {
+    height: 2.5em;
+    margin: 0.25em;
+    padding: 1.2em 0.5em 0.5em 0.5em;
+}
+
+
+
+//
+// selecting files makes no sense if there is only one file
+// in the transfer
+.download_page .files[data-count="1"] .select_all,
+.download_page .files[data-count="1"] .file .select,
+.download_page .files[data-count="1"] .archive {
+    display: none;
+}
+
+.download_page .progressbar.user_quota {
+    display: none;
+}
+
+//
+// anti virus results
+//
+.avresulterror,
+.avresultfailed {
+    color: $bad-color;
+}
+.avresultsucceeded {
+    color: $good-color;
+}
+.avfile {
+    padding-top: 1em;
+}
+.avfile .name {
+    font-size:1.5em;
+    padding-bottom: 1em;
+}
+
+.avheader1 {
+    color: $good-color;
+}
+.avheader0 {
+    color: $bad-color;
+}
+
+////////////////////////////////////////////////////////////
+/* User profile */
+////////////////////////////////////////////////////////////
+
+.user_page .info {
+    margin: 1em 0;
+}
+
+.user_page .info .readonly {
+    border: 1px solid silver;
+    padding: 0.25em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.user_page .info .unknown {
+    border: 1px solid black;
+    background-color: #EABEBE;
+    padding: 0.25em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.user_page span[data-info="remote_config"] {
+    display: none;
+}
+
+.user_page span[data-remote-auth-sync-request] {
+    display: none;
+}
+
+////////////////////////////////////////////////////////////
+/* Translate email page */
+////////////////////////////////////////////////////////////
+
+.translate_email_page dl [data-property="subject"] {
+    margin: 0.5em;
+}
+
+.translate_email_page dl dt {
+    font-weight: bold;
+}
+
+.translate_email_page dl dt[data-property="subject"] {
+    float: left;
+    margin-top: 0;
+}
+
+.translate_email_page dl dt[data-property="message"] {
+    display: none;
+}
+
+.translate_email_page dl dd[data-property="message"] {
+    margin: 2em 0.5em;
+}
+
+.translate_email_page dl dd[data-property="message"] p {
+    margin: 1em 0;
+}
+
+/* Copy of mail.css */
+.translate_email_page dl dd[data-property="message"] table {
+    width: 100%;
+    border: 1px solid #bbb;
+    border-collapse: collapse;
+}
+
+.translate_email_page dl dd[data-property="message"] th,
+.translate_email_page dl dd[data-property="message"] td {
+    padding: 3px;
+    vertical-align: top;
+}
+
+.translate_email_page dl dd[data-property="message"] th:first-child,
+.translate_email_page dl dd[data-property="message"] td:first-child {
+    width: 5em;
+}
+
+.translate_email_page dl dd[data-property="message"] th {
+    background-color: #ccc;
+    height: 30px;
+}
+
+.translate_email_page dl dd[data-property="message"] tbody tr:nth-child(even) td {
+    background-color: #e5e5e5;
+}
+
+.translate_email_page dl dd[data-property="message"] td:first-child {
+    font-weight: bold;
+}
+/* End copy of mail.css */
+
+.translate_email_page .progressbar.user_quota {
+    display: none;
+}
+
+
+/* Paged results navigation */
+
+%paginator {
+    width: 1em;
+    text-align: center;
+}
+
+table.paginator .pageprev0 {
+    @extend %paginator;
+    width: 2em;
+}
+table.paginator .pageprev {
+    @extend %paginator;
+}
+table.paginator .pagenext {
+    @extend %paginator;
+}
+table.paginator .pageheader {
+    text-align: left;
+    font-size: 1.15em;
+    font-weight: bold;
+    vertical-align: middle;
+}
+table.paginator a {
+    text-decoration: none;
+}
+
+
+
+/* help page */
+
+#dialog-help img {
+    display: inline;
+    vertical-align: middle;
+}
+
+#dialog-help strong {
+    font-weight: bold;
+}
+
+/* dialogs  */
+
+.success-dialog .modal-content,
+.warning-dialog .modal-content,
+.error-dialog .modal-content {
+    overflow:hidden;
+}
+.success-dialog .modal-header{
+    background-color:#CFC;
+}
+
+.warning-dialog .modal-header{
+     background-color:#fcc;
+}
+
+.error-dialog .modal-header{
+     background-color:#faa;
+}
+
+.must_login_message {
+    background-color: rgb(251,201,201);
+    border: 1px solid;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.4em 0.4em 0.4em 32px;
+    margin: 2em 5em;
+}
+
+#menu ul li select {
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    margin: 0.6em 1em;
+}
+
+.download_page .archive {
+    margin-top: 1em;
+    text-align: center;
+}
+
+.serviceaup ul {
+    margin-bottom: 2em;
+}
+
+.serviceaup ul li {
+    margin-bottom: 0.3em;
+    line-height: 1.1em;
+}
+
+
+.logoutbutton {
+    background: #efe3db!important;
+    color: black !important;
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    padding: 0.6em 1em;
+    text-decoration: none;
+    border-width: 0px;
+    text-shadow: 0 0 0em #000;
+    transition: all 0.2s ease 0s;
+}
+
+.logoutbutton:hover {
+    background-color: #fff3f3 !important;
+}
+
+@import "local-variables.scss";
+
+

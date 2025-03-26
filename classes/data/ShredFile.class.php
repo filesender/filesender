@@ -250,6 +250,6 @@ class ShredFile extends DBObject
     public static function shouldUseShredFile()
     {
         $cmd = Config::get('storage_filesystem_file_shred_command');
-        return strlen($cmd) > 0;
+        return $cmd && strlen($cmd) > 0;
     }
 }

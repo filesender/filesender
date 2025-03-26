@@ -5,69 +5,67 @@ include_once "vidattr.php";
 
 $maybe_display_aggregate_statistics_menu = false;
 
+$LanguageSelectorShown = false;
+if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
+    $LanguageSelectorShown   = true;
+}
+
 ?>
 
-
-
-
-<div id="menu">
-    <div class="leftmenu">
+<!-- New UI header - BEGIN -->
+<header>
+    <nav>
+        <a class="fs-link fs-link--no-hover" href="<?php echo GUI::path() ?>">
+            <?php GUI::includeLogo() ?>
+        </a>
         <ul>
             <?php
-            
-            if(!Auth::isGuest()) {
-                pagemenuitem('upload');
 
-                if(Config::get('guest_support_enabled')) {
-                    pagemenuitem('guests');
+                if(!Auth::isGuest()) {
+                    pagemenuitem('upload');
+
+                    pagemenuitem('transfers');
+
+                    if(Config::get('guest_support_enabled')) {
+                        pagemenuitem('guests');
+                    }
+
+                    if(Config::get('user_page')) {
+                        pagemenuitem('user');
+                    }
+
+                    pagemenuitem('statistics');
+
+                    pagemenuitem('admin');
+
+                    if( $maybe_display_aggregate_statistics_menu ) {
+                        if (AggregateStatistic::enabled()) {
+                            pagemenuitem('aggregate_statistics');
+                        }
+                    }
+
                 }
-                
-                pagemenuitem('transfers');
-               
-                if(Config::get('user_page'))
-                    pagemenuitem('user');
-                
-                pagemenuitem('statistics');
-                
-                pagemenuitem('admin');
 
-                if( $maybe_display_aggregate_statistics_menu ) {
-                    if (AggregateStatistic::enabled()) {
-                        pagemenuitem('aggregate_statistics');
+                if (!Auth::isAuthenticated()) {
+                    pagemenuitem('help');
+                    pagemenuitem('about');
+                    pagemenuitem('privacy');
+                }
+
+            
+                if (!Auth::isAuthenticated() && !Auth::isSP() && !Auth::isGuest())
+                {
+                    $faicon = 'fa-sign-in';
+                    $icon = '<i class="fa '.$faicon.'"></i> ';
+
+                    if(Config::get('auth_sp_embedded')) {
+                        pagemenuitem('logon');
+                    }else{
+                        echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.$icon.'<span>'.Lang::tr('logon').'</span>'.'</a></li>';
                     }
                 }
-                    
-            }
-            
             ?>
+
         </ul>
-    </div>
-    
-    <div class="rightmenu">
-        <ul>
-        <?php
-            pagemenuitem('help');
-            pagemenuitem('about');
-            pagemenuitem('privacy');
-
-            if (Auth::isAuthenticated() && Auth::isSP()) {
-                $url = AuthSP::logoffURL();
-                if($url) {
-                    echo '<li><a href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
-                }
-                
-            }else if (!Auth::isGuest()){
-                if(Config::get('auth_sp_embedded')) {
-                    pagemenuitem('logon');
-                }else{
-                    echo '<li><a href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.Lang::tr('logon').'</a></li>';
-                }
-            }
-        ?>
-        </ul>
-            
-    </div>
-
-    
-</div>
-
+    </nav>
+</header> <!-- New UI header - END -->

@@ -1,0 +1,81 @@
+.fs-new-invitation {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-new-invitation__header .fs-link {
+    margin-left: calc(-1 * var(--fs-spacing-10x));
+}
+
+.fs-new-invitation__header {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.fs-new-invitation__header .fs-link {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.fs-new-invitation__data {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--fs-spacing-8x);
+}
+
+.fs-new-invitation__data .fs-collapse {
+    margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-new-invitation__data .fs-new-invitation__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.fs-new-invitation__form {
+    display: block;
+}
+
+.fs-new-invitation__form--hide {
+    display: none;
+}
+
+.fs-new-invitation__success {
+    display: none;
+}
+
+.fs-new-invitation__success--show {
+    display: block;
+}
+
+.fs-new-invitation__success-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--fs-spacing-8x);
+    text-align: center;
+}
+
+.fs-new-invitation .fs-select:first-child label {
+    width: var(--fs-spacing-19x);
+}
+
+.fs-new-invitation__recipients {
+    padding-left: var(--fs-spacing-22x);
+}
+
+.fs-new-invitation .remove {
+    color: var(--fs-danger);
+}
+
+
+.guest-expires-select-by-picker {
+    display: none;
+}

@@ -22,7 +22,7 @@ oggetto: {cfg:site_name}: Codice di verifica una tantum per il download
 
 Salve,
 
-Qualcuno (probabilmente voi) ha richiesto un codice di verifica una tantum per poter
+Qualcuno (probabilmente tu) ha richiesto un codice di verifica una tantum per poter
 scaricare un file che è stato reso disponibile attraverso il servizio {cfg:site_name}.
 Questo è il codice di verifica via e-mail per scaricare questo trasferimento:
 
@@ -36,7 +36,7 @@ Questo è il codice di verifica via e-mail per scaricare questo trasferimento:
 </p>
 
 <p>
-Qualcuno (probabilmente voi) ha richiesto un codice di verifica una tantum per poter
+Qualcuno (probabilmente tu) ha richiesto un codice di verifica una tantum per poter
 scaricare un file che è stato reso disponibile attraverso il servizio {cfg:site_name}.
 Questo è il codice di verifica via e-mail per scaricare questo trasferimento:
 </p>

@@ -35,6 +35,8 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
+
+
 /**
  * REST transfer endpoint
  */
@@ -210,6 +212,28 @@ class RestEndpointUser extends RestEndpoint
                 'data' => ''
             );
         }
+
+        if( $property == 'filesender-python-client-configuration-file' ) {
+
+            $username = $user->saml_user_identification_uid;
+            $authsecret = $user->auth_secret;
+            $site_url = Config::get('site_url');
+            $days_valid = Config::get('default_transfer_days_valid');
+            
+            $doc = <<<END
+[system]
+base_url = {$site_url}rest.php
+default_transfer_days_valid = $days_valid
+
+[user]
+username = $username
+apikey = $authsecret
+END;
+            
+            header('Content-Type: text/plain');
+            echo $doc;
+            exit;
+        }
         
         if ($property == 'quota') {
             // Get user quota info (if enabled)
@@ -298,7 +322,14 @@ class RestEndpointUser extends RestEndpoint
         
         // Update data
         $data = $this->request->input;
-        
+
+        if( $data->save_transfer_preferences || $data->save_frequent_email_address ) {
+
+            $user->save_frequent_email_address = Utilities::validateCheckboxValue( $data->save_frequent_email_address );
+            $user->save_transfer_preferences   = Utilities::validateCheckboxValue( $data->save_transfer_preferences );
+
+            $user->save();
+        }
         if ($data->lang) {
             // Lang property update, fail if not allowed
             
@@ -341,6 +372,7 @@ class RestEndpointUser extends RestEndpoint
             $user->frequent_recipients = null;
             $user->save();
         }
+        
         if( $data->clear_user_transfer_preferences ) {
             $user->transfer_preferences = null;
             $user->save();
@@ -353,6 +385,7 @@ class RestEndpointUser extends RestEndpoint
             $user->save();
             
         }
+
         return true;
     }
 

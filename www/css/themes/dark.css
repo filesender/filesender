@@ -1,0 +1,101 @@
+:root {
+    /* COLORS */
+
+    --fs-black: #000000;
+    --fs-white: #FFFFFF;
+
+    --fs-gray-100: #f0f0f0;
+    --fs-gray-200: #E9E9E9;
+    --fs-gray-300: #ccc;
+    --fs-gray-500: #adadad;
+    --fs-gray-900: #333333;
+    --fs-gray-alpha-50: rgba(238, 238, 238, .50);
+
+    --fs-blue-100: #edf5ff;
+    --fs-blue-200: #adcdff;
+    --fs-blue-300: #5992ed;
+    --fs-blue: #1351b4;
+
+    --fs-bg-color: #000000;
+    --fs-bg-color-secondary: #121212;
+    --fs-bg-color-tertiary: #121212;
+    --fs-bg-color-quarternary: #121212;
+    --fs-bg-color-quinary: #121212;
+    --fs-border: var(--fs-light);
+
+    --fs-text-color: #FBFAFE;
+
+    --fs-hightlight-bg: var(--fs-bg-color-secondary);
+    --fs-hightlight-bg-alternative: #bb86fc;
+    --fs-hightlight-bg-secondary: #bb86fc;
+
+    --fs-accent: #3700b3;
+
+    --fs-primary: #bb86fc;
+
+    --fs-light: var(--fs-white);
+    --fs-bg-light: var(--fs-bg-color);
+
+    --fs-hover: #bb86fc;
+
+    --fs-btn: #3700b3;
+    --fs-btn-hover: #3700b3;
+    --fs-btn-active: #C08FFB;
+
+    --fs-success: #018786;
+    --fs-success-hover: #02ADAD;
+    --fs-success-active: #47E6E6;
+
+    --fs-info: #155BCB;
+    --fs-info-hover: #4177D3;
+    --fs-info-active: #84A5E4;
+
+    --fs-warning: #FFCD05;
+    --fs-warning-hover: #DFB41E;
+    --fs-warning-active: #A3882D;
+
+    --fs-danger: #EA4D3C;
+    --fs-danger-hover: #EA4D3C;
+    --fs-danger-active: #F48D82;
+
+    /* SPACING */
+
+    -fs-spacing-base: 8px;
+    --fs-spacing-half: calc(var(--fs-spacing-base) / 2);
+    --fs-spacing-quarter: calc(var(--fs-spacing-base) / 4);
+
+    --fs-spacing-1x: var(--fs-spacing-base);
+    --fs-spacing-2x: calc(var(--fs-spacing-base) * 2);
+    --fs-spacing-3x: calc(var(--fs-spacing-base) * 3);
+    --fs-spacing-4x: calc(var(--fs-spacing-base) * 4);
+    --fs-spacing-5x: calc(var(--fs-spacing-base) * 5);
+    --fs-spacing-6x: calc(var(--fs-spacing-base) * 6);
+    --fs-spacing-7x: calc(var(--fs-spacing-base) * 7);
+    --fs-spacing-8x: calc(var(--fs-spacing-base) * 8);
+    --fs-spacing-9x: calc(var(--fs-spacing-base) * 9);
+    --fs-spacing-10x: calc(var(--fs-spacing-base) * 10);
+    --fs-spacing-11x: calc(var(--fs-spacing-base) * 11);
+    --fs-spacing-12x: calc(var(--fs-spacing-base) * 12);
+    --fs-spacing-13x: calc(var(--fs-spacing-base) * 13);
+    --fs-spacing-14x: calc(var(--fs-spacing-base) * 14);
+    --fs-spacing-15x: calc(var(--fs-spacing-base) * 15);
+    --fs-spacing-16x: calc(var(--fs-spacing-base) * 16);
+    --fs-spacing-17x: calc(var(--fs-spacing-base) * 17);
+    --fs-spacing-18x: calc(var(--fs-spacing-base) * 18);
+    --fs-spacing-19x: calc(var(--fs-spacing-base) * 19);
+    --fs-spacing-20x: calc(var(--fs-spacing-base) * 20);
+    --fs-spacing-21x: calc(var(--fs-spacing-base) * 21);
+    --fs-spacing-22x: calc(var(--fs-spacing-base) * 22);
+    --fs-spacing-23x: calc(var(--fs-spacing-base) * 23);
+    --fs-spacing-24x: calc(var(--fs-spacing-base) * 24);
+    --fs-spacing-25x: calc(var(--fs-spacing-base) * 25);
+    --fs-spacing-26x: calc(var(--fs-spacing-base) * 26);
+    --fs-spacing-27x: calc(var(--fs-spacing-base) * 27);
+    --fs-spacing-28x: calc(var(--fs-spacing-base) * 28);
+    --fs-spacing-29x: calc(var(--fs-spacing-base) * 29);
+    --fs-spacing-30x: calc(var(--fs-spacing-base) * 30);
+}
+
+img {
+    filter: invert(1);
+}

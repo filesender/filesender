@@ -1,0 +1,493 @@
+.fs-transfer {
+  flex: 1;
+  background: var(--fs-bg-color);
+  padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-transfer .col-12 {
+  padding: 0 var(--fs-spacing-3x);
+}
+
+.fs-transfer__step {
+  display: none;
+  flex-direction: column;
+}
+
+.fs-transfer__step--active {
+  display: flex;
+}
+
+.fs-transfer__list h6 {
+  width: 100%;
+  padding: var(--fs-spacing-5x) var(--fs-spacing-5x) var(--fs-spacing-2x) var(--fs-spacing-5x) !important;
+  border-bottom: 1px solid var(--fs-gray-300);
+  background: var(--fs-hightlight-bg);
+  border-top-left-radius: var(--fs-spacing-base);
+  border-top-right-radius: var(--fs-spacing-base);
+  margin-bottom: 0 !important;
+}
+
+.fs-transfer__droparea {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 35vh;
+  padding: var(--fs-spacing-10x);
+  margin-top: var(--fs-spacing-4x);
+  background: var(--fs-bg-color-secondary);
+  border: 1px dashed var(--fs-border);
+  border-radius: var(--fs-spacing-base);
+  font-size: 0.9rem;
+}
+
+.fs-transfer__droparea--hide {
+  display: none;
+}
+
+.fs-transfer__droparea input {
+  display: none;
+}
+
+.fs-transfer__droparea label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fs-transfer__droparea label + * {
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-transfer__droparea label strong + span {
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-transfer__droparea--active {
+  background: var(--fs-hover);
+  border-color: var(--fs-accent);
+}
+
+.fs-transfer__droparea--active:after {
+  content: "\f093";
+  position: absolute;
+  display: inline-block;
+  font-family: FontAwesome;
+  font-size: 6.5rem;
+  z-index: 1;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  color: var(--fs-accent);
+}
+
+.fs-transfer__droparea--active span,
+.fs-transfer__droparea--active strong {
+  opacity: .2;
+}
+
+.fs-transfer__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--fs-bg-light);
+  border: 1px solid var(--fs-border);
+  border-radius: var(--fs-spacing-base);
+  margin: var(--fs-spacing-4x) 0;
+  font-size: 14px;
+}
+
+.fs-transfer__list--active {
+  display: flex;
+}
+
+.fs-transfer__list > .fs-transfer__add-buttons {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  bottom: -22px;
+}
+
+.fs-transfer__list > .fs-transfer__add-buttons label + label {
+  margin-left: var(--fs-spacing-2x);
+}
+
+.fs-transfer__files {
+  flex: 1;
+  min-height: 35vh;
+  max-height: 54vh;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.fs-transfer__files table {
+  width: 100%;
+}
+
+.fs-transfer__files table tr {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 var(--fs-spacing-3x);
+  border-top: 1px solid var(--fs-gray-300);
+  min-height: var(--fs-spacing-7x);
+}
+
+.fs-transfer__files table tr.file.invalid {
+  background: transparent;
+  color: var(--fs-danger);
+}
+
+.fs-transfer__files table tr.tpl {
+  display: none;
+}
+
+.fs-transfer__files table tr.tpl + tr {
+  border-top: none;
+}
+
+.fs-transfer__files table tr:first-child {
+  border-top: none;
+}
+
+.fs-transfer__files table tr.fs-transfer__file-to-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fs-transfer__files table tr.fs-transfer__file-to-upload div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.fs-transfer__files table tr.fs-transfer__file-to-upload div span:first-child {
+  flex: 1;
+  margin-right: var(--fs-spacing-3x);
+}
+
+.fs-transfer__files table tr.fs-transfer__file-to-upload div span + strong {
+  margin-left: var(--fs-spacing-3x);
+}
+
+.fs-transfer__files table tr span + button {
+  margin-left: var(--fs-spacing-3x);
+}
+
+.fs-transfer__files table td,
+.fs-transfer__files table td > div {
+  border: none;
+  width: 100%;
+}
+
+.fs-transfer__files table td div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fs-transfer__files table tr td div span:first-child {
+  flex: 1;
+  margin-right: var(--fs-spacing-3x);
+}
+
+.fs-transfer__files table td div .progressbar {
+  display: none;
+  flex: 1;
+  width: 100%;
+  margin: var(--fs-spacing-base) 0 0 0 !important;
+  padding: 0;
+}
+
+.fs-transfer__files table td div .progressbar .progress-bar {
+  padding-left: var(--fs-spacing-base);
+  background-color: var(--fs-success);
+}
+
+.fs-transfer__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-transfer__actions--active {
+  display: flex;
+}
+
+.fs-transfer__actions button + button {
+  margin-left: var(--fs-spacing-base);
+}
+
+.fs-transfer__options {
+  margin-top: var(--fs-spacing-9x);
+}
+
+.fs-transfer__send-options h5 {
+  margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-transfer__transfer-fields,
+.fs-transfer__transfer-settings,
+.fs-transfer__password {
+  display: none;
+}
+
+.fs-transfer__transfer-fields--show,
+.fs-transfer__transfer-settings--show,
+.fs-transfer__password--show {
+  display: block;
+}
+
+.fs-transfer__password {
+  padding: 0 var(--fs-spacing-base) var(--fs-spacing-2x) var(--fs-spacing-base);
+}
+
+.fs-transfer__password small {
+  font-size: 0.8rem;
+}
+
+.fs-transfer__password-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fs-transfer__password-top .fs-input-group {
+  flex: 1;
+  margin-top: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-base);
+}
+
+.fs-transfer__upload-detail {
+  margin-top: var(--fs-spacing-9x);
+}
+
+.fs-transfer__upload-detail h5 {
+  margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-transfer__upload-size-info {
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-transfer__upload-speed-info {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer__upload-speed-info div {
+  width: 100%;
+}
+
+.fs-transfer__upload-files-info {
+  margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer__upload-link {
+  display: none;
+  margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer__upload-link--show {
+  display: block;
+}
+
+.fs-transfer__upload-recipients {
+  display: none;
+  margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer__upload-recipients--show {
+  display: block;
+}
+
+.fs-transfer__upload-expires {
+  margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer__upload-custom-name {
+  display: none;
+  margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer__total-info {
+  display: block;
+}
+
+.fs-transfer__upload-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: var(--fs-spacing-4x) 0;
+  margin-top: var(--fs-spacing-3x) !important;
+  border-top: 1px solid var(--fs-gray-200);
+}
+
+.fs-transfer__upload-actions a {
+  text-decoration: none !important;
+}
+
+.fs-transfer__upload-actions button + button, .fs-transfer__upload-actions a + a {
+  margin-left: var(--fs-spacing-2x);
+}
+
+.fs-transfer__directory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fs-transfer__directory > span + label {
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-transfer__recipients {
+  padding-left: var(--fs-spacing-22x);
+}
+
+.fs-transfer__recipients .remove {
+  color: var(--fs-danger);
+}
+
+.fs-transfer__generate-password {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+}
+
+.fs-transfer__generate-password span + a {
+  margin-left: var(--fs-spacing-2x);
+  padding: 0 var(--fs-spacing-2x);
+}
+
+.fs-transfer .fs-table {
+  margin: 0 !important;
+}
+
+.fs-transfer__files table .fs-button {
+  margin-left: var(--fs-spacing-base);
+}
+
+/* XS */
+@media (max-width: 575px) {
+  .fs-transfer {
+    font-size: 0.8rem;
+  }
+  .fs-transfer h1 {
+    font-size: 1.6rem;
+    margin: var(--fs-spacing-2x);
+  }
+  .fs-transfer__droparea {
+    padding: var(--fs-spacing-base);
+    margin-top: var(--fs-spacing-2x);
+  }
+  .fs-transfer__list h6 {
+    padding: var(--fs-spacing-2x) var(--fs-spacing-base) var(--fs-spacing-base) var(--fs-spacing-base) !important;
+    font-size: 0.9rem;
+  }
+  .fs-transfer__files {
+    padding: 0 var(--fs-spacing-base) 0 var(--fs-spacing-base);
+  }
+  .fs-transfer__actions {
+    flex-direction: column-reverse;
+  }
+  .fs-transfer__left {
+    margin-top: var(--fs-spacing-2x);
+  }
+  .fs-transfer__left, .fs-transfer__right {
+    display: flex;
+    flex-direction: column;
+  }
+  .fs-transfer__left button + button, .fs-transfer__right button + button {
+    margin-top: var(--fs-spacing-2x);
+  }
+
+  .fs-transfer__list {
+    margin: var(--fs-spacing-4x) 0 var(--fs-spacing-6x) 0;
+  }
+
+  .fs-transfer__list > .fs-transfer__add-buttons {
+    flex-direction: column;
+    align-items: center;
+    bottom: -56px;
+  }
+
+  .fs-transfer__list > .fs-transfer__add-buttons label + label {
+    margin-left: 0;
+    margin-top: var(--fs-spacing-2x);
+  }
+
+  .fs-transfer__files table tr {
+    padding: 0 var(--fs-spacing-base);
+  }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+  .fs-transfer h1 {
+    font-size: 1.8rem;
+    margin: var(--fs-spacing-3x);
+  }
+
+  .fs-transfer__droparea {
+    padding: var(--fs-spacing-2x);
+    margin-top: var(--fs-spacing-3x);
+  }
+
+  .fs-transfer__list h6 {
+    padding: var(--fs-spacing-3x) var(--fs-spacing-2x) var(--fs-spacing-2x) var(--fs-spacing-2x) !important;
+    font-size: 1.2rem;
+  }
+
+  .fs-transfer__files {
+    padding: 0 var(--fs-spacing-base) 0 var(--fs-spacing-base);
+  }
+
+  .fs-transfer__actions {
+    flex-direction: column-reverse;
+  }
+
+  .fs-transfer__left {
+    margin-top: var(--fs-spacing-2x);
+  }
+
+  .fs-transfer__left, .fs-transfer__right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fs-transfer__left button + button, .fs-transfer__right button + button {
+    margin-top: var(--fs-spacing-2x);
+  }
+
+  .fs-transfer__list {
+    margin: var(--fs-spacing-4x) 0 var(--fs-spacing-6x) 0;
+  }
+
+  .fs-transfer__list > .fs-transfer__add-buttons {
+    flex-direction: column;
+    align-items: center;
+    bottom: -56px;
+  }
+
+  .fs-transfer__list > .fs-transfer__add-buttons label + label {
+    margin-left: 0;
+    margin-top: var(--fs-spacing-2x);
+  }
+
+  .fs-transfer__files table tr {
+    padding: 0 var(--fs-spacing-2x);
+  }
+}
+

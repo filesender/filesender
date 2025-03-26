@@ -1,0 +1,197 @@
+.fs-input-group {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin-top: var(--fs-spacing-3x);
+  margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-input-group--center {
+  align-items: center;
+}
+
+.fs-input-group--hide {
+  display: none;
+}
+
+.fs-input-group label {
+  width: var(--fs-spacing-19x);
+}
+
+.fs-input-group div {
+  flex: 1;
+}
+
+.fs-input-group div input {
+  width: 100%;
+}
+
+.fs-input-group label + * {
+  margin-left: var(--fs-spacing-3x);
+}
+
+.fs-input-group--auto label,
+.fs-input-group--auto input {
+  width: auto;
+}
+
+.fs-input-group--auto input {
+  width: auto;
+  flex: none !important;
+}
+
+.fs-input-group--vertical {
+  flex-direction: column;
+}
+
+.fs-input-group--vertical label {
+  width: auto;
+  margin-bottom: var(--fs-spacing-base);
+}
+
+.fs-input-group span.invalid {
+  position: absolute;
+  left: var(--fs-spacing-15x);
+}
+
+.fs-input-group input,
+.fs-input-group textarea {
+  flex: 1;
+  border: 1px solid var(--fs-bg-color-quarternary);
+  min-height: var(--fs-spacing-6x);
+  background: var(--fs-light);
+  border-radius: var(--fs-spacing-base);
+}
+
+.fs-input-group input:disabled,
+.fs-input-group textarea:disabled {
+  opacity: 0.5;
+}
+
+.fs-input-group input.invalid,
+.fs-input-group textarea.invalid {
+  border-color: var(--fs-danger);
+}
+
+.fs-input-group input:focus,
+.fs-input-group textarea:focus,
+.fs-input-group input:focus-visible,
+.fs-input-group textarea:focus-visible {
+  border: 1px solid var(--fs-accent);
+  outline: none;
+}
+
+.fs-input-group input {
+  padding: 0 var(--fs-spacing-3x);
+}
+
+.fs-input-group textarea {
+  padding: var(--fs-spacing-base) var(--fs-spacing-3x);
+}
+
+.fs-input-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--fs-light);
+  border: 1px solid var(--fs-bg-color-quarternary);
+  border-radius: var(--fs-spacing-4x);
+  font-weight: 700;
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-input-inline input {
+  flex: 1;
+  min-height: var(--fs-spacing-6x);
+  padding: 0 var(--fs-spacing-3x);
+  background: transparent;
+  border: none;
+}
+
+.fs-input-inline button {
+  font-size: 0.9rem;
+}
+
+.fs-checkbox {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  height: var(--fs-spacing-3x);
+  min-width: var(--fs-spacing-3x);
+}
+
+.fs-checkbox--disabled,
+.fs-checkbox--disabled label,
+.fs-checkbox--disabled input,
+.fs-checkbox--disabled .fs-checkbox__mark{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: not-allowed;
+}
+
+.fs-checkbox--disabled .fs-checkbox__mark {
+  opacity: 0.5;
+}
+
+.fs-checkbox label {
+  margin-left: var(--fs-spacing-5x);
+  cursor: pointer;
+}
+
+.fs-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.fs-checkbox__mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--fs-spacing-3x);
+  width: var(--fs-spacing-3x);
+  background-color: var(--fs-bg-color-tertiary);
+  border-radius: var(--fs-spacing-half);
+}
+
+/* On mouse-over, add a grey background color */
+.fs-checkbox:hover input ~ .fs-checkbox__mark {
+  background-color: var(--fs-bg-color-quarternary);
+}
+
+/* When the checkbox is checked, add a blue background */
+.fs-checkbox input:checked ~ .fs-checkbox__mark {
+  background-color: var(--fs-accent);
+}
+
+/* Create the fs-checkbox__mark/indicator (hidden when not checked) */
+.fs-checkbox__mark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the fs-checkbox__mark when checked */
+.fs-checkbox input:checked ~ .fs-checkbox__mark:after {
+  display: block;
+}
+
+.fs-checkbox .fs-checkbox__mark:after {
+  left: 8px;
+  top: 4.5px;
+  width: 7px;
+  height: 12px;
+  border: solid var(--fs-bg-color-secondary);
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

@@ -2,7 +2,7 @@
 
 chdir( dirname(__FILE__) . '/../../../www/lib' );
 
-echo "This script will inspect the software in www/lib in the current reposiroty\n";
+echo "This script will inspect the software in www/lib in the current repository\n";
 echo "and show you the current versions in use.\n";
 echo "\n";
 echo "Working in directory " . getcwd() . "\n";
@@ -15,10 +15,22 @@ echo "\n";
 // out the version into the first () match.
 //
 $packages = array(
+   'bootstrap' => array(
+        'path' => 'bootstrap/dist/css/bootstrap.min.css',
+        'pattern' => '/Bootstrap[ ]+v([0-9.]+).*/m',
+    ),
+    'bootbox' => array(
+        'path' => 'bootbox/dist/bootbox.all.min.js',
+        'pattern' => '/@version: ([0-9.]+).*/m',
+    ),    
     'chart.js' => array(
         'path' => 'chart.js/chart.min.js',
         'pattern' => '/Chart.js v([0-9.]+).*/m',
     ),
+   'flag-icons' => array(
+        'path' => 'flag-icons/css/flag-icons.min.css',
+        'pattern' => '/v([0-9.]+)/m',
+    ),   
     'font awesome' => array(
         'path' => 'font-awesome/css/font-awesome.css',
         'pattern' => '/Font Awesome ([0-9.]+) by/m',
@@ -31,10 +43,10 @@ $packages = array(
         'path' => 'jquery-ui/jquery-ui.min.js',
         'pattern' => '/jQuery UI - v([0-9.]+) -/m',
     ),
-    'reset' => array(
-        'path' => 'reset/reset.css',
-        'pattern' => '/v([0-9.]+) | 20/m',
-    ),
+    'popperjs' => array(
+        'path' => 'popper.js/dist/umd/popper.min.js',
+        'pattern' => '|popperjs/core v([0-9.]+)|m',
+    ),    
     'promise-polyfill' => array(
         'path' => 'promise-polyfill/polyfill.min.js',
         'pattern' => '/v([0-9.]+)/m',

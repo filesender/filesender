@@ -7,14 +7,14 @@
 // 
 // 
 ?>
-subject: Pozvánka k používání {cfg:site_name}
+subject: Pozvánka pro použití na {cfg:site_name}
 
 {alternative:plain}
 
-Ahoj,
+Dobrý den,
 
-Byli jste pozváni k použití {cfg:site_name} na {cfg:site_url}.
-Vaše heslo pro prvotní přihlášení je {password}.
+Byli jste pozváni k používání {cfg:site_name} na {cfg:site_url}.
+Vaše prvotní heslo pro přihlášení je {password}.
 
 Doporučujeme vám, abyste navštívili stránku Můj profil a změnili si heslo, jakmile začnete stránky používat.
 
@@ -24,12 +24,12 @@ S pozdravem,
 {alternative:html}
 
 <p>
-    Hello,
+    Dobrý den,
 </p>
 
 <p>
 Byli jste pozváni k používání {cfg:site_name} na {cfg:site_url}.
-Vaše heslo pro prvotní přihlášení je {password}.</p>
+Vaše prvotní heslo pro přihlášení je {password}.</p>
 <p>
 Doporučujeme vám, abyste navštívili stránku Můj profil a změnili si heslo, jakmile začnete stránky používat.
 </p>
@@ -38,4 +38,3 @@ Doporučujeme vám, abyste navštívili stránku Můj profil a změnili si heslo
     S pozdravem,<br />
     {cfg:site_name}
 </p>
-

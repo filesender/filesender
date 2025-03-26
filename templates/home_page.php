@@ -1,6 +1,6 @@
 <div class="box">
     {tr:site_splash}
-    
+
     <?php
     
     if(!Auth::isAuthenticated()) {
@@ -10,4 +10,5 @@
     }
     
     ?>
+    <script type="text/javascript" src="{path:js/home_page.js}"></script>
 </div>

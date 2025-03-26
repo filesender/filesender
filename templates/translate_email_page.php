@@ -3,7 +3,7 @@
     if(!array_key_exists('token', $_REQUEST))
         throw new TokenIsMissingException();
     
-    $token = $_REQUEST['token'];
+    $token = htmlspecialchars($_REQUEST['token']);
     if(!Utilities::isValidUID($token))
         throw new TokenHasBadFormatException($token);
     

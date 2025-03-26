@@ -1,0 +1,65 @@
+.fs-link {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+    border-radius: var(--fs-spacing-3x);
+    color: var(--fs-text-color);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.fs-link:hover {
+    color: var(--fs-accent) !important;
+    background: var(--fs-hover) !important;
+}
+
+.fs-link:hover i {
+    color: var(--fs-accent) !important;
+}
+
+.fs-link i {
+    color: var(--fs-accent);
+    font-size: 1.2rem;
+}
+
+.fs-link i + span {
+    margin-left: var(--fs-spacing-base);
+}
+
+.fs-link--no-hover:hover {
+    background: transparent !important;
+}
+
+.fs-link:active,
+.fs-link:visited,
+.fs-link:focus,
+.fs-link:focus-visible {
+    background: transparent;
+    border: none;
+}
+
+.fs-link--circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--fs-spacing-5x);
+    width: var(--fs-spacing-5x);
+    border-radius: 100%;
+    color: var(--fs-accent) !important;
+    background: var(--fs-hightlight-bg) !important;
+}
+
+.fs-link--disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    text-decoration: none;
+}
+
+.fs-link--disabled:hover {
+    color: var(--fs-accent) !important;
+    background: var(--fs-hightlight-bg) !important;
+}

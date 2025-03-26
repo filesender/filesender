@@ -53,13 +53,13 @@ for the Web server setup, one for each supported server.
 On RedHat/CentOS, run:
 
 ```
-dnf install -y httpd mod_ssl php php-mbstring php-xml php-json
+dnf install -y httpd mod_ssl php php-mbstring php-xml php-json php-intl
 ```
 
 On Debian, run:
 
 ```
-apt-get install -y apache2 php php-mbstring php-xml php-json libapache2-mod-php
+apt-get install -y apache2 libapache2-mod-php php php-mbstring php-xml php-json php-intl
 ```
 
 # Step 1-nginx - Install NGINX and PHP
@@ -117,6 +117,9 @@ mkdir -p /opt/filesender
 cd       /opt/filesender
 tar xzvf /tmp/filesender-3.0.tar.gz
 mv filesender-filesender-3.0  filesender
+cd filesender
+composer install --no-dev
+
 ```
 
 
@@ -163,6 +166,8 @@ git clone --depth 1 --branch master https://github.com/filesender/filesender.git
 
 cd /opt/filesender/filesender
 git checkout master
+
+composer install --no-dev
 ```
 
 You can bring down new releases to an existing git repository and then

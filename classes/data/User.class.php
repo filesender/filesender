@@ -128,6 +128,17 @@ class User extends DBObject
             'type' => 'datetime',
             'null' => true
         ),
+        
+        'save_frequent_email_address' => array(
+            'type' => 'bool',
+            'null'    => false,
+            'default' => true,
+        ),
+        'save_transfer_preferences' => array(
+            'type' => 'bool',
+            'null'    => false,
+            'default' => true,
+        ),
     );
 
 
@@ -146,12 +157,15 @@ class User extends DBObject
                         . ' , id is not null as is_active '
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
-                                       .self::getDBTable().' up, '.call_user_func('Authentication::getDBTable').' a where up.authid = a.id ';
+                                       .self::getDBTable().' up LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON up.authid = a.id';
+            $idpview[$dbtype] = 'select u.*, a.saml_user_identification_idp as saml_user_identification_idp, a.saml_user_identification_idp as idp from '
+                               . self::getDBTable().' u '
+                               . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
         }
         
-        
         return array( strtolower(self::getDBTable()) . 'view' => $a,
-                      'userauthview' => $userauthviewdef
+                      'userauthview' => $userauthviewdef,
+                      'useridpview' => $idpview,
         );
     }
     
@@ -175,6 +189,14 @@ class User extends DBObject
     protected $guest_expiry_default_days = null;
     protected $service_aup_accepted_version = 0;
     protected $service_aup_accepted_time = null;
+    protected $save_frequent_email_address = true;
+    protected $save_transfer_preferences = true;
+
+    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+    const AUP             = " service_aup_accepted_version >= :aup ";
+    const FROM_IDP_AUP    = " saml_user_identification_idp = :idp and service_aup_accepted_version >= :aup ";
+    const APIKEY          = " auth_secret IS NOT NULL  ";
+    const FROM_IDP_APIKEY = " saml_user_identification_idp = :idp and auth_secret IS NOT NULL  ";
 
     
     /** 
@@ -260,9 +282,13 @@ class User extends DBObject
         if (!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) {
             throw new UserMissingUIDException();
         }
+        // Check if idp attribute exists, if it doesn't make it null
+        if (!array_key_exists('idp', $attributes) || !$attributes['idp']) {
+            $attributes['idp'] = null;
+        }
         
         // Get matching user
-        $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid']);
+        $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid'],$attributes['idp']);
         $user = self::fromAuthId($authid);
         
         // Add metadata from attributes
@@ -420,6 +446,9 @@ class User extends DBObject
         if( Config::get('data_protection_user_frequent_email_address_disabled')) {
             return array();
         }
+        if( !$this->save_frequent_email_address ) {
+            return array();
+        }
 
         // Get max number of returned recipients from config
         $size = Config::get('autocomplete');
@@ -495,6 +524,10 @@ class User extends DBObject
         if( Config::get('data_protection_user_frequent_email_address_disabled')) {
             $recipients = array();
         }
+        if( !$this->save_frequent_email_address ) {
+            $recipients = array();
+        }
+
         
         // Save if something changed
         if ($recipients !== $this->frequent_recipients) {
@@ -608,6 +641,10 @@ class User extends DBObject
         }
         
         $score = $props->$option;
+
+        if( $this->save_transfer_preferences ) {
+            return $score;
+        }
         
         if (abs($score) < 3) {
             return $default;
@@ -657,6 +694,8 @@ class User extends DBObject
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
           , 'guest_expiry_default_days', 'service_aup_accepted_version', 'service_aup_accepted_time'
+          , 'save_frequent_email_address', 'save_transfer_preferences'
+            
         ))) {
             return $this->$property;
         }
@@ -668,6 +707,11 @@ class User extends DBObject
         if ($property == 'saml_user_identification_uid') {
             $a = Authentication::fromId($this->authid);
             return $a->saml_user_identification_uid;
+        }
+
+        if ($property == 'saml_user_identification_idp') {
+            $a = Authentication::fromId($this->authid);
+            return $a->saml_user_identification_idp;
         }
         
         if ($property == 'email') {
@@ -719,7 +763,7 @@ class User extends DBObject
         } elseif ($property == 'guest_preferences') {
             $this->guest_preferences = $value;
         } elseif ($property == 'frequent_recipients') {
-            if( Config::get('data_protection_user_frequent_email_address_disabled')) {
+            if( Config::get('data_protection_user_frequent_email_address_disabled') || !$this->save_frequent_email_address ) {
                 // keep nothing.
                 $this->frequent_recipients = array();
             } else {
@@ -752,10 +796,16 @@ class User extends DBObject
             $this->service_aup_accepted_version = $value;
         } elseif ($property == 'service_aup_accepted_time') {
             $this->service_aup_accepted_time = $value;
+        } elseif ($property == 'save_frequent_email_address') {
+            $this->save_frequent_email_address = $value;
+        } elseif ($property == 'save_transfer_preferences') {
+            $this->save_transfer_preferences = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
     }
+
+    
 
     /**
      * Delete the user related objects that the database delete will not remove.
@@ -788,7 +838,14 @@ class User extends DBObject
         if( Config::get('data_protection_user_frequent_email_address_disabled')) {
             $this->frequent_recipients = array();
         }
+        if( !$this->save_frequent_email_address ) {
+            $this->frequent_recipients = array();
+        }
+        Logger::dump("AAA beforesave ", $this->transfer_preferences );
         if( Config::get('data_protection_user_transfer_preferences_disabled')) {
+            $this->transfer_preferences = null;
+        }
+        if( !$this->save_transfer_preferences ) {
             $this->transfer_preferences = null;
         }
     }
@@ -866,4 +923,71 @@ class User extends DBObject
 
         return $ret;
     }
+
+    /*
+     * Count how many users we have or a tenant has
+     */
+    public static function users( $idp = null )
+    {
+        if ( !$idp ) {
+            return self::countEstimate();
+        }
+
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_NO_ORDER
+            ),
+            array(':idp' => $idp)
+        );
+    }
+
+    /*
+     * Count how many signed AUPs we have or a tenant has
+     */
+    public static function usersSignedAUP( $idp = null )
+    {
+        if ( !$idp ) {
+            return self::count(
+                array(
+                    'view'  => self::getDBTable(),
+                    'where' => self::AUP
+                ),
+                array('aup' => Config::get('service_aup_min_required_version'))
+            );
+        }
+
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_AUP
+            ),
+            array(':idp' => $idp, 'aup' => Config::get('service_aup_min_required_version'))
+        );
+        
+    }
+
+    /*
+     * Count how many API Keys we have or a tenant has
+     */
+    public static function usersWithAPIKey( $idp = null )
+    {
+        if ( !$idp ) {
+            return self::count(
+                array(
+                    'view'  => self::getDBTable(),
+                    'where' => self::APIKEY
+                )
+            );
+        }
+
+        return self::count(
+            array(
+                'view'  => 'useridpview',
+                'where' => self::FROM_IDP_APIKEY
+            ),
+            array(':idp' => $idp)
+        );        
+    }
+
 }

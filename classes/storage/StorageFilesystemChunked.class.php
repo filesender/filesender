@@ -155,7 +155,7 @@ class StorageFilesystemChunked extends StorageFilesystem
         }
 
         if (self::file_exists($filePath) === false) {
-            mkdir($filePath, 0770, true);
+            @mkdir($filePath, 0770, true);
         }
 
         $chunkFile = self::getChunkFilename( $file, $filePath, $offset);

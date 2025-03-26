@@ -7,10 +7,9 @@
 // 
 // 
 ?>
-<h2>Inviter un utilisateur hôte</h2>
-<p>Une invitation permet à une personne quelconque, sans compte d'accès, de vous envoyer des fichiers. Pour créer une invitation: 
-<li>Entrez l'adresse email de l'utilisateur invité.</li>
-<li>Saisissez un objet et un message si nécessaire. </li>
-<li>Cliquez 'Envoyer l'invitation'.</li></p>
- <p>L'utilisateur invité recevra un courriel contenant le lien d'invitation.
+<p>
+    Une invitation permet à une personne quelconque de vous envoyer un fichier.
+    Pour créer une invitation, entrez une adresse email et cliquez "Envoyer l'invitation".
+    <br />
+    Un e-mail sera envoyée à la personne avec un lien sur l'invitation.
 </p>

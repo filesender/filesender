@@ -90,6 +90,7 @@ $(function() {
                 }
                 l.appendTo(hashperftable);
             });
+            return n;
         })
     });
     
@@ -203,6 +204,8 @@ $(function() {
                     }, efunc );
                 }, efunc );
 
+            return n;
+            
         });
     });
 
@@ -253,7 +256,156 @@ $(function() {
         
         zip.complete();
     });
+
+    /////////////////////////////////
+    /////////////////////////////////
+    /////////////////////////////////
+    /////////////////////////////////
     
+    section.find('[data-action="show-bs-alert-success"]').on('click', function() {
+        filesender.ui.alert('success', 'this is the main part of the message');
+    });
+
+    
+    section.find('[data-action="show-bs-test"]').on('click', function() {
+
+        filesender.ui.alert('success', 'this is the main part of the message');
+    });
+
+    section.find('[data-action="show-bs-test-bootbox"]').on('click', function() {
+
+        if( false ) {
+            filesender.ui.alert('success', 'this is the main part of the message');
+            bootbox.alert({
+                title: 'hi there',
+                message: 'this is the main part of the message',
+                centerVertical: true
+            });
+        }
+
+        var onClose = function() {
+        };
+        var p = filesender.ui.alert('success', lang.tr('done_uploading'), onClose);
         
+        var t = null;
+        var dl = $('<div class="download_link" />').text(lang.tr('download_link') + ' :').appendTo(p);
+        t = $('<textarea class="wide" readonly="readonly" />').appendTo(dl);
+        t.val('http://127.0.0.1/not-a-link').focus().select();
+        if(t) t.on('click', function() {
+            $(this).focus().select();
+        });
+
+
+        var c = lang.tr('done_uploading') + '<br/>';
+        c += '<div class="download_link" />' + lang.tr('download_link') + ' :' + '<br/>';
+        c += '<textarea class="wide" readonly="readonly" />';
+        c += 'http://127.0.0.1/not-a-link';
+
+        // bootbox.alert({
+        //     title: 'Success',
+        //     message: c,
+        //     className: 'warning-dialog',
+        //     centerVertical: true
+        // });
+
+        filesender.ui.alertbs('error', lang.tr('fdfdfdfd'), function() {});
+
+        
+    });
+
+    var onClose = function() {
+        console.log('show-bs-test-alertbs onclose...');
+    };
     
+    section.find('[data-action="show-bs-test-alertbs"]').on('click', function() {
+
+        var popup = filesender.ui.alertbs('success', 'this is the main part of the message', onClose );
+        $('<p>').text('hi there').appendTo(popup.find('.bootbox-body'));
+
+    });
+       
+
+    section.find('[data-action="show-bs-maint1"]').on('click', function() {
+
+        filesender.ui.maintenance(true);
+
+        setTimeout(function () {
+            filesender.ui.maintenance(false);
+        }, 2000 );
+        
+    });
+    section.find('[data-action="show-bs-maint2"]').on('click', function() {
+        filesender.ui.maintenance(false);
+    });
+
+    section.find('[data-action="show-bs-test-error"]').on('click', function() {
+
+
+        filesender.ui.confirm('this is the test error', function() {}, function() {} );
+
+        var buttons = {
+            extend: {
+                callback: function() {
+                    console.log('extend');
+                }
+            }
+        }
+        buttons.extend_and_remind = {
+            callback: function() {
+                console.log('extend 2');
+            }
+        };
+        buttons.cancel = {};
+        
+
+        // filesender.ui.dialogWithButtons( 'confirm_dialog', 'confirm',
+        //                                  lang.tr('confirm_extend_expiry').r({days: 30}).out(),
+        //                                  buttons );
+        
+        
+
+        // filesender.ui.confirmTitle(lang.tr('authentication_required'),
+        //                            lang.tr('authentication_required_explanation'),
+        //                            function() {
+        //                                console.log("onclose ..." );
+        //                            });
+                           
+
+        
+        // var authentication_required = filesender.ui.popup(
+        //                 lang.tr('authentication_required'),
+        //                 filesender.config.logon_url ? {
+        //                     logon: function() {
+        //                         filesender.ui.redirect(filesender.config.logon_url);
+        //                     }
+        //                 } : {
+        //                     ok: function() {}
+        //                 },
+        //                 {noclose: true}
+        //             );
+        // authentication_required.text(lang.tr('authentication_required_explanation'));
+        
+
+//        filesender.ui.confirmbs(lang.tr('confirm_close_transfer'), function() { alert('yes'); }, function() { alert('no'); });
+        
+        // bootbox.confirm({
+        //     message: "This is a confirm with custom button text and color! Do you like it?",
+        //     buttons: {
+        //         confirm: {
+        //             label: 'Yes',
+        //             className: 'btn-success'
+        //         },
+        //         cancel: {
+        //             label: 'No',
+        //             className: 'btn-danger'
+        //         }
+        //     },
+        //     callback: function (result) {
+        //         console.log('This was logged in the callback: ' + result);
+        //     }
+        // });
+        
+    });
+    
+
 });

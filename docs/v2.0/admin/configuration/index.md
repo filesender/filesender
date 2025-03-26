@@ -130,9 +130,11 @@ A note about colours;
 ## General UI
 
 * [theme](#theme)
+* [theme_userpref_enabled](#theme_userpref_enabled)
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
+* [upload_show_play_pause](#upload_show_play_pause)
 * [upload_display_bits_per_sec](#upload_display_bits_per_sec)
 * [upload_display_per_file_stats](#upload_display_per_file_stats)
 * [upload_force_transfer_resume_forget_if_encrypted](#upload_force_transfer_resume_forget_if_encrypted)
@@ -152,8 +154,13 @@ A note about colours;
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
-
-
+* [date_format_style](#date_format_style)
+* [time_format_style](#time_format_style)
+* [make_download_links_clickable](#make_download_links_clickable)
+* [valid_timezone_regex](#valid_timezone_regex)
+* [client_send_current_timezone_to_server](#client_send_current_timezone_to_server)
+* [ui_use_datepicker_for_transfer_expire_time_selection](#ui_use_datepicker_for_transfer_expire_time_selection)
+* [ui_use_datepicker_for_guest_expire_time_selection](#ui_use_datepicker_for_guest_expire_time_selection)
 
 ## Transfers
 
@@ -218,6 +225,7 @@ A note about colours;
 * [terasender_enabled](#terasender_enabled)
 * [terasender_advanced](#terasender_advanced)
 * [terasender_worker_count](#terasender_worker_count)
+* [terasender_worker_max_count](#terasender_worker_max_count)
 * [terasender_start_mode](#terasender_start_mode)
 * [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stalling_detection)
@@ -285,6 +293,7 @@ A note about colours;
 * [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
 * [auth_sp_fake_additional_attributes_values](#auth_sp_fake_additional_attributes_values)
 * [auditlog_lifetime](#auditlog_lifetime)
+* [auditlog_must_be_n_days_longer_than_max_transfer_days_valid](#auditlog_must_be_n_days_longer_than_max_transfer_days_valid)
 * [ratelimithistory_lifetime](#ratelimithistory_lifetime)
 * [report_format](#report_format)
 * [exception_additional_logging_regex](#exception_additional_logging_regex)
@@ -1426,6 +1435,14 @@ Inside of files_downloaded.mail.php for example
 * __available:__ since version 2.8
 * __comment:__ You can not select absolute or relative paths using this parameter. Your theme directory must exist inside the existing template directory.
 
+### theme_userpref_enabled
+
+* __description:__ allow user to change theme.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.0
+* __comment:__ allow user to select theme in user_page
 
 
 ### autocomplete
@@ -1457,6 +1474,15 @@ Inside of files_downloaded.mail.php for example
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+### upload_show_play_pause
+
+* __description:__ Show buttons to allow an upload to pause, resume, and stop
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0
+* __comment:__ 
 
 ### upload_display_bits_per_sec
 
@@ -1624,6 +1650,67 @@ Inside of files_downloaded.mail.php for example
 * __available:__ since version 2.48
 * __comment:__ If you are performing a major upgrade you might like to retain an original FileSender installation in read only mode so users can continue to download existing files and redirect visitors to a new site for new uploads. This may be useful for upgrading between major FileSender releases such as the 2.x series to the 3.x series and also for change in infrastructure such as moving to different disk pools or storage back ends.
 
+
+### date_format_style
+* __description:__  High level selection of the style to format a date with.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ medium
+* __available:__ since version 3.0beta7
+* __comment:__ This can be one of full, long, medium, or short. This will be used to format dates and times with the locale according to IntlDateFormatter. The local is taken from the user profile, and then from the http accepted languages sent from the browser so it should match which language and locale the user is most confortable with. See for example https://www.php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants This replaces the use of the date_format translation string in the 2.x series of FileSender.
+
+
+### time_format_style
+* __description:__  High level selection of the style to format a date with a time component with.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ medium
+* __available:__ since version 3.0beta7
+* __comment:__ This can be one of full, long, medium, or short. This will be used to format dates and times with the locale according to IntlDateFormatter. The local is taken from the user profile, and then from the http accepted languages sent from the browser so it should match which language and locale the user is most confortable with. See for example https://www.php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants This replaces the use of the datetime_format translation string in the 2.x series of FileSender.
+
+
+### make_download_links_clickable
+* __description:__  Allow the user to click on links to downloads instead of needing to copy and paste them to navigate to the transfer.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta7
+* __comment:__ The transfer link can be clicked on when get a link is used and an upload is compete.
+
+
+### valid_timezone_regex
+* __description:__  A full php regex expression including the leading and trailing //i type characters to match a valid timezone string sent from the browser
+* __mandatory:__ no
+* __type:__ string (php regex including the leading and trailing //i characters)
+* __default:__ '@^[_/a-z]+$@i'
+* __available:__ since version 3.0beta7
+* __comment:__ This regex is used to match timezone data passed from the browser. If the regex does not match the timezone is considered invalid and ignored. Set this to '' to explicitly disable this feature.
+
+
+### client_send_current_timezone_to_server
+* __description:__  If enabled the client will send the current timezone to the server. This could be a privacy issue so it is off by default.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta7
+* __comment:__ If enabled the client will share the current timezone setting to the server so it can format dates as the client expects.
+
+
+### ui_use_datepicker_for_transfer_expire_time_selection
+* __description:__  If enabled the expire date selection on the upload page will use a date picker.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta8
+* __comment:__ 
+
+### ui_use_datepicker_for_guest_expire_time_selection
+* __description:__  If enabled the expire date selection on the new guest page will use a date picker.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta8
+* __comment:__ 
 
 
 
@@ -2001,8 +2088,8 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __recommend_leaving_at_default:__ true
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ 1
-* __available:__ since version 2.6
+* __default:__ 3
+* __available:__ updated in 3.0 beta7 an above to 3, was 1 since version 2.6
 * __comment:__
 
 
@@ -2386,6 +2473,15 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__ terasender_workerCount
 * __comment:__ <span style="background-color:orange">we need to check maximum webworker counts for standard browsers and possibly increase the default number</span>
 
+### terasender_worker_max_count
+
+* __description:__ Max value that terasender_worker_count can ever have if user set.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 30
+* __available:__ since version 2.23
+* __comment:__ 
+
 ### terasender_start_mode
 
 * __description:__ progress sequentially or parallel through the file list.
@@ -2745,13 +2841,13 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ### auth_sp_saml_uid_attribute
 
-* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *eduPersonTargetedID* or *eduPersonPrincipalName* (watch the spelling!).  ePTID is an anonymous identifier making it hard to link FileSender logging to a specific user which may or may not be what you want.  ePTID will protect your users against rogue IdPs.  eduPersonPrincipalName will usually give you an identifier like <username>@<domain>.
+* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *pairwise-id* or *subject-id* (watch the spelling!). 
 * __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
 * __type:__ string
-* __default:__ eduPersonTargetedId
+* __default:__ pairwise-id
 * __available:__ since version 1.0
 * __1.x name:__ saml_uid_attribute
-* __comment:__
+* __comment:__ Note that the default has changed from the deprecated eduPersonTargetedId to pairwise-id in version 2.48.
 
 ### auth_sp_saml_entitlement_attribute
 
@@ -2824,7 +2920,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ### auth_sp_shibboleth_uid_attribute
 
-* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *eduPersonTargetedID* or *eduPersonPrincipalName* (watch the spelling!).  ePTID is an anonymous identifier making it hard to link FileSender logging to a specific user which may or may not be what you want.  ePTID will protect your users against rogue IdPs.  eduPersonPrincipalName will usually give you an identifier like <username>@<domain>.
+* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use pairwise-id.
 * __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
 * __type:__ string
 * __default:__
@@ -3110,11 +3206,23 @@ $config['log_facilities'] =
 
 * __description:__ The auditlog is kept in the database and contains all events for a transfer.  This information can be used to tell the user what happened to their transfer when.  This directive specifies the maximum lifetime of auditlog entries (in days).  If set to 0 we remove data when the transfer is closed, after sending reports (if user indicated they wanted).  As long as transfer is live you have this data, as soon as transfer expires the log disappears.  If you set it to "false" we don't log anything and a user can't even see the logs when a transfer is live.
 * __mandatory:__ no
-* __type:__ boolean/int (days).  Set to false to disable.
+* __type:__ boolean/int (days).  Set to null to disable.
 * __default:__ 31
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ Use this setting to control the privacy footprint of your FileSender service.
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service. NOTE: this value can not be less than max_transfer_days.
+
+
+### auditlog_must_be_n_days_longer_than_max_transfer_days_valid
+
+* __description:__ In order to retain auditlogs for an expected amount of time, it is enforced that auditlog_lifetime = max_transfer_days + this setting.
+* __mandatory:__ no
+* __type:__ int (days)
+* __default:__ 14
+* __available:__ since version 3.0beta8/rc1
+* __1.x name:__
+* __comment:__ It is highly recommended that you leave this setting as the default value. 
+
 
 ### ratelimithistory_lifetime
 
@@ -3287,7 +3395,7 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __available:__ since version 2
 * __1.x name:__
 * __comment:__ the parameter needs an array of strings.  The strings are configuration parameters you want to appear in the "info" webservice endpoint.  You can also give it static strings that have a specific meaning for you, like "version 2.0".
-* __example:__ <span style="background-color:orange">example comes here.</span>
+* __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
 
 ### rest_allow_jsonp
 

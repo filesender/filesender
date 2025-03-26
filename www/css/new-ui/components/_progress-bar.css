@@ -1,0 +1,43 @@
+.fs-progress-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-progress-bar__value {
+  width: var(--fs-spacing-7x);
+}
+
+.fs-progress-bar__value + .fs-progress-bar__indicator {
+  margin-left: var(--fs-spacing-2x);
+}
+
+.fs-progress-bar__progress {
+  position: relative;
+  flex: 1;
+  height: var(--fs-spacing-2x);
+  border-radius: var(--fs-spacing-2x);
+  background: var(--fs-bg-color-quarternary);
+  margin: 0 !important;
+}
+
+.fs-progress-bar__indicator {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: var(--fs-success);
+  border-radius: var(--fs-spacing-2x);
+}
+
+.fs-progress-bar__indicator--thin {
+  height: var(--fs-spacing-base);
+  border-radius: var(--fs-spacing-base);
+}
+
+.fs-progress-bar__indicator--thin:before {
+  border-radius: var(--fs-spacing-base);
+}

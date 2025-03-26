@@ -13,12 +13,12 @@ subject: Host ukončil nahrávání souborů
 
 Vážený uživateli,
 
-Následující host ukončil nahrávání souborů pomocí pozvánky hosta :
+Host ukončil nahrávání souborů za použití pozvánky :
 
 Host: {guest.email}
 Odkaz na pozvánku: {cfg:site_url}?s=upload&vid={guest.token}
 
-Pozvánka je k dispozici do {date:guest.expires}, poté bude automaticky smazán.
+Pozvánka je platná do {date:guest.expires}, poté bude automaticky smazána.
 
 S pozdravem,
 {cfg:site_name}
@@ -26,11 +26,11 @@ S pozdravem,
 {alternative:html}
 
 <p>
-   Vážený uživateli,
+    Vážený uživateli,
 </p>
 
 <p>
-Následující host ukončil nahrávání souborů pomocí pozvánky hosta :
+Host ukončil nahrávání souborů za použití pozvánky :
 </p>
 
 <table rules="rows">
@@ -60,3 +60,4 @@ Následující host ukončil nahrávání souborů pomocí pozvánky hosta :
     {cfg:site_name}
 </p>
 ',
+

@@ -190,6 +190,60 @@ class ApplicationMail extends Mail
         
         $this->to['name'] = $name;
     }
+
+    /**
+     * As similar code is run for handling both email_from and email_return_path
+     * this method exists.
+     *
+     * This will;
+     * * do some basic validation
+     * * expand the path 'no-reply@' to include the domain name of the site.
+     * * expand the 'sender' keyword to the sender email.
+     *
+     * @return the expanded $from to use
+     */
+    private function handleEmailFrom( $from, $sender, $config_key )
+    {
+        if ($from != 'sender') {
+            if( str_ends_with($from, "@")) {
+                // 'no-reply@' to have host name from site_url added
+            } else {
+
+                if( $config_key == 'email_return_path' ) {
+                    if( !Utilities::validateEmail(str_replace('<verp>', 'verp', Config::get('email_return_path')))) {
+                        throw new ConfigBadParameterException($config_key);
+                    }
+                } else {
+                    if( !Utilities::validateEmail($from)) {
+                        throw new ConfigBadParameterException($config_key);
+                    }
+                }
+            }
+        }
+        
+        if ($from == 'sender') {
+            $from = $sender->email;
+        }
+        
+        if( str_ends_with($from, "@")) {
+
+            $h = Config::get("site_hostname");
+            if( $h == '' ) {
+                $u = parse_url(Config::get("site_url"));
+                if( !$u ) {
+                    throw new ConfigBadParameterException($config_key);
+                }
+                
+                $h = $u["host"];
+                if( $h == '' ) {
+                    throw new ConfigBadParameterException($config_key);
+                }
+            }
+            $from .= $h;
+        }
+
+        return $from;
+    }
     
     /**
      * Sends the mail
@@ -221,7 +275,7 @@ class ApplicationMail extends Mail
         
         // Context identifier
         $context = $this->to['object'] ? strtolower(get_class($this->to['object'])).'-'.$this->to['object']->id : 'no_context';
-        
+
         // Build from field depending on config
         $from = Config::get('email_from');
         if (is_array($from)) {
@@ -235,14 +289,8 @@ class ApplicationMail extends Mail
         }
         
         if ($from) {
-            if ($from != 'sender' && !Utilities::validateEmail($from)) {
-                throw new ConfigBadParameterException('email_from');
-            }
-            
-            if ($from == 'sender') {
-                $from = $sender->email;
-            }
-            
+            $from = $this->handleEmailFrom( $from, $sender, 'email_from' );
+
             // Got one, validate and set header
             if ($from) {
                 if (!Utilities::validateEmail($from)) {
@@ -282,13 +330,7 @@ class ApplicationMail extends Mail
         // Build reply-to field depending on config
         $reply_to = Config::get('email_reply_to');
         if ($reply_to) {
-            if ($reply_to != 'sender' && !Utilities::validateEmail($reply_to)) {
-                throw new ConfigBadParameterException('email_reply_to');
-            }
-            
-            if ($reply_to == 'sender') {
-                $reply_to = $sender->email;
-            }
+            $reply_to = $this->handleEmailFrom( $reply_to, $sender, 'email_reply_to' );
             
             // Got one, validate and set header
             if ($reply_to) {
@@ -307,13 +349,7 @@ class ApplicationMail extends Mail
         // Build return path field depending on config
         $return_path = Config::get('email_return_path');
         if ($return_path) {
-            if ($return_path != 'sender' && !Utilities::validateEmail(str_replace('<verp>', 'verp', $return_path))) {
-                throw new ConfigBadParameterException('email_return_path');
-            }
-            
-            if ($return_path == 'sender') {
-                $return_path = $sender->email;
-            }
+            $return_path = $this->handleEmailFrom( $return_path, $sender, 'email_return_path' );
             
             // Got one, validate and set property to be passed to PHP's mail internal
             if ($return_path) {

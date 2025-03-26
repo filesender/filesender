@@ -7,12 +7,11 @@
 // 
 // 
 ?>
-<h1>Welkom bij {cfg:site_name}</h1>
+<h1>Welkom bij {cfg:site_name}!</h1>
 
 <p>
-    Deel veilig je bestanden met {cfg:site_name}!
+    Deel veilig je bestanden met {cfg:site_name}.
 </p>
-
 <p>
-  Ben je hier op uitnodiging? Volg de gebruiksaanwijzing in je uitnodigingse-mail. 
+  Ben je hier op uitnodiging? Volg de gebruiksaanwijzing in je uitnodigings-e-mail. 
 </p>
