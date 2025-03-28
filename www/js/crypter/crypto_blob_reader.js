@@ -13,15 +13,16 @@ window.filesender.log = function( msg ) {
 }
 
 
-window.filesender.crypto_blob_reader = function () {
+
+window.filesender.crypto_blob_reader = function (chunkSize,cryptedChunkSize) {
     return {
         reader: null,
         file: null,
         file_size: null,
         blobSlice: null,
         blob: null,
-        chunkSize: window.filesender.config.upload_chunk_size, // 5 MB default
-        cryptedChunkSize: window.filesender.config.upload_crypted_chunk_size, // 5mb + checksum + IV
+        chunkSize: chunkSize,
+        cryptedChunkSize: cryptedChunkSize,
         
         completed: 0,
         numberOfChunks: 0,
@@ -171,6 +172,7 @@ window.filesender.crypto_blob_reader = function () {
             return returnBlobArray;
         },
         sliceForDownloadBuffers: function (largeBuffer) {
+            
             if(typeof largeBuffer.slice === 'undefined'){
                 largeBuffer.slice = largeBuffer.subarray;
             }

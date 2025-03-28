@@ -6,6 +6,7 @@ namespace Tests\Support\Page\Acceptance;
 
 use Codeception\Util\Locator;
 
+
 class FileSender
 {
     /**
@@ -18,6 +19,8 @@ class FileSender
      * @var \Tests\Support\AcceptanceTester;
      */
     protected $acceptanceTester;
+
+    private $downloadDir = "/home/testdriver/Downloads/";
 
     public function __construct(\Tests\Support\AcceptanceTester $I)
     {
@@ -115,7 +118,7 @@ EOT );
     }
 
     
-    public function upload( $options, $filename = null, $startUpload = true )
+    public function upload( $options, $filename = null, $startUpload = true, $otherFiles = null )
     {
         $I = $this->acceptanceTester;
         $fs = $this;
@@ -138,9 +141,13 @@ EOT );
         
         $I->executeJS("var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';");
 
-
         
         $I->attachFile('.file_selector input[name="files"]', $filename );
+        if( $otherFiles ) {
+            foreach( $otherFiles as $f ) {
+                $I->attachFile('.file_selector input[name="files"]', $f );
+            }
+        }
         
         if( $startUpload ) {
             $I->click('.start.ui-button');
@@ -324,5 +331,169 @@ EOT );
         $this->customConfig["PUT_PERFORM_TESTSUITE"] = $v;
         $this->writeCustomConfig();
     }
+
+
+    public function uploadEncrypted( $otherFiles = null )
+    {
+        $I = $this->acceptanceTester;
+        $fs = $this;
+        
+        $fs->upload(
+            array('get_a_link' => true,
+                  'encryption_password' => '123123',
+            ),
+            "file20mb.txt", true, $otherFiles );
+            
+    }
+
+    
+    public function downloadEncrypted( $fn = "file20mb.txt" )
+    {
+        $I = $this->acceptanceTester;
+        $fs = $this;
+
+        
+        $fs->setupAuth();
+        
+        $fs->gotoLatestTransferDownloadPage();
+
+        
+        $I->click("[data-name='" . $fn . "'] .download");
+        $I->wait(1);
+        $I->fillField('.ui-dialog-content.ui-widget-content .wide', '123123x');
+        $I->click(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button");
+        $I->wait(1);
+        $I->retrySeeInPopup("Incorrect");
+        $I->wait(1);
+        $I->retryAcceptPopup();
+        $I->wait(1);
+        $I->retrySee('Incorrect Password');
+
+
+        $I->click("[data-name='" . $fn . "'] .download");
+        $I->wait(1);
+        $I->fillField('.ui-dialog-content.ui-widget-content .wide', '123123');
+        $I->click(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button");
+
+        // run the auto streamsaver dialog handler.
+        exec(dirname(__FILE__) . "/../../../" . "/accept-dialog.sh");
+        
+        $I->wait(3);
+        $I->retrySee('Download complete');
+//        $I->wait(30);
+        
+    } 
+
+
+    public function uploadNotEncrypted( $otherFiles = null )
+    {        
+        $I = $this->acceptanceTester;
+        $fs = $this;
+
+        $fs->upload(
+            array('get_a_link' => true,
+            ),
+            "file20mb.txt", true, $otherFiles );
+    }
+    
+    public function downloadNotEncrypted( $fn = "file20mb.txt" )
+    {
+        $I = $this->acceptanceTester;
+        $fs = $this;
+
+        $fs->setupAuth();
+
+        $fs->gotoLatestTransferDownloadPage();
+        $I->click("[data-name='" . $fn . "'] .download");
+
+        $v = $dlfn = $fs->waitForDownloadToComplete();
+        
+        $I->assertNotSame("",print_r($v,true),"no contents downloaded");
+
+//        $fn = $I->grabTextFrom('.file .name');
+        $I->assertNotSame("",$fn);
+        $fnhash = sha1(file_get_contents("./unittests/codeception/Support/Data/" . $fn));
+        $I->assertNotSame("",$fnhash);
+
+        $dlhash = sha1(file_get_contents($dlfn));
+        $I->assertNotSame("",$dlhash);
+
+        $I->assertSame($fnhash,$dlhash);
+    }    
+
+
+    public function verifyFile( $fn, $downloadPath )
+    {
+        $I = $this->acceptanceTester;
+        $fs = $this;
+
+        $I->assertNotSame("",$fn);
+        $I->assertNotSame("",$downloadPath);
+        $I->assertNotSame($fn,$downloadPath);
+        
+        $fnhash = sha1(file_get_contents("./unittests/codeception/Support/Data/" . $fn));
+        $I->assertNotSame("",$fnhash);
+
+        $dlhash = sha1(file_get_contents($downloadPath));
+        $I->assertNotSame("",$dlhash);
+
+        $I->assertSame($fnhash,$dlhash);
+    }
+    
+    
+    public function downloadEncryptedArchive( $expectedItems )
+    {
+        $I = $this->acceptanceTester;
+        $fs = $this;
+
+
+        
+        $fs->setupAuth();
+        
+        $fs->gotoLatestTransferDownloadPage();
+        
+
+        $I->click(".archive_download");
+        $I->wait(1);
+        $I->fillField('.ui-dialog-content.ui-widget-content .wide', '123123');
+        $I->click(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button");
+
+        // run the auto streamsaver dialog handler.
+        exec(dirname(__FILE__) . "/../../../" . "/accept-dialog.sh");
+        
+        $I->wait(5);
+        $I->retrySee("Download complete", ".archive_message");
+        
+
+        //
+        // Check the sha1 for all the expected files in the downloaded zip
+        //
+        exec(dirname(__FILE__) . "/../../../" . "/fix-download-permissions.sh");
+        
+        $tmpdir = "/tmp/selenium-downloads/";
+        $fn = trim(file_get_contents($tmpdir . "/active.txt"));
+        $I->assertNotSame("",$fn);
+        
+        foreach( $expectedItems as $delfn ) {
+            $p = $tmpdir.$delfn;
+            if( file_exists($p)) {
+                $I->assertNotSame("deleting file $delfn",$p);                
+                unlink($p);
+            }
+        }
+        
+        copy($this->downloadDir . $fn . ".zip", $tmpdir . "/$fn.zip" );
+        $oldpwd = getcwd();
+        chdir($tmpdir);
+        exec("unzip -o  $fn.zip");
+        chdir($oldpwd);
+
+        foreach( $expectedItems as $fn ) {
+            $this->verifyFile( $fn, $tmpdir . $fn );
+        }
+        
+
+        
+    } 
     
 }
