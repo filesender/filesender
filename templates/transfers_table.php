@@ -468,6 +468,8 @@ if (!function_exists('clickableHeader')) {
                              data-fileiv="<?php                   echo Template::Q($file->iv); ?>"
                              data-fileaead="<?php                 echo Template::Q($file->aead); ?>"
                              data-transferid="<?php               echo Template::Q($transfer->id); ?>"
+                             data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
+                             data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"
                         >
                             <?php echo Template::Q($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
@@ -489,6 +491,8 @@ if (!function_exists('clickableHeader')) {
                                         data-fileiv="<?php            echo Template::Q($file->iv); ?>"
                                         data-fileaead="<?php          echo Template::Q($file->aead); ?>"
                                         data-transferid="<?php        echo Template::Q($transfer->id); ?>"
+                                        data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
+                                        data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"
                                 ></span>
                                         
                                 <?php } else {?>

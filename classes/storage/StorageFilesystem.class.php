@@ -440,6 +440,8 @@ class StorageFilesystem
     public static function readChunk(File $file, $offset, $length)
     {
         $chunk_size = (int)Config::get('download_chunk_size');
+        $chunk_size = $file->transfer->chunk_size;
+        $crypted_chunk_size = $file->transfer->crypted_chunk_size;
         
         $file_path = static::buildPath($file).static::buildFilename($file);
         
@@ -448,7 +450,7 @@ class StorageFilesystem
         }
 
         if ($file->transfer->is_encrypted) {
-            $offset=floor($offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size'));
+            $offset=floor($offset / $chunk_size * $crypted_chunk_size);
         }
 
         // Open file for reading

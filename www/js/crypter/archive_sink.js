@@ -37,7 +37,7 @@ if (typeof window === 'undefined')
 if (!('filesender' in window))
     window.filesender = {};
 
-window.filesender.archive_sink = function ( cryptoapp, link, transferid, archiveName, pass, selectedFiles, arg_callbackError ) {
+window.filesender.archive_sink = function ( cryptoapp, link, transferid, chunk_size, crypted_chunk_size, archiveName, pass, selectedFiles, arg_callbackError ) {
     return {
         complete:       false,
         // keep a tally of bytes processed to make sure we get everything.
@@ -49,6 +49,8 @@ window.filesender.archive_sink = function ( cryptoapp, link, transferid, archive
         cryptoapp:      cryptoapp,
         link:           link,
         transferid:     transferid,
+        chunk_size:     chunk_size,
+        crypted_chunk_size: crypted_chunk_size,
         pass:           pass,
         activeFileID:   null,
         progress:       null,
@@ -139,6 +141,8 @@ window.filesender.archive_sink = function ( cryptoapp, link, transferid, archive
                 }
                 
                 $this.cryptoapp.decryptDownloadToBlobSink( $this, pass, $this.transferid,
+                                                           $this.chunk_size,
+                                                           $this.crypted_chunk_size,
                                                            $this.link+f.fileid,
                                                            f.mime, f.filename, f.filesize, f.encrypted_filesize,
                                                            f.key_version, f.salt,

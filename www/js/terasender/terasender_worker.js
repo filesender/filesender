@@ -126,7 +126,7 @@ var terasender_worker = {
                 
                 // Decrypt the contents of the file
                 var oReq = this.createXhr();
-                
+
                 oReq.open("GET", job.link, true);
                 oReq.responseType = "arraybuffer";
                 var chunksz     = 1 * this.crypto_app.crypto_chunk_size;
