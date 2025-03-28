@@ -267,6 +267,7 @@ class File extends DBObject
     private function calculateEncryptedFileSize()
     {
         $upload_chunk_size = Config::get('upload_chunk_size');
+
         
         $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
         $chunksMinusOne = ceil($this->size / $upload_chunk_size)-1;
@@ -507,6 +508,10 @@ class File extends DBObject
             return $this->$property;
         }
 
+        if(in_array($property, array('chunk_size', 'crypted_chunk_size'))) {
+            return $this->transfer->$property;
+        }
+        
         if ($property == 'id') {
             if (is_null($this->id)) {
                 $this->save();
