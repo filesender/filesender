@@ -44,7 +44,7 @@ $user = Auth::user();
                     <h2>{tr:user_preferences}</h2>
 
                     <?php
-                    if (Config::get('lang_userpref_enabled')) {
+                    if (Config::get('lang_userpref_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
                         $id = 'lang';
 
                         if($page[$id]) {
@@ -58,8 +58,13 @@ $user = Auth::user();
 
                                 if($mode == 'write') {
                                     $opts = array();
+				    $code = Lang::getCode();
+				    $prevname = null;
                                     foreach(Lang::getAvailableLanguages() as $id => $language) {
                                         $selected = ($id == $value) ? 'selected="selected"' : '';
+					if( $prevname && $prevname == $language['name'] ) {
+						continue;
+					}
                                         $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($language['name']).'</option>';
                                     }
 
