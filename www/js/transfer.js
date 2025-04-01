@@ -1078,12 +1078,14 @@ window.filesender.transfer = function() {
      * Report progress
      * 
      * @param object file
-     * @param callable complete is file done
+     * @param bool complete is file done
      */
     this.reportProgress = function(file, complete) {
         var now = (new Date()).getTime();
         
         file.progress_reported = now;
+
+        if(!complete) complete = false;
         
         if(complete && file.status == 'done') return; // Already reported
         
@@ -1096,35 +1098,9 @@ window.filesender.transfer = function() {
             filesender.ui.log('Uploading ' + file.name + ' (' + file.size + ' bytes) : ' + (100 * uploaded / file.size).toFixed(2) + '%');
         }
         
-        if (complete) {
-            var transfer = this;
-            window.setTimeout(function() {
-                filesender.client.fileComplete(file, undefined, function(data) {
-                    transfer.updateFileInRestartTracker(file);
-                    
-                    if (transfer.onprogress)
-                        transfer.onprogress.call(transfer, file, true);
-                    
-                    complete();
-                }, function(error) {
-                    window.filesender.log("transfer encountered an error: " + JSON.stringify(error));
-                    if (error.message === 'file_integrity_check_failed') {
-                        // reset the file progress to make it retry the whole file
-                        file.fine_progress = 0;
-                        file.fine_progress_done = 0;
-                        file.progress_reported = 0;
-                        file.uploaded = 0;
-                        file.status = '';
-                        file.complete = false;
-                        file.min_uploaded_offset = 0;
-                        transfer.updateFileInRestartTracker(file);
-                        transfer.reportError(error);
-                    }
-                });
-            }, 100);//750);
-        } else if (this.onprogress) {
+        if (this.onprogress) {
             this.updateFileInRestartTracker(file);
-            this.onprogress.call(this, file, false);
+            this.onprogress.call(this, file, complete);
         } else {
 	    window.filesender.log("transfer has not onprogress");
 	}
@@ -1447,11 +1423,28 @@ window.filesender.transfer = function() {
                 file.uploaded = file_uploaded_when_chunk_complete;
                 
                 if (last) { // File done
-                    transfer.reportProgress(file, function() {
-                        if(was_last_file) {
-                            transfer.reportComplete();
-                        }
-                    });
+                    window.setTimeout(function() {
+                        filesender.client.fileComplete(file, undefined, function(data) {
+                            transfer.reportProgress(file, true);
+                            if(was_last_file) {
+                                transfer.reportComplete();
+                            }
+                        }, function(error) {
+                            window.filesender.log("transfer encountered an error: " + JSON.stringify(error));
+                            if (error.message === 'file_integrity_check_failed') {
+                                // reset the file progress to make it retry the whole file
+                                file.fine_progress = 0;
+                                file.fine_progress_done = 0;
+                                file.progress_reported = 0;
+                                file.uploaded = 0;
+                                file.status = '';
+                                file.complete = false;
+                                file.min_uploaded_offset = 0;
+                                transfer.updateFileInRestartTracker(file);
+                                transfer.reportError(error);
+                            }
+                        });
+                    }, 100);
                     
                     
                 } else {
