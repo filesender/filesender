@@ -177,7 +177,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         <span><?php echo Template::Q(Utilities::formatBytes($transfer->size)) ?></span>
                     </div>
                     <div  class="fs-info">
-                        <a href="https://docs.filesender.org/filesender/v3.0/user/download/">{tr:more_information_about_downloading_files}</a>
+                        <a href="https://docs.filesender.org/filesender/v3.0/user/download/" target="_blank">{tr:more_information_about_downloading_files}</a>
                     </div>
                 </div>
             </div>
