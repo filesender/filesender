@@ -458,7 +458,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
-                                                            {tr:send_transfer_to}
+                                                            {tr:send_transfer_to} *
                                                         </label>
 
                                                         <?php echo Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email) ?>
@@ -466,7 +466,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <?php } else { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
-                                                            {tr:send_transfer_to}
+                                                            {tr:send_transfer_to} *
                                                         </label>
 
                                                         <div>
@@ -508,6 +508,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                     </label>
                                                     <textarea id="message" name="message" rows="3" placeholder="{tr:optional_message}"></textarea>
                                                 </div>
+                                                * = {tr:mandatory}
 
                                                 <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
                                                 <label class="invalid" id="password_can_not_be_part_of_message_warning">
