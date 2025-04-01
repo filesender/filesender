@@ -186,6 +186,7 @@ window.filesender.transfer = function() {
     this.uploader = null;
     this.aup_checked = false;
     this.roundtriptoken = '';
+    this.completed_files = 0;
     
     this.watchdog_processes = {};
     
@@ -1111,21 +1112,25 @@ window.filesender.transfer = function() {
      */
     this.reportComplete = function() {
         if(this.status == 'done') return; // Already reported
-        
-        this.status = 'done';
-        
-        var time = (new Date()).getTime() - this.time; // ms
-        
-        filesender.ui.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
-        
+
         var transfer = this;
         window.setTimeout(function() {
-            filesender.client.transferComplete(transfer, undefined, function(data) {
-                transfer.removeFromRestartTracker();
-                
-                if (transfer.oncomplete)
-                    transfer.oncomplete.call(transfer, time);
-            });
+            if (transfer.completed_files === transfer.files.length) {
+                transfer.status = 'done';
+
+                var time = (new Date()).getTime() - transfer.time; // ms
+
+                filesender.ui.log('Transfer ' + transfer.id + ' (' + transfer.size + ' bytes) complete, took ' + (time / 1000) + 's');
+
+                filesender.client.transferComplete(transfer, undefined, function(data) {
+                    transfer.removeFromRestartTracker();
+
+                    if (transfer.oncomplete)
+                        transfer.oncomplete.call(transfer, time);
+                });
+            } else {
+                transfer.reportComplete();
+            }
         }, 300);//1500); //so it doesnt miss the last chunk
     };
     
@@ -1426,6 +1431,7 @@ window.filesender.transfer = function() {
                     window.setTimeout(function() {
                         filesender.client.fileComplete(file, undefined, function(data) {
                             transfer.reportProgress(file, true);
+                            transfer.completed_files++;
                             if(was_last_file) {
                                 transfer.reportComplete();
                             }
