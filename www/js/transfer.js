@@ -1428,13 +1428,11 @@ window.filesender.transfer = function() {
                 file.uploaded = file_uploaded_when_chunk_complete;
                 
                 if (last) { // File done
+
                     window.setTimeout(function() {
                         filesender.client.fileComplete(file, undefined, function(data) {
                             transfer.reportProgress(file, true);
                             transfer.completed_files++;
-                            if(was_last_file) {
-                                transfer.reportComplete();
-                            }
                         }, function(error) {
                             window.filesender.log("transfer encountered an error: " + JSON.stringify(error));
                             if (error.message === 'file_integrity_check_failed') {
@@ -1451,7 +1449,10 @@ window.filesender.transfer = function() {
                             }
                         });
                     }, 100);
-                    
+
+                    if(was_last_file) {
+                        transfer.reportComplete();
+                    }
                     
                 } else {
                     transfer.reportProgress(file);
