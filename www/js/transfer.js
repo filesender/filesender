@@ -1085,8 +1085,6 @@ window.filesender.transfer = function() {
         var now = (new Date()).getTime();
         
         file.progress_reported = now;
-
-        if(!complete) complete = false;
         
         if(complete && file.status == 'done') return; // Already reported
         
