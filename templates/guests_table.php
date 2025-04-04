@@ -59,9 +59,6 @@
                         <li>
                             0
                         </li>
-                        <li>
-                            <i class="fa fa-exclamation-circle"></i>
-                        </li>
                     </ul>
                 <?php } else {
                     $dc = count($guestTransfers);
