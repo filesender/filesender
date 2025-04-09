@@ -352,7 +352,7 @@ if( !$found ) {
                     </button>
 
                     <?php if($extend) { ?>
-                        <button type="button" data-action="extend" class="fs-button" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
+                        <button type="button" data-action="extend" class="fs-button objectholder" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
                             <i class="fa fa-calendar-plus-o"></i>
                             <span>{tr:extend_expires}</span>
                         </button>                        
