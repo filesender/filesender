@@ -225,7 +225,7 @@ if( !$found ) {
 
                         <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
                             <span>
-                                Your transfer has been sent to the following email addresses
+                                <?php echo Lang::tr('your_transfer_was_sent') ?>
                             </span>
                             <div class="fs-badge-buttons-listv recipients">
                                 <br/>
@@ -252,7 +252,7 @@ if( !$found ) {
 
                                 <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
                                     <i class="fa fa-lg fa-envelope-o"></i>
-                                    <span>Add recipient</span>
+                                    <span><?php echo Lang::tr('add_recipient') ?></span>
                                 </button>
                                 <br/>
                             </div>
