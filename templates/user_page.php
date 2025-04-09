@@ -210,7 +210,7 @@ $user = Auth::user();
                             <div class="fs-settings__saved-info">
                                 <h3>{tr:saved_information}</h3>
 
-                                <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                <ul class="fs-listx">
                                     <li>
                                         <button type="button" id="clear_user_transfer_preferences" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
@@ -224,7 +224,7 @@ $user = Auth::user();
                                     </li>
                                 </ul>
 
-                                <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                <ul class="fs-listx">
                                     <li>
                                         <button type="button" id="clear_frequent_recipients" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
