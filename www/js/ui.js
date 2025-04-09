@@ -371,6 +371,17 @@ window.filesender.ui = {
             inputType: 'email',
             className: 'prompt-dialog',
             centerVertical: true,
+            required: true,
+            buttons: {
+                confirm: {
+                    label: lang.tr('OK').out(),
+                    className: 'fs-button fs-button--success'
+                },
+                cancel: {
+                    label: lang.tr('Cancel').out(),
+                    className: 'fs-button fs-button--danger'
+                }
+            },
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
                 if( result ) {
