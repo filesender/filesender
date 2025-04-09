@@ -254,8 +254,10 @@ $(function() {
 
     $('.fs-transfer-detail__actions  button[data-action="extend"]').on('click', function() {
         filesender.ui.extendExpires( $(this), 'transfer');
-    });    
+    });
 
+    $('[data-expiry-extension="0"] [data-action="extend"]').addClass('disabled').attr({title: lang.tr('transfer_expiry_extension_count_exceeded')});
+    
     // Add recipient buttons
     $('[data-recipients-enabled=""] [data-action="add_recipient"]').addClass('disabled');
 
@@ -270,7 +272,6 @@ $(function() {
 
         var prompt = filesender.ui.promptEmail(lang.tr('enter_to_email'), function(input) {
             $('p.error', this).remove();
-
             var raw_emails = input.split(/[,;]/);
 
             var emails = [];
