@@ -213,6 +213,12 @@ class RestEndpointUser extends RestEndpoint
             );
         }
 
+        if( $property == 'filesender-python-client' ) {
+            header('Content-Type: text/x-python');
+            echo file_get_contents(FILESENDER_BASE.'/scripts/client/filesender.py');
+            exit;
+        }
+
         if( $property == 'filesender-python-client-configuration-file' ) {
 
             $username = $user->saml_user_identification_uid;

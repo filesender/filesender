@@ -415,7 +415,17 @@ $user = Auth::user();
 
                                 <ul class="fs-list fs-list--inline">
                                     <li>
+                                    <?php
+                                    if (Config::get('cli_client_from_github')) {
+                                    ?>
                                         <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py">
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client" download="filesender.py" >
+                                    <?php
+                                    }
+                                    ?>
                                             {tr:download_python_cli}
                                         </a>
                                     </li>
