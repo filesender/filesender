@@ -184,7 +184,20 @@ class Transfer extends DBObject
             'default' => 0,
             'null'    => false,
         ),
-        
+
+        'chunk_size' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'null'    => false,
+            'default' => 0
+        ),
+        'crypted_chunk_size' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'null'    => false,
+            'default' => 0
+        ),
+
     );
 
     /**
@@ -371,7 +384,10 @@ class Transfer extends DBObject
     protected $storage_filesystem_per_hour_buckets = false;
     protected $storage_filesystem_per_idp = false;
     protected $download_count = 0;
+    protected $chunk_size = 0;
+    protected $crypted_chunk_size = 0;
 
+    
     
     /**
      * Related objects cache
@@ -402,6 +418,8 @@ class Transfer extends DBObject
         $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
         $this->storage_filesystem_per_idp = Config::get('storage_filesystem_per_idp');
         $this->download_count = 0;
+        $this->chunk_size = Config::get('upload_chunk_size');
+        $this->crypted_chunk_size = Config::get('upload_crypted_chunk_size');
         
         if (!is_null($id)) {
             // Load from database if id given
@@ -423,7 +441,6 @@ class Transfer extends DBObject
             CollectionType::initialize();
             $this->collectionsCache = Collection::fromTransfer($this);
         }
-
     }
     
     /**
@@ -1165,8 +1182,7 @@ class Transfer extends DBObject
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
-            , 'download_count'
-            
+            , 'download_count', 'chunk_size', 'crypted_chunk_size'            
         ))) {
             return $this->$property;
         }

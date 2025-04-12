@@ -212,6 +212,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                                     <tr class="file" data-id="<?php          echo Template::Q($file->id) ?>"
                                         data-encrypted="<?php                echo Template::Q(isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'); ?>"
                                         data-mime="<?php                     echo Template::Q($file->mime_type); ?>"
+                                        data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
+                                        data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"                                       
                                         data-name="<?php                     echo Template::Q($file->path); ?>"
                                         data-size="<?php                     echo Template::Q($file->size); ?>"
                                         data-encrypted-size="<?php           echo Template::Q($file->encrypted_size); ?>"
@@ -348,7 +350,6 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         <?php } ?>
                         </table>
                     <?php } ?>
-
                     </div>
             <?php } ?>
                 </div>

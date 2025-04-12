@@ -198,7 +198,7 @@ $lang['disable_terasender'] = 'Disable parallel upload (Tick if you are on a slo
 $lang['does_not_expire'] = 'Does not expire';
 $lang['done'] = 'Done';
 $lang['done_uploading'] = 'Done uploading';
-$lang['done_uploading_guest'] = 'Thank you for using {cfg:site_name}. If your guest is enabled for multiple uploads you may use your upload link again to send other files.';
+$lang['done_uploading_guest'] = 'Thank you for using {cfg:site_name}. If your guest voucher is enabled for multiple uploads you may use your upload link again to send other files.';
 $lang['done_uploading_redirect'] = 'Your upload is completed and you are being redirected to <a href="{url}">{url}</a>. The redirect is taking longer than expected.';
 $lang['download'] = 'Download';
 $lang['download_bad_files_ids'] = 'Invalid download file IDs';

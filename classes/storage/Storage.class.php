@@ -170,7 +170,6 @@ class Storage
                 $offset = 0;
             }
         }
-        
         // Ask underlying class to read data
         $data = call_user_func(self::getStorageClass($file).'::readChunk', $file, $offset, $length);
         
