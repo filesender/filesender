@@ -943,7 +943,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                         </div>
                     </div>
                 </div>
-
+                <?php if(!Auth::isGuest()) { ?>
                 <div class="fs-transfer__upload-actions">
                     <a id="detail-link" href=""type="button" class="fs-button fs-button--info" role="button">
                         <i class="fa fa-file-text-o"></i>
@@ -954,6 +954,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                         {tr:all_my_transfers}
                     </a>
                 </div>
+                <?php } ?>
             </div>
         </div>
 
