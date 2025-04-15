@@ -45,6 +45,7 @@ try:
     import os
     import sys
     import json
+    from pathlib import Path
     import configparser
     from os.path import expanduser
     from math import ceil
@@ -98,7 +99,7 @@ parser = argparse.ArgumentParser(
       Example (Config file is present): 
       python filesender.py -r recipient@example.com file1.txt''')
 )
-parser.add_argument("files", help="path to file(s) to send", nargs='+')
+parser.add_argument("files", help="path to file(s) to send", nargs='*',default="") #todo: args
 parser.add_argument("-v", "--verbose", action="store_true")
 parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
@@ -106,6 +107,8 @@ parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("-e", "--encrypted")
+parser.add_argument("-d", "--download" )
+parser.add_argument("-o","--output_dir" )
 parser.add_argument("--days", type=int)
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
@@ -115,19 +118,19 @@ requiredNamed = parser.add_argument_group('required named arguments')
 
 # if we have found these in the config file they become optional arguments
 if username is None:
-  requiredNamed.add_argument("-u", "--username", required=True)
+  requiredNamed.add_argument("-u", "--username", required=True,) #todo: args
 else:
   parser.add_argument("-u", "--username")
   
 if apikey is None:
-  requiredNamed.add_argument("-a", "--apikey", required=True)
+  requiredNamed.add_argument("-a", "--apikey", required=True) #todo: args
 else:
   parser.add_argument("-a", "--apikey")
   
-requiredNamed.add_argument("-r", "--recipients", required=True)
+requiredNamed.add_argument("-r", "--recipients",default="") #todo: args
 
 if base_url == "[base_url]":
-  requiredNamed.add_argument("-b", "--base_url", required=True)
+  requiredNamed.add_argument("-b", "--base_url", required=True) #todo: args
 else:
   parser.add_argument("-b", "--base_url")
 
@@ -145,6 +148,8 @@ user_timeout = args.timeout
 user_retries = args.retries
 encrypted = args.encrypted
 transfer_timeout = args.days
+download_link = args.download
+download_folder = args.output_dir
 
 if args.username is not None:
   username = args.username
@@ -241,7 +246,7 @@ class SupportedHashTypes(Enum):
   SHA256 = "SHA-256"
 
 
-if encrypted:
+if encrypted and not download_link:
   if not encryption_supported:
     print("Failed to import 'cryptography' library, cannot proceed with encrypted transfer.")
     print("\npip3 install cryptography")
@@ -335,10 +340,11 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     signed += inputcontent
 
   #print(signed)
-  bkey = bytearray()
-  bkey.extend(map(ord, apikey))
-  data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
-  #print("signed: " + str(signed))
+  if 'token' not in data: #If an auth token is provided we should not sign the call.
+    bkey = bytearray()
+    bkey.extend(map(ord, apikey))
+    data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
+    #print("signed: " + str(signed))
   url = base_url+path+'?'+('&'.join(flatten(data)))
   headers = {
     "Accept": "application/json",
@@ -477,6 +483,51 @@ def deleteTransfer(transfer):
     {}
   )
 
+def getFilesInTransfer(transfer_token) -> list[dict]:
+  "Fetch the list of file information in a given transfer"
+  return call(
+    'get'
+    ,'/transfer/fileidsextended',
+    {'token':transfer_token},
+    None,None,
+    {},
+  )
+
+def downloadFile(token,file_info:dict,download_key:bytes|None):
+  """Download a given file to disk."""
+  download_url = base_url.replace("rest.php","download.php")
+  path = file_info['name'].split("/")
+  download_file_name = path[-1]
+  prefix = token
+  if download_folder is not None:
+    prefix = download_folder
+  path = os.path.join(prefix,*path[:-1])
+  Path(path).mkdir(parents=True, exist_ok=True)
+  local_file_path = os.path.join(path, download_file_name)
+
+  if file_info["encrypted"]:
+    return _downloadEncryptedFile(token,file_info,download_url,local_file_path,download_key)
+  return _downloadFile(token,file_info,download_url,local_file_path)
+
+def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
+  """save file to disk at local path"""
+
+  with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True) as download:
+        download.raise_for_status()
+        with open(local_file_path, mode='wb') as f:
+            for chunk in download.iter_content(upload_chunk_size):
+                f.write(chunk)
+
+def _downloadEncryptedFile(token,file_info:dict, download_url:str, local_file_path:str,download_key:bytes):
+  """Internal tool to download encrypted file, should be used via downloadFile"""
+  chunk_no = 0
+  with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True) as download:
+        download.raise_for_status()
+        with open(local_file_path, mode='wb') as f:
+            for chunk in download.iter_content(upload_chunk_size):
+                f.write(decrypt_chunk(chunk,chunk_no,file_info,download_key))
+                chunk_no += 1
+
 def postGuest(user_id, recipient, subject=None, message=None, expires=None, options=[]):
 
   if expires is None:
@@ -529,6 +580,19 @@ def generate_key():
         256 // 8
     )
 
+def decrypt_chunk(chunk:bytes,chunk_no:int,file_info:dict,key:bytes):
+  """Returns a non-encrypted chunk for the file"""
+
+  if file_info['key-version'] != 3:
+    raise NotImplementedError("Only AES-GCM is currently supported.")
+  
+
+  cipher = AESGCM(key)
+
+  aead = base64.b64decode(file_info['fileaead'])
+  iv = base64.b64decode(file_info['fileiv']) + chunk_no.to_bytes(4, byteorder="little")
+  return cipher.decrypt(iv,chunk[len(iv):],aead)
+
 def encrypt_chunk(data,chunkid,fileKey):
   if encryption_details["crypt_type"] == SupportedCryptTypes.AESGCM:
     return encrypt_chunk_aesgcm(data,chunkid,fileKey)
@@ -544,10 +608,51 @@ def encrypt_chunk_aesgcm(data,chunkid,files_key):
   cipher_text = cipher.encrypt(fulliv,data,aead)
   return fulliv + cipher_text
 
+def deconstruct_download_link(download_link:str) -> tuple[str, str]:
+  """Return the base path and access token from a provided download link"""
+
+  components = download_link.split("?")
+  assert len(components) == 2
+  query_params = {comp.split('=')[0]: comp.split("=")[-1] for comp in components[1].split("&")}
+
+  return (components[0], query_params["token"])
+
+def download_transfer(download_link):
+  """Save all files in a given transfer to the local disk."""
+  (download_base_url,download_token) = deconstruct_download_link(download_link)
+  globals()["base_url"] = f"{download_base_url}/rest.php"
+
+  file_list = getFilesInTransfer(download_token)
+  download_size = sum(map(lambda x: x['size'],file_list))
+  downloaded_total = 0
+  download_key = None
+  if file_list[0]['encrypted']:
+    encryption_details = {}
+    encryption_details["hash_name"] = SupportedHashTypes("SHA-256")
+    encryption_details["password"] = encrypted
+    encryption_details['salt'] = file_list[0]['key-salt'].encode('ascii')
+    encryption_details['password_hash_iterations'] = file_list[0]['password-hash-iterations']
+    globals()["encryption_details"] = encryption_details
+    download_key = generate_key()
+  for file in file_list:
+    if progress:
+      print(f"Downloading: {file['name']}")
+    downloadFile(download_token,file, download_key)
+    if progress:
+      downloaded_total += file['size']
+      print(f"Complete: {file['name']}")
+      print(f"Total transfer {round((downloaded_total/download_size)*100)}% complete")
+  return
+
+
 
 ##########################################################################
 
 #postTransfer
+if download_link:
+  download_transfer(download_link)
+  exit(0)
+
 if debug:
   print('postTransfer')
 
