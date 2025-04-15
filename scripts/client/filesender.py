@@ -533,18 +533,28 @@ def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
   with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True) as download:
         download.raise_for_status()
         with open(local_file_path, mode='wb') as f:
-            for chunk in download.iter_content(upload_chunk_size):
+            for chunk in download.iter_content(chunk_size=20_000):
                 f.write(chunk)
 
 def _downloadEncryptedFile(token,file_info:dict, download_url:str, local_file_path:str,download_key:bytes):
   """Internal tool to download encrypted file, should be used via downloadFile"""
   chunk_no = 0
-  with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True) as download:
-        download.raise_for_status()
-        with open(local_file_path, mode='wb') as f:
-            for chunk in download.iter_content(upload_chunk_size):
-                f.write(decrypt_chunk(chunk,chunk_no,file_info,download_key))
-                chunk_no += 1
+  crypted_chunk_size = 12582944 #todo: fetch crypted chunk size.
+  chunk_size = 12582912 #todo: fetch chunk size.
+  # calculation taken from crypto_app.js, the end overlaps with the start of the next range
+  # because it uses the non encrypted byte ranges but requets the full crypted chunk size.
+  # var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
+
+  with open(local_file_path, mode='wb') as f:
+    for i in range(0,file_info['size'],chunk_size):
+      end_offset = min(1 * (chunk_no * chunk_size + (1*crypted_chunk_size)-1),
+                       (1*file_info['size']) + 32 - 1)
+      download = requests.get(download_url,params={"token":token,"files_ids":file_info['id']},
+                              headers={ "Range": f"bytes={i}-{end_offset}"})
+      download.raise_for_status()
+      f.write(decrypt_chunk(download.content,chunk_no,file_info,download_key))
+      chunk_no += 1
+      print(chunk_no)
 
 def postGuest(user_id, recipient, subject=None, message=None, expires=None, options=[]):
 
