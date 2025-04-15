@@ -99,7 +99,7 @@ parser = argparse.ArgumentParser(
       Example (Config file is present): 
       python filesender.py -r recipient@example.com file1.txt''')
 )
-parser.add_argument("files", help="path to file(s) to send", nargs='*',default="") #todo: args
+parser.add_argument("files", help="path to file(s) to send", nargs='*',default="")
 parser.add_argument("-v", "--verbose", action="store_true")
 parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
@@ -118,19 +118,19 @@ requiredNamed = parser.add_argument_group('required named arguments')
 
 # if we have found these in the config file they become optional arguments
 if username is None:
-  requiredNamed.add_argument("-u", "--username", required=True,) #todo: args
+  requiredNamed.add_argument("-u", "--username")
 else:
   parser.add_argument("-u", "--username")
   
 if apikey is None:
-  requiredNamed.add_argument("-a", "--apikey", required=True) #todo: args
+  requiredNamed.add_argument("-a", "--apikey")
 else:
   parser.add_argument("-a", "--apikey")
   
-requiredNamed.add_argument("-r", "--recipients",default="") #todo: args
+requiredNamed.add_argument("-r", "--recipients", default="")
 
 if base_url == "[base_url]":
-  requiredNamed.add_argument("-b", "--base_url", required=True) #todo: args
+  requiredNamed.add_argument("-b", "--base_url")
 else:
   parser.add_argument("-b", "--base_url")
 
@@ -150,6 +150,8 @@ encrypted = args.encrypted
 transfer_timeout = args.days
 download_link = args.download
 download_folder = args.output_dir
+recipients = args.recipients
+arg_files = args.files
 
 if args.username is not None:
   username = args.username
@@ -171,6 +173,22 @@ if args.base_url is not None:
 from_address = username
 if hasattr(args, 'from_address'):
   from_address = args.from_address
+
+if not all([apikey, base_url, username,arg_files,recipients]) and not download_link:
+  missing_fields:list[str] = []
+  if not apikey:
+    missing_fields.append("-a, --api-key")
+  if not base_url:
+    missing_fields.append("-b, --base_url")
+  if not username:
+    missing_fields.append("-u, --username")
+  if not recipients:
+    missing_fields.append("-r, --recipients")
+  if not arg_files:
+    missing_fields.append("[FILE]")
+
+  print(f"Missing required paramter, please provide the following: \n {','.join(missing_fields)}\n or -d --download with a valid download link")
+  sys.exit(1)
 
 #configs
 try:
@@ -229,8 +247,8 @@ if debug:
   print('username          : '+username)
   print('apikey            : '+apikey)
   print('upload_chunk_size : '+str(upload_chunk_size)+' bytes')
-  print('recipients        : '+args.recipients)
-  print('files             : '+','.join(args.files))
+  print('recipients        : '+recipients)
+  print('files             : '+','.join(arg_files))
   print('insecure          : '+str(insecure))
 
 
@@ -661,11 +679,11 @@ if transfer_timeout is not None:
   transfer_timeout = round(time.time()) + (transfer_timeout*24*3600)
 
 if guest:
-  print('creating new guest ' + args.recipients)
+  print('creating new guest ' + recipients)
   troptions = {'get_a_link':0}
  
   r = postGuest( username,
-                 args.recipients,
+                 recipients,
                  subject=args.subject,
                  message=args.message,
                  expires=transfer_timeout,
@@ -674,12 +692,12 @@ if guest:
 
 fileList = []
 i = 0
-while i < len(args.files):
-  fn_abs = os.path.abspath(args.files[i])
+while i < len(arg_files):
+  fn_abs = os.path.abspath(arg_files[i])
   if(os.path.isdir(fn_abs)):
-    args.files.extend(
+    arg_files.extend(
       map(lambda s: fn_abs+os.sep+s,
-        os.listdir(args.files[i])))
+        os.listdir(arg_files[i])))
   else:
     fileList.append(fn_abs)
     if (len(fileList) > max_transfer_files):
@@ -738,7 +756,7 @@ release_list(fileList) # don't need it anymore
 troptions = {'get_a_link':0}
 transfer = postTransfer( username,
                          filesTransfer,
-                         args.recipients,
+                         recipients,
                          subject=args.subject,
                          message=args.message,
                          expires=transfer_timeout,
