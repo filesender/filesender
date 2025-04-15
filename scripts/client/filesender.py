@@ -136,7 +136,7 @@ else:
 
 # if username is not a valid email address then ensure user supplies a valid email address
 if username is None or not bool(re.match(r"([^@|\s]+@[^@]+\.[^@|\s]+)", username)):
-  requiredNamed.add_argument("-f", "--from_address", help="filesender email from address", required=True)
+  requiredNamed.add_argument("-f", "--from_address", help="filesender email from address")
 
 args = parser.parse_args()
 debug = args.verbose
@@ -174,7 +174,7 @@ from_address = username
 if hasattr(args, 'from_address'):
   from_address = args.from_address
 
-if not all([apikey, base_url, username,arg_files,recipients]) and not download_link:
+if not all([apikey, base_url, (username or from_address),arg_files,recipients]) and not download_link:
   missing_fields:list[str] = []
   if not apikey:
     missing_fields.append("-a, --api-key")
@@ -191,56 +191,60 @@ if not all([apikey, base_url, username,arg_files,recipients]) and not download_l
   sys.exit(1)
 
 #configs
-try:
-  info_response = requests.get(base_url+'/info', verify=True)
-  config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
-except requests.exceptions.SSLError as exc:
-  if not insecure:
-    print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
-    print(exc)
-    print('For more information, please refer to https://www.digicert.com/ssl/. If you are absolutely certain of the identity of the server you are connecting to, you can use the --insecure flag to bypass this warning. Exiting...')
-    sys.exit(1)
-  elif insecure:
-    print('Warning: Error: the SSL certificate of the server you are connecting to cannot be verified:')
-    print(exc)
-    print('Running with --insecure flag, ignoring warning...')
-    info_response = requests.get(base_url+'/info', verify=False)
-    config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
+worker_count = 4
+worker_timeout = 180
+max_chunk_retries = 20
+terasender_enabled = False
+max_transfer_files = 30
 
-upload_chunk_size = info_response.json()['upload_chunk_size']
+if base_url != '[base_url]':
+  try:
+    info_response = requests.get(base_url+'/info', verify=True)
+    config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
+  except requests.exceptions.SSLError as exc:
+    if not insecure:
+      print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
+      print(exc)
+      print('For more information, please refer to https://www.digicert.com/ssl/. If you are absolutely certain of the identity of the server you are connecting to, you can use the --insecure flag to bypass this warning. Exiting...')
+      sys.exit(1)
+    elif insecure:
+      print('Warning: Error: the SSL certificate of the server you are connecting to cannot be verified:')
+      print(exc)
+      print('Running with --insecure flag, ignoring warning...')
+      info_response = requests.get(base_url+'/info', verify=False)
+      config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
 
-try:
-    regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
-    worker_count = int(regex_match.group(1))
-    regex_match = re.search(r"terasender_worker_start_must_complete_within_ms\D*(\d+)",config_response.text)
-    worker_timeout = int(regex_match.group(1)) // 1000
-    regex_match = re.search(r"terasender_worker_max_chunk_retries\D*(\d+)",config_response.text)
-    worker_retries = int(regex_match.group(1))
-    regex_match = re.search(r"terasender_enabled\W*(\w+)",config_response.text)
-    terasender_enabled = regex_match.group(1) == "true"
-    regex_match = re.search(r"max_transfer_files\D*(\d+)",config_response.text)
-    max_transfer_files = int(regex_match.group(1))
-    regex_match =  re.search(r"max_transfer_days_valid\D*(\d+)",config_response.text)
-    max_transfer_days_valid = int(regex_match.group(1))
-except Exception as e:
-    print("Failed to parse match")
-    print(e)
-    worker_count = 4
-    worker_timeout = 180
-    max_chunk_retries = 20
-    terasender_enabled = False
-    max_transfer_files = 30
+  upload_chunk_size = info_response.json()['upload_chunk_size']
 
-if terasender_enabled:
-  if user_threads:
-    worker_count = min(int(user_threads), worker_count)
-else:
-  worker_count = 1
+  try:
+      regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
+      worker_count = int(regex_match.group(1))
+      regex_match = re.search(r"terasender_worker_start_must_complete_within_ms\D*(\d+)",config_response.text)
+      worker_timeout = int(regex_match.group(1)) // 1000
+      regex_match = re.search(r"terasender_worker_max_chunk_retries\D*(\d+)",config_response.text)
+      worker_retries = int(regex_match.group(1))
+      regex_match = re.search(r"terasender_enabled\W*(\w+)",config_response.text)
+      terasender_enabled = regex_match.group(1) == "true"
+      regex_match = re.search(r"max_transfer_files\D*(\d+)",config_response.text)
+      max_transfer_files = int(regex_match.group(1))
+      regex_match =  re.search(r"max_transfer_days_valid\D*(\d+)",config_response.text)
+      max_transfer_days_valid = int(regex_match.group(1))
+      upload_crypted_chunk_size = upload_chunk_size + 32
+  except Exception as e:
+      print("Failed to parse match")
+      print(e)
 
-if user_timeout:
-  worker_timeout = min(int(user_timeout), worker_timeout)
-if user_retries:
-  worker_retries  = min(int(user_retries), worker_retries)
+
+  if terasender_enabled:
+    if user_threads:
+      worker_count = min(int(user_threads), worker_count)
+  else:
+    worker_count = 1
+
+  if user_timeout:
+    worker_timeout = min(int(user_timeout), worker_timeout)
+  if user_retries:
+    worker_retries  = min(int(user_retries), worker_retries)
 
 if debug:
   print('base_url          : '+base_url)
@@ -332,7 +336,7 @@ def flatten(d, parent_key=''):
     new_key = parent_key + '[' + k + ']' if parent_key else k
     if isinstance(v, MutableMapping):
       items.extend(flatten(v, new_key).items())
-    else:
+    elif v is not None:
       items.append(new_key+'='+v)
   items.sort()
   return items
@@ -539,22 +543,19 @@ def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
 def _downloadEncryptedFile(token,file_info:dict, download_url:str, local_file_path:str,download_key:bytes):
   """Internal tool to download encrypted file, should be used via downloadFile"""
   chunk_no = 0
-  crypted_chunk_size = 12582944 #todo: fetch crypted chunk size.
-  chunk_size = 12582912 #todo: fetch chunk size.
   # calculation taken from crypto_app.js, the end overlaps with the start of the next range
   # because it uses the non encrypted byte ranges but requets the full crypted chunk size.
   # var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
 
   with open(local_file_path, mode='wb') as f:
-    for i in range(0,file_info['size'],chunk_size):
-      end_offset = min(1 * (chunk_no * chunk_size + (1*crypted_chunk_size)-1),
+    for i in range(0,file_info['size'],upload_chunk_size):
+      end_offset = min(1 * (chunk_no * upload_chunk_size + (1*upload_crypted_chunk_size)-1),
                        (1*file_info['size']) + 32 - 1)
       download = requests.get(download_url,params={"token":token,"files_ids":file_info['id']},
                               headers={ "Range": f"bytes={i}-{end_offset}"})
       download.raise_for_status()
       f.write(decrypt_chunk(download.content,chunk_no,file_info,download_key))
       chunk_no += 1
-      print(chunk_no)
 
 def postGuest(user_id, recipient, subject=None, message=None, expires=None, options=[]):
 
@@ -614,7 +615,6 @@ def decrypt_chunk(chunk:bytes,chunk_no:int,file_info:dict,key:bytes):
   if file_info['key-version'] != 3:
     raise NotImplementedError("Only AES-GCM is currently supported.")
   
-
   cipher = AESGCM(key)
 
   aead = base64.b64decode(file_info['fileaead'])
@@ -660,6 +660,9 @@ def download_transfer(download_link):
     encryption_details["password"] = encrypted
     encryption_details['salt'] = file_list[0]['key-salt'].encode('ascii')
     encryption_details['password_hash_iterations'] = file_list[0]['password-hash-iterations']
+    info_response = requests.get(base_url+"/info")
+    globals()['upload_chunk_size'] = info_response.json()['upload_chunk_size']
+    globals()['upload_crypted_chunk_size'] = upload_chunk_size + 32
     globals()["encryption_details"] = encryption_details
     download_key = generate_key()
   for file in file_list:
