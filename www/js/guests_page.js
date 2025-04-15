@@ -261,6 +261,7 @@ $(function() {
         options: {guest: {}, transfer: {}},
         sendbutton: send_voucher.find('.send'),
         message_can_not_contain_urls: send_voucher.find('textarea[name="message_can_not_contain_urls"]'),
+        pgp_encrypt_passphrase_to_email: send_voucher.find('input[name="pgp_encrypt_passphrase_to_email"]'),
     };
     send_voucher.find('.guest_options input').each(function() {
         var i = $(this);
@@ -328,6 +329,18 @@ $(function() {
     filesender.ui.nodes.expires.on('change', function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
+
+    var disenable = function( obj, disabled, dv )
+    {
+        if( obj ) {
+            if( disabled ) {
+                obj.prop('checked', dv );
+                obj.prop('disabled', true);
+            } else {
+                obj.prop('disabled', false);
+            }
+        }
+    };
     
     /**
      * It doesn't make sense to allow only send to me when the guest is getting a link
@@ -336,12 +349,15 @@ $(function() {
     var get_a_link_updates = function() {
         var checked = filesender.ui.nodes.get_a_link.is(':checked');
         var onlyToMe = filesender.ui.nodes.can_only_send_to_me;
+        var pgp = filesender.ui.nodes.pgp_encrypt_passphrase_to_email;
         if( checked ) {
             onlyToMe.prop('checked', false );
             onlyToMe.prop('disabled', true);
+            disenable( pgp, true, false );
             filesender.ui.notify('info',lang.tr('turning_on_guests_get_a_link_disables_can_only_send_to_me'));
         } else {
             onlyToMe.prop('disabled', false);
+            disenable( pgp, false, false );
         }
     }
     filesender.ui.nodes.get_a_link.on('click', function() {
@@ -349,6 +365,32 @@ $(function() {
     });
     get_a_link_updates();
 
+
+    //
+    // If the user wants to force a guest to pgp encrypt then
+    // the guest can only send to the user who invited them
+    //
+    var pgp_encrypt_passphrase_updates = function( showMsg ) {
+        var checked = filesender.ui.nodes.pgp_encrypt_passphrase_to_email.is(':checked');
+        var onlyToMe = filesender.ui.nodes.can_only_send_to_me;
+        var gal = filesender.ui.nodes.get_a_link;
+        
+        if( checked ) {
+            onlyToMe.prop('checked', true );
+            onlyToMe.prop('disabled', true);
+            disenable( gal, true, false );
+            if( showMsg ) {
+                filesender.ui.notify('info',lang.tr('turning_on_guests_pgp_encryption_disables_can_only_send_to_me'));
+            }
+        } else {
+            onlyToMe.prop('disabled', false);
+            disenable( gal, false, false );
+        }
+    }
+    filesender.ui.nodes.pgp_encrypt_passphrase_to_email.on('click', function() {
+        pgp_encrypt_passphrase_updates( true );
+    });
+    pgp_encrypt_passphrase_updates( false );
 
     if( filesender.ui.nodes.does_not_expire ) {
         filesender.ui.nodes.does_not_expire.on('click', function() {

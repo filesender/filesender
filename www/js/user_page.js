@@ -244,4 +244,109 @@ $(function() {
     });
 
     window.filesender.log("window.filesender.log() from user page ");
+
+    ////////////////////
+    ////////////////////
+    ////////////////////
+    
+
+    $('.delete_my_pgp_key').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var p = {};
+        p['pgp_key_delete'] = '1';        
+        filesender.client.updateUserPreferences(p, function() {
+            filesender.ui.notify('success', lang.tr('preferences_updated'));
+            filesender.ui.reload();
+            });
+    });
+    $('.test_my_pgp_key').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var pgpkey = $('#pgpkey').text();
+        
+	kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	    if (!err) {
+                var dd = new Date(0);
+                dd.setUTCSeconds(key.primary.lifespan.generated);
+                var msg = lang.tr('test_my_pgp_message').r({
+                    time: dd.toLocaleTimeString(),
+                    date: dd.toLocaleDateString()
+                }).toString();
+                
+		var params = {
+		    msg: msg,
+		    encrypt_for: key
+		};
+                
+		kbpgp.box (params, function(err, result_string, result_buffer) {
+                    pgpmsg = result_string;
+                    filesender.client.testPGPPublicKey(pgpmsg, function() {
+                        filesender.ui.notify('success', lang.tr('email_sent'));
+                    });
+                });
+            } else {
+                console.log(err);
+                filesender.ui.alert('error', lang.tr('key_import_failed'));
+            }
+            
+        });
+        
+    });
+    $('#pgp_public_key_file').on('change', function(e) {
+        const fileList = event.target.files;
+        if( fileList.length == 1 ) {
+            const f = fileList[0];
+
+	    var r = new FileReader();
+	    r.onload = function() {
+                const d = r.result;
+
+                if( d.startsWith("-----BEGIN PGP PUBLIC KEY BLOCK")) {
+
+	            kbpgp.KeyManager.import_from_armored_pgp({ armored: d }, function(err, key) {
+	                if (!err) {
+                            
+                            var p = {};
+                            p['pgp_key'] = d;
+                            
+                            filesender.client.updateUserPreferences(p, function() {
+                                filesender.ui.notify('success', lang.tr('preferences_updated'));
+                                filesender.ui.reload();
+                            });
+                            
+                        } else {
+                            console.log(err);
+                            if( err.message == "cannot have 2 primary keys" ) {
+                                filesender.ui.alert('error', lang.tr('key_import_must_be_single_key'));
+                            } else {
+                                filesender.ui.alert('error', lang.tr('key_import_failed'));
+                            }
+                        }
+                    });
+                } else {
+                    filesender.ui.alert('error', lang.tr('not_a_public_key'));                   
+                }
+	    }
+            r.readAsText(f);
+        }
+    });
+
+    var pgpkey = $('#pgpkey').text();
+    kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	if (!err) {
+            var s = '';
+
+            var userid = key.userids[0];
+            $('#pgpkeyinfoemail').text(userid.components.email);
+            var dd = new Date(0);
+            dd.setUTCSeconds(key.primary.lifespan.generated);
+            s = dd.toLocaleDateString() + " " + dd.toLocaleTimeString();
+            $('#pgpkeyinfocreated').text(s);
+        }
+    });
+    
+    
 });

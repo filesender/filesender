@@ -35,6 +35,15 @@ function presentAVName( $v )
     return Template::Q($ret);
 }
 
+function WrapPGPInPRE( $v )
+{
+    if( str_starts_with($v,"-----BEGIN PGP MESSAGE-----")) {
+        return "<pre>" . $v . "</pre>";
+    }
+    return $v;
+}
+
+
 $rid = 0;
 if(Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     if(array_key_exists('token', $_REQUEST)) {
@@ -169,7 +178,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     <?php if($transfer->message) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:message}:</strong>
-                            <span><?php echo Template::replaceTainted($transfer->message) ?></span>
+                            <span><?php echo WrapPGPInPRE(Template::replaceTainted($transfer->message)) ?></span>
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">

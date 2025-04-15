@@ -13,6 +13,11 @@ if(!in_array($section, $sections)) {
     throw new GUIUnknownAdminSectionException($section);
 }
 
+$user = Auth::user();
+$pgpkey = null;
+if( Utilities::isTrue(Config::get('pgp_enabled'))) {
+    $pgpkey = $user->pgp_key;
+}
 
 // allow a part of the page to handle a guest option
 // and avoid it being handled a second time by other code
@@ -39,7 +44,8 @@ foreach (Guest::allOptions() as $name => $dfn) {
 //
 $displayoption = function($name, $cfg, $transfer = false)
 use ( $new_guests_can_only_send_to_creator,
-    $new_guests_can_only_send_to_creator_default )
+      $new_guests_can_only_send_to_creator_default,
+      $pgpkey )      
 {
     // don't show the option for get_a_link if they can't use it.
     if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
@@ -50,6 +56,14 @@ use ( $new_guests_can_only_send_to_creator,
         return;
     }
 
+    //
+    // If the user does not have a pgp public key then we shouldn't offer
+    // for them to force the guest to use PGP encryption
+    //
+    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$pgpkey ) {
+        return;
+    }    
+    
     $default = $cfg['default'];
     if(Auth::isSP()) {
         if($transfer) {
@@ -72,7 +86,7 @@ use ( $new_guests_can_only_send_to_creator,
     } else {
         $lockClassLabel = '';
         $lockClass = '';
-        if($name == 'get_a_link' || $name == 'can_only_send_to_me') {
+        if($name == 'get_a_link' || $name == 'can_only_send_to_me'  || $name == 'pgp_encrypt_passphrase_to_email') {
             $lockClass = 'get_a_link_lock';
         }
 
@@ -294,6 +308,18 @@ use ( $new_guests_can_only_send_to_creator,
                 </div>
             </div>
         </div>
+
+        <?php if($show_pgp_user_profile_message) { ?>
+            <div>
+                <i class="fa fa-info-circle"></i>
+                Note: if you <a href="?s=user">upload your PGP public key</a> you can nominate
+                that the passphrase used by a guest for encryption
+                is randomly generated and a PGP encrypted message
+                be sent to you with that passphrase. When the system knows your PGP
+                public key this option will be shown above.
+            </div>
+        <?php } ?>
+        
     </div>
 </div>
 
