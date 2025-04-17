@@ -126,7 +126,8 @@ class Utilities
 
     public static function isValidPGPMessage($msg)
     {
-
+        $originalmsg = $msg;
+        
         $rex = '/^(-----BEGIN PGP MESSAGE-----)([\n\r]*).*([a-zA-Z]+:[a-zA-Z 0-9\.\:\/]+[\n\r]*)*([\/a-zA-Z0-9\n\.\:\+\ \=]{63}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{1,64}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{0,64}[\n\r]*)+(-----END PGP MESSAGE-----[\n\r]*)[\n\r]*$/';
         
         $msg = filter_var( $msg, FILTER_VALIDATE_REGEXP,
@@ -135,7 +136,9 @@ class Utilities
         );
 
         if( !$msg ) {
-            throw new PKIPGPBadMesageException('');
+            if( str_starts_with( $originalmsg, "-----BEGIN PGP MESSAGE-----")) {
+                throw new PKIPGPBadMesageException('');
+            }
         }
 
         return true;
