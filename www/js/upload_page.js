@@ -2271,10 +2271,16 @@ $(function() {
         if(files && files.length) filesender.ui.files.addList(files);
     }
 
-    var pgpenc = ('pgp_encrypt_passphrase_to_email' in filesender.ui.nodes.options)
-        ? filesender.ui.nodes.options.pgp_encrypt_passphrase_to_email.is(':checked')
-        : false;
-
+    var pgpenc = false;
+    if( filesender.config.pgp_enabled ) {
+        pgpenc = ('pgp_encrypt_passphrase_to_email' in filesender.ui.nodes.options)
+            ? filesender.ui.nodes.options.pgp_encrypt_passphrase_to_email.is(':checked')
+            : false;
+        if( $("#pgp-possile").text() == "false" ) {
+            pgpenc = false;
+        }
+    }
+    
     if( !pgpenc ) {
         // validate message as it is typed
         window.filesender.ui.handleFlagInvalidOnRegexMatch(

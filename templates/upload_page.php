@@ -1030,6 +1030,7 @@ if( $pgp_encrypt_passphrase ) {
         
     </form>
 
+    <div id="pgp-possile" hidden="true"><?php echo Utilities::boolToString(!empty($pgpkey)) ?></div>
     <div id="pgpkey" hidden="true"><?php echo Template::Q($pgpkey) ?></div>
 
     
