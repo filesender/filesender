@@ -67,7 +67,8 @@ class StorageCloudS3 extends StorageFilesystem
         
         return self::$client;
     }
-    
+
+    // seems deprecated
     public static function getOffsetWithinBlob( $offset )
     {
         $file_chunk_size = Config::get('upload_chunk_size');
@@ -87,8 +88,11 @@ class StorageCloudS3 extends StorageFilesystem
     
     public static function getObjectName( File $file, $offset )
     {
-        $file_chunk_size = Config::get('upload_chunk_size');
-        $offset = $offset - ($offset % $file_chunk_size);
+        $chunk_size = Config::get('upload_chunk_size');
+        $chunk_size = $file->transfer->chunk_size;
+        $crypted_chunk_size = $file->transfer->crypted_chunk_size;
+        
+        $offset = $offset - ($offset % $chunk_size);
         $object_name = str_pad($offset, 24, '0', STR_PAD_LEFT);
 
         if( self::usingCustomBucketName( $file ) ) {
@@ -120,8 +124,11 @@ class StorageCloudS3 extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
+        $chunk_size = $file->transfer->chunk_size;
+        $crypted_chunk_size = $file->transfer->crypted_chunk_size;
+        
         if ($file->transfer->options['encryption']) {
-            $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+            $offset = $offset / $chunk_size * $crypted_chunk_size;
         }
 
         $bucket_name = self::getBucketName( $file );

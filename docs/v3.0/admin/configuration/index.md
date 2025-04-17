@@ -329,6 +329,7 @@ A note about colours;
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
 * [statistics_table_rows_per_page](#statistics_table_rows_per_page)
 * [tenant_admin](#tenant_admin)
+* [cli_client_from_github](#cli_client_from_github)
 
 ## Data Protection
 
@@ -3537,6 +3538,13 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __default:__ -
 * __available:__ since version 3.1
 * __comment:__ see [auth_config_regex_files](#auth_config_regex_files) on how to setup differnt config files per idp. Within that file set $config['tenant_admin'].
+
+### cli_client_from_github
+* __description:__ Directs users to github for python cli client. Setting to false uses local hosted file.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 3.1
 
 ---
 

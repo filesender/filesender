@@ -16,7 +16,7 @@ Madame, Monsieur,
 
 Madame, Monsieur,
 
-Ceci est un rappel. Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un group de personnes.
+Ceci est un rappel. Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un groupe de personnes.
 
 Emetteur: {guest.user_email}
 Lien de dépôt: {guest.upload_link}
@@ -35,7 +35,7 @@ Cordialement,
 </p>
 
 <p>
-    Ceci est un rappel. Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un group de personnes.
+    Ceci est un rappel. Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un groupe de personnes.
 </p>
 
 <table rules="rows">

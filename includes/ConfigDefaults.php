@@ -78,6 +78,8 @@ $default = array(
 
     'auth_remote_user_enabled' => false, //disables remote user auth
 
+    'cli_client_from_github' => true,
+
     'aup_default' => false,
     'aup_enabled' => false,
     'api_secret_aup_enabled' => false,

@@ -67,16 +67,20 @@ class StorageCloudAzure extends StorageFilesystem
         return $blobClient;
     }
     
+    // seems deprecated
     public static function getOffsetWithinBlob($offset)
     {
         $file_chunk_size = Config::get('upload_chunk_size');
         return ($offset % $file_chunk_size);
     }
     
-    public static function getBlobName($offset)
+    public static function getBlobName(File $file, $offset)
     {
-        $file_chunk_size = Config::get('upload_chunk_size');
-        $offset = $offset - ($offset % $file_chunk_size);
+        $chunk_size = Config::get('upload_chunk_size');
+        $chunk_size = $file->transfer->chunk_size;
+        $crypted_chunk_size = $file->transfer->crypted_chunk_size;
+        
+        $offset = $offset - ($offset % $chunk_size);
         return str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
 
@@ -94,12 +98,15 @@ class StorageCloudAzure extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
+        $chunk_size = $file->transfer->chunk_size;
+        $crypted_chunk_size = $file->transfer->crypted_chunk_size;
+        
         if ($file->transfer->options['encryption']) {
-            $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+            $offset = $offset / $chunk_size * $crypted_chunk_size;
         }
 
         $container_name = $file->uid;
-        $blob_name      = self::getBlobName($offset);
+        $blob_name      = self::getBlobName($file,$offset);
         
         try {
             $az = self::getBlobService();
@@ -140,7 +147,7 @@ class StorageCloudAzure extends StorageFilesystem
     {
         $chunk_size     = strlen($data);
         $container_name = $file->uid;
-        $blob_name      = self::getBlobName($offset);
+        $blob_name      = self::getBlobName($file,$offset);
 
         try {
             $az = self::getBlobService();
