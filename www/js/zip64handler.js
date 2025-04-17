@@ -50,7 +50,9 @@ if (!('filesender' in window))
 
     var sswriteu64 = async function (writer,n) {
         var lob = n & 0xFFFFFFFF;
-        var hib = n - lob;
+        var hib = BigInt(0xFFFFFFFF00000000) & BigInt(n);
+        hib = hib >> BigInt(32);
+        hib = Number(hib);
         await writer.write(new Uint8Array([(lob)&0xFF,(lob>>8)&0xFF,(lob>>16)&0xFF,(lob>>24)&0xFF,
                                            (hib)&0xFF,(hib>>8)&0xFF,(hib>>16)&0xFF,(hib>>24)&0xFF]));
     }

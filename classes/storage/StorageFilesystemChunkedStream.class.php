@@ -68,7 +68,7 @@ class StorageFilesystemChunkedStream
         }
         
         $file_path = StorageFilesystem::buildPath($file).$file->uid;
-        $chunkFile = StorageFilesystemChunked::getChunkFilename($file_path, $offset);
+        $chunkFile = StorageFilesystemChunked::getChunkFilename($file, $file_path, $offset);
 
 
         if (strcmp($this->currentChunkFile, $chunkFile)) {
@@ -80,7 +80,7 @@ class StorageFilesystemChunkedStream
                 return false;
             }
             
-            $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($offset));
+            $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($file, $offset));
             if ($rc == -1) {
                 $this->gameOver = true;
                 if ($this->fh) {

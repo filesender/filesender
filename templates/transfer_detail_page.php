@@ -152,6 +152,7 @@ if( !$found ) {
 
                                                     <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
                                                         <span class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}"
+                                                              data-action="download"
                                                               data-id="<?php echo $file->id ?>"
                                                               data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
                                                               data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>"
@@ -172,7 +173,9 @@ if( !$found ) {
                                                         </span>
 
                                                     <?php } else {?>
-                                                        <a class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>">
+                                                        <a class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}"
+                                                           data-action="download"
+                                                           href="download.php?files_ids=<?php echo $file->id ?>">
                                                             <i class="fa fa-download"></i>
                                                         </a>
                                                     <?php } ?>
@@ -222,7 +225,7 @@ if( !$found ) {
 
                         <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
                             <span>
-                                Your transfer has been sent to the following email addresses
+                                <?php echo Lang::tr('your_transfer_was_sent') ?>
                             </span>
                             <div class="fs-badge-buttons-listv recipients">
                                 <br/>
@@ -249,7 +252,7 @@ if( !$found ) {
 
                                 <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
                                     <i class="fa fa-lg fa-envelope-o"></i>
-                                    <span>Add recipient</span>
+                                    <span><?php echo Lang::tr('add_recipient') ?></span>
                                 </button>
                                 <br/>
                             </div>
@@ -349,7 +352,7 @@ if( !$found ) {
                     </button>
 
                     <?php if($extend) { ?>
-                        <button type="button" data-action="extend" class="fs-button" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
+                        <button type="button" data-action="extend" class="fs-button objectholder" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
                             <i class="fa fa-calendar-plus-o"></i>
                             <span>{tr:extend_expires}</span>
                         </button>                        

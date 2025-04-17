@@ -371,6 +371,17 @@ window.filesender.ui = {
             inputType: 'email',
             className: 'prompt-dialog',
             centerVertical: true,
+            required: true,
+            buttons: {
+                confirm: {
+                    label: lang.tr('OK').out(),
+                    className: 'fs-button fs-button--success'
+                },
+                cancel: {
+                    label: lang.tr('Cancel').out(),
+                    className: 'fs-button fs-button--danger'
+                }
+            },
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
                 if( result ) {
@@ -628,7 +639,7 @@ window.filesender.ui = {
     rawError: function (text) {
         console.log(text);
         var doc = new DOMParser().parseFromString(text, 'text/html');
-        if (doc.getElementsByClassName('exception')) { //if this is from our template, pull out the exception only.
+        if (doc.getElementsByClassName('exception').length >= 1 ) { //if this is from our template, pull out the exception only.
                 text = doc.getElementsByClassName('exception')[0].textContent || text;
         } else { //strip html as alert cant process that.
                 text = doc.body.textContent || text;
@@ -870,7 +881,10 @@ window.filesender.ui = {
         if(!id || isNaN(id)) return;
 
         var duration = parseInt(t.attr('data-expiry-extension'));
-
+        if( !duration ) {
+            console.log("extendExpires() is not offering to extend the expire time 0 days" );
+            return;
+        }
         var extend = function(remind) {
             filesender.client.extendObject(className,id, remind, function(t) {
                 $('.objectholder[data-id="' + id + '"]').attr('data-expiry-extension', t.expiry_date_extension);

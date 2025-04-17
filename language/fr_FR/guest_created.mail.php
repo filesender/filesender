@@ -37,7 +37,7 @@ Cordialement,
 </p>
 
 <p>
-    Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un group de personnes.
+    Veuillez trouver ci-dessous une invitation donnant accès à <a href="{cfg:site_url}">{cfg:site_name}</a>. Vous pouvez utiliser cette invitation pour déposer un ensemble de fichiers et le rendre disponible au téléchargement pour un groupe de personnes.
 </p>
 
 <table rules="rows">

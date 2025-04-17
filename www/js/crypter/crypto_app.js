@@ -47,9 +47,11 @@ window.filesender.crypto_app_downloading = false;
 // list of fileid for this encrypted download
 window.filesender.crypto_encrypted_archive_download_fileidlist = '';
 
-window.filesender.crypto_last_password_succeeded = false;
+window.filesender.crypto_last_password_succeeded = false; 
 window.filesender.crypto_last_password = '';
 
+
+window.filesender.crypted_chunk_size = 0;
 
 /*
  * Main entry points
@@ -63,6 +65,7 @@ window.filesender.crypto_app = function () {
         crypto_crypt_name:   window.filesender.config.crypto_crypt_name,
         crypto_hash_name:    window.filesender.config.crypto_hash_name,
         upload_crypted_chunk_size: window.filesender.config.upload_crypted_chunk_size,
+//        upload_crypted_chunk_size: window.filesender.crypted_chunk_size,
         // random passwords should be 32 octects (256 bits) of entropy.
         crypto_client_entropy_octets: 32,
         crypto_random_password_octets: 32,
@@ -534,7 +537,7 @@ window.filesender.crypto_app = function () {
                 // then do not allow it to happen.
                 // Other checks should stop the code before this code can
                 // run, but more checks are always better
-                if( value.byteLength + chunkid*$this.crypto_chunk_size
+                if( value.byteLength + chunkid * encryption_details.chunk_size
                     > window.filesender.config.crypto_gcm_max_file_size )
                 {
                     return callbackError({message: 'maximum_encrypted_file_size_exceeded',
@@ -788,9 +791,9 @@ window.filesender.crypto_app = function () {
             var oReq = new XMLHttpRequest();
             oReq.open("GET", link, true);
             oReq.responseType = "arraybuffer";
-            var chunksz     = 1 * $this.crypto_chunk_size;
+            var chunksz     = 1 * encryption_details.chunk_size;
             var startoffset = 1 * (chunkid * chunksz);
-            var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
+            var endoffset   = 1 * (chunkid * chunksz + (1*encryption_details.crypted_chunk_size)-1);
             var legacyChunkPadding = 0;
             oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Download', filesender.crypto_encrypted_archive_download );
 
@@ -808,15 +811,15 @@ window.filesender.crypto_app = function () {
             // Handle last chunk details, some offsets might need to change slightly
             //
             if( chunkid == encryption_details.chunkcount ) {
-                var padding = (1*$this.upload_crypted_chunk_size) - (1* $this.crypto_chunk_size);
+                var padding = (1*encryption_details.crypted_chunk_size) - (1* encryption_details.chunk_size);
                 var blockPad = 32;
 
                 window.filesender.log("downloadAndDecryptChunk(last chunk offset adjustment) "
                                       + " legacyPadding " + legacyChunkPadding
-                                      + " ccs "  + $this.crypto_chunk_size
-                                      + " uccs " + $this.upload_crypted_chunk_size
+                                      + " ccs "  + encryption_details.chunk_size
+                                      + " uccs " + encryption_details.crypted_chunk_size
                                       + " soffset " + startoffset
-                                      + " soffsetcc " + (1 * (chunkid * $this.upload_crypted_chunk_size))
+                                      + " soffsetcc " + (1 * (chunkid * encryption_details.crypted_chunk_size))
                                      );
                 window.filesender.log("downloadAndDecryptChunk(last chunk offset adjustment) "
                                       + " eoffset " + endoffset
@@ -844,10 +847,6 @@ window.filesender.crypto_app = function () {
                     
                 }
 
-                window.filesender.log("downloadAndDecryptChunk(adjustments done) "
-                                      + " eoffset " + endoffset
-                                      + " padding " + padding );
-
                 oReq.setRequestHeader('X-FileSender-Encrypted-Archive-Contents', window.filesender.crypto_encrypted_archive_download_fileidlist );
                 window.filesender.crypto_encrypted_archive_download_fileidlist = '';
                 
@@ -856,13 +855,18 @@ window.filesender.crypto_app = function () {
             var brange = 'bytes=' + startoffset + '-' + endoffset;
             oReq.setRequestHeader('Range', brange);
 
+            window.filesender.log("downloadAndDecryptChunk(adjustments done) "
+                                  + " eoffset " + endoffset
+                                  + " padding " + padding
+                                 + " range " + brange );
+            
             //Download progress
             oReq.addEventListener("progress", function(evt){
                 window.filesender.log("downloadAndDecryptChunk(progress) chunkid " + chunkid
                                       + " loaded " + evt.loaded + " of total " + evt.total );
                 if (evt.lengthComputable) {
-                    var percentComplete = Math.round(evt.loaded / (1*$this.upload_crypted_chunk_size) *10000) / 100;
-                    var percentOfFileComplete = 100*((chunkid*$this.crypto_chunk_size + evt.loaded) / encryption_details.filesize );
+                    var percentComplete = Math.round(evt.loaded / (1*encryption_details.crypted_chunk_size) *10000) / 100;
+                    var percentOfFileComplete = 100*((chunkid * encryption_details.chunk_size + evt.loaded) / encryption_details.filesize );
                     
                     if (progress) {
 
@@ -903,7 +907,7 @@ window.filesender.crypto_app = function () {
             // When we get the chunk data (or an XHR error)
             //
             oReq.onload = function (oEvent) {
-                window.filesender.log("ddChunk(onload)");
+                window.filesender.log("ddChunk(onload) chunkid:" + chunkid);
                 
                 // check for a redirect containing and error and halt if so
                 if( $this.handleXHRError( oReq, link, 'file_encryption_wrong_password' )) {
@@ -916,7 +920,7 @@ window.filesender.crypto_app = function () {
                 var arrayBuffer = new Uint8Array(oReq.response);
                 setTimeout(function(){
 
-                    var sliced = window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer);
+                    var sliced = window.filesender.crypto_blob_reader(encryption_details.chunk_size,encryption_details.crypted_chunk_size).sliceForDownloadBuffers( arrayBuffer );
                     var encryptedChunk = window.filesender.crypto_common().separateIvFromData(sliced[0]);
                     
                     $this.decryptBlob(
@@ -1000,7 +1004,7 @@ window.filesender.crypto_app = function () {
          * 
          * @param fileiv is the decoded fileiv. Decoding can be done with decodeCryptoFileIV()
          */
-        decryptDownloadToBlobSink: function (blobSink, pass, transferid,
+        decryptDownloadToBlobSink: function (blobSink, pass, transferid, chunk_size, crypted_chunk_size,
                                              link, mime, name, filesize, encrypted_filesize,
                                              key_version, salt,
                                              password_version, password_encoding, password_hash_iterations,
@@ -1011,7 +1015,7 @@ window.filesender.crypto_app = function () {
                                        filesize:           filesize,
                                        encrypted_filesize: encrypted_filesize,
                                        // zero based count.
-                                       chunkcount: Math.ceil( filesize / (1* $this.crypto_chunk_size))-1,
+                                       chunkcount: Math.ceil( filesize / (1* chunk_size))-1,
                                        key_version:       key_version,
                                        salt:              salt,
                                        password_version:  password_version,
@@ -1020,7 +1024,9 @@ window.filesender.crypto_app = function () {
                                        client_entropy:    client_entropy,
                                        fileiv:            fileiv,
                                        fileaead:          fileaead,
-                                       transferid:        transferid
+                                       transferid:        transferid,
+                                       chunk_size:         chunk_size,
+                                       crypted_chunk_size: crypted_chunk_size,
                                      };
             // For GCM this will be the fileiv (96 bits of fixed entropy).
             encryption_details.expected_fixed_chunk_iv = new Uint8Array(16);
@@ -1081,7 +1087,7 @@ window.filesender.crypto_app = function () {
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
                 }
-                if( encryption_details.aead.chunksize != window.filesender.config.upload_chunk_size ) {
+                if( encryption_details.aead.chunksize != encryption_details.chunk_size ) {
                     window.filesender.log("decryptBlobSpecificFinalChunkChecks() bad aead 4");
                     return callbackError({message: 'decryption_verification_failed_bad_aead',
                                           details: {}});
@@ -1227,7 +1233,8 @@ window.filesender.crypto_app = function () {
                 );
  
         },
-        decryptDownload: function (link, transferid, mime, name, filesize, encrypted_filesize,
+        decryptDownload: function (link, transferid, chunk_size, crypted_chunk_size,
+                                   mime, name, filesize, encrypted_filesize,
                                    key_version, salt,
                                    password_version, password_encoding, password_hash_iterations,
                                    client_entropy, fileiv, fileaead,
@@ -1246,6 +1253,10 @@ window.filesender.crypto_app = function () {
                 }
             };
 
+
+            window.filesender.config.upload_chunk_size = crypted_chunk_size;
+            window.filesender.crypted_chunk_size = crypted_chunk_size;
+            
             // Should we use streamsaver for this download?
             var use_streamsaver = $this.useStreamSaver();
             
@@ -1324,7 +1335,7 @@ window.filesender.crypto_app = function () {
             var prompt = window.filesender.ui.promptPassword(window.filesender.config.language.file_encryption_enter_password, function (pass) {
             
                 window.filesender.crypto_last_password = pass;
-                $this.decryptDownloadToBlobSink( blobSink, pass, transferid,
+                $this.decryptDownloadToBlobSink( blobSink, pass, transferid, chunk_size, crypted_chunk_size,
                                                  link, mime, name, filesize, encrypted_filesize,
                                                  key_version, salt,
                                                  password_version, password_encoding, password_hash_iterations,
@@ -1374,7 +1385,7 @@ window.filesender.crypto_app = function () {
             }
             window.filesender.crypto_encrypted_archive_download_fileidlist = fileidlist;
         },
-        decryptDownloadToZip: function(link,transferid,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
+        decryptDownloadToZip: function(link,transferid,chunk_size,crypted_chunk_size,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
 
             var $this = this;
 
@@ -1410,8 +1421,8 @@ window.filesender.crypto_app = function () {
                 }
                                                      
                 
-                var blobSinkStreamed = window.filesender.archive_sink( $this, link, transferid, archiveName, pass, selectedFiles, callbackError );
-                var blobSink = blobSinkStreamed;
+                blobSinkStreamed = window.filesender.archive_sink( $this, link, transferid, chunk_size, crypted_chunk_size, archiveName, pass, selectedFiles, callbackError );
+                blobSink = blobSinkStreamed;
                 blobSink.init()
                     .then( () => {
                         blobSink.progress = progress;

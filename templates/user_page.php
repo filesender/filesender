@@ -44,7 +44,7 @@ $user = Auth::user();
                     <h2>{tr:user_preferences}</h2>
 
                     <?php
-                    if (Config::get('lang_userpref_enabled')) {
+                    if (Config::get('lang_userpref_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
                         $id = 'lang';
 
                         if($page[$id]) {
@@ -58,8 +58,13 @@ $user = Auth::user();
 
                                 if($mode == 'write') {
                                     $opts = array();
+				    $code = Lang::getCode();
+				    $prevname = null;
                                     foreach(Lang::getAvailableLanguages() as $id => $language) {
                                         $selected = ($id == $value) ? 'selected="selected"' : '';
+					if( $prevname && $prevname == $language['name'] ) {
+						continue;
+					}
                                         $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($language['name']).'</option>';
                                     }
 
@@ -205,7 +210,7 @@ $user = Auth::user();
                             <div class="fs-settings__saved-info">
                                 <h3>{tr:saved_information}</h3>
 
-                                <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                <ul class="fs-listx">
                                     <li>
                                         <button type="button" id="clear_user_transfer_preferences" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
@@ -219,7 +224,7 @@ $user = Auth::user();
                                     </li>
                                 </ul>
 
-                                <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                <ul class="fs-listx">
                                     <li>
                                         <button type="button" id="clear_frequent_recipients" class="fs-button fs-button--danger">
                                             <i class="fa fa-close"></i>
@@ -410,7 +415,17 @@ $user = Auth::user();
 
                                 <ul class="fs-list fs-list--inline">
                                     <li>
+                                    <?php
+                                    if (Config::get('cli_client_from_github')) {
+                                    ?>
                                         <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py">
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client" download="filesender.py" >
+                                    <?php
+                                    }
+                                    ?>
                                             {tr:download_python_cli}
                                         </a>
                                     </li>

@@ -36,7 +36,9 @@
  */
 require_once('../includes/init.php');
 
+
 try {
+    
     // List of files to be downloaded
     if(!array_key_exists('files_ids', $_REQUEST))
         throw new DownloadMissingFilesIDsException();
@@ -160,7 +162,7 @@ try {
             $archive_format = "tar";
         }
     }
-    
+
     if(count($files_ids) > 1 || $archive_format_selected) { 
         // Archive download
         $ret = downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded,$archive_format);
@@ -296,17 +298,18 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     register_shutdown_function($abort_handler);
 
     $read_range = function($range = null) use($file, $recipient, $abort_handler, $transfer) {
+
         $abort_handler();
 
         $offset = $range ? $range['start'] : 0;
 
-        $chunk_size = (int) Config::get('download_chunk_size');
+        $chunk_size = $file->chunk_size;
         if (!$chunk_size)
             $chunk_size = 1024 * 1024;
 
         if($transfer->options['encryption'] == 1){
             $end = $file->encrypted_size;
-            $chunk_size = (int) Config::get('upload_crypted_chunk_size');
+            $chunk_size = $file->crypted_chunk_size;
         }else{
             $end = $file->size;
         }
