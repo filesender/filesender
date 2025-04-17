@@ -881,3 +881,6 @@ $lang['upload_a_new_pgp_public_key'] = 'Upload a new PGP public key';
 $lang['turning_on_guests_pgp_encryption_disables_can_only_send_to_me'] = 'Turning on PGP encryption forces the guest to only be able to send to you.';
 $lang['upload_will_use_pgp_to_share_passphrase'] = '<i class="fa fa-lock"></i> This upload will be encrypted with a randonly generated passphrase. That passphrase will be encrypted with PGP and emailed to the authorized recipient {email}';
 $lang['pgp_invalid_key_guest_upload'] = 'The PGP key is invalid. Please contact the user who invited you to the system.';
+$lang['pgp_public_key_invalid'] = 'The PGP public key is invalid';
+$lang['key_import_failed'] = 'Failed to import the provided PGP key';
+$lang['not_a_public_key'] = 'The selected file is not a PGP public key';

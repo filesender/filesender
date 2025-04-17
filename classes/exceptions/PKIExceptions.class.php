@@ -68,3 +68,42 @@ class PKIUnknownEventException extends DetailedException
     }
 }
 
+
+/**
+ * Bad key exception
+ */
+class PKIPGPBadPublicKeyException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $event
+     */
+    public function __construct($event)
+    {
+        parent::__construct(
+            'pgp_public_key_invalid', // Message to give to the user
+            array('event' => $event) // Real message to log
+        );
+    }
+}
+
+/**
+ * Bad message
+ */
+class PKIPGPBadMesageException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $event
+     */
+    public function __construct($event)
+    {
+        parent::__construct(
+            'pgp_message_invalid', // Message to give to the user
+            array('event' => $event) // Real message to log
+        );
+    }
+}
+

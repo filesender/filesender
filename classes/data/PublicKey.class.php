@@ -138,6 +138,27 @@ class PublicKey extends DBObject
         }
     }
 
+    /**
+     * This return the key if it is OK or throws an exception if there is something wrong.
+     */
+    private static function validateKeyData( $key, $keytype )
+    {
+        // We only handle PGP keys right now
+
+        $rex = '/^(-----BEGIN PGP PUBLIC KEY BLOCK-----)([\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{63}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{1,64}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{0,64}[\n\r]*)+(-----END PGP PUBLIC KEY BLOCK-----[\n\r]*)$/';        
+        
+        $key = filter_var( $key, FILTER_VALIDATE_REGEXP,
+                           array( "flags" => FILTER_NULL_ON_FAILURE,
+                                  "options" => array("regexp" => $rex ))
+        );
+
+        if( !$key ) {
+            Logger::error("AAA issue with key");
+            throw new PKIPGPBadPublicKeyException('');
+        }
+        
+        return $key;
+    }
 
     /**
      * Create a new public key
@@ -149,6 +170,8 @@ class PublicKey extends DBObject
         if( $keytype == -1 ) {
             $keytype = DBConstantPublicKeyType::lookup(DBConstantPublicKeyType::PGP);
         }
+
+        self::validateKeyData( $key, $keytype );
         
         $ret->keytype = $keytype;
         $ret->keydata = $key;
@@ -162,6 +185,11 @@ class PublicKey extends DBObject
 
     public static function ensure( $userid, $key, $keytype = -1, $created = null )
     {
+        if( $keytype == -1 ) {
+            $keytype = DBConstantPublicKeyType::lookup(DBConstantPublicKeyType::PGP);
+        }
+        self::validateKeyData( $key, $keytype );
+        
         $data = array();
         $data['userid'] = $userid;
         $data['keydata'] = $key;

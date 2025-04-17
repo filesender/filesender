@@ -313,6 +313,7 @@ $(function() {
                             p['pgp_key'] = d;
                             
                             filesender.client.updateUserPreferences(p, function() {
+
                                 filesender.ui.notify('success', lang.tr('preferences_updated'));
                                 filesender.ui.reload();
                             });
@@ -320,14 +321,30 @@ $(function() {
                         } else {
                             console.log(err);
                             if( err.message == "cannot have 2 primary keys" ) {
-                                filesender.ui.alert('error', lang.tr('key_import_must_be_single_key'));
+                                window.setTimeout(function() {
+                                    filesender.ui.alert('error', lang.tr('key_import_must_be_single_key'),
+                                                        function() {
+                                                            filesender.ui.reload();
+                                                        });
+                                }, 100);
+                                
                             } else {
-                                filesender.ui.alert('error', lang.tr('key_import_failed'));
+                                window.setTimeout(function() {
+                                    filesender.ui.alert('error', lang.tr('key_import_failed'),
+                                                        function() {
+                                                            filesender.ui.reload();
+                                                        });
+                                }, 100);
                             }
                         }
                     });
                 } else {
-                    filesender.ui.alert('error', lang.tr('not_a_public_key'));                   
+                    window.setTimeout(function() {
+                        filesender.ui.alert('error', lang.tr('not_a_public_key'),
+                                            function() {
+                                                filesender.ui.reload();
+                                            });
+                    }, 100);
                 }
 	    }
             r.readAsText(f);

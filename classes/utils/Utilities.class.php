@@ -110,6 +110,7 @@ class Utilities
     /**
      * Validates a personal message
      *
+     * This can now throw on a bad input for PGP messages. 
      */
     public static function isValidMessage($msg)
     {
@@ -125,6 +126,18 @@ class Utilities
 
     public static function isValidPGPMessage($msg)
     {
+
+        $rex = '/^(-----BEGIN PGP MESSAGE-----)([\n\r]*).*([a-zA-Z]+:[a-zA-Z 0-9\.\:\/]+[\n\r]*)*([\/a-zA-Z0-9\n\.\:\+\ \=]{63}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{1,64}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{0,64}[\n\r]*)+(-----END PGP MESSAGE-----[\n\r]*)[\n\r]*$/';
+        
+        $msg = filter_var( $msg, FILTER_VALIDATE_REGEXP,
+                           array( "flags" => FILTER_NULL_ON_FAILURE,
+                                  "options" => array("regexp" => $rex ))
+        );
+
+        if( !$msg ) {
+            throw new PKIPGPBadMesageException('');
+        }
+
         return true;
     }
     
