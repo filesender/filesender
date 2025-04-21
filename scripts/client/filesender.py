@@ -642,7 +642,9 @@ def deconstruct_download_link(download_link:str) -> tuple[str, str]:
   components = download_link.split("?")
   assert len(components) == 2
   query_params = {comp.split('=')[0]: comp.split("=")[-1] for comp in components[1].split("&")}
-
+  if "token" not in query_params:
+    print("Error: Unable to find download token in url, please wrap the download string in ' or \" quotes ")
+    sys.exit(1)
   return (components[0], query_params["token"])
 
 def download_transfer(download_link):
