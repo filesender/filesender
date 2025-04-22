@@ -515,21 +515,28 @@ def getFilesInTransfer(transfer_token) -> list[dict]:
     {},
   )
 
-def downloadFile(token,file_info:dict,download_key:bytes|None):
+def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
   """Download a given file to disk."""
-  download_url = base_url.replace("rest.php","download.php")
-  path = file_info['name'].split("/")
-  download_file_name = path[-1]
-  prefix = token
-  if download_folder is not None:
-    prefix = download_folder
-  path = os.path.join(prefix,*path[:-1])
-  Path(path).mkdir(parents=True, exist_ok=True)
-  local_file_path = os.path.join(path, download_file_name)
+  try:
+    if attempt > 10:
+      print("Unable to donwload file.")
+      sys.exit(1)
+    download_url = base_url.replace("rest.php","download.php")
+    path = file_info['name'].split("/")
+    download_file_name = path[-1]
+    prefix = token
+    if download_folder is not None:
+      prefix = download_folder
+    path = os.path.join(prefix,*path[:-1])
+    Path(path).mkdir(parents=True, exist_ok=True)
+    local_file_path = os.path.join(path, download_file_name)
 
-  if file_info["encrypted"]:
-    return _downloadEncryptedFile(token,file_info,download_url,local_file_path,download_key)
-  return _downloadFile(token,file_info,download_url,local_file_path)
+    if file_info["encrypted"]:
+      return _downloadEncryptedFile(token,file_info,download_url,local_file_path,download_key)
+    return _downloadFile(token,file_info,download_url,local_file_path)
+  except Exception as e:
+    print(f"Retrying on file {file_info['name']}")
+    return downloadFile(token,file_info,download_key,attempt+1)
 
 def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
   """save file to disk at local path"""
