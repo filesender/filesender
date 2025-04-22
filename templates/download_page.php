@@ -35,14 +35,6 @@ function presentAVName( $v )
     return Template::Q($ret);
 }
 
-function WrapPGPInPRE( $v )
-{
-    Logger::error("WrapPGPInPRE()  $v " );
-    if( str_starts_with($v,"-----BEGIN PGP MESSAGE-----")) {
-        return "<pre>" . $v . "</pre>";
-    }
-    return $v;
-}
 
 
 $rid = 0;
@@ -181,11 +173,14 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                             <strong>{tr:message}:</strong>
                             <span><?php
                                   $isPGPmsg = false;
-                                  if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                                      $isPGPmsg = true;
+                                  if( filesender.config.pgp_enabled ) {                                      
+                                      if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
+                                          $isPGPmsg = true;
+                                      }
                                   }
                                   
                                   if( $isPGPmsg ) {
+                                      // hide it from here is it is clutter.
                                   } else {
                                       echo Template::replaceTainted($transfer->message);
                                   }
@@ -441,8 +436,10 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <tr><td align="right" class="message">{tr:message}</td><td><p>
                 <?php
                 $isPGPmsg = false;
-                if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                    $isPGPmsg = true;
+                if( filesender.config.pgp_enabled ) {                                      
+                    if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
+                        $isPGPmsg = true;
+                    }
                 }
                 if( $isPGPmsg ) {
                     echo "<PRE>";
