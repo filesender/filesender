@@ -132,6 +132,8 @@ class PublicKey extends DBObject
         // Fill properties from provided data
         if ($data) {
             $this->fillFromDBData($data);
+            self::validateKeyData( $this->keydata, $this->keytype );
+            
             if( $data['created'] ) {
                 $this->created = $data['created'];
             }

@@ -114,8 +114,10 @@ class Utilities
      */
     public static function isValidMessage($msg)
     {
-        if( self::isValidPGPMessage($msg)) {
-            return true;
+        if( Config::isTrue('pgp_enabled')) {
+            if( self::isValidPGPMessage($msg)) {
+                return true;
+            }
         }
         $r = Config::get('message_can_not_contain_urls_regex');
         if (strlen($r) && preg_match('/' . $r . '/', $msg)) {

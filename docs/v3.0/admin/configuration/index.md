@@ -3403,7 +3403,9 @@ able to receive files with FileSender with the pass phrase used for
 encryption being sent to them as a PGP encrypted message. The first
 iteration of this feature is focused on allowing guests to upload
 files to the user who invited them and not have to worry about
-transmitting the passphrase.
+transmitting the passphrase. NOTE: Using the pgp_enabled feature will implicitly
+allow users of the system to lookup the uploaded public key for another user by 
+their email address.
 
 
 
