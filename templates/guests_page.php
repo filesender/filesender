@@ -15,7 +15,7 @@ if(!in_array($section, $sections)) {
 
 $user = Auth::user();
 $pgpkey = null;
-if( Utilities::isTrue(Config::get('pgp_enabled'))) {
+if( Config::isTrue('pgp_enabled')) {
     $pgpkey = $user->pgp_key;
 }
 

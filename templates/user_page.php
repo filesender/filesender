@@ -317,6 +317,10 @@ $user = Auth::user();
             </div>
         </div>
 
+        <?php
+        if( Config::isTrue('pgp_enabled')) {
+        ?>
+
         <div class="row">
             <div class="col-12">
                 <div class="fs-settings__about">
@@ -372,7 +376,11 @@ EOF;
                     </div>
             </div>
             </div>
-        
+
+        <?php
+        } // if(pgp_enabled)
+        ?>
+            
         <?php
         if (Config::get('auth_remote_user_enabled')) {
 
