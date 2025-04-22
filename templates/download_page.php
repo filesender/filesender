@@ -173,7 +173,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                             <strong>{tr:message}:</strong>
                             <span><?php
                                   $isPGPmsg = false;
-                                  if( filesender.config.pgp_enabled ) {                                      
+                                  if( Config::isTrue('pgp_enabled')) {
                                       if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
                                           $isPGPmsg = true;
                                       }
@@ -436,7 +436,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
             <tr><td align="right" class="message">{tr:message}</td><td><p>
                 <?php
                 $isPGPmsg = false;
-                if( filesender.config.pgp_enabled ) {                                      
+                if( Config::isTrue('pgp_enabled')) {
                     if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
                         $isPGPmsg = true;
                     }
