@@ -19,11 +19,13 @@ if( Config::isTrue('pgp_enabled')) {
     $pgpkey = $user->pgp_key;
 }
 $show_pgp_user_profile_message = false;
-foreach(Transfer::availableOptions(false) as $name => $cfg) {
-    Logger::error("AAA1 name $name ");
-    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
-        if( !$pgpkey ) {
-            $show_pgp_user_profile_message = true;
+if( Config::isTrue('pgp_enabled')) {
+    foreach(Transfer::availableOptions(false) as $name => $cfg) {
+        Logger::error("AAA1 name $name ");
+        if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+            if( !$pgpkey ) {
+                $show_pgp_user_profile_message = true;
+            }
         }
     }
 }

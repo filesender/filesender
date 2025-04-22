@@ -581,7 +581,9 @@ if( $pgp_encrypt_passphrase ) {
                                             }
                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
                                                 if( $name == "pgp_encrypt_passphrase_to_email" ) {
-                                                    $cfg['default'] = true;
+                                                    if( $pgp_encrypt_passphrase ) {
+                                                        $cfg['default'] = $guest->transfer_options['pgp_encrypt_passphrase_to_email'];
+                                                    }
                                                 }
                                                 if( !array_key_exists($name,$upload_options_handled)) {
                                                     $displayoption($name, $cfg, Auth::isGuest());

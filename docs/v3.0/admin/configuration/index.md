@@ -3407,6 +3407,20 @@ transmitting the passphrase. NOTE: Using the pgp_enabled feature will implicitly
 allow users of the system to lookup the uploaded public key for another user by 
 their email address.
 
+You will also want to add a stanza like the following to your config.php / transfer_options. In the first 
+version this setting is needed but will be overridden for guest uploads when a user has a public key. That 
+is if there is a public key then guest uploads will always use it regardless of the transfer_options setting.
+
+```
+$config['transfer_options'] = array(
+...
+        'pgp_encrypt_passphrase_to_email' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+...        
+```
 
 
 
