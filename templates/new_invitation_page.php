@@ -13,11 +13,21 @@ if(!in_array($section, $sections)) {
     throw new GUIUnknownAdminSectionException($section);
 }
 
-$user = Auth::user();
 $pgpkey = null;
 if( Config::isTrue('pgp_enabled')) {
+    $user = Auth::user();
     $pgpkey = $user->pgp_key;
 }
+$show_pgp_user_profile_message = false;
+foreach(Transfer::availableOptions(false) as $name => $cfg) {
+    Logger::error("AAA1 name $name ");
+    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+        if( !$pgpkey ) {
+            $show_pgp_user_profile_message = true;
+        }
+    }
+}
+Logger::error("AAA show " . $show_pgp_user_profile_message);
 
 // allow a part of the page to handle a guest option
 // and avoid it being handled a second time by other code
@@ -28,6 +38,7 @@ $new_guests_can_only_send_to_creator = false;
 
 Guest::forcedOptions();
 foreach (Guest::allOptions() as $name => $dfn) {
+    Logger::error("AAA2 name $name ");
     if( $name == 'can_only_send_to_me' ) {
         $new_guests_can_only_send_to_creator_default = $dfn['default'];
         if (in_array('available', $dfn) && !$dfn['available']) {
@@ -309,14 +320,15 @@ use ( $new_guests_can_only_send_to_creator,
             </div>
         </div>
 
-        <?php if($show_pgp_user_profile_message) { ?>
-            <div>
-                <i class="fa fa-info-circle"></i>
-                Note: if you <a href="?s=user">upload your PGP public key</a> you can nominate
-                that the passphrase used by a guest for encryption
-                is randomly generated and a PGP encrypted message
-                be sent to you with that passphrase. When the system knows your PGP
-                public key this option will be shown above.
+        <?php if($show_pgp_user_profile_message) { // so many div shells to get layout. ?>
+            <div class="fs-new-invitation__form">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
+                        <div class="fs-new-invitation__data">
+                            <div><i class="fa fa-info-circle"></i>{tr:pgp_blurb_guests_page}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php } ?>
         

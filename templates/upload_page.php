@@ -193,6 +193,9 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 if( Auth::isGuest() && $pgp_encrypt_passphrase ) {
     $guest = AuthGuest::getGuest();
     $pgpkey = $guest->owner->pgp_key;
+    if( !$guest->owner->pgp_have_key ) {
+        $pgp_encrypt_passphrase = false;
+    }
 }
 $pgp_encrypt_passphrase_add_class = "";
 if( $pgp_encrypt_passphrase ) {
@@ -553,15 +556,7 @@ if( $pgp_encrypt_passphrase ) {
                                                 </label>
                                             </div>
                                             <div class="pgpinfo" id="pgpinfo" >
-                                                <p>
-
-                                                    Note that the password has been encrypted into an email shown above. Only the person who is listed
-                                                    as a recipient and has uploaded a valid public key to the system system should be able to decrypt this email.
-                                                    This allows you to upload a file that is encrypted in the browser and the password to decrypt that is then
-                                                    put into a secure message shown above so that only the recipient can decode the password and then download
-                                                    the files.
-                                                    
-                                                </p>
+                                                <p>{tr:pgp_upload_page_description}</p>
                                             </div>
                                         <?php } ?> <!-- closing if($allow_recipients) -->
                                         <?php if(Auth::isGuest()) { ?>

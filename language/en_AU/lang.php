@@ -884,3 +884,6 @@ $lang['pgp_invalid_key_guest_upload'] = 'The PGP key is invalid. Please contact 
 $lang['pgp_public_key_invalid'] = 'The PGP public key is invalid';
 $lang['key_import_failed'] = 'Failed to import the provided PGP key';
 $lang['not_a_public_key'] = 'The selected file is not a PGP public key';
+$lang['pgp_blurb_guests_page'] = 'Note: if you <a href="?s=user">upload your PGP public key</a> you can nominate that the passphrase used by a guest for encryption is randomly generated and a PGP encrypted message be sent to you with that passphrase. When the system knows your PGP public key this option will be shown above.';
+$lang['pgp_upload_page_description'] = 'Note that the password has been encrypted into an email shown above. Only the person who is listed as a recipient and has uploaded a valid public key to the system system should be able to decrypt this email. This allows you t upload a file that is encrypted in the browser and the password to decrypt that is then put into a secure message shown above so that only the recipient can decode the password and then download the files.';
+

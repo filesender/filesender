@@ -734,6 +734,13 @@ class User extends DBObject
             if( !$k ) return null;
             return $k->created;
         }
+        if (in_array($property, array(
+            'pgp_have_key'
+        ))) {
+            $k = PublicKey::getDefaultForUser($this->id);
+            return $k->have_key;
+        }
+        
         if( $property == 'auth_secret_created_formatted' ) {
             return $this->auth_secret_created ? Utilities::formatDate($this->auth_secret_created,true) : '';
         }

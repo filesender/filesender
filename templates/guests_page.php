@@ -13,9 +13,9 @@ if(!in_array($section, $sections)) {
     throw new GUIUnknownAdminSectionException($section);
 }
 
-$user = Auth::user();
 $pgpkey = null;
 if( Config::isTrue('pgp_enabled')) {
+    $user = Auth::user();
     $pgpkey = $user->pgp_key;
 }
 
@@ -64,6 +64,7 @@ use ( $new_guests_can_only_send_to_creator,
     //
     // If the user does not have a pgp public key then we shouldn't offer
     // for them to force the guest to use PGP encryption
+    // $pgpkey is null if pgp is not able to be used.
     //
     if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$pgpkey ) {
         return;

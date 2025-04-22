@@ -231,6 +231,19 @@ class PublicKey extends DBObject
             return $this->keydata;
         }
         if (in_array($property, array(
+            'have_key'
+        ))) {
+            Logger::error("AAA have_key");
+            try {
+                self::validateKeyData( $this->keydata, $this->keytype );
+            } catch (Exception $e) {
+            Logger::error("AAA have_key 2");
+                return false;
+            }
+            Logger::error("AAA have_key 3");
+            return true;
+        }
+        if (in_array($property, array(
             'id',
             'keydata',
             'keytype',
