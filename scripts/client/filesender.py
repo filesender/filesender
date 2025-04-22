@@ -187,7 +187,7 @@ if not all([apikey, base_url, (username or from_address),arg_files,recipients]) 
   if not arg_files:
     missing_fields.append("[FILE]")
 
-  print(f"Missing required paramter, please provide the following: \n {','.join(missing_fields)}\n or -d --download with a valid download link")
+  print(f"Missing required parameter, please provide the following: \n {','.join(missing_fields)}\n or -d --download with a valid download link")
   sys.exit(1)
 
 #configs
@@ -317,12 +317,12 @@ if encrypted and not download_link:
 
   if encryption_details["password_numbers_required"]:
     if not any(map(lambda x: x.isdigit(),encryption_details["password"])):
-      print("Password does not meet number requirment")
+      print("Password does not meet number requirement")
       exit(1)
 
   if encryption_details["password_special_required"]:
     if all(map(lambda x: x.isalnum(),encryption_details["password"])):
-      print("Password does not meet special character requiremnet")
+      print("Password does not meet special character requirement")
       exit(1)
 
 
@@ -519,7 +519,7 @@ def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
   """Download a given file to disk."""
   try:
     if attempt > 10:
-      print("Unable to donwload file.")
+      print("Unable to download file.")
       sys.exit(1)
     download_url = base_url.replace("rest.php","download.php")
     path = file_info['name'].split("/")
