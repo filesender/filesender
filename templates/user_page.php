@@ -426,12 +426,16 @@ $user = Auth::user();
                                     <?php
                                     }
                                     ?>
-                                            {tr:download_python_cli}
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli}
+                                            </button>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{config:site_url}rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
-                                            {tr:download_python_cli_configuration}
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli_configuration}
+                                            </button>
                                         </a>
                                     </li>
                                 </ul>
