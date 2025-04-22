@@ -2280,7 +2280,8 @@ $(function() {
             pgpenc = false;
         }
     }
-    
+
+    console.log("PGP pgpenc " + pgpenc );
     if( !pgpenc ) {
         // validate message as it is typed
         window.filesender.ui.handleFlagInvalidOnRegexMatch(
@@ -3000,51 +3001,52 @@ $(function() {
         }, 500 );
 
 
-    filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').on('change', function() {
-        var choice = $(this).is(':checked');
-        if( choice ) {
-            
-            if(!filesender.ui.nodes.encryption.toggle.is(':checked')) {
-                filesender.ui.nodes.encryption.toggle.click();
-            }
-            if(!filesender.ui.nodes.encryption.show_hide.is(':checked')) {
-                filesender.ui.nodes.encryption.show_hide.click();
-            }
-            if(!filesender.ui.nodes.encryption.use_generated.is(':checked')) {
-                filesender.ui.nodes.encryption.use_generated.click();
-            }
-            filesender.ui.nodes.encryption.generate.click();
-            if(filesender.ui.nodes.options.get_a_link.is(':checked')) {
-                filesender.ui.nodes.options.get_a_link.click();
-            }
-            filesender.ui.nodes.subject.val('A PGP protected passphrase from FileSender');
+    if( pgpenc ) {
+        filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').on('change', function() {
+            var choice = $(this).is(':checked');
+            if( choice ) {
+                
+                if(!filesender.ui.nodes.encryption.toggle.is(':checked')) {
+                    filesender.ui.nodes.encryption.toggle.click();
+                }
+                if(!filesender.ui.nodes.encryption.show_hide.is(':checked')) {
+                    filesender.ui.nodes.encryption.show_hide.click();
+                }
+                if(!filesender.ui.nodes.encryption.use_generated.is(':checked')) {
+                    filesender.ui.nodes.encryption.use_generated.click();
+                }
+                filesender.ui.nodes.encryption.generate.click();
+                if(filesender.ui.nodes.options.get_a_link.is(':checked')) {
+                    filesender.ui.nodes.options.get_a_link.click();
+                }
+                filesender.ui.nodes.subject.val('A PGP protected passphrase from FileSender');
 
-            filesender.ui.nodes.options.get_a_link.prop('disabled', true);
-            filesender.ui.nodes.encryption.toggle.prop('disabled', true);
-            filesender.ui.nodes.encryption.use_generated.prop('disabled', true);
-            filesender.ui.nodes.form.find('input[name="add_me_to_recipients"]').prop('disabled', true);
-            filesender.ui.nodes.message.prop('disabled', true);
-            filesender.ui.nodes.message.val("This will be updated when you enter a recipient");
-            filesender.ui.nodes.recipients.input.addClass('bad');
+                filesender.ui.nodes.options.get_a_link.prop('disabled', true);
+                filesender.ui.nodes.encryption.toggle.prop('disabled', true);
+                filesender.ui.nodes.encryption.use_generated.prop('disabled', true);
+                filesender.ui.nodes.form.find('input[name="add_me_to_recipients"]').prop('disabled', true);
+                filesender.ui.nodes.message.prop('disabled', true);
+                filesender.ui.nodes.message.val("This will be updated when you enter a recipient");
+                filesender.ui.nodes.recipients.input.addClass('bad');
+                
+            } else {
+                filesender.ui.nodes.options.get_a_link.prop('disabled', false);
+                filesender.ui.nodes.encryption.toggle.prop('disabled', false);
+                filesender.ui.nodes.encryption.use_generated.prop('disabled', false);
+                filesender.ui.nodes.form.find('input[name="add_me_to_recipients"]').prop('disabled', false);
+                filesender.ui.nodes.message.prop('disabled', false);
+                filesender.ui.nodes.subject.val("");
+                filesender.ui.nodes.message.val("");
+            }
             
-        } else {
-            filesender.ui.nodes.options.get_a_link.prop('disabled', false);
-            filesender.ui.nodes.encryption.toggle.prop('disabled', false);
-            filesender.ui.nodes.encryption.use_generated.prop('disabled', false);
-            filesender.ui.nodes.form.find('input[name="add_me_to_recipients"]').prop('disabled', false);
-            filesender.ui.nodes.message.prop('disabled', false);
-            filesender.ui.nodes.subject.val("");
-            filesender.ui.nodes.message.val("");
+        });
+
+
+
+        if(filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').is(':checked')) {
+            filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').trigger('change');
         }
-        
-    });
-
-
-
-    if(filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').is(':checked')) {
-        filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').trigger('change');
     }
-
     
 });
 
