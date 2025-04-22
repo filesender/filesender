@@ -498,7 +498,6 @@ if( $pgp_encrypt_passphrase ) {
                                                            . Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email)
                                                                      . '</div>';
                                                         ?>
-                                                     </div>
 
                                                     </div>
                                                 <?php } else { ?>
