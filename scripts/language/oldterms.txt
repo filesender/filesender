@@ -1,3 +1,4 @@
+PGP
 a_transfer_link
 a_transfer_link_tip
 about
@@ -182,6 +183,7 @@ delete
 delete_current_api_secret
 delete_invitation
 delete_my_account
+delete_my_pgp_keys
 delete_transfer
 delete_transfer_nicely
 delete_transfer_roughly
@@ -419,6 +421,7 @@ is_default
 iterations
 job
 kb_per_second
+key_import_failed
 language
 last_activity
 later
@@ -433,6 +436,7 @@ mac_archive_message
 maintenance
 maintenance_autoresume
 make_default
+mandatory
 max_email_recipients_exceeded
 maximum
 maximum_encrypted_file_size_exceeded
@@ -468,6 +472,8 @@ no_such_property
 no_transfers
 none
 noscript
+not_a_public_key
+not_found
 nothing_happened_as_of_late_you_can_send_client_logs
 number_of_files
 ok
@@ -491,6 +497,11 @@ pause
 paused
 perform_these_actions_on_all_users
 performed
+pgp_blurb_guests_page
+pgp_encrypt_passphrase_to_email
+pgp_invalid_key_guest_upload
+pgp_public_key_invalid
+pgp_upload_page_description
 please_add_file_again
 preferences_updated
 previous
@@ -714,8 +725,12 @@ terasender_worker_count
 terasender_worker_failed_to_start
 terms_text
 terms_title
+test_my_pgp_key
+test_my_pgp_message
+test_pgp_message
 testterm
 text_desc_of_file_count_and_size
+the_system_does_not_know_your_pgp_key
 theme
 theme_info
 then_enter_verification_code_below
@@ -791,6 +806,7 @@ translatable_email_not_found
 translate_email_footer
 translate_to
 turning_on_guests_get_a_link_disables_can_only_send_to_me
+turning_on_guests_pgp_encryption_disables_can_only_send_to_me
 twoeightdays
 ui2_accept_aup_1
 ui2_accept_aup_2
@@ -822,6 +838,7 @@ undergoing_maintenance
 unexpected_file
 unknown_page
 unreadable_file
+upload_a_new_pgp_public_key
 upload_all_terasender_workers_completed_pbkdf2
 upload_complete
 upload_completed
@@ -835,6 +852,7 @@ upload_progressing_again
 upload_stalled_and_resumed
 upload_stalled_due_to_testing
 upload_started
+upload_will_use_pgp_to_share_passphrase
 uploaded
 uploading_transfers
 uploading_your_transfer
@@ -887,6 +905,7 @@ you_can_report_exception
 you_can_report_exception_by_email
 you_can_send_client_logs
 you_generated_this_auth_secret_at
+you_have_a_pgp_public_key_known_to_system
 your_download_link
 your_invitation_was_sent_to
 your_transfer_was_sent
