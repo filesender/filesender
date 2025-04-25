@@ -65,8 +65,9 @@ class DatabaseForeignKey
     protected $reference = null;
     protected $referencecolumns = null;
     protected $fkExists = 0;
+    protected $deleteAction = 'cascade';
     
-    public function __construct($description, $tablename, $indexname, $basecolumns, $reference, $referencecolumns)
+    public function __construct($description, $tablename, $indexname, $basecolumns, $reference, $referencecolumns, $deleteAction = 'cascade')
     {
         $this->description      = $description;
         $this->tablename        = $tablename;
@@ -74,6 +75,7 @@ class DatabaseForeignKey
         $this->basecolumns      = $basecolumns;
         $this->reference        = $reference;
         $this->referencecolumns = $referencecolumns;
+        $this->deleteAction     = $deleteAction;
     }
 
     /**
@@ -117,7 +119,7 @@ class DatabaseForeignKey
         return 'ALTER TABLE '.$this->tablename.' ADD CONSTRAINT '
               .$this->indexname.' FOREIGN KEY (' . $this->basecolumns . ') '
              . ' REFERENCES '.$this->reference.' (' . $this->referencecolumns . ')  '
-             . ' on delete cascade on update restrict ;';
+             . ' on delete ' . $this->deleteAction . ' on update restrict ;';
     }
 
     /**

@@ -35,6 +35,8 @@ function presentAVName( $v )
     return Template::Q($ret);
 }
 
+
+
 $rid = 0;
 if(Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     if(array_key_exists('token', $_REQUEST)) {
@@ -167,9 +169,23 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         </div>
                     <?php } ?>
                     <?php if($transfer->message) { ?>
-                        <div class="fs-info fs-info--aligned">
+                        <div class="fs-info fs-info--aligned top-transfer-message">
                             <strong>{tr:message}:</strong>
-                            <span><?php echo Template::replaceTainted($transfer->message) ?></span>
+                            <span><?php
+                                  $isPGPmsg = false;
+                                  if( Config::isTrue('pgp_enabled')) {
+                                      if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
+                                          $isPGPmsg = true;
+                                      }
+                                  }
+                                  
+                                  if( $isPGPmsg ) {
+                                      // hide it from here is it is clutter.
+                                  } else {
+                                      echo Template::replaceTainted($transfer->message);
+                                  }
+                                  ?>
+                            </span>
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
@@ -417,7 +433,23 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <?php } ?>
 
         <?php if($transfer->message) { ?>
-                        <tr><td align="right" class="message">{tr:message}</td><td><p><?php echo Template::Q($transfer->message) ?></p></td></tr>
+            <tr><td align="right" class="message">{tr:message}</td><td><p>
+                <?php
+                $isPGPmsg = false;
+                if( Config::isTrue('pgp_enabled')) {
+                    if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
+                        $isPGPmsg = true;
+                    }
+                }
+                if( $isPGPmsg ) {
+                    echo "<PRE>";
+                }
+                echo Template::replaceTainted($transfer->message);
+                if( $isPGPmsg ) {
+                    echo "</PRE>";
+                }
+                
+                ?></p></td></tr>
         <?php } ?>
                     </tbody>
                 </table>

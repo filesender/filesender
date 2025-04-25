@@ -868,3 +868,22 @@ $lang['you_generated_this_auth_secret_at'] = 'You generated this auth secret at:
 $lang['your_download_link'] = 'Here\'s your download link';
 $lang['your_invitation_was_sent_to'] = 'Your invitation was sent to';
 $lang['your_transfer_was_sent'] = 'Your transfer was sent to the following email addresses';
+
+$lang['PGP'] = 'PGP';
+$lang['pgp_encrypt_passphrase_to_email'] = 'Use PGP: When uploading, a passphrase will be randomly generated and will be sent to the recipient as a PGP encrypted message. Note that the recipient must have uploaded their public key to the server in order for this feature to work.';
+$lang['delete_my_pgp_keys'] = 'Delete my PGP public key on the system';
+$lang['you_have_a_pgp_public_key_known_to_system'] = 'You have a PGP public key in the system.';
+$lang['the_system_does_not_know_your_pgp_key'] = 'You do not have a PGP public key in the system';
+$lang['test_my_pgp_key'] = 'Send a test email to me encrypted with my PGP key';
+$lang['test_my_pgp_message'] = 'This is an encrypted message generated at {time} on {date}. Have a nice day!';
+$lang['not_found'] = 'Not found';
+$lang['upload_a_new_pgp_public_key'] = 'Upload a new PGP public key';
+$lang['turning_on_guests_pgp_encryption_disables_can_only_send_to_me'] = 'Turning on PGP encryption forces the guest to only be able to send to you.';
+$lang['upload_will_use_pgp_to_share_passphrase'] = '<i class="fa fa-lock"></i> This upload will be encrypted with a randonly generated passphrase. That passphrase will be encrypted with PGP and emailed to the authorized recipient {email}';
+$lang['pgp_invalid_key_guest_upload'] = 'The PGP key is invalid. Please contact the user who invited you to the system.';
+$lang['pgp_public_key_invalid'] = 'The PGP public key is invalid';
+$lang['key_import_failed'] = 'Failed to import the provided PGP key';
+$lang['not_a_public_key'] = 'The selected file is not a PGP public key';
+$lang['pgp_blurb_guests_page'] = 'Note: if you <a href="?s=user">upload your PGP public key</a> you can nominate that the passphrase used by a guest for encryption is randomly generated and a PGP encrypted message be sent to you with that passphrase. When the system knows your PGP public key this option will be shown above.';
+$lang['pgp_upload_page_description'] = 'Note that the password has been encrypted into an email shown above. Only the person who is listed as a recipient and has uploaded a valid public key to the system system should be able to decrypt this email. This allows you t upload a file that is encrypted in the browser and the password to decrypt that is then put into a secure message shown above so that only the recipient can decode the password and then download the files.';
+

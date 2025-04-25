@@ -41,6 +41,7 @@ A note about colours;
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
 * [download_show_download_links](#download_show_download_links)
 * [disclose](#disclose)
+* [pgp_enabled](#pgp_enabled)
 
 
 ## Security settings
@@ -3387,6 +3388,42 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __1.x name:__
 * __comment:__ the parameter needs an array of strings.  Current options include: 'version'
 * __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
+
+
+### pgp_enabled
+
+* __description:__ If set to true then some PGP functionaily to help send the encryption passphrase is enabled.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ - false
+* __available:__ since 3.0rc8
+* __1.x name:__
+* __comment:__ If a user elects to upload their PGP public key then they might be
+able to receive files with FileSender with the pass phrase used for
+encryption being sent to them as a PGP encrypted message. The first
+iteration of this feature is focused on allowing guests to upload
+files to the user who invited them and not have to worry about
+transmitting the passphrase. NOTE: Using the pgp_enabled feature will implicitly
+allow users of the system to lookup the uploaded public key for another user by 
+their email address.
+
+You will also want to add a stanza like the following to your config.php / transfer_options. In the first 
+version this setting is needed but will be overridden for guest uploads when a user has a public key. That 
+is if there is a public key then guest uploads will always use it regardless of the transfer_options setting.
+
+```
+$config['transfer_options'] = array(
+...
+        'pgp_encrypt_passphrase_to_email' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+...        
+```
+
+
+
 
 
 ### disclosed

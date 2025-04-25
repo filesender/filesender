@@ -47,6 +47,10 @@ $packages = array(
         'path' => 'popper.js/dist/umd/popper.min.js',
         'pattern' => '|popperjs/core v([0-9.]+)|m',
     ),    
+    'kbpgp' => array(
+        'path' => 'kbpgp/kbpgp.js',
+        'pattern' => '/version:"([0-9.]+)"/m',
+    ),    
     'promise-polyfill' => array(
         'path' => 'promise-polyfill/polyfill.min.js',
         'pattern' => '/v([0-9.]+)/m',

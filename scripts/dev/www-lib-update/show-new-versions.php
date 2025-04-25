@@ -8,6 +8,7 @@ $packages = array(
     'font-awesome'         => array(),
     'jquery'               => array(),
     'jquery-ui-dist'       => array(),
+    'kbpgp'                => array(),
     '@popperjs/core'       => array(),
     'promise-polyfill'     => array(),
     'streamsaver'          => array(),

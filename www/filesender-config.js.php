@@ -215,6 +215,8 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     ui_use_datepicker_for_guest_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_guest_expire_time_selection')) ?>,
 
     auth_warn_session_expired: <?php echo value_to_TF(Config::get('auth_warn_session_expired')) ?>,
+
+    pgp_enabled: <?php echo value_to_TF(Config::get('pgp_enabled')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

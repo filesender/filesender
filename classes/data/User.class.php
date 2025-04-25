@@ -322,6 +322,31 @@ class User extends DBObject
 //        Logger::info('fromAuthId() found authid ' . $authid . ' at id ' . $id );
         return self::fromId($id);
     }
+
+    
+    public static function fromAuthEmail($email)
+    {
+        $statement = DBI::prepare('SELECT * FROM '.Authentication::getDBTable().' WHERE saml_user_identification_uid = :email');
+        $statement->execute(array(':email' => $email));
+        $data = $statement->fetch();
+
+        if (!$data) {
+            return null;
+        }
+        $id = $data['id'];
+        return self::fromAuthID($id);
+    }
+    
+    public static function findPGPKey($email, $def = null)
+    {
+        $u = self::findAuthEmail($email);
+        $key = $def;
+        if( $u ) {
+            $key = $u->pgp_key;
+        }
+        return $key;
+    }
+    
     
     /**
      * Save user preferences in database
@@ -699,7 +724,23 @@ class User extends DBObject
         ))) {
             return $this->$property;
         }
-
+        if( $property == 'pgp_key' ) {
+            $k = PublicKey::getDefaultForUser($this->id);
+            if( !$k ) return null;
+            return $k->key;
+        }
+        if( $property == 'pgp_key_created' ) {
+            $k = PublicKey::getDefaultForUser($this->id);
+            if( !$k ) return null;
+            return $k->created;
+        }
+        if (in_array($property, array(
+            'pgp_have_key'
+        ))) {
+            $k = PublicKey::getDefaultForUser($this->id);
+            return $k->have_key;
+        }
+        
         if( $property == 'auth_secret_created_formatted' ) {
             return $this->auth_secret_created ? Utilities::formatDate($this->auth_secret_created,true) : '';
         }

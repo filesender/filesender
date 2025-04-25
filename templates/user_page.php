@@ -318,6 +318,70 @@ $user = Auth::user();
         </div>
 
         <?php
+        if( Config::isTrue('pgp_enabled')) {
+        ?>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__about">
+        <?php
+    echo "<h2>".Lang::tr('PGP')."</h2>\n";
+    echo "<div>";
+    $user = Auth::user();
+    $v = $user->pgp_key;
+    if( $v ) {
+        echo "{tr:you_have_a_pgp_public_key_known_to_system}";
+
+        echo <<<EOF
+        <div class="pgpkey" id="pgpkey" hidden="true">$v
+        </div>
+        <div class="pgpkeyinfo" id="pgpkeyinfo">
+          <table>
+          <tr><td>{tr:email_address}</td><td id="pgpkeyinfoemail"></td></tr>
+          <tr><td>{tr:created}</td><td id="pgpkeyinfocreated"></td></tr>
+          </table>
+        </div>
+EOF;
+        
+        echo <<<EOF
+       <ul class="fs-listx">
+       <li>
+           <a  type="button" class="fs-button test_my_pgp_key">
+             <span class="fa fa-lg fa-times"></span>
+             {tr:test_my_pgp_key}
+           </a>
+       </li><li>
+           <a type="button" class="fs-button fs-button--danger delete_my_pgp_key">
+             <span class="fa fa-lg fa-times"></span>
+             {tr:delete_my_pgp_keys}
+           </a>
+       </li></ul>
+EOF;
+        
+    }
+    else
+    {
+        echo "{tr:the_system_does_not_know_your_pgp_key}";
+    }
+    if( !$v ) {
+    echo <<<EOF
+            <div class="form-group upload_new_pgp_public_key">
+                <label for="pgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_pgp_public_key}</label>
+                <input id="pgp_public_key_file" name="pgp_public_key_file" type="file" class="form-control-file" hidden="true" />
+            </div>
+EOF;
+    }
+    echo "</div>";
+        ?>
+                    </div>
+            </div>
+            </div>
+
+        <?php
+        } // if(pgp_enabled)
+        ?>
+            
+        <?php
         if (Config::get('auth_remote_user_enabled')) {
 
         ?>

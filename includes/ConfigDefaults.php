@@ -291,6 +291,7 @@ $default = array(
                                                                 , 'enable_recipient_email_download_complete'
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
                                                                 , 'hide_sender_email', 'popup_on_complete'
+                                                                , 'pgp_encrypt_passphrase_to_email'
     ),
 
     'header_x_frame_options' => 'sameorigin',
@@ -299,6 +300,7 @@ $default = array(
 
     'theme' => '',
     'theme_userpref_enabled' => true,
+    'pgp_enabled' => false,
 
     'user_can_only_view_guest_transfers_shared_with_them' => false,
 

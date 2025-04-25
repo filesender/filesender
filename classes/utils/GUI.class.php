@@ -125,6 +125,12 @@ class GUI
             );
         }
 
+        if( Utilities::isTrue(Config::get('pgp_enabled'))) {
+            array_push( $sources,
+                        'lib/kbpgp/kbpgp.js',
+            );
+        }
+        
         array_push( $sources,
                     'lib/jquery/jquery.min.js',
                     'lib/jquery-ui/jquery-ui.min.js',

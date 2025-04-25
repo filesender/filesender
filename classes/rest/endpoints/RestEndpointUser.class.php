@@ -383,6 +383,21 @@ END;
             $user->transfer_preferences = null;
             $user->save();
         }
+        if( Config::isTrue('pgp_enabled')) {        
+            if( $data->pgp_key ) {
+                $k = PublicKey::ensure( $user->id, $data->pgp_key,
+                                        DBConstantPublicKeyType::lookup(DBConstantPublicKeyType::PGP),
+                                        time());
+                $k->save();
+            }
+            if( $data->pgp_key_delete ) {
+                
+                $keys = PublicKey::allForUser( $user->id );
+                foreach( $keys as $k ) {
+                    $k->delete();
+                }            
+            }
+        }
         if( $data->exists('guest_expiry_default_days')) {
             if (!Auth::isAdmin()) {
                 throw new RestAdminRequiredException();
@@ -471,6 +486,25 @@ END;
             
         }
 
+        if( Config::isTrue('pgp_enabled')) {
+            if ($data->property == 'pgp_key') {
+                $key = $user->findPGPKey( $data->email, '{tr:not_found}' );
+                return array(
+                    'path' => '/user/'.$user->id,
+                    'data' => $key,
+                    'found' => ($key != null) ? true : false
+                );
+            }
+            if( $data->property == 'test_pgp_key' ) {
+                $msg = $data->message;
+                TranslatableEmail::quickSend('test_pgp_message', $user, array('message' => $msg));
+                return array(
+                    'path' => '/user/'.$user->id,
+                    'data' => 'ok'
+                );
+            }
+        }
+        
         
         /////////
         //

@@ -186,7 +186,6 @@ class TranslatableEmail extends DBObject
     public static function create(DBObject $context, $translation_id, $variables)
     {
         $email = new self();
-        
         // Get context (caller)
         $email->context_type = get_class($context);
         $email->context_id = $context->id;
@@ -265,6 +264,10 @@ class TranslatableEmail extends DBObject
                     $context = $to;
                     break;
                 } 
+                if( $translation_id == 'test_pgp_message' ) {
+                    $context = $to;
+                    break;
+                } 
                 
                 // no break
             default:
@@ -318,6 +321,10 @@ class TranslatableEmail extends DBObject
                     break;
                 }
                 if( $translation_id == 'local_authdb_password_reminder' ) {
+                    $context = $to;
+                    break;
+                } 
+                if( $translation_id == 'test_pgp_message' ) {
                     $context = $to;
                     break;
                 } 
