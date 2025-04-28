@@ -197,54 +197,53 @@ max_chunk_retries = 20
 terasender_enabled = False
 max_transfer_files = 30
 
-if base_url != '[base_url]':
-  try:
-    info_response = requests.get(base_url+'/info', verify=True)
-    config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
-  except requests.exceptions.SSLError as exc:
-    if not insecure:
-      print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
-      print(exc)
-      print('For more information, please refer to https://www.digicert.com/ssl/. If you are absolutely certain of the identity of the server you are connecting to, you can use the --insecure flag to bypass this warning. Exiting...')
-      sys.exit(1)
-    elif insecure:
-      print('Warning: Error: the SSL certificate of the server you are connecting to cannot be verified:')
-      print(exc)
-      print('Running with --insecure flag, ignoring warning...')
-      info_response = requests.get(base_url+'/info', verify=False)
-      config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
+try:
+  info_response = requests.get(base_url+'/info', verify=True)
+  config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
+except requests.exceptions.SSLError as exc:
+  if not insecure:
+    print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
+    print(exc)
+    print('For more information, please refer to https://www.digicert.com/ssl/. If you are absolutely certain of the identity of the server you are connecting to, you can use the --insecure flag to bypass this warning. Exiting...')
+    sys.exit(1)
+  elif insecure:
+    print('Warning: Error: the SSL certificate of the server you are connecting to cannot be verified:')
+    print(exc)
+    print('Running with --insecure flag, ignoring warning...')
+    info_response = requests.get(base_url+'/info', verify=False)
+    config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
 
-  upload_chunk_size = int(info_response.json()['upload_chunk_size'])
+upload_chunk_size = int(info_response.json()['upload_chunk_size'])
 
-  try:
-      regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
-      worker_count = int(regex_match.group(1))
-      regex_match = re.search(r"terasender_worker_start_must_complete_within_ms\D*(\d+)",config_response.text)
-      worker_timeout = int(regex_match.group(1)) // 1000
-      regex_match = re.search(r"terasender_worker_max_chunk_retries\D*(\d+)",config_response.text)
-      worker_retries = int(regex_match.group(1))
-      regex_match = re.search(r"terasender_enabled\W*(\w+)",config_response.text)
-      terasender_enabled = regex_match.group(1) == "true"
-      regex_match = re.search(r"max_transfer_files\D*(\d+)",config_response.text)
-      max_transfer_files = int(regex_match.group(1))
-      regex_match =  re.search(r"max_transfer_days_valid\D*(\d+)",config_response.text)
-      max_transfer_days_valid = int(regex_match.group(1))
-      upload_crypted_chunk_size = upload_chunk_size + 32
-  except Exception as e:
-      print("Failed to parse match")
-      print(e)
+try:
+    regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
+    worker_count = int(regex_match.group(1))
+    regex_match = re.search(r"terasender_worker_start_must_complete_within_ms\D*(\d+)",config_response.text)
+    worker_timeout = int(regex_match.group(1)) // 1000
+    regex_match = re.search(r"terasender_worker_max_chunk_retries\D*(\d+)",config_response.text)
+    worker_retries = int(regex_match.group(1))
+    regex_match = re.search(r"terasender_enabled\W*(\w+)",config_response.text)
+    terasender_enabled = regex_match.group(1) == "true"
+    regex_match = re.search(r"max_transfer_files\D*(\d+)",config_response.text)
+    max_transfer_files = int(regex_match.group(1))
+    regex_match =  re.search(r"max_transfer_days_valid\D*(\d+)",config_response.text)
+    max_transfer_days_valid = int(regex_match.group(1))
+    upload_crypted_chunk_size = upload_chunk_size + 32
+except Exception as e:
+    print("Failed to parse match")
+    print(e)
 
 
-  if terasender_enabled:
-    if user_threads:
-      worker_count = min(int(user_threads), worker_count)
-  else:
-    worker_count = 1
+if terasender_enabled:
+  if user_threads:
+    worker_count = min(int(user_threads), worker_count)
+else:
+  worker_count = 1
 
-  if user_timeout:
-    worker_timeout = min(int(user_timeout), worker_timeout)
-  if user_retries:
-    worker_retries  = min(int(user_retries), worker_retries)
+if user_timeout:
+  worker_timeout = min(int(user_timeout), worker_timeout)
+if user_retries:
+  worker_retries  = min(int(user_retries), worker_retries)
 
 if debug:
   print('base_url          : '+base_url)
@@ -362,10 +361,9 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
     signed += inputcontent
 
   #print(signed)
-  if 'token' not in data: #If an auth token is provided we should not sign the call.
-    bkey = bytearray()
-    bkey.extend(map(ord, apikey))
-    data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
+  bkey = bytearray()
+  bkey.extend(map(ord, apikey))
+  data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
     #print("signed: " + str(signed))
   url = base_url+path+'?'+('&'.join(flatten(data)))
   headers = {
@@ -657,8 +655,9 @@ def deconstruct_download_link(download_link:str) -> tuple[str, str]:
 def download_transfer(download_link):
   """Save all files in a given transfer to the local disk."""
   (download_base_url,download_token) = deconstruct_download_link(download_link)
-  globals()["base_url"] = f"{download_base_url}/rest.php"
-
+  if download_base_url not in base_url:
+    print(f"Error: Download requested for non configured filesender instance {download_base_url}. This client is configured for {base_url}")
+    sys.exit(1)
   file_list = getFilesInTransfer(download_token)
   download_size = sum(map(lambda x: x['size'],file_list))
   downloaded_total = 0
@@ -669,9 +668,6 @@ def download_transfer(download_link):
     encryption_details["password"] = encrypted
     encryption_details['salt'] = file_list[0]['key-salt'].encode('ascii')
     encryption_details['password_hash_iterations'] = file_list[0]['password-hash-iterations']
-    info_response = requests.get(base_url+"/info")
-    globals()['upload_chunk_size'] = int(info_response.json()['upload_chunk_size'])
-    globals()['upload_crypted_chunk_size'] = upload_chunk_size + 32
     globals()["encryption_details"] = encryption_details
     download_key = generate_key()
   for file in file_list:
