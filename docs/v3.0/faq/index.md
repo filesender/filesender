@@ -49,7 +49,7 @@ First enable saml20-idp protocal and setup modules:
 
 ### SimpleSAMLphp config/authsources.php
 
-It will be helpfull, to use the admin modul of SimpleSAMLphp to check
+It will be helpfull, to use the admin module of SimpleSAMLphp to check
 new settings during the setup proces. With the activated module "admin"
 you can the login here: https://YOURDOMAIN/simplesaml/module.php/admin/
 
@@ -106,7 +106,7 @@ config/authsources.php. In the below a user 'tester' can login and
 	      ),
 	),
 ```
-Check the federation tab in the SimpleSAMLphp-admin-modul.
+Check the federation tab in the SimpleSAMLphp-admin-module.
 There has to be the hosted entity "example-sp" now. Furthermore in
 the "test" tab you can find the example-userpass auth source for
 testing the credentials. The example-sp will not working yet!
