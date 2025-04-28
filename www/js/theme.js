@@ -101,26 +101,22 @@ filesender.ui.setTheme = function() {
     if (userTheme) {
 
         if (userTheme === THEMES.DARK_THEME && systemTheme && systemTheme === THEMES.DARK_THEME) {
-            selectedTheme = THEMES.DARK_THEME;
+            selectedTheme = THEMES.LIGHT_THEME;
         } else {
             selectedTheme = THEMES.LIGHT_THEME;
         }
 
         filesender.ui.setUserTheme(selectedTheme);
         filesender.ui.nodes.themeSelector.val(selectedTheme);
-        console.log('1');
-        console.log(filesender.ui.nodes.themeSelector);
-        console.log(filesender.ui.nodes.themeSelector.val());
     } else {
         filesender.ui.clearUserTheme();
 
         if (systemTheme && systemTheme === THEMES.DARK_THEME) {
-            selectedTheme = THEMES.DARK_THEME;
+            selectedTheme = THEMES.LIGHT_THEME;
         }
     }
 
     filesender.ui.changeTheme(selectedTheme);
-    console.log(selectedTheme);
 };
 
 filesender.ui.handleThemeChange = function() {
