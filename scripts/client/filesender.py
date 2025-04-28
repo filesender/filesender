@@ -541,7 +541,7 @@ def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
 def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
   """save file to disk at local path"""
 
-  with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True) as download:
+  with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True,verify=(not insecure)) as download:
         download.raise_for_status()
         with open(local_file_path, mode='wb') as f:
             for chunk in download.iter_content(chunk_size=20_000):
@@ -559,7 +559,7 @@ def _downloadEncryptedFile(token,file_info:dict, download_url:str, local_file_pa
       end_offset = min(1 * (chunk_no * upload_chunk_size + (1*upload_crypted_chunk_size)-1),
                        (1*file_info['size']) + 32 - 1)
       download = requests.get(download_url,params={"token":token,"files_ids":file_info['id']},
-                              headers={ "Range": f"bytes={i}-{end_offset}"})
+                              headers={ "Range": f"bytes={i}-{end_offset}"},verify=(not insecure))
       download.raise_for_status()
       f.write(decrypt_chunk(download.content,chunk_no,file_info,download_key))
       chunk_no += 1
