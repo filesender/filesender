@@ -344,29 +344,30 @@ $user = Auth::user();
 EOF;
         
         echo <<<EOF
+       <br>
        <ul class="fs-listx">
        <li>
-           <a  type="button" class="fs-button test_my_pgp_key">
-             <span class="fa fa-lg fa-times"></span>
-             {tr:test_my_pgp_key}
-           </a>
+           <button type="button" class="fs-button test_my_pgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:test_my_pgp_key}</span>
+           </button>
        </li><li>
-           <a type="button" class="fs-button fs-button--danger delete_my_pgp_key">
-             <span class="fa fa-lg fa-times"></span>
-             {tr:delete_my_pgp_keys}
-           </a>
+           <button type="button" class="fs-button fs-button--danger delete_my_pgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:delete_my_pgp_keys}</span>
+           </button>
        </li></ul>
 EOF;
         
     }
     else
     {
-        echo "{tr:the_system_does_not_know_your_pgp_key}";
+        echo "{tr:the_system_does_not_know_your_pgp_key}<br><br>";
     }
     if( !$v ) {
     echo <<<EOF
             <div class="form-group upload_new_pgp_public_key">
-                <label for="pgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_pgp_public_key}</label>
+                <label for="pgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_pgp_public_key}</label><br>
                 <input id="pgp_public_key_file" name="pgp_public_key_file" type="file" class="form-control-file" hidden="true" />
             </div>
 EOF;
