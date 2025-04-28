@@ -214,7 +214,7 @@ if base_url != '[base_url]':
       info_response = requests.get(base_url+'/info', verify=False)
       config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
 
-  upload_chunk_size = info_response.json()['upload_chunk_size']
+  upload_chunk_size = int(info_response.json()['upload_chunk_size'])
 
   try:
       regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
@@ -670,7 +670,7 @@ def download_transfer(download_link):
     encryption_details['salt'] = file_list[0]['key-salt'].encode('ascii')
     encryption_details['password_hash_iterations'] = file_list[0]['password-hash-iterations']
     info_response = requests.get(base_url+"/info")
-    globals()['upload_chunk_size'] = info_response.json()['upload_chunk_size']
+    globals()['upload_chunk_size'] = int(info_response.json()['upload_chunk_size'])
     globals()['upload_crypted_chunk_size'] = upload_chunk_size + 32
     globals()["encryption_details"] = encryption_details
     download_key = generate_key()
