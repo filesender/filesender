@@ -99,9 +99,8 @@ filesender.ui.setTheme = function() {
     const userTheme = filesender.ui.getUserTheme();
 
     if (userTheme) {
-
         if (userTheme === THEMES.DARK_THEME && systemTheme && systemTheme === THEMES.DARK_THEME) {
-            selectedTheme = THEMES.LIGHT_THEME;
+            selectedTheme = THEMES.DARK_THEME;
         } else {
             selectedTheme = THEMES.LIGHT_THEME;
         }
@@ -112,7 +111,7 @@ filesender.ui.setTheme = function() {
         filesender.ui.clearUserTheme();
 
         if (systemTheme && systemTheme === THEMES.DARK_THEME) {
-            selectedTheme = THEMES.LIGHT_THEME;
+            selectedTheme = THEMES.DARK_THEME;
         }
     }
 
