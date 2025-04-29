@@ -1139,6 +1139,7 @@ filesender.ui.evalUploadEnabled = function() {
     }
 
     if (filesender.ui.stage == 3) {
+        configStageOk = configStageOk || filesender.ui.nodes.guest_token.length;
         filesender.ui.nodes.stages.confirm.prop('disabled', !configStageOk);
         if (configStageOk) {
             filesender.ui.nodes.recipients.input.removeClass('invalid');
