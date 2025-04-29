@@ -114,7 +114,7 @@ jobs:
 
 # this fails for mysql jobs when using the cache (jan 2021)
 #    - name: Cache extensions
-#      uses: actions/cache@v2
+#      uses: actions/cache@v4
 #      with:
 #        path: ${{ steps.cachesetupphp.outputs.dir }}
 #        key: ${{ steps.cachesetupphp.outputs.key }}
@@ -133,7 +133,7 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -147,7 +147,7 @@ jobs:
 
 
     - name: Cache SimpleSAML
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       id: cache-simplesaml
       with:
         path: "simplesaml"
