@@ -1033,6 +1033,8 @@ window.filesender.crypto_app = function () {
             encryption_details.aead = {};
             encryption_details.client_entropy_decoded = new Uint8Array(16);
 
+            console.log(encryption_details);
+
             // Should we use streamsaver for this download?
             var use_streamsaver = $this.useStreamSaver();
             window.filesender.log('StreamSaver info. config.allow ' + window.filesender.config.allow_streamsaver

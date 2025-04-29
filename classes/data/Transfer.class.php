@@ -844,6 +844,8 @@ class Transfer extends DBObject
         }
         
         Logger::info($this.' deleted');
+        Logger::logActivity(LogEventTypes::TRANSFER_DELETED, $this);
+        
     }
 
     public function userCanSeeTransfer()

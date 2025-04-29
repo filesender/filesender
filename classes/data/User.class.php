@@ -339,7 +339,7 @@ class User extends DBObject
     
     public static function findPGPKey($email, $def = null)
     {
-        $u = self::findAuthEmail($email);
+        $u = self::fromAuthEmail($email);
         $key = $def;
         if( $u ) {
             $key = $u->pgp_key;
