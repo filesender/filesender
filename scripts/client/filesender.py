@@ -45,6 +45,7 @@ try:
     import os
     import sys
     import json
+    from pathlib import Path
     import configparser
     from os.path import expanduser
     from math import ceil
@@ -98,7 +99,7 @@ parser = argparse.ArgumentParser(
       Example (Config file is present): 
       python filesender.py -r recipient@example.com file1.txt''')
 )
-parser.add_argument("files", help="path to file(s) to send", nargs='+')
+parser.add_argument("files", help="path to file(s) to send", nargs='*',default="")
 parser.add_argument("-v", "--verbose", action="store_true")
 parser.add_argument("-i", "--insecure", action="store_true")
 parser.add_argument("-p", "--progress", action="store_true")
@@ -106,6 +107,8 @@ parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
 parser.add_argument("-e", "--encrypted")
+parser.add_argument("-d", "--download" )
+parser.add_argument("-o","--output_dir" )
 parser.add_argument("--days", type=int)
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
@@ -115,25 +118,25 @@ requiredNamed = parser.add_argument_group('required named arguments')
 
 # if we have found these in the config file they become optional arguments
 if username is None:
-  requiredNamed.add_argument("-u", "--username", required=True)
+  requiredNamed.add_argument("-u", "--username")
 else:
   parser.add_argument("-u", "--username")
   
 if apikey is None:
-  requiredNamed.add_argument("-a", "--apikey", required=True)
+  requiredNamed.add_argument("-a", "--apikey")
 else:
   parser.add_argument("-a", "--apikey")
   
-requiredNamed.add_argument("-r", "--recipients", required=True)
+requiredNamed.add_argument("-r", "--recipients", default="")
 
 if base_url == "[base_url]":
-  requiredNamed.add_argument("-b", "--base_url", required=True)
+  requiredNamed.add_argument("-b", "--base_url")
 else:
   parser.add_argument("-b", "--base_url")
 
 # if username is not a valid email address then ensure user supplies a valid email address
 if username is None or not bool(re.match(r"([^@|\s]+@[^@]+\.[^@|\s]+)", username)):
-  requiredNamed.add_argument("-f", "--from_address", help="filesender email from address", required=True)
+  requiredNamed.add_argument("-f", "--from_address", help="filesender email from address")
 
 args = parser.parse_args()
 debug = args.verbose
@@ -145,6 +148,10 @@ user_timeout = args.timeout
 user_retries = args.retries
 encrypted = args.encrypted
 transfer_timeout = args.days
+download_link = args.download
+download_folder = args.output_dir
+recipients = args.recipients
+arg_files = args.files
 
 if args.username is not None:
   username = args.username
@@ -167,7 +174,29 @@ from_address = username
 if hasattr(args, 'from_address'):
   from_address = args.from_address
 
+if not all([apikey, base_url, (username or from_address),arg_files,recipients]) and not download_link:
+  missing_fields:list[str] = []
+  if not apikey:
+    missing_fields.append("-a, --api-key")
+  if not base_url:
+    missing_fields.append("-b, --base_url")
+  if not username:
+    missing_fields.append("-u, --username")
+  if not recipients:
+    missing_fields.append("-r, --recipients")
+  if not arg_files:
+    missing_fields.append("[FILE]")
+
+  print(f"Missing required parameter, please provide the following: \n {','.join(missing_fields)}\n or -d --download with a valid download link")
+  sys.exit(1)
+
 #configs
+worker_count = 4
+worker_timeout = 180
+max_chunk_retries = 20
+terasender_enabled = False
+max_transfer_files = 30
+
 try:
   info_response = requests.get(base_url+'/info', verify=True)
   config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
@@ -184,7 +213,7 @@ except requests.exceptions.SSLError as exc:
     info_response = requests.get(base_url+'/info', verify=False)
     config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
 
-upload_chunk_size = info_response.json()['upload_chunk_size']
+upload_chunk_size = int(info_response.json()['upload_chunk_size'])
 
 try:
     regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
@@ -199,14 +228,11 @@ try:
     max_transfer_files = int(regex_match.group(1))
     regex_match =  re.search(r"max_transfer_days_valid\D*(\d+)",config_response.text)
     max_transfer_days_valid = int(regex_match.group(1))
+    upload_crypted_chunk_size = upload_chunk_size + 32
 except Exception as e:
     print("Failed to parse match")
     print(e)
-    worker_count = 4
-    worker_timeout = 180
-    max_chunk_retries = 20
-    terasender_enabled = False
-    max_transfer_files = 30
+
 
 if terasender_enabled:
   if user_threads:
@@ -224,8 +250,8 @@ if debug:
   print('username          : '+username)
   print('apikey            : '+apikey)
   print('upload_chunk_size : '+str(upload_chunk_size)+' bytes')
-  print('recipients        : '+args.recipients)
-  print('files             : '+','.join(args.files))
+  print('recipients        : '+recipients)
+  print('files             : '+','.join(arg_files))
   print('insecure          : '+str(insecure))
 
 
@@ -241,7 +267,7 @@ class SupportedHashTypes(Enum):
   SHA256 = "SHA-256"
 
 
-if encrypted:
+if encrypted and not download_link:
   if not encryption_supported:
     print("Failed to import 'cryptography' library, cannot proceed with encrypted transfer.")
     print("\npip3 install cryptography")
@@ -290,12 +316,12 @@ if encrypted:
 
   if encryption_details["password_numbers_required"]:
     if not any(map(lambda x: x.isdigit(),encryption_details["password"])):
-      print("Password does not meet number requirment")
+      print("Password does not meet number requirement")
       exit(1)
 
   if encryption_details["password_special_required"]:
     if all(map(lambda x: x.isalnum(),encryption_details["password"])):
-      print("Password does not meet special character requiremnet")
+      print("Password does not meet special character requirement")
       exit(1)
 
 
@@ -309,7 +335,7 @@ def flatten(d, parent_key=''):
     new_key = parent_key + '[' + k + ']' if parent_key else k
     if isinstance(v, MutableMapping):
       items.extend(flatten(v, new_key).items())
-    else:
+    elif v is not None:
       items.append(new_key+'='+v)
   items.sort()
   return items
@@ -338,7 +364,7 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
   bkey = bytearray()
   bkey.extend(map(ord, apikey))
   data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
-  #print("signed: " + str(signed))
+    #print("signed: " + str(signed))
   url = base_url+path+'?'+('&'.join(flatten(data)))
   headers = {
     "Accept": "application/json",
@@ -477,6 +503,65 @@ def deleteTransfer(transfer):
     {}
   )
 
+def getFilesInTransfer(transfer_token) -> list[dict]:
+  "Fetch the list of file information in a given transfer"
+  return call(
+    'get'
+    ,'/transfer/fileidsextended',
+    {'token':transfer_token},
+    None,None,
+    {},
+  )
+
+def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
+  """Download a given file to disk."""
+  try:
+    if attempt > 10:
+      print("Unable to download file.")
+      sys.exit(1)
+    download_url = base_url.replace("rest.php","download.php")
+    path = file_info['name'].split("/")
+    download_file_name = path[-1]
+    prefix = token
+    if download_folder is not None:
+      prefix = download_folder
+    path = os.path.join(prefix,*path[:-1])
+    Path(path).mkdir(parents=True, exist_ok=True)
+    local_file_path = os.path.join(path, download_file_name)
+
+    if file_info["encrypted"]:
+      return _downloadEncryptedFile(token,file_info,download_url,local_file_path,download_key)
+    return _downloadFile(token,file_info,download_url,local_file_path)
+  except Exception as e:
+    print(f"Retrying on file {file_info['name']}")
+    return downloadFile(token,file_info,download_key,attempt+1)
+
+def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
+  """save file to disk at local path"""
+
+  with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True,verify=(not insecure)) as download:
+        download.raise_for_status()
+        with open(local_file_path, mode='wb') as f:
+            for chunk in download.iter_content(chunk_size=20_000):
+                f.write(chunk)
+
+def _downloadEncryptedFile(token,file_info:dict, download_url:str, local_file_path:str,download_key:bytes):
+  """Internal tool to download encrypted file, should be used via downloadFile"""
+  chunk_no = 0
+  # calculation taken from crypto_app.js, the end overlaps with the start of the next range
+  # because it uses the non encrypted byte ranges but requets the full crypted chunk size.
+  # var endoffset   = 1 * (chunkid * chunksz + (1*$this.upload_crypted_chunk_size)-1);
+
+  with open(local_file_path, mode='wb') as f:
+    for i in range(0,file_info['size'],upload_chunk_size):
+      end_offset = min(1 * (chunk_no * upload_chunk_size + (1*upload_crypted_chunk_size)-1),
+                       (1*file_info['size']) + 32 - 1)
+      download = requests.get(download_url,params={"token":token,"files_ids":file_info['id']},
+                              headers={ "Range": f"bytes={i}-{end_offset}"},verify=(not insecure))
+      download.raise_for_status()
+      f.write(decrypt_chunk(download.content,chunk_no,file_info,download_key))
+      chunk_no += 1
+
 def postGuest(user_id, recipient, subject=None, message=None, expires=None, options=[]):
 
   if expires is None:
@@ -529,6 +614,18 @@ def generate_key():
         256 // 8
     )
 
+def decrypt_chunk(chunk:bytes,chunk_no:int,file_info:dict,key:bytes):
+  """Returns a non-encrypted chunk for the file"""
+
+  if file_info['key-version'] != 3:
+    raise NotImplementedError("Only AES-GCM is currently supported.")
+  
+  cipher = AESGCM(key)
+
+  aead = base64.b64decode(file_info['fileaead'])
+  iv = base64.b64decode(file_info['fileiv']) + chunk_no.to_bytes(4, byteorder="little")
+  return cipher.decrypt(iv,chunk[len(iv):],aead)
+
 def encrypt_chunk(data,chunkid,fileKey):
   if encryption_details["crypt_type"] == SupportedCryptTypes.AESGCM:
     return encrypt_chunk_aesgcm(data,chunkid,fileKey)
@@ -544,10 +641,54 @@ def encrypt_chunk_aesgcm(data,chunkid,files_key):
   cipher_text = cipher.encrypt(fulliv,data,aead)
   return fulliv + cipher_text
 
+def deconstruct_download_link(download_link:str) -> tuple[str, str]:
+  """Return the base path and access token from a provided download link"""
+
+  components = download_link.split("?")
+  assert len(components) == 2
+  query_params = {comp.split('=')[0]: comp.split("=")[-1] for comp in components[1].split("&")}
+  if "token" not in query_params:
+    print("Error: Unable to find download token in url, please wrap the download string in ' or \" quotes ")
+    sys.exit(1)
+  return (components[0], query_params["token"])
+
+def download_transfer(download_link):
+  """Save all files in a given transfer to the local disk."""
+  (download_base_url,download_token) = deconstruct_download_link(download_link)
+  if download_base_url not in base_url:
+    print(f"Error: Download requested for non configured filesender instance {download_base_url}. This client is configured for {base_url}")
+    sys.exit(1)
+  file_list = getFilesInTransfer(download_token)
+  download_size = sum(map(lambda x: x['size'],file_list))
+  downloaded_total = 0
+  download_key = None
+  if file_list[0]['encrypted']:
+    encryption_details = {}
+    encryption_details["hash_name"] = SupportedHashTypes("SHA-256")
+    encryption_details["password"] = encrypted
+    encryption_details['salt'] = file_list[0]['key-salt'].encode('ascii')
+    encryption_details['password_hash_iterations'] = file_list[0]['password-hash-iterations']
+    globals()["encryption_details"] = encryption_details
+    download_key = generate_key()
+  for file in file_list:
+    if progress:
+      print(f"Downloading: {file['name']}")
+    downloadFile(download_token,file, download_key)
+    if progress:
+      downloaded_total += file['size']
+      print(f"Complete: {file['name']}")
+      print(f"Total transfer {round((downloaded_total/download_size)*100)}% complete")
+  return
+
+
 
 ##########################################################################
 
 #postTransfer
+if download_link:
+  download_transfer(download_link)
+  exit(0)
+
 if debug:
   print('postTransfer')
 
@@ -556,11 +697,11 @@ if transfer_timeout is not None:
   transfer_timeout = round(time.time()) + (transfer_timeout*24*3600)
 
 if guest:
-  print('creating new guest ' + args.recipients)
+  print('creating new guest ' + recipients)
   troptions = {'get_a_link':0}
  
   r = postGuest( username,
-                 args.recipients,
+                 recipients,
                  subject=args.subject,
                  message=args.message,
                  expires=transfer_timeout,
@@ -569,12 +710,12 @@ if guest:
 
 fileList = []
 i = 0
-while i < len(args.files):
-  fn_abs = os.path.abspath(args.files[i])
+while i < len(arg_files):
+  fn_abs = os.path.abspath(arg_files[i])
   if(os.path.isdir(fn_abs)):
-    args.files.extend(
+    arg_files.extend(
       map(lambda s: fn_abs+os.sep+s,
-        os.listdir(args.files[i])))
+        os.listdir(arg_files[i])))
   else:
     fileList.append(fn_abs)
     if (len(fileList) > max_transfer_files):
@@ -633,7 +774,7 @@ release_list(fileList) # don't need it anymore
 troptions = {'get_a_link':0}
 transfer = postTransfer( username,
                          filesTransfer,
-                         args.recipients,
+                         recipients,
                          subject=args.subject,
                          message=args.message,
                          expires=transfer_timeout,
