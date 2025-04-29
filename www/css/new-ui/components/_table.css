@@ -51,6 +51,12 @@
   padding: 0;
 }
 
+
+table.files .downloadprogress {
+    margin-left: 1em;
+}
+
+
 /* XS,SM,MD */
 @media (max-width: 991px) {
   .fs-table {
