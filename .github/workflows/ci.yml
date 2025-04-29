@@ -176,7 +176,7 @@ jobs:
         POSTGRES_PORT: 5432
 
     - uses: saucelabs/sauce-connect-action@v1.1.2
-      if: ${{ env.TESTSUITE == 'selenium' }}
+      if: ${{ env.TESTSUITE == 'seleniumDISABLED' }}
       with:
         username: ${{ secrets.SAUCE_USERNAME }}
         accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
