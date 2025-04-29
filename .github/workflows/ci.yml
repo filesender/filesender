@@ -77,7 +77,7 @@ jobs:
           --health-retries 5
 
       mariadb:
-        image: mariadb:10.2
+        image: mariadb:latest
         ports:
           - 3306:3306
         env:
