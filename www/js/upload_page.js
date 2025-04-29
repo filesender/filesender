@@ -980,18 +980,30 @@ filesender.ui.recipients = {
         filesender.ui.evalUploadEnabled();
 
         filesender.client.getPGPPublicKey( email, function(loc,data) {
-            console.log("AAA" );
-            console.log(data );            
             var pgpkey = data;
-            
-            filesender.ui.confirm(lang.tr('confirm_use_pgp_to_send_passphrase'),
-                                  function() { // ok
-                                      filesender.ui.transfer.recipients_publickeys.set(email, pgpkey );
-                                      updateForPGPTransferOfPassphrase();
-                                      self.updatePGPInfo( email, pgpkey );
-                                  },
-                                  function() { // cancel
-                                  });
+            if( pgpkey ) {
+
+	        kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	            if (!err) {
+		        console.log("Key loaded... asking if the user wants to use it");
+
+                        filesender.ui.confirm(
+                            lang.tr('confirm_use_pgp_to_send_passphrase'),
+                            function() { // ok
+                                filesender.ui.transfer.recipients_publickeys.set(email, pgpkey );
+                                updateForPGPTransferOfPassphrase();
+                                self.updatePGPInfo( email, pgpkey );
+                            },
+                            function() { // cancel
+                            });
+                        
+                    } else {
+                        console.log("Key load FAILED...");
+                        window.filesender.notification.notify( lang.tr('pgp_public_key_invalid'));
+                    }
+                });
+                
+            }
             
         });
         
