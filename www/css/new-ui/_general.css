@@ -19,9 +19,13 @@ main {
 }
 
 main .core {
-  background: var(--fs-white);
-  border: 1px solid var(--fs-gray-200);
+  background: var(--fs-bg-color);
   border-radius: var(--fs-spacing-base);
+}
+
+main .logon_page {
+  text-align: center;
+  padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
 }
 
 hr {

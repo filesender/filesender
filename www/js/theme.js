@@ -99,7 +99,6 @@ filesender.ui.setTheme = function() {
     const userTheme = filesender.ui.getUserTheme();
 
     if (userTheme) {
-
         if (userTheme === THEMES.DARK_THEME && systemTheme && systemTheme === THEMES.DARK_THEME) {
             selectedTheme = THEMES.DARK_THEME;
         } else {
@@ -108,9 +107,6 @@ filesender.ui.setTheme = function() {
 
         filesender.ui.setUserTheme(selectedTheme);
         filesender.ui.nodes.themeSelector.val(selectedTheme);
-        console.log('1');
-        console.log(filesender.ui.nodes.themeSelector);
-        console.log(filesender.ui.nodes.themeSelector.val());
     } else {
         filesender.ui.clearUserTheme();
 
@@ -120,7 +116,6 @@ filesender.ui.setTheme = function() {
     }
 
     filesender.ui.changeTheme(selectedTheme);
-    console.log(selectedTheme);
 };
 
 filesender.ui.handleThemeChange = function() {
