@@ -49,7 +49,6 @@ If you want to add your FileSender installation to this list use one of the foll
 
 | Country/Region | Organisation  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
-| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014| 3 May 2024 |
 | Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021| 25 Apr 2025 |
 | Cyprus  | University of Cyprus | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| 25 Apr 2025 |
 | Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://filesender.hifis.dkfz.de/](https://filesender.hifis.dkfz.de/) | Aug 2023| 25 Apr 2025 |
@@ -64,11 +63,9 @@ If you want to add your FileSender installation to this list use one of the foll
 | --- | --- | --- |---|---|
 | Asia Pacific  | APAN  | [https://apacfilesender.asia/](https://apacfilesender.asia/)   | Jul 2024 | 25 Apr 2025 |
 | Australia  | AARNet  | [https://filesender.aarnet.edu.au/](https://filesender.aarnet.edu.au/)    | 2009 | 25 Apr 2025 |
-| Bangladesh  | BdREN  | [https://filesender.bdren.net.bd/](https://filesender.bdren.net.bd/)    | Apr 2024 | 3 May 2024 |
 | Japan | NII/GakuNin | [https://filesender.nii.ac.jp/](https://filesender.nii.ac.jp/) | Oct 2017| 25 Apr 2025 |
 | Korea    | KISTI  | [https://filesender.kreonet.net](https://filesender.kreonet.net)    | Mar 2014| 25 Apr 2025, version 1.x |
 | Kyrgyzstan | KRENA | [https://filesender.kif.kg/](https://filesender.kif.kg/) | Sep 2024 | 25 Apr 2025 |
-| Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017| 8 May 2024 |
 | New Zealand  | REANNZ  | [https://filesender.reannz.co.nz](https://filesender.reannz.co.nz)    | Aug 2024 | 25 Apr 2025 |
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016| 25 Apr 2025 |
 
@@ -94,13 +91,13 @@ If you want to add your FileSender installation to this list use one of the foll
 
 | Country/Region | NREN/Organisation  | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
-| South and East Africa | UbuntuNet Alliance | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | Mar 2018| 25 Apr 2025 |
+| East and South Africa | UbuntuNet Alliance | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | Mar 2018| 25 Apr 2025 |
 | Ethiopia | EthERNet | [https://filesender.ethernet.edu.et/](https://filesender.ethernet.edu.et/) | Oct 2023 | 25 Apr 2025 |
 | Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 | 25 Apr 2025 |
-| Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015| 3 May 2024 |
+| Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015| 30 Apr 2025 |
 | Somalia | SomaliREN | [https://filesender.somaliren.org.so/filesender/](https://filesender.somaliren.org.so/filesender/) | May 2022 | 25 Apr 2025 |
 | South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014| 25 Apr 2025 |
-| Tanzania  | TERNET | [https://filesender.ternet.or.tz/](https://filesender.ternet.or.tz/) | Apr 2025 | 25 Apr 2025 |
+| Tanzania  | TERNET | [https://filesender.ternet.or.tz/](https://filesender.ternet.or.tz/) | May 2023 | 25 Apr 2025 |
 | Uganda | RENU | [https://filesender.renu.ac.ug/](https://filesender.renu.ac.ug/) | Mar 2018| 25 Apr 2025 |
 
 ## Known installs in other communities
@@ -117,8 +114,10 @@ If you want to add your FileSender installation to this list use one of the foll
 | --- | --- | --- |---|---|
 | Armenia  | ASNET-AM  | [https://filesender.asnet.am/filesender/](https://filesender.asnet.am/filesender/)  | Feb 2016| 25 Apr 2025 - unreachable |
 | Australia | BarNet - Legal sector ISP | [https://filesender.barnet.com.au/](https://filesender.barnet.com.au/) | Mar 2018 | 25 Apr 2025 - unreachable |
+| Bangladesh  | BdREN  | [https://filesender.bdren.net.bd/](https://filesender.bdren.net.bd/)    | Apr 2024 | 30 Apr 2025 - unreachable |
+| Malaysia  | MYREN    | [https://filesender.myren.net.my](https://filesender.myren.net.my)    | Oct 2017| 30 Apr 2025 - unreachable |
 | Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013| 25 Apr 2025 - unreachable |
-| Russian Federation | RUNNet |  [https://filesender.runnet.ru/](https://filesender.runnet.ru/) | Mar 2018| 25 Apr 2025 - unreachable |
+| Russian Federation | RUNNet | [https://filesender.runnet.ru/](https://filesender.runnet.ru/) | Mar 2018| 25 Apr 2025 - unreachable |
 | Spain/Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| 25 Apr 2025 - unreachable |
 
 ## Verified decommissioned installations
@@ -126,6 +125,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Country/Region| Organisation | Service URL | Known since | Last checked |
 | --- | --- | --- |---|---|
 | Europe	| GÉANT | [https://filesender.geant.org/](https://filesender.geant.org/)	| Sep 2010	| Oct 2024 - unreachable |
+| Austria  | Institute for Advanced Studies  | [https://filesender.ihs.ac.at](https://filesender.ihs.ac.at)  | Jan 2014| Apr 2025 - unreachable |
 | Lithuania  | Aleksandras Stulginskis University  | [https://filesender.asu.lt](https://filesender.asu.lt)  | Feb 2012| May 2024 - unreachable |
 | UK/Kent  | GOETEC  | [https://send.goetec.ac.uk](https://send.goetec.ac.uk)      | Aug 2014| May 2024 - unreachable |
 | USA    | Internet2  | [https://filesender.internet2.edu/](https://filesender.internet2.edu/)    | Jul 2012| Nov 2020 - unreachable |
