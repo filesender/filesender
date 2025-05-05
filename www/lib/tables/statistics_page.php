@@ -16,7 +16,9 @@ $topic = Utilities::filter_regex( $topic, Utilities::FILTER_REGEX_PLAIN_STRING_U
 if( !$topic || $topic == '' ) {
     Logger::haltWithErorr('nefarious activity suspected: attempt made on statistics_page without valid topic!');
 }
-$start = Utilities::arrayKeyOrDefault( $_GET, 'start', 0, FILTER_VALIDATE_INT  );
+$start = Utilities::arrayKeyOrDefault( $_GET, 'start', 0, FILTER_VALIDATE_INT );
+$sort = Utilities::arrayKeyOrDefault( $_GET, 'sort', '' );
+$sortdirection = Utilities::arrayKeyOrDefault( $_GET, 'sortdirection', FILTER_VALIDATE_INT ) ? 'DESC' : 'ASC';
 
 function os_name_to_html( $v ) {
     if( $v == 'iPad'   )  return '<i class="fa fa-apple"></i> iPad';
@@ -53,12 +55,14 @@ function is_encrypted_to_html( $v ) {
 
 switch ($topic) {
     case 'top_users':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,['User','Transfers','Size','Downloads']))
+            $sort='User';
+        echo '<tr sort="'.$sort.'"><th sort="User">'.Lang::translate('admin_users_section').'</th><th sort="Transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="Size">'.Lang::translate('size').'</th><th sort="Downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  t.user_email as "User", '
            .'  COUNT(DISTINCT t.id) AS "Transfers", '
-          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
+           . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
@@ -76,7 +80,8 @@ switch ($topic) {
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
                                                         ."    AND t.status = 'available' "
-            .' GROUP BY t.user_email      '
+           .' GROUP BY t.user_email      '
+           .' ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -99,7 +104,9 @@ switch ($topic) {
         break;
 
     case 'transfer_per_user':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,['User','Transfers','Size','Downloads']))
+            $sort='User';
+        echo '<tr sort="'.$sort.'"><th sort="User">'.Lang::translate('admin_users_section').'</th><th sort="Transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="Size">'.Lang::translate('size').'</th><th sort="Downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  t.user_email as "User", '
@@ -121,7 +128,8 @@ switch ($topic) {
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-            .' GROUP BY t.user_email         '
+           .' GROUP BY t.user_email         '
+           .' ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -144,7 +152,9 @@ switch ($topic) {
         break;
 
     case 'mime_types':
-        echo '<tr><th>'.Lang::translate('mime_types').'</th><th></th></tr>'."\n";
+        if (!in_array($sort,['mime_type','total']))
+            $sort='total';
+        echo '<tr sort="'.$sort.'"><th sort="mime_type">'.Lang::translate('mime_types').'</th><th sort="total">'.Lang::translate('count').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  f.mime_type as mime_type, count(f.mime_type) as total '
@@ -164,7 +174,7 @@ switch ($topic) {
            .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
-           .'ORDER BY Total DESC '
+           .'ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -187,7 +197,9 @@ switch ($topic) {
         break;
 
     case 'users_with_api_keys':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('date').'</th></tr>'."\n";
+        if (!in_array($sort,['User','Date']))
+            $sort='Date';
+        echo '<tr sort="'.$sort.'"><th sort="User">'.Lang::translate('admin_users_section').'</th><th sort="Date">'.Lang::translate('date').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  a.saml_user_identification_uid as "User", '
@@ -201,7 +213,7 @@ switch ($topic) {
              :
              'AND a.saml_user_identification_idp = :idp '
            )
-           .'ORDER BY "Date" DESC '
+           .'ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start
         ;
