@@ -25,6 +25,7 @@
    *
    * @param  string $format Date format
    * @param  integer|string|DateTime $timestamp Timestamp
+   * @param  string|null $locale locale
    * @return string
    * @author BohwaZ <https://bohwaz.net/>
    */
@@ -37,9 +38,9 @@
       } catch (Exception $e) {
         throw new InvalidArgumentException('$timestamp argument is neither a valid UNIX timestamp, a valid date-time string or a DateTime object.', 0, $e);
       }
-    }
 
-    $timestamp->setTimezone(new DateTimeZone(date_default_timezone_get()));
+      $timestamp->setTimezone(new DateTimeZone(date_default_timezone_get()));
+    }
 
     $locale = Locale::canonicalize($locale ?? (Locale::getDefault() ?? setlocale(LC_TIME, '0')));
 

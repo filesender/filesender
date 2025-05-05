@@ -110,13 +110,39 @@ class Utilities
     /**
      * Validates a personal message
      *
+     * This can now throw on a bad input for PGP messages. 
      */
     public static function isValidMessage($msg)
     {
+        if( Config::isTrue('pgp_enabled')) {
+            if( self::isValidPGPMessage($msg)) {
+                return true;
+            }
+        }
         $r = Config::get('message_can_not_contain_urls_regex');
         if (strlen($r) && preg_match('/' . $r . '/', $msg)) {
             return false;
         }
+        return true;
+    }
+
+    public static function isValidPGPMessage($msg)
+    {
+        $originalmsg = $msg;
+        
+        $rex = '/^(-----BEGIN PGP MESSAGE-----)([\n\r]*).*([a-zA-Z]+:[a-zA-Z 0-9\.\:\/]+[\n\r]*)*([\/a-zA-Z0-9\n\.\:\+\ \=]{63}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{1,64}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{0,64}[\n\r]*)+(-----END PGP MESSAGE-----[\n\r]*)[\n\r]*$/';
+        
+        $msg = filter_var( $msg, FILTER_VALIDATE_REGEXP,
+                           array( "flags" => FILTER_NULL_ON_FAILURE,
+                                  "options" => array("regexp" => $rex ))
+        );
+
+        if( !$msg ) {
+            if( str_starts_with( $originalmsg, "-----BEGIN PGP MESSAGE-----")) {
+                throw new PKIPGPBadMesageException('');
+            }
+        }
+
         return true;
     }
     
@@ -708,6 +734,45 @@ class Utilities
         $r = filter_var($r, $filter, $options);
         return $r;
     }
+    /**
+     * Calls arrayKeyOrDefault for a string. As the filtering for a string might change over time
+     * this one call is created if you want a general purpose string that you might then
+     * call filter_regex on after this call.
+     */
+    public static function arrayKeyOrDefaultString($array, $key, $def = '' )
+    {        
+        return self::arrayKeyOrDefault($array,$key,$def,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
+    
+    /**
+     * Call filter_var with the supplied default value and regular expression
+     * 
+     * @param string v the value to filter
+     * @param string rex to match against. See FILTER_REGEX constants in this class for one
+     * that might work. Feel free to add more of those constants to make it easier to maintain
+     * things and audit in the future. NOTE that an empty, invalid, or null rex value is a terminal
+     * case and control may not return from the function in those cases.
+     * 
+     * @param string def default value if filter fails
+     */
+    public static function filter_regex( $v, $rex, $def = '' )
+    {
+        if( !$rex || $rex == '' ) {
+            Logger::haltWithErorr('filter_regex called without a valid regex. This should never happen');           
+        }
+
+        
+        $r = filter_var($v, FILTER_VALIDATE_REGEXP,
+                        array( 'options' => array('default' => $def,
+                                                  'regexp' => $rex,
+                        )));
+        return $r;
+    }
+    const FILTER_REGEX_PLAIN_STRING = '/^[A-Za-z]+$/';
+    const FILTER_REGEX_PLAIN_STRING_OR_NUMBER = '/^[A-Za-z0-9]+$/';
+    const FILTER_REGEX_PLAIN_STRING_UNDERSCORE = '/^[A-Za-z_]+$/';
+    
 
     /**
      * true if $v is array( array( ... ) )

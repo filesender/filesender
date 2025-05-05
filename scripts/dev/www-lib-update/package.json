@@ -9,18 +9,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@popperjs/core": "^2.11.5",
+    "@popperjs/core": "^2.11.8",
     "bootbox": "^6.0.0",
-    "bootstrap": "^5.2.3",
+    "bootstrap": "^5.3.3",
     "flag-icons": "^6.4.2",     
-    "chart.js": "^4.4.2",
+    "chart.js": "^4.4.8",
     "font-awesome": "^4.7.0",
     "jquery": "^3.7.1",
-    "jquery-ui-dist": "^1.13.2",
+    "jquery-ui-dist": "^1.13.3",
+    "kbpgp": "^2.1.15",
     "promise-polyfill": "^8.3.0",
     "streamsaver": "^2.0.6",
     "web-streams-polyfill": "^4.0.0",
     "webcrypto-shim": "^0.1.7",
-    "xregexp": "^5.1.1"
+    "xregexp": "^5.1.2"
   }
 }

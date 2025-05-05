@@ -213,6 +213,7 @@ if( !$found ) {
 
                                                     <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
                                                         <span class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text download" title="{tr:download}"
+                                                              data-action="download"
                                                               data-id="<?php echo $file->id ?>"
                                                               data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
                                                               data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>"
@@ -279,6 +280,69 @@ if( !$found ) {
             </div>
         </div>
 
+        <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+            <div class="row">
+                <div class="col">
+                    <div class="fs-transfer-detail__recipients">
+                        <h2>Recipients</h2>
+
+                        <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
+                            <span>
+                                <?php echo Lang::tr('your_transfer_was_sent') ?>
+                            </span>
+                            <div class="fs-badge-buttons-listv recipients">
+                                <br/>
+                                
+                                <?php foreach($transfer->recipients as $recipient) { ?>
+                                    <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                                        <?php
+                                        if(in_array($recipient->email, Auth::user()->email_addresses)) {
+                                            echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                                        } else {
+                                            echo '<span>'.Template::sanitizeOutput($recipient->identity).'</span>';
+                                        }
+                                        ?>
+
+                                        <span class="fs-badge-buttons-shell" >
+                                            <span data-action="remind" class="fa    fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                                            <span data-action="delete" class="fa    fa-lg fa-trash-o" title="{tr:delete}"></span>
+                                            <span data-action="auditlog" class="fa  fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
+                                        </span>
+                                        
+                                    </div>
+                                    <br/>
+                                <?php } ?>
+
+                                <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
+                                    <i class="fa fa-lg fa-envelope-o"></i>
+                                    <span><?php echo Lang::tr('add_recipient') ?></span>
+                                </button>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
+        <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+            <div class="row">
+                <div class="col col-sm-12 col-md-8">
+                    <div class="fs-transfer-detail__link">
+                        <h2>{tr:download_link}</h2>
+                        <div class="fs-copy">
+                            <span class="download_link"><?php echo $transfer->first_recipient->download_link ?></span>
+
+                            <button id="copy-to-clipboard" type="button" class="fs-button">
+                                <i class="fa fa-copy"></i>
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
         <?php if ($transfer->options) { ?>
             <div class="row">
                 <div class="col">
@@ -332,7 +396,7 @@ if( !$found ) {
                     </button>
 
                     <?php if($extend) { ?>
-                        <button type="button" data-action="extend" class="fs-button fs-button--inverted" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
+                        <button type="button" data-action="extend" class="fs-button fs-button--inverted objectholder" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
                             <i class="fa fa-calendar-plus-o"></i>
                             <span>{tr:extend_expires}</span>
                         </button>

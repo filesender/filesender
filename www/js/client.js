@@ -801,6 +801,24 @@ window.filesender.client = {
                          callback );
     },
 
+    getPGPPublicKey: function(emailaddr, callback) {
+        return this.post('/user/@me',
+                         {
+                             property: 'pgp_key',
+                             email: emailaddr
+                         },
+                         callback );
+    },
+
+    testPGPPublicKey: function(message,callback) {
+        return this.post('/user/@me',
+                         {
+                             property: 'test_pgp_key',
+                             message: message
+                         },
+                         callback );
+    },
+    
     getTransferOption: function(id, option, token, callback) {
         return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },

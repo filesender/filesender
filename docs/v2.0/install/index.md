@@ -118,6 +118,8 @@ mkdir -p /opt/filesender
 cd       /opt/filesender
 tar xzvf /tmp/filesender-2.0.tar.gz
 mv filesender-filesender-2.0  filesender
+cd filesender
+composer install --no-dev
 ```
 
 
@@ -164,6 +166,9 @@ git clone --depth 1 --branch master https://github.com/filesender/filesender.git
 
 cd /opt/filesender/filesender
 git checkout master
+
+composer install --no-dev
+
 ```
 
 You can bring down new releases to an existing git repository and then
@@ -275,9 +280,15 @@ ln -s simplesamlphp-2.2.3 simplesaml
 Copy standard configuration files to the right places:
 
 ```
-cd /opt/filesender/simplesaml
-cp -r config-templates/*.php config/
-cp -r metadata-templates/*.php metadata/
+cd /opt/filesender/simplesaml/config
+mv acl.php.dist acl.php
+mv authsources.php.dist authsources.php
+mv config.php.dist config.php
+
+cd /opt/filesender/simplesaml/metadata
+mv saml20-idp-hosted.php.dist saml20-idp-hosted.php
+mv saml20-idp-remote.php.dist saml20-idp-remote.php
+mv saml20-sp-remote.php.dist saml20-sp-remote.php
 ```
 
 There are some thoughts on updates to your SimpleSAMLphp configuration

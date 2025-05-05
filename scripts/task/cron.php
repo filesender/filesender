@@ -76,10 +76,6 @@ if( $testingMode ) {
     Mail::TESTING_SET_DO_NOT_SEND_EMAIL();
 }
 
-
-
-
-
 if( $verbose ) {
     echo "cron.php starting up... --force:$force --testing-mode:$testingMode\n";
     echo "cron.php running as user: " . `id` . "\n";
@@ -114,7 +110,11 @@ if( $verbose ) echo "cron.php delete failed transfers...\n";
 foreach(Transfer::allFailed() as $transfer) {
     Logger::info($transfer.' failed, deleting it');
     if( $force ) {
-        $transfer->deleteForce = true;
+       try {
+            $transfer->deleteForce = true;
+       } catch (Exception $e) {
+               Logger::warn("Deleting transfer failed. error:" . $e->getMessage());
+       }
     }
     $transfer->delete();
 }

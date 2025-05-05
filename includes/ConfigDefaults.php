@@ -48,8 +48,8 @@ $default = array(
     'site_logo' => '', // [optional] This allows a different logo image to be used per site using auth_config_regex_files
     'email_use_html' => true,   // By default, use HTML on mails
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
-    'upload_display_bits_per_sec' => true, // By default, do not show bits per seconds
-    'upload_display_per_file_stats' => true, //
+    'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds
+    'upload_display_per_file_stats' => false, //
     'upload_force_transfer_resume_forget_if_encrypted' => false, //
     'upload_considered_too_slow_if_no_progress_for_seconds' => 30, // seconds
     'force_ssl' => true,
@@ -66,6 +66,10 @@ $default = array(
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     'auth_sp_force_session_start_first' => false,  // maybe move session_start() forward.
+    'auth_sp_idp_filters' => array(
+        array('/^https*:\/\//', ''), // get rid of https://
+        array('/\/$/', '') // remove a trailing slash (/)
+    ),
 
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
@@ -73,6 +77,8 @@ $default = array(
     'auth_warn_session_expired' => false,
 
     'auth_remote_user_enabled' => false, //disables remote user auth
+
+    'cli_client_from_github' => true,
 
     'aup_default' => false,
     'aup_enabled' => false,
@@ -159,7 +165,6 @@ $default = array(
     // There are not so many options here, so they are listed
     // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',
-//    'storage_type' => 'filesystemChunked',
 
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
     'storage_filesystem_df_command' => 'df {path}',
@@ -177,6 +182,8 @@ $default = array(
     'storage_filesystem_per_day_max_age_to_create_directory' => 7,
     'storage_filesystem_per_day_min_days_to_clean_empty_directories' => -1,
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
+    'storage_filesystem_per_idp' => false,
+    'storage_filesystem_explicitly_store_subpath_per_file' => false,
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'no-reply@',
@@ -240,8 +247,9 @@ $default = array(
         return Config::get('site_url').'?s=logout';
     },
 
-    'admin_can_view_user_transfers_page' => true,
+    'admin_can_view_user_transfers_page' => false,
     'show_storage_statistics_in_admin' => true,
+    'statistics_table_rows_per_page' => 10,
 
     'cloud_s3_region'   => 'us-east-1',
     'cloud_s3_version'  => 'latest',
@@ -283,6 +291,7 @@ $default = array(
                                                                 , 'enable_recipient_email_download_complete'
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
                                                                 , 'hide_sender_email', 'popup_on_complete'
+                                                                , 'pgp_encrypt_passphrase_to_email'
     ),
 
     'header_x_frame_options' => 'sameorigin',
@@ -291,6 +300,7 @@ $default = array(
 
     'theme' => '',
     'theme_userpref_enabled' => true,
+    'pgp_enabled' => false,
 
     'user_can_only_view_guest_transfers_shared_with_them' => false,
 
@@ -382,6 +392,23 @@ $default = array(
     'valid_timezone_regex' => '@^[_/a-z]+$@i',
     'client_send_current_timezone_to_server' => false,
     
+    'validate_csrf_token_for_guests' => true,
+
+    'template_config_values_that_can_be_read_in_templates' => array(
+        'default_guest_days_valid',
+        'default_transfer_days_valid',
+        'encryption_password_text_only_min_password_length',
+        'guest_reminder_limit_per_day',
+        'mac_unzip_link',
+        'mac_unzip_name',
+        'max_guest_days_valid',
+        'max_transfer_days_valid',
+        'max_transfer_files',
+        'max_transfer_recipients',
+        'site_name',
+        'site_url',
+    ),
+
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,

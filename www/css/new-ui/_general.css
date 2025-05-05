@@ -30,6 +30,11 @@ main .core, main .box {
   border: none !important;
 }
 
+main .logon_page {
+  text-align: center;
+  padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
 hr {
   margin-top: var(--fs-spacing-3x) !important;
   margin-bottom: var(--fs-spacing-3x) !important;

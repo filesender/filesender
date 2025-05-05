@@ -103,8 +103,8 @@ $transfers_page = function($status) {
 
     if($offset) {
         $po = max(0, $offset - $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fi fi-chevron-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo=0&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($po).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $start_index = $offset - $page_size * $display_page_num;
@@ -124,7 +124,7 @@ $transfers_page = function($status) {
                   $o >= $offset + $page_size * $display_page_num ) {
             $navigation .= '<span>'.'...'.'</span>'."\n";
         } else {
-            $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers">'.$p.'</a>'."\n";
+            $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($o).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers">'.$p.'</a>'."\n";
         }
         
         $p++;
@@ -133,8 +133,8 @@ $transfers_page = function($status) {
     if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
         $lo = $total_count - ($total_count % $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fi fi-chevron-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'&transfersort='.$transfersort.$cgiminmax.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($no).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($lo).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $navigation .= '</div>'."\n";
@@ -198,7 +198,7 @@ echo "<p>{tr:search_transfer_by_sender_email_description}</p>\n";
         </fieldset>
         <fieldset class="search">
             <label for="senderemail" class="mandatory">{tr:sender_email_search}</label>
-            <input type="text" name="senderemail" size="60" value="<?php echo $senderemail ?>" />
+            <input type="text" name="senderemail" size="60" value="<?php echo Template::sanitizeOutputEmail($senderemail) ?>" />
             <input type="submit" value="{tr:search}">
         </fieldset>
 </form>

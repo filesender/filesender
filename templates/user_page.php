@@ -58,7 +58,7 @@ $user = Auth::user();
                     </div>
 
                     <?php
-                    if (Config::get('lang_userpref_enabled')) {
+                    if (Config::get('lang_userpref_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
                         $id = 'lang';
 
                         if($page[$id]) {
@@ -72,8 +72,13 @@ $user = Auth::user();
 
                                 if($mode == 'write') {
                                     $opts = array();
+				    $code = Lang::getCode();
+				    $prevname = null;
                                     foreach(Lang::getAvailableLanguages() as $id => $language) {
                                         $selected = ($id == $value) ? 'selected="selected"' : '';
+					if( $prevname && $prevname == $language['name'] ) {
+						continue;
+					}
                                         $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($language['name']).'</option>';
                                     }
 
@@ -175,7 +180,7 @@ $user = Auth::user();
                             <div class="fs-settings__saved-info">
                                 <strong>{tr:saved_information}</strong>
 
-                                <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                <ul class="fs-listx">
                                     <li>
                                         <button type="button" id="clear_user_transfer_preferences" class="fs-button">
                                             <i class="fi fi-trash"></i>
@@ -189,7 +194,7 @@ $user = Auth::user();
                                     </li>
                                 </ul>
 
-                                <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                <ul class="fs-listx">
                                     <li>
                                         <button type="button" id="clear_frequent_recipients" class="fs-button">
                                             <i class="fi fi-trash"></i>
@@ -407,6 +412,205 @@ $user = Auth::user();
                 </div>
             </div>
         </div>
+
+        <?php
+        if( Config::isTrue('pgp_enabled')) {
+        ?>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__about">
+        <?php
+    echo "<h2>".Lang::tr('PGP')."</h2>\n";
+    echo "<div>";
+    $user = Auth::user();
+    $v = $user->pgp_key;
+    if( $v ) {
+        echo "{tr:you_have_a_pgp_public_key_known_to_system}";
+
+        echo <<<EOF
+        <div class="pgpkey" id="pgpkey" hidden="true">$v
+        </div>
+        <div class="pgpkeyinfo" id="pgpkeyinfo">
+          <table>
+          <tr><td>{tr:email_address}</td><td id="pgpkeyinfoemail"></td></tr>
+          <tr><td>{tr:created}</td><td id="pgpkeyinfocreated"></td></tr>
+          </table>
+        </div>
+EOF;
+        
+        echo <<<EOF
+       <br>
+       <ul class="fs-listx">
+       <li>
+           <button type="button" class="fs-button test_my_pgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:test_my_pgp_key}</span>
+           </button>
+       </li><li>
+           <button type="button" class="fs-button fs-button--danger delete_my_pgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:delete_my_pgp_keys}</span>
+           </button>
+       </li></ul>
+EOF;
+        
+    }
+    else
+    {
+        echo "{tr:the_system_does_not_know_your_pgp_key}<br><br>";
+    }
+    if( !$v ) {
+    echo <<<EOF
+            <div class="form-group upload_new_pgp_public_key">
+                <label for="pgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_pgp_public_key}</label><br>
+                <input id="pgp_public_key_file" name="pgp_public_key_file" type="file" class="form-control-file" hidden="true" />
+            </div>
+EOF;
+    }
+    echo "</div>";
+        ?>
+                    </div>
+            </div>
+            </div>
+
+        <?php
+        } // if(pgp_enabled)
+        ?>
+            
+        <?php
+        if (Config::get('auth_remote_user_enabled')) {
+
+        ?>
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__remote-authentication">
+                    <h2>{tr:user_remote_authentication}</h2>
+
+                    <?php
+                        $tt = 0;
+                        $id = 'auth_secret';
+
+                        if($page[$id]) {
+                            $value = Auth::user()->$id;
+
+                            $v = Auth::user()->auth_secret_created_formatted;
+                            if( $v == '' ) {
+                            } else {
+                                $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
+                            }
+                            $info['key'] = 'auth_secret';
+                            //                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
+                        }
+
+                    ?>
+                    <p>
+                        {tr:user_remote_authentication_body}
+                    </p>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="fs-settings__api-secret">
+                                <h3>{tr:api_secret}</h3>
+
+                                <?php if($tt) { echo "<p>$tt</p>"; } ?>
+
+                                <?php
+                                if ($value) {
+                                    echo <<<EOT
+                                    <div class='fs-copy'>
+                                        <span>$value</span>
+                                        <button id='copy-api-secret' type='button' class='fs-button'>
+                                            <i class='fa fa-copy'></i>
+                                            {tr:copy}
+                                        </button>
+                                    </div>
+                                    EOT;
+
+                                }
+                                ?>
+
+                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                    <li>
+                                        <button type="button" id="api_secret_create" class="fs-button">
+                                            <i class="fa fa-plus"></i>
+                                            <span>{tr:new_api_secret}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:generate_new_api_secret}
+                                        </span>
+                                    </li>
+                                </div>
+
+                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                    <li>
+                                        <button type="button" id="api_secret_delete" class="fs-button fs-button--danger">
+                                            <i class="fa fa-close"></i>
+                                            <span>{tr:clear_api_secret}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:delete_current_api_secret}
+                                        </span>
+                                    </li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="fs-settings__cli">
+                                <h3><?php echo Lang::tr('python_cli_client_heading'); ?></h3>
+
+                                {tr:python_cli_client_setup_information}
+
+                                <div class="fs-copy">
+                                    <span>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</span>
+
+                                    <button id="copy-python-command" type="button" class="fs-button">
+                                        <i class="fa fa-copy"></i>
+                                        {tr:copy}
+                                    </button>
+                                </div>
+
+                                <ul class="fs-list fs-list--inline">
+                                    <li>
+                                    <?php
+                                    if (Config::get('cli_client_from_github')) {
+                                    ?>
+                                        <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py">
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client" download="filesender.py" >
+                                    <?php
+                                    }
+                                    ?>
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli}
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli_configuration}
+                                            </button>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <?php
+        }
+        ?>
     </div>
 </div>
 

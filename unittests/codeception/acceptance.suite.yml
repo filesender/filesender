@@ -1,0 +1,11 @@
+actor: AcceptanceTester
+modules:
+    enabled:
+      - Asserts
+      - WebDriver:
+          browser: chrome
+          url: 'http://localhost/filesender'
+            
+step_decorators:
+  - \Codeception\Step\Retry
+  - \Codeception\Step\TryTo

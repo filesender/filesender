@@ -40,6 +40,8 @@ A note about colours;
 * [download_verification_code_valid_duration](#download_verification_code_valid_duration)
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
 * [download_show_download_links](#download_show_download_links)
+* [disclose](#disclose)
+* [pgp_enabled](#pgp_enabled)
 
 
 ## Security settings
@@ -62,12 +64,13 @@ A note about colours;
 * [rate_limits](#rate_limits)
 * [valid_filename_regex](#valid_filename_regex)
 * [message_cannot_contain_urls_regex](#message_cannot_contain_urls_regex)
-
+* [validate_csrf_token_for_guests](#validate_csrf_token_for_guests)
 
 ## Backend storage
 
 * [storage_type](#storage_type)
 * [storage_filesystem_path](#storage_filesystem_path)
+* [storage_filesystem_explicitly_store_subpath_per_file](#storage_filesystem_explicitly_store_subpath_per_file)
 * [storage_filesystem_df_command](#storage_filesystem_df_command)
 * [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
 * [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
@@ -78,6 +81,7 @@ A note about colours;
 * [storage_filesystem_per_day_max_age_to_create_directory](#storage_filesystem_per_day_min_age_to_create_directory)
 * [storage_filesystem_per_day_min_days_to_clean_empty_directories](#storage_filesystem_per_day_min_days_to_clean_empty_directories)
 * [storage_filesystem_per_day_max_days_to_clean_empty_directories](#storage_filesystem_per_day_max_days_to_clean_empty_directories)
+* [storage_filesystem_per_idp](#storage_filesystem_per_idp)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 * [storage_filesystem_external_script](#storage_filesystem_external_script)
 * [cloud_s3_region](#cloud_s3_region)
@@ -157,7 +161,7 @@ A note about colours;
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
-
+* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
 
 
 ## Transfers
@@ -265,8 +269,9 @@ A note about colours;
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 	* [auth_sp_saml_entitlement_attribute](#auth_sp_saml_entitlement_attribute)
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
-    * [using_local_saml_dbauth](#using_local_saml_dbauth)
-    * [auth_warn_session_expired](#auth_warn_session_expired)
+	* [using_local_saml_dbauth](#using_local_saml_dbauth)
+	* [auth_warn_session_expired](#auth_warn_session_expired)
+	* [auth_sp_idp_filters](#auth_sp_idp_filters)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -323,6 +328,9 @@ A note about colours;
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
+* [statistics_table_rows_per_page](#statistics_table_rows_per_page)
+* [tenant_admin](#tenant_admin)
+* [cli_client_from_github](#cli_client_from_github)
 
 ## Data Protection
 
@@ -832,6 +840,16 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __available:__ since version 2.0
 * __comment:__ Example: (ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
 
+### validate_csrf_token_for_guests
+* __description:__ If CSRF token checks are performed for guest users.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.50
+* __comment:__ 
+
+
+
 ---
 
 ## Backend storage
@@ -859,6 +877,17 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __available:__ since version 1.0
 * __1.x name:__ site_filestore
 * __comment:__
+
+
+### storage_filesystem_explicitly_store_subpath_per_file
+
+* __description:__ If you are looking to migrate what subpaths are used in the storage for your filesender you might like to enable this feature. It will explicitly store the computed subpath in the database for each file.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.0rc5
+* __comment:__ This will store the computed subpath in the database for each file. As of rc5 only storage of this path is available. In the future it might allow for changing the bucket storage (storage_filesystem_per_day_buckets et al), idp storage (storage_filesystem_per_idp) settings while files previously uploaded will remain available. Being able to store this path is the first step, any migration will require the paths to be explicitly stored in order to work.
+
 
 ### storage_filesystem_df_command
 
@@ -938,6 +967,15 @@ $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{207
 * __default:__ 7
 * __available:__ since version 2.47
 * __comment:__ This is mostly for internal use and likely fine to leave at default. This prevents bucket subdirectories from being recreated if very old files are listed where the file content is already deleted by the cron job.
+
+###storage_filesystem_per_idp
+
+* __description:__ Store files in a subdirectory based on the IDP the user/owner is from
+* __mandatory:__ no
+* __type:__ **bool**
+* __default:__ false
+* __available:__ since version 3.1
+* __comment:__ Note that if you change this setting existing transfers may not be available. It only applies to new transfers and old transfers may look in the wrong location unless you have moved the files on disk.
 
 ### storage_filesystem_per_day_min_days_to_clean_empty_directories
 
@@ -1245,32 +1283,33 @@ User language detection is done in the following order:
 * __description:__ allow explicit language switching via URL (example: ?lang=en)
 * __mandatory:__ no (required when using lang_browser_enabled)
 * __type:__ boolean
-* __default:__ false
+* __default:__ true
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ Default changed to true in 3.0
 
 ### lang_userpref_enabled
 
 * __description:__ take user's preferred language from user's stored preferences.  These preferences are stored in the FileSender database.
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ false
+* __default:__ true
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ Default switched to true in 3.0
 
 ### lang_selector_enabled
 
 * __description:__ display language selector in UI .  If your FileSender instance only supports 1 language no selector is displayed and no "translate this email" link is present in emails.
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ false
+* __default:__ true
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ requires lang_url_enabled to be true.
 * __comment:__ <span style="background-color:orange">if the lang_selector is disabled a user can still select different translations in the email translation page</span>
 * __comment:__ <span style="background-color:orange">how is determined which language the lang selector defaults to when a user enters a page?  Browser setting?  Order in locale.php? </span>
+* __comment:__ Default changed to true in 3.0
 
 ### lang_save_url_switch_in_userpref
 
@@ -1650,6 +1689,37 @@ Inside of files_downloaded.mail.php for example
 * __comment:__ If you are performing a major upgrade you might like to retain an original FileSender installation in read only mode so users can continue to download existing files and redirect visitors to a new site for new uploads. This may be useful for upgrading between major FileSender releases such as the 2.x series to the 3.x series and also for change in infrastructure such as moving to different disk pools or storage back ends.
 
 
+### template_config_values_that_can_be_read_in_templates
+* __description:__  An array of configuration keys that can be exposed to the templates. If this setting is 'false' it will be ignored. If a key is not listed here it should not be readable through the cfg: mechanism in the language translations.
+* __mandatory:__ no
+* __type:__ array of string
+* __default:__ Something like array(
+        'default_guest_days_valid',
+        'default_transfer_days_valid',
+        'encryption_password_text_only_min_password_length',
+        'guest_reminder_limit_per_day',
+        'mac_unzip_link',
+        'mac_unzip_name',
+        'max_guest_days_valid',
+        'max_transfer_days_valid',
+        'max_transfer_files',
+        'max_transfer_recipients',
+        'site_name',
+        'site_url',
+    ),
+* __available:__ since version 2.51
+* __comment:__ 
+     A starting list can be found with a command like the following. The cfg: keys in that tmp file can be inspected and added to your config.php.
+     ```
+     grep -Roh  '{cfg:.*}' language/en_AU/ | sort |uniq > /tmp/configwhite.txt
+     ```
+     It should be noted that the use of `false` to disable this feature is deprecated from day 1. 
+     It will become mandatory at some point so it is best to test and validate for that now. If there are reasonable
+     items that you think should be in this setting for your language please make a pull request or mail the dev
+     list and they can be added to the default.
+
+
+* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
 
 
 ---
@@ -2840,8 +2910,14 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
                The warning does not happen during an upload because the session may expire there and the upload can still complete.
 
+### auth_sp_idp_filters
 
-
+* __description:__ Replacement filters to run on IDP entityIDs to make them read nicer
+* __mandatory:__ no
+* __type:__ array
+* __default:__ 
+* __available:__ since version 3.1
+* __comment:__ Note: setting this will overwrite the default values. If you want them include them in your custom config.
 
 
 ## Authentication: Shibboleth
@@ -3302,6 +3378,54 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __1.x name:__
 * __comment:__
 
+### disclose
+
+* __description:__ Some optional information can be disclosed by the FileSender instance. For example, the version number being run.
+* __mandatory:__ no
+* __type:__ boolean/array of strings
+* __default:__ - (disclose nothing)
+* __available:__ since before version 2.50
+* __1.x name:__
+* __comment:__ the parameter needs an array of strings.  Current options include: 'version'
+* __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
+
+
+### pgp_enabled
+
+* __description:__ If set to true then some PGP functionaily to help send the encryption passphrase is enabled.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ - false
+* __available:__ since 3.0rc8
+* __1.x name:__
+* __comment:__ If a user elects to upload their PGP public key then they might be
+able to receive files with FileSender with the pass phrase used for
+encryption being sent to them as a PGP encrypted message. The first
+iteration of this feature is focused on allowing guests to upload
+files to the user who invited them and not have to worry about
+transmitting the passphrase. NOTE: Using the pgp_enabled feature will implicitly
+allow users of the system to lookup the uploaded public key for another user by 
+their email address.
+
+You will also want to add a stanza like the following to your config.php / transfer_options. In the first 
+version this setting is needed but will be overridden for guest uploads when a user has a public key. That 
+is if there is a public key then guest uploads will always use it regardless of the transfer_options setting.
+
+```
+$config['transfer_options'] = array(
+...
+        'pgp_encrypt_passphrase_to_email' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+...        
+```
+
+
+
+
+
 ### disclosed
 
 * __description:__ the webservice has an endpoint called "info" which discloses information about the FileSender instance.  By default it gives the URL of the FileSender instance.  This parameter allows you to add more info from the configuration file.  E.g. when using a remote client this client needs the chunk size.
@@ -3418,11 +3542,16 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 		'uid' => [
 			'@mydomain.com$' => 'mydomainfile',
 			'@myotherdomain.com$|@yetanotherdomain.com$' => 'myotherdomainfile',
-		];
+		],
+		'idp' => [
+			'idp.customer2.com' => 'customer2',
+		],
+	];
 	</code></pre>
 
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
+        If the idp is 'idp.customer2.com', the config file config-customer2.php in the config subdir will be loaded.
 	
 ### show_storage_statistics_in_admin
 * __description:__ Lists used and free diskspace in admin section
@@ -3431,6 +3560,28 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __default:__ true
 * __available:__ since version 2.0
 * __comment:__ Shows a section in the administrator interface showing basic disk statistics.
+
+### statistics_table_rows_per_page
+* __description:__ Number of rows to show in statistics page
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 3.1
+
+### tenant_admin
+* __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender tenant administrators. Accounts with these UIDs can access the Statistics page through the web UI and view stats related to the IDP they are a tenant admin of. Separate multiple entries with a comma (',').
+* __mandatory:__ no
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.1
+* __comment:__ see [auth_config_regex_files](#auth_config_regex_files) on how to setup differnt config files per idp. Within that file set $config['tenant_admin'].
+
+### cli_client_from_github
+* __description:__ Directs users to github for python cli client. Setting to false uses local hosted file.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 3.1
 
 ---
 

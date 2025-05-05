@@ -1,3 +1,32 @@
+
+.fs-listx {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: center;    
+    flex-direction: row;
+}
+.fs-listx li:nth-child(1) {
+    align-items: center;    
+}
+.fs-listx li:nth-child(2) {
+    flex: 2;
+    flex-grow: 2;
+}
+
+.fs-listx li + li {
+    margin-left: var(--fs-spacing-2x);
+}
+
+.fs-listx + .fs-listx {
+    margin-top: var(--fs-spacing-3x);
+}
+
+
+
+
+
 .fs-list {
     display: flex;
     list-style: none;

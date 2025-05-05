@@ -827,6 +827,15 @@ td .desc {
 }
 
 
+#upload_form .recipients .badrecipient {
+    margin: 0.2em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #de0000;
+}
+
 
 
 ////////////////////////////////////////////////////////////

@@ -98,6 +98,13 @@ class AuthSPSaml
             
             $attributes = array();
 
+            // Get IDP from SSP
+            $idp = trim($ssp->getAuthData('saml:sp:IdP'));
+            $idp_filters = Config::get('auth_sp_idp_filters');
+            foreach($idp_filters as $idp_filter) {
+                $idp = preg_replace($idp_filter[0], $idp_filter[1], $idp);
+            }
+            $attributes['idp'] = $idp;
             
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
@@ -282,6 +289,10 @@ class AuthSPSaml
             }
         }
 
+        if(!array_key_exists("HTTP_HOST",$_SERVER)) {
+            $_SERVER["HTTP_HOST"] = Config::get("site_hostname");
+        }
+        
         Auth::$authClassLoadingCount++;
         if (is_null(self::$simplesamlphp_auth_simple)) {
             $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';

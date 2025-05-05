@@ -3,6 +3,8 @@ $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
 $show_get_a_link_or_email_choice = true;
+$pgp_encrypt_passphrase = false;
+$pgpkey = '';
 
 // CGI to used variables
 $aupChecked = '';
@@ -77,6 +79,8 @@ if(Auth::isGuest()) {
     }
 }
 
+$allow_recipients = true;
+
 if( $encryption_mandatory ) {
     $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
     $encryption_checkbox_classes = '';
@@ -121,6 +125,16 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
         }
     }
 
+
+    //
+    // User to User PGP is a future feature.
+    //
+    if( !Auth::isGuest() &&
+        $name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL)
+    {
+        return;
+    }
+
     echo '<div data-option="'.$name.'" '. $extraDivAttrs .'>';
 
     if($text) {
@@ -149,45 +163,49 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
 
 
     if ($name === TransferOptions::ENCRYPTION) {
-        echo '<div id="encgroup1" class="fs-transfer__password">';
-        echo '    <div class="fs-transfer__password-top" id="encryption_password_container">';
-        echo '        <div class="fs-input-group">';
-        echo '          <input type="text" id="encryption_password" name="encryption_password" placeholder="'.Lang::tr('enter_your_password').'">';
+        echo '<div id="encryption_options"  class="<?php echo $pgp_encrypt_passphrase_add_class ?>"> </div>';
+        echo '<div id="encgroup1pgp">';
+        echo '    <div id="encgroup1" class="fs-transfer__password">';
+        echo '        <div class="fs-transfer__password-top" id="encryption_password_container">';
+        echo '            <div class="fs-input-group">';
+        echo '                <input type="text" id="encryption_password" name="encryption_password" placeholder="'.Lang::tr('enter_your_password').'">';
+        echo '            </div>';
+        echo '            <div class="fs-transfer__generate-password">';
+        echo '                <span>'.Lang::tr('or').'&nbsp;</span>';
+        echo '                <button type="button" id="encryption_generate_password" class="fs-button">'.Lang::tr('generate_password').'</button>';
+        echo '            </div>';
         echo '        </div>';
-        echo '        <div class="fs-transfer__generate-password">';
-        echo '            <span>'.Lang::tr('or').'&nbsp;</span>';
-        echo '            <button type="button" id="encryption_generate_password" class="fs-button">'.Lang::tr('generate_password').'</button>';
+        echo '        <div class="fieldcontainer" id="encryption_password_show_container">';
+        echo '            <label class="fs-checkbox">';
+        echo '                <label for="encryption_show_password">'.Lang::tr('file_encryption_show_password').'</label>';
+        echo '                <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >';
+        echo '                <span class="fs-checkbox__mark"></span>';
+        echo '            </label>';
         echo '        </div>';
-        echo '    </div>';
-        echo '    <div class="fieldcontainer" id="encryption_password_show_container">';
-        echo '        <label class="fs-checkbox">';
-        echo '            <label for="encryption_show_password">'.Lang::tr('file_encryption_show_password').'</label>';
-        echo '            <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >';
-        echo '            <span class="fs-checkbox__mark"></span>';
-        echo '        </label>';
-        echo '    </div>';
-        echo '    <div class="fs-transfer__password-bottom">';
-        echo '        <small>'.Lang::tr('password_share_tip').'</small>';
-        echo '    </div>';
-        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">';
-        echo '        <small>'.Lang::tr('file_encryption_password_too_short').'</small>';
-        echo '    </div>';
-        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">';
-        echo '        <small>'.Lang::tr('file_encryption_password_must_have_numbers').'</small>';
-        echo '    </div>';
-        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">';
-        echo '        <small>'.Lang::tr('file_encryption_password_must_have_upper_and_lower_case').'</small>';
-        echo '    </div>';
-        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">';
-        echo '        <small>'.Lang::tr('file_encryption_password_must_have_special_characters').'</small>';
-        echo '    </div>';
-        echo '    <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">';
-        echo '        <small>'.Lang::tr('encryption_password_container_can_have_text_only_min_password_length_message').'</small>';
-        echo '    </div>';
-        echo '    <div class="fieldcontainer" id="encryption_description_disabled_container">';
-        echo '        <small>'.Lang::tr('file_encryption_description_disabled').'</small>';
+        echo '        <div class="fs-transfer__password-bottom">';
+        echo '            <small>'.Lang::tr('password_share_tip').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_too_short').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_must_have_numbers').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_must_have_upper_and_lower_case').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_must_have_special_characters').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">';
+        echo '            <small>'.Lang::tr('encryption_password_container_can_have_text_only_min_password_length_message').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer" id="encryption_description_disabled_container">';
+        echo '            <small>'.Lang::tr('file_encryption_description_disabled').'</small>';
+        echo '        </div>';
         echo '    </div>';
         echo '</div>';
+
     }
 
     echo '</div>';
@@ -210,6 +228,13 @@ if( !Auth::isGuest()) {
         }
     }
 }
+foreach(Transfer::allOptions() as $name => $dfn)  {
+    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+        if(Auth::isGuest()) {
+            $pgp_encrypt_passphrase = true;
+        }
+    }
+}
 
 
 $possibleExpireDays = array( 7, 15, 30, 40 );
@@ -217,6 +242,17 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
     return $k < Config::get('max_transfer_days_valid');
 });
 
+if( Auth::isGuest() && $pgp_encrypt_passphrase ) {
+    $guest = AuthGuest::getGuest();
+    $pgpkey = $guest->owner->pgp_key;
+    if( !$guest->owner->pgp_have_key ) {
+        $pgp_encrypt_passphrase = false;
+    }
+}
+$pgp_encrypt_passphrase_add_class = "";
+if( $pgp_encrypt_passphrase ) {
+    $pgp_encrypt_passphrase_add_class = "hidden";
+}
 
 ?>
 
@@ -224,7 +260,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
     <div class="box">
         {tr:read_only_mode}
     </div>
-<?php
+    <?php
     return;
 }
 ?>
@@ -388,8 +424,10 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
                                 <div class="row">
                                     <div class="col-12 col-sm-12 col-md-7 col-lg-8">
+                                        <div class="<?php echo $pgp_encrypt_passphrase_add_class ?>" ></div>
+
                                         <?php if($allow_recipients) { ?>
-                                            <div data-related-to="message">
+                                            <div data-related-to="message"  id="recip">
                                                 <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
@@ -397,6 +435,12 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                         </label>
 
                                                         <?php echo AuthGuest::getGuest()->user_email ?>
+
+                                                        <?php
+                                                        echo '<div class="recipients">'
+                                                            . Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email)
+                                                            . '</div>';
+                                                        ?>
                                                     </div>
                                                 <?php } else { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
@@ -432,12 +476,15 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                     {tr:password_can_not_be_part_of_message_error}
                                                 </label>
                                             </div>
+                                            <div class="pgpinfo" id="pgpinfo" >
+                                                <p>{tr:pgp_upload_page_description}</p>
+                                            </div>
                                         <?php } ?> <!-- closing if($allow_recipients) -->
                                         <?php if(Auth::isGuest()) { ?>
                                             <div>
-                                                <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
-                                                <input type="hidden" id="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
-                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
+                                                <input type="hidden" name="guest_token" value="<?php echo Template::Q(AuthGuest::getGuest()->token) ?>" />
+                                                <input type="hidden" id="guest_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
                                             </div>
                                         <?php } ?>
                                     </div>
@@ -461,11 +508,16 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 }
                                             }
                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                if( $name == "pgp_encrypt_passphrase_to_email" ) {
+                                                    if( $pgp_encrypt_passphrase ) {
+                                                        $cfg['default'] = $guest->transfer_options['pgp_encrypt_passphrase_to_email'];
+                                                    }
+                                                }
                                                 if( !array_key_exists($name,$upload_options_handled)) {
                                                     $displayoption($name, $cfg, Auth::isGuest());
                                                 }
                                             }
-                                            
+
                                             ?>
                                         </div>
                                     </div>
@@ -535,17 +587,17 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                         </strong>
 
                                                         <?php
-                                                            foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                                if( !array_key_exists($name,$upload_options_handled)) {
-                                                                    $displayoption($name, $cfg, Auth::isGuest());
-                                                                }
+                                                        foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                            if( !array_key_exists($name,$upload_options_handled)) {
+                                                                $displayoption($name, $cfg, Auth::isGuest());
                                                             }
+                                                        }
 
-                                                            foreach(Transfer::availableOptions(true) as $name => $cfg)  {
-                                                                if( !array_key_exists($name,$upload_options_handled)) {
-                                                                    $displayoption($name, $cfg, Auth::isGuest());
-                                                                }
+                                                        foreach(Transfer::availableOptions(true) as $name => $cfg)  {
+                                                            if( !array_key_exists($name,$upload_options_handled)) {
+                                                                $displayoption($name, $cfg, Auth::isGuest());
                                                             }
+                                                        }
                                                         ?>
                                                     </div>
                                                 </div>
@@ -673,20 +725,20 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     </table>
                                 </div>
                                 <?php if(Config::get('upload_show_play_pause')) { ?>
-                                <div class="fs-transfer__resume-buttons buttons">
-                                    <button type="button" id="fs-transfer__pause" class="fs-button fs-button--icon-right pausebutton">
-                                        {tr:pause}
-                                        <i class="fa fa-pause"></i>
-                                    </button>
-                                    <button type="button" id="fs-transfer__resume" class="fs-button fs-button--icon-right resumebutton" disabled="1">
-                                        {tr:resume}
-                                        <i class="fa fa-play"></i>
-                                    </button>
-                                    <button type="button" id="fs-transfer__stop" class="fs-button fs-button--icon-right stopbutton">
-                                        {tr:stop}
-                                        <i class="fa fa-stop"></i>
-                                    </button>
-                                </div>
+                                    <div class="fs-transfer__resume-buttons buttons">
+                                        <button type="button" id="fs-transfer__pause" class="fs-button fs-button--icon-right pausebutton">
+                                            {tr:pause}
+                                            <i class="fa fa-pause"></i>
+                                        </button>
+                                        <button type="button" id="fs-transfer__resume" class="fs-button fs-button--icon-right resumebutton" disabled="1">
+                                            {tr:resume}
+                                            <i class="fa fa-play"></i>
+                                        </button>
+                                        <button type="button" id="fs-transfer__stop" class="fs-button fs-button--icon-right stopbutton">
+                                            {tr:stop}
+                                            <i class="fa fa-stop"></i>
+                                        </button>
+                                    </div>
                                 <?php } ?>
                             </div>
                         </div>
@@ -719,12 +771,12 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     <table class="fs-table">
                                         <tbody>
                                         <tr class="fs-transfer__number-of-files number_of_files">
-                                             <td>{tr:number_of_files}</td>
-                                             <td id="fs-transfer__total-files">
-                                                 <span class="value">0</span>
-                                                 {tr:files_lowercase}
-                                             </td>
-                                         </tr>
+                                            <td>{tr:number_of_files}</td>
+                                            <td id="fs-transfer__total-files">
+                                                <span class="value">0</span>
+                                                {tr:files_lowercase}
+                                            </td>
+                                        </tr>
                                         <tr class="fs-transfer__total-info size">
                                             <td>{tr:ui2_total_size}</td>
                                             <td id="fs-transfer__total-size" class="value">0 MB</td>
@@ -741,8 +793,8 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     <span></span>
 
                                     <button id="copy-to-clipboard" type='button'>
-                                       <i class='fi fi-copy'></i>
-                                   </button>
+                                        <i class='fi fi-copy'></i>
+                                    </button>
                                 </div>
                             </div>
                             <div class="fs-transfer__upload-recipients">
@@ -757,7 +809,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                     {tr:expires_in} <span id="expires-days">7</span> {tr:days}.
                                 </span>
                             </div>
-                            
+
                             <div class="fs-transfer__upload-custom-name">
                                 <label for="transfer-name">
                                     {tr:add_transfer_custom_name}
@@ -795,9 +847,19 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                     </div>
                 </div>
             <?php } ?>
-
         </div>
+
+        <?php if( $pgp_encrypt_passphrase ) {  ?>
+            <div>
+                <p><?php echo lang::tr('upload_will_use_pgp_to_share_passphrase')->r('email',AuthGuest::getGuest()->user_email)->out()?></p>
+            </div>
+        <?php } ?>
+
+
     </form>
+
+    <div id="pgp-possile" hidden="true"><?php echo Utilities::boolToString(!empty($pgpkey)) ?></div>
+    <div id="pgpkey" hidden="true"><?php echo Template::Q($pgpkey) ?></div>
 
     <?php if (!Config::get('disable_directory_upload')) { ?>
         <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>

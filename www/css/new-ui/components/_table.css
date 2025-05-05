@@ -87,6 +87,12 @@
   color: var(--fs-table-button-hover-color) !important;
 }
 
+
+table.files .downloadprogress {
+    margin-left: 1em;
+}
+
+
 /* XS,SM,MD */
 @media (max-width: 991px) {
   .fs-table {

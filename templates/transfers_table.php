@@ -16,6 +16,9 @@
     $haveNext = 0;
     $havePrev = 0;
 
+    $status = Template::Q($status);
+    $mode   = Template::Q($mode);
+
     $isAdmin = false;
     $showAdminExtend = false;
     if (Auth::isAuthenticated()) {
@@ -171,20 +174,31 @@ EOF;
     </thead>
     <tbody>
     <?php foreach($transfers as $transfer) { ?>
-        <tr id="transfer_<?php echo $transfer->id ?>"
+        <tr id="transfer_<?php             echo Template::Q($transfer->id) ?>"
             class="transfer objectholder fs-table__row fs-table__row--clickable"
             data-transfer
-            data-id="<?php echo $transfer->id ?>"
-            data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
-            data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
-            data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
-            data-key-version="<?php echo $transfer->key_version; ?>"
-            data-key-salt="<?php echo $transfer->salt; ?>"
-            data-password-version="<?php echo $transfer->password_version; ?>"
-            data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
-            data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
-            data-client-entropy="<?php echo $transfer->client_entropy; ?>"
+            data-id="<?php echo                 Template::Q($transfer->id) ?>"
+            data-chunk-size="<?php         echo Template::Q($file->chunk_size); ?>"
+            data-crypted-chunk-size="<?php echo Template::Q($file->crypted_chunk_size); ?>"
+            data-recipients-enabled="<?php echo Template::Q($transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1') ?>"
+            data-errors="<?php echo             Template::Q(count($transfer->recipients_with_error) ? '1' : '') ?>"
+            data-expiry-extension="<?php echo   Template::Q($transfer->expiry_date_extension); ?>"
+            data-key-version="<?php echo        Template::Q($transfer->key_version); ?>"
+            data-key-salt="<?php echo           Template::Q($transfer->salt); ?>"
+            data-password-version="<?php echo   Template::Q($transfer->password_version); ?>"
+            data-password-encoding="<?php echo  Template::Q($transfer->password_encoding_string); ?>"
+            data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
+            data-client-entropy="<?php echo     Template::Q($transfer->client_entropy); ?>"
         >
+
+            <td data-label="{tr:transfer_id_short}">
+                <?php
+                echo Template::Q($transfer->id);
+                if( $transfer->is_encrypted ) {
+                    echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
+                }
+                ?>
+            </td>
 
             <?php if($show_guest) { ?>
                 <td data-label="{tr:guest}">
@@ -219,7 +233,7 @@ EOF;
                         if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
                         else $name = mb_substr($name, 0, 23).'...';
                     }
-                    $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::replaceTainted($name).'</span>';
+                    $items[] = '<span title="'.Template::Q($file->path).'">'.Template::replaceTainted($name).'</span>';
                 }
 
                 if(count($transfer->files) > 3)
@@ -283,18 +297,19 @@ EOF;
 <?php
     if( $havePrev || $haveNext ) {
         echo "<div class='fs-paginator fs-paginator--center'>";
-        $base = '?s=' . htmlspecialchars($_GET['s']);
-        $cgioffset = $pagerprefix . 'offset';
-        $cgilimit  = $pagerprefix . 'limit';
-        $nextPage  = $offset+$limit;
-        $transfersort = Utilities::getGETparam('transfersort','');
-        $cgias = Utilities::getGETparam('as','');
-        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax&nextlink=1";
+        $base = '?s=' . Template::Q(htmlspecialchars($_GET['s']));
+        $cgioffset =    Template::Q($pagerprefix) . 'offset';
+        $cgilimit  =    Template::Q($pagerprefix) . 'limit';
+        $nextPage  =    Template::Q($offset+$limit);
+        $transfersort = Template::Q(Utilities::getGETparam('transfersort',''));
+        $cgias =        Template::Q(Utilities::getGETparam('as',''));
+        $as = $cgias .  Template::Q($cgiuid) . Template::Q($cgiminmax);        
+        $nextLink  =    Template::Q("$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax&nextlink=1");
 
         if( $havePrev ) {
-            $prevPage = max(0,$offset-$limit);
-            echo "<a class='fs-link fs-link--circle' href='$base&$cgioffset=0&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax'><i class='fa fa-angle-double-left'></i></a>";
-            echo "<a class='fs-link fs-link--circle' href='$base&$cgioffset=$prevPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax'><i class='fi fi-chevron-left'></i></a>";
+            $prevPage = Template::Q(max(0,$offset-$limit));
+            echo "<a class='fs-link fs-link--circle' href='$base&cgioffset=0&cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><i class='fa fa-angle-double-left'></i></a>";
+            echo "<a class='fs-link fs-link--circle' href='$base&cgioffset=$prevPage&cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><i class='fa fa-angle-left'></i></a>";
         } else {
             echo "<a class='fs-link fs-link--circle fs-link--disabled' href='javascript:void(0)'><i class='fa fa-angle-double-left'></i></a>";
             echo "<a class='fs-link fs-link--circle fs-link--disabled' href='javascript:void(0)'><i class='fi fi-chevron-left'></i></a>";

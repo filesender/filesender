@@ -183,10 +183,6 @@ class RestEndpointTransfer extends RestEndpoint
             if (!Utilities::isValidUID($token)) {
                 throw new RestBadParameterException('token');
             }
-            // Need to be authenticated
-            if (!Auth::isAuthenticated()) {
-                throw new RestAuthenticationRequiredException();
-            }
             
             $recipient = Recipient::fromToken($token);
             if ($recipient->transfer) {
@@ -561,9 +557,12 @@ class RestEndpointTransfer extends RestEndpoint
             
             foreach ($allOptions as $name => $dfn) {
                 if (in_array($name, $allowed_options)) {
-                    if (method_exists($data->options, 'exists')) {
-                        if ($data->options->exists($name)) {
-                            $options[$name] = $data->options->$name;
+                    // check if options is object
+                    if (is_object( $data->options) ) {
+                        if (method_exists($data->options, 'exists')) {
+                            if ($data->options->exists($name)) {
+                                $options[$name] = $data->options->$name;
+                            }
                         }
                     } else {
                         if (array_search($name, $data->options) !== false) {
@@ -574,13 +573,18 @@ class RestEndpointTransfer extends RestEndpoint
             }
             $options['encryption'] = $data->encryption;
 
+            $data->encryption_client_entropy = filter_var( $data->encryption_client_entropy,
+                                                           FILTER_VALIDATE_REGEXP,
+                                                           ["options" => ["regexp" => "|^[-A-Za-z0-9+/]*={0,3}$|" ]] );
+            
+            
             // check if encryption is mandatory but the user tried to disable it
             if( Principal::isEncryptionMandatory()) {
                 if( !$data->encryption ) {
                     throw new TransferMustBeEncryptedException();
                 }
             }
-
+            
             if( strtolower(Config::get('storage_type')) == 'clouds3' ) {
                 $options = StorageCloudS3::augmentTransferOptions( $options );                
             }
@@ -805,7 +809,10 @@ class RestEndpointTransfer extends RestEndpoint
                 $filedata->mime_type = Utilities::valuePassesConfigRegexOrDefault( $filedata->mime_type,
                                                                                    'mime_type_regex',
                                                                                    Config::get('mime_type_default'));
-                
+
+                $filedata->iv = filter_var( $filedata->iv,
+                                            FILTER_VALIDATE_REGEXP,
+                                            ["options" => ["regexp" => "|^[-A-Za-z0-9+/]*={0,3}$|" ]] );                
 
                 $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
                                            $filedata->iv, $filedata->aead );

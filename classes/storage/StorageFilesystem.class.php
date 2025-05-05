@@ -49,7 +49,6 @@ class StorageFilesystem
      */
     protected static $hashing = null;
 
-    
     /**
      * Storage setup, loads options from config
      */
@@ -81,7 +80,6 @@ class StorageFilesystem
         if ($hashing) {
             self::$hashing = $hashing;
         }
-
     }
     
     /**
@@ -325,6 +323,8 @@ class StorageFilesystem
      * Build file storage path (without filename)
      *
      * @param File $file
+     * @param string fillPath This is currently only used in the test suite. Using it might break
+     *                        migration of path mangling settings.
      *
      * @return string path
      */
@@ -337,7 +337,15 @@ class StorageFilesystem
         } else {
             $path = "";
         }
-        
+
+        // Is idp in storage path enabled
+        if ($file->transfer->storage_filesystem_per_idp) {
+            $subpath = '';
+            $idp = $file->transfer->owner->saml_user_identification_idp;
+            //sanatise idp to safe path
+            $subpath = trim(preg_replace('/[^a-z0-9]+/', '_', strtolower($idp)));
+            $path = self::ensurePath( $path, $subpath );
+        }
         
         // Is storage path hashing enabled
         if (self::$hashing) {
@@ -420,6 +428,15 @@ class StorageFilesystem
                 return $path;
             }
         }
+
+        // cache the subpath
+        if( $fullPath ) {
+            if( Config::get('storage_filesystem_explicitly_store_subpath_per_file')) {
+                if( !$file->storage_path ) {
+                    $file->storage_path = $path;
+                }
+            }
+        }
   
         return $path;
     }
@@ -439,6 +456,8 @@ class StorageFilesystem
     public static function readChunk(File $file, $offset, $length)
     {
         $chunk_size = (int)Config::get('download_chunk_size');
+        $chunk_size = $file->transfer->chunk_size;
+        $crypted_chunk_size = $file->transfer->crypted_chunk_size;
         
         $file_path = static::buildPath($file).static::buildFilename($file);
         
@@ -447,7 +466,7 @@ class StorageFilesystem
         }
 
         if ($file->transfer->is_encrypted) {
-            $offset=floor($offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size'));
+            $offset=floor($offset / $chunk_size * $crypted_chunk_size);
         }
 
         // Open file for reading

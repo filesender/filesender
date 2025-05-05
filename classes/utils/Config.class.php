@@ -600,6 +600,12 @@ class Config
         return $value;
     }
 
+    public static function isTrue($key)
+    {
+        return(Utilities::isTrue(Config::get($key)));
+    }
+
+    
     /**
      * If there is a CID image mapping in the configuration lookup the $cid
      * and return the path for the image if it is set or null
@@ -768,6 +774,7 @@ class Config
         }
     }
 
+    
 }
 
 /**

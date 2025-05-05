@@ -425,6 +425,11 @@ function ensureFK()
                     'transfers.password_encoding refers to dbconstantpasswordencoding.id',
 	            call_user_func('Transfer::getDBTable'), 'transfer_passwordencoding', 'password_encoding',
 	            call_user_func('DBConstantPasswordEncoding::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'publickeys.userid refers to users.id',
+	            call_user_func('PublicKey::getDBTable'), 'PublicKeys_userid', 'userid',
+	            call_user_func('User::getDBTable'), 'id' ));
 
 
     array_push( $fks,
@@ -743,6 +748,15 @@ try {
     }
 
     verifyTableCharacterSets();
+
+    // set the chunk size info to current settings for tuples that didn't have any value
+    $chunk_size = Config::get('upload_chunk_size');
+    $crypted_chunk_size = Config::get('upload_crypted_chunk_size');
+    $tbl_transfers = call_user_func('Transfer::getDBTable');
+    $statement = DBI::prepare("UPDATE $tbl_transfers set chunk_size = :chunk_size, crypted_chunk_size=:crypted_chunk_size where chunk_size=0 "  );
+    $placeholders =  array(':chunk_size' => $chunk_size,
+                           ':crypted_chunk_size' => $crypted_chunk_size);
+    $statement->execute($placeholders);
     
     
 } catch(Exception $e) {
