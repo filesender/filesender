@@ -506,7 +506,7 @@ $lang['profile_page_text_linking_to_admin_page'] = 'Ziyaret edebilirsiniz <a hre
 $lang['profile_page_text_linking_to_privacy_page'] = '{cfg:site_name} gizliliğinize önem verir. Lütfen bu kurulum tarafından bilgilerin ne kadar tutulduğunu görmek için <a href="{cfg:site_url}/?s=privacy">click to see</a> tıklayınız';
 $lang['python_cli_client_heading'] = 'Python CLI Client';
 $lang['python_cli_client_setup_information'] = 'Python CLI İstemci yapılandırmasını kullanmak için, ~/.filesender üzerinde bir dizin oluşturun ve ~/.filesender dizinine filesender.py.ini yapılandırma dosyasını yapıştırın. Yapılandırma dosyası isteğe bağlıdır ancak komut satırında tüm parametreleri belirtmek zorunda kalmayacağınız anlamına geldiğinden önerilmektedir. Python CLI İstemcisi, istenilen konuma indirilebilir ve çalışmak için Python versiyon 3\'e ihtiyaç duyar.<p>Yapılandırma dosyası hazır olduktan sonra <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre> kullanarak bir dosyayı yükleyebilirsiniz';
-$lang['quota_usage'] = '{size:used} / {size:total} kullanıldı, kalan {size:available} 
+$lang['quota_usage'] = '{size:used} / {size:total} kullanıldı, kalan {size:available}
 ';
 $lang['rate_limit_exceeded'] = 'You have attempted to perform this operation more frequently than is allowed in a 24 hour period.';
 $lang['reader_not_supported'] = 'HTML5 desteği olmayan eski bir tarayıcı kullanıyorsunuz. <br /><br />Dosya seçimi için sürükle-bırak seçeneği mevcut değildir.<br /><br />{size} kadar dosyaları yükleyebilirsiniz.';

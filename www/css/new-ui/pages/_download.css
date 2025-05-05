@@ -1,11 +1,7 @@
 .fs-download {
     flex: 1;
-    background: var(--fs-bg-color);
-    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
-}
-
-.fs-download__title {
-    text-align: center;
+    background: var(--fs-download-background);
+    padding: var(--fs-spacing-11x) var(--fs-spacing-2x);
 }
 
 .fs-download__title p {
@@ -28,13 +24,12 @@
 }
 
 .fs-download__check-all {
-    padding-left: calc(var(--fs-spacing-3x) + 1px);
+    padding-left: calc(var(--fs-spacing-2x) + 1px);
     margin-top: var(--fs-spacing-6x);
 }
 
 .fs-download__total-size {
     display: none;
-    text-align: right;
 }
 
 .fs-download__total-size--show {
@@ -57,7 +52,6 @@
 .fs-download__actions {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
     margin-top: var(--fs-spacing-4x) !important;
 }
@@ -72,7 +66,6 @@
 
 .fs-download__zip64-info {
     margin-top: var(--fs-spacing-4x);
-    padding: 0 20%;
 }
 
 .fs-download__zip64-info--hide {
@@ -83,8 +76,35 @@
     margin-bottom: var(--fs-spacing-2x) !important;
 }
 
+.fs-transfer__list--hidden {
+    display: none;
+}
+
 .fs-transfer__files__thead {
     display: none;
+}
+
+.download_page {
+    padding: 0 !important;
+}
+
+.form-check {
+    margin-bottom: 0 !important;
+}
+
+.download_page .archive {
+    text-align: left !important;
+}
+
+.download_page .archive, .download_page .disclamer {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.download_page .files .file {
+    height: auto !important;
+    margin: 0 var(--fs-spacing-2x) !important;
+    padding: 0 !important;
 }
 
 /* XS */

@@ -134,7 +134,7 @@ filesender.logger.nopwatcher = {
                 $(msgContainer).appendTo('#upload_form');
                 this.msg = $('<div class="nothing_happened_as_of_late_you_can_send_client_logs" />').appendTo('#fs-upload__msg_content');
                 this.msg.append(lang.tr('nothing_happened_as_of_late_you_can_send_client_logs') + ' ');
-                this.msg.append($('<button class="send_client_logs fs-button fs-button--info" />').text(lang.tr('send_client_logs').out()).on('click', function () {
+                this.msg.append($('<button class="send_client_logs fs-button fs-button--primary" />').text(lang.tr('send_client_logs').out()).on('click', function () {
                     filesender.logger.send(function () {
                         filesender.ui.notify('success', lang.tr('client_logs_sent'));
                     });

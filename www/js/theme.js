@@ -65,6 +65,7 @@ filesender.ui.changeTheme = function(theme) {
         }
     }
 
+    $('body').attr('data-theme', `${theme}`);
     $('body').append(themeStyle);
 };
 

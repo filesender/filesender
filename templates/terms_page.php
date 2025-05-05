@@ -6,15 +6,27 @@ include_once "pagemenuitem.php"
     <div class="container">
         <div class="row">
             <div class="col">
-                <div class="fs-base-page__header">
-                    <?php
+                <?php
                     if (Auth::isAuthenticated()) {
-                        echo "<a id='fs-back-link' class='fs-link fs-link--circle'>
-                                <i class='fa fa-angle-left'></i>
-                            </a>";
+                ?>
+                    <div class="row">
+                        <div class="col">
+                            <a id='fs-back-link' class='fs-link fs-link--primary fs-link--no-hover fs-back-link'>
+                                <i class='fi fi-chevron-left'></i>
+                                <span>{tr:back_to_settings}</span>
+                            </a>
+                        </div>
+                    </div>
+                <?php
                     }
-                    ?>
-                    <h1>{tr:terms_title}</h1>
+                ?>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="fs-base-page__header mt-5">
+                            <h1>{tr:terms_title}</h1>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="fs-base-page__content">

@@ -10,7 +10,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--fs-accent);
   border-radius: var(--fs-spacing-4x);
   height: var(--fs-spacing-4x);
   padding: 0 var(--fs-spacing-2x);
@@ -18,15 +17,15 @@
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
-  color: var(--fs-accent);
-  background: var(--fs-hightlight-bg);
+  color: var(--fs-badge-color);
+  background: var(--fs-badge-background);
   margin-right: var(--fs-spacing-base);
   margin-bottom: var(--fs-spacing-2x);
 }
 
 .fs-badge a {
-  font-size: 1rem !important;
-  color: var(--fs-accent) !important;
+  font-size: 1.6rem !important;
+  color: var(--fs-badge-color) !important;
   text-decoration: none !important;
 }
 
@@ -51,7 +50,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--fs-accent);
   border-radius: var(--fs-spacing-4x);
   height: var(--fs-spacing-5x);
   padding: 0 var(--fs-spacing-2x);
@@ -59,8 +57,8 @@
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
-  color: var(--fs-accent);
-  background: var(--fs-hightlight-bg);
+  color: var(—fs-badge-btn-text-color);
+  background: var(—fs-badge-btn-text-background);
   margin-right: var(--fs-spacing-base);
   margin-bottom: var(--fs-spacing-2x);
 }
@@ -70,8 +68,8 @@
 }
 
 .fs-badge-buttons a {
-  font-size: 1rem !important;
-  color: var(--fs-accent) !important;
+  font-size: 1.6rem !important;
+  color: var(--fs-badge-color) !important;
   text-decoration: none !important;
 }
 

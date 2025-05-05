@@ -52,52 +52,25 @@ if( $found ) {
     <div class="container">
         <div class="row">
             <div class="col">
-                <div class="fs-invitation-detail__header">
-                    <a id='fs-back-link' class="fs-link fs-link--circle">
-                        <i class='fa fa-angle-left'></i>
-                    </a>
+                <a id='fs-back-link' class='fs-link fs-link--primary fs-link--no-hover fs-back-link'>
+                    <i class='fi fi-chevron-left'></i>
+                    <span>{tr:new_invitation_back}</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="fs-invitation-detail__header mt-5">
                     <h1>{tr:invitation_details}</h1>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-7">
-                <div class="fs-invitation-detail__information">
-                    <h2>{tr:invitation_information}</h2>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:invitation_sent_on}:</strong>
-                        <span>
-                            <?php echo Utilities::formatDate($guest->created) ?>
-                        </span>
-                    </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:expiration_date}:</strong>
-                        <span>
-                            <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
-                        </span>
-                    </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:subject}:</strong>
-                        <span>
-                            <?php echo Template::replaceTainted($guest->subject) ?>
-                        </span>
-                    </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:message}:</strong>
-                        <span>
-                            <?php echo Template::replaceTainted($guest->message) ?>
-                        </span>
-                    </div>
-<!--                    <div class="fs-info fs-info--aligned">-->
-<!--                        <strong>{tr:language}:</strong>-->
-<!--                        <span>English</span>-->
-<!--                    </div>-->
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                 <div class="fs-invitation-detail__recipients">
-                    <h2>{tr:recipient}</h2>
+                    <h4>{tr:recipient}</h2>
                     <p>
                         {tr:your_invitation_was_sent_to}:
                     </p>
@@ -123,13 +96,48 @@ if( $found ) {
                         </ul>
                     <?php } ?>
                 </div>
+                <div class="fs-invitation-detail__information">
+                    <div class="fs-info fs-info--aligned">
+                        <strong>{tr:invitation_sent_on}</strong>
+                        <span>
+                            <?php echo Utilities::formatDate($guest->created) ?>
+                        </span>
+                    </div>
+                    <div class="fs-info fs-info--aligned">
+                        <strong>{tr:expiration_date}</strong>
+                        <span>
+                            <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
+                        </span>
+                    </div>
+                    <div class="fs-info fs-info--aligned">
+                        <strong>{tr:subject}</strong>
+                        <span>
+                            <?php
+                                if ($guest->subject) {
+                                    echo Template::replaceTainted($guest->subject);
+                                } else {
+                                    echo '-';
+                                }
+                            ?>
+                        </span>
+                    </div>
+                    <div class="fs-info fs-info--aligned">
+                        <strong>{tr:message}</strong>
+                        <span>
+                            <?php
+                                if ($guest->subject) {
+                                    echo Template::replaceTainted($guest->message);
+                                } else {
+                                    echo '-';
+                                }
+                            ?>
+                        </span>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-12">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                 <div class="fs-invitation-detail__guest-list">
-                    <h2>{tr:invitation_guest_transfer_linked}</h2>
+                    <h4>{tr:invitation_guest_transfer_linked}</h2>
 
                     <?php
                         $transfers = Transfer::fromGuest($guest);
@@ -143,25 +151,19 @@ if( $found ) {
             <div class="row">
                 <div class="col">
                     <div class="fs-invitation-detail__options">
-                        <h2>{tr:invitation_selected_options}</h2>
+                        <h4>{tr:invitation_selected_options}</h2>
                         <div class="row">
                             <?php if ($guest->options) { ?>
-                                <div class="col col-sm-12 col-md-6">
-                                    <h3>{tr:advanced_invitation_options}</h3>
+                                <div class="col col-sm-12 col-md-6 mt-3">
+                                    <strong>{tr:advanced_invitation_options}</strong>
 
                                     <?php
                                     $optionshtml = "";
                                     if(count(array_filter($guest->options))) {
                                         foreach (array_keys(array_filter($guest->options)) as $o) {
-                                            $checkboxClass = "fs-checkbox--disabled";
-
                                             $optionshtml .= "<div class='fs-invitation-detail__check'>";
-                                            $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
-                                            $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
-                                            $optionshtml .= "<input id='".$o."' type='checkbox' checked disabled>";
-                                            $optionshtml .= "<span class='fs-checkbox__mark'></span>";
-                                            $optionshtml .= "</label>";
-                                            $optionshtml .= "</div>";
+                                            $optionshtml .= "<i class='fi fi-valid'></i>";
+                                            $optionshtml .= "<span>".Lang::tr($o)."</span>";
                                             $optionshtml .= "</div>";
                                         }
                                     }
@@ -175,8 +177,8 @@ if( $found ) {
                                 </div>
                             <?php } ?>
                             <?php if ($guest->transfer_options) { ?>
-                                <div class="col col-sm-12 col-md-6">
-                                    <h3>{tr:advanced_transfer_options}</h3>
+                                <div class="col col-sm-12 col-md-6 mt-3">
+                                    <strong>{tr:advanced_transfer_options}</strong>
 
                                     <?php
                                     $optionshtml = "";
@@ -185,21 +187,10 @@ if( $found ) {
                                             if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
                                                 // this option will never be shown to the user
                                             } else {
-                                                $checkboxClass = $o == TransferOptions::EMAIL_DAILY_STATISTICS ? "" : "fs-checkbox--disabled";
 
                                                 $optionshtml .= "<div class='fs-invitation-detail__check'>";
-                                                $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
-                                                $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
-
-                                                if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
-                                                    $optionshtml .= "<input id='".$o."' data-option='".TransferOptions::EMAIL_DAILY_STATISTICS."' type='checkbox' checked>";
-                                                } else {
-                                                    $optionshtml .= "<input id='".$o."' type='checkbox' checked disabled>";
-                                                }
-
-                                                $optionshtml .= "<span class='fs-checkbox__mark'></span>";
-                                                $optionshtml .= "</label>";
-                                                $optionshtml .= "</div>";
+                                                $optionshtml .= "<i class='fi fi-valid'></i>";
+                                                $optionshtml .= "<span>".Lang::tr($o)."</span>";
                                                 $optionshtml .= "</div>";
                                             }
                                         }
@@ -223,8 +214,8 @@ if( $found ) {
             <div class="row">
                 <div class="col-12">
                     <div class="fs-invitation-detail__actions">
-                        <button type="button" class="fs-button fs-button--danger delete">
-                            <i class="fa fa-trash"></i>
+                        <button type="button" class="fs-button fs-button--inverted delete">
+                            <i class="fi fi-trash"></i>
                             <span>{tr:delete_invitation}</span>
                         </button>
                     </div>

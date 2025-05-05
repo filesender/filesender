@@ -2,12 +2,27 @@
   margin: 0;
   padding: 0;
   width: 100%;
+  background: var(--fs-table-background);
+}
+
+.fs-table th {
+  background: var(--fs-table-th-background);
 }
 
 .fs-table th,
 .fs-table td {
-  padding: var(--fs-spacing-2x);
   vertical-align: top;
+}
+
+.fs-table th a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: underline;
+}
+
+.fs-table th a i {
+  margin-left: var(--fs-spacing-half);
 }
 
 .fs-table--text-middle th,
@@ -17,11 +32,15 @@
 
 .fs-table.fs-table--thin th,
 .fs-table.fs-table--thin td {
-  padding: var(--fs-spacing-base);
+  padding: calc(var(--fs-spacing-base) + 2px);
+}
+
+.fs-table.fs-table--striped tbody tr:nth-child(even) {
+  background-color: var(--fs-table-striped-even-background);
 }
 
 .fs-table.fs-table--striped tbody tr:nth-child(odd) {
-  background-color: var(--fs-hightlight-bg);
+  background-color: var(--fs-table-striped-odd-background);
 }
 
 .fs-table.fs-table--selectable tbody td:not(.actions) {
@@ -29,26 +48,43 @@
 }
 
 .fs-table.fs-table--selectable tbody tr:hover {
-  background-color: var(--fs-hightlight-bg-secondary) !important;
+  background-color: var(--fs-table-selectable-hover-background) !important;
 }
 
 .fs-table__check-action {
   width: auto !important;
   padding: 0 !important;
+  margin-right: var(--fs-spacing-2x);
+}
+
+.fs-table__name {
+  min-width: 300px;
 }
 
 .fs-table__actions {
-
+  min-width: 358px;
 }
 
 .fs-table__actions .fs-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: 1.6rem;
   height: var(--fs-spacing-4x);
-  width: var(--fs-spacing-4x);
+  /*width: var(--fs-spacing-4x);*/
   padding: 0;
+  background: transparent !important;
+  color: var(--fs-table-actions-color) !important;
+  cursor: pointer !important;
+  font-weight: bold;
+  margin-right: var(--fs-spacing-2x);
+}
+
+.fs-table__actions .fs-button,
+.fs-table__actions .fs-button:hover,
+.fs-table__actions .fs-button:active {
+  background: transparent !important;
+  color: var(--fs-table-button-hover-color) !important;
 }
 
 
@@ -71,7 +107,7 @@ table.files .downloadprogress {
     padding: 5px;
     display: block;
     margin: .5rem 0 1rem;
-    background-color: var(--fs-light);
+    background-color: var(--fs-table-responsive-tr-background);
     border-radius: 2px;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
   }
@@ -79,7 +115,7 @@ table.files .downloadprogress {
   .fs-table.fs-table--responsive td {
     display: block;
     text-align: right;
-    border-bottom: 1px dotted var(--fs-gray-300);
+    border-bottom: 1px dotted var(--fs-table-responsive-td-border-color);
   }
 
   .fs-table.fs-table--responsive td:last-child {

@@ -18,7 +18,7 @@
   flex: 1;
   height: var(--fs-spacing-2x);
   border-radius: var(--fs-spacing-2x);
-  background: var(--fs-bg-color-quarternary);
+  background: var(--fs-progress-bar-background);
   margin: 0 !important;
 }
 
@@ -29,8 +29,9 @@
   height: 100%;
   left: 0;
   top: 0;
-  background: var(--fs-success);
+  background: var(--fs-progress-bar-indicator-background);
   border-radius: var(--fs-spacing-2x);
+  border: 4px solid var(--fs-progress-bar-indicator-border-color);
 }
 
 .fs-progress-bar__indicator--thin {
