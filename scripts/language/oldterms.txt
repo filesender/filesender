@@ -497,8 +497,10 @@ pause
 paused
 perform_these_actions_on_all_users
 performed
+pgp_adding_to_transfer_with_some_public_keys_missing
 pgp_blurb_guests_page
 pgp_encrypt_passphrase_to_email
+pgp_functionality_limited_to_one_recipient
 pgp_invalid_key_guest_upload
 pgp_public_key_invalid
 pgp_upload_page_description
