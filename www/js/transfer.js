@@ -156,6 +156,7 @@ window.filesender.transfer = function() {
     this.size = 0;
     this.files = [];
     this.recipients = [];
+    this.recipients_publickeys = new Map();
     this.from = null;
     this.subject = null;
     this.message = null;
