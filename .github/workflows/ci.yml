@@ -196,6 +196,10 @@ jobs:
           echo "testing task/cron job"
           echo "BASEDIR $BASEDIR"
           pwd
+          echo "AAAAAAA test"
+          ls -ld /home/runner/work/filesender/filesender/includes
+          ls -l /home/runner/work/filesender/filesender/includes/init.php          
+          sudo -u www-data id
           sudo -u www-data php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         fi

@@ -100,8 +100,6 @@ sudo chgrp -R www-data ${FILESENDERROOT}
 sudo chown -R www-data:docker   ${FILESENDERROOT}/log
 sudo chown -R www-data:docker   ${FILESENDERROOT}/files
 sudo chown -R www-data:www-data ${FILESENDERROOT}/tmp
-echo "AAAAAAA test"
-ls -l /home/runner/work/filesender/filesender/includes/init.php
 # recommended by install script for php${php_version}-fpm
 sudo a2enmod proxy_fcgi setenvif
 sudo a2enconf php7.4-fpm
