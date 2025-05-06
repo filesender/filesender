@@ -489,7 +489,6 @@ END;
         if( Config::isTrue('pgp_enabled')) {
             if ($data->property == 'pgp_key') {
                 $key = $user->findPGPKey( $data->email, '{tr:not_found}' );
-                Logger::error("pgp key!");
                 return array(
                     'path' => '/user/'.$user->id,
                     'data' => $key,

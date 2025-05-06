@@ -869,14 +869,13 @@ filesender.ui.recipients = {
     
     updatePGPInfo: function(email,pgpkey = null) {
 
-        console.log("updatePGPInfo(top) email " + email );
         if(!pgpkey) {
             pgpkey = $('#pgpkey').text();
         }
 
         var self = this;
         if( pgpkey == null ) {
-            console.log("AAA no key for email " + email );
+            console.log("no pgp key for email..." );
             filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').addClass('badrecipient');
             this.updatePGPInfoError('pgp_invalid_key_guest_upload');
         } else {
@@ -2355,7 +2354,6 @@ $(function() {
         }
     }
 
-    console.log("PGP pgpenc " + pgpenc );
     if( !pgpenc ) {
         // validate message as it is typed
         window.filesender.ui.handleFlagInvalidOnRegexMatch(
