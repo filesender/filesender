@@ -26,7 +26,7 @@ jobs:
             MATRIX_INCLUDE_JSON+="{\"testsuite\": \"selenium\", \"db\": \"mysql\", \"travis_sauce_connect\": \"true\"}"
           else
             #MATRIX_INCLUDE_JSON+="{\"testsuite\": \"cron\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
-            #MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
+            MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
             MATRIX_INCLUDE_JSON+="{\"testsuite\": \"core\", \"db\": \"mysql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
             #MATRIX_INCLUDE_JSON+="{\"testsuite\": \"dataset\", \"db\": \"pgsql\", \"travis_sauce_connect\": \"false\",\"sauce_username\": \"\"}"
           fi
