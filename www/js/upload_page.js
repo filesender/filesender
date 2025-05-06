@@ -920,6 +920,17 @@ filesender.ui.recipients = {
 
         var self = this;
         var too_much = null;
+
+        if( filesender.ui.transfer.recipients_publickeys.size ) {
+            filesender.ui.confirm( lang.tr('pgp_functionality_limited_to_one_recipient')
+                                   .r({email: email}).out(),
+                                   function() { // ok
+                                   },
+                                   function() { // cancel
+                                   });
+            return;
+        }
+        
         if(email.match(/[,;\s]/)) { // Multiple values
             email = email.split(/[,;\s]/);
             var invalid = [];
@@ -980,8 +991,30 @@ filesender.ui.recipients = {
 
         filesender.client.getPGPPublicKey( email, function(loc,data) {
             var pgpkey = data;
+            if( !pgpkey ) {
+                if( filesender.ui.transfer.recipients_publickeys.size ) {
+                    filesender.ui.confirm( lang.tr('pgp_adding_to_transfer_with_some_public_keys_missing')
+                                           .r({email: email}).out(),
+                                          function() { // ok
+                                          },
+                                          function() { // cancel
+                                          });
+                }
+            }
+            
             if( pgpkey ) {
-
+                if( filesender.ui.transfer.recipients_publickeys.size != (filesender.ui.transfer.recipients.length-1) ) {
+                    // adding to a transfer with existing recipients
+                    // who do not have a public key.
+                    filesender.ui.confirm( lang.tr('pgp_adding_to_transfer_with_some_public_keys_missing')
+                                           .r({email: email}).out(),
+                                          function() { // ok
+                                          },
+                                          function() { // cancel
+                                          });
+                    return '';
+                }
+                
 	        kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
 	            if (!err) {
 		        console.log("Key loaded... asking if the user wants to use it");
