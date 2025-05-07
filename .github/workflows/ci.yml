@@ -196,6 +196,7 @@ jobs:
           echo "testing task/cron job"
           echo "BASEDIR $BASEDIR"
           pwd
+          sudo systemctl stop apparmor
           echo "AAAAAAA test"
           ls -ld /home/runner/work/filesender/filesender/includes
           ls -l /home/runner/work/filesender/filesender/includes/init.php          
