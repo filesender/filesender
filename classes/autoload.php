@@ -86,6 +86,7 @@ class Autoloader
         'DownloadOneTimePassword' => 'data/',
         'RateLimitHistory' => 'data/',
         'UploadGraph' => 'data/',
+        'PublicKey' => 'data/',
         
         'AVProgram*' => 'avprograms/',
         
