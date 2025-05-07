@@ -425,6 +425,11 @@ function ensureFK()
                     'transfers.password_encoding refers to dbconstantpasswordencoding.id',
 	            call_user_func('Transfer::getDBTable'), 'transfer_passwordencoding', 'password_encoding',
 	            call_user_func('DBConstantPasswordEncoding::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'publickeys.userid refers to users.id',
+	            call_user_func('PublicKey::getDBTable'), 'PublicKeys_userid', 'userid',
+	            call_user_func('User::getDBTable'), 'id' ));
 
 
     array_push( $fks,
