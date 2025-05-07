@@ -198,7 +198,6 @@ jobs:
           pwd
           sudo systemctl stop apparmor
           echo "AAAAAAA test"
-          sudo chmod o+rx /home/runner
           sudo chown -R www-data /home/runner/work/filesender        
           ls -ld /home
           ls -ld /home/runner
