@@ -198,6 +198,7 @@ jobs:
           pwd
           sudo systemctl stop apparmor
           echo "AAAAAAA test"
+          sudo chown -R www-data /home/runner/work/filesender        
           ls -ld /home/runner/work/filesender/filesender/includes
           ls -l /home/runner/work/filesender/filesender/includes/init.php          
           sudo -u www-data id
