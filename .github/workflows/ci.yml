@@ -190,22 +190,7 @@ jobs:
           echo "testing task/cron job"
           echo "BASEDIR $BASEDIR"
           pwd
-          sudo systemctl stop apparmor
-          echo "AAAAAAA test"
           sudo chown -R runner /home/runner/work/filesender
-          ls -ld /home
-          ls -ld /home/runner
-          ls -ld /home/runner/work
-          ls -ld /home/runner/work/filesender
-          ls -ld /home/runner/work/filesender/filesender
-          ls -ld /home/runner/work/filesender/filesender/includes
-          ls -l /home/runner/work/filesender/filesender/includes/init.php
-          ls -l /home/runner/work/filesender/filesender/scripts/task/../../includes/init.php
-          sudo -u www-data id
-          php -v
-          php -i|grep php.ini
-          grep open_basedir /etc/php/8.3/cli/php.ini
-          id
           sudo -u runner php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         fi

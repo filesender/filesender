@@ -31,8 +31,7 @@
  */
 
 
-require_once '/home/runner/work/filesender/filesender/includes/init.php';
-require_once(dirname(__FILE__) . '/../../includes/init.php');
+require_once(dirname(__FILE__).'/../../includes/init.php');
 
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('Cron started');
