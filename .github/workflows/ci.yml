@@ -200,7 +200,8 @@ jobs:
           echo "AAAAAAA test"
           sudo chown -R www-data /home/runner/work/filesender        
           ls -ld /home/runner/work/filesender/filesender/includes
-          ls -l /home/runner/work/filesender/filesender/includes/init.php          
+          ls -l /home/runner/work/filesender/filesender/includes/init.php
+          ls -l /home/runner/work/filesender/filesender/scripts/task/../../includes/init.php
           sudo -u www-data id
           sudo -u www-data php scripts/task/cron.php --testing-mode
           echo "cron job complete"
