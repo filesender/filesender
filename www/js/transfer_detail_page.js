@@ -47,6 +47,8 @@ $(function() {
         event.stopPropagation();
 
         var transferid = $(this).attr('data-transferid');
+        var chunk_size         = $(this).attr('data-chunk-size');
+        var crypted_chunk_size = $(this).attr('data-crypted-chunk-size');
         var id = $(this).attr('data-id');
         var encrypted = $(this).attr('data-encrypted');
         var filename = $(this).attr('data-name');
@@ -71,7 +73,7 @@ $(function() {
 
         window.filesender.crypto_app().decryptDownload(
             filesender.config.base_path + 'download.php?files_ids=' + id.join(','),
-            transferid,
+            transferid, chunk_size, crypted_chunk_size,
             mime, filename,
             filesize, encrypted_filesize,
             key_version, salt,

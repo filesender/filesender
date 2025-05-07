@@ -156,6 +156,8 @@ if( !$found ) {
                                                               data-id="<?php echo $file->id ?>"
                                                               data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
                                                               data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>"
+                                                              data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
+                                                              data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"                                       
                                                               data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
                                                               data-size="<?php echo $file->size; ?>"
                                                               data-encrypted-size="<?php echo $file->encrypted_size; ?>"
