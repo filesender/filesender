@@ -203,6 +203,7 @@ jobs:
           ls -l /home/runner/work/filesender/filesender/includes/init.php
           ls -l /home/runner/work/filesender/filesender/scripts/task/../../includes/init.php
           sudo -u www-data id
+          php -v
           sudo -u www-data php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         fi
