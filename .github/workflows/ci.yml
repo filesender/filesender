@@ -205,6 +205,7 @@ jobs:
           sudo -u www-data id
           php -v
           php -i|grep php.ini
+          grep open_basedir /etc/php/8.3/cli/php.ini
           sudo -u www-data php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         fi
