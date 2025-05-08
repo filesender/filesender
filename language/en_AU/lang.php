@@ -889,3 +889,4 @@ $lang['pgp_upload_page_description'] = 'Note that the password has been encrypte
 
 $lang['pgp_functionality_limited_to_one_recipient'] = 'PGP functionality is limited to one recipient at the moment. This is a new feature and will evolve over time.';
 $lang['pgp_adding_to_transfer_with_some_public_keys_missing'] = 'The PGP key is not found for the email {email} so they can not be securely notified.';
+$lang['confirm_use_pgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use PGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
