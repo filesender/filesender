@@ -182,7 +182,7 @@ might like to add to your configuration.
 
 * If you would like to support IE11 and use encryption then you will
   need to enable a legacy encryption key version using the
-  [encryption_key_version_new_files](https://docs.filesender.org/v3.0/admin/configuration/#encryption_key_version_new_files)
+  [encryption_key_version_new_files](https://docs.filesender.org/filesender/v3.0/admin/configuration/#encryption_key_version_new_files)
   directive.
 
 Initialise config file and set permissions right. Make the files, tmp
