@@ -8,6 +8,7 @@
 // 
 ?>
 <?php
+$lang['PGP'] = 'PGP';
 $lang['a_transfer_link'] = 'A transfer link';
 $lang['a_transfer_link_tip'] = 'You send the download link to your recipients';
 $lang['about'] = 'எம்மைப்பற்றி';
@@ -158,6 +159,7 @@ $lang['confirm_remind_recipient'] = 'இந்த பெறுநருக்க
 $lang['confirm_remind_transfer'] = 'இந்த பரிமாற்றத்தின் பெறுநர்களுக்கு நினைவூட்டலை அனுப்ப விரும்புகிறீர்களா?';
 $lang['confirm_remove_daily_stats_transfer'] = 'இந்தப் பரிமாற்றத்திற்கான தினசரி புள்ளிவிவரங்களைப் பெற விரும்பவில்லை என்பதில் உறுதியாக உள்ளீர்களா?';
 $lang['confirm_stop_upload'] = 'பதிவேற்றத்தை நிறுத்தி ஏற்கனவே பதிவேற்றிய தரவை அகற்ற விரும்புகிறீர்களா?';
+$lang['confirm_use_pgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use PGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
 $lang['continue'] = 'தொடரவும்';
 $lang['copy'] = 'Copy';
 $lang['copy_text'] = 'கீழே உள்ள உரையை நகலெடுக்கவும்';
@@ -190,6 +192,7 @@ $lang['delete'] = 'அழி';
 $lang['delete_current_api_secret'] = 'Delete the current API secret.';
 $lang['delete_invitation'] = 'Delete invitation';
 $lang['delete_my_account'] = 'எனது கணக்கை நீக்கு';
+$lang['delete_my_pgp_keys'] = 'Delete my PGP public key on the system';
 $lang['delete_transfer'] = 'Delete transfer';
 $lang['delete_transfer_nicely'] = 'பரிமாற்றத்தை நீக்கி, பெறுநர்களுக்கு அறிவிக்கவும்';
 $lang['delete_transfer_roughly'] = 'அறிவிப்புகள் இல்லாமல் பரிமாற்றத்தை நீக்கு';
@@ -423,6 +426,7 @@ $lang['is_default'] = 'இது இயல்புநிலை மதிப்�
 $lang['iterations'] = 'மறு செய்கைகள்';
 $lang['job'] = 'வேலை';
 $lang['kb_per_second'] = 'கேபி/வினாடி';
+$lang['key_import_failed'] = 'Failed to import the provided PGP key';
 $lang['language'] = 'Language';
 $lang['last_activity'] = 'Last activity
 ';
@@ -473,6 +477,8 @@ $lang['no_such_property'] = 'சொத்து கிடைக்கவில�
 $lang['no_transfers'] = 'இடமாற்றங்கள் இல்லை';
 $lang['none'] = 'எதுவும் இல்லை';
 $lang['noscript'] = 'இந்த பயன்பாடு ஜாவாஸ்கிரிப்டை பெரிதும் நம்பியுள்ளது, அதைத் தொடங்க நீங்கள் அதை இயக்க வேண்டும்.';
+$lang['not_a_public_key'] = 'The selected file is not a PGP public key';
+$lang['not_found'] = 'Not found';
 $lang['nothing_happened_as_of_late_you_can_send_client_logs'] = 'நீங்கள் தற்போது பதிவேற்றும் இடமாற்றத்தில் சிறிது நேரம் எந்த முன்னேற்றமும் இல்லை, அது சிக்கியுள்ளதாக நீங்கள் நினைத்தால், அதை உங்கள் ஆதரவுக் குழுவிடம் தெரிவிக்கும் முன், இந்தப் பொத்தானைக் கிளிக் செய்வதன் மூலம் உங்கள் பயனர் இடைமுகத்திலிருந்து கடைசி பதிவு உள்ளீடுகளை அனுப்பவும்:';
 $lang['number_of_files'] = 'கோப்புகளின் எண்ணிக்கை';
 $lang['ok'] = '
@@ -499,6 +505,13 @@ $lang['paused'] = '
 இடைநிறுத்தப்பட்டது';
 $lang['perform_these_actions_on_all_users'] = 'அனைத்து பயனர்களுக்கும் இந்த செயல்களைச் செய்யவும்';
 $lang['performed'] = 'நிகழ்த்தினார்';
+$lang['pgp_adding_to_transfer_with_some_public_keys_missing'] = 'The PGP key is not found for the email {email} so they can not be securely notified.';
+$lang['pgp_blurb_guests_page'] = 'Note: if you <a href="?s=user">upload your PGP public key</a> you can nominate that the passphrase used by a guest for encryption is randomly generated and a PGP encrypted message be sent to you with that passphrase. When the system knows your PGP public key this option will be shown above.';
+$lang['pgp_encrypt_passphrase_to_email'] = 'Use PGP: When uploading, a passphrase will be randomly generated and will be sent to the recipient as a PGP encrypted message. Note that the recipient must have uploaded their public key to the server in order for this feature to work.';
+$lang['pgp_functionality_limited_to_one_recipient'] = 'The PGP key is not found for the email {email} so they can not be securely notified.';
+$lang['pgp_invalid_key_guest_upload'] = 'The PGP key is invalid. Please contact the user who invited you to the system.';
+$lang['pgp_public_key_invalid'] = 'The PGP public key is invalid';
+$lang['pgp_upload_page_description'] = 'Note that the password has been encrypted into an email shown above. Only the person who is listed as a recipient and has uploaded a valid public key to the system system should be able to decrypt this email. This allows you t upload a file that is encrypted in the browser and the password to decrypt that is then put into a secure message shown above so that only the recipient can decode the password and then download the files.';
 $lang['please_add_file_again'] = 'இந்தக் கோப்பை மீண்டும் சேர்க்கவும்';
 $lang['preferences_updated'] = 'பயனர் விருப்பத்தேர்வுகள் புதுப்பிக்கப்பட்டன';
 $lang['previous'] = 'Previous';
@@ -734,8 +747,12 @@ $lang['terasender_worker_count'] = 'TeraSender தொழிலாளர் எ�
 $lang['terasender_worker_failed_to_start'] = 'ஒன்று அல்லது அதற்கு மேற்பட்ட பதிவேற்றப் பணிகளைத் தொடங்க முடியவில்லை';
 $lang['terms_text'] = 'Lorem ipsum';
 $lang['terms_title'] = 'General terms and conditions';
+$lang['test_my_pgp_key'] = 'Send a test email to me encrypted with my PGP key';
+$lang['test_my_pgp_message'] = 'This is an encrypted message generated at {time} on {date}. Have a nice day!';
+$lang['test_pgp_message'] = 'This is an encrypted message generated at {time} on {date}. Have a nice day!';
 $lang['testterm'] = 'சோதனை மதிப்பு';
 $lang['text_desc_of_file_count_and_size'] = 'மொத்த அளவு {totalsize} உடன் {filecount} கோப்பு(களை) பதிவேற்றுகிறீர்கள்';
+$lang['the_system_does_not_know_your_pgp_key'] = 'You do not have a PGP public key in the system';
 $lang['theme'] = 'Theme';
 $lang['theme_info'] = 'The theme is only saved in the browser';
 $lang['then_enter_verification_code_below'] = 'And then enter the verification code below to continue. You will have {config:download_verification_code_valid_duration_minutes} minutes to complete this process.';
@@ -811,6 +828,7 @@ $lang['translatable_email_not_found'] = 'The requested email message could not b
 $lang['translate_to'] = 'மொழிபெயர்:';
 $lang['turning_on_guests_get_a_link_disables_can_only_send_to_me'] = 'Allowing guests to get a link means that can only send to me has been disabled
 ';
+$lang['turning_on_guests_pgp_encryption_disables_can_only_send_to_me'] = 'Turning on PGP encryption forces the guest to only be able to send to you.';
 $lang['twoeightdays'] = '28 நாட்கள்';
 $lang['ui2_accept_aup_1'] = 'இந்த விதிமுறைகளை ஏற்கிறேன் ';
 $lang['ui2_accept_aup_2'] = 'இந்த சேவையைப் பயன்படுத்தும் போது';
@@ -844,6 +862,7 @@ $lang['undergoing_maintenance'] = 'இந்த பயன்பாடு பர�
 $lang['unexpected_file'] = 'இந்த கோப்பு மறுதொடக்கம் பரிமாற்றத்தின் பகுதியாக இல்லை';
 $lang['unknown_page'] = 'தெரியாத பக்கம்';
 $lang['unreadable_file'] = 'கோப்பை படிக்க முடியவில்லை';
+$lang['upload_a_new_pgp_public_key'] = 'Upload a new PGP public key';
 $lang['upload_all_terasender_workers_completed_pbkdf2'] = 'பதிவேற்றும் பணியாளர்கள் அனைவரும் இப்போது தயாராக உள்ளனர், மேலும் மறைகுறியாக்கப்பட்ட தரவை மாற்ற வேண்டும்';
 $lang['upload_completed'] = 'Upload completed';
 $lang['upload_log_header'] = 'முக்கிய பதிவேற்ற செய்திகள்';
@@ -860,6 +879,7 @@ $lang['upload_stalled_and_resumed'] = 'Upload stalled and was resumed...
 ';
 $lang['upload_stalled_due_to_testing'] = 'சோதனை வழக்கு காரணமாக பதிவேற்றம் நிறுத்தப்பட்டது...';
 $lang['upload_started'] = 'பதிவேற்றம் தொடங்கியது...';
+$lang['upload_will_use_pgp_to_share_passphrase'] = '<i class="fa fa-lock"></i> This upload will be encrypted with a randonly generated passphrase. That passphrase will be encrypted with PGP and emailed to the authorized recipient {email}';
 $lang['uploaded'] = 'பதிவேற்றப்பட்டது';
 $lang['uploading_transfers'] = 'தற்போது இடமாற்றங்களைப் பதிவேற்றுகிறது';
 $lang['uploading_your_transfer'] = 'Uploading your transfer...';
@@ -914,6 +934,7 @@ $lang['you_can_report_exception_by_email'] = 'இந்த பிழையை �
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :
 ';
 $lang['you_generated_this_auth_secret_at'] = 'இந்த அங்கீகார ரகசியத்தை நீங்கள் உருவாக்கியது: {datetime}';
+$lang['you_have_a_pgp_public_key_known_to_system'] = 'You have a PGP public key in the system.';
 $lang['your_download_link'] = 'Here\'s your download link';
 $lang['your_invitation_was_sent_to'] = 'Your invitation was sent to';
 $lang['your_transfer_was_sent'] = 'Your transfer was sent to the following email addresses';

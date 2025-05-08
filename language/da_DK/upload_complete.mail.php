@@ -44,7 +44,7 @@ Følgende fil{if:transfer.files>1}er{endif} er blevet uploadet til  <a href="{cf
     </thead>
     <tbody>
         <tr>
-            <td>File{if:transfer.files>1}er{endif}</td>
+            <td>Fil{if:transfer.files>1}er{endif}</td>
             <td>
                 {if:transfer.files>1}
                 <ul>
