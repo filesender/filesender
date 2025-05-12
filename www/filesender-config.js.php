@@ -216,7 +216,7 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 
     auth_warn_session_expired: <?php echo value_to_TF(Config::get('auth_warn_session_expired')) ?>,
 
-    pgp_enabled: <?php echo value_to_TF(Config::get('pgp_enabled')) ?>,
+    openpgp_enabled: <?php echo value_to_TF(Config::get('openpgp_enabled')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

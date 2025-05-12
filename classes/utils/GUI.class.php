@@ -125,7 +125,7 @@ class GUI
             );
         }
 
-        if( Utilities::isTrue(Config::get('pgp_enabled'))) {
+        if( Utilities::isTrue(Config::get('openpgp_enabled'))) {
             array_push( $sources,
                         'lib/kbpgp/kbpgp.js',
             );

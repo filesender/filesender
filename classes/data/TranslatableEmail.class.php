@@ -264,7 +264,7 @@ class TranslatableEmail extends DBObject
                     $context = $to;
                     break;
                 } 
-                if( $translation_id == 'test_pgp_message' ) {
+                if( $translation_id == 'test_openpgp_message' ) {
                     $context = $to;
                     break;
                 } 
@@ -324,7 +324,7 @@ class TranslatableEmail extends DBObject
                     $context = $to;
                     break;
                 } 
-                if( $translation_id == 'test_pgp_message' ) {
+                if( $translation_id == 'test_openpgp_message' ) {
                     $context = $to;
                     break;
                 } 

@@ -318,27 +318,27 @@ $user = Auth::user();
         </div>
 
         <?php
-        if( Config::isTrue('pgp_enabled')) {
+        if( Config::isTrue('openpgp_enabled')) {
         ?>
 
         <div class="row">
             <div class="col-12">
                 <div class="fs-settings__about">
         <?php
-    echo "<h2>".Lang::tr('PGP')."</h2>\n";
+    echo "<h2>".Lang::tr('OpenPGP')."</h2>\n";
     echo "<div>";
     $user = Auth::user();
-    $v = $user->pgp_key;
+    $v = $user->openpgp_key;
     if( $v ) {
-        echo "{tr:you_have_a_pgp_public_key_known_to_system}";
+        echo "{tr:you_have_a_openpgp_public_key_known_to_system}";
 
         echo <<<EOF
-        <div class="pgpkey" id="pgpkey" hidden="true">$v
+        <div class="openpgpkey" id="openpgpkey" hidden="true">$v
         </div>
-        <div class="pgpkeyinfo" id="pgpkeyinfo">
+        <div class="openpgpkeyinfo" id="openpgpkeyinfo">
           <table>
-          <tr><td>{tr:email_address}</td><td id="pgpkeyinfoemail"></td></tr>
-          <tr><td>{tr:created}</td><td id="pgpkeyinfocreated"></td></tr>
+          <tr><td>{tr:email_address}</td><td id="openpgpkeyinfoemail"></td></tr>
+          <tr><td>{tr:created}</td><td id="openpgpkeyinfocreated"></td></tr>
           </table>
         </div>
 EOF;
@@ -347,14 +347,14 @@ EOF;
        <br>
        <ul class="fs-listx">
        <li>
-           <button type="button" class="fs-button test_my_pgp_key">
+           <button type="button" class="fs-button test_my_openpgp_key">
              <i class="fa fa-lg fa-times"></i>
-             <span>{tr:test_my_pgp_key}</span>
+             <span>{tr:test_my_openpgp_key}</span>
            </button>
        </li><li>
-           <button type="button" class="fs-button fs-button--danger delete_my_pgp_key">
+           <button type="button" class="fs-button fs-button--danger delete_my_openpgp_key">
              <i class="fa fa-lg fa-times"></i>
-             <span>{tr:delete_my_pgp_keys}</span>
+             <span>{tr:delete_my_openpgp_keys}</span>
            </button>
        </li></ul>
 EOF;
@@ -362,13 +362,13 @@ EOF;
     }
     else
     {
-        echo "{tr:the_system_does_not_know_your_pgp_key}<br><br>";
+        echo "{tr:the_system_does_not_know_your_openpgp_key}<br><br>";
     }
     if( !$v ) {
     echo <<<EOF
-            <div class="form-group upload_new_pgp_public_key">
-                <label for="pgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_pgp_public_key}</label><br>
-                <input id="pgp_public_key_file" name="pgp_public_key_file" type="file" class="form-control-file" hidden="true" />
+            <div class="form-group upload_new_openpgp_public_key">
+                <label for="openpgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_openpgp_public_key}</label><br>
+                <input id="openpgp_public_key_file" name="openpgp_public_key_file" type="file" class="form-control-file" hidden="true" />
             </div>
 EOF;
     }
@@ -379,7 +379,7 @@ EOF;
             </div>
 
         <?php
-        } // if(pgp_enabled)
+        } // if(openpgp_enabled)
         ?>
             
         <?php

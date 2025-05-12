@@ -172,14 +172,14 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         <div class="fs-info fs-info--aligned top-transfer-message">
                             <strong>{tr:message}:</strong>
                             <span><?php
-                                  $isPGPmsg = false;
-                                  if( Config::isTrue('pgp_enabled')) {
+                                  $isOpenPGPmsg = false;
+                                  if( Config::isTrue('openpgp_enabled')) {
                                       if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                                          $isPGPmsg = true;
+                                          $isOpenPGPmsg = true;
                                       }
                                   }
                                   
-                                  if( $isPGPmsg ) {
+                                  if( $isOpenPGPmsg ) {
                                       // hide it from here is it is clutter.
                                   } else {
                                       echo Template::replaceTainted($transfer->message);
@@ -435,17 +435,17 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <?php if($transfer->message) { ?>
             <tr><td align="right" class="message">{tr:message}</td><td><p>
                 <?php
-                $isPGPmsg = false;
-                if( Config::isTrue('pgp_enabled')) {
+                $isOpenPGPmsg = false;
+                if( Config::isTrue('openpgp_enabled')) {
                     if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                        $isPGPmsg = true;
+                        $isOpenPGPmsg = true;
                     }
                 }
-                if( $isPGPmsg ) {
+                if( $isOpenPGPmsg ) {
                     echo "<PRE>";
                 }
                 echo Template::replaceTainted($transfer->message);
-                if( $isPGPmsg ) {
+                if( $isOpenPGPmsg ) {
                     echo "</PRE>";
                 }
                 

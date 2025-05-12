@@ -801,19 +801,19 @@ window.filesender.client = {
                          callback );
     },
 
-    getPGPPublicKey: function(emailaddr, callback) {
+    getOpenPGPPublicKey: function(emailaddr, callback) {
         return this.post('/user/@me',
                          {
-                             property: 'pgp_key',
+                             property: 'openpgp_key',
                              email: emailaddr
                          },
                          callback );
     },
 
-    testPGPPublicKey: function(message,callback) {
+    testOpenPGPPublicKey: function(message,callback) {
         return this.post('/user/@me',
                          {
-                             property: 'test_pgp_key',
+                             property: 'test_openpgp_key',
                              message: message
                          },
                          callback );

@@ -383,14 +383,14 @@ END;
             $user->transfer_preferences = null;
             $user->save();
         }
-        if( Config::isTrue('pgp_enabled')) {        
-            if( $data->pgp_key ) {
-                $k = PublicKey::ensure( $user->id, $data->pgp_key,
-                                        DBConstantPublicKeyType::lookup(DBConstantPublicKeyType::PGP),
+        if( Config::isTrue('openpgp_enabled')) {        
+            if( $data->openpgp_key ) {
+                $k = PublicKey::ensure( $user->id, $data->openpgp_key,
+                                        DBConstantPublicKeyType::lookup(DBConstantPublicKeyType::OpenPGP),
                                         time());
                 $k->save();
             }
-            if( $data->pgp_key_delete ) {
+            if( $data->openpgp_key_delete ) {
                 
                 $keys = PublicKey::allForUser( $user->id );
                 foreach( $keys as $k ) {
@@ -486,8 +486,8 @@ END;
             
         }
 
-        if( Config::isTrue('pgp_enabled')) {
-            if ($data->property == 'pgp_key') {
+        if( Config::isTrue('openpgp_enabled')) {
+            if ($data->property == 'openpgp_key') {
                 $key = $user->findPGPKey( $data->email, '{tr:not_found}' );
                 return array(
                     'path' => '/user/'.$user->id,
@@ -495,9 +495,9 @@ END;
                     'found' => ($key != null) ? true : false
                 );
             }
-            if( $data->property == 'test_pgp_key' ) {
+            if( $data->property == 'test_openpgp_key' ) {
                 $msg = $data->message;
-                TranslatableEmail::quickSend('test_pgp_message', $user, array('message' => $msg));
+                TranslatableEmail::quickSend('test_openpgp_message', $user, array('message' => $msg));
                 return array(
                     'path' => '/user/'.$user->id,
                     'data' => 'ok'

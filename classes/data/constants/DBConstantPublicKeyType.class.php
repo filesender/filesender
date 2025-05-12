@@ -43,12 +43,12 @@ class DBConstantPublicKeyType extends DBConstant
         return new self();
     }
 
-    const PGP            = 'pgp';
+    const OpenPGP            = 'openpgp';
     
     protected function getEnum()
     {
         return array(
-            self::PGP           => 1,
+            self::OpenPGP           => 1,
         );
     }
 

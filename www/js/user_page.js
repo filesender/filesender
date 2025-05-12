@@ -250,28 +250,28 @@ $(function() {
     ////////////////////
     
 
-    $('.delete_my_pgp_key').on('click', function(e) {
+    $('.delete_my_openpgp_key').on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
 
         var p = {};
-        p['pgp_key_delete'] = '1';        
+        p['openpgp_key_delete'] = '1';        
         filesender.client.updateUserPreferences(p, function() {
             filesender.ui.notify('success', lang.tr('preferences_updated'));
             filesender.ui.reload();
             });
     });
-    $('.test_my_pgp_key').on('click', function(e) {
+    $('.test_my_openpgp_key').on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
 
-        var pgpkey = $('#pgpkey').text();
+        var openpgpkey = $('#openpgpkey').text();
         
-	kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
 	    if (!err) {
                 var dd = new Date(0);
                 dd.setUTCSeconds(key.primary.lifespan.generated);
-                var msg = lang.tr('test_my_pgp_message').r({
+                var msg = lang.tr('test_my_openpgp_message').r({
                     time: dd.toLocaleTimeString(),
                     date: dd.toLocaleDateString()
                 }).toString();
@@ -282,8 +282,8 @@ $(function() {
 		};
                 
 		kbpgp.box (params, function(err, result_string, result_buffer) {
-                    pgpmsg = result_string;
-                    filesender.client.testPGPPublicKey(pgpmsg, function() {
+                    openpgpmsg = result_string;
+                    filesender.client.testOpenPGPPublicKey(openpgpmsg, function() {
                         filesender.ui.notify('success', lang.tr('email_sent'));
                     });
                 });
@@ -295,7 +295,7 @@ $(function() {
         });
         
     });
-    $('#pgp_public_key_file').on('change', function(e) {
+    $('#openpgp_public_key_file').on('change', function(e) {
         const fileList = event.target.files;
         if( fileList.length == 1 ) {
             const f = fileList[0];
@@ -310,7 +310,7 @@ $(function() {
 	                if (!err) {
                             
                             var p = {};
-                            p['pgp_key'] = d;
+                            p['openpgp_key'] = d;
                             
                             filesender.client.updateUserPreferences(p, function() {
 
@@ -351,17 +351,17 @@ $(function() {
         }
     });
 
-    var pgpkey = $('#pgpkey').text();
-    kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+    var openpgpkey = $('#openpgpkey').text();
+    kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
 	if (!err) {
             var s = '';
 
             var userid = key.userids[0];
-            $('#pgpkeyinfoemail').text(userid.components.email);
+            $('#openpgpkeyinfoemail').text(userid.components.email);
             var dd = new Date(0);
             dd.setUTCSeconds(key.primary.lifespan.generated);
             s = dd.toLocaleDateString() + " " + dd.toLocaleTimeString();
-            $('#pgpkeyinfocreated').text(s);
+            $('#openpgpkeyinfocreated').text(s);
         }
     });
     

@@ -3,8 +3,8 @@ $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
 $show_get_a_link_or_email_choice = true;
-$pgp_encrypt_passphrase = false;
-$pgpkey = '';
+$openpgp_encrypt_passphrase = false;
+$openpgpkey = '';
 
 // CGI to used variables
 $aupChecked = '';
@@ -125,7 +125,7 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
     // User to User PGP is a future feature.
     //
     if( !Auth::isGuest() &&
-        $name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL)
+        $name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL)
     {
             return;
     }        
@@ -177,9 +177,9 @@ if( !Auth::isGuest()) {
     }
 }
 foreach(Transfer::allOptions() as $name => $dfn)  {
-    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
         if(Auth::isGuest()) {
-            $pgp_encrypt_passphrase = true;
+            $openpgp_encrypt_passphrase = true;
         } 
     }
 }
@@ -190,16 +190,16 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
     return $k < Config::get('max_transfer_days_valid');
 });
 
-if( Auth::isGuest() && $pgp_encrypt_passphrase ) {
+if( Auth::isGuest() && $openpgp_encrypt_passphrase ) {
     $guest = AuthGuest::getGuest();
-    $pgpkey = $guest->owner->pgp_key;
-    if( !$guest->owner->pgp_have_key ) {
-        $pgp_encrypt_passphrase = false;
+    $openpgpkey = $guest->owner->openpgp_key;
+    if( !$guest->owner->openpgp_have_key ) {
+        $openpgp_encrypt_passphrase = false;
     }
 }
-$pgp_encrypt_passphrase_add_class = "";
-if( $pgp_encrypt_passphrase ) {
-    $pgp_encrypt_passphrase_add_class = "hidden";
+$openpgp_encrypt_passphrase_add_class = "";
+if( $openpgp_encrypt_passphrase ) {
+    $openpgp_encrypt_passphrase_add_class = "hidden";
 }
 
 ?>
@@ -441,7 +441,7 @@ if( $pgp_encrypt_passphrase ) {
                                 <div class="row">
                                     <div class="col-12">
                                         <div data-related-to="emailfrom">
-                                            <div class="<?php echo $pgp_encrypt_passphrase_add_class ?>" ></div>
+                                            <div class="<?php echo $openpgp_encrypt_passphrase_add_class ?>" ></div>
 
                                             <?php $emails = Auth::isGuest() ? array(AuthGuest::getGuest()->email) : Auth::user()->email_addresses ?>
 
@@ -554,8 +554,8 @@ if( $pgp_encrypt_passphrase ) {
                                                     {tr:password_can_not_be_part_of_message_error}
                                                 </label>
                                             </div>
-                                            <div class="pgpinfo" id="pgpinfo" >
-                                                <p>{tr:pgp_upload_page_description}</p>
+                                            <div class="openpgpinfo" id="openpgpinfo" >
+                                                <p>{tr:openpgp_upload_page_description}</p>
                                             </div>
                                         <?php } ?> <!-- closing if($allow_recipients) -->
                                         <?php if(Auth::isGuest()) { ?>
@@ -580,9 +580,9 @@ if( $pgp_encrypt_passphrase ) {
                                                 }
                                             }
                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                if( $name == "pgp_encrypt_passphrase_to_email" ) {
-                                                    if( $pgp_encrypt_passphrase ) {
-                                                        $cfg['default'] = $guest->transfer_options['pgp_encrypt_passphrase_to_email'];
+                                                if( $name == "openpgp_encrypt_passphrase_to_email" ) {
+                                                    if( $openpgp_encrypt_passphrase ) {
+                                                        $cfg['default'] = $guest->transfer_options['openpgp_encrypt_passphrase_to_email'];
                                                     }
                                                 }
                                                 if( !array_key_exists($name,$upload_options_handled)) {
@@ -605,7 +605,7 @@ if( $pgp_encrypt_passphrase ) {
 
                                 <?php if(Config::get('encryption_enabled')) {  ?>
                                     <div class="row">
-                                        <div id="encryption_options"  class="<?php echo $pgp_encrypt_passphrase_add_class ?>"> </div>
+                                        <div id="encryption_options"  class="<?php echo $openpgp_encrypt_passphrase_add_class ?>"> </div>
                                         <div class="col-12">
                                             <div class="fs-switch" data-related-to="encryption">
                                                 <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
@@ -614,7 +614,7 @@ if( $pgp_encrypt_passphrase ) {
                                                 </label>
                                             </div>
 
-                                            <div id="encgroup1pgp">
+                                            <div id="encgroup1openpgp">
                                             <div id="encgroup1" class="fs-transfer__password">
                                                 <div class="fs-transfer__password-top" id="encryption_password_container">
                                                     <div class="row">
@@ -1018,16 +1018,16 @@ if( $pgp_encrypt_passphrase ) {
             <?php } ?>
         </div>
         
-        <?php if( $pgp_encrypt_passphrase ) {  ?>
+        <?php if( $openpgp_encrypt_passphrase ) {  ?>
             <div>
-                <p><?php echo lang::tr('upload_will_use_pgp_to_share_passphrase')->r('email',AuthGuest::getGuest()->user_email)->out()?></p>
+                <p><?php echo lang::tr('upload_will_use_openpgp_to_share_passphrase')->r('email',AuthGuest::getGuest()->user_email)->out()?></p>
             </div>
         <?php } ?>
         
     </form>
 
-    <div id="pgp-possile" hidden="true"><?php echo Utilities::boolToString(!empty($pgpkey)) ?></div>
-    <div id="pgpkey" hidden="true"><?php echo Template::Q($pgpkey) ?></div>
+    <div id="openpgp-possile" hidden="true"><?php echo Utilities::boolToString(!empty($openpgpkey)) ?></div>
+    <div id="openpgpkey" hidden="true"><?php echo Template::Q($openpgpkey) ?></div>
 
     
     <?php if (!Config::get('disable_directory_upload')) { ?>

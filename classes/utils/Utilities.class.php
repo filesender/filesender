@@ -110,12 +110,12 @@ class Utilities
     /**
      * Validates a personal message
      *
-     * This can now throw on a bad input for PGP messages. 
+     * This can now throw on a bad input for OpenPGP messages. 
      */
     public static function isValidMessage($msg)
     {
-        if( Config::isTrue('pgp_enabled')) {
-            if( self::isValidPGPMessage($msg)) {
+        if( Config::isTrue('openpgp_enabled')) {
+            if( self::isValidOpenPGPMessage($msg)) {
                 return true;
             }
         }
@@ -126,7 +126,7 @@ class Utilities
         return true;
     }
 
-    public static function isValidPGPMessage($msg)
+    public static function isValidOpenPGPMessage($msg)
     {
         $originalmsg = $msg;
         
@@ -139,7 +139,7 @@ class Utilities
 
         if( !$msg ) {
             if( str_starts_with( $originalmsg, "-----BEGIN PGP MESSAGE-----")) {
-                throw new PKIPGPBadMesageException('');
+                throw new PKIOpenPGPBadMesageException('');
             }
         }
 

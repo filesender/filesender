@@ -342,7 +342,7 @@ class User extends DBObject
         $u = self::fromAuthEmail($email);
         $key = $def;
         if( $u ) {
-            $key = $u->pgp_key;
+            $key = $u->openpgp_key;
         }
         return $key;
     }
@@ -724,18 +724,18 @@ class User extends DBObject
         ))) {
             return $this->$property;
         }
-        if( $property == 'pgp_key' ) {
+        if( $property == 'openpgp_key' ) {
             $k = PublicKey::getDefaultForUser($this->id);
             if( !$k ) return null;
             return $k->key;
         }
-        if( $property == 'pgp_key_created' ) {
+        if( $property == 'openpgp_key_created' ) {
             $k = PublicKey::getDefaultForUser($this->id);
             if( !$k ) return null;
             return $k->created;
         }
         if (in_array($property, array(
-            'pgp_have_key'
+            'openpgp_have_key'
         ))) {
             $k = PublicKey::getDefaultForUser($this->id);
             return $k->have_key;
