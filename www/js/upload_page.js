@@ -130,7 +130,7 @@ function getGuestOption( n )
 }
 
 
-function updateForPGPTransferOfPassphrase()
+function updateForOpenPGPTransferOfPassphrase()
 {
         var crypto = window.filesender.crypto_app();
         var encoded = crypto.generateRandomPassword();
@@ -146,14 +146,14 @@ function updateForPGPTransferOfPassphrase()
         if( !filesender.ui.evalUploadEnabledSkipPGP ) {
             if( filesender.ui.transfer.recipients.length ) {
                 for(var i=0; i<filesender.ui.transfer.recipients.length; i++) {
-                    var pgpkey = filesender.ui.transfer.recipients_publickeys.get(filesender.ui.transfer.recipients[i]);
-                    filesender.ui.recipients.updatePGPInfo(filesender.ui.transfer.recipients[i],pgpkey);
+                    var openpgpkey = filesender.ui.transfer.recipients_publickeys.get(filesender.ui.transfer.recipients[i]);
+                    filesender.ui.recipients.updateOpenPGPInfo(filesender.ui.transfer.recipients[i],openpgpkey);
                 }
             }
             var recip = $('.recipients').text();
             console.log("RECIP " + recip );
-            var pgpkey = filesender.ui.transfer.recipients_publickeys.get(recip);
-            filesender.ui.recipients.updatePGPInfo(recip,pgpkey);
+            var openpgpkey = filesender.ui.transfer.recipients_publickeys.get(recip);
+            filesender.ui.recipients.updateOpenPGPInfo(recip,openpgpkey);
             ok = true;
         }
         stage2ok = true;
@@ -165,8 +165,8 @@ function updateForPGPTransferOfPassphrase()
         $('#encryption').attr('readonly', true);
         $('#encgroup1').attr('readonly', true);
 
-        $('#encgroup1pgp').hide();
-        $('#pgpinfo').show();
+        $('#encgroup1openpgp').hide();
+        $('#openpgpinfo').show();
 
         filesender.ui.nodes.encryption.toggle.prop('checked',true);
 
@@ -854,33 +854,33 @@ filesender.ui.files = {
     },
 };
 
-var have_shown_bad_pgp_key_dialog = false;
+var have_shown_bad_openpgp_key_dialog = false;
 
 // Manage recipients
 filesender.ui.recipients = {
 
-    updatePGPInfoError: function(trstr) {
+    updateOpenPGPInfoError: function(trstr) {
 
-        if( !have_shown_bad_pgp_key_dialog ) {
-            have_shown_bad_pgp_key_dialog = true;
+        if( !have_shown_bad_openpgp_key_dialog ) {
+            have_shown_bad_openpgp_key_dialog = true;
             filesender.ui.alert('error', lang.tr(trstr));
         }
     },
     
-    updatePGPInfo: function(email,pgpkey = null) {
+    updateOpenPGPInfo: function(email,openpgpkey = null) {
 
-        if(!pgpkey) {
-            pgpkey = $('#pgpkey').text();
+        if(!openpgpkey) {
+            openpgpkey = $('#openpgpkey').text();
         }
 
         var self = this;
-        if( pgpkey == null ) {
-            console.log("no pgp key for email..." );
+        if( openpgpkey == null ) {
+            console.log("no openpgp key for email..." );
             filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').addClass('badrecipient');
-            this.updatePGPInfoError('pgp_invalid_key_guest_upload');
+            this.updateOpenPGPInfoError('openpgp_invalid_key_guest_upload');
         } else {
 
-	    kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	    kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
 	        if (!err) {
 		    console.log("Key loaded");
 		    var params = {
@@ -898,14 +898,14 @@ filesender.ui.recipients = {
                             filesender.ui.evalUploadEnabled();
                             filesender.ui.evalUploadEnabledSkipPGP = false;
                         } else {
-                            self.updatePGPInfoError('pgp_invalid_key_guest_upload');
+                            self.updateOpenPGPInfoError('openpgp_invalid_key_guest_upload');
                         }
                     });
                 } else {
 		    console.log("Key load FAILED");
                     console.log(err);
                     filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').addClass('badrecipient');
-                    self.updatePGPInfoError('pgp_invalid_key_guest_upload');
+                    self.updateOpenPGPInfoError('openpgp_invalid_key_guest_upload');
                 }
             });
 
@@ -922,7 +922,7 @@ filesender.ui.recipients = {
         var too_much = null;
 
         if( filesender.ui.transfer.recipients_publickeys.size ) {
-            filesender.ui.confirm( lang.tr('pgp_functionality_limited_to_one_recipient')
+            filesender.ui.confirm( lang.tr('openpgp_functionality_limited_to_one_recipient')
                                    .r({email: email}).out(),
                                    function() { // ok
                                    },
@@ -989,12 +989,12 @@ filesender.ui.recipients = {
 
         filesender.ui.evalUploadEnabled();
 
-        if( filesender.config.pgp_enabled ) {
-            filesender.client.getPGPPublicKey( email, function(loc,data) {
-                var pgpkey = data;
-                if( !pgpkey ) {
+        if( filesender.config.openpgp_enabled ) {
+            filesender.client.getOpenPGPPublicKey( email, function(loc,data) {
+                var openpgpkey = data;
+                if( !openpgpkey ) {
                     if( filesender.ui.transfer.recipients_publickeys.size ) {
-                        filesender.ui.confirm( lang.tr('pgp_adding_to_transfer_with_some_public_keys_missing')
+                        filesender.ui.confirm( lang.tr('openpgp_adding_to_transfer_with_some_public_keys_missing')
                                                .r({email: email}).out(),
                                                function() { // ok
                                                },
@@ -1003,11 +1003,11 @@ filesender.ui.recipients = {
                     }
                 }
                 
-                if( pgpkey ) {
+                if( openpgpkey ) {
                     if( filesender.ui.transfer.recipients_publickeys.size != (filesender.ui.transfer.recipients.length-1) ) {
                         // adding to a transfer with existing recipients
                         // who do not have a public key.
-                        filesender.ui.confirm( lang.tr('pgp_adding_to_transfer_with_some_public_keys_missing')
+                        filesender.ui.confirm( lang.tr('openpgp_adding_to_transfer_with_some_public_keys_missing')
                                                .r({email: email}).out(),
                                                function() { // ok
                                                },
@@ -1016,23 +1016,23 @@ filesender.ui.recipients = {
                         return '';
                     }
                     
-	            kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	            kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
 	                if (!err) {
 		            console.log("Key loaded... asking if the user wants to use it");
 
                             filesender.ui.confirm(
-                                lang.tr('confirm_use_pgp_to_send_passphrase'),
+                                lang.tr('confirm_use_openpgp_to_send_passphrase'),
                                 function() { // ok
-                                    filesender.ui.transfer.recipients_publickeys.set(email, pgpkey );
-                                    updateForPGPTransferOfPassphrase();
-                                    self.updatePGPInfo( email, pgpkey );
+                                    filesender.ui.transfer.recipients_publickeys.set(email, openpgpkey );
+                                    updateForOpenPGPTransferOfPassphrase();
+                                    self.updateOpenPGPInfo( email, openpgpkey );
                                 },
                                 function() { // cancel
                                 });
                             
                         } else {
                             console.log("Key load FAILED...");
-                            window.filesender.notification.notify( lang.tr('pgp_public_key_invalid'));
+                            window.filesender.notification.notify( lang.tr('openpgp_public_key_invalid'));
                         }
                     });
                     
@@ -2073,7 +2073,7 @@ $(function() {
         options: {
             get_a_link: form.find('input[id="get_a_link"]'),
             hide_sender_email: form.find('input[name="hide_sender_email"]'),
-            pgp_encrypt_passphrase_to_email: form.find('input[name="pgp_encrypt_passphrase_to_email"]')
+            openpgp_encrypt_passphrase_to_email: form.find('input[name="openpgp_encrypt_passphrase_to_email"]')
         },
         buttons: {
             start: form.find('.buttons .start'),
@@ -2380,17 +2380,17 @@ $(function() {
         if(files && files.length) filesender.ui.files.addList(files);
     }
 
-    var pgpenc = false;
-    if( filesender.config.pgp_enabled ) {
-        pgpenc = ('pgp_encrypt_passphrase_to_email' in filesender.ui.nodes.options)
-            ? filesender.ui.nodes.options.pgp_encrypt_passphrase_to_email.is(':checked')
+    var openpgpenc = false;
+    if( filesender.config.openpgp_enabled ) {
+        openpgpenc = ('openpgp_encrypt_passphrase_to_email' in filesender.ui.nodes.options)
+            ? filesender.ui.nodes.options.openpgp_encrypt_passphrase_to_email.is(':checked')
             : false;
-        if( $("#pgp-possile").text() == "false" ) {
-            pgpenc = false;
+        if( $("#openpgp-possile").text() == "false" ) {
+            openpgpenc = false;
         }
     }
 
-    if( !pgpenc ) {
+    if( !openpgpenc ) {
         // validate message as it is typed
         window.filesender.ui.handleFlagInvalidOnRegexMatch(
             filesender.ui.nodes.message,
@@ -2500,13 +2500,13 @@ $(function() {
 
 
     
-    if( pgpenc ) {
+    if( openpgpenc ) {
 
         var recip = $('.recipients').text();
-        pgpkey = $('#pgpkey').text();
-        filesender.ui.transfer.recipients_publickeys.set( recip, pgpkey );
+        openpgpkey = $('#openpgpkey').text();
+        filesender.ui.transfer.recipients_publickeys.set( recip, openpgpkey );
 
-        updateForPGPTransferOfPassphrase();
+        updateForOpenPGPTransferOfPassphrase();
     }
   
     // Custom collapse
@@ -2674,7 +2674,7 @@ $(function() {
 
     filesender.ui.nodes.encryption.generate.on('click', function() {
 
-        if( pgpenc ) {
+        if( openpgpenc ) {
             return;
         }        
         var crypto = window.filesender.crypto_app();
@@ -3078,8 +3078,8 @@ $(function() {
         }, 500 );
 
 
-    if( pgpenc ) {
-        filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').on('change', function() {
+    if( openpgpenc ) {
+        filesender.ui.nodes.form.find('input[name="openpgp_encrypt_passphrase_to_email"]').on('change', function() {
             var choice = $(this).is(':checked');
             if( choice ) {
                 
@@ -3120,8 +3120,8 @@ $(function() {
 
 
 
-        if(filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').is(':checked')) {
-            filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').trigger('change');
+        if(filesender.ui.nodes.form.find('input[name="openpgp_encrypt_passphrase_to_email"]').is(':checked')) {
+            filesender.ui.nodes.form.find('input[name="openpgp_encrypt_passphrase_to_email"]').trigger('change');
         }
     }
     

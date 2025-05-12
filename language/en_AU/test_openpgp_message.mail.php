@@ -15,9 +15,6 @@ Please find below a test encrypted message that you can decode with your private
 
 {message}
 
----test
-===foo2
-
 Best regards,
 {cfg:site_name}
 

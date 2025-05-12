@@ -13,10 +13,10 @@ if(!in_array($section, $sections)) {
     throw new GUIUnknownAdminSectionException($section);
 }
 
-$pgpkey = null;
-if( Config::isTrue('pgp_enabled')) {
+$openpgpkey = null;
+if( Config::isTrue('openpgp_enabled')) {
     $user = Auth::user();
-    $pgpkey = $user->pgp_key;
+    $openpgpkey = $user->openpgp_key;
 }
 
 
@@ -26,11 +26,11 @@ $guest_options_handled = array();
 
 $new_guests_can_only_send_to_creator = false;
 
-$show_pgp_user_profile_message = false;
+$show_openpgp_user_profile_message = false;
 foreach(Transfer::allOptions() as $name => $dfn)  {
-    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
-        if( !$pgpkey ) {
-            $show_pgp_user_profile_message = true;
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+        if( !$openpgpkey ) {
+            $show_openpgp_user_profile_message = true;
         }
     }
 }
@@ -54,7 +54,7 @@ foreach (Guest::allOptions() as $name => $dfn) {
 $displayoption = function($name, $cfg, $transfer = false)
 use ( $new_guests_can_only_send_to_creator,
       $new_guests_can_only_send_to_creator_default,
-      $pgpkey )
+      $openpgpkey )
 {
     // don't show the option for get_a_link if they can't use it.
     if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
@@ -62,11 +62,11 @@ use ( $new_guests_can_only_send_to_creator,
     }
 
     //
-    // If the user does not have a pgp public key then we shouldn't offer
+    // If the user does not have a openpgp public key then we shouldn't offer
     // for them to force the guest to use PGP encryption
-    // $pgpkey is null if pgp is not able to be used.
+    // $openpgpkey is null if pgp is not able to be used.
     //
-    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$pgpkey ) {
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$openpgpkey ) {
         return;
     }    
     
@@ -94,7 +94,7 @@ use ( $new_guests_can_only_send_to_creator,
     } else {
         $lockClassLabel = '';
         $lockClass = '';
-        if($name == 'get_a_link' || $name == 'can_only_send_to_me' || $name == 'pgp_encrypt_passphrase_to_email') {
+        if($name == 'get_a_link' || $name == 'can_only_send_to_me' || $name == 'openpgp_encrypt_passphrase_to_email') {
             $lockClass = 'get_a_link_lock';
         }
         echo '<div class="form-check form-switch custom-control custom-switch '.$lockClass.'" '. $extraDivAttrs .'>';

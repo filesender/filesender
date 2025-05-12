@@ -72,7 +72,7 @@ class PKIUnknownEventException extends DetailedException
 /**
  * Bad key exception
  */
-class PKIPGPBadPublicKeyException extends DetailedException
+class PKIOpenPGPBadPublicKeyException extends DetailedException
 {
     /**
      * Constructor
@@ -82,7 +82,7 @@ class PKIPGPBadPublicKeyException extends DetailedException
     public function __construct($event)
     {
         parent::__construct(
-            'pgp_public_key_invalid', // Message to give to the user
+            'openpgp_public_key_invalid', // Message to give to the user
             array('event' => $event) // Real message to log
         );
     }
@@ -91,7 +91,7 @@ class PKIPGPBadPublicKeyException extends DetailedException
 /**
  * Bad message
  */
-class PKIPGPBadMesageException extends DetailedException
+class PKIOpenPGPBadMesageException extends DetailedException
 {
     /**
      * Constructor
@@ -101,7 +101,7 @@ class PKIPGPBadMesageException extends DetailedException
     public function __construct($event)
     {
         parent::__construct(
-            'pgp_message_invalid', // Message to give to the user
+            'openpgp_message_invalid', // Message to give to the user
             array('event' => $event) // Real message to log
         );
     }

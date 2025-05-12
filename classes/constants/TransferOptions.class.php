@@ -65,6 +65,6 @@ class TransferOptions extends Enum
 
     const VERIFY_EMAIL_TO_DOWNLOAD                  = 'verify_email_to_download';
     
-    const PGP_ENCRYPT_PASSPHRASE_TO_EMAIL           = 'pgp_encrypt_passphrase_to_email';
+    const OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL           = 'openpgp_encrypt_passphrase_to_email';
     
 }

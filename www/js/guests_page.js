@@ -261,7 +261,7 @@ $(function() {
         options: {guest: {}, transfer: {}},
         sendbutton: send_voucher.find('.send'),
         message_can_not_contain_urls: send_voucher.find('textarea[name="message_can_not_contain_urls"]'),
-        pgp_encrypt_passphrase_to_email: send_voucher.find('input[name="pgp_encrypt_passphrase_to_email"]'),
+        openpgp_encrypt_passphrase_to_email: send_voucher.find('input[name="openpgp_encrypt_passphrase_to_email"]'),
     };
     send_voucher.find('.guest_options input').each(function() {
         var i = $(this);
@@ -349,15 +349,15 @@ $(function() {
     var get_a_link_updates = function() {
         var checked = filesender.ui.nodes.get_a_link.is(':checked');
         var onlyToMe = filesender.ui.nodes.can_only_send_to_me;
-        var pgp = filesender.ui.nodes.pgp_encrypt_passphrase_to_email;
+        var openpgp = filesender.ui.nodes.openpgp_encrypt_passphrase_to_email;
         if( checked ) {
             onlyToMe.prop('checked', false );
             onlyToMe.prop('disabled', true);
-            disenable( pgp, true, false );
+            disenable( openpgp, true, false );
             filesender.ui.notify('info',lang.tr('turning_on_guests_get_a_link_disables_can_only_send_to_me'));
         } else {
             onlyToMe.prop('disabled', false);
-            disenable( pgp, false, false );
+            disenable( openpgp, false, false );
         }
     }
     filesender.ui.nodes.get_a_link.on('click', function() {
@@ -367,11 +367,11 @@ $(function() {
 
 
     //
-    // If the user wants to force a guest to pgp encrypt then
+    // If the user wants to force a guest to openpgp encrypt then
     // the guest can only send to the user who invited them
     //
-    var pgp_encrypt_passphrase_updates = function( showMsg ) {
-        var checked = filesender.ui.nodes.pgp_encrypt_passphrase_to_email.is(':checked');
+    var openpgp_encrypt_passphrase_updates = function( showMsg ) {
+        var checked = filesender.ui.nodes.openpgp_encrypt_passphrase_to_email.is(':checked');
         var onlyToMe = filesender.ui.nodes.can_only_send_to_me;
         var gal = filesender.ui.nodes.get_a_link;
         
@@ -380,17 +380,17 @@ $(function() {
             onlyToMe.prop('disabled', true);
             disenable( gal, true, false );
             if( showMsg ) {
-                filesender.ui.notify('info',lang.tr('turning_on_guests_pgp_encryption_disables_can_only_send_to_me'));
+                filesender.ui.notify('info',lang.tr('turning_on_guests_openpgp_encryption_disables_can_only_send_to_me'));
             }
         } else {
             onlyToMe.prop('disabled', false);
             disenable( gal, false, false );
         }
     }
-    filesender.ui.nodes.pgp_encrypt_passphrase_to_email.on('click', function() {
-        pgp_encrypt_passphrase_updates( true );
+    filesender.ui.nodes.openpgp_encrypt_passphrase_to_email.on('click', function() {
+        openpgp_encrypt_passphrase_updates( true );
     });
-    pgp_encrypt_passphrase_updates( false );
+    openpgp_encrypt_passphrase_updates( false );
 
     if( filesender.ui.nodes.does_not_expire ) {
         filesender.ui.nodes.does_not_expire.on('click', function() {

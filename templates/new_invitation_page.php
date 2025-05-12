@@ -13,23 +13,23 @@ if(!in_array($section, $sections)) {
     throw new GUIUnknownAdminSectionException($section);
 }
 
-$pgpkey = null;
-if( Config::isTrue('pgp_enabled')) {
+$openpgpkey = null;
+if( Config::isTrue('openpgp_enabled')) {
     $user = Auth::user();
-    $pgpkey = $user->pgp_key;
+    $openpgpkey = $user->openpgp_key;
 }
-$show_pgp_user_profile_message = false;
-if( Config::isTrue('pgp_enabled')) {
+$show_openpgp_user_profile_message = false;
+if( Config::isTrue('openpgp_enabled')) {
     foreach(Transfer::availableOptions(false) as $name => $cfg) {
         Logger::error("AAA1 name $name ");
-        if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
-            if( !$pgpkey ) {
-                $show_pgp_user_profile_message = true;
+        if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+            if( !$openpgpkey ) {
+                $show_openpgp_user_profile_message = true;
             }
         }
     }
 }
-Logger::error("AAA show " . $show_pgp_user_profile_message);
+Logger::error("AAA show " . $show_openpgp_user_profile_message);
 
 // allow a part of the page to handle a guest option
 // and avoid it being handled a second time by other code
@@ -58,7 +58,7 @@ foreach (Guest::allOptions() as $name => $dfn) {
 $displayoption = function($name, $cfg, $transfer = false)
 use ( $new_guests_can_only_send_to_creator,
       $new_guests_can_only_send_to_creator_default,
-      $pgpkey )      
+      $openpgpkey )      
 {
     // don't show the option for get_a_link if they can't use it.
     if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
@@ -73,7 +73,7 @@ use ( $new_guests_can_only_send_to_creator,
     // If the user does not have a pgp public key then we shouldn't offer
     // for them to force the guest to use PGP encryption
     //
-    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$pgpkey ) {
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$openpgpkey ) {
         return;
     }    
     
@@ -99,7 +99,7 @@ use ( $new_guests_can_only_send_to_creator,
     } else {
         $lockClassLabel = '';
         $lockClass = '';
-        if($name == 'get_a_link' || $name == 'can_only_send_to_me'  || $name == 'pgp_encrypt_passphrase_to_email') {
+        if($name == 'get_a_link' || $name == 'can_only_send_to_me'  || $name == 'openpgp_encrypt_passphrase_to_email') {
             $lockClass = 'get_a_link_lock';
         }
 
@@ -322,12 +322,12 @@ use ( $new_guests_can_only_send_to_creator,
             </div>
         </div>
 
-        <?php if($show_pgp_user_profile_message) { // so many div shells to get layout. ?>
+        <?php if($show_openpgp_user_profile_message) { // so many div shells to get layout. ?>
             <div class="fs-new-invitation__form">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
                         <div class="fs-new-invitation__data">
-                            <div><i class="fa fa-info-circle"></i>{tr:pgp_blurb_guests_page}</div>
+                            <div><i class="fa fa-info-circle"></i>{tr:openpgp_blurb_guests_page}</div>
                         </div>
                     </div>
                 </div>
