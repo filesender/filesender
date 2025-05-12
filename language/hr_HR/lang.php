@@ -8,6 +8,7 @@
 // 
 ?>
 <?php
+$lang['OpenPGP'] = 'PGP';
 $lang['PGP'] = 'PGP';
 $lang['a_transfer_link'] = 'Poveznica prijenosa';
 $lang['a_transfer_link_tip'] = 'Primateljima šaljete vezu za preuzimanje';
@@ -154,7 +155,7 @@ $lang['confirm_remind_recipient'] = 'Želite li poslati podsjetnik ovon primatel
 $lang['confirm_remind_transfer'] = 'Želite li poslati podsjetnik primateljima ovog prijenosa?';
 $lang['confirm_remove_daily_stats_transfer'] = 'Jeste li sigurni da više ne želite primati dnevne statistike za ovaj prijenos?';
 $lang['confirm_stop_upload'] = 'Želite li zaustaviti prijenos i ukloniti već prenesene podatke?';
-$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use PGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
+$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use OpenPGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
 $lang['continue'] = 'Nastaviti';
 $lang['copy'] = 'Kopiranje';
 $lang['copy_text'] = 'Kopirajte tekst u nastavku';
@@ -471,6 +472,13 @@ $lang['oneweek'] = '1 tjedan';
 $lang['open_auditlog'] = 'Pregledaj zapisnike prijenosa';
 $lang['open_file_auditlog'] = 'Pogledajte što se dogodilo s ovom datotekom';
 $lang['open_recipient_auditlog'] = 'Pogledajte što je ovaj primatelj učinio';
+$lang['openpgp_adding_to_transfer_with_some_public_keys_missing'] = 'PGP ključ nije pronađen za e-poštu {email} pa se ne može sigurno obavijestiti.';
+$lang['openpgp_blurb_guests_page'] = 'Napomena: ako <a href="?s=user">učitate svoj PGP javni ključ</a>, možete odrediti da se šifra koju gost koristi za enkripciju nasumično generira i da vam se pošalje PGP šifrirana poruka s tom šifrom. Kada sustav sazna vaš PGP javni ključ, ova opcija će biti prikazana iznad.';
+$lang['openpgp_encrypt_passphrase_to_email'] = 'Koristi PGP: Prilikom učitavanja, lozinka će se nasumično generirati i poslati primatelju kao PGP šifrirana poruka. Imajte na umu da primatelj mora prenijeti svoj javni ključ na poslužitelj kako bi ova značajka radila.';
+$lang['openpgp_functionality_limited_to_one_recipient'] = 'PGP ključ nije pronađen za e-poštu {email} pa se ne može sigurno obavijestiti.';
+$lang['openpgp_invalid_key_guest_upload'] = 'PGP ključ je nevažeći. Molimo kontaktirajte korisnika koji vas je pozvao u sustav.';
+$lang['openpgp_public_key_invalid'] = 'PGP javni ključ je nevažeći';
+$lang['openpgp_upload_page_description'] = 'Imajte na umu da je lozinka šifrirana u gore prikazanoj e-pošti. Samo osoba koja je navedena kao primatelj i prenijela je važeći javni ključ u sustav sustava trebala bi moći dešifrirati ovu e-poštu. To vam omogućuje prijenos datoteke koja je šifrirana u pregledniku i lozinku za dešifriranje koja se zatim stavlja u sigurnu poruku prikazanu gore tako da samo primatelj može dekodirati lozinku i zatim preuzeti datoteke.';
 $lang['optional'] = 'opcionalno';
 $lang['optional_message'] = 'Neobavezna poruka';
 $lang['options'] = 'Postavke';
@@ -486,13 +494,6 @@ $lang['pause'] = 'Pauza';
 $lang['paused'] = 'Pauzirano';
 $lang['perform_these_actions_on_all_users'] = 'Izvedi ove radnje na svim korisnicima';
 $lang['performed'] = 'Izvedeno';
-$lang['openpgp_adding_to_transfer_with_some_public_keys_missing'] = 'PGP ključ nije pronađen za e-poštu {email} pa se ne može sigurno obavijestiti.';
-$lang['openpgp_blurb_guests_page'] = 'Napomena: ako <a href="?s=user">učitate svoj PGP javni ključ</a>, možete odrediti da se šifra koju gost koristi za enkripciju nasumično generira i da vam se pošalje PGP šifrirana poruka s tom šifrom. Kada sustav sazna vaš PGP javni ključ, ova opcija će biti prikazana iznad.';
-$lang['openpgp_encrypt_passphrase_to_email'] = 'Koristi PGP: Prilikom učitavanja, lozinka će se nasumično generirati i poslati primatelju kao PGP šifrirana poruka. Imajte na umu da primatelj mora prenijeti svoj javni ključ na poslužitelj kako bi ova značajka radila.';
-$lang['openpgp_functionality_limited_to_one_recipient'] = 'PGP ključ nije pronađen za e-poštu {email} pa se ne može sigurno obavijestiti.';
-$lang['openpgp_invalid_key_guest_upload'] = 'PGP ključ je nevažeći. Molimo kontaktirajte korisnika koji vas je pozvao u sustav.';
-$lang['openpgp_public_key_invalid'] = 'PGP javni ključ je nevažeći';
-$lang['openpgp_upload_page_description'] = 'Imajte na umu da je lozinka šifrirana u gore prikazanoj e-pošti. Samo osoba koja je navedena kao primatelj i prenijela je važeći javni ključ u sustav sustava trebala bi moći dešifrirati ovu e-poštu. To vam omogućuje prijenos datoteke koja je šifrirana u pregledniku i lozinku za dešifriranje koja se zatim stavlja u sigurnu poruku prikazanu gore tako da samo primatelj može dekodirati lozinku i zatim preuzeti datoteke.';
 $lang['please_add_file_again'] = 'Ponovno dodajte ovu datoteku';
 $lang['preferences_updated'] = 'Korisničke postavke su ažurirane';
 $lang['previous'] = 'Prethodno';

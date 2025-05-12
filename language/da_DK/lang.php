@@ -8,6 +8,7 @@
 // 
 ?>
 <?php
+$lang['OpenPGP'] = 'PGP';
 $lang['PGP'] = 'PGP';
 $lang['a_transfer_link'] = 'Et overførselslink';
 $lang['a_transfer_link_tip'] = 'Du kan sende hentningslinket til dine modtagere';
@@ -156,7 +157,7 @@ $lang['confirm_remind_transfer'] = 'Sikker på du vil sende en påmindelse til m
 $lang['confirm_remove_daily_stats_transfer'] = 'Sikker på du ikke længere vil have statistik dagligt for den her overførsel?';
 $lang['confirm_stop_upload'] = 'Sikker på du vil standse uploaden og slette allerede uploadede data?';
 $lang['confirm_upload_add_to_recipients_with_no_explicit_address'] = 'Du har valgt at sende filerne kun til den person som inviterede dig til systemet. Hvis det er meningen, så vælg bare O.k. Men hvis du vil tilføje en anden modtager, skal du afbryde dialogen her og tilføje modtagerne før du trykker Send igen.';
-$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use PGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
+$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use OpenPGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
 $lang['continue'] = 'Fortsæt';
 $lang['copy'] = 'Kopiér';
 $lang['copy_text'] = 'Kopiér teksten herunder';
@@ -473,6 +474,13 @@ $lang['oneweek'] = '1 uge';
 $lang['open_auditlog'] = 'Se overførselsloggene';
 $lang['open_file_auditlog'] = 'Se hvad der skete med den her fil';
 $lang['open_recipient_auditlog'] = 'Se hvad den her modtager gjorde';
+$lang['openpgp_adding_to_transfer_with_some_public_keys_missing'] = 'Der kendes ingen PGP-nøgle for mailadressen {email}, så modtageren kan ikke underrettes sikkert.';
+$lang['openpgp_blurb_guests_page'] = 'Bemærk: Hvis du <a href="?s=user">uploader din offentlige PGP-nøgle</a>, kan du indstille at en der dannes en tilfældig krypteringskode for en gæst, og sendes en PGP-krypteret meddelelse til dig med krypteringskoden. Når systemet kender din offentlige PGP-nøgle, vil den mulighed blive vist ovenfor.';
+$lang['openpgp_encrypt_passphrase_to_email'] = 'Brug PGP: Ved upload vil en tilfældig adgangskode blive dannet og sendt til modtageren i en PGP-krypteret meddelelse. Bemærk at dét kun virker hvis modtageren forlods har uploadet sin offentlige nøgle til serveren.';
+$lang['openpgp_functionality_limited_to_one_recipient'] = 'Der kendes ingen PGP-nøgle for mailadressen {email}, så modtageren kan ikke underrettes sikkert.';
+$lang['openpgp_invalid_key_guest_upload'] = 'PGP-nøglen er ugyldig. Kontakt venligst den bruger som inviterede dig til systemet.';
+$lang['openpgp_public_key_invalid'] = 'Den offentlige PGP-nøgle er ugyldig';
+$lang['openpgp_upload_page_description'] = 'Bemærk at adgangskoden er blevet lagt ind i den krypterede mail som vises ovenfor. Den mail bør ikke kunne afkrypteres af andre end den person som er anført som modtager, og som har uploadet en gyldig offentlig nøgle i systemet. Det gør det muligt for dig at uploade en fil som krypteres i browseren, og få adgangskoden til filen sendt i den sikre meddelelse herover, så kun modtageren kan læse adgangskoden og hente filerne.';
 $lang['optional'] = 'valgfri';
 $lang['optional_message'] = 'Frivillig meddelelse';
 $lang['options'] = 'Tilvalg';
@@ -488,13 +496,6 @@ $lang['pause'] = 'Pause';
 $lang['paused'] = 'Sat på pause';
 $lang['perform_these_actions_on_all_users'] = 'Udfør de her handlinger på alle brugere';
 $lang['performed'] = 'Udført';
-$lang['openpgp_adding_to_transfer_with_some_public_keys_missing'] = 'Der kendes ingen PGP-nøgle for mailadressen {email}, så modtageren kan ikke underrettes sikkert.';
-$lang['openpgp_blurb_guests_page'] = 'Bemærk: Hvis du <a href="?s=user">uploader din offentlige PGP-nøgle</a>, kan du indstille at en der dannes en tilfældig krypteringskode for en gæst, og sendes en PGP-krypteret meddelelse til dig med krypteringskoden. Når systemet kender din offentlige PGP-nøgle, vil den mulighed blive vist ovenfor.';
-$lang['openpgp_encrypt_passphrase_to_email'] = 'Brug PGP: Ved upload vil en tilfældig adgangskode blive dannet og sendt til modtageren i en PGP-krypteret meddelelse. Bemærk at dét kun virker hvis modtageren forlods har uploadet sin offentlige nøgle til serveren.';
-$lang['openpgp_functionality_limited_to_one_recipient'] = 'Der kendes ingen PGP-nøgle for mailadressen {email}, så modtageren kan ikke underrettes sikkert.';
-$lang['openpgp_invalid_key_guest_upload'] = 'PGP-nøglen er ugyldig. Kontakt venligst den bruger som inviterede dig til systemet.';
-$lang['openpgp_public_key_invalid'] = 'Den offentlige PGP-nøgle er ugyldig';
-$lang['openpgp_upload_page_description'] = 'Bemærk at adgangskoden er blevet lagt ind i den krypterede mail som vises ovenfor. Den mail bør ikke kunne afkrypteres af andre end den person som er anført som modtager, og som har uploadet en gyldig offentlig nøgle i systemet. Det gør det muligt for dig at uploade en fil som krypteres i browseren, og få adgangskoden til filen sendt i den sikre meddelelse herover, så kun modtageren kan læse adgangskoden og hente filerne.';
 $lang['please_add_file_again'] = 'Tilføj venligst den her fil igen';
 $lang['preferences_updated'] = 'Brugerindstillinger opdateret';
 $lang['previous'] = 'Forrige';
