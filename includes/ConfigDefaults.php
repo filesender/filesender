@@ -70,6 +70,8 @@ $default = array(
         array('/^https*:\/\//', ''), // get rid of https://
         array('/\/$/', '') // remove a trailing slash (/)
     ),
+    'auth_sp_idp_metadata_to_capture' => [ 'description','OrganizationName','name','OrganizationDisplayName','url','OrganizationURL' ],
+
 
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',

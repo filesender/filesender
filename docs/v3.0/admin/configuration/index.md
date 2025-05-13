@@ -272,6 +272,7 @@ A note about colours;
 	* [using_local_saml_dbauth](#using_local_saml_dbauth)
 	* [auth_warn_session_expired](#auth_warn_session_expired)
 	* [auth_sp_idp_filters](#auth_sp_idp_filters)
+	* [auth_sp_idp_metadata_to_capture](#auth_sp_idp_metadata_to_capture)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -2918,6 +2919,19 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __default:__ 
 * __available:__ since version 3.1
 * __comment:__ Note: setting this will overwrite the default values. If you want them include them in your custom config.
+
+### auth_sp_idp_metadata_to_capture
+
+* __description:__ A list of metadata attributes to capture from the IDP into the IdP table for SAML authentications.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ [ 'description','OrganizationName','name','OrganizationDisplayName','url','OrganizationURL' ]
+* __available:__ since version 3.0rc9
+* __comment:__ Note: This is an array of the metadata names from the SSP metadata config file for the IdP that you would like
+                     replicated into the local IdP table. Note that if you add to these items you will need to modify your
+                     local IdP class to include the additional columns in the table to store the matching metadata.
+
+
 
 
 ## Authentication: Shibboleth

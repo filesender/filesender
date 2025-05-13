@@ -216,6 +216,31 @@ class AuthSPSaml
         
         return self::$attributes;
     }
+
+
+    public static function ensureLocalIdPMetadata( $entityId, $idp )
+    {
+        $ssp = self::loadSimpleSAML();
+        
+        $c = new ReflectionClass("\SimpleSAML\IdP");
+        $method = $c->getMethod('getById');
+        $sspidp = $method->invoke(null,"saml2:" . $entityId);
+        $cfg = $sspidp->getConfig();
+
+        $lang = Config::get('default_language');
+        $md   = Config::get('auth_sp_idp_metadata_to_capture');
+
+        foreach( $md as $k ) {
+            if( $cfg->hasValue($k)) {
+                $n = $cfg->getValue( $k );
+                $data = $n[$lang];
+                $idp->{$k} = $data;
+            }
+        }
+
+        $idp->saveIfChanged();
+    }
+    
     
     /**
      * Generate the logon URL.

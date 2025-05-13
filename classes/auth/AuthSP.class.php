@@ -97,6 +97,13 @@ class AuthSP
         
         return call_user_func($class.'::logoffURL', $target);
     }
+
+    public static function ensureLocalIdPMetadata( $entityId, $idp )
+    {
+        $class = self::loadDelegationClass();
+        
+        return call_user_func($class.'::ensureLocalIdPMetadata', $entityId, $idp );
+    }
     
     /**
      * Trigger authentication

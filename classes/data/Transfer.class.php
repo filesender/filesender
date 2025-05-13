@@ -35,6 +35,7 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
+
 /**
  * Represents a transfer in database
  *
@@ -44,6 +45,7 @@ if (!defined('FILESENDER_BASE')) {
  */
 class Transfer extends DBObject
 {
+    private static $config = null;
     /**
      * Database map
      */
@@ -198,6 +200,12 @@ class Transfer extends DBObject
             'default' => 0
         ),
 
+        'idpid' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'null'    => true
+        ),
+        
     );
 
     /**
@@ -386,6 +394,7 @@ class Transfer extends DBObject
     protected $download_count = 0;
     protected $chunk_size = 0;
     protected $crypted_chunk_size = 0;
+    protected $idpid = null;
 
     
     
@@ -636,6 +645,9 @@ class Transfer extends DBObject
                 throw new BadEmailException($user_email);
             }
         }
+
+        
+        
         
         $transfer->__set('user_email', $user_email);
         $transfer->__set('expires', $expires);
@@ -643,6 +655,18 @@ class Transfer extends DBObject
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
 
+        if(Auth::isSP()) {
+            if(Auth::isRegularUser() || Auth::isAdmin()) {
+                $attrs = Auth::attributes();
+                $entityId = $attrs['idp'];
+                $idp = IdP::ensure($entityId);
+                $transfer->idpid = $idp->id;
+
+                AuthSP::ensureLocalIdPMetadata($entityId,$idp);
+                $transfer->save();
+            }
+        }
+        
         return $transfer;
     }
     
@@ -1184,7 +1208,7 @@ class Transfer extends DBObject
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
-            , 'download_count', 'chunk_size', 'crypted_chunk_size'            
+            , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
         ))) {
             return $this->$property;
         }
@@ -1409,6 +1433,8 @@ class Transfer extends DBObject
             $this->storage_filesystem_per_idp = $value;
         } elseif ($property == 'download_count') {
             $this->download_count = $value;
+        } elseif ($property == 'idpid') {
+            $this->idpid = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

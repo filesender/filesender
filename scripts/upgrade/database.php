@@ -442,6 +442,12 @@ function ensureFK()
                     'downloadonetimepasswords.rid refers to recipients.id',
 	            call_user_func('DownloadOneTimePassword::getDBTable'), 'DownloadOneTimePassword_rid', 'rid',
 	            call_user_func('Recipient::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'transfers.idpid refers to idps.id',
+	            call_user_func('Transfer::getDBTable'), 'Transfers_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
     
     
     foreach ( $fks as $fk ) {
