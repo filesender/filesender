@@ -221,23 +221,38 @@ class AuthSPSaml
     public static function ensureLocalIdPMetadata( $entityId, $idp )
     {
         $ssp = self::loadSimpleSAML();
-        
-        $c = new ReflectionClass("\SimpleSAML\IdP");
-        $method = $c->getMethod('getById');
-        $sspidp = $method->invoke(null,"saml2:" . $entityId);
-        $cfg = $sspidp->getConfig();
 
+
+Logger::error("AAABBB ensureLocalIdPMetadata 0");
+
+        $c = new ReflectionClass("\SimpleSAML\Metadata\MetaDataStorageHandler");
+        $method = $c->getMethod('getMetadataHandler');
+        $mdh = $method->invoke(null);
+Logger::error("AAABBB ensureLocalIdPMetadata 2");
+
+   
+        $sspmd = $mdh->getList('saml20-idp-remote', true );
+Logger::error("AAABBB ensureLocalIdPMetadata 3");
+Logger::error("AAABBB ensureLocalIdPMetadata 3 " . print_r($sspmd,true));
+        $sspmd = $sspmd[$entityId];
+Logger::error("AAABBB ensureLocalIdPMetadata 4 " . print_r($sspmd,true));
+Logger::error("AAABBB ensureLocalIdPMetadata 5 entityId $entityId ");
+Logger::error("AAABBB ensureLocalIdPMetadata 6 " . print_r($sspmd,true));
+
+        $cfg = $sspmd; 
         $lang = Config::get('default_language');
         $md   = Config::get('auth_sp_idp_metadata_to_capture');
 
+Logger::error("AAABBB ensureLocalIdPMetadata 6");
         foreach( $md as $k ) {
-            if( $cfg->hasValue($k)) {
-                $n = $cfg->getValue( $k );
+            if( $cfg[$k]) {
+                $n = $cfg[$k];
                 $data = $n[$lang];
                 $idp->{$k} = $data;
             }
         }
 
+Logger::error("AAABBB ensureLocalIdPMetadata 7");
         $idp->saveIfChanged();
     }
     

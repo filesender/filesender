@@ -145,9 +145,9 @@ class IdP extends DBObject
         if ($data) {
             $this->fillFromDBData($data);
             
-            if( $data['created'] ) {
+//            if( $data['created'] ) {
 //                $this->created = $data['created'];
-            }
+//            }
             $this->save();
         }
     }

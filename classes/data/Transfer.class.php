@@ -655,12 +655,14 @@ class Transfer extends DBObject
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
 
+Logger::error("AAABBB transfer 1");
         if(Auth::isSP()) {
             if(Auth::isRegularUser() || Auth::isAdmin()) {
                 $attrs = Auth::attributes();
                 $entityId = $attrs['idp'];
                 $idp = IdP::ensure($entityId);
                 $transfer->idpid = $idp->id;
+Logger::error("AAABBB transfer 2");
 
                 AuthSP::ensureLocalIdPMetadata($entityId,$idp);
                 $transfer->save();
