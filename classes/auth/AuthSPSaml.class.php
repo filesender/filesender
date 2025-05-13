@@ -242,12 +242,15 @@ Logger::error("AAABBB ensureLocalIdPMetadata 6 " . print_r($sspmd,true));
         $cfg = $sspmd; 
         $lang = Config::get('default_language');
         $md   = Config::get('auth_sp_idp_metadata_to_capture');
-
+        $lang2 = strtok($lang, "_");
 Logger::error("AAABBB ensureLocalIdPMetadata 6");
         foreach( $md as $k ) {
             if( $cfg[$k]) {
                 $n = $cfg[$k];
                 $data = $n[$lang];
+                if(!$data) {
+                    $data = $n[$lang2];
+                }
                 $idp->{$k} = $data;
             }
         }
