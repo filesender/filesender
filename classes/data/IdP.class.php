@@ -65,12 +65,12 @@ class IdP extends DBObject
             'size' => 170,
             'null' => true
         ),
-        'OrganizationName' => array(
+        'organization_name' => array(
             'type' => 'string',
             'size' => 170,
             'null' => true
         ),
-        'OrganizationDisplayName' => array(
+        'organization_display_name' => array(
             'type' => 'string',
             'size' => 170,
             'null' => true
@@ -80,13 +80,17 @@ class IdP extends DBObject
             'size' => 170,
             'null' => true
         ),
-        'OrganizationURL' => array(
+        'organization_url' => array(
             'type' => 'string',
             'size' => 170,
             'null' => true
         ),
         'created' => array(
             'type' => 'datetime',
+        ),
+        'updated' => array(
+            'type' => 'datetime',
+            'null' => true
         ),
     );
 
@@ -119,11 +123,12 @@ class IdP extends DBObject
     protected $entityid = null;
     protected $name = null;
     protected $description = null;
-    protected $OrganizationName = null;
-    protected $OrganizationDisplayName = null;
+    protected $organization_name = null;
+    protected $organization_display_name = null;
     protected $url = null;
-    protected $OrganizationURL = null;
+    protected $organization_url = null;
     protected $created = null;
+    protected $updated = null;
     protected $changed = false;
     
 
@@ -168,6 +173,7 @@ class IdP extends DBObject
         $ret->keytype = $keytype;
         $ret->keydata = $key;
         $ret->created = time();
+        $ret->updated = time();
         if( $created ) {
             $ret->created = $created;
         }
@@ -212,10 +218,10 @@ class IdP extends DBObject
             'entityid',
             'name',
             'description',
-            'OrganizationName',
-            'OrganizationDisplayName',
+            'organization_name',
+            'organization_display_name',
             'url',
-            'OrganizationURL',
+            'organization_url',
             'created',
          ))) {
             return $this->$property;
@@ -228,10 +234,10 @@ class IdP extends DBObject
         if (in_array($property, array(
             'name',
             'description',
-            'OrganizationName',
-            'OrganizationDisplayName',
+            'organization_name',
+            'organization_display_name',
             'url',
-            'OrganizationURL',
+            'organization_url',
         ))) {
             $this->$property = $value;
             $this->changed = true;
@@ -243,6 +249,7 @@ class IdP extends DBObject
         if( $this->changed )
         {
             $this->changed = false;
+            $this->updated = time();
             $this->save();
         }
     }

@@ -105,7 +105,7 @@ class AuthSPSaml
                 $idp = preg_replace($idp_filter[0], $idp_filter[1], $idp);
             }
             $attributes['idp'] = $idp;
-            
+
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
                 // Keys in raw_attributes (can be array of key)
@@ -237,7 +237,11 @@ class AuthSPSaml
         $md    = Config::get('auth_sp_idp_metadata_to_capture');
         $lang  = Config::get('default_language');
         $lang2 = strtok($lang, "_");
-        foreach( $md as $k ) {
+        foreach( $md as $k => $fsk ) {
+            $colname = $fsk;
+            if( is_numeric($k)) {
+                $k = $fsk;
+            }
             if( $cfg[$k]) {
                 $n = $cfg[$k];
                 $data = null;
@@ -256,7 +260,7 @@ class AuthSPSaml
                 }
 
                 if( $data ) {
-                    $idp->{$k} = $data;
+                    $idp->{$colname} = $data;
                 }
             }
         }

@@ -2925,10 +2925,12 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __description:__ A list of metadata attributes to capture from the IDP into the IdP table for SAML authentications.
 * __mandatory:__ no
 * __type:__ array
-* __default:__ [ 'description','OrganizationName','name','OrganizationDisplayName','url','OrganizationURL' ]
+* __default:__ [ 'description','OrganizationName' => 'organization_name','name','OrganizationDisplayName'=>'organization_display_name','url','OrganizationURL'=>'organization_url'  ]
 * __available:__ since version 3.0rc9
 * __comment:__ Note: This is an array of the metadata names from the SSP metadata config file for the IdP that you would like
-                     replicated into the local IdP table. Note that if you add to these items you will need to modify your
+                     replicated into the local IdP table. The format allows renaming, the key is the SSP metadata name and the value is what column to use
+                     in the IdP table in FileSender. This way columns can remain with the lower_case and underscore naming convention in FileSender.
+                     Note that if you add to these items you will need to modify your
                      local IdP class to include the additional columns in the table to store the matching metadata.
 
 
