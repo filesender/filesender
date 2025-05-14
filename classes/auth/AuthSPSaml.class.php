@@ -260,7 +260,7 @@ Logger::error("AAABBB ensureLocalIdPMetadata 6loop $k ");
 Logger::error("AAABBB ensureLocalIdPMetadata 6loop count " .  count($n));
                 if(!$data) {
                     if( count($n) == 1 ) {
-                        $data = $n[0];
+                        $data = reset($n);
                     }
                 }
                 
