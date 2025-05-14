@@ -35,7 +35,6 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
-
 /**
  * Represents a transfer in database
  *
@@ -45,7 +44,6 @@ if (!defined('FILESENDER_BASE')) {
  */
 class Transfer extends DBObject
 {
-    private static $config = null;
     /**
      * Database map
      */
@@ -655,17 +653,17 @@ class Transfer extends DBObject
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
 
-Logger::error("AAABBB transfer 1");
         if(Auth::isSP()) {
             if(Auth::isRegularUser() || Auth::isAdmin()) {
                 $attrs = Auth::attributes();
                 $entityId = $attrs['idp'];
-                $idp = IdP::ensure($entityId);
-                $transfer->idpid = $idp->id;
-Logger::error("AAABBB transfer 2");
+                if( $entityId ) {
+                    $idp = IdP::ensure($entityId);
+                    $transfer->idpid = $idp->id;
 
-                AuthSP::ensureLocalIdPMetadata($entityId,$idp);
-                $transfer->save();
+                    AuthSP::ensureLocalIdPMetadata($entityId,$idp);
+                    $transfer->save();
+                }
             }
         }
         

@@ -222,31 +222,23 @@ class AuthSPSaml
     {
         $ssp = self::loadSimpleSAML();
 
-
-Logger::error("AAABBB ensureLocalIdPMetadata 0");
-
         $c = new ReflectionClass("\SimpleSAML\Metadata\MetaDataStorageHandler");
         $method = $c->getMethod('getMetadataHandler');
         $mdh = $method->invoke(null);
-Logger::error("AAABBB ensureLocalIdPMetadata 2");
-
-   
         $sspmd = $mdh->getList('saml20-idp-remote', true );
-Logger::error("AAABBB ensureLocalIdPMetadata 3");
-Logger::error("AAABBB ensureLocalIdPMetadata 3 " . print_r($sspmd,true));
+        
+        if(empty($sspmd[$entityId])) {
+            Logger::warning("No IdP metadata found for IdP $entityId ");
+            return;
+        }
         $sspmd = $sspmd[$entityId];
-Logger::error("AAABBB ensureLocalIdPMetadata 4 " . print_r($sspmd,true));
-Logger::error("AAABBB ensureLocalIdPMetadata 5 entityId $entityId ");
-Logger::error("AAABBB ensureLocalIdPMetadata 6 " . print_r($sspmd,true));
-
-        $cfg = $sspmd; 
-        $lang = Config::get('default_language');
-        $md   = Config::get('auth_sp_idp_metadata_to_capture');
+        $cfg = $sspmd;
+        
+        $md    = Config::get('auth_sp_idp_metadata_to_capture');
+        $lang  = Config::get('default_language');
         $lang2 = strtok($lang, "_");
-Logger::error("AAABBB ensureLocalIdPMetadata 6");
         foreach( $md as $k ) {
             if( $cfg[$k]) {
-Logger::error("AAABBB ensureLocalIdPMetadata 6loop $k ");
                 $n = $cfg[$k];
                 $data = null;
                 if( !empty($n[$lang])) {
@@ -257,19 +249,18 @@ Logger::error("AAABBB ensureLocalIdPMetadata 6loop $k ");
                         $data = $n[$lang2];
                     }
                 }
-Logger::error("AAABBB ensureLocalIdPMetadata 6loop count " .  count($n));
                 if(!$data) {
                     if( count($n) == 1 ) {
                         $data = reset($n);
                     }
                 }
-                
-Logger::error("AAABBB ensureLocalIdPMetadata 6loop setting $k to $data ");
-                $idp->{$k} = $data;
+
+                if( $data ) {
+                    $idp->{$k} = $data;
+                }
             }
         }
 
-Logger::error("AAABBB ensureLocalIdPMetadata 7");
         $idp->saveIfChanged();
     }
     
