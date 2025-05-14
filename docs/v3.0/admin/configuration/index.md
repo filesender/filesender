@@ -2933,6 +2933,13 @@ This is only for old, existing transfers which have no roundtriptoken set.
                      Note that if you add to these items you will need to modify your
                      local IdP class to include the additional columns in the table to store the matching metadata.
 
+### auth_sp_idp_metadata_to_capture_frequency
+* __description:__ How often an update using auth_sp_idp_metadata_to_capture can happen.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 6 * 3600, // 6 hours
+* __available:__ since version 3.0rc9
+* __comment:__ This is to allow automatic refresh of metadata but also not bog the system down by looking at it too frequently.
 
 
 

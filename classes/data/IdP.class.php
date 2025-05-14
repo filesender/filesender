@@ -223,6 +223,7 @@ class IdP extends DBObject
             'url',
             'organization_url',
             'created',
+            'updated'
          ))) {
             return $this->$property;
         }
@@ -238,6 +239,7 @@ class IdP extends DBObject
             'organization_display_name',
             'url',
             'organization_url',
+            'updated'
         ))) {
             $this->$property = $value;
             $this->changed = true;

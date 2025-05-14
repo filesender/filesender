@@ -220,6 +220,12 @@ class AuthSPSaml
 
     public static function ensureLocalIdPMetadata( $entityId, $idp )
     {
+        $secs_ago = Config::get('auth_sp_idp_metadata_to_capture_frequency');
+        if( $secs_ago ) {
+            if( $idp->updated > (time() - $secs_ago )) {
+                return;
+            }
+        }
         $ssp = self::loadSimpleSAML();
 
         $c = new ReflectionClass("\SimpleSAML\Metadata\MetaDataStorageHandler");
