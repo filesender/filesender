@@ -246,11 +246,25 @@ Logger::error("AAABBB ensureLocalIdPMetadata 6 " . print_r($sspmd,true));
 Logger::error("AAABBB ensureLocalIdPMetadata 6");
         foreach( $md as $k ) {
             if( $cfg[$k]) {
+Logger::error("AAABBB ensureLocalIdPMetadata 6loop $k ");
                 $n = $cfg[$k];
-                $data = $n[$lang];
-                if(!$data) {
-                    $data = $n[$lang2];
+                $data = null;
+                if( !empty($n[$lang])) {
+                    $data = $n[$lang];
                 }
+                if(!$data) {
+                    if( !empty($n[$lang2])) {
+                        $data = $n[$lang2];
+                    }
+                }
+Logger::error("AAABBB ensureLocalIdPMetadata 6loop count " .  count($n));
+                if(!$data) {
+                    if( count($n) == 1 ) {
+                        $data = $n[0];
+                    }
+                }
+                
+Logger::error("AAABBB ensureLocalIdPMetadata 6loop setting $k to $data ");
                 $idp->{$k} = $data;
             }
         }
