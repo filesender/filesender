@@ -69,7 +69,7 @@ switch ($topic) {
            .((!$idp) ?
              ''
              :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id '
            )
            .'WHERE '
            .((!$idp) ?
@@ -118,7 +118,7 @@ switch ($topic) {
            .((!$idp) ?
              ''
              :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id '
            )
            .'WHERE '
            .((!$idp) ?
@@ -163,7 +163,7 @@ switch ($topic) {
            .((!$idp) ?
              ''
              :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN a ON u.authid=a.id '
            )
            .'WHERE '
            .((!$idp) ?
@@ -205,7 +205,7 @@ switch ($topic) {
            .'  a.saml_user_identification_uid as "User", '
            .'  DATE(u.auth_secret_created) as "Date" '
            .'FROM '
-           .'  '.call_user_func('Authentication::getDBTable').' a LEFT JOIN '.call_user_func('User::getDBTable').' u on a.id=u.authid '
+           .'  authidpview a LEFT JOIN '.call_user_func('User::getDBTable').' u on a.id=u.authid '
            .'WHERE '
            .'  u.auth_secret IS NOT NULL '
            .((!$idp) ?

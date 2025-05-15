@@ -448,6 +448,12 @@ function ensureFK()
                     'transfers.idpid refers to idps.id',
 	            call_user_func('Transfer::getDBTable'), 'Transfers_idpid', 'idpid',
 	            call_user_func('IdP::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'authentications.idpid refers to idps.id',
+	            call_user_func('Authentication::getDBTable'), 'Authentications_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
     
     
     foreach ( $fks as $fk ) {
@@ -731,6 +737,7 @@ try {
     // Remake all the views. This is done last because the view might reference other
     // tables and might rely on the other tables schema having been updated already
     //
+    array_unshift($classes, 'Authentication');
     foreach($classes as $class) {
         echo 'Checking class '.$class."\n";
         

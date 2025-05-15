@@ -158,9 +158,9 @@ class User extends DBObject
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
                                        .self::getDBTable().' up LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON up.authid = a.id';
-            $idpview[$dbtype] = 'select u.*, a.saml_user_identification_idp as saml_user_identification_idp, a.saml_user_identification_idp as idp from '
+            $idpview[$dbtype] = 'select u.*, av.saml_user_identification_idp_entityid as saml_user_identification_idp, av.saml_user_identification_idp_entityid as idp from '
                                . self::getDBTable().' u '
-                               . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+                               . ' LEFT JOIN authidpview av ON u.authid=av.id ';
         }
         
         return array( strtolower(self::getDBTable()) . 'view' => $a,
