@@ -2931,7 +2931,8 @@ This is only for old, existing transfers which have no roundtriptoken set.
                      replicated into the local IdP table. The format allows renaming, the key is the SSP metadata name and the value is what column to use
                      in the IdP table in FileSender. This way columns can remain with the lower_case and underscore naming convention in FileSender.
                      Note that if you add to these items you will need to modify your
-                     local IdP class to include the additional columns in the table to store the matching metadata.
+                     local IdP class to include the additional columns in the table to store the matching metadata. Perhaps a future extension will allow storing more custom IdP
+                     metadata in a JSON field in the table.
 
 ### auth_sp_idp_metadata_to_capture_frequency
 * __description:__ How often an update using auth_sp_idp_metadata_to_capture can happen. Set to 0 to disable live updates entirely.

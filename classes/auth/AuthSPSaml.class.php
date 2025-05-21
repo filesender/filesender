@@ -232,6 +232,7 @@ class AuthSPSaml
             }
         }
         
+        Logger::info("Finding IdP metadata for $entityId from SSP");
         $ssp = self::loadSimpleSAML();
 
         $c = new ReflectionClass("\SimpleSAML\Metadata\MetaDataStorageHandler");
