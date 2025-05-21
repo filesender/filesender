@@ -92,6 +92,11 @@ class IdP extends DBObject
             'type' => 'datetime',
             'null' => true
         ),
+        'extra' => array(
+            'type' => 'text',
+            'transform' => 'json',
+            'default' => '{}'
+        ),
     );
 
     protected static $secondaryIndexMap = array(
@@ -130,7 +135,8 @@ class IdP extends DBObject
     protected $created = null;
     protected $updated = null;
     protected $changed = false;
-    
+    protected $extra = array();
+
 
 
     /**
@@ -223,7 +229,8 @@ class IdP extends DBObject
             'url',
             'organization_url',
             'created',
-            'updated'
+            'updated',
+            'extra'
          ))) {
             return $this->$property;
         }
