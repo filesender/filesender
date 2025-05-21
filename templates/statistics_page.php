@@ -38,12 +38,12 @@ if (Auth::isAdmin()) {
     <select id="idpselect">
         <option value="all">All</option>
 <?php
-$sql='SELECT DISTINCT saml_user_identification_idp as idp FROM authidpview WHERE saml_user_identification_idp IS NOT NULL ORDER BY saml_user_identification_idp';
+$sql='SELECT DISTINCT * FROM idps ORDER BY entityid';
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
 foreach($result as $row) {
-    echo '        <option value="'.$row['idp'].'"'.html_selectidp( $idp, $row ).'>'.$row['idp'].'</option>'."\n";
+    echo '        <option value="'.$row['entityid'].'"'.html_selectidp( $idp, $row ).'>'.$row['entityid'].'</option>'."\n";
 }
 ?>
     </select>
