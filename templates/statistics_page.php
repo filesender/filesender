@@ -43,7 +43,7 @@ $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
 foreach($result as $row) {
-    echo '        <option value="'.$row['entityid'].'"'.html_selectidp( $idp, $row ).'>'.$row['entityid'].'</option>'."\n";
+    echo '        <option value="'.$row['entityid'].'"'.html_selectidp( $idp, $row ).'>'.$row['name'].'</option>'."\n";
 }
 ?>
     </select>
