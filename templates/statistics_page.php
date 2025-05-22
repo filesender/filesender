@@ -38,12 +38,12 @@ if (Auth::isAdmin()) {
     <select id="idpselect">
         <option value="all">All</option>
 <?php
-$sql='SELECT DISTINCT * FROM idps ORDER BY entityid';
+$sql='SELECT entityid, name FROM idps ORDER BY name';
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
 foreach($result as $row) {
-    echo '        <option value="'.$row['entityid'].'"'.html_selectidp( $idp, $row ).'>'.$row['entityid'].'</option>'."\n";
+    echo '        <option value="'.$row['entityid'].'"'.html_selectidp( $idp, $row ).'>'.$row['name'].'</option>'."\n";
 }
 ?>
     </select>
