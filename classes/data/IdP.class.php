@@ -95,7 +95,7 @@ class IdP extends DBObject
         'extra' => array(
             'type' => 'text',
             'transform' => 'json',
-            'default' => '{}'
+            'null' => true
         ),
     );
 

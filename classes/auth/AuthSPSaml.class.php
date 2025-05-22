@@ -335,7 +335,7 @@ class AuthSPSaml
     /**
      * Load SimpleSAML class
      */
-    private static function loadSimpleSAML()
+    public static function loadSimpleSAML()
     {
         if (is_null(self::$config)) {
             self::$config = Config::get('auth_sp_saml_*');
