@@ -2935,10 +2935,10 @@ This is only for old, existing transfers which have no roundtriptoken set.
                      metadata in a JSON field in the table.
 
 ### auth_sp_idp_metadata_to_capture_frequency
-* __description:__ How often an update using auth_sp_idp_metadata_to_capture can happen. Set to 0 to disable live updates entirely.
+* __description:__ How often an update using auth_sp_idp_metadata_to_capture can happen. Set to 0 to disable live updates entirely. If disabled you should use scripts/task/cron-update-idp-metadata.php to update associated metadata as desired.
 * __mandatory:__ no
 * __type:__ int
-* __default:__ 6 * 3600, // 6 hours
+* __default:__ 0, // disabled.
 * __available:__ since version 3.0rc9
 * __comment:__ This is to allow automatic refresh of metadata but also not bog the system down by looking at it too frequently. You can also use the cron-update-idp-metadata.php script to reimport the metadata explicitly for existing tuples in the idp table.
 

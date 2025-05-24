@@ -71,7 +71,7 @@ $default = array(
         array('/\/$/', '') // remove a trailing slash (/)
     ),
     'auth_sp_idp_metadata_to_capture' => [ 'description','OrganizationName' => 'organization_name','name','OrganizationDisplayName'=>'organization_display_name','url','OrganizationURL'=>'organization_url'  ],
-    'auth_sp_idp_metadata_to_capture_frequency' => 6 * 3600, // 6 hours
+    'auth_sp_idp_metadata_to_capture_frequency' => 0, // disabled.
 
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
