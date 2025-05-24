@@ -272,6 +272,7 @@ A note about colours;
 	* [using_local_saml_dbauth](#using_local_saml_dbauth)
 	* [auth_warn_session_expired](#auth_warn_session_expired)
 	* [auth_sp_idp_filters](#auth_sp_idp_filters)
+	* [auth_sp_idp_metadata_to_capture](#auth_sp_idp_metadata_to_capture)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -2918,6 +2919,29 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __default:__ 
 * __available:__ since version 3.1
 * __comment:__ Note: setting this will overwrite the default values. If you want them include them in your custom config.
+
+### auth_sp_idp_metadata_to_capture
+
+* __description:__ A list of metadata attributes to capture from the IDP into the IdP table for SAML authentications.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ [ 'description','OrganizationName' => 'organization_name','name','OrganizationDisplayName'=>'organization_display_name','url','OrganizationURL'=>'organization_url'  ]
+* __available:__ since version 3.0rc9
+* __comment:__ Note: This is an array of the metadata names from the SSP metadata config file for the IdP that you would like
+                     replicated into the local IdP table. The format allows renaming, the key is the SSP metadata name and the value is what column to use
+                     in the IdP table in FileSender. This way columns can remain with the lower_case and underscore naming convention in FileSender.
+                     Note that if you add to these items you will need to modify your
+                     local IdP class to include the additional columns in the table to store the matching metadata. Perhaps a future extension will allow storing more custom IdP
+                     metadata in a JSON field in the table.
+
+### auth_sp_idp_metadata_to_capture_frequency
+* __description:__ How often an update using auth_sp_idp_metadata_to_capture can happen. Set to 0 to disable live updates entirely. If disabled you should use scripts/task/cron-update-idp-metadata.php to update associated metadata as desired.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0, // disabled.
+* __available:__ since version 3.0rc9
+* __comment:__ This is to allow automatic refresh of metadata but also not bog the system down by looking at it too frequently. You can also use the cron-update-idp-metadata.php script to reimport the metadata explicitly for existing tuples in the idp table.
+
 
 
 ## Authentication: Shibboleth

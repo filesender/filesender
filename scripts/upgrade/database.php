@@ -442,6 +442,18 @@ function ensureFK()
                     'downloadonetimepasswords.rid refers to recipients.id',
 	            call_user_func('DownloadOneTimePassword::getDBTable'), 'DownloadOneTimePassword_rid', 'rid',
 	            call_user_func('Recipient::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'transfers.idpid refers to idps.id',
+	            call_user_func('Transfer::getDBTable'), 'Transfers_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'authentications.idpid refers to idps.id',
+	            call_user_func('Authentication::getDBTable'), 'Authentications_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
     
     
     foreach ( $fks as $fk ) {
@@ -725,6 +737,8 @@ try {
     // Remake all the views. This is done last because the view might reference other
     // tables and might rely on the other tables schema having been updated already
     //
+    // ordering here is important as other table views depend on authentication table views.
+    array_unshift($classes, 'Authentication');
     foreach($classes as $class) {
         echo 'Checking class '.$class."\n";
         

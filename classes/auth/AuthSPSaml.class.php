@@ -105,7 +105,7 @@ class AuthSPSaml
                 $idp = preg_replace($idp_filter[0], $idp_filter[1], $idp);
             }
             $attributes['idp'] = $idp;
-            
+
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
                 // Keys in raw_attributes (can be array of key)
@@ -216,6 +216,71 @@ class AuthSPSaml
         
         return self::$attributes;
     }
+
+
+    public static function ensureLocalIdPMetadata( $entityId, $idp, $force = false )
+    {
+        if( !$force ) {
+            $secs_ago = Config::get('auth_sp_idp_metadata_to_capture_frequency');
+            if( !$secs_ago ) {
+                return;
+            }
+            if( $secs_ago ) {
+                if( $idp->updated > (time() - $secs_ago )) {
+                    return;
+                }
+            }
+        }
+        
+        Logger::info("Finding IdP metadata for $entityId from SSP");
+        $ssp = self::loadSimpleSAML();
+
+        $c = new ReflectionClass("\SimpleSAML\Metadata\MetaDataStorageHandler");
+        $method = $c->getMethod('getMetadataHandler');
+        $mdh = $method->invoke(null);
+        $sspmd = $mdh->getList('saml20-idp-remote', true );
+        
+        if(empty($sspmd[$entityId])) {
+            Logger::warning("No IdP metadata found for IdP $entityId ");
+            return;
+        }
+        $sspmd = $sspmd[$entityId];
+        $cfg = $sspmd;
+        
+        $md    = Config::get('auth_sp_idp_metadata_to_capture');
+        $lang  = Config::get('default_language');
+        $lang2 = strtok($lang, "_");
+        foreach( $md as $k => $fsk ) {
+            $colname = $fsk;
+            if( is_numeric($k)) {
+                $k = $fsk;
+            }
+            if( $cfg[$k]) {
+                $n = $cfg[$k];
+                $data = null;
+                if( !empty($n[$lang])) {
+                    $data = $n[$lang];
+                }
+                if(!$data) {
+                    if( !empty($n[$lang2])) {
+                        $data = $n[$lang2];
+                    }
+                }
+                if(!$data) {
+                    if( count($n) == 1 ) {
+                        $data = reset($n);
+                    }
+                }
+
+                if( $data ) {
+                    $idp->{$colname} = $data;
+                }
+            }
+        }
+
+        $idp->saveIfChanged();
+    }
+    
     
     /**
      * Generate the logon URL.
@@ -270,7 +335,7 @@ class AuthSPSaml
     /**
      * Load SimpleSAML class
      */
-    private static function loadSimpleSAML()
+    public static function loadSimpleSAML()
     {
         if (is_null(self::$config)) {
             self::$config = Config::get('auth_sp_saml_*');

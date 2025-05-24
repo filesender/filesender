@@ -104,7 +104,7 @@ class Recipient extends DBObject
                               . self::getDBTable() . ' r '
                                     . ' LEFT JOIN '.call_user_func('Transfer::getDBTable').' t ON r.transfer_id=t.id '
                                     . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+                                    . ' LEFT JOIN authidpview a ON u.authid=a.id ';
             
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a

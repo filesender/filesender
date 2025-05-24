@@ -198,6 +198,12 @@ class Transfer extends DBObject
             'default' => 0
         ),
 
+        'idpid' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'null'    => true
+        ),
+        
     );
 
     /**
@@ -236,12 +242,12 @@ class Transfer extends DBObject
                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                         . '  group by t.id,f.size ';
 
-            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,a.saml_user_identification_idp from '
+            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+                                     . ' from '
                                      . self::getDBTable().' t '
+                                           . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
                                            . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
-                                           . '  group by t.id, a.saml_user_identification_idp';
+                                           . '  group by t.id,idp.id';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
                                        . self::getDBTable().' t LEFT JOIN '
@@ -251,12 +257,13 @@ class Transfer extends DBObject
                                 . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
 
-            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, a.saml_user_identification_idp from '
+            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+                                   . ' from '
                                    . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
-
+                                         . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                         . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
+            
             $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
                                     . ' from '
                                     . self::getDBTable().' t, '
@@ -282,17 +289,21 @@ class Transfer extends DBObject
                                              . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
             
-            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, a.saml_user_identification_idp '
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum,  idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
                                            . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
-                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.Authentication::getDBTable().' a ON u.authid=a.id '
-                                           . ' GROUP BY a.saml_user_identification_idp ';
+                                           . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                           . ' GROUP BY idp.id ';
 
-            $idpview[$dbtype] = 'select t.*,a.saml_user_identification_idp as idp, saml_user_identification_idp as saml_user_identification_idp from '
+            
+            $idpview[$dbtype] = 'select t.*, idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+                              . ' from '
                               . self::getDBTable() . ' t '
-                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+                                    . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
+
+
+            
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -386,6 +397,7 @@ class Transfer extends DBObject
     protected $download_count = 0;
     protected $chunk_size = 0;
     protected $crypted_chunk_size = 0;
+    protected $idpid = null;
 
     
     
@@ -636,6 +648,9 @@ class Transfer extends DBObject
                 throw new BadEmailException($user_email);
             }
         }
+
+        
+        
         
         $transfer->__set('user_email', $user_email);
         $transfer->__set('expires', $expires);
@@ -643,6 +658,20 @@ class Transfer extends DBObject
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
 
+        if(Auth::isSP()) {
+            if(Auth::isRegularUser() || Auth::isAdmin()) {
+                $attrs = Auth::attributes();
+                $entityId = $attrs['idp'];
+                if( $entityId ) {
+                    $idp = IdP::ensure($entityId);
+                    $transfer->idpid = $idp->id;
+
+                    AuthSP::ensureLocalIdPMetadata($entityId,$idp);
+                    $transfer->save();
+                }
+            }
+        }
+        
         return $transfer;
     }
     
@@ -1184,7 +1213,7 @@ class Transfer extends DBObject
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
-            , 'download_count', 'chunk_size', 'crypted_chunk_size'            
+            , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
         ))) {
             return $this->$property;
         }
@@ -1409,6 +1438,8 @@ class Transfer extends DBObject
             $this->storage_filesystem_per_idp = $value;
         } elseif ($property == 'download_count') {
             $this->download_count = $value;
+        } elseif ($property == 'idpid') {
+            $this->idpid = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

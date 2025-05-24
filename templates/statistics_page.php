@@ -38,12 +38,12 @@ if (Auth::isAdmin()) {
     <select id="idpselect">
         <option value="all">All</option>
 <?php
-$sql='SELECT DISTINCT saml_user_identification_idp FROM '.call_user_func('Authentication::getDBTable').' WHERE saml_user_identification_idp IS NOT NULL ORDER BY saml_user_identification_idp';
+$sql='SELECT entityid, name FROM idps ORDER BY name';
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
 foreach($result as $row) {
-    echo '        <option value="'.$row['saml_user_identification_idp'].'"'.html_selectidp( $idp, $row ).'>'.$row['saml_user_identification_idp'].'</option>'."\n";
+    echo '        <option value="'.$row['entityid'].'"'.html_selectidp( $idp, $row ).'>'.$row['name'].'</option>'."\n";
 }
 ?>
     </select>
@@ -137,7 +137,7 @@ if (!$idp) {
 $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(created) as day,SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY DATE(created)) t';
 $placeholders=array();
 if ($idp) {
-    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(t.created) as day, SUM(t.filesize) as size, COUNT(t.id) as count FROM transfersfilesview t LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id WHERE a.saml_user_identification_idp = :idp GROUP BY DATE(t.created)) tt';
+    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(t.created) as day, SUM(t.filesize) as size, COUNT(t.id) as count FROM transfersfilesview t LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id WHERE a.saml_user_identification_idp = :idp GROUP BY DATE(t.created)) tt';
 $placeholders=array();
     $placeholders[':idp'] = $idp;
 }
