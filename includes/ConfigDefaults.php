@@ -66,10 +66,6 @@ $default = array(
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     'auth_sp_force_session_start_first' => false,  // maybe move session_start() forward.
-    'auth_sp_idp_filters' => array(
-        array('/^https*:\/\//', ''), // get rid of https://
-        array('/\/$/', '') // remove a trailing slash (/)
-    ),
     'auth_sp_idp_metadata_to_capture' => [ 'description','OrganizationName' => 'organization_name','name','OrganizationDisplayName'=>'organization_display_name','url','OrganizationURL'=>'organization_url'  ],
     'auth_sp_idp_metadata_to_capture_frequency' => 0, // disabled.
 
