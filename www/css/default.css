@@ -2909,6 +2909,15 @@ table.guests .guest .to .errors .details {
   margin-left: 0.25em;
 }
 
+/* Statistics page */
+.statistics_page #idpbutton {
+  width: 40px;
+}
+
+.statistics_page #idpselect {
+  max-width: calc(100% - 90px);
+}
+
 /* Admin page */
 /* Admin statistics */
 .admin_page .statistics_section .storage_usage_blocks {

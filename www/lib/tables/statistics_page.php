@@ -6,10 +6,8 @@ if (!Auth::isAdmin() && !Auth::isTenantAdmin()) {
     exit(0);
 }
 
-
 $idp = Auth::getTenantAdminIDP();
 $pagelimit=Config::get('statistics_table_rows_per_page');
-
 
 $topic = Utilities::arrayKeyOrDefaultString( $_GET, 't' );
 $topic = Utilities::filter_regex( $topic, Utilities::FILTER_REGEX_PLAIN_STRING_UNDERSCORE );
@@ -75,7 +73,7 @@ switch ($topic) {
            .((!$idp) ?
              ''
              :
-             'a.saml_user_identification_idp = :idp AND '
+             'a.idpid = :idp AND '
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
@@ -124,7 +122,7 @@ switch ($topic) {
            .((!$idp) ?
              ''
              :
-             'a.saml_user_identification_idp = :idp AND '
+             'a.idpid = :idp AND '
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
@@ -163,13 +161,13 @@ switch ($topic) {
            .((!$idp) ?
              ''
              :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN a ON u.authid=a.id '
+             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id '
            )
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             'a.saml_user_identification_idp = :idp AND '
+             'a.idpid = :idp AND '
            )
            .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
@@ -211,7 +209,7 @@ switch ($topic) {
            .((!$idp) ?
              ''
              :
-             'AND a.saml_user_identification_idp = :idp '
+             'AND a.idpid = :idp '
            )
            .'ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit

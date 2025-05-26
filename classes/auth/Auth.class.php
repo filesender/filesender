@@ -497,10 +497,10 @@ class Auth
         }
 
         if (!self::isTenantAdmin()) {
-            return null;
+            return 0;
         }
         
-        return self::user()->saml_user_identification_idp;
+        return self::user()->idpid;
     }
 
     /**

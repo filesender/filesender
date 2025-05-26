@@ -73,9 +73,9 @@ $sql =
        .'  (SELECT AVG(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
        .'  (SELECT MIN(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
      :
-        '  (SELECT MAX(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
-       .'  (SELECT AVG(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
-       .'  (SELECT MIN(size) FROM transferssizeidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
+        '  (SELECT MAX(size) FROM transferssizeidpview WHERE idpid = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
+       .'  (SELECT AVG(size) FROM transferssizeidpview WHERE idpid = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
+       .'  (SELECT MIN(size) FROM transferssizeidpview WHERE idpid = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
     )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '

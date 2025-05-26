@@ -158,7 +158,7 @@ class User extends DBObject
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
                                        .self::getDBTable().' up LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON up.authid = a.id';
-            $idpview[$dbtype] = 'select u.*, av.saml_user_identification_idp_entityid as saml_user_identification_idp, av.saml_user_identification_idp_entityid as idp from '
+            $idpview[$dbtype] = 'select u.*, av.idpid as idpid, av.saml_user_identification_idp_entityid as idp, av.idp_name as idp_name from '
                                . self::getDBTable().' u '
                                . ' LEFT JOIN authidpview av ON u.authid=av.id ';
         }
@@ -192,11 +192,11 @@ class User extends DBObject
     protected $save_frequent_email_address = true;
     protected $save_transfer_preferences = true;
 
-    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     const AUP             = " service_aup_accepted_version >= :aup ";
-    const FROM_IDP_AUP    = " saml_user_identification_idp = :idp and service_aup_accepted_version >= :aup ";
+    const FROM_IDP_AUP    = " idpid = :idp and service_aup_accepted_version >= :aup ";
     const APIKEY          = " auth_secret IS NOT NULL  ";
-    const FROM_IDP_APIKEY = " saml_user_identification_idp = :idp and auth_secret IS NOT NULL  ";
+    const FROM_IDP_APIKEY = " idpid = :idp and auth_secret IS NOT NULL  ";
 
     
     /** 
