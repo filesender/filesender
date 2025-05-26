@@ -861,6 +861,10 @@ filesender.ui.recipients = {
 
     updateOpenPGPInfoError: function(trstr) {
 
+        if( !filesender.config.openpgp_enabled ) {
+            return;           
+        }
+        
         if( !have_shown_bad_openpgp_key_dialog ) {
             have_shown_bad_openpgp_key_dialog = true;
             filesender.ui.alert('error', lang.tr(trstr));
@@ -869,6 +873,10 @@ filesender.ui.recipients = {
     
     updateOpenPGPInfo: function(email,openpgpkey = null) {
 
+        if( !filesender.config.openpgp_enabled ) {
+            return;           
+        }
+        
         if(!openpgpkey) {
             openpgpkey = $('#openpgpkey').text();
         }
