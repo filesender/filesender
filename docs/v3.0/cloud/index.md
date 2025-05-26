@@ -139,6 +139,15 @@ $config['storage_type'] = 'CloudAzure';
 
 ## Amazon S3
 
+### Note
+
+There is a report of instability with backing the S3 storage with IBM
+Cloud Object Storage (On-premises) in 2025 (issue 2235). If you are
+intending to use this configuration please test large encrypted
+transfers with many files to a zip are working as you wish before
+deploying. If you find that configuration to be stable please also
+report that to the mailing list or github so this paragraph can be
+amended. Thank you.
 
 ### Setup
 
