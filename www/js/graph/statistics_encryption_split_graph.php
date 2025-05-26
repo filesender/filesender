@@ -27,7 +27,7 @@ if (!$idp) {
        .'FROM transferssizeidpview '
        .'WHERE (DATE(created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
        .'      (DATE(expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(expires) <= NOW()) '
-       .'  AND saml_user_identification_idp = :idp';
+       .'  AND idpid = :idp';
     $placeholders[':idp'] = $idp;
 }
 

@@ -289,7 +289,7 @@ class Transfer extends DBObject
                                              . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
             
-            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum,  idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, t.idpid, idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
                                            . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
                                            . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
@@ -301,9 +301,6 @@ class Transfer extends DBObject
                               . self::getDBTable() . ' t '
                                     . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
 
-
-            
-            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -358,10 +355,10 @@ class Transfer extends DBObject
     const CLOSED_NO_ORDER = "status = 'closed' ";
     const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
     const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
-    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
-    const FROM_IDP_UPLOADING = "status = 'uploading' and saml_user_identification_idp = :idp ORDER BY created DESC";
-    const FROM_IDP_AVAILABLE = "status = 'available' and saml_user_identification_idp = :idp ORDER BY created DESC";
-    const FROM_IDP_EXPIRED   = "expires <= :date  and saml_user_identification_idp = :idp ORDER BY expires ASC";
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
+    const FROM_IDP_UPLOADING = "status = 'uploading' and idpid = :idp ORDER BY created DESC";
+    const FROM_IDP_AVAILABLE = "status = 'available' and idpid = :idp ORDER BY created DESC";
+    const FROM_IDP_EXPIRED   = "expires <= :date and idpid = :idp ORDER BY expires ASC";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
