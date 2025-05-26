@@ -255,7 +255,7 @@ class AuthSPSaml
             if( is_numeric($k)) {
                 $k = $fsk;
             }
-            if( $cfg[$k]) {
+            if( !empty($cfg[$k])) {
                 $n = $cfg[$k];
                 $data = null;
                 if( !empty($n[$lang])) {
