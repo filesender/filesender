@@ -166,14 +166,15 @@ class Authentication extends DBObject
             $ret = static::createFactory(null, $data);
             $ret->fillFromDBData($data);
             if (!is_null($saml_auth_idp)) {
-                // only update if the idp has changed
-                if ($saml_auth_idp!=$ret->saml_user_identification_idp) {
-                    $ret->saml_user_identification_idp = $saml_auth_idp;
 
-                    $entityId = $saml_auth_idp;
-                    $idp = IdP::ensure($entityId);
+                $entityId = $saml_auth_idp;
+                $idp = IdP::ensure($entityId);
+
+                // only update if the idp has changed
+                if ($ret->idpid != $idp->id) {
+                    // FIXME maybe drop column saml_user_identification_idp
+                    $ret->saml_user_identification_idp = $saml_auth_idp;
                     $ret->idpid = $idp->id;
-                    
                     $ret->save();
                 }
             }
@@ -191,6 +192,7 @@ class Authentication extends DBObject
         Logger::info('authentication::create(4) ' . $ret->id);
         Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash);
         if (!is_null($saml_auth_idp)) {
+            // FIXME maybe drop column saml_user_identification_idp
             $ret->saml_user_identification_idp = $saml_auth_idp;
 
             $entityId = $saml_auth_idp;
