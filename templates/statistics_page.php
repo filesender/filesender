@@ -38,7 +38,7 @@ if (Auth::isAdmin()) {
     <select id="idpselect">
         <option value="0">All</option>
 <?php
-$sql='SELECT entityid, name FROM idpsview ORDER BY name';
+$sql='SELECT id, name FROM idpsview ORDER BY name';
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
