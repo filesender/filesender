@@ -351,19 +351,22 @@ $(function() {
         }
     });
 
-    var openpgpkey = $('#openpgpkey').text();
-    kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
-	if (!err) {
-            var s = '';
-
-            var userid = key.userids[0];
-            $('#openpgpkeyinfoemail').text(userid.components.email);
-            var dd = new Date(0);
-            dd.setUTCSeconds(key.primary.lifespan.generated);
-            s = dd.toLocaleDateString() + " " + dd.toLocaleTimeString();
-            $('#openpgpkeyinfocreated').text(s);
-        }
-    });
+    if( filesender.config.openpgp_enabled ) {
     
+        var openpgpkey = $('#openpgpkey').text();
+        kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
+	    if (!err) {
+                var s = '';
+                
+                var userid = key.userids[0];
+                $('#openpgpkeyinfoemail').text(userid.components.email);
+                var dd = new Date(0);
+                dd.setUTCSeconds(key.primary.lifespan.generated);
+                s = dd.toLocaleDateString() + " " + dd.toLocaleTimeString();
+                $('#openpgpkeyinfocreated').text(s);
+            }
+        });
+        
+    }
     
 });
