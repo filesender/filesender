@@ -197,13 +197,13 @@ class IdP extends DBObject
             return IdP::fromId($data['id']);
         }
         
-        
-        $data = array();
-        $data['entityid'] = $entityid;
-        $data['name'] = $name;
-        $r = self::fromData( null, $data );
-        $r->created = time();
-        return $r;
+        $ret = new self();
+        $ret->entityid = $entityid;
+        $ret->name = $name;
+        $ret->created = time();
+        $ret->updated = time();
+        $ret->save();
+        return $ret;
     }
 
     
