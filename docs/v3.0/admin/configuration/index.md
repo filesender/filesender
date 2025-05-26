@@ -271,7 +271,6 @@ A note about colours;
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
 	* [using_local_saml_dbauth](#using_local_saml_dbauth)
 	* [auth_warn_session_expired](#auth_warn_session_expired)
-	* [auth_sp_idp_filters](#auth_sp_idp_filters)
 	* [auth_sp_idp_metadata_to_capture](#auth_sp_idp_metadata_to_capture)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
@@ -2910,15 +2909,6 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __available:__ since version 2.49
 * __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
                The warning does not happen during an upload because the session may expire there and the upload can still complete.
-
-### auth_sp_idp_filters
-
-* __description:__ Replacement filters to run on IDP entityIDs to make them read nicer
-* __mandatory:__ no
-* __type:__ array
-* __default:__ 
-* __available:__ since version 3.1
-* __comment:__ Note: setting this will overwrite the default values. If you want them include them in your custom config.
 
 ### auth_sp_idp_metadata_to_capture
 
