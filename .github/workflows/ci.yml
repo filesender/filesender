@@ -43,7 +43,7 @@ jobs:
   build:
     if: github.repository == 'filesender/filesender'
     name: ${{ matrix.testsuite }}-${{ matrix.db }}
-    runs-on: Ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: metadata
 
     env:
