@@ -237,7 +237,7 @@ class AuthSPSaml
         $sspmd = $mdh->getList('saml20-idp-remote', true );
         
         if(empty($sspmd[$entityId])) {
-            Logger::warning("No IdP metadata found for IdP $entityId ");
+            Logger::warn("No IdP metadata found for IdP $entityId ");
             return;
         }
         $sspmd = $sspmd[$entityId];
