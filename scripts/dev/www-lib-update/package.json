@@ -19,6 +19,7 @@
     "jquery-ui-dist": "^1.13.3",
     "kbpgp": "^2.1.15",
     "promise-polyfill": "^8.3.0",
+    "select2": "^4.0.13",
     "streamsaver": "^2.0.6",
     "web-streams-polyfill": "^4.0.0",
     "webcrypto-shim": "^0.1.7",

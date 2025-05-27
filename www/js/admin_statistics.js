@@ -154,6 +154,7 @@ function table(t,start=0,sort='',sortdirection=0) {
 $(function() {
     quotabars();
 
+    $("#idpselect").select2();
     $("#idpbutton").click(function(){
         $(location).prop('href', '?s=statistics&idp='+$("#idpselect").val());
     });

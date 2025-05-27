@@ -16,7 +16,15 @@ function html_selectidp( $idp, $row ) {
         <div class="row">
             <div class="col">
                 <div class="fs-statistics__title">
-                    <h1>{tr:admin_statistics_section}<?php if ($idp) { echo ' ('.Template::Q($idp).')'; } ?></h1>
+                    <h1>{tr:admin_statistics_section}<?php if ($idp) {
+$sql='SELECT name FROM idpsview WHERE id=:idp';
+$placeholders=array();
+$placeholders[':idp'] = $idp;
+$statement = DBI::prepare($sql);
+$statement->execute($placeholders);
+$result = $statement->fetchAll();
+$row = array_pop($result);
+echo '<br>('.Template::Q($row['name']).')'; } ?></h1>
                 </div>
             </div>
         </div>
@@ -138,7 +146,6 @@ $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(cre
 $placeholders=array();
 if ($idp) {
     $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(t.created) as day, SUM(t.filesize) as size, COUNT(t.id) as count FROM transfersfilesview t LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id WHERE a.idpid = :idp GROUP BY DATE(t.created)) tt';
-$placeholders=array();
     $placeholders[':idp'] = $idp;
 }
 $statement = DBI::prepare($sql);
