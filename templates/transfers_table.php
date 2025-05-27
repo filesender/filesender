@@ -174,8 +174,8 @@ EOF;
             class="transfer objectholder fs-table__row fs-table__row--clickable"
             data-transfer
             data-id="<?php echo                 Template::Q($transfer->id) ?>"
-            data-chunk-size="<?php         echo Template::Q($file->chunk_size); ?>"
-            data-crypted-chunk-size="<?php echo Template::Q($file->crypted_chunk_size); ?>"
+            data-chunk-size="<?php         echo Template::Q($transfer->chunk_size); ?>"
+            data-crypted-chunk-size="<?php echo Template::Q($transfer->crypted_chunk_size); ?>"
             data-recipients-enabled="<?php echo Template::Q($transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1') ?>"
             data-errors="<?php echo             Template::Q(count($transfer->recipients_with_error) ? '1' : '') ?>"
             data-expiry-extension="<?php echo   Template::Q($transfer->expiry_date_extension); ?>"
