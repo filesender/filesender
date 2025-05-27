@@ -214,6 +214,7 @@ A note about colours;
 * [recipient_reminder_limit](#recipient_reminder_limit)
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
+* [owner_automatic_reminder](#owner_automatic_reminder)
 * [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
 
 ## Graphs
@@ -2366,8 +2367,6 @@ This is only for old, existing transfers which have no roundtriptoken set.
      log in and thus the exact user is not known for the download log.
      
 
-
-
 ### transfer_automatic_reminder
 
 * __description:__ The number of reminders that a user can send to a recipient
@@ -2389,6 +2388,16 @@ This is only for old, existing transfers which have no roundtriptoken set.
    $config['transfer_automatic_reminder'] = 7;
    $config['transfer_automatic_reminder'] = array(7,10);
 
+
+### owner_automatic_reminder
+
+* __description:__ When sending a transfer reminder, also send one to the transfer owner
+* __mandatory:__ no
+* __type:__ bool
+* __default__: true
+* __available__: 3.0rc9
+* __comment__: When the transfer_automatic_reminder is true, this controls if an additional reminder is sent to 
+  the owner of the transfer.
 
 
 ### transfers_table_show_admin_full_path_to_each_file

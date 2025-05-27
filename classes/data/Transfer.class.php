@@ -1813,7 +1813,7 @@ class Transfer extends DBObject
         if (!count($rms)) {
             return;
         }
-        
+
         foreach (self::all(self::AVAILABLE) as $transfer) {
             $recipients_downloaded_ids = array_map(function ($l) {
                 return $l->author_id;
@@ -1847,7 +1847,10 @@ class Transfer extends DBObject
                 $recipient->remind();
             }
 
-            $send_owner_autoreminder = true;
+            $send_owner_autoreminder = Config::get('owner_automatic_reminder');
+            if (!$send_owner_autoreminder) {
+                $send_owner_autoreminder = true;
+            }
 
             // no not leak this transfer in a reminder if the system wants
             // private guests
