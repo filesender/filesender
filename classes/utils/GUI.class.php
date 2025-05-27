@@ -63,6 +63,7 @@ class GUI
     public static function stylesheets()
     {
         return self::filterSources(array(
+            'lib/select2/select2.min.css',
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'lib/bootstrap/dist/css/bootstrap.min.css',
@@ -134,6 +135,7 @@ class GUI
         array_push( $sources,
                     'lib/jquery/jquery.min.js',
                     'lib/jquery-ui/jquery-ui.min.js',
+                    'lib/select2/select2.min.js',
                     'lib/promise-polyfill/polyfill.min.js',
                     'lib/web-streams-polyfill/dist/ponyfill.js',
                     'lib/webcrypto-shim/webcrypto-shim.min.js',
