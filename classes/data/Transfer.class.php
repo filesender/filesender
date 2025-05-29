@@ -1848,9 +1848,6 @@ class Transfer extends DBObject
             }
 
             $send_owner_autoreminder = Config::get('owner_automatic_reminder');
-            if (!$send_owner_autoreminder) {
-                $send_owner_autoreminder = true;
-            }
 
             // no not leak this transfer in a reminder if the system wants
             // private guests
