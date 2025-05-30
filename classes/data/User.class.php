@@ -737,8 +737,11 @@ class User extends DBObject
         if (in_array($property, array(
             'openpgp_have_key'
         ))) {
-            $k = PublicKey::getDefaultForUser($this->id);
-            return $k->have_key;
+            if( Config::isTrue('openpgp_enabled')) {
+                $k = PublicKey::getDefaultForUser($this->id);
+                return $k->have_key;
+            }
+            return false;
         }
         
         if( $property == 'auth_secret_created_formatted' ) {
