@@ -217,6 +217,7 @@ $default = array(
     'guest_reminder_limit' => 50,
     'guest_reminder_limit_per_day' => 0,
     'recipient_reminder_limit' => 50,
+    'owner_automatic_reminder' => true,
 
     'autocomplete' => false,
     'autocomplete_min_characters' => 3,
