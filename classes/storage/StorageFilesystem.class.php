@@ -343,7 +343,11 @@ class StorageFilesystem
             $subpath = '';
             $idp = $file->transfer->owner->saml_user_identification_idp;
             //sanatise idp to safe path
-            $subpath = trim(preg_replace('/[^a-z0-9]+/', '_', strtolower($idp)));
+            $subpath = preg_replace('/[^a-z0-9]+/', '_', 
+                                   str_replace(['http://','https://'], '',
+                                              strtolower(rtrim(trim($idp), '/'))
+                                              )
+                                   );
             $path = self::ensurePath( $path, $subpath );
         }
         
