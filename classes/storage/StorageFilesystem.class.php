@@ -341,7 +341,7 @@ class StorageFilesystem
         // Is idp in storage path enabled
         if ($file->transfer->storage_filesystem_per_idp) {
             $subpath = '';
-            $idp = $file->transfer->owner->saml_user_identification_idp;
+            $idp = $file->transfer->idp_entityid;
             //sanatise idp to safe path
             $subpath = trim(preg_replace('/[^a-z0-9]+/', '_', strtolower($idp)));
             $path = self::ensurePath( $path, $subpath );

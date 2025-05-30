@@ -242,7 +242,7 @@ class Transfer extends DBObject
                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                         . '  group by t.id,f.size ';
 
-            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
                                      . ' from '
                                      . self::getDBTable().' t '
                                            . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
@@ -257,7 +257,7 @@ class Transfer extends DBObject
                                 . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
 
-            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                    . ' from '
                                    . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
@@ -289,14 +289,14 @@ class Transfer extends DBObject
                                              . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
             
-            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, t.idpid, idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, t.idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
                                            . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
                                            . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
                                            . ' GROUP BY idp.id ';
 
             
-            $idpview[$dbtype] = 'select t.*, idp.entityid as saml_user_identification_idp,idp.name as idp_name,idp.organization_name as idp_organization_name '
+            $idpview[$dbtype] = 'select t.*, idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
                               . ' from '
                               . self::getDBTable() . ' t '
                                     . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
@@ -1355,6 +1355,16 @@ class Transfer extends DBObject
             $this->salt = Crypto::generateSaltString(32);
             $this->save();
             return $this->salt;
+        }
+        if ($property == 'idp_entityid') {
+            $d = self::pick('idp_entityid',
+                array(
+                    'view'  => 'transferidpview',
+                    'where' => 'id=:id'
+                ),
+                array(':id' => $this->id)
+            );
+            return $d['idp_entityid'];
         }
         throw new PropertyAccessException($this, $property);
     }
