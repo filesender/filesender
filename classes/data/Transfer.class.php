@@ -1357,13 +1357,7 @@ class Transfer extends DBObject
             return $this->salt;
         }
         if ($property == 'idp_entityid') {
-            $d = self::pick('idp_entityid',
-                array(
-                    'view'  => 'transferidpview',
-                    'where' => 'id=:id'
-                ),
-                array(':id' => $this->id)
-            );
+            $d = $this->fetchFromViewForId('transferidpview','idp_entityid');
             return $d['idp_entityid'];
         }
         throw new PropertyAccessException($this, $property);

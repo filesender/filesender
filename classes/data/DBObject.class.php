@@ -192,6 +192,42 @@ class DBObject
         self::$objectCache[$class][$id] = $object;
         return $object;
     }
+
+    /**
+     * Similar to pick() and fromId(). This looks up a tuple using the primary key 'id' from one
+     * of the views of this class. By default the 'view' is used, for example transfersview or filesview.
+     * By default all columns are returned for the matching tuple.
+     *
+     * The minimal use is likely (get for current object)
+     * 
+     * $tup = fetchFromViewForId( 'transfersspecialview' );
+     * 
+     * @return db tuple raw data or throw on failure
+     */
+    public function fetchFromViewForId( $viewName = null, $columns = '*', $id = null )
+    {
+        if( !$viewName ) {
+            $viewName = static::getDBTable() . "view";
+            $viewName = strtolower($viewName);
+        }
+        if( !$id ) {
+            $id = $this->id;
+        }
+        
+        $d = self::pick($columns,
+                        array(
+                            'view'  => $viewName,
+                            'where' => 'id=:id'
+                        ),
+                        array(':id' => $id)
+        );
+        if( !$d ) {
+            // There is no row.
+            // We are looking on PK so this is a really bad thing!
+            throw new ObjectLookupInViewFailedException( $this, $viewName, $id );
+        }
+        return $d;
+    }
     
     /**
      * Cached getter relying on data
