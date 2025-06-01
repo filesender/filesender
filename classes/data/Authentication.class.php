@@ -60,11 +60,6 @@ class Authentication extends DBObject
             'size' => 200,
             'null' => true
         ),
-        'saml_user_identification_idp' => array(
-            'type' => 'string',
-            'size' => 170,
-            'null' => true
-        ),
         'idpid' => array(
             'type' => 'uint',
             'size' => 'big',
@@ -104,7 +99,7 @@ class Authentication extends DBObject
     {
         $a = array();
         foreach (array('mysql','pgsql') as $dbtype) {
-            $idpview[$dbtype] = 'select a.*,  idp.entityid as saml_user_identification_idp_entityid,idp.name as idp_name,idp.organization_name as idp_organization_name '
+            $idpview[$dbtype] = 'select a.*,  idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                               . ' FROM '
                                . self::getDBTable().' a '
                                      . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=a.id ';
@@ -120,7 +115,6 @@ class Authentication extends DBObject
     protected $id = null;
     protected $saml_user_identification_uid = null;
     protected $saml_user_identification_uid_hash = 0;
-    protected $saml_user_identification_idp = null;
     protected $idpid = null;
     protected $created = 0;
     protected $last_activity = 0;
@@ -172,8 +166,6 @@ class Authentication extends DBObject
 
                 // only update if the idp has changed
                 if ($ret->idpid != $idp->id) {
-                    // FIXME maybe drop column saml_user_identification_idp
-                    $ret->saml_user_identification_idp = $saml_auth_idp;
                     $ret->idpid = $idp->id;
                     $ret->save();
                 }
@@ -192,14 +184,11 @@ class Authentication extends DBObject
         Logger::info('authentication::create(4) ' . $ret->id);
         Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash);
         if (!is_null($saml_auth_idp)) {
-            // FIXME maybe drop column saml_user_identification_idp
-            $ret->saml_user_identification_idp = $saml_auth_idp;
-
             $entityId = $saml_auth_idp;
             $idp = IdP::ensure($entityId);
             $ret->idpid = $idp->id;
             
-            Logger::info('authentication::create(6) ' . $ret->saml_user_identification_idp);
+            Logger::info('authentication::create(6) ' . $entityId);
         }
         $ret->save();
         return $ret;
@@ -237,7 +226,7 @@ class Authentication extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'saml_user_identification_idp', 'idpid', 'created','last_activity','passwordhash'
+            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'idpid', 'created','last_activity','passwordhash'
         ))) {
             return $this->$property;
         }
@@ -260,8 +249,6 @@ class Authentication extends DBObject
     {
         if ($property == 'saml_user_identification_uid_hash') {
             $this->saml_user_identification_uid_hash = $value;
-        } elseif ($property == 'saml_user_identification_idp') {
-            $this->saml_user_identification_idp = $value;
         } elseif ($property == 'idpid') {
             $this->idpid = $value;
         } elseif ($property == 'passwordhash') {

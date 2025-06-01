@@ -158,9 +158,10 @@ class User extends DBObject
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
                                        .self::getDBTable().' up LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON up.authid = a.id';
-            $idpview[$dbtype] = 'select u.*, av.idpid as idpid, av.saml_user_identification_idp_entityid as idp, av.idp_name as idp_name from '
+            $idpview[$dbtype] = 'select u.*, av.idpid as idpid, i.entityid as idp, i.idp_name as idp_name from '
                                . self::getDBTable().' u '
-                               . ' LEFT JOIN authidpview av ON u.authid=av.id ';
+                               . ' LEFT JOIN authidpview av ON u.authid=av.id '
+                               . ' LEFT JOIN '.call_user_func('IdP::getDBTable').'i ON av.idpid=i.id';
         }
         
         return array( strtolower(self::getDBTable()) . 'view' => $a,
@@ -753,9 +754,10 @@ class User extends DBObject
             return $a->saml_user_identification_uid;
         }
 
-        if ($property == 'saml_user_identification_idp') {
+        if ($property == 'idp_entityid') {
             $a = Authentication::fromId($this->authid);
-            return $a->saml_user_identification_idp;
+            $i = IdP::fromId($a->idpid);
+            return $i->entityid;
         }
         
         if ($property == 'email') {
