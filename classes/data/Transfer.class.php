@@ -263,23 +263,15 @@ class Transfer extends DBObject
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                          . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
                                          . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
-            
-            $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                    . ' from '
-                                          . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a '
-                                          . " where "
-                                          . " a.target_id=" . DBLayer::toViewVarCharCast("t.id",255)
-                                          . " and target_type = 'Transfer'  "
-                                    . " UNION "
-                                    . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                    . ' from '
-                                          . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a, '
-                                          . call_user_func('File::getDBTable').' f '
-                                          . " where  f.transfer_id=t.id  "
-                                          . "   and a.target_id=" .  DBLayer::toViewVarCharCast("f.id",255)
-                                          . "   and target_type = 'File'  ";
+
+            $auditlogsview[$dbtype] = 'SELECT t.*, 0 as fileid, a.created as acreated, a.author_type, a.author_id, a.target_type, a.target_id, a.event, a.id as aid '
+                                    . 'FROM '
+                                    . '  '.self::getDBTable().' t LEFT JOIN '.call_user_func('AuditLog::getDBTable').' a ON t.id = a.target_id AND a.target_type = \'Transfer\' '
+                                    . 'UNION '
+                                    . 'SELECT t.*, f.id as fileid, a.created as acreated, a.author_type, a.author_id, a.target_type, a.target_id, a.event, a.id as aid '
+                                    . 'FROM '
+                                    . '  '.call_user_func('File::getDBTable').' f LEFT JOIN '.call_user_func('AuditLog::getDBTable').' a ON f.transfer_id = a.target_id AND a.target_type = \'File\' '
+                                    . '                                           LEFT JOIN '.self::getDBTable().' t ON f.transfer_id=t.id';
             
             $auditlogsviewdlcss[$dbtype] = 'select id,count(*) as count from transfersauditlogsview where  '
                                              . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id ";
