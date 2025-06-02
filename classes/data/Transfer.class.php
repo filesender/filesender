@@ -289,7 +289,7 @@ class Transfer extends DBObject
                                              . " left outer join transfersauditlogsdlsubselectcountview zz "
                                              . " on t.id = zz.id  " ;
             
-            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, t.idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, max(t.idpid), idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
                                            . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
                                            . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
