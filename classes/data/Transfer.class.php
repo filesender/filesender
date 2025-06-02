@@ -264,30 +264,6 @@ class Transfer extends DBObject
                                          . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
                                          . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
 
-            $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                    . ' from '
-                                    . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a '
-                                          . " where "
-                                          . " a.target_id=" . DBLayer::toViewVarCharCast("t.id",255)
-                                          . " and target_type = 'Transfer'  "
-                                     . " UNION "
-                                          . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                          . ' from '
-                                          . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a, '
-                                          . call_user_func('File::getDBTable').' f '
-                                          . " where  f.transfer_id=t.id  "
-                                          . "   and a.target_id=" .  DBLayer::toViewVarCharCast("f.id",255)
-                                                                            . "   and target_type = 'File'  ";
-            
-            $auditlogsviewdlcss[$dbtype] = 'select id,count(*) as count from transfersauditlogsview where  '
-                                             . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id ";
-                
-            $auditlogsviewdlc[$dbtype] = 'select t.*,count from '
-                                       . self::getDBTable() . ' t '
-                                             . " left outer join transfersauditlogsdlsubselectcountview zz "
-                                             . " on t.id = zz.id  " ;
             
             $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, t.idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
@@ -308,9 +284,6 @@ class Transfer extends DBObject
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
                     , 'transfersfilesidpview' => $filesidpview
-                    , 'transfersauditlogsview' => $auditlogsview
-                    , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
-                    , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
                     , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
                     , 'transferidpview' => $idpview
         );
