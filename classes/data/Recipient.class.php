@@ -100,11 +100,11 @@ class Recipient extends DBObject
                         . DBView::columnDefinition_age($dbtype, 'created')
                         . DBView::columnDefinition_age($dbtype, 'last_activity', 'last_activity_days_ago')
                                 . '  from ' . self::getDBTable();
-            $idpview[$dbtype] = 'select r.*,u.id as uid,u.authid,a.saml_user_identification_idp from '
+             $idpview[$dbtype] = 'select r.*,u.id as uid, u.authid, a.idpid from '
                               . self::getDBTable() . ' r '
                                     . ' LEFT JOIN '.call_user_func('Transfer::getDBTable').' t ON r.transfer_id=t.id '
                                     . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+                                    . ' LEFT JOIN authidpview a ON u.authid=a.id ';
             
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
@@ -115,7 +115,7 @@ class Recipient extends DBObject
     /**
      * Set selectors
      */
-    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     
 
     /**
