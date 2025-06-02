@@ -266,20 +266,20 @@ class Transfer extends DBObject
             
             $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
                                     . ' from '
-                                    . self::getDBTable().' t, '
+                                          . self::getDBTable().' t, '
                                           . call_user_func('AuditLog::getDBTable').' a '
                                           . " where "
                                           . " a.target_id=" . DBLayer::toViewVarCharCast("t.id",255)
                                           . " and target_type = 'Transfer'  "
-                                     . " UNION "
-                                          . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                          . ' from '
+                                    . " UNION "
+                                    . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
+                                    . ' from '
                                           . self::getDBTable().' t, '
                                           . call_user_func('AuditLog::getDBTable').' a, '
                                           . call_user_func('File::getDBTable').' f '
                                           . " where  f.transfer_id=t.id  "
                                           . "   and a.target_id=" .  DBLayer::toViewVarCharCast("f.id",255)
-                                                                            . "   and target_type = 'File'  ";
+                                          . "   and target_type = 'File'  ";
             
             $auditlogsviewdlcss[$dbtype] = 'select id,count(*) as count from transfersauditlogsview where  '
                                              . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id ";
