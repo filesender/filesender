@@ -229,6 +229,7 @@ class DBObject
         return $d;
     }
     
+    
     /**
      * Cached getter relying on data
      *
@@ -407,6 +408,7 @@ class DBObject
         return $data['count'];
     }
 
+
     /**
      * Get a single tuple result for a query
      *
@@ -425,6 +427,7 @@ class DBObject
         $data = $statement->fetch();
         return $data;
     }
+    
     
     /**
      * convert the result of an sql query on this table to a set objects

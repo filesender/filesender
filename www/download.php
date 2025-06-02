@@ -175,8 +175,14 @@ try {
         manageOptions($ret, $transfer, $recipient, $recently_downloaded);
     
 } catch (Exception $e) {
+    if(!array_key_exists('exception', $_SESSION))
+        $_SESSION['exception'] = [];
+
+    $_SESSION['exception'] = array_slice($_SESSION['exception'], -4);
+    
     $sid = uniqid();
-    $_SESSION['exception_'.$sid] = $e;
+    $_SESSION['exception'][$sid] = $e;
+    
     $path = GUI::path() . '?s=exception&sid=' . $sid;
     header('Location: ' . $path);
 }

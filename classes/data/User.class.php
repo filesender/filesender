@@ -198,6 +198,7 @@ class User extends DBObject
     const FROM_IDP_AUP    = " idpid = :idp and service_aup_accepted_version >= :aup ";
     const APIKEY          = " auth_secret IS NOT NULL  ";
     const FROM_IDP_APIKEY = " idpid = :idp and auth_secret IS NOT NULL  ";
+    
 
     
     /** 
@@ -287,7 +288,7 @@ class User extends DBObject
         if (!array_key_exists('idp', $attributes) || !$attributes['idp']) {
             $attributes['idp'] = null;
         }
-        
+       
         // Get matching user
         $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid'],$attributes['idp']);
         $user = self::fromAuthId($authid);
@@ -721,7 +722,6 @@ class User extends DBObject
             'email_addresses', 'name', 'quota', 'authid'
           , 'guest_expiry_default_days', 'service_aup_accepted_version', 'service_aup_accepted_time'
           , 'save_frequent_email_address', 'save_transfer_preferences'
-            
         ))) {
             return $this->$property;
         }

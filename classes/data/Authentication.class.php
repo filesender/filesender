@@ -94,6 +94,20 @@ class Authentication extends DBObject
         )
     );
 
+    
+    public static function getViewMap()
+    {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
+            $idpview[$dbtype] = 'select a.*,  idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+                              . ' FROM '
+                               . self::getDBTable().' a '
+                                     . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=a.id ';
+        }
+        
+        return array( 'authidpview' => $idpview,
+        );
+    }
 
     public static function getViewMap()
     {

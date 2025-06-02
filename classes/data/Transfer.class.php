@@ -300,7 +300,6 @@ class Transfer extends DBObject
                               . ' from '
                               . self::getDBTable() . ' t '
                                     . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
-
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -1210,7 +1209,7 @@ class Transfer extends DBObject
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
-            , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
+          , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
         ))) {
             return $this->$property;
         }
