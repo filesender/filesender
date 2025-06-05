@@ -36,9 +36,9 @@ if(!('ui'         in window.filesender)) window.filesender.ui = {};
 const USER_THEME_KEY = 'USER_THEME';
 
 const THEMES = {
-    DEVICE_THEME: 'device',
+    DEVICE_THEME: 'default',
     LIGHT_THEME: 'default',
-    DARK_THEME: 'dark'
+    DARK_THEME: 'default'
 };
 
 /**
