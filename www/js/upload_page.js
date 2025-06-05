@@ -789,6 +789,7 @@ filesender.ui.recipients = {
     	var emailseparator = /[,;\s]/;
     	if( outlookemailformat.test(email) ){
     		emailseparator = /[;]/;
+			email = email.replace(/>[,\s]/, '>;');
         }
 		
         if( email.match(emailseparator) ) { // Multiple values
