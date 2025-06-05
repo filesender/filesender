@@ -816,6 +816,12 @@ filesender.ui.recipients = {
             return invalid.join(', ');
         }
         
+		 // outlook email format
+		if (outlookemailformat.test(email)){
+			console.log(email);email = outlookemailformat.exec(email)[1];
+            
+		}
+		
         var added = true;
         filesender.ui.transfer.addRecipient(email, function(error) {
             if(error.message == 'transfer_too_many_recipients')
