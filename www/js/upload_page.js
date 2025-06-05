@@ -785,8 +785,8 @@ filesender.ui.recipients = {
         };
         
         var too_much = null;
-        if(email.match(/[;]/)) { // Multiple values
-            email = email.split(/[;]/);
+        if(email.match(/[,;\s]/)) { // Multiple values
+            email = email.split(/[,;\s]/);
             var invalid = [];
             for(var i=0; i<email.length; i++) {
                 if(too_much) continue;
@@ -806,15 +806,9 @@ filesender.ui.recipients = {
                 return '';
             }
             
-            return invalid.join('; ');
+            return invalid.join(', ');
         }
         
-		// outlook email format
-        const pattern = /<(.+)>/;
-		if (pattern.test(email)){
-			email = pattern.exec(email)[1];
-		}
-		
         var added = true;
         filesender.ui.transfer.addRecipient(email, function(error) {
             if(error.message == 'transfer_too_many_recipients')
