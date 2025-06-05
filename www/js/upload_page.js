@@ -785,8 +785,14 @@ filesender.ui.recipients = {
         };
         
         var too_much = null;
-        if(email.match(/[,;\s]/)) { // Multiple values
-            email = email.split(/[,;\s]/);
+		const outlookemailformat = /<(.+)>/;
+    	var emailseparator = /[,;\s]/;
+    	if( outlookemailformat.test(email) ){
+    		emailseparator = /[;]/;
+        }
+		
+        if( email.match(emailseparator) ) { // Multiple values
+            email = email.split(emailseparator);
             var invalid = [];
             for(var i=0; i<email.length; i++) {
                 if(too_much) continue;
