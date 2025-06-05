@@ -298,7 +298,7 @@ $default = array(
     'owasp_csrf_protector_enabled' => false,
 
     'theme' => '',
-    'theme_userpref_enabled' => true,
+    'theme_userpref_enabled' => false,
     'openpgp_enabled' => false,
 
     'user_can_only_view_guest_transfers_shared_with_them' => false,
