@@ -785,11 +785,11 @@ filesender.ui.recipients = {
         };
         
         var too_much = null;
-		const outlookemailformat = /<(.+)>/;
+        const outlookemailformat = /<(.+)>/;
     	var emailseparator = /[,;\s]/;
-    	if( outlookemailformat.test(email) ){
-    		emailseparator = /[;]/;
-			email = email.replace(/>[,\s]/, '>;');
+        if( outlookemailformat.test(email) ){
+            emailseparator = /[;]/; 
+            email = email.replace(/>[,\s]/, '>;'); 
         }
 		
         if( email.match(emailseparator) ) { // Multiple values
@@ -816,11 +816,10 @@ filesender.ui.recipients = {
             return invalid.join(', ');
         }
         
-		 // outlook email format
-		if (outlookemailformat.test(email)){
-			console.log(email);email = outlookemailformat.exec(email)[1];
-            
-		}
+        // outlook email format, only use part between brackets
+        if (outlookemailformat.test(email)){
+            email = outlookemailformat.exec(email)[1];
+        }
 		
         var added = true;
         filesender.ui.transfer.addRecipient(email, function(error) {
