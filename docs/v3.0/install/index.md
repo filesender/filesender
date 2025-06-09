@@ -680,8 +680,8 @@ On **Debian**, run:
 # Step 8 - Update your FileSender config.php
 
 Edit your `/opt/filesender/filesender/config/config.php` to reflect the
-your settings. Be sure to at least set `$config['site_url']`, contact
-details, database settings and authentication configuration. The
+your settings. Be sure to at least set `$config['site_url']`, `site_hostname`,
+contact details, database settings and authentication configuration. The
 configuration file is self-explanatory.
 
 The main settings you will want to inspect and update are shown below.

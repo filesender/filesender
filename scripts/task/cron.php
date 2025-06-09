@@ -85,6 +85,30 @@ if( $verbose ) {
     echo "cron.php running as user: " . `id` . "\n";
 }
 
+
+if(!array_key_exists("HTTP_HOST",$_SERVER)) {
+    if( !Config::get("site_hostname")) {
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "\n";
+        echo "Some functionality that involves emails might use the SimpleSAMLphp library to construct part of the URL\n";
+        echo "in the message. The SimpleSAMLphp library is expecting to be run from a web request rather than from\n";
+        echo "a command line script.\n";
+        echo "\n";
+        echo "Please set site_hostname in your filesender config.php to allow a good hostname for your server to be known\n";
+        echo "and this cron.php script will ensure that information is used by SimpleSAMLphp to create correct links.\n";
+        echo "\n";
+        echo "Thank you\n";
+        echo "\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "\n";
+    }
+}
+
+
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
 if(!is_null($storage_usage)) {
