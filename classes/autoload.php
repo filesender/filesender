@@ -87,6 +87,7 @@ class Autoloader
         'RateLimitHistory' => 'data/',
         'UploadGraph' => 'data/',
         'PublicKey' => 'data/',
+        'IdP' => 'data/',
         
         'AVProgram*' => 'avprograms/',
         
