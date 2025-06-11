@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -142,9 +142,17 @@ class Guest extends DBObject
                         . DBView::columnDefinition_age($dbtype, 'service_aup_accepted_time', 'service_aup_accepted_time_days_ago')
                         . ' , expires < now() as expired '
                         . " , status = 'available' as is_available "
-                        . '  from ' . self::getDBTable();
+                                . '  from ' . self::getDBTable();
+            $idpview[$dbtype] = 'select g.*,u.id as uid,u.authid,a.idpid from '
+                              . self::getDBTable() . ' g '
+                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON g.userid=u.id '
+                                    . ' LEFT JOIN authidpview a ON u.authid=a.id '
+                                    . ' WHERE ' . self::AVAILABLE;            
+            
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        return array( strtolower(self::getDBTable()) . 'view' => $a
+                    , 'guestsidpview' => $idpview
+        );
     }
 
     /**
@@ -161,8 +169,9 @@ class Guest extends DBObject
     const EXPIRED = "expires < :date ORDER BY expires ASC";
     // For these fragments we want to find the guests that have
     // expires is null because they are still considered active
-    const FROM_USER = "userid = :userid AND (expires is null or expires > :date) ORDER BY created DESC";
+    const FROM_USER           = "userid = :userid AND (expires is null or expires > :date) ORDER BY created DESC";
     const FROM_USER_AVAILABLE = "userid = :userid AND (expires is null or expires > :date) AND status = 'available' ORDER BY created DESC";
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     
     /**
      * Properties
@@ -700,6 +709,24 @@ class Guest extends DBObject
         
         return $options;
     }
+
+    /*
+     * Count how many guests we have or a tenant has
+     */
+    public static function getGuestCount( $idp = null )
+    {
+        if (!$idp) {
+            return self::countEstimate();
+        }
+        
+        return self::count(
+            array(
+                'view'  => 'guestsidpview',
+                'where' => self::FROM_IDP_NO_ORDER
+            ),
+            array(':idp' => $idp)
+        );
+    }    
     
     /**
      * Getter
@@ -740,6 +767,10 @@ class Guest extends DBObject
             return $user->saml_user_identification_uid;
         }
         
+        if ($property == 'idpid') {
+            $user = User::fromId($this->userid);
+            return $user->idpid;
+        }
         
         if ($property == 'upload_link') {
             return Utilities::http_build_query(

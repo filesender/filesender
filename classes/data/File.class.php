@@ -2,7 +2,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -122,7 +122,17 @@ class File extends DBObject
         'have_avresults' => array(
             'type' => 'bool',
             'default' => false
-        )
+        ),
+
+        // used by storage::buildPath to cache the storage path used for this file
+        // this may allow migration of settings in the future with access
+        // to existing files.
+        'storage_path' => array(
+            'type' => 'string',
+            'size' => 170,
+            'null' => true
+        ),
+        
     );
 
     protected static $secondaryIndexMap = array(
@@ -146,12 +156,11 @@ class File extends DBObject
             // to work where they do not allow subqueries in view definitions.
             $transferviewdef[$dbtype] = Transfer::getPrimaryViewDefinition($dbtype);
 
-            $filesbywhodef[$dbtype] = 'select t.id as transferid,name,upload_end,f.id as fileid,mime_type,size,'
-                                . ' t.* from '.self::getDBTable().' f, '
-                                    . ' filestranferviewcopy t '
-                                    . ' where f.transfer_id = t.id order by t.id';
-        }
-        
+            $filesbywhodef[$dbtype] = 'select t.id as transferid, name, upload_end, f.id as fileid, mime_type, size,'
+                                    . ' t.* from '.self::getDBTable().' f LEFT JOIN'
+                                    . ' filestranferviewcopy t ON f.transfer_id = t.id'
+                                    . ' order by t.id';
+        }        
         
         return array( strtolower(self::getDBTable()) . 'view' => $a ,
                       'filestranferviewcopy' => $transferviewdef    ,
@@ -178,6 +187,7 @@ class File extends DBObject
     protected $aead = null;
     protected $have_avresults = false;
     protected $storage_class_name = ''; // set in constructor
+    protected $storage_path = null;
    
     /**
      * Related objects cache
@@ -503,7 +513,7 @@ class File extends DBObject
     {
         if (in_array($property, array(
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
-          , 'storage_class_name', 'iv', 'aead', 'have_avresults'
+          , 'storage_class_name', 'iv', 'aead', 'have_avresults', 'storage_path'
         ))) {
             return $this->$property;
         }
@@ -619,6 +629,8 @@ class File extends DBObject
             $this->aead = $value;
         } elseif ($property == 'have_avresults') {
             $this->have_avresults = $value;
+        } elseif ($property == 'storage_path') {
+            $this->storage_path = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

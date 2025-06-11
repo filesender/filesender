@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -115,9 +115,25 @@ class StatLog extends DBObject
                                                                'os',
                                                                'os_name' )
                         . '  from ' . self::getDBTable() . ' base';
-            
+            $browserstatsview[$dbtype] ='SELECT '
+                                       .'    MAX(additional_attributes) as "additional_attributes", '
+                                       .'    AVG(CASE WHEN time_taken > 0 THEN size/time_taken ELSE 0 END) as speed, '
+                                       .'    AVG(CASE WHEN time_taken > 0 AND size>1073741824 THEN size/time_taken ELSE NULL END) as gspeed, '
+                                       .'    AVG(size) as avgsize, '
+                                       .'    MIN(size) as minsize, '
+                                       .'    MAX(size) as maxsize, '
+                                       .'    SUM(size) as transfered, '
+                                       .'    COUNT(ID) as count, '
+                                       .'    MIN('.DBLayer::timeStampToEpoch('created').') as firsttransfer, '
+                                       .'    is_encrypted,os_name,browser_name '
+                                       .' FROM statlogsview '
+                                       ." WHERE event='file_uploaded' "
+                                       .' GROUP BY is_encrypted,os_name,browser_name '
+                                       .' ORDER BY count DESC, maxsize DESC ';
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        return array( strtolower(self::getDBTable()) . 'view' => $a
+                    , 'browserstatsview' => $browserstatsview
+        );
     }
     
     /**

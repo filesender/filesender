@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -91,6 +91,31 @@ class Recipient extends DBObject
             'token' => array()
         )
     );
+
+    public static function getViewMap()
+    {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype, 'created')
+                        . DBView::columnDefinition_age($dbtype, 'last_activity', 'last_activity_days_ago')
+                                . '  from ' . self::getDBTable();
+             $idpview[$dbtype] = 'select r.*,u.id as uid, u.authid, a.idpid from '
+                              . self::getDBTable() . ' r '
+                                    . ' LEFT JOIN '.call_user_func('Transfer::getDBTable').' t ON r.transfer_id=t.id '
+                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
+                                    . ' LEFT JOIN authidpview a ON u.authid=a.id ';
+            
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a
+                    , 'recipientsidpview' => $idpview
+        );
+    }
+
+    /**
+     * Set selectors
+     */
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     
 
     /**
@@ -254,6 +279,25 @@ class Recipient extends DBObject
         foreach (TrackingEvent::fromRecipient($this) as $tracking_event) {
             $tracking_event->delete();
         }
+    }
+
+    /*
+     * Count how many unique recipients we have or a tenant has
+     */
+    public static function getRecipientCount( $idp = null )
+    {
+        if (!$idp) {
+            return self::countEstimate();
+        }
+
+        return self::count(
+            array(
+                'view'  => 'recipientsidpview',
+                'where' => self::FROM_IDP_NO_ORDER
+            ),
+            array(':idp' => $idp)
+        );
+        
     }
     
     /**

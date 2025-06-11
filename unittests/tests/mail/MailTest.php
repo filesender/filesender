@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -54,7 +54,7 @@ class Mailtest extends CommonUnitTestCase {
      */
     public function testSendMail() {
         // Creating transfert object
-        $mail = new Mail('emiel@codebridge.nl', 'Test mail SURFnet filesender', $html = false);
+        $mail = new Mail('emiel@codebridge.nl', 'Test mail SURF filesender', $html = false);
         //$mail->to("emiel@codebridge.nl");
         $mail->cc("emiel@codebridge.nl");
 
