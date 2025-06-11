@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -172,7 +172,11 @@ class Transfer extends DBObject
             'null'    => false,
             'default' => false,
         ),
-
+        'storage_filesystem_per_idp' => array(
+            'type'    => 'bool',
+            'null'    => false,
+            'default' => false,
+        ),
 
         'download_count' => array(
             'type'    => 'uint',
@@ -194,6 +198,12 @@ class Transfer extends DBObject
             'default' => 0
         ),
 
+        'idpid' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'null'    => true
+        ),
+        
     );
 
     /**
@@ -223,64 +233,62 @@ class Transfer extends DBObject
             $authviewdef[$dbtype] = 'select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
                                   . 't.made_available,t.expires,t.created '
                                   . ' FROM '
-                                      . self::getDBTable().' t, '
-                                            . call_user_func('User::getDBTable').' u, '
-                                            . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
+                                      . self::getDBTable().' t LEFT JOIN '
+                                            . call_user_func('User::getDBTable').' u ON t.userid = u.id LEFT JOIN '
+                                            . call_user_func('Authentication::getDBTable').' a ON u.authid = a.id';
 
             $sizeviewdev[$dbtype] = 'select t.*,sum(f.size) as size from '
-                                  . self::getDBTable().' t, '
-                                        . call_user_func('File::getDBTable').' f '
-                                        . ' where '
-                                        . ' f.transfer_id=t.id '
-                                        . '  group by t.id ';
+                                  . self::getDBTable().' t LEFT JOIN '
+                                        . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
+                                        . '  group by t.id,f.size ';
+
+            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
+                                     . ' from '
+                                     . self::getDBTable().' t '
+                                           . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                           . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
+                                           . '  group by t.id,idp.id';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
-                                       . self::getDBTable().' t, '
-                                             . call_user_func('Recipient::getDBTable').' r '
-                                             . ' where '
-                                             . ' r.transfer_id=t.id ';
-            $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
-                                . self::getDBTable().' t, '
-                                      . call_user_func('File::getDBTable').' f '
-                                      . ' where '
-                                      . ' f.transfer_id=t.id ';
+                                       . self::getDBTable().' t LEFT JOIN '
+                                             . call_user_func('Recipient::getDBTable').' r ON t.id=r.transfer_id';
 
-            $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                    . ' from '
-                                    . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a '
-                                          . " where "
-                                          . " a.target_id=" . DBLayer::toViewVarCharCast("t.id",255)
-                                          . " and target_type = 'Transfer'  "
-                                     . " UNION "
-                                          . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                          . ' from '
-                                          . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a, '
-                                          . call_user_func('File::getDBTable').' f '
-                                          . " where  f.transfer_id=t.id  "
-                                          . "   and a.target_id=" .  DBLayer::toViewVarCharCast("f.id",255)
-                                                                            . "   and target_type = 'File'  ";
+            $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
+                                . self::getDBTable().' t LEFT JOIN '
+                                      . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
+
+            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+                                   . ' from '
+                                   . self::getDBTable().' t LEFT JOIN '
+                                      . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
+                                         . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                         . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
+
             
-            $auditlogsviewdlcss[$dbtype] = 'select id,count(*) as count from transfersauditlogsview where  '
-                                             . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id ";
-                
-            $auditlogsviewdlc[$dbtype] = 'select t.*,count from '
-                                       . self::getDBTable() . ' t '
-                                             . " left outer join transfersauditlogsdlsubselectcountview zz "
-                                             . " on t.id = zz.id  " ;
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, t.idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+                                           . ' FROM '.File::getDBTable().' f '
+                                           . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
+                                           . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                           . ' GROUP BY idp.id ';
+
+            
+            $idpview[$dbtype] = 'select t.*, idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
+                              . ' from '
+                              . self::getDBTable() . ' t '
+                                    . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
                     , 'transferssizeview' => $sizeviewdev
+                    , 'transferssizeidpview' => $sizeidpviewdev
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
-                    , 'transfersauditlogsview' => $auditlogsview
-                    , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
-                    , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
+                    , 'transfersfilesidpview' => $filesidpview
+                    , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
+                    , 'transferidpview' => $idpview
         );
     }
-
+    
     protected static $secondaryIndexMap = array(
         'userid' => array(
             'userid' => array()
@@ -319,6 +327,10 @@ class Transfer extends DBObject
     const CLOSED_NO_ORDER = "status = 'closed' ";
     const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
     const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
+    const FROM_IDP_UPLOADING = "status = 'uploading' and idpid = :idp ORDER BY created DESC";
+    const FROM_IDP_AVAILABLE = "status = 'available' and idpid = :idp ORDER BY created DESC";
+    const FROM_IDP_EXPIRED   = "expires <= :date and idpid = :idp ORDER BY expires ASC";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -350,9 +362,11 @@ class Transfer extends DBObject
     protected $guest_transfer_shown_to_user_who_invited_guest = true;
     protected $storage_filesystem_per_day_buckets = false;
     protected $storage_filesystem_per_hour_buckets = false;
+    protected $storage_filesystem_per_idp = false;
     protected $download_count = 0;
     protected $chunk_size = 0;
     protected $crypted_chunk_size = 0;
+    protected $idpid = null;
 
     
     
@@ -383,6 +397,7 @@ class Transfer extends DBObject
     {
         $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
         $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
+        $this->storage_filesystem_per_idp = Config::get('storage_filesystem_per_idp');
         $this->download_count = 0;
         $this->chunk_size = Config::get('upload_chunk_size');
         $this->crypted_chunk_size = Config::get('upload_crypted_chunk_size');
@@ -1092,8 +1107,8 @@ class Transfer extends DBObject
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
-            , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets'
-          , 'download_count', 'chunk_size', 'crypted_chunk_size'
+            , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
+          , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
             
         ))) {
             return $this->$property;
@@ -1308,6 +1323,8 @@ class Transfer extends DBObject
             $this->storage_filesystem_per_day_buckets = $value;
         } elseif ($property == 'storage_filesystem_per_hour_buckets') {
             $this->storage_filesystem_per_hour_buckets = $value;
+        } elseif ($property == 'storage_filesystem_per_idp') {
+            $this->storage_filesystem_per_idp = $value;
         } elseif ($property == 'download_count') {
             $this->download_count = $value;
         } else {
@@ -1564,6 +1581,7 @@ class Transfer extends DBObject
 
         $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
         $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
+        $this->storage_filesystem_per_idp = Config::get('storage_filesystem_per_idp');
         
         // Update status and log to audit/stat
         $this->status = TransferStatuses::AVAILABLE;

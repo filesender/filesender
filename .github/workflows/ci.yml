@@ -41,7 +41,7 @@ jobs:
   build:
     if: github.repository == 'filesender/filesender'
     name: ${{ matrix.testsuite }}-${{ matrix.db }}
-    runs-on: Ubuntu-20.04
+    runs-on: Ubuntu-24.04
     needs: metadata
 
     env:
@@ -51,7 +51,7 @@ jobs:
       SAUCE_DONT_VERIFY_CERTS: 1
       php_extensions: mbstring, pdo_mysql, pdo_pgsql, pgsql, mysqlnd
       php_cache_key: cache_setup_php_key_v8
-      php_version: '8.1'
+      php_version: '8.3'
       TESTINGUI: 0
 
     strategy:
@@ -61,7 +61,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:16.8
         env:
           POSTGRES_DB: postgres
           POSTGRES_HOST: localhost
@@ -69,15 +69,9 @@ jobs:
           POSTGRES_USER: postgres
         ports:
           - 5432:5432
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
       mariadb:
-        image: mariadb:10.2
+        image: mariadb:11.4
         ports:
           - 3306:3306
         env:
@@ -85,8 +79,7 @@ jobs:
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
-
+        
     steps:
     - name: Checkout code from github
       uses: actions/checkout@v2
@@ -114,7 +107,7 @@ jobs:
 
 # this fails for mysql jobs when using the cache (jan 2021)
 #    - name: Cache extensions
-#      uses: actions/cache@v2
+#      uses: actions/cache@v4
 #      with:
 #        path: ${{ steps.cachesetupphp.outputs.dir }}
 #        key: ${{ steps.cachesetupphp.outputs.key }}
@@ -133,7 +126,7 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -142,12 +135,12 @@ jobs:
 
     - name: Install composer.json packages
       run: |
-        composer self-update --1
+        composer self-update
         composer update --no-interaction
 
 
     - name: Cache SimpleSAML
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       id: cache-simplesaml
       with:
         path: "simplesaml"
@@ -176,7 +169,7 @@ jobs:
         POSTGRES_PORT: 5432
 
     - uses: saucelabs/sauce-connect-action@v1.1.2
-      if: ${{ env.TESTSUITE == 'selenium' }}
+      if: ${{ env.TESTSUITE == 'seleniumDISABLED' }}
       with:
         username: ${{ secrets.SAUCE_USERNAME }}
         accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
@@ -197,7 +190,8 @@ jobs:
           echo "testing task/cron job"
           echo "BASEDIR $BASEDIR"
           pwd
-          sudo -u www-data php scripts/task/cron.php --testing-mode
+          sudo chown -R runner /home/runner/work/filesender
+          sudo -u runner php scripts/task/cron.php --testing-mode
           echo "cron job complete"
         fi
         echo "testing $TESTSUITE on database $DB "

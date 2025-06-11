@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -60,6 +60,11 @@ class Authentication extends DBObject
             'size' => 200,
             'null' => true
         ),
+        'idpid' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
+        ),
         'created' => array(
             'type' => 'datetime',
             'null' => true
@@ -89,6 +94,20 @@ class Authentication extends DBObject
         )
     );
 
+    
+    public static function getViewMap()
+    {
+        $a = array();
+        foreach (array('mysql','pgsql') as $dbtype) {
+            $idpview[$dbtype] = 'select a.*,  idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+                              . ' FROM '
+                               . self::getDBTable().' a '
+                                     . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=a.id ';
+        }
+        
+        return array( 'authidpview' => $idpview,
+        );
+    }
 
     
     /**
@@ -97,6 +116,7 @@ class Authentication extends DBObject
     protected $id = null;
     protected $saml_user_identification_uid = null;
     protected $saml_user_identification_uid_hash = 0;
+    protected $idpid = null;
     protected $created = 0;
     protected $last_activity = 0;
     protected $comment = null;
@@ -129,10 +149,10 @@ class Authentication extends DBObject
     /**
      * Create or return the auth object
      */
-    public static function ensure($saml_auth_uid, $comment = null)
+    public static function ensure($saml_auth_uid, $comment = null, $saml_auth_idp = null)
     {
         $saml_uid = $saml_auth_uid;
-        Logger::info('authentication::create(1) saml_uid ' . $saml_uid);
+        Logger::info('authentication::create(1) saml_uid ' . $saml_uid . ' saml_idp '. $saml_auth_idp);
 
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE saml_user_identification_uid = :samluid');
         $statement->execute(array(':samluid' => $saml_uid));
@@ -140,6 +160,17 @@ class Authentication extends DBObject
         if ($data) {
             $ret = static::createFactory(null, $data);
             $ret->fillFromDBData($data);
+            if (!is_null($saml_auth_idp)) {
+
+                $entityId = $saml_auth_idp;
+                $idp = IdP::ensure($entityId);
+
+                // only update if the idp has changed
+                if ($ret->idpid != $idp->id) {
+                    $ret->idpid = $idp->id;
+                    $ret->save();
+                }
+            }
             Logger::info('authentication::create(2) FOUND AND RETURNING ' . $data['id']);
             return $ret;
         }
@@ -153,6 +184,13 @@ class Authentication extends DBObject
         $ret->updateHash();
         Logger::info('authentication::create(4) ' . $ret->id);
         Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash);
+        if (!is_null($saml_auth_idp)) {
+            $entityId = $saml_auth_idp;
+            $idp = IdP::ensure($entityId);
+            $ret->idpid = $idp->id;
+            
+            Logger::info('authentication::create(6) ' . $entityId);
+        }
         $ret->save();
         return $ret;
     }
@@ -165,9 +203,9 @@ class Authentication extends DBObject
      *
      * @return self
      */
-    public static function ensureAuthIDFromSAMLUID($saml_auth_uid)
+    public static function ensureAuthIDFromSAMLUID($saml_auth_uid, $saml_auth_idp = null)
     {
-        return self::ensure($saml_auth_uid)->id;
+        return self::ensure($saml_auth_uid,null,$saml_auth_idp)->id;
     }
 
     private function updateHash()
@@ -189,7 +227,7 @@ class Authentication extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'created','last_activity','passwordhash'
+            'id', 'saml_user_identification_uid', 'saml_user_identification_uid_hash', 'idpid', 'created','last_activity','passwordhash'
         ))) {
             return $this->$property;
         }
@@ -212,6 +250,8 @@ class Authentication extends DBObject
     {
         if ($property == 'saml_user_identification_uid_hash') {
             $this->saml_user_identification_uid_hash = $value;
+        } elseif ($property == 'idpid') {
+            $this->idpid = $value;
         } elseif ($property == 'passwordhash') {
             $this->passwordhash = $value;
         } elseif ($property == 'password') {

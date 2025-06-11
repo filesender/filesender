@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -392,7 +392,7 @@ window.filesender.ui = {
     rawError: function (text) {
         console.log(text);
         var doc = new DOMParser().parseFromString(text, 'text/html');
-        if (doc.getElementsByClassName('exception')) { //if this is from our template, pull out the exception only.
+        if (doc.getElementsByClassName('exception').length >= 1 ) { //if this is from our template, pull out the exception only.
                 text = doc.getElementsByClassName('exception')[0].textContent || text;
         } else { //strip html as alert cant process that.
                 text = doc.body.textContent || text;

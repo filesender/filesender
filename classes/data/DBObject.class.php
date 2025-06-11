@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -192,6 +192,43 @@ class DBObject
         self::$objectCache[$class][$id] = $object;
         return $object;
     }
+
+    /**
+     * Similar to pick() and fromId(). This looks up a tuple using the primary key 'id' from one
+     * of the views of this class. By default the 'view' is used, for example transfersview or filesview.
+     * By default all columns are returned for the matching tuple.
+     *
+     * The minimal use is likely (get for current object)
+     * 
+     * $tup = fetchFromViewForId( 'transfersspecialview' );
+     * 
+     * @return db tuple raw data or throw on failure
+     */
+    public function fetchFromViewForId( $viewName = null, $columns = '*', $id = null )
+    {
+        if( !$viewName ) {
+            $viewName = static::getDBTable() . "view";
+            $viewName = strtolower($viewName);
+        }
+        if( !$id ) {
+            $id = $this->id;
+        }
+        
+        $d = self::pick($columns,
+                        array(
+                            'view'  => $viewName,
+                            'where' => 'id=:id'
+                        ),
+                        array(':id' => $id)
+        );
+        if( !$d ) {
+            // There is no row.
+            // We are looking on PK so this is a really bad thing!
+            throw new ObjectLookupInViewFailedException( $this, $viewName, $id );
+        }
+        return $d;
+    }
+    
     
     /**
      * Cached getter relying on data
@@ -370,6 +407,27 @@ class DBObject
         $data = $statement->fetch();
         return $data['count'];
     }
+
+
+    /**
+     * Get a single tuple result for a query
+     *
+     * @param string $criteria sql criteria and/or pagination options
+     * @param array $placeholders
+     *
+     * @return the one tuple
+     */
+    public static function pick($columns = '*', $criteria = null, $placeholders = array())
+    {
+        $statement = self::buildStatement($columns,$criteria, $placeholders);
+        
+        // run it
+        $statement->execute($placeholders);
+
+        $data = $statement->fetch();
+        return $data;
+    }
+    
     
     /**
      * convert the result of an sql query on this table to a set objects
