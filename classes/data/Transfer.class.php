@@ -242,28 +242,18 @@ class Transfer extends DBObject
                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                         . '  group by t.id,f.size ';
 
-            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
-                                     . ' from '
+            $sizeidpviewdev[$dbtype] = 'SELECT t.id, t.idpid, sum(f.size) as size, t.created, t.expires, DATE(t.created) as date_created, DATE(t.expires) as date_expires, t.made_available, t.status, t.options '
+                                     . 'FROM '
                                      . self::getDBTable().' t '
-                                           . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
                                            . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                           . '  group by t.id,idp.id';
+                                           . ' GROUP BY t.id';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
                                        . self::getDBTable().' t LEFT JOIN '
                                              . call_user_func('Recipient::getDBTable').' r ON t.id=r.transfer_id';
-
-            $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
+            $filesview[$dbtype] = 'SELECT t.*, f.name as filename, f.size as filesize, DATE(t.created) as date_created, DATE(t.expires) as date_expires FROM '
                                 . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
-
-            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
-                                   . ' from '
-                                   . self::getDBTable().' t LEFT JOIN '
-                                      . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                         . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
-                                         . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
-
             
             $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, max(t.idpid) as idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
@@ -283,7 +273,6 @@ class Transfer extends DBObject
                     , 'transferssizeidpview' => $sizeidpviewdev
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
-                    , 'transfersfilesidpview' => $filesidpview
                     , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
                     , 'transferidpview' => $idpview
         );

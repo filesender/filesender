@@ -142,10 +142,10 @@ if (!$idp) {
 <h3>Per Day</h3>
 <table class="fs-table fs-table--striped per_day">
 <?php
-$sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(created) as day,SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY DATE(created)) t';
+$sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select date_created as day, SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY date_created) t';
 $placeholders=array();
 if ($idp) {
-    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(t.created) as day, SUM(t.filesize) as size, COUNT(t.id) as count FROM transfersfilesview t LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id WHERE a.idpid = :idp GROUP BY DATE(t.created)) tt';
+    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select date_created as day, SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview WHERE idpid = :idp GROUP BY date_created) t';
     $placeholders[':idp'] = $idp;
 }
 $statement = DBI::prepare($sql);
