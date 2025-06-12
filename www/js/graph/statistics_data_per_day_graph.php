@@ -69,13 +69,13 @@ $sql =
     'SELECT '
    .'  Date.date, '
    .((!$idp) ?
-        '  (SELECT MAX(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
-       .'  (SELECT AVG(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
-       .'  (SELECT MIN(size) FROM transferssizeview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
+        '  (SELECT MAX(size) FROM transferssizeidpview WHERE date_created <= Date.date AND date_expires >= Date.date) as max, '
+       .'  (SELECT AVG(size) FROM transferssizeidpview WHERE date_created <= Date.date AND date_expires >= Date.date) as avg, '
+       .'  (SELECT MIN(size) FROM transferssizeidpview WHERE date_created <= Date.date AND date_expires >= Date.date) as min '
      :
-        '  (SELECT MAX(size) FROM transferssizeidpview WHERE idpid = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as max, '
-       .'  (SELECT AVG(size) FROM transferssizeidpview WHERE idpid = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as avg, '
-       .'  (SELECT MIN(size) FROM transferssizeidpview WHERE idpid = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as min '
+        '  (SELECT MAX(size) FROM transferssizeidpview WHERE idpid = :idp AND date_created <= Date.date AND date_expires >= Date.date) as max, '
+       .'  (SELECT AVG(size) FROM transferssizeidpview WHERE idpid = :idp AND date_created <= Date.date AND date_expires >= Date.date) as avg, '
+       .'  (SELECT MIN(size) FROM transferssizeidpview WHERE idpid = :idp AND date_created <= Date.date AND date_expires >= Date.date) as min '
     )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '

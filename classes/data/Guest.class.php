@@ -143,12 +143,11 @@ class Guest extends DBObject
                         . ' , expires < now() as expired '
                         . " , status = 'available' as is_available "
                                 . '  from ' . self::getDBTable();
-            $idpview[$dbtype] = 'select g.*,u.id as uid,u.authid,a.idpid from '
+            $idpview[$dbtype] = 'SELECT g.*, DATE(g.created) as date_created, DATE(g.expires) as date_expires, u.id as uid, u.authid, a.idpid FROM '
                               . self::getDBTable() . ' g '
-                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON g.userid=u.id '
-                                    . ' LEFT JOIN authidpview a ON u.authid=a.id '
-                                    . ' WHERE ' . self::AVAILABLE;            
-            
+                                    . 'LEFT JOIN '.call_user_func('User::getDBTable').' u ON g.userid=u.id '
+                                    . 'LEFT JOIN authidpview a ON u.authid=a.id '
+                                    . 'WHERE ' . self::AVAILABLE;
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'guestsidpview' => $idpview
