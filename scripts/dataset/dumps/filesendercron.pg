@@ -412,7 +412,7 @@ CREATE TABLE public.transfers (
     id bigint NOT NULL,
     userid bigint NOT NULL,
     user_email character varying(250) NOT NULL,
-    guest_id integer,
+    guest_id bigint,
     lang character varying(8),
     subject character varying(250),
     message text,
@@ -538,7 +538,7 @@ CREATE VIEW public.filesview AS
 --
 
 CREATE TABLE public.guests (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     userid bigint NOT NULL,
     user_email character varying(250) NOT NULL,
     token character varying(60) NOT NULL,
