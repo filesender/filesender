@@ -257,7 +257,7 @@ CREATE VIEW public.clientlogsview AS
 
 CREATE TABLE public.collections (
     id integer NOT NULL,
-    transfer_id integer NOT NULL,
+    transfer_id bigint NOT NULL,
     parent_id integer,
     type_id integer NOT NULL,
     info character varying(2048)
@@ -369,8 +369,8 @@ CREATE TABLE public.filecollections (
 --
 
 CREATE TABLE public.files (
-    id integer NOT NULL,
-    transfer_id integer NOT NULL,
+    id bigint NOT NULL,
+    transfer_id bigint NOT NULL,
     uid character varying(60) NOT NULL,
     name character varying(255) NOT NULL,
     mime_type character varying(255) NOT NULL,
@@ -409,7 +409,7 @@ ALTER SEQUENCE public.files_id_seq OWNED BY public.files.id;
 --
 
 CREATE TABLE public.transfers (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     userid bigint NOT NULL,
     user_email character varying(250) NOT NULL,
     guest_id integer,
@@ -643,7 +643,7 @@ ALTER SEQUENCE public.metadatas_id_seq OWNED BY public.metadatas.id;
 
 CREATE TABLE public.recipients (
     id integer NOT NULL,
-    transfer_id integer NOT NULL,
+    transfer_id bigint NOT NULL,
     email character varying(255) NOT NULL,
     token character varying(60) NOT NULL,
     created timestamp without time zone NOT NULL,
