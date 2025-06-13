@@ -908,38 +908,6 @@ UNION
   WHERE ((f.transfer_id = t.id) AND ((a.target_id)::text = ((f.id)::character varying(255))::text) AND ((a.target_type)::text = 'File'::text));
 
 
---
--- Name: transfersauditlogsdlcountview; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.transfersauditlogsdlcountview AS
- SELECT t.id,
-    t.userid,
-    t.user_email,
-    t.guest_id,
-    t.lang,
-    t.subject,
-    t.message,
-    t.created,
-    t.made_available,
-    t.expires,
-    t.expiry_extensions,
-    t.status,
-    t.options,
-    t.key_version,
-    t.salt,
-    t.password_version,
-    t.password_encoding,
-    t.password_hash_iterations,
-    t.client_entropy,
-    t.roundtriptoken,
-    zz.count
-   FROM (public.transfers t
-     LEFT JOIN ( SELECT transfersauditlogsview.id,
-            count(*) AS count
-           FROM public.transfersauditlogsview
-          WHERE (((transfersauditlogsview.event)::text = 'download_ended'::text) OR ((transfersauditlogsview.event)::text = 'archive_download_ended'::text))
-          GROUP BY transfersauditlogsview.id) zz ON ((t.id = zz.id)));
 
 
 --
