@@ -868,6 +868,7 @@ filesender.ui.recipients = {
             return this.addCollection(emailresult,errorhandler);
         }
 
+        
         if(email.match(/[,;\s]/)) {
             // Multiple values with no special <> handling
             m = email.split(/[,;\s]/);
