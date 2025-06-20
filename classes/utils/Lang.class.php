@@ -346,8 +346,6 @@ class Lang
         $main = array_shift($stack);
         $t = array('main' => $main, 'fallback' => $stack);
         
-        Logger::debug($t);
-
         return $t['main'];
     }
     
