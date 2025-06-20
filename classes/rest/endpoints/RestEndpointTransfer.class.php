@@ -799,6 +799,9 @@ class RestEndpointTransfer extends RestEndpoint
                 }
 
                 // trim off optional rfc2045 *(";" parameter) blocks
+                if(!$filedata->mime_type) {
+                    $filedata->mime_type = '';
+                }
                 $filedata->mime_type = preg_replace('/^([^;]*).*/','$1',$filedata->mime_type);
 
                 $filedata->mime_type = Utilities::valuePassesConfigRegexOrDefault( $filedata->mime_type,
