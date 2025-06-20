@@ -90,6 +90,7 @@ class RestRequest
 /**
  * Request body converter
  */
+#[AllowDynamicProperties]
 class RestInput
 {
     /**
@@ -97,9 +98,6 @@ class RestInput
      */
     private $data = array();
 
-    public $mime_type = null;
-    public $iv = null;
-    public $encryption_client_entropy = null;
     
     /**
      * Recursive crawler that converts raw data into browsable data
