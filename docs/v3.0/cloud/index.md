@@ -139,15 +139,20 @@ $config['storage_type'] = 'CloudAzure';
 
 ## Amazon S3
 
-### Note
+### Notes
 
-There is a report of instability with backing the S3 storage with IBM
+1. There is a report of instability with backing the S3 storage with IBM
 Cloud Object Storage (On-premises) in 2025 (issue 2235). If you are
 intending to use this configuration please test large encrypted
 transfers with many files to a zip are working as you wish before
 deploying. If you find that configuration to be stable please also
 report that to the mailing list or github so this paragraph can be
 amended. Thank you.
+
+2. The current implementation uses the [Amazon SDK for PHP](https://docs.aws.amazon.com/sdk-for-php/), which in turn uses [Guzzle](https://docs.guzzlephp.org/en/stable/index.html).
+Documented behaviour of Guzzle is that [request bodies that exceed 2MB are stored on disk.](https://docs.guzzlephp.org/en/stable/psr7.html#body)
+This means that chunks, while in flight, are stored in your PHP [temp dir](https://www.php.net/manual/en/function.sys-get-temp-dir.php).
+Your PHP temp-dir has to have enough capacity to hold these files, both capacity and performance-wise.
 
 ### Setup
 
