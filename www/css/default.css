@@ -2502,6 +2502,11 @@ td .desc {
   cursor: pointer;
 }
 
+.custom-action-label {
+  cursor: pointer;
+  padding-left: 0.5em;
+}
+
 /* Upload page */
 .selectdir_hidden_input_element {
   width: 0.1px;
