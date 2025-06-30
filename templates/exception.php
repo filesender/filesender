@@ -1,6 +1,7 @@
-<div class="exception">
+<main>
+<div class="xexception">
     {tr:encountered_exception}
-    
+
     <div class="message">
         <?php echo Lang::tr(Utilities::sanitizeOutput($exception->getMessage())) ?>
     </div>
@@ -17,3 +18,4 @@
     <?php } ?>
     </div>
 </div>
+</main>

@@ -9,25 +9,16 @@ if (!Auth::isAdmin() && !Auth::isTenantAdmin()) {
 }
 $idp = Auth::getTenantAdminIDP();
 
-$sql = '';
 $placeholders = array();
-if (!$idp) {
-    $sql =
-        'SELECT '
-       .'  SUM(case WHEN options LIKE \'%\\"encryption\\":false%\' THEN 1 ELSE 0 END) as "Unencrypted", '
-       .'  SUM(case WHEN options LIKE \'%\\"encryption\\":true%\' THEN 1 ELSE 0 END) as "Encrypted" '
-       .'FROM transferssizeview '
-       .'WHERE (DATE(created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-       .'      (DATE(expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(expires) <= NOW())';
-} else {
-    $sql =
-        'SELECT '
-       .'  SUM(case WHEN options LIKE \'%\\"encryption\\":false%\' THEN 1 ELSE 0 END) as "Unencrypted", '
-       .'  SUM(case WHEN options LIKE \'%\\"encryption\\":true%\' THEN 1 ELSE 0 END) as "Encrypted" '
-       .'FROM transferssizeidpview '
-       .'WHERE (DATE(created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-       .'      (DATE(expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(expires) <= NOW()) '
-       .'  AND saml_user_identification_idp = :idp';
+$sql =
+    'SELECT '
+   .'  SUM(case WHEN options LIKE \'%\\"encryption\\":false%\' THEN 1 ELSE 0 END) as "Unencrypted", '
+   .'  SUM(case WHEN options LIKE \'%\\"encryption\\":true%\'  THEN 1 ELSE 0 END) as "Encrypted" '
+   .'FROM transferssizeidpview '
+   .'WHERE (date_created >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+   .'      (date_expires >= NOW() - '.DBLayer::toIntervalDays(30).' AND date_expires <= NOW())';
+if ($idp) {
+    $sql.=' AND idpid = :idp';
     $placeholders[':idp'] = $idp;
 }
 

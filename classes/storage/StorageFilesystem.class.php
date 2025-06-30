@@ -2,7 +2,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -341,9 +341,13 @@ class StorageFilesystem
         // Is idp in storage path enabled
         if ($file->transfer->storage_filesystem_per_idp) {
             $subpath = '';
-            $idp = $file->transfer->owner->saml_user_identification_idp;
+            $idp = $file->transfer->idp_entityid;
             //sanatise idp to safe path
-            $subpath = trim(preg_replace('/[^a-z0-9]+/', '_', strtolower($idp)));
+            $subpath = preg_replace('/[^a-z0-9]+/', '_', 
+                                   str_replace(['http://','https://'], '',
+                                              strtolower(rtrim(trim($idp), '/'))
+                                              )
+                                   );
             $path = self::ensurePath( $path, $subpath );
         }
         

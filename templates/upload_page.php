@@ -3,6 +3,8 @@ $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
 $show_get_a_link_or_email_choice = true;
+$openpgp_encrypt_passphrase = false;
+$openpgpkey = '';
 
 // CGI to used variables
 $aupChecked = '';
@@ -77,6 +79,8 @@ if(Auth::isGuest()) {
     }
 }
 
+$allow_recipients = true;
+
 /**
  * @param optionsToFilter is an array of options which we do not want to
  *                        show in the default panels on the left. This allows
@@ -116,6 +120,16 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
         }
     }
 
+
+    //
+    // User to User PGP is a future feature.
+    //
+    if( !Auth::isGuest() &&
+        $name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL)
+    {
+            return;
+    }        
+    
     echo '<div data-option="'.$name.'" '. $extraDivAttrs .'>';
 
     if($text) {
@@ -162,6 +176,13 @@ if( !Auth::isGuest()) {
         }
     }
 }
+foreach(Transfer::allOptions() as $name => $dfn)  {
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+        if(Auth::isGuest()) {
+            $openpgp_encrypt_passphrase = true;
+        } 
+    }
+}
 
 
 $possibleExpireDays = array( 7, 15, 30, 40 );
@@ -169,6 +190,17 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
     return $k < Config::get('max_transfer_days_valid');
 });
 
+if( Auth::isGuest() && $openpgp_encrypt_passphrase ) {
+    $guest = AuthGuest::getGuest();
+    $openpgpkey = $guest->owner->openpgp_key;
+    if( !$guest->owner->openpgp_have_key ) {
+        $openpgp_encrypt_passphrase = false;
+    }
+}
+$openpgp_encrypt_passphrase_add_class = "";
+if( $openpgp_encrypt_passphrase ) {
+    $openpgp_encrypt_passphrase_add_class = "hidden";
+}
 
 ?>
 
@@ -409,6 +441,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                 <div class="row">
                                     <div class="col-12">
                                         <div data-related-to="emailfrom">
+                                            <div class="<?php echo $openpgp_encrypt_passphrase_add_class ?>" ></div>
 
                                             <?php $emails = Auth::isGuest() ? array(AuthGuest::getGuest()->email) : Auth::user()->email_addresses ?>
 
@@ -454,14 +487,18 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                 <div class="row">
                                     <div class="col-12">
                                         <?php if($allow_recipients) { ?>
-                                            <div data-related-to="message">
+                                            <div data-related-to="message"  id="recip">
                                                 <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
                                                         <label for="to">
                                                             {tr:send_transfer_to}
                                                         </label>
+                                                        <?php
+                                                        echo '<div class="recipients">' 
+                                                           . Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email)
+                                                                     . '</div>';
+                                                        ?>
 
-                                                        <?php echo Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email) ?>
                                                     </div>
                                                 <?php } else { ?>
                                                     <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
@@ -517,6 +554,9 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                     {tr:password_can_not_be_part_of_message_error}
                                                 </label>
                                             </div>
+                                            <div class="openpgpinfo" id="openpgpinfo" >
+                                                <p>{tr:openpgp_upload_page_description}</p>
+                                            </div>
                                         <?php } ?> <!-- closing if($allow_recipients) -->
                                         <?php if(Auth::isGuest()) { ?>
                                             <div>
@@ -540,6 +580,11 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 }
                                             }
                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                if( $name == "openpgp_encrypt_passphrase_to_email" ) {
+                                                    if( $openpgp_encrypt_passphrase ) {
+                                                        $cfg['default'] = $guest->transfer_options['openpgp_encrypt_passphrase_to_email'];
+                                                    }
+                                                }
                                                 if( !array_key_exists($name,$upload_options_handled)) {
                                                     $displayoption($name, $cfg, Auth::isGuest());
                                                 }
@@ -560,6 +605,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
 
                                 <?php if(Config::get('encryption_enabled')) {  ?>
                                     <div class="row">
+                                        <div id="encryption_options"  class="<?php echo $openpgp_encrypt_passphrase_add_class ?>"> </div>
                                         <div class="col-12">
                                             <div class="fs-switch" data-related-to="encryption">
                                                 <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
@@ -568,6 +614,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 </label>
                                             </div>
 
+                                            <div id="encgroup1openpgp">
                                             <div id="encgroup1" class="fs-transfer__password">
                                                 <div class="fs-transfer__password-top" id="encryption_password_container">
                                                     <div class="row">
@@ -611,6 +658,7 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                                                 <div class="fieldcontainer" id="encryption_description_disabled_container">
                                                     <small>{tr:file_encryption_description_disabled}</small>
                                                 </div>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -968,10 +1016,20 @@ $expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
                     </div>
                 </div>
             <?php } ?>
-
         </div>
+        
+        <?php if( $openpgp_encrypt_passphrase ) {  ?>
+            <div>
+                <p><?php echo lang::tr('upload_will_use_openpgp_to_share_passphrase')->r('email',AuthGuest::getGuest()->user_email)->out()?></p>
+            </div>
+        <?php } ?>
+        
     </form>
 
+    <div id="openpgp-possile" hidden="true"><?php echo Utilities::boolToString(!empty($openpgpkey)) ?></div>
+    <div id="openpgpkey" hidden="true"><?php echo Template::Q($openpgpkey) ?></div>
+
+    
     <?php if (!Config::get('disable_directory_upload')) { ?>
         <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>
     <?php } ?>

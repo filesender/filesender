@@ -13,7 +13,7 @@ subject: Datei(en) steht(en) nicht mehr zum Download bereit
 
 Sehr geehrte Damen und Herren,
 
-die Dateiübertragung Nr. {transfer.id} ist abgelaufen und steht nicht mehr zum Download bereit.
+der Dateitransfer Nr. {transfer.id} ist abgelaufen und steht nicht mehr zum Download bereit.
 
 Mit freundlichen Grüßen
 {cfg:site_name}
@@ -25,7 +25,7 @@ Mit freundlichen Grüßen
 </p>
 
 <p>
-    die Dateiübertragung Nr. {transfer.id} ist abgelaufen und steht nicht mehr zum Download bereit.
+    der Dateitransfer Nr. {transfer.id} ist abgelaufen und steht nicht mehr zum Download bereit.
 
 <p>
     Mit freundlichen Grüßen<br />

@@ -3,9 +3,9 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -86,7 +86,7 @@ function graph(g) {
     });
 }
 
-function table(t,start=0) {
+function table(t,start=0,sort='',sortdirection=0) {
     if (!$("#"+t).length) return;
     $("#nav_"+t).remove();
 
@@ -100,9 +100,40 @@ function table(t,start=0) {
     }
 
     $.ajax({
-        url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start
+        url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start+"&sort="+sort+"&sortdirection="+sortdirection
     }).done(function(rows) {
         $("#"+t).html(rows);
+
+        var attr = $("#"+t+" tr:first").attr('sort');
+        if (typeof attr !== 'undefined' && attr !== false) {
+            var sort=$("#"+t+" tr:first")[0].attributes['sort'].value;
+            $("#"+t+" tr:first th").each(function(){
+                var key = $(this)[0].attributes['sort'].value;
+                var text = $(this).text();
+                if (sort == key) {
+                    if (sortdirection) {
+                        text='<u>'+text+'</u> <i class="fa fa-sort-desc" aria-hidden="true"></i>';
+                    } else {
+                        text='<u>'+text+'</u> <i class="fa fa-sort-asc" aria-hidden="true"></i>';
+                    }
+                }
+                var span = $("<span>", {
+                    html: text,
+                    id: t+"_"+key
+                });
+                span.on("click",function() {
+                    if (sort==key && sortdirection==0) {
+                        sortdirection=1;
+                    } else {
+                        sortdirection=0;
+                    }
+                    table(t,start,key,sortdirection);
+                });
+                $(this).html('');
+                $(this).append(span);
+            });
+        }
+
         $("#"+t).after('<div id="nav_'+t+'" class="table-nav"></div>');
         var trs=$("#"+t+" tr");
         if (parseInt(trs[1].attributes['data-row'].value)>0) {
@@ -123,6 +154,7 @@ function table(t,start=0) {
 $(function() {
     quotabars();
 
+    $("#idpselect").select2();
     $("#idpbutton").click(function(){
         $(location).prop('href', '?s=statistics&idp='+$("#idpselect").val());
     });
@@ -135,7 +167,7 @@ $(function() {
 
     table("top_users");
     table("transfer_per_user");
-    table("mime_types");
-    table("users_with_api_keys");
+    table("mime_types",0,'',1);
+    table("users_with_api_keys",0,'',1);
     table("browser_stats");
 });

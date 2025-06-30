@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -425,6 +425,11 @@ function ensureFK()
                     'transfers.password_encoding refers to dbconstantpasswordencoding.id',
 	            call_user_func('Transfer::getDBTable'), 'transfer_passwordencoding', 'password_encoding',
 	            call_user_func('DBConstantPasswordEncoding::getDBTable'), 'id' ));
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'publickeys.userid refers to users.id',
+	            call_user_func('PublicKey::getDBTable'), 'PublicKeys_userid', 'userid',
+	            call_user_func('User::getDBTable'), 'id' ));
 
 
     array_push( $fks,
@@ -437,6 +442,18 @@ function ensureFK()
                     'downloadonetimepasswords.rid refers to recipients.id',
 	            call_user_func('DownloadOneTimePassword::getDBTable'), 'DownloadOneTimePassword_rid', 'rid',
 	            call_user_func('Recipient::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'transfers.idpid refers to idps.id',
+	            call_user_func('Transfer::getDBTable'), 'Transfers_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'authentications.idpid refers to idps.id',
+	            call_user_func('Authentication::getDBTable'), 'Authentications_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
     
     
     foreach ( $fks as $fk ) {
@@ -720,6 +737,10 @@ try {
     // Remake all the views. This is done last because the view might reference other
     // tables and might rely on the other tables schema having been updated already
     //
+    //
+    // ordering here is important as other table views depend on authentication table views.
+    //
+    array_unshift($classes, 'Authentication');
     foreach($classes as $class) {
         echo 'Checking class '.$class."\n";
         

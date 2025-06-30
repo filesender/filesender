@@ -4,7 +4,7 @@ include_once "pagemenuitem.php";
 $idp = Auth::getTenantAdminIDP();
 
 function html_selectidp( $idp, $row ) {
-    if( $idp == $row['saml_user_identification_idp'] ) {
+    if( $idp == $row['id'] ) {
         return ' selected';
     }
     return '';
@@ -16,7 +16,15 @@ function html_selectidp( $idp, $row ) {
         <div class="row">
             <div class="col">
                 <div class="fs-statistics__title">
-                    <h1>{tr:admin_statistics_section}<?php if ($idp) { echo ' ('.Template::Q($idp).')'; } ?></h1>
+                    <h1>{tr:admin_statistics_section}<?php if ($idp) {
+$sql='SELECT name FROM idpsview WHERE id=:idp';
+$placeholders=array();
+$placeholders[':idp'] = $idp;
+$statement = DBI::prepare($sql);
+$statement->execute($placeholders);
+$result = $statement->fetchAll();
+$row = array_pop($result);
+echo '<br>('.Template::Q($row['name']).')'; } ?></h1>
                 </div>
             </div>
         </div>
@@ -36,14 +44,14 @@ if (Auth::isAdmin()) {
 ?>
     <h3>IDP:
     <select id="idpselect">
-        <option value="all">All</option>
+        <option value="0">All</option>
 <?php
-$sql='SELECT DISTINCT saml_user_identification_idp FROM '.call_user_func('Authentication::getDBTable').' WHERE saml_user_identification_idp IS NOT NULL ORDER BY saml_user_identification_idp';
+$sql='SELECT id, name FROM idpsview ORDER BY name';
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
 foreach($result as $row) {
-    echo '        <option value="'.$row['saml_user_identification_idp'].'"'.html_selectidp( $idp, $row ).'>'.$row['saml_user_identification_idp'].'</option>'."\n";
+    echo '        <option value="'.$row['id'].'"'.html_selectidp( $idp, $row ).'>'.$row['name'].'</option>'."\n";
 }
 ?>
     </select>
@@ -134,11 +142,10 @@ if (!$idp) {
 <h3>Per Day</h3>
 <table class="fs-table fs-table--striped per_day">
 <?php
-$sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(created) as day,SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY DATE(created)) t';
+$sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select date_created as day, SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview GROUP BY date_created) t';
 $placeholders=array();
 if ($idp) {
-    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select DATE(t.created) as day, SUM(t.filesize) as size, COUNT(t.id) as count FROM transfersfilesview t LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id WHERE a.saml_user_identification_idp = :idp GROUP BY DATE(t.created)) tt';
-$placeholders=array();
+    $sql='SELECT FLOOR(AVG(size)) as s, FLOOR(AVG(count)) as c FROM (select date_created as day, SUM(filesize) as size, COUNT(id) as count FROM transfersfilesview WHERE idpid = :idp GROUP BY date_created) t';
     $placeholders[':idp'] = $idp;
 }
 $statement = DBI::prepare($sql);

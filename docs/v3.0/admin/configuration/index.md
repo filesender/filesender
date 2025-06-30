@@ -41,6 +41,7 @@ A note about colours;
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
 * [download_show_download_links](#download_show_download_links)
 * [disclose](#disclose)
+* [openpgp_enabled](#openpgp_enabled)
 
 
 ## Security settings
@@ -213,6 +214,7 @@ A note about colours;
 * [recipient_reminder_limit](#recipient_reminder_limit)
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
+* [owner_automatic_reminder](#owner_automatic_reminder)
 * [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
 
 ## Graphs
@@ -270,7 +272,7 @@ A note about colours;
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
 	* [using_local_saml_dbauth](#using_local_saml_dbauth)
 	* [auth_warn_session_expired](#auth_warn_session_expired)
-	* [auth_sp_idp_filters](#auth_sp_idp_filters)
+	* [auth_sp_idp_metadata_to_capture](#auth_sp_idp_metadata_to_capture)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -2365,8 +2367,6 @@ This is only for old, existing transfers which have no roundtriptoken set.
      log in and thus the exact user is not known for the download log.
      
 
-
-
 ### transfer_automatic_reminder
 
 * __description:__ The number of reminders that a user can send to a recipient
@@ -2388,6 +2388,16 @@ This is only for old, existing transfers which have no roundtriptoken set.
    $config['transfer_automatic_reminder'] = 7;
    $config['transfer_automatic_reminder'] = array(7,10);
 
+
+### owner_automatic_reminder
+
+* __description:__ When sending a transfer reminder, also send one to the transfer owner
+* __mandatory:__ no
+* __type:__ bool
+* __default__: true
+* __available__: 3.0rc9
+* __comment__: When the transfer_automatic_reminder is true, this controls if an additional reminder is sent to 
+  the owner of the transfer.
 
 
 ### transfers_table_show_admin_full_path_to_each_file
@@ -2909,14 +2919,28 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
                The warning does not happen during an upload because the session may expire there and the upload can still complete.
 
-### auth_sp_idp_filters
+### auth_sp_idp_metadata_to_capture
 
-* __description:__ Replacement filters to run on IDP entityIDs to make them read nicer
+* __description:__ A list of metadata attributes to capture from the IDP into the IdP table for SAML authentications.
 * __mandatory:__ no
 * __type:__ array
-* __default:__ 
-* __available:__ since version 3.1
-* __comment:__ Note: setting this will overwrite the default values. If you want them include them in your custom config.
+* __default:__ [ 'description','OrganizationName' => 'organization_name','name','OrganizationDisplayName'=>'organization_display_name','url','OrganizationURL'=>'organization_url'  ]
+* __available:__ since version 3.0rc9
+* __comment:__ Note: This is an array of the metadata names from the SSP metadata config file for the IdP that you would like
+                     replicated into the local IdP table. The format allows renaming, the key is the SSP metadata name and the value is what column to use
+                     in the IdP table in FileSender. This way columns can remain with the lower_case and underscore naming convention in FileSender.
+                     Note that if you add to these items you will need to modify your
+                     local IdP class to include the additional columns in the table to store the matching metadata. Perhaps a future extension will allow storing more custom IdP
+                     metadata in a JSON field in the table.
+
+### auth_sp_idp_metadata_to_capture_frequency
+* __description:__ How often an update using auth_sp_idp_metadata_to_capture can happen. Set to 0 to disable live updates entirely. If disabled you should use scripts/task/cron-update-idp-metadata.php to update associated metadata as desired.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0, // disabled.
+* __available:__ since version 3.0rc9
+* __comment:__ This is to allow automatic refresh of metadata but also not bog the system down by looking at it too frequently. You can also use the cron-update-idp-metadata.php script to reimport the metadata explicitly for existing tuples in the idp table.
+
 
 
 ## Authentication: Shibboleth
@@ -3387,6 +3411,42 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __1.x name:__
 * __comment:__ the parameter needs an array of strings.  Current options include: 'version'
 * __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
+
+
+### openpgp_enabled
+
+* __description:__ If set to true then some OpenPGP functionaily to help send the encryption passphrase is enabled.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ - false
+* __available:__ since 3.0rc8
+* __1.x name:__
+* __comment:__ If a user elects to upload their OpenPGP public key then they might be
+able to receive files with FileSender with the pass phrase used for
+encryption being sent to them as a OpenPGP encrypted message. The first
+iteration of this feature is focused on allowing guests to upload
+files to the user who invited them and not have to worry about
+transmitting the passphrase. NOTE: Using the openpgp_enabled feature will implicitly
+allow users of the system to lookup the uploaded public key for another user by 
+their email address.
+
+You will also want to add a stanza like the following to your config.php / transfer_options. In the first 
+version this setting is needed but will be overridden for guest uploads when a user has a public key. That 
+is if there is a public key then guest uploads will always use it regardless of the transfer_options setting.
+
+```
+$config['transfer_options'] = array(
+...
+        'openpgp_encrypt_passphrase_to_email' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+...        
+```
+
+
+
 
 
 ### disclosed

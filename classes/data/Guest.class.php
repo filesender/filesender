@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -143,11 +143,11 @@ class Guest extends DBObject
                         . ' , expires < now() as expired '
                         . " , status = 'available' as is_available "
                                 . '  from ' . self::getDBTable();
-            $idpview[$dbtype] = 'select g.*,u.id as uid,u.authid,a.saml_user_identification_idp from '
+            $idpview[$dbtype] = 'SELECT g.*, DATE(g.created) as date_created, DATE(g.expires) as date_expires, u.id as uid, u.authid, a.idpid FROM '
                               . self::getDBTable() . ' g '
-                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON g.userid=u.id '
-                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
-                                    . ' WHERE ' . self::AVAILABLE;            
+                                    . 'LEFT JOIN '.call_user_func('User::getDBTable').' u ON g.userid=u.id '
+                                    . 'LEFT JOIN authidpview a ON u.authid=a.id '
+                                    . 'WHERE ' . self::AVAILABLE;
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'guestsidpview' => $idpview
@@ -170,7 +170,7 @@ class Guest extends DBObject
     // expires is null because they are still considered active
     const FROM_USER           = "userid = :userid AND (expires is null or expires > :date) ORDER BY created DESC";
     const FROM_USER_AVAILABLE = "userid = :userid AND (expires is null or expires > :date) AND status = 'available' ORDER BY created DESC";
-    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     
     /**
      * Properties
@@ -766,9 +766,9 @@ class Guest extends DBObject
             return $user->saml_user_identification_uid;
         }
         
-        if ($property == 'saml_user_identification_idp') {
+        if ($property == 'idpid') {
             $user = User::fromId($this->userid);
-            return $user->saml_user_identification_idp;
+            return $user->idpid;
         }
         
         if ($property == 'upload_link') {

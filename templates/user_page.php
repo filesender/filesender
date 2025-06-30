@@ -88,17 +88,6 @@ $user = Auth::user();
                     }
                     ?>
 
-                    <?php if (Config::get('theme_userpref_enabled')) { ?>
-                    <div class='fs-select pt-3'>
-                        <label for='user_theme'>{tr:theme}</label>
-                        <select id="user_theme" name="user_theme">
-                            <option value="device" selected>{tr:device}</option>
-                            <option value="default">{tr:light}</option>
-                            <option value="dark">{tr:dark}</option>
-                        </select>
-                        <small>{tr:theme_info}</small>
-                    </div>
-                    <?php } ?>
 
                     <div class="fs-switch fs-switch--small">
                         <input id="previous-settings" type="checkbox" name="save_transfer_preferences"  <?php echo isChecked($user->save_transfer_preferences); ?> />
@@ -318,6 +307,71 @@ $user = Auth::user();
         </div>
 
         <?php
+        if( Config::isTrue('openpgp_enabled')) {
+        ?>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__about">
+        <?php
+    echo "<h2>".Lang::tr('OpenPGP')."</h2>\n";
+    echo "<div>";
+    $user = Auth::user();
+    $v = $user->openpgp_key;
+    if( $v ) {
+        echo "{tr:you_have_a_openpgp_public_key_known_to_system}";
+
+        echo <<<EOF
+        <div class="openpgpkey" id="openpgpkey" hidden="true">$v
+        </div>
+        <div class="openpgpkeyinfo" id="openpgpkeyinfo">
+          <table>
+          <tr><td>{tr:email_address}</td><td id="openpgpkeyinfoemail"></td></tr>
+          <tr><td>{tr:created}</td><td id="openpgpkeyinfocreated"></td></tr>
+          </table>
+        </div>
+EOF;
+        
+        echo <<<EOF
+       <br>
+       <ul class="fs-listx">
+       <li>
+           <button type="button" class="fs-button test_my_openpgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:test_my_openpgp_key}</span>
+           </button>
+       </li><li>
+           <button type="button" class="fs-button fs-button--danger delete_my_openpgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:delete_my_openpgp_keys}</span>
+           </button>
+       </li></ul>
+EOF;
+        
+    }
+    else
+    {
+        echo "{tr:the_system_does_not_know_your_openpgp_key}<br><br>";
+    }
+    if( !$v ) {
+    echo <<<EOF
+            <div class="form-group upload_new_openpgp_public_key">
+                <label for="openpgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_openpgp_public_key}</label><br>
+                <input id="openpgp_public_key_file" name="openpgp_public_key_file" type="file" class="form-control-file" hidden="true" />
+            </div>
+EOF;
+    }
+    echo "</div>";
+        ?>
+                    </div>
+            </div>
+            </div>
+
+        <?php
+        } // if(openpgp_enabled)
+        ?>
+            
+        <?php
         if (Config::get('auth_remote_user_enabled')) {
 
         ?>
@@ -426,12 +480,16 @@ $user = Auth::user();
                                     <?php
                                     }
                                     ?>
-                                            {tr:download_python_cli}
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli}
+                                            </button>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{config:site_url}rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
-                                            {tr:download_python_cli_configuration}
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli_configuration}
+                                            </button>
                                         </a>
                                     </li>
                                 </ul>

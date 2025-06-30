@@ -61,11 +61,11 @@ $sql =
     'SELECT '
    .'  Date.date, '
    .((!$idp) ?
-        '  (SELECT COUNT(id) FROM transfersfilesview WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as transfers, '
-       .'  (SELECT COUNT(id) FROM '.call_user_func('Guest::getDBTable').' WHERE DATE(created) <= Date.date AND DATE(expires) >= Date.date) as guests '
+        '  (SELECT COUNT(id) FROM transfersfilesview WHERE date_created <= Date.date AND date_expires >= Date.date) as transfers, '
+       .'  (SELECT COUNT(id) FROM guestsidpview      WHERE date_created <= Date.date AND date_expires >= Date.date) as guests '
      :
-        '  (SELECT COUNT(id) FROM transfersfilesidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as transfers, '
-       .'  (SELECT COUNT(id) FROM guestsidpview WHERE saml_user_identification_idp = :idp AND DATE(created) <= Date.date AND DATE(expires) >= Date.date) as guests '
+        '  (SELECT COUNT(id) FROM transfersfilesview WHERE idpid = :idp AND date_created <= Date.date AND date_expires >= Date.date) as transfers, '
+       .'  (SELECT COUNT(id) FROM guestsidpview      WHERE idpid = :idp AND date_created <= Date.date AND date_expires >= Date.date) as guests '
     )
    .'FROM '
    .'  (SELECT (SELECT Date(NOW() - '.DBLayer::toIntervalDays(30).')) + '.DBLayer::toIntervalDays("a+b").' date '

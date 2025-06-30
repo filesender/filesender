@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -66,10 +66,8 @@ $default = array(
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     'auth_sp_force_session_start_first' => false,  // maybe move session_start() forward.
-    'auth_sp_idp_filters' => array(
-        array('/^https*:\/\//', ''), // get rid of https://
-        array('/\/$/', '') // remove a trailing slash (/)
-    ),
+    'auth_sp_idp_metadata_to_capture' => [ 'description','OrganizationName' => 'organization_name','name','OrganizationDisplayName'=>'organization_display_name','url','OrganizationURL'=>'organization_url'  ],
+    'auth_sp_idp_metadata_to_capture_frequency' => 0, // disabled.
 
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
@@ -219,6 +217,7 @@ $default = array(
     'guest_reminder_limit' => 50,
     'guest_reminder_limit_per_day' => 0,
     'recipient_reminder_limit' => 50,
+    'owner_automatic_reminder' => true,
 
     'autocomplete' => false,
     'autocomplete_min_characters' => 3,
@@ -291,6 +290,7 @@ $default = array(
                                                                 , 'enable_recipient_email_download_complete'
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
                                                                 , 'hide_sender_email', 'popup_on_complete'
+                                                                , 'openpgp_encrypt_passphrase_to_email'
     ),
 
     'header_x_frame_options' => 'sameorigin',
@@ -298,7 +298,8 @@ $default = array(
     'owasp_csrf_protector_enabled' => false,
 
     'theme' => '',
-    'theme_userpref_enabled' => true,
+    'theme_userpref_enabled' => false,
+    'openpgp_enabled' => false,
 
     'user_can_only_view_guest_transfers_shared_with_them' => false,
 
