@@ -346,3 +346,5 @@ $config['encryption_password_must_have_special_characters'] = false;
 
 $config['max_transfer_files'] = 30;
 
+$config['site_hostname'] = '127.0.0.1';
+

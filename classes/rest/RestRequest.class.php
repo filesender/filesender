@@ -90,6 +90,7 @@ class RestRequest
 /**
  * Request body converter
  */
+#[AllowDynamicProperties]
 class RestInput
 {
     /**
@@ -97,6 +98,7 @@ class RestInput
      */
     private $data = array();
 
+    
     /**
      * Recursive crawler that converts raw data into browsable data
      *

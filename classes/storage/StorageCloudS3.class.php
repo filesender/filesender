@@ -109,6 +109,12 @@ class StorageCloudS3 extends StorageFilesystem
         return $file->uid;
     }
 
+
+    public static function canStore(Transfer $transfer)
+    {
+        // FIXME: we should really check if the Cloud backend has enough space
+        return true;
+    }
     
     /**
      *  Reads chunk at offset

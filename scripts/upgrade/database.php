@@ -737,7 +737,9 @@ try {
     // Remake all the views. This is done last because the view might reference other
     // tables and might rely on the other tables schema having been updated already
     //
+    //
     // ordering here is important as other table views depend on authentication table views.
+    //
     array_unshift($classes, 'Authentication');
     foreach($classes as $class) {
         echo 'Checking class '.$class."\n";

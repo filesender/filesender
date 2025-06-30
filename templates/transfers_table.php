@@ -232,7 +232,7 @@ EOF;
                 $items = array();
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
                     $name = $file->path;
-                    $name_shorten_by = (int) (mb_strlen((string) count($transfer->downloads))+mb_strlen(Lang::tr('see_all'))+3)/2;
+                    $name_shorten_by = intval(ceil(intval (mb_strlen((string) count($transfer->downloads))+mb_strlen(Lang::tr('see_all'))+3)/2));
                     if(mb_strlen($name) > 28-$name_shorten_by) {
                         if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
                         else $name = mb_substr($name, 0, 23).'...';

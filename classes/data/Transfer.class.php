@@ -259,7 +259,7 @@ class Transfer extends DBObject
                                            . ' FROM '.File::getDBTable().' f '
                                            . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
                                            . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
-                                           . ' GROUP BY idp.id ';
+                                           . ' GROUP BY idp.id,t.idpid ';
 
             
             $idpview[$dbtype] = 'select t.*, idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '

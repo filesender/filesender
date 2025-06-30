@@ -193,6 +193,7 @@ class User extends DBObject
     protected $save_frequent_email_address = true;
     protected $save_transfer_preferences = true;
 
+
     const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     const AUP             = " service_aup_accepted_version >= :aup ";
     const FROM_IDP_AUP    = " idpid = :idp and service_aup_accepted_version >= :aup ";
@@ -716,7 +717,7 @@ class User extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'id','additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
+            'id','additional_attributes', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'auth_secret_created',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
@@ -743,6 +744,15 @@ class User extends DBObject
                 return $k->have_key;
             }
             return false;
+        }
+        
+        if( $property == 'lang' ) {
+
+            if( !$this->lang ) {
+                return Lang::getCodeNoUserPref();
+            }
+            
+            return $this->lang;
         }
         
         if( $property == 'auth_secret_created_formatted' ) {
