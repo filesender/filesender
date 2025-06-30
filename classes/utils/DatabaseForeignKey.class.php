@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -65,8 +65,9 @@ class DatabaseForeignKey
     protected $reference = null;
     protected $referencecolumns = null;
     protected $fkExists = 0;
+    protected $deleteAction = 'cascade';
     
-    public function __construct($description, $tablename, $indexname, $basecolumns, $reference, $referencecolumns)
+    public function __construct($description, $tablename, $indexname, $basecolumns, $reference, $referencecolumns, $deleteAction = 'cascade')
     {
         $this->description      = $description;
         $this->tablename        = $tablename;
@@ -74,6 +75,7 @@ class DatabaseForeignKey
         $this->basecolumns      = $basecolumns;
         $this->reference        = $reference;
         $this->referencecolumns = $referencecolumns;
+        $this->deleteAction     = $deleteAction;
     }
 
     /**
@@ -117,7 +119,7 @@ class DatabaseForeignKey
         return 'ALTER TABLE '.$this->tablename.' ADD CONSTRAINT '
               .$this->indexname.' FOREIGN KEY (' . $this->basecolumns . ') '
              . ' REFERENCES '.$this->reference.' (' . $this->referencecolumns . ')  '
-             . ' on delete cascade on update restrict ;';
+             . ' on delete ' . $this->deleteAction . ' on update restrict ;';
     }
 
     /**

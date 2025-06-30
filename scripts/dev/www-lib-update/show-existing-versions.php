@@ -15,7 +15,7 @@ echo "\n";
 // out the version into the first () match.
 //
 $packages = array(
-   'bootstrap' => array(
+    'bootstrap' => array(
         'path' => 'bootstrap/dist/css/bootstrap.min.css',
         'pattern' => '/Bootstrap[ ]+v([0-9.]+).*/m',
     ),
@@ -27,7 +27,7 @@ $packages = array(
         'path' => 'chart.js/chart.min.js',
         'pattern' => '/Chart.js v([0-9.]+).*/m',
     ),
-   'flag-icons' => array(
+    'flag-icons' => array(
         'path' => 'flag-icons/css/flag-icons.min.css',
         'pattern' => '/v([0-9.]+)/m',
     ),   
@@ -47,9 +47,17 @@ $packages = array(
         'path' => 'popper.js/dist/umd/popper.min.js',
         'pattern' => '|popperjs/core v([0-9.]+)|m',
     ),    
+    'kbpgp' => array(
+        'path' => 'kbpgp/kbpgp.js',
+        'pattern' => '/version:"([0-9.]+)"/m',
+    ),    
     'promise-polyfill' => array(
         'path' => 'promise-polyfill/polyfill.min.js',
         'pattern' => '/v([0-9.]+)/m',
+    ),
+    'select2' => array(
+        'path' => 'select2/select2.min.js',
+        'pattern' => '/Select2 ([0-9.]+) /m',
     ),
     'streamsaver' => array(
         'path' => 'streamsaver/StreamSaver.js',

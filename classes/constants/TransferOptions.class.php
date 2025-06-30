@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -64,5 +64,7 @@ class TransferOptions extends Enum
     const WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE  = 'web_notification_when_upload_is_complete';
 
     const VERIFY_EMAIL_TO_DOWNLOAD                  = 'verify_email_to_download';
+    
+    const OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL           = 'openpgp_encrypt_passphrase_to_email';
     
 }

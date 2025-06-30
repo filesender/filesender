@@ -257,7 +257,7 @@ CREATE VIEW public.clientlogsview AS
 
 CREATE TABLE public.collections (
     id integer NOT NULL,
-    transfer_id integer NOT NULL,
+    transfer_id bigint NOT NULL,
     parent_id integer,
     type_id integer NOT NULL,
     info character varying(2048)
@@ -369,8 +369,8 @@ CREATE TABLE public.filecollections (
 --
 
 CREATE TABLE public.files (
-    id integer NOT NULL,
-    transfer_id integer NOT NULL,
+    id bigint NOT NULL,
+    transfer_id bigint NOT NULL,
     uid character varying(60) NOT NULL,
     name character varying(255) NOT NULL,
     mime_type character varying(255) NOT NULL,
@@ -409,10 +409,10 @@ ALTER SEQUENCE public.files_id_seq OWNED BY public.files.id;
 --
 
 CREATE TABLE public.transfers (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     userid bigint NOT NULL,
     user_email character varying(250) NOT NULL,
-    guest_id integer,
+    guest_id bigint,
     lang character varying(8),
     subject character varying(250),
     message text,
@@ -538,7 +538,7 @@ CREATE VIEW public.filesview AS
 --
 
 CREATE TABLE public.guests (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     userid bigint NOT NULL,
     user_email character varying(250) NOT NULL,
     token character varying(60) NOT NULL,
@@ -643,7 +643,7 @@ ALTER SEQUENCE public.metadatas_id_seq OWNED BY public.metadatas.id;
 
 CREATE TABLE public.recipients (
     id integer NOT NULL,
-    transfer_id integer NOT NULL,
+    transfer_id bigint NOT NULL,
     email character varying(255) NOT NULL,
     token character varying(60) NOT NULL,
     created timestamp without time zone NOT NULL,
@@ -908,38 +908,6 @@ UNION
   WHERE ((f.transfer_id = t.id) AND ((a.target_id)::text = ((f.id)::character varying(255))::text) AND ((a.target_type)::text = 'File'::text));
 
 
---
--- Name: transfersauditlogsdlcountview; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.transfersauditlogsdlcountview AS
- SELECT t.id,
-    t.userid,
-    t.user_email,
-    t.guest_id,
-    t.lang,
-    t.subject,
-    t.message,
-    t.created,
-    t.made_available,
-    t.expires,
-    t.expiry_extensions,
-    t.status,
-    t.options,
-    t.key_version,
-    t.salt,
-    t.password_version,
-    t.password_encoding,
-    t.password_hash_iterations,
-    t.client_entropy,
-    t.roundtriptoken,
-    zz.count
-   FROM (public.transfers t
-     LEFT JOIN ( SELECT transfersauditlogsview.id,
-            count(*) AS count
-           FROM public.transfersauditlogsview
-          WHERE (((transfersauditlogsview.event)::text = 'download_ended'::text) OR ((transfersauditlogsview.event)::text = 'archive_download_ended'::text))
-          GROUP BY transfersauditlogsview.id) zz ON ((t.id = zz.id)));
 
 
 --

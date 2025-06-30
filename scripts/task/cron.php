@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -81,6 +81,30 @@ if( $verbose ) {
     echo "cron.php running as user: " . `id` . "\n";
 }
 
+
+if(!array_key_exists("HTTP_HOST",$_SERVER)) {
+    if( !Config::get("site_hostname")) {
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "\n";
+        echo "Some functionality that involves emails might use the SimpleSAMLphp library to construct part of the URL\n";
+        echo "in the message. The SimpleSAMLphp library is expecting to be run from a web request rather than from\n";
+        echo "a command line script.\n";
+        echo "\n";
+        echo "Please set site_hostname in your filesender config.php to allow a good hostname for your server to be known\n";
+        echo "and this cron.php script will ensure that information is used by SimpleSAMLphp to create correct links.\n";
+        echo "\n";
+        echo "Thank you\n";
+        echo "\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "\n";
+    }
+}
+
+
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
 if(!is_null($storage_usage)) {
@@ -110,7 +134,11 @@ if( $verbose ) echo "cron.php delete failed transfers...\n";
 foreach(Transfer::allFailed() as $transfer) {
     Logger::info($transfer.' failed, deleting it');
     if( $force ) {
-        $transfer->deleteForce = true;
+       try {
+            $transfer->deleteForce = true;
+       } catch (Exception $e) {
+               Logger::warn("Deleting transfer failed. error:" . $e->getMessage());
+       }
     }
     $transfer->delete();
 }

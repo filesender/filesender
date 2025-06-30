@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -254,6 +254,106 @@ class Lang
         return self::$code_stack;
     }
 
+
+    /**
+     * Get current default lang code 
+     *
+     * @return string
+     */
+    public static function getCodeNoUserPref()
+    {
+        $stack = array();
+        
+        $available = self::getAvailableLanguages();
+        
+        // Fill stack by order of preference and without duplicates
+        
+        if (count($available) > 1) {
+            // Auth exception should not stop processing of lang code
+            try {
+                // URL/session given language
+                if (Config::get('lang_url_enabled')) {
+                    if (array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(-.+)?$`', $_GET['lang'])) {
+                        $code = self::realCode($_GET['lang']);
+                        if ($code) {
+                            if (!in_array($code, $stack)) {
+                                $stack[] = $code;
+                            }
+                            
+                            if (isset($_SESSION)) {
+                                $_SESSION['lang'] = $code;
+                            }
+                        }
+                    }
+                    
+                    if (isset($_SESSION) && array_key_exists('lang', $_SESSION)) {
+                        if (!in_array($_SESSION['lang'], $stack)) {
+                            $stack[] = $_SESSION['lang'];
+                        }
+                    }
+                }
+                
+            } catch (Exception $e) {
+            }
+            
+            // Browser language
+            if (Config::get('lang_browser_enabled') && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
+                $codes = array();
+                foreach (array_map('trim', explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])) as $part) {
+                    $code = $part;
+                    $weight = 1;
+                    if (strpos($part, ';') !== false) {
+                        $part = array_map('trim', explode(';', $part));
+                        $code = array_shift($part);
+                        foreach ($part as $p) {
+                            if (preg_match('`^q=([0-9]+\.[0-9]+)$`', $p, $m)) {
+                                $weight = (float)$m[1];
+                            }
+                        }
+                    }
+                    $codes[$code] = $weight;
+                }
+                
+                uasort($codes, function ($a, $b) {
+                    return ($b > $a) ? 1 : (($b < $a) ? -1 : 0);
+                });
+                
+                foreach ($codes as $code => $weight) {
+                    $code = self::realCode($code);
+                    if ($code && !in_array($code, $stack)) {
+                        $stack[] = $code;
+                    }
+                }
+            }
+        }
+        
+        // Filter provided values
+        $stack = array_filter($stack, function ($code) use ($available) {
+            return array_key_exists($code, $available);
+        });
+        
+        // Config default language
+        $code = Config::get('default_language');
+        if ($code) {
+            $code = self::realCode($code);
+            if ($code && !in_array($code, $stack)) {
+                $stack[] = $code;
+            }
+        }
+        
+        // Absolute default, but avoid adding "en" if already set as default
+        if (!in_array('en', $stack)) {
+            $stack[] = 'en';
+        }
+        
+        // Add to cached stack (most significant first)
+        $main = array_shift($stack);
+        $t = array('main' => $main, 'fallback' => $stack);
+        
+        return $t['main'];
+    }
+    
+    
     /**
      * Uses data from http HTTP_ACCEPT_LANGUAGE header and the explicit user preference from the profile page first.
      */
@@ -363,7 +463,6 @@ class Lang
     public static function getCode()
     {
         $stack = self::getCodeStack();
-        
         return $stack['main'];
     }
     

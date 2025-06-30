@@ -13,6 +13,23 @@ if(!in_array($section, $sections)) {
     throw new GUIUnknownAdminSectionException($section);
 }
 
+$openpgpkey = null;
+if( Config::isTrue('openpgp_enabled')) {
+    $user = Auth::user();
+    $openpgpkey = $user->openpgp_key;
+}
+$show_openpgp_user_profile_message = false;
+if( Config::isTrue('openpgp_enabled')) {
+    foreach(Transfer::availableOptions(false) as $name => $cfg) {
+        Logger::error("AAA1 name $name ");
+        if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+            if( !$openpgpkey ) {
+                $show_openpgp_user_profile_message = true;
+            }
+        }
+    }
+}
+Logger::error("AAA show " . $show_openpgp_user_profile_message);
 
 // allow a part of the page to handle a guest option
 // and avoid it being handled a second time by other code
@@ -23,6 +40,7 @@ $new_guests_can_only_send_to_creator = false;
 
 Guest::forcedOptions();
 foreach (Guest::allOptions() as $name => $dfn) {
+    Logger::error("AAA2 name $name ");
     if( $name == 'can_only_send_to_me' ) {
         $new_guests_can_only_send_to_creator_default = $dfn['default'];
         if (in_array('available', $dfn) && !$dfn['available']) {
@@ -39,7 +57,8 @@ foreach (Guest::allOptions() as $name => $dfn) {
 //
 $displayoption = function($name, $cfg, $transfer = false)
 use ( $new_guests_can_only_send_to_creator,
-    $new_guests_can_only_send_to_creator_default )
+      $new_guests_can_only_send_to_creator_default,
+      $openpgpkey )      
 {
     // don't show the option for get_a_link if they can't use it.
     if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
@@ -50,6 +69,14 @@ use ( $new_guests_can_only_send_to_creator,
         return;
     }
 
+    //
+    // If the user does not have a pgp public key then we shouldn't offer
+    // for them to force the guest to use PGP encryption
+    //
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$openpgpkey ) {
+        return;
+    }    
+    
     $default = $cfg['default'];
     if(Auth::isSP()) {
         if($transfer) {
@@ -72,7 +99,7 @@ use ( $new_guests_can_only_send_to_creator,
     } else {
         $lockClassLabel = '';
         $lockClass = '';
-        if($name == 'get_a_link' || $name == 'can_only_send_to_me') {
+        if($name == 'get_a_link' || $name == 'can_only_send_to_me'  || $name == 'openpgp_encrypt_passphrase_to_email') {
             $lockClass = 'get_a_link_lock';
         }
 
@@ -294,6 +321,19 @@ use ( $new_guests_can_only_send_to_creator,
                 </div>
             </div>
         </div>
+
+        <?php if($show_openpgp_user_profile_message) { // so many div shells to get layout. ?>
+            <div class="fs-new-invitation__form">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
+                        <div class="fs-new-invitation__data">
+                            <div><i class="fa fa-info-circle"></i>{tr:openpgp_blurb_guests_page}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+        
     </div>
 </div>
 

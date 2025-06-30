@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -110,13 +110,39 @@ class Utilities
     /**
      * Validates a personal message
      *
+     * This can now throw on a bad input for OpenPGP messages. 
      */
     public static function isValidMessage($msg)
     {
+        if( Config::isTrue('openpgp_enabled')) {
+            if( self::isValidOpenPGPMessage($msg)) {
+                return true;
+            }
+        }
         $r = Config::get('message_can_not_contain_urls_regex');
         if (strlen($r) && preg_match('/' . $r . '/', $msg)) {
             return false;
         }
+        return true;
+    }
+
+    public static function isValidOpenPGPMessage($msg)
+    {
+        $originalmsg = $msg;
+        
+        $rex = '/^(-----BEGIN PGP MESSAGE-----)([\n\r]*).*([a-zA-Z]+:[a-zA-Z 0-9\.\:\/]+[\n\r]*)*([\/a-zA-Z0-9\n\.\:\+\ \=]{63}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{1,64}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{0,64}[\n\r]*)+(-----END PGP MESSAGE-----[\n\r]*)[\n\r]*$/';
+        
+        $msg = filter_var( $msg, FILTER_VALIDATE_REGEXP,
+                           array( "flags" => FILTER_NULL_ON_FAILURE,
+                                  "options" => array("regexp" => $rex ))
+        );
+
+        if( !$msg ) {
+            if( str_starts_with( $originalmsg, "-----BEGIN PGP MESSAGE-----")) {
+                throw new PKIOpenPGPBadMesageException('');
+            }
+        }
+
         return true;
     }
     

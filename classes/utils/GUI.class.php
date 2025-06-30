@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -63,6 +63,7 @@ class GUI
     public static function stylesheets()
     {
         return self::filterSources(array(
+            'lib/select2/select2.min.css',
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'lib/bootstrap/dist/css/bootstrap.min.css',
@@ -125,9 +126,16 @@ class GUI
             );
         }
 
+        if( Utilities::isTrue(Config::get('openpgp_enabled'))) {
+            array_push( $sources,
+                        'lib/kbpgp/kbpgp.js',
+            );
+        }
+        
         array_push( $sources,
                     'lib/jquery/jquery.min.js',
                     'lib/jquery-ui/jquery-ui.min.js',
+                    'lib/select2/select2.min.js',
                     'lib/promise-polyfill/polyfill.min.js',
                     'lib/web-streams-polyfill/dist/ponyfill.js',
                     'lib/webcrypto-shim/webcrypto-shim.min.js',
