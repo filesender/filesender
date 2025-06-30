@@ -99,7 +99,10 @@ class AuthSPSaml
             $attributes = array();
 
             // Get IDP from SSP
-            $idp = trim($ssp->getAuthData('saml:sp:IdP'));
+            $idp = $ssp->getAuthData('saml:sp:IdP');
+            if( $idp ) {
+                $idp = trim($idp);
+            }
             $attributes['idp'] = $idp;
 
             // Wanted attributes
