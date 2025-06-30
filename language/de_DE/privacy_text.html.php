@@ -11,7 +11,7 @@
 <p>
 Damit dieser Service funktionieren kann, müssen einige Informationen bzgl. der Dateien und wer darauf Zugriff hat gespeichert werden. Übertragene Dateien werden automatisch vom System gelöscht, sobald deren Gültigkeit abgelaufen ist. Andere zugehörige Informationen werden ebenfalls nach einer gewissen Zeit gelöscht. Auf dieser Seite können Sie sehen, wie lange welche Informationen gespeichert werden.</p>
 <p>
-Beachten Sie, dass alle einer Übertragung zugehörigen Dateien und Kopien versendeter E-Mails mit dieser gelöscht werden.
+Beachten Sie, dass alle einem Transfer zugehörigen Dateien und Kopien versendeter E-Mails mit dieser gelöscht werden.
 </p>
 <?php
 if( ShredFile::shouldUseShredFile()) {
