@@ -419,7 +419,7 @@ window.filesender.ui = {
         for(var i=0; i<actions.length; i++) {
             var action = $('<div class="custom-control custom-radio action" />').appendTo(list);
             var input = $('<input type="radio" class="custom-control-input" name="action" />').attr({value: actions[i]}).appendTo(action);
-            $('<label class="custom-control-label" for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
+            $('<label class="custom-action-label" for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
             action.on('click', function() {
                 var input = $(this).find('input[name="action"]');
                 input.val([input.attr('value')]);
