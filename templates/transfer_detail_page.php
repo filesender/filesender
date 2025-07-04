@@ -33,6 +33,8 @@ $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
 
 $found = true;
 $user = Auth::user();
+$isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'] === true;
+
 if( !Auth::isAuthenticated() || !$transfer ) {
     $found = false;
 }
