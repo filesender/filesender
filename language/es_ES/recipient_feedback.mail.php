@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Opinión del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif} {target.email}
+subject: Opinión del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif} {target.email}
 
 {alternative:plain}
 

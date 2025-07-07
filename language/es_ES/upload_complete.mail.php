@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Fichero{if:transfer.files>1}s{endif} subido satisfactoriamente
+subject: Fichero{if:transfer.files>1}s{endif} subido satisfactoriamente
 
 {alternative:plain}
 

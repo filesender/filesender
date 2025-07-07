@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Recordatorios automáticos enviados para envío de archivos n°{transfer.id}
+subject: Recordatorios automáticos enviados para envío de archivos n°{transfer.id}
 
 {alternative:plain}
 
