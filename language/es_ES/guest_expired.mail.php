@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Invitación caducada 
+subject: Invitación caducada 
 
 {alternative:plain}
 
