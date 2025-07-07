@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-asunto: El invitado ha terminado de subir archivos
+subject: El invitado ha terminado de subir archivos
 
 {alternative:plain}
 
