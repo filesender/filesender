@@ -7,16 +7,7 @@
 // 
 // 
 ?>
-<?php 
-// ADVERTENCIA, este es un archivo de solo lectura creado por scripts de importación
-// ADVERTENCIA
-// ADVERTENCIA, los cambios realizados en este archivo serán eliminados
-// ADVERTENCIA
-// ADVERTENCIA, por favor, haz los cambios en poeditor en lugar de aquí
-// 
-// 
-?>
-asunto: {cfg:site_name}: Código de verificación único para descarga
+subject: {cfg:site_name}: Código de verificación único para descarga
 
 {alternative:plain}
 
