@@ -458,7 +458,7 @@ server {
         server_name filesender.example.org;
         index index.php;
         error_page 500 502 503 504 /50x.html;
-        root /opt/filesender/www;
+        root /opt/filesender/filesender/www;
         location = /50x.html {
             root   /usr/share/nginx/html;
         }
@@ -474,7 +474,7 @@ server {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         }
         location ^~ /saml {
-            alias /opt/filesender/saml/www;
+            alias /opt/filesender/simplesaml/www;
             location ~ ^(?<prefix>/saml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
                 include fastcgi_params;
                 fastcgi_pass  localhost:9090;
@@ -483,7 +483,7 @@ server {
             }
         }
         location ~* \.(ico|docx|doc|xls|xlsx|rar|zip|jpg|jpeg|txt|xml|pdf|gif|png|css|js)$ {
-            root   /opt/filesender/www/;
+            root   /opt/filesender/filesender/www/;
         }
         location ~ /\. {
                 deny all;
