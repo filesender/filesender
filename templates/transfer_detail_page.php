@@ -8,7 +8,14 @@ $havePrev = 0;
 $transfer_not_found = <<<HEREDOC
       <div class="fs-transfer-detail transfer_details">
         <div class="container">
-            {tr:transfer_not_found}
+            <div class="alert alert-danger show">
+                <h4 class="alert-heading"><i class="bi-exclamation-octagon-fill"></i>
+                {tr:encountered_exception}
+                </h4>
+                <div class="details">
+                {tr:transfer_not_found}
+                </div>
+            </div>
         </div>
       </div>
 HEREDOC;

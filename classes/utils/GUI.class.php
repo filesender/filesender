@@ -67,6 +67,7 @@ class GUI
             'lib/jquery-ui/jquery-ui.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'lib/bootstrap/dist/css/bootstrap.min.css',
+            'lib/bootstrap-icons/font/bootstrap-icons.css',
             'lib/flag-icons/css/flag-icons.min.css',
             'css/default.css',
             'css/new-ui/styles.css',  // Adding the new-ui styles

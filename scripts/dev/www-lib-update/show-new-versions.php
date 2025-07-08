@@ -2,6 +2,7 @@
 
 $packages = array(
     'bootstrap'            => array(),
+    'bootstrap-icons'      => array(),
     'bootbox'              => array(),
     'chart.js'             => array(),
     'flag-icons'           => array(),
