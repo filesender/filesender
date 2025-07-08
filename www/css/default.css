@@ -3271,6 +3271,13 @@ table.paginator a {
   background-color: #fff3f3 !important;
 }
 
+.fs-exception-detail {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+
 /* Local Variables:    */
 /* mode: text          */
 /* comment-column: 0   */
