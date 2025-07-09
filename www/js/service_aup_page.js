@@ -43,27 +43,28 @@ $(function() {
         window.filesender.log("Principal has accepted service AUP version " + aup_version );
 
         filesender.client.serviceAUPAccept(aup_version, function() {
-            filesender.ui.notify('success', lang.tr('service_aup_terms_accepted'));
-
-            var url = new URL(location);
-            var page = url.searchParams.get("s");
-            if( !page ) {
-                page = 'upload';
-            }
-            var args = {};
-            if( url.searchParams.get("vid") ) {
-                args = {
-                    vid: url.searchParams.get("vid")
-                };
-            }
-            if( url.searchParams.get("token") ) {
-                args = {
-                    token: url.searchParams.get("token")
-                };
-            }
-            filesender.ui.goToPage( page, args, null );
+            filesender.ui.notify('success',
+                                 lang.tr('service_aup_terms_accepted'),
+                                 function() {
+                                     var url = new URL(location);
+                                     var page = url.searchParams.get("s");
+                                     if( !page ) {
+                                         page = 'upload';
+                                     }
+                                     var args = {};
+                                     if( url.searchParams.get("vid") ) {
+                                         args = {
+                                             vid: url.searchParams.get("vid")
+                                         };
+                                     }
+                                     if( url.searchParams.get("token") ) {
+                                         args = {
+                                             token: url.searchParams.get("token")
+                                         };
+                                     }
+                                     filesender.ui.goToPage( page, args, null );
+                                 });
         });
-        
         return false;
     });
 
