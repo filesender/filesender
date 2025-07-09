@@ -617,15 +617,17 @@ if( $openpgp_encrypt_passphrase ) {
                                             <div id="encgroup1openpgp">
                                             <div id="encgroup1" class="fs-transfer__password">
                                                 <div class="fs-transfer__password-top" id="encryption_password_container">
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-6">
-                                                            <div class="fs-input-group">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-5">
+                                                            <div class="fs-input-group ">
                                                                 <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
                                                             </div>
                                                         </div>
-                                                        <div class="col-12 col-sm-12 col-md-6">
+                                                        <div class="col-md-auto">
+                                                                <span>{tr:or}</span>
+                                                        </div>
+                                                        <div class="col-6">
                                                             <div class="fs-transfer__generate-password">
-                                                                <span>{tr:or} &nbsp;</span>
                                                                 <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
                                                             </div>
                                                         </div>
