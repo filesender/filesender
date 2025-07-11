@@ -864,7 +864,7 @@ window.filesender.crypto_app = function () {
             oReq.addEventListener("progress", function(evt){
                 window.filesender.log("downloadAndDecryptChunk(progress) chunkid " + chunkid
                                       + " loaded " + evt.loaded + " of total " + evt.total );
-                if (evt.lengthComputable) {
+                if (evt.lengthComputable || evt.loaded) {
                     var percentComplete = Math.round(evt.loaded / (1*encryption_details.crypted_chunk_size) *10000) / 100;
                     var percentOfFileComplete = 100*((chunkid * encryption_details.chunk_size + evt.loaded) / encryption_details.filesize );
                     
