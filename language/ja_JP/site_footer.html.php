@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Do you have a question? Contact the helpdesk of your institution.
+質問がありますか？所属組織のヘルプデスクにお問い合わせください。

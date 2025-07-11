@@ -16,7 +16,7 @@
 // 
 // 
 ?>
-subject: {cfg:site_name}: One time verification code for download
+subject: {cfg:site_name}: Código de verificación único para descarga
 
 {alternative:plain}
 

@@ -68,6 +68,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Kyrgyzstan | KRENA | [https://filesender.kif.kg/](https://filesender.kif.kg/) | Sep 2024 | 25 Apr 2025 |
 | New Zealand  | REANNZ  | [https://filesender.reannz.co.nz](https://filesender.reannz.co.nz)    | Aug 2024 | 25 Apr 2025 |
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016| 25 Apr 2025 |
+| Tajikistan | TARENA | [https://sp.tidf.tj/](https://sp.tidf.tj/) | Jan 2019 | 23 Jun 2025 |
 
 ## HE&R Community installations - Asia - Pacific
 
@@ -105,6 +106,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Country/Region| Organisation | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
 | France | CDG 33 - Gironde Management Center | [https://filesender.cdg33.fr/](https://filesender.cdg33.fr/) | Apr 2025 | 25 Apr 2025 |
+| France | Occitania Regional Council | [https://filesender.laregion.fr/](https://filesender.laregion.fr/) | Jun 2025 | 23 Jun 2025 |
 | Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 25 Apr 2025 |
 
 
