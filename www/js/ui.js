@@ -503,6 +503,30 @@ window.filesender.ui = {
         return n;
     },
 
+    notifyAndReload: function(type, message) {
+        if(typeof message != 'string') {
+            if(message.out) {
+                message = message.out();
+            }else if(!message.jquery) {
+                message = message.toString();
+            }
+        }
+
+        var ctn = $('#notifications');
+        if(!ctn.length) ctn = $('<div id="notifications" />').appendTo('body');
+
+        if( type == 'error' ) {
+            type = 'danger';
+        }
+        var n = $('<div class="alert alert-' + type + '" role="alert" />').html(message).appendTo(ctn);
+
+        window.setTimeout(function() {
+            filesender.ui.reload();
+        }, 1500);
+
+        return n;
+    },
+    
     /**
      * Display/remove maintenance popup
      *
