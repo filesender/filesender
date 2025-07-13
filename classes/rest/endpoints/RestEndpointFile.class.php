@@ -538,6 +538,25 @@ class RestEndpointFile extends RestEndpoint
             $file->complete();
             
             return true;
+        } elseif (is_null($mode) && $data && $data->record_activity) {
+            $author = $data->author;
+            if ($author) {
+                if (is_string($author)) {
+                    $email = $author;
+                } else if (isset($author->email)) {
+                    $email = $author->email;
+                } else {
+                    $email = '';
+                }
+                $author = null;
+                foreach ($file->transfer->recipients as $r) {
+                    if ($r->email == $email) {
+                        $author = $r;
+                    }
+                }
+            }
+            $file->recordActivity($data->record_activity, $data->created, $data->ip, $author);
+            return true;
         }
     }
     
@@ -581,10 +600,12 @@ class RestEndpointFile extends RestEndpoint
             // Several files in the transfer, remove file
             $file->transfer->removeFile($file);
             
-            if ($file->transfer->status == 'available') {
-                // Notify deletion for transfers that are available
-                foreach ($file->transfer->recipients as $recipient) {
-                    $file->transfer->sendToRecipient('file_deleted', $recipient, $file);
+            if (!$file->transfer->hasBeenForwarded()) {
+                if ($file->transfer->status == 'available') {
+                    // Notify deletion for transfers that are available
+                    foreach ($file->transfer->recipients as $recipient) {
+                        $file->transfer->sendToRecipient('file_deleted', $recipient, $file);
+                    }
                 }
             }
         } else {

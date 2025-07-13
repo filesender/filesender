@@ -147,6 +147,9 @@ class RestEndpointRecipient extends RestEndpoint
         if ($data->remind) {
             TranslatableEmail::rateLimit( false, 'transfer_reminder', $recipient->transfer );
             $recipient->remind();
+
+        } elseif ($data->record_activity) {
+            $recipient->recordActivity();
         }
 
         return self::cast($recipient);
@@ -192,9 +195,11 @@ class RestEndpointRecipient extends RestEndpoint
         if (count($recipient->transfer->recipients) > 1) {
             // If transfer has several recipients remove the requested one
             $recipient->transfer->removeRecipient($recipient);
-            
-            if ($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
-                $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
+
+            if (!$recipient->transfer->hasBeenForwarded()) {
+                if ($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
+                    $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
+                }
             }
         } else {
             // Last/only recipient deletion => close transfer

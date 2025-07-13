@@ -179,13 +179,32 @@ class BadAuthIDException extends DetailedException
     /**
      * Constructor
      *
-     * @param string $url
+     * @param string $aid
      */
     public function __construct($aid)
     {
         parent::__construct(
             'bad_url_code', // Message to give to the user
             array('aid' => $aid) // Details to log
+        );
+    }
+}
+
+/**
+ * Bad forward_id exception
+ */
+class BadForwardIDException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $forward_id
+     */
+    public function __construct($forward_id)
+    {
+        parent::__construct(
+            'bad_forward_id', // Message to give to the user
+            array('forward_id' => $forward_id) // Details to log
         );
     }
 }

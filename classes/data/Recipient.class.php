@@ -83,7 +83,13 @@ class Recipient extends DBObject
         'last_reminder' => array(
             'type' => 'datetime',
             'null' => true
-        )
+        ),
+        'forward_id' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
+        ),
+
     );
 
     protected static $secondaryIndexMap = array(
@@ -130,6 +136,7 @@ class Recipient extends DBObject
     protected $options = null;
     protected $reminder_count = 0;
     protected $last_reminder = 0;
+    protected $forward_id = null;
     
     /**
      * Related objects cache
@@ -215,17 +222,32 @@ class Recipient extends DBObject
         $recipient->created = time();
         
         // Generate token until it is indeed unique
-        $recipient->token = Utilities::generateUID(false, function ($token, $tries) {
-            $statement = DBI::prepare('SELECT * FROM '.Recipient::getDBTable().' WHERE token = :token');
-            $statement->execute(array(':token' => $token));
-            $data = $statement->fetch();
-            if (!$data) {
-                Logger::info('Recipient uid generation took '.$tries.' tries');
-            }
-            return !$data;
-        });
-        
+        $recipient->token = Utilities::generateUID(false, 'Recipient::unicityToken');
+
+        if ($recipient->needForward()) {
+            $dest = ForwardAnotherServer::addRecipient($transfer, $email);
+            $recipient->forward_id = $dest->id;
+            $recipient->token = $dest->token;
+        }
+
         return $recipient;
+    }
+
+    /**
+     * uid unicity
+     *
+     * @param string $token
+     * @param int $tries
+     */
+    public static function unicityToken($token, $tries)
+    {
+        $statement = DBI::prepare('SELECT * FROM '.Recipient::getDBTable().' WHERE token = :token');
+        $statement->execute(array(':token' => $token));
+        $data = $statement->fetch();
+        if (!$data) {
+            Logger::info('Recipient uid generation took '.$tries.' tries');
+        }
+        return !$data;
     }
     
     /**
@@ -270,12 +292,26 @@ class Recipient extends DBObject
 
         $this->transfer->remind($this);
     }
-    
+
+    /**
+     * need forward?
+     */
+    public function needForward($tofrom = 'to')
+    {
+        return $this->transfer->needForward($tofrom);
+    }
+
     /**
      * Delete the recipient related objects
      */
     public function beforeDelete()
     {
+        if ($this->needForward()) {
+            ForwardAnotherServer::deleteRecipient($this);
+            $this->forward_id = null;
+            $this->save();
+        }
+
         foreach (TrackingEvent::fromRecipient($this) as $tracking_event) {
             $tracking_event->delete();
         }
@@ -311,7 +347,7 @@ class Recipient extends DBObject
      */
     public function __get($property)
     {
-        if (in_array($property, array('id', 'transfer_id', 'email', 'token', 'created', 'last_activity', 'options'))) {
+        if (in_array($property, array('id', 'transfer_id', 'email', 'token', 'created', 'last_activity', 'options', 'forward_id'))) {
             return $this->$property;
         }
         
@@ -334,9 +370,11 @@ class Recipient extends DBObject
         }
         
         if ($property == 'download_link') {
+            $server = ForwardAnotherServer::getServerByTransfer($this->transfer);
             return Utilities::http_build_query(
                 array( 's'     => 'download',
-                       'token' => $this->token )
+                       'token' => $this->token ),
+                ($server ? $server['url'] : null)
             );
         }
         
@@ -387,6 +425,14 @@ class Recipient extends DBObject
             $this->logsCache = (array)$value;
         } elseif ($property == 'trackingevents') {
             $this->trackingEventsCache = (array)$value;
+        } elseif ($property == 'token') {
+            $this->token = $value;
+        } elseif ($property == 'forward_id') {
+            if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                throw new BadForwardIDException($value);
+            }
+            $value = (int)$value;
+            $this->forward_id = (string)$value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

@@ -46,6 +46,7 @@ class ProcessTypes extends Enum
     
     const GUI       = 'gui';
     const REST      = 'rest';
+    const ASYNC     = 'async';
     
     const CRON      = 'cron';
     const FEEDBACK  = 'feedback';

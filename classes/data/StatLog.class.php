@@ -193,7 +193,7 @@ class StatLog extends DBObject
      *
      * @return StatLog auditlog
      */
-    public static function create($event, DBObject $target)
+    public static function create($event, DBObject $target, $created = null, $ip = null)
     {
         // Check if statlog is enabled
         $lt = Config::get('statlog_lifetime');
@@ -209,8 +209,8 @@ class StatLog extends DBObject
         // Create entry
         $log = new self();
         $log->event = $event;
-        $log->created = time();
-        $log->target_type = get_class($target);
+        $log->created = ($created ? $created : time());
+        $log->target_type = ($ip ? $ip : get_class($target));
         $log->browser = DBConstantBrowserType::currentBrowserToEnum();
         $log->os = DBConstantOperatingSystem::currentUserOperatingSystemEnum();
         $is_encrypted = false;

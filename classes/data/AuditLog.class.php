@@ -199,7 +199,7 @@ class AuditLog extends DBObject
      *
      * @return AuditLog auditlog
      */
-    public static function create($event, DBObject $target, $author = null)
+    public static function create($event, DBObject $target, $author = null, $created = null, $ip = null)
     {
         if (is_null(Config::get('auditlog_lifetime'))) { // Auditlog disabled
             return;
@@ -209,12 +209,17 @@ class AuditLog extends DBObject
         if (!LogEventTypes::isValidValue($event)) {
             throw new AuditLogUnknownEventException($event);
         }
+
+        if (!Auth::isAdmin()) {
+            $created = null;
+            $ip = null;
+        }
         
         $auditLog = new self();
         
         $auditLog->event = $event;
-        $auditLog->created = time();
-        $auditLog->ip = Utilities::getClientIP();
+        $auditLog->created = (empty($created) ? time() : $created);
+        $auditLog->ip = (empty($ip) ? Utilities::getClientIP() : $ip);
         $auditLog->target_id = $target->id;
         $auditLog->target_type = get_class($target);
         

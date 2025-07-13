@@ -58,6 +58,9 @@ class TransferOptions extends Enum
     const COLLECTION                                = 'collection';
     const MUST_BE_LOGGED_IN_TO_DOWNLOAD             = 'must_be_logged_in_to_download';
 
+    const FORWARD_TO_ANOTHER_SERVER                 = 'forward_to_another_server';
+    const FORWARD_SERVER_NAME                       = 'forward_server_name';
+
     // Optional options specific to S3 storage
     const STORAGE_CLOUD_S3_BUCKET                   = 'storage_cloud_s3_bucket';
     
