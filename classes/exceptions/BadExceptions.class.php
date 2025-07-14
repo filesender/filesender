@@ -210,6 +210,25 @@ class BadForwardIDException extends DetailedException
 }
 
 /**
+ * Bad salt
+ */
+class BadSaltException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $url
+     */
+    public function __construct($v)
+    {
+        parent::__construct(
+            'bad_salt', // Message to give to the user
+            array('salt' => $v)         // Details to log
+        );
+    }
+}
+
+/**
  * Bad crypto key version
  */
 class BadCryptoKeyVersionException extends DetailedException

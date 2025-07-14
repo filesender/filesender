@@ -1902,7 +1902,7 @@ filesender.ui.handle_get_a_link_change = function() {
     
     form.find(
         ' .fieldcontainer[data-option="forward_to_another_server"],' +
-            ' .fieldcontainer[data-option="forward_server_name"]'
+        ' .fieldcontainer[data-option="forward_server_name"]'
     ).toggle(!choice);
 
     if( choice ) {
@@ -2200,7 +2200,7 @@ $(function() {
         options: {
             get_a_link: form.find('input[id="get_a_link"]'),
             hide_sender_email: form.find('input[name="hide_sender_email"]'),
-            openpgp_encrypt_passphrase_to_email: form.find('input[name="openpgp_encrypt_passphrase_to_email"]')
+            openpgp_encrypt_passphrase_to_email: form.find('input[name="openpgp_encrypt_passphrase_to_email"]'),
             forward_to_another_server: form.find('input[name="forward_to_another_server"]'),
             forward_server_name: form.find('select[name="forward_server_name"]'),
         },

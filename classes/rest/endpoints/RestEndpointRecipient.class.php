@@ -149,6 +149,14 @@ class RestEndpointRecipient extends RestEndpoint
             $recipient->remind();
 
         } elseif ($data->record_activity) {
+            if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+                !$recipient->transfer->forward_id) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $record_activity = $data->record_activity;
+            if (!LogEventTypes::isValidName($record_activity)) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
             $recipient->recordActivity();
         }
 

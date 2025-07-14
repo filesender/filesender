@@ -680,14 +680,16 @@ class File extends DBObject
             $this->have_avresults = $value;
         } elseif ($property == 'storage_path') {
             $this->storage_path = $value;
-        } elseif ($property == 'uid') {
-            $this->uid = $value;
-        } elseif ($property == 'forward_id') {
-            if ($value && !preg_match('`^[0-9]+$`', $value)) {
-                throw new BadForwardIDException($value);
+        } elseif (Utilities::isTrue(Config::get('file_forwarding_enabled'))) {
+            if ($property == 'uid') {
+                $this->uid = $value;
+            } elseif ($property == 'forward_id') {
+                if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadForwardIDException($value);
+                }
+                $value = (int)$value;
+                $this->forward_id = (string)$value;
             }
-            $value = (int)$value;
-            $this->forward_id = (string)$value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

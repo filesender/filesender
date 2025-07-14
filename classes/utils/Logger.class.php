@@ -531,11 +531,12 @@ class Logger
      * @param string $logEvent
      * @param object $target
      * @param object $author
+     * @param object $created
      */
     public static function logActivity($logEvent, $target, $author = null, $created = null, $ip = null)
     {
         $auditlog = AuditLog::create($logEvent, $target, $author, $created, $ip);
-        StatLog::create($logEvent, $target, $created, $ip);
+        StatLog::create($logEvent, $target, $created);
         AggregateStatistic::create($logEvent, $target, $author);
 
         if( $logEvent == LogEventTypes::DOWNLOAD_ENDED || $logEvent == LogEventTypes::ARCHIVE_DOWNLOAD_ENDED ) {

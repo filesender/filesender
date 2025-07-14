@@ -425,14 +425,16 @@ class Recipient extends DBObject
             $this->logsCache = (array)$value;
         } elseif ($property == 'trackingevents') {
             $this->trackingEventsCache = (array)$value;
-        } elseif ($property == 'token') {
-            $this->token = $value;
-        } elseif ($property == 'forward_id') {
-            if ($value && !preg_match('`^[0-9]+$`', $value)) {
-                throw new BadForwardIDException($value);
+        } elseif( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
+            if ($property == 'token') {
+                $this->token = $value;
+            } elseif ($property == 'forward_id') {
+                if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadForwardIDException($value);
+                }
+                $value = (int)$value;
+                $this->forward_id = (string)$value;
             }
-            $value = (int)$value;
-            $this->forward_id = (string)$value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

@@ -1010,9 +1010,13 @@ class Transfer extends DBObject
         }
         
         if (!$this->isOwner($user)) {
-            if( AuthRemote::isAuthenticated() && $this->needForward('to') ) {
-                $server = ForwardAnotherServer::getServerByTransfer($this);
-                if ($server['appname'] != $user->saml_user_identification_uid) {
+            if( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
+                if( AuthRemote::isAuthenticated() && $this->needForward('to') ) {
+                    $server = ForwardAnotherServer::getServerByTransfer($this);
+                    if ($server['appname'] != $user->saml_user_identification_uid) {
+                        return FALSE;
+                    }
+                } else if( !Auth::isAdmin()) {
                     return FALSE;
                 }
             } else if( !Auth::isAdmin()) {
@@ -1430,8 +1434,6 @@ class Transfer extends DBObject
             $this->password_hash_iterations = $value;
         } elseif ($property == 'client_entropy') {
             $this->client_entropy = $value;
-        } elseif ($property == 'salt') {
-            $this->salt = $value;
         } elseif ($property == 'guest_transfer_shown_to_user_who_invited_guest') {
             $this->guest_transfer_shown_to_user_who_invited_guest = $value;
         } elseif ($property == 'storage_filesystem_per_day_buckets') {
@@ -1444,14 +1446,21 @@ class Transfer extends DBObject
             $this->download_count = $value;
         } elseif ($property == 'idpid') {
             $this->idpid = $value;
-        } elseif ($property == 'forward_server') {
-            $this->forward_server = $value;
-        } elseif ($property == 'forward_id') {
-            if ($value && !preg_match('`^[0-9]+$`', $value)) {
-                throw new BadForwardIDException($value);
+        } elseif( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
+            if ($property == 'salt') {
+                if (!Crypto::validateSaltString($value, 32)) {
+                    throw new BadSaltException($value);
+                }
+                $this->salt = $value;
+            } elseif ($property == 'forward_server') {
+                $this->forward_server = $value;
+            } elseif ($property == 'forward_id') {
+                if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadForwardIDException($value);
+                }
+                $value = (int)$value;
+                $this->forward_id = (string)$value;
             }
-            $value = (int)$value;
-            $this->forward_id = (string)$value;
         } else {
             throw new PropertyAccessException($this, $property);
         }

@@ -539,6 +539,26 @@ class RestEndpointFile extends RestEndpoint
             
             return true;
         } elseif (is_null($mode) && $data && $data->record_activity) {
+            if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+                !$file->transfer->forward_id) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $record_activity = $data->record_activity;
+            if (!LogEventTypes::isValidName($record_activity)) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $created = $data->created;
+            if ($created &&
+                (!is_numeric($created) || (int)$created != $created ||
+                 $transfer->created > $created || $created > time())) {
+                throw new RestBadParameterException('created = '.$data->created);
+            }
+            $ip = $data->ip;
+            if ($ip &&
+                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
+                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                throw new RestBadParameterException('ip = '.$data->ip);
+            }
             $author = $data->author;
             if ($author) {
                 if (is_string($author)) {
@@ -555,7 +575,7 @@ class RestEndpointFile extends RestEndpoint
                     }
                 }
             }
-            $file->recordActivity($data->record_activity, $data->created, $data->ip, $author);
+            $file->recordActivity($record_activity, $created, $ip, $author);
             return true;
         }
     }
