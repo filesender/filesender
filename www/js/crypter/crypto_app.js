@@ -1388,6 +1388,7 @@ window.filesender.crypto_app = function () {
         decryptDownloadToZip: function(link,transferid,chunk_size,crypted_chunk_size,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
 
             var $this = this;
+            window.filesender.crypto_encrypted_archive_download = true;
 
             var callbackError = function (error) {
                 window.filesender.log(error);
