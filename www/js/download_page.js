@@ -237,6 +237,7 @@ $(function() {
                         var progress = $($this).find("[data-id='" + ids[i] + "']").find('.downloadprogress');
                         progress.html("");
                     }
+                    window.filesender.crypto_encrypted_archive_download = true;
                     crypto_app.decryptDownloadToZip( filesender.config.base_path
                                                      + 'download.php?token=' + token
                                                      + '&files_ids='
