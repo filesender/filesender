@@ -324,7 +324,7 @@ $default = array(
 
     'streamsaver_enabled' => true,
     'streamsaver_on_unknown_browser' => false,
-    'streamsaver_on_firefox' => false,
+    'streamsaver_on_firefox' => true,
     'streamsaver_on_chrome' => true,
     'streamsaver_on_edge'   => true,
     'streamsaver_on_safari' => true,
