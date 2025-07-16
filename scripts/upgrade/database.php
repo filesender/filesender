@@ -785,6 +785,15 @@ try {
         echo "\n";
         echo "as this script performs mostly DDL statements transactions are not used for mariadb\n";
         echo "you should either get a full run of this script or compare the output to a backup\n";
+        echo "\n";
+        echo "If the last thing you saw was an attempt to remove a view you might\n";
+        echo "like to ensure that the user you are connecting as can DROP items\n";
+        echo "in the database. DROP is only needed on views but there is no\n";
+        echo "ability to allow just 'DROP VIEW' in MariaDB\n";
+        echo "See the install docs for info about using a separate user\n";
+        echo " for running the database script with these additional privileges\n";
+        echo "\n";
+        echo "***ERROR***\n\n";
     } else {
         echo " This should leave the database state as it was before you started the script\n";
         DBI::rollBack();
