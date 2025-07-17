@@ -153,8 +153,6 @@ A note about colours;
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
 
-
-
 ## Transfers
 
 * [aup_default](#aup_default)
@@ -262,6 +260,13 @@ A note about colours;
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
     * [using_local_saml_dbauth](#using_local_saml_dbauth)
     * [auth_warn_session_expired](#auth_warn_session_expired)
+* __OpenIDConnectClient__
+	* [auth_sp_oidc_issuer](#auth_sp_oidc_issuer)
+	* [auth_sp_oidc_client_id](#auth_sp_oidc_client_id)
+	* [auth_sp_oidc_client_secret](#auth_sp_oidc_client_secret)
+  * [auth_sp_oidc_uid_attribute](#auth_sp_oidc_uid_attribute)
+	* [auth_sp_oidc_email_attribute](#auth_sp_oidc_email_attribute)
+	* [auth_sp_oidc_name_attribute](#auth_sp_oidc_name_attribute)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -2677,10 +2682,10 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ### auth_sp_type
 
-* __description:__ which authentication library to use.  saml=SimpleSAMLphp, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
+* __description:__ which authentication library to use.  saml=SimpleSAMLphp, oidc=OpenIDConnectClient, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
 * __mandatory:__ no
 * __type:__ string, keyword
-* __permissible values:__ "saml", "shibboleth", "fake"
+* __permissible values:__ "saml", "oidc", "shibboleth", "fake"
 * __default:__ saml
 * __cookies:__ saml uses them by default
 * __available:__ since version 2.0
@@ -2814,9 +2819,57 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
                The warning does not happen during an upload because the session may expire there and the upload can still complete.
 
+## Authentication: OpenIDConnectClient
 
+---
 
+### auth_sp_oidc_issuer
+* __description:__ The URL of the OpenID Connect Issuer. This is the authority that authenticates the user.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__  Example: `https://login.example.com/realms/yourrealm`
 
+### auth_sp_oidc_client_id
+* __description:__ The Client ID registered with the OpenID Connect Issuer.  This identifies your FileSender application to the identity provider.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_client_secret
+* __description:__ The Client Secret associated with the Client ID.  Keep this value confidential.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_uid_attribute
+* __description:__ The name of the claim that contains the user's unique identifier.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ sub
+* __available:__ since version 2.57
+* __comment:__  `sub` is a standard claim for the subject identifier.
+
+### auth_sp_oidc_email_attribute
+* __description:__ The name of the claim that contains the user's email address.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ email
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_name_attribute
+* __description:__ The name of the claim that contains the user's full name.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ name
+* __available:__ since version 2.57
+* __comment:__
 
 ## Authentication: Shibboleth
 
@@ -2873,6 +2926,8 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__
 * __example:__ $prot.$_SERVER['SERVER_NAME'].'/Shibboleth.sso/Logout?return={target}';
+
+---
 
 ## Authentication: SP_fake
 
