@@ -1,6 +1,7 @@
 /tmp
 /files
 /config/config.php
+/config/config_private.php
 /config/templates
 /config/language
 /docs/_book
