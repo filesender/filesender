@@ -5,100 +5,92 @@ require_once __DIR__.'/../optional-dependencies/oidc/vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
 
-class OIDC
-{
-    private $oidcClient;
+$oidcClient = null;
 
-    /**
-     * Provides an instance of our OIDC lib
-     * @return OpenIDConnectClient
-     */
-    private function getOidcClient()
-    {
-        if ($this->oidcClient === null) {
-            $oidcIssuer = Config::get('auth_sp_oidc_issuer');
-            $oidcClientId = Config::get('auth_sp_oidc_client_id');
-            $oidcClientSecret = ConfigPrivate::get('auth_sp_oidc_client_secret');
+function getOidcClient() {
+    global $oidcClient;
 
-            if (empty($oidcIssuer)) {
-                throw new ConfigMissingParameterException('auth_sp_oidc_issuer');
-            }
-            if (empty($oidcClientId)) {
-                throw new ConfigMissingParameterException('auth_sp_oidc_client_id');
-            }
-            if (empty($oidcClientSecret)) {
-                throw new ConfigMissingParameterException('auth_sp_oidc_client_secret');
-            }
+    if ($oidcClient === null) {
+        $oidcIssuer = Config::get('auth_sp_oidc_issuer');
+        $oidcClientId = Config::get('auth_sp_oidc_client_id');
+        $oidcClientSecret = ConfigPrivate::get('auth_sp_oidc_client_secret');
 
-            $this->oidcClient = new OpenIDConnectClient($oidcIssuer, $oidcClientId, $oidcClientSecret);
+        if (empty($oidcIssuer)) {
+            throw new ConfigMissingParameterException('auth_sp_oidc_issuer');
         }
-        return $this->oidcClient;
-    }
-
-    public static function login()
-    {
-        $oidc = new self();
-        $client = $oidc->getOidcClient();
-
-        $redirectUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-        $client->setRedirectURL($redirectUrl);
-        $client->addScope(['openid', 'profile', 'email']);
-
-        try {
-            $client->authenticate();
-            $_SESSION['oidc_user_info'] = $client->requestUserInfo();
-            $_SESSION['oidc_access_token'] = $client->getAccessToken();
-
-            Logger::info("OIDC login successful for user: " . $_SESSION['oidc_user_info']->sub);
-        } catch (Exception $e) {
-            Logger::error("OIDC login failed: " . $e->getMessage());
-            throw new Exception("OIDC login failed", 1, $e);
+        if (empty($oidcClientId)) {
+            throw new ConfigMissingParameterException('auth_sp_oidc_client_id');
+        }
+        if (empty($oidcClientSecret)) {
+            throw new ConfigMissingParameterException('auth_sp_oidc_client_secret');
         }
 
-        $landingPage = Config::get('landing_page') ?: 'upload';
-        $location = Utilities::http_build_query(['s' => $landingPage]);
-        
-        header('Location: ' . $location);
-        exit;
+    $oidcClient = new OpenIDConnectClient($oidcIssuer, $oidcClientId, $oidcClientSecret);
+    }
+return $oidcClient;
+}
+
+function oidcLogin() {
+    global $oidcClient;
+    $client = getOidcClient();
+
+    $redirectUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+    $client->setRedirectURL($redirectUrl);
+    $client->addScope(['openid', 'profile', 'email']);
+
+    try {
+        $client->authenticate();
+        $_SESSION['oidc_user_info'] = $client->requestUserInfo();
+        $_SESSION['oidc_access_token'] = $client->getAccessToken();
+
+        Logger::info("OIDC login successful for user: " . $_SESSION['oidc_user_info']->sub);
+    } catch (Exception $e) {
+        Logger::error("OIDC login failed: " . $e->getMessage());
+        throw new Exception("OIDC login failed", 1, $e);
     }
 
-    public static function logout()
-    {
-        Logger::info("OIDC logout attempt.");
+    $landingPage = Config::get('landing_page') ?: 'upload';
+    $location = Utilities::http_build_query(['s' => $landingPage]);
+    
+    header('Location: ' . $location);
+    exit;
+}
 
-        $oidc = new self();
-        $client = $oidc->getOidcClient();
+function oidcLogout() {
+    Logger::info("OIDC logout attempt.");
+
+    global $oidcClient;
+    $client = getOidcClient();
         
-        $accessToken = $_SESSION['oidc_access_token'];
+    $accessToken = $_SESSION['oidc_access_token'];
 
-        try {
-            if (!empty($accessToken)) {
-                $client->revokeToken($accessToken, 'access_token');
-            }
-        } catch (Exception $e) {
-            Logger::error("OIDC access token revocation failed: " . $e->getMessage());
+    try {
+        if (!empty($accessToken)) {
+            $client->revokeToken($accessToken, 'access_token');
         }
-
-        session_destroy();
-        
-        Logger::info("OIDC logout successful.");
-
-        $target = Config::get('site_logouturl') ?: '/';
-        $location = Utilities::http_build_query([$target]);
-        
-        header('Location: ' . $location);
-        exit;
+    } catch (Exception $e) {
+        Logger::error("OIDC access token revocation failed: " . $e->getMessage());
     }
+
+    session_destroy();
+    
+    Logger::info("OIDC logout successful.");
+
+    $target = Config::get('site_logouturl') ?: '/';
+    $location = Utilities::http_build_query([$target]);
+    
+    header('Location: ' . $location);
+    exit;
 }
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] === 'login') {
-        OIDC::login();
+        oidcLogin();
     } elseif ($_GET['action'] === 'logout') {
-        OIDC::logout();
+        oidcLogout();
     }
 }
 
 if (isset($_GET['code'])) {
-    OIDC::login();
+    oidcLogin();
 }
