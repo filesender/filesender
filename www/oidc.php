@@ -49,8 +49,8 @@ function oidcLogin() {
         throw new Exception("OIDC login failed", 1, $e);
     }
 
-    $landingPage = Config::get('landing_page') ?: 'upload';
-    $location = Utilities::http_build_query(['s' => $landingPage]);
+    $target = Config::get('landing_page') ?: 'upload';
+    $location = Utilities::http_build_query(['s' => $target]);
     
     header('Location: ' . $location);
     exit;
