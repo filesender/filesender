@@ -76,8 +76,7 @@ function oidcLogout() {
     
     Logger::info("OIDC logout successful.");
 
-    $target = Config::get('site_logouturl') ?: '/';
-    $location = Utilities::http_build_query([$target]);
+    $location = Config::get('site_logouturl') ?: '/';
     
     header('Location: ' . $location);
     exit;
