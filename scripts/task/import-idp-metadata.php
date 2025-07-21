@@ -35,6 +35,75 @@ require_once(dirname(__FILE__).'/../../includes/init.php');
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('Cron started');
 
+
+// import from Shibboleth
+if( Config::get('auth_sp_type') == 'shibboleth' ) {
+    echo "Alpha code for importing metadata from shibboleth\n";
+
+    $context = stream_context_create(array(
+        "ssl"=>array(
+            "verify_peer"=>true,
+            "verify_peer_name"=>true,
+        ),
+    ));
+    
+    $discoURL = Config::get("auth_sp_shibboleth_disco_url");
+    $mdquery = Config::get("auth_sp_shibboleth_mdquery");
+    $mdToCapture = Config::get('auth_sp_idp_metadata_to_capture');
+
+    if( $discoURL == '' || $discoURL == null ) {
+        echo "please set auth_sp_shibboleth_disco_url\n";
+        exit;
+    }   
+    if( $mdquery == '' || $mdquery == null ) {
+        echo "please set auth_sp_shibboleth_mdquery\n";
+        exit;
+    }
+    
+    $disco = file_get_contents( $discoURL, false, $context );
+    $d = json_decode($disco);
+
+    echo "looping over discovered entity IDs...\n";
+    foreach( $d as $idx => $obj ) {
+        $e = $obj->entityID;
+        echo "entityid: $e \n";
+
+
+        // /opt/shibboleth-sp/bin/mdquery -e urn:x-simplesamlphp:sspdev-idp
+        $output = array();
+        exec("$mdquery -e $e", $output);
+
+        echo "executed mdquery for entityid: $e ". " resulting in this many lines of output: " . count($output) . " \n";
+
+        $emd = simplexml_load_string( implode("\n",$output));
+
+        $idp = IdP::ensure($e);
+
+        foreach( $mdToCapture as $k => $fsk ) {
+            $colname = $fsk;
+            if( is_numeric($k)) {
+                $k = $fsk;
+            }
+            $result = $emd->xpath('//md:'.$k.'[1]');
+            $data = reset($result);
+
+            if( $data ) {
+                $idp->{$colname} = $data;
+            }
+            echo "setting k $colname to $data \n";
+            
+        }
+        
+        $idp->saveIfChanged();
+    }
+
+    echo "Alpha code for importing metadata from shibboleth run is complete\n";
+    exit;
+}
+
+
+
+// Import from SSP
 AuthSPSaml::loadSimpleSAML();
 
 $c = new ReflectionClass("\SimpleSAML\Metadata\MetaDataStorageHandler");

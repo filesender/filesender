@@ -275,6 +275,8 @@ A note about colours;
 	* [auth_sp_shibboleth_name_attribute](#auth_sp_shibboleth_name_attribute)
 	* [auth_sp_shibboleth_login_url](#auth_sp_shibboleth_login_url)
 	* [auth_sp_shibboleth_logout_url](#auth_sp_shibboleth_logout_url)
+	* [auth_sp_shibboleth_disco_url](#auth_sp_shibboleth_disco_url)
+	* [auth_sp_shibboleth_mdquery](#auth_sp_shibboleth_mdquery)
 * __SP_Fake__
 	* [auth_sp_fake_authenticated](#auth_sp_fake_authenticated)!!
 	* [auth_sp_fake_uid](#auth_sp_fake_uid)!!
@@ -2960,6 +2962,32 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__
 * __example:__ $prot.$_SERVER['SERVER_NAME'].'/Shibboleth.sso/Logout?return={target}';
+
+### auth_sp_shibboleth_disco_url
+
+* __description:__ where to find the Shibboleth Discovery data
+* __mandatory:__ no. This is used by the import-idp-metadata.php script to import IdP information
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.0rc10
+* __1.x name:__
+* __comment:__
+* __example:__ $prot.$_SERVER['SERVER_NAME'].'/Shibboleth.sso/DiscoFeed';
+
+
+### auth_sp_shibboleth_mdquery
+
+* __description:__ where to find the Shibboleth mdquery executable
+* __mandatory:__ no. This is used by the import-idp-metadata.php script to import IdP information
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.0rc10
+* __1.x name:__
+* __comment:__
+* __example:__ /opt/shibboleth-sp/bin/mdquery
+
+
+
 
 ## Authentication: SP_fake
 
