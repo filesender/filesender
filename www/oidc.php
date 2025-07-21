@@ -30,11 +30,11 @@ function getOidcClient() {
 return $oidcClient;
 }
 
-function oidcLogin() {
+function oidcLogin($target = null) {
     global $oidcClient;
     $client = getOidcClient();
 
-    $redirectUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+    $redirectUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?target=" . urlencode($target);
     $client->setRedirectURL($redirectUrl);
     $client->addScope(['openid', 'profile', 'email']);
 
@@ -49,14 +49,16 @@ function oidcLogin() {
         throw new Exception("OIDC login failed", 1, $e);
     }
 
-    $target = Config::get('landing_page') ?: 'upload';
-    $location = Utilities::http_build_query(['s' => $target]);
+    if (!$target) {
+        $landing_page = Config::get('landing_page') ?: 'upload';
+        $target = Utilities::http_build_query(['s' => $landing_page]);
+    }
     
-    header('Location: ' . $location);
+    header('Location: ' . $target);
     exit;
 }
 
-function oidcLogout() {
+function oidcLogout($target = null) {
     Logger::info("OIDC logout attempt.");
 
     global $oidcClient;
@@ -76,20 +78,24 @@ function oidcLogout() {
     
     Logger::info("OIDC logout successful.");
 
-    $location = Config::get('site_logouturl') ?: '/';
+    if (!$target) {
+        $target = Config::get('site_logouturl') ?: '/';
+    }
     
-    header('Location: ' . $location);
+    header('Location: ' . $target);
     exit;
 }
 
+$target = isset($_GET['target']) ? urldecode($_GET['target']) : '';
+
 if (isset($_GET['action'])) {
     if ($_GET['action'] === 'login') {
-        oidcLogin();
+        oidcLogin($target);
     } elseif ($_GET['action'] === 'logout') {
-        oidcLogout();
+        oidcLogout($target);
     }
 }
 
 if (isset($_GET['code'])) {
-    oidcLogin();
+    oidcLogin($target);
 }
