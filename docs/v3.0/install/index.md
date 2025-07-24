@@ -7,10 +7,12 @@ title: Installation - Linux Source 3.x from Git
 This is the installation documentation for installing the FileSender
 3.x releases on Linux. See the
 [releases](https://github.com/filesender/filesender/releases) page for
-up to date information about recent releases. This guide is written
-for installation from source on the RedHat/CentOS or Debian platform
-but any Linux variant should work with some modifications (most
-notably about installing the required additional software packages).
+up to date information about recent releases. 
+
+This guide is written for installation from source on the
+RedHat/CentOS or Debian platform but any Linux variant should work
+with some modifications (most notably about installing the required
+additional software packages).
 
 Our hope is that FileSender installation should take less than an hour.
 There are docker images of FileSender available which you might like
@@ -25,16 +27,16 @@ you can report issues with and update the documentation.
 
 ### This documentation was tested with
 
-* RedHat/CentOS (7)
+* RedHat/CentOS
 * Debian (9, Stretch with [apache and postgresql] and [apache and mariadb])
-* Fedora (28 with apache and postgresql)
+* Fedora (42 with apache and postgresql)
 
 ### Dependencies
 
-* Apache (or nginx) and PHP version 8.2 or later.
+* Apache (or nginx) and PHP version 8.4 or later.
 * A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
-* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.2 or newer.
+* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.4 or newer.
 
 Note that older versions of PHP may work, but they are not supported
 by the PHP project so it is recommended to avoid them in production. Likewise,
