@@ -29,7 +29,7 @@ you can report issues with and update the documentation.
 
 * RedHat/CentOS
 * Debian (9, Stretch with [apache and postgresql] and [apache and mariadb])
-* Fedora (42 with apache and postgresql)
+* Fedora (42 with apache and mariadb or postgresql)
 
 ### Dependencies
 
@@ -94,8 +94,8 @@ see something like the following:
 # ls -l /opt/filesender
 total 8
 drwxrwxr-x. 21 root root 4096 Jun  6 15:28 filesender
-lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.2.3
-drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.2.3
+lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.4.2
+drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.4.2
 
 # ls -l /opt/filesender/filesender/
 total 160
@@ -247,7 +247,7 @@ authentication for development and testing. When you move to a
 production service you probably want to change that to only support
 authentication sources of your choice.
 
-All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.2.3 of SimpleSAMLphp.
+All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.2 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
 [(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
 probably work. The continuous integration in FileSender has an
@@ -262,17 +262,17 @@ Extract SimpleSAMLphp in a suitable directory and create symlink:
 ```
 mkdir -p ~/src
 cd ~/src
-wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v2.2.3/simplesamlphp-2.2.3-full.tar.gz
+wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v2.4.2/simplesamlphp-2.4.2-full.tar.gz
 
 php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v1.19.7 >| checklist
-echo " simplesamlphp-2.2.3-full.tar.gz" >> checklist
+echo " simplesamlphp-2.4.2-full.tar.gz" >> checklist
 sha256sum --check checklist
- simplesamlphp-2.2.3-full.tar.gz: OK
+ simplesamlphp-2.4.2-full.tar.gz: OK
 
 mkdir -p /opt/filesender
 cd /opt/filesender
-tar xvzf ~/src/simplesamlphp-2.2.3-full.tar.gz
-ln -s simplesamlphp-2.2.3 simplesaml
+tar xvzf ~/src/simplesamlphp-2.4.2-full.tar.gz
+ln -s simplesamlphp-2.4.2 simplesaml
 ```
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web directory with a web server alias.
