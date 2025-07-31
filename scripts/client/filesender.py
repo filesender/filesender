@@ -125,13 +125,14 @@ else:
   
 requiredNamed.add_argument("-r", "--recipients", required=True)
 
-if base_url == "[base_url]":
+# Do not change this seemingly out-of-place concat as it avoid getting this test messed up by clidownload.php
+if base_url == "[" + "base_url" + "]":
   requiredNamed.add_argument("-b", "--base_url", required=True)
 else:
   parser.add_argument("-b", "--base_url")
 
 # if username is not a valid email address then ensure user supplies a valid email address
-if username is None or not bool(re.match("([^@|\s]+@[^@]+\.[^@|\s]+)", username)):
+if username is None or not bool(re.match(r'([^@|\s]+@[^@]+\.[^@|\s]+)', username)):
   requiredNamed.add_argument("-f", "--from_address", help="filesender email from address", required=True)
 
 args = parser.parse_args()
