@@ -125,7 +125,8 @@ else:
   
 requiredNamed.add_argument("-r", "--recipients", required=True)
 
-if base_url == "[base_url]":
+# Do not change this seemingly out-of-place concat as it avoid getting this test messed up by clidownload.php
+if base_url == "[" + "base_url" + "]":
   requiredNamed.add_argument("-b", "--base_url", required=True)
 else:
   parser.add_argument("-b", "--base_url")
