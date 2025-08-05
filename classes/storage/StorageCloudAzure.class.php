@@ -84,6 +84,12 @@ class StorageCloudAzure extends StorageFilesystem
         return str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
 
+    public static function canStore(Transfer $transfer)
+    {
+        // FIXME: we should really check if the Cloud backend has enough space
+        return true;
+    }
+    
     /**
      *  Reads chunk at offset
      *

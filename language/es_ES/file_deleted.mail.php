@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: El archivo ya no está disponible para descargar
+subject: El archivo ya no está disponible para descargar
 {alternative:plain}
 
 Estimado señor o señora,
