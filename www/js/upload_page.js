@@ -778,37 +778,14 @@ filesender.ui.files = {
 
 // Manage recipients
 filesender.ui.recipients = {
+
     // Add recipient to list
-    add: function(email, errorhandler) {
+    addSingle: function(email, errorhandler) {
         if(!errorhandler) errorhandler = function(error) {
             filesender.ui.error(error);
         };
         
         var too_much = null;
-        if(email.match(/[,;\s]/)) { // Multiple values
-            email = email.split(/[,;\s]/);
-            var invalid = [];
-            for(var i=0; i<email.length; i++) {
-                if(too_much) continue;
-                
-                var s = email[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
-                if(!s) continue;
-                
-                if(this.add(s, function(error) {
-                    if(error.message == 'transfer_too_many_recipients')
-                        too_much = error;
-                }))
-                    invalid.push(s);
-            }
-            
-            if(too_much) {
-                filesender.ui.error(too_much);
-                return '';
-            }
-            
-            return invalid.join(', ');
-        }
-        
         var added = true;
         filesender.ui.transfer.addRecipient(email, function(error) {
             if(error.message == 'transfer_too_many_recipients')
@@ -844,6 +821,68 @@ filesender.ui.recipients = {
         filesender.ui.evalUploadEnabled();
         
         return '';
+    },
+
+    addCollection: function(col, errorhandler) {
+        var too_much = null;
+        var invalid = [];
+        col.forEach((e) => {
+            console.log("adding email address: " + e );
+            if(!too_much) {
+                if(this.addSingle(e, function(error) {
+                    if(error.message == 'transfer_too_many_recipients')
+                        too_much = error;
+                })) {
+                    invalid.push(s);
+                }
+                if(too_much) {
+                    filesender.ui.error(too_much);
+                    return '';
+                }
+            }}
+                   );
+
+        return invalid.join(', ');
+    },
+    
+    // Add recipient to list
+    // handle breaking up email string into many addresses if appropriate
+    add: function(email, errorhandler) {
+        if(!errorhandler) errorhandler = function(error) {
+            filesender.ui.error(error);
+        };
+        
+        if(m = email.match(/([^<]+ <[^>]+@[^>]+>)(([,;][\s]*)|$)/g)) {
+            var emailresult = [];
+            // trim off start < and end >;, etc
+            // to leave just the core email address
+            m.forEach((e) => emailresult.push(
+                e.replace(/[^<]+</,'')
+                    .replace(/>[,;\s]*/,'')));
+                           
+            console.log("multiple email address matches detected. Original matches are:" );
+            console.log(m);
+            console.log("multiple email address matches detected. Cleaned up matches are:");
+            console.log(emailresult);
+
+            return this.addCollection(emailresult,errorhandler);
+        }
+
+        
+        if(email.match(/[,;\s]/)) {
+            // Multiple values with no special <> handling
+            m = email.split(/[,;\s]/);
+            var emailresult = m;
+
+            console.log("multiple email address matches detected. <> are already attempted above. Original matches are:" );
+            console.log(m);
+
+            return this.addCollection(emailresult,errorhandler);
+        }
+        
+        // Only a single address detected.
+        console.log("single email address " + email );
+        return this.addSingle(email, errorhandler);
     },
     
     // Add recipients from input

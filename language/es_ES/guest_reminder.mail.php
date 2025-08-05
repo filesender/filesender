@@ -7,8 +7,7 @@
 // 
 // 
 ?>
-Asunto: (recordatorio) invitación recibida
-Asunto: (recordatorio) {guest.subject}
+subject: (recordatorio) invitación recibida {guest.subject}
 
 {alternative:plain}
 

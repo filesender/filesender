@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: El/los archivo(s) ya no están disponibles para su descarga
+subject: El/los archivo(s) ya no están disponibles para su descarga
 
 {alternative:plain}
 
