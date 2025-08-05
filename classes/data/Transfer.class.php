@@ -266,6 +266,13 @@ class Transfer extends DBObject
                               . ' from '
                               . self::getDBTable() . ' t '
                                     . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
+
+            $filesidpview[$dbtype] = 'select 1';
+            $auditlogsview[$dbtype] = 'select 1';
+            $auditlogsviewdlcss[$dbtype] = 'select 1';
+            $auditlogsviewdlc[$dbtype] = 'select 1';
+            
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -275,6 +282,10 @@ class Transfer extends DBObject
                     , 'transfersfilesview' => $filesview
                     , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
                     , 'transferidpview' => $idpview
+                    , 'transfersfilesidpview' => $filesidpview
+                    , 'transfersauditlogsview' => $auditlogsview
+                    , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
+                    , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
         );
     }
     
