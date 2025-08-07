@@ -8,7 +8,7 @@ This is the installation documentation for installing the FileSender
 2.x releases on Linux. See the
 [releases](https://github.com/filesender/filesender/releases) page for
 up to date information about recent releases. This guide is written
-for installation from source on the RedHat/CentOS or Debian platform
+for installation from source on the RedHat/Fedora/CentOS or Debian platform
 but any Linux variant should work with some modifications (most
 notably about installing the required additional software packages).
 
@@ -25,7 +25,7 @@ you can report issues with and update the documentation.
 
 ### This documentation was tested with
 
-* RedHat/CentOS (7)
+* RedHat/Fedora/CentOS (F42)
 * Debian (9, Stretch with [apache and postgresql] and [apache and mariadb])
 * Fedora (28 with apache and postgresql)
 
@@ -51,7 +51,7 @@ for the Web server setup, one for each supported server.
 
 # Step 1-apache - Install Apache and PHP
 
-On RedHat/CentOS, run:
+On RedHat/Fedora/CentOS, run:
 
 ```
 dnf install -y httpd mod_ssl php php-mbstring php-xml php-json php-intl
@@ -128,7 +128,7 @@ composer install --no-dev
 Install the Git package with one of the following commands.
 
 ```
-# on RedHat/CentOS
+# on RedHat/Fedora/CentOS
 dnf install -y git
 
 # on Debian:
@@ -192,7 +192,7 @@ might like to add to your configuration.
 
 Initialise config file and set permissions right. Make the files, tmp
 and log directories writable by the web daemon user (`apache` on
-RedHat/CentOS, `www-data` on Debian), copy the config file in place
+RedHat/Fedora/CentOS, `www-data` on Debian), copy the config file in place
 from the template and allow the web daemon user to read the config.php
 configuration file:
 
@@ -205,7 +205,7 @@ mkdir -p tmp files log
 chmod o-rwx tmp files log config/config.php
 ```
 
-On RedHat/CentOS, run:
+On RedHat/Fedora/CentOS, run:
 
 ```
 chown apache:apache tmp files log
@@ -224,7 +224,7 @@ chown www-data:www-data tmp files log
 chgrp www-data config/config.php
 ```
 
-* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, mount it with the following option: `context=system_u:object_r:httpd_sys_rw_content_t:s0`.
+* **NOTE**: If you use NFS storage for user files on RedHat/Fedora/CentOS, mount it with the following option: `context=system_u:object_r:httpd_sys_rw_content_t:s0`.
 * **DO NOT** enable `httpd_use_nfs`. If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
 
 
@@ -401,7 +401,7 @@ The apache config file is provided in config-templates/apache and
 should be copied to one of the following locations depending on your
 distribution:
 
-On RedHat/CentOS, run:
+On RedHat/Fedora/CentOS, run:
 ```
 cd /opt/filesender/filesender/
 cp config-templates/apache/filesender.conf /etc/httpd/conf.d/
@@ -458,7 +458,7 @@ server {
         server_name filesender.example.org;
         index index.php;
         error_page 500 502 503 504 /50x.html;
-        root /opt/filesender/www;
+        root /opt/filesender/filesender/www;
         location = /50x.html {
             root   /usr/share/nginx/html;
         }
@@ -474,7 +474,7 @@ server {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         }
         location ^~ /saml {
-            alias /opt/filesender/saml/www;
+            alias /opt/filesender/simplesaml/www;
             location ~ ^(?<prefix>/saml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
                 include fastcgi_params;
                 fastcgi_pass  localhost:9090;
@@ -483,7 +483,7 @@ server {
             }
         }
         location ~* \.(ico|docx|doc|xls|xlsx|rar|zip|jpg|jpeg|txt|xml|pdf|gif|png|css|js)$ {
-            root   /opt/filesender/www/;
+            root   /opt/filesender/filesender/www/;
         }
         location ~ /\. {
                 deny all;
@@ -532,7 +532,7 @@ listen = 127.0.0.1:9090
 
 ## Option a - PostgreSQL
 
-On RedHat/CentOS, run:
+On RedHat/Fedora/CentOS, run:
 
 	dnf install -y php-pgsql postgresql-server
 
@@ -593,7 +593,7 @@ $ createdb -E UTF8 -O filesender filesender
 
 ## Option b - MySQL
 
-On RedHat/CentOS, run:
+On RedHat/Fedora/CentOS, run:
 
 	yum install -y mariadb-server php-mysqlnd
 
@@ -652,11 +652,11 @@ FLUSH PRIVILEGES;
 A sample settings file is provided with FileSender in
 **config-templates/filesender-php.ini**. If you don't feel like
 manually editing your php.ini file, copy the filesender-php.ini file
-to your **/etc/php.d/** (RedHat/CentOS) or
+to your **/etc/php.d/** (RedHat/Fedora/CentOS) or
 **/etc/php/7.0/apache2/conf.d/** (Debian) directory to activate those
 settings.
 
-On **RedHat/CentOS**, run:
+On **RedHat/Fedora/CentOS**, run:
 
 	service httpd reload
 
@@ -678,7 +678,7 @@ Enable secure cookie handling to protect sessions:
 
 Reload your Apache server to activate the changes to your php.ini.
 
-On **RedHat/CentOS**, run:
+On **RedHat/Fedora/CentOS**, run:
 
 	service httpd reload
 
@@ -813,7 +813,7 @@ If you get an error you might like to check your php log files
 
 ## SElinux
 
-If you use RedHat/CentOS, you have SElinux installed. SElinux protects
+If you use RedHat/Fedora/CentOS, you have SElinux installed. SElinux protects
 your system from unauthorised changes by attackers. FileSender
 supports SElinux, and if you followed this guide you have set up
 SElinux correctly with file storage in the same directory as
@@ -855,7 +855,7 @@ MAY be on, if you do not run the database on the local host.
 
 Its good practice to disallow plain HTTP traffic and allow HTTPS only. Make a file in one of the following locations:
 
-* **/etc/httpd/conf.d/000-forcehttps.conf** (RedHat/CentOS)
+* **/etc/httpd/conf.d/000-forcehttps.conf** (RedHat/Fedora/CentOS)
 * **/etc/apache2/sites-available/000-forcehttps.conf** (Debian)
 
 Add the following:
@@ -864,7 +864,7 @@ Add the following:
 		Redirect / https://filesender.example.org/
 	</VirtualHost>
 
-On **RedHat/CentOS**, run:
+On **RedHat/Fedora/CentOS**, run:
 
 	service httpd reload
 

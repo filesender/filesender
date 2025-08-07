@@ -36,10 +36,10 @@ $(function() {
 
     const copyToClipboard = (value) => {
         navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', 'Copied to clipboard!');
+            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
         }).catch((e) => {
             console.error(e);
-            filesender.ui.notify('error', 'Error copying to clipboard!');
+            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
         });
     }
 
@@ -85,8 +85,7 @@ $(function() {
         p['clear_frequent_recipients'] = '1';
 
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('database_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('database_updated'));
         });
 
         return false;
@@ -100,8 +99,7 @@ $(function() {
         p['clear_user_transfer_preferences'] = '1';
 
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('database_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('database_updated'));
         });
 
         return false;
@@ -132,8 +130,7 @@ $(function() {
         p['apisecretdelete'] = '1';
 
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('preferences_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
         });
 
         return false;
@@ -148,8 +145,7 @@ $(function() {
             p['apisecretcreate'] = '1';
 
             filesender.client.updateUserPreferences(p, function() {
-                filesender.ui.notify('success', lang.tr('preferences_updated'));
-                filesender.ui.reload();
+                filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
             });
         };
 
@@ -200,8 +196,7 @@ $(function() {
 
         
         if (!hasError) {
-            filesender.ui.notify('success', lang.tr('preferences_updated'));
-            location.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
         } else {
             filesender.ui.notify('error', lang.tr('Could not save user preferences.'));
         }
@@ -257,8 +252,7 @@ $(function() {
         var p = {};
         p['openpgp_key_delete'] = '1';        
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('preferences_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
             });
     });
     $('.test_my_openpgp_key').on('click', function(e) {
@@ -314,8 +308,7 @@ $(function() {
                             
                             filesender.client.updateUserPreferences(p, function() {
 
-                                filesender.ui.notify('success', lang.tr('preferences_updated'));
-                                filesender.ui.reload();
+                                filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
                             });
                             
                         } else {

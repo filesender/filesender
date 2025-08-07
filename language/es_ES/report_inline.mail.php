@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Informe sobre {target.type} #{target.id}
+subject: Informe sobre {target.type} #{target.id}
 
 {alternative:plain}
 

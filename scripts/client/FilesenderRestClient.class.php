@@ -178,7 +178,7 @@ class FilesenderRestClient {
             'Content-Type: '.$content_type
         ));
         curl_setopt($h, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($h, CURLOPT_SSL_VERIFYHOST, true);
+        curl_setopt($h, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($h, CURLOPT_SSL_VERIFYPEER, true);
         
         switch($method) {
