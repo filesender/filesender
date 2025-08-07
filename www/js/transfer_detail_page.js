@@ -228,8 +228,10 @@ $(function() {
 
             var actions = $('<div class="actions" />').appendTo(popup);
 
-            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(' ' + lang.tr('send_to_my_email')).appendTo(actions);
+            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(lang.tr('send_to_my_email')).appendTo(actions);
+            $('<p>&nbsp;</p>').prependTo(send_by_email);
             $('<span class="fa fa-lg fa-envelope-o" />').prependTo(send_by_email);
+            
             send_by_email.on('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -388,10 +390,10 @@ $(function() {
     // Copy download link
     const copyToClipboard = (value) => {
         navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', 'Copied to clipboard!');
+            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
         }).catch((e) => {
             console.error(e);
-            filesender.ui.notify('error', 'Error copying to clipboard!');
+            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
         });
     }
 

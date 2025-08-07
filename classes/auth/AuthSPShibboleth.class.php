@@ -170,6 +170,24 @@ class AuthSPShibboleth
         
         return self::$attributes;
     }
+
+    public static function ensureLocalIdPMetadata( $entityId, $idp, $force = false )
+    {
+        if( !$force ) {
+            $secs_ago = Config::get('auth_sp_idp_metadata_to_capture_frequency');
+            if( !$secs_ago ) {
+                return;
+            }
+            if( $secs_ago ) {
+                if( $idp->updated > (time() - $secs_ago )) {
+                    return;
+                }
+            }
+        }
+        
+        Logger::info("Finding IdP metadata for $entityId from Shibboleth");
+        $idp->saveIfChanged();
+    }
     
     /**
      * Generate the logon URL.

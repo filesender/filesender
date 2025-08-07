@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Descargar resumen 
+subject: Descargar resumen 
 
 {alternative:plain}
 

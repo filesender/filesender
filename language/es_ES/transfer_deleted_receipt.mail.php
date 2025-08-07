@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Fichero(s) eliminado(s)
+subject: Fichero(s) eliminado(s)
 
 {alternative:plain}
 

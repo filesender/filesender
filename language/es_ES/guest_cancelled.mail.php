@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Invitación cancelada 
+subject: Invitación cancelada 
 
 {alternative:plain}
 

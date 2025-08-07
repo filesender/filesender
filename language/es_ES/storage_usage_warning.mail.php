@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Alerta uso de almacenamiento
+subject: Alerta uso de almacenamiento
 
 {alternative:plain}
 

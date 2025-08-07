@@ -19,6 +19,10 @@ $packages = array(
         'path' => 'bootstrap/dist/css/bootstrap.min.css',
         'pattern' => '/Bootstrap[ ]+v([0-9.]+).*/m',
     ),
+    'bootstrap-icons' => array(
+        'path' => 'bootstrap-icons/font/bootstrap-icons.css',
+        'pattern' => '/Bootstrap Icons v([0-9.]+).*/m',
+    ),
     'bootbox' => array(
         'path' => 'bootbox/dist/bootbox.all.min.js',
         'pattern' => '/@version: ([0-9.]+).*/m',
