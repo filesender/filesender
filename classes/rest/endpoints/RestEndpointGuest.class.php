@@ -259,6 +259,10 @@ class RestEndpointGuest extends RestEndpoint
                 $transfer_options[TransferOptions::ADD_ME_TO_RECIPIENTS] = false;
             }
         }
+
+        unset($transfer_options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+        unset($transfer_options[TransferOptions::FORWARD_SERVER_NAME]);
+
         $guest->transfer_options = $transfer_options;
         
         // Set expiry date

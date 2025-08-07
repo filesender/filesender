@@ -217,13 +217,19 @@ function downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded
     Logger::info('User started archive download ('.count($files).' files, '.$size.' bytes)');
     
     // Send the ZIP
+    $auditlog = null;
     if(!$recently_downloaded)
-        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+        $auditlog = Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+    if($transfer->needForward('from'))
+        ForwardAnotherServer::recordActivityTransfer(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $auditlog, $recipient);
     
     $result = $zipper->streamArchive($recipient);
     
+    $auditlog = null;
     if(!$recently_downloaded)
-        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+        $auditlog = Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+    if($transfer->needForward('from'))
+        ForwardAnotherServer::recordActivityTransfer(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $auditlog, $recipient);
     
     Logger::info('User download archive ('.count($files).' files, '.$size.' bytes, '.(time() - $time).' seconds)');
     
@@ -338,7 +344,9 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         return ($offset >= $file->size);
     };
 
-    if($recipient) $recipient->recordActivity();
+    if($recipient) {
+        $recipient->recordActivity();
+    }
     
     $done = false;
     
@@ -365,9 +373,12 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     
     if ($ranges) {
         Logger::info('User restarted download of '.$file.' from offset '.$ranges[0]['start']);
-        
+
+        $auditlog = null;
         if(!$recently_downloaded)
-            Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
+            $auditlog  = Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
+        if($transfer->needForward('from'))
+            ForwardAnotherServer::recordActivityFile(LogEventTypes::DOWNLOAD_RESUMED, $file, $auditlog);
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
@@ -432,9 +443,12 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
         // Read data (no range means all file)
         Logger::info('User started to download '.$file);
-        
+
+        $auditlog = null;
         if(!$recently_downloaded)
-            Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+            $auditlog = Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+        if($transfer->needForward('from'))
+            ForwardAnotherServer::recordActivityFile(LogEventTypes::DOWNLOAD_STARTED, $file, $auditlog, $recipient);
         
         $read_range();
         $done = true;
@@ -443,10 +457,14 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     
     if($done) {
         Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
-        
+
+        $auditlog = null;
         if(!$recently_downloaded) {
-            Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+            $auditlog = Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
         }
+        if($transfer->needForward('from'))
+            ForwardAnotherServer::recordActivityFile(LogEventTypes::DOWNLOAD_ENDED, $file, $auditlog, $recipient);
+
     }
     
     return array('result' => $done, 'files' => array($file));
@@ -523,4 +541,6 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
             // we hit a rate limit so do not email this time
         }
     }
+    if($transfer->needForward('from'))
+        ForwardAnotherServer::recordActivityTransfer(LogEventTypes::DOWNLOAD_ENDED, $transfer, null, $recipient, $ret['files']);
 }

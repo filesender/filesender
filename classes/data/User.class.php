@@ -586,7 +586,9 @@ class User extends DBObject
                 in_array($name, array(
                         TransferOptions::EMAIL_ME_COPIES,
                         TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
-                        TransferOptions::ADD_ME_TO_RECIPIENTS
+                        TransferOptions::ADD_ME_TO_RECIPIENTS,
+                        TransferOptions::FORWARD_TO_ANOTHER_SERVER,
+                        TransferOptions::FORWARD_SERVER_NAME
                 ))
             ) {
                 continue;

@@ -63,6 +63,24 @@ class Crypto
     }
 
     /**
+     * Validate a base64 encoded salt.
+     */
+    public static function validateSaltString( $v, $len = 32)
+    {
+        if( !strlen($v)) {
+            return false;
+        }
+        $t = base64_decode( $v, true );
+        if( !$t ) {
+            return false;
+        }
+        if( strlen($v) !== $len ) {
+            return false;
+        }
+        return base64_encode($t) === rtrim($v, '=');
+    }
+
+    /**
      * This uses the formula from page 7 of the OpenFortress security analysis
      * to get a PBKDF2 iteration count for an expected number of years of security
      * from brute force attack.

@@ -1,11 +1,11 @@
-<?php 
+<?php
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-// 
-// 
+//
+//
 ?>
 <?php
 $lang['OpenPGP'] = 'OpenPGP';
@@ -352,6 +352,8 @@ $lang['find_users_who_might_be_abusing_the_system'] = 'Repérer les utilisateurs
 $lang['forget'] = 'Oublier ce dépôt';
 $lang['forward'] = 'Faire suivre';
 $lang['forward_guest_voucher'] = 'Faire suivre l\'invitation';
+$lang['forward_server_name'] = 'Serveur de destination';
+$lang['forward_to_another_server'] = 'Transférer vers un autre serveur';
 $lang['from'] = 'De';
 $lang['gb_per_second'] = 'Gb/sec';
 $lang['general'] = 'Général';

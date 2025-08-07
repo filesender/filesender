@@ -1,11 +1,11 @@
-<?php 
+<?php
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-// 
-// 
+//
+//
 ?>
 <?php
 $lang['OpenPGP'] = 'OpenPGP';
@@ -262,7 +262,7 @@ $lang['email_recipient_when_transfer_expires'] = 'Email recipient when transfer 
 $lang['email_report_on_closing'] = 'Send me a report when expired';
 $lang['email_sent'] = 'Message Sent';
 $lang['email_separator_msg'] = 'Multiple email addresses separated by , or ;';
-$lang['email_upload_complete'] = 'Notify me when upload is done';
+$lang['email_upload_complete'] = 'Notify me when upload and forward to another server(if you choose) are done';
 $lang['email_upload_page_access'] = 'Notify me when guests access the upload page';
 $lang['email_upload_started'] = 'Notify me when upload starts';
 $lang['empty_file'] = 'Empty file';
@@ -351,6 +351,10 @@ $lang['find_users_who_might_be_abusing_the_system'] = 'Find users who might be a
 $lang['forget'] = 'Forget about it';
 $lang['forward'] = 'Forward';
 $lang['forward_guest_voucher'] = 'Forward guest voucher';
+$lang['forward_in_progress'] = 'Forward in progress';
+$lang['forward_server_name'] = 'Destination server';
+$lang['forward_to_another_server'] = 'Forward to another server';
+$lang['forward_not_completed'] = 'But the forwarding has not yet been completed';
 $lang['from'] = 'From';
 $lang['gb_per_second'] = 'Gb/sec';
 $lang['general'] = 'General';
@@ -546,7 +550,10 @@ $lang['report_event_archive_download_started'] = 'Recipient {author.identity} st
 $lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.path} ({size:file.size})';
 $lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.path} ({size:file.size})';
 $lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.path} ({size:file.size})';
+$lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forwarded';
 $lang['report_event_file_uploaded'] = 'File {file.path} ({size:file.size}) uploaded (took {time:time_taken})';
+$lang['report_event_forward_ended'] = 'Forward another server ended';
+$lang['report_event_forward_started'] = 'Forward another server started';
 $lang['report_event_transfer_available'] = 'Transfer became available (took {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Transfer was closed on request';
 $lang['report_event_transfer_decrypt_failed'] = 'Decryption failed';

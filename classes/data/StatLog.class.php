@@ -190,10 +190,11 @@ class StatLog extends DBObject
      *
      * @param StatEvent $event: the event to be logged
      * @param DBObject: the target to be logged
+     * @param datetime $created: created datetime if forwarded
      *
      * @return StatLog auditlog
      */
-    public static function create($event, DBObject $target)
+    public static function create($event, DBObject $target, $created = null)
     {
         // Check if statlog is enabled
         $lt = Config::get('statlog_lifetime');
@@ -205,11 +206,16 @@ class StatLog extends DBObject
         if (!LogEventTypes::isValidValue($event)) {
             throw new StatLogUnknownEventException($event);
         }
-        
+
+        if( !Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+            !Auth::isAdmin()) {
+            $created = time();
+        }
+
         // Create entry
         $log = new self();
         $log->event = $event;
-        $log->created = time();
+        $log->created = $created;
         $log->target_type = get_class($target);
         $log->browser = DBConstantBrowserType::currentBrowserToEnum();
         $log->os = DBConstantOperatingSystem::currentUserOperatingSystemEnum();

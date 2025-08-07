@@ -86,7 +86,7 @@ $allow_recipients = true;
  *                        show in the default panels on the left. This allows
  *                        some options to be displayed in other locations on the page.
  */
-$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email')) use ($guest_can_only_send_to_creator) {
+$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email','forward_to_another_server', 'forward_server_name')) use ($guest_can_only_send_to_creator) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
 
     if( in_array($name, $optionsToFilter)) {
@@ -603,6 +603,36 @@ if( $openpgp_encrypt_passphrase ) {
 
                                 <strong>Transfer settings</strong>
 
+                                <div class="row">
+                                    <div class="col-12">
+                                        <?php if( array_key_exists( 'forward_to_another_server', Transfer::availableOptions() )  &&
+                                                  !Auth::isGuest()) { ?>
+                                            <div data-option="forward_to_another_server" class="fs-switch fs-switch--hide">
+                                                <input id="forward_to_another_server" name="forward_to_another_server" type="checkbox">
+                                                <label for="forward_to_another_server">{tr:forward_to_another_server}</label>
+                                            </div>
+                                            <div data-option="forward_server_name" class="fs-select fs-select--hide">
+                                                <label for="forward_server_name">
+                                                    {tr:forward_server_name}
+                                                </label>
+                                                <select id="forward_server_name" name="forward_server_name">
+                                                    <?php
+                                                    $forwardServers = ForwardAnotherServer::getServersList();
+                                                    foreach ($forwardServers as $key => $value) {
+                                                        $server_label = ForwardAnotherServer::getServerLabel($key);
+                                                        if (isset($value['need_encrypt']) && !empty($value['need_encrypt'])) {
+                                                            $need_encrypt = 'class="need-encrypt"';
+                                                        } else {
+                                                            $need_encrypt = '';
+                                                        }
+                                                        echo '<option value="'. $key . '" ' . $need_encrypt . ' >' . $server_label . '</option>';
+                                                    } ?>
+                                                </select>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+
                                 <?php if(Config::get('encryption_enabled')) {  ?>
                                     <div class="row">
                                         <div id="encryption_options"  class="<?php echo $openpgp_encrypt_passphrase_add_class ?>"> </div>
@@ -934,6 +964,9 @@ if( $openpgp_encrypt_passphrase ) {
                             <h5>
                                 {tr:transfer_completed}
                             </h5>
+                            <div class="fs-transfer__forward-not-finished">
+                                <span></span>
+                            </div>
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">100%</strong>
                                 <span class="fs-progress-bar__progress">

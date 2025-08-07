@@ -1,11 +1,11 @@
-<?php 
+<?php
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-// 
-// 
+//
+//
 ?>
 <?php
 $lang['OpenPGP'] = 'PGP';
@@ -349,6 +349,8 @@ $lang['find_users_who_might_be_abusing_the_system'] = 'Pronađite korisnike koji
 $lang['forget'] = 'Zaboravi';
 $lang['forward'] = 'Proslijedi';
 $lang['forward_guest_voucher'] = 'Proslijedi kupon za gosta';
+$lang['forward_server_name'] = 'Odredišni poslužitelj';
+$lang['forward_to_another_server'] = 'Prebaciti na drugi poslužitelj';
 $lang['from'] = 'Pošiljatelj';
 $lang['gb_per_second'] = 'Gb/sec';
 $lang['general'] = 'Općenito';

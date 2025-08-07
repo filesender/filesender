@@ -88,6 +88,7 @@ $user = Auth::user();
                     }
                     ?>
 
+$user = Auth::user();
 
                     <div class="fs-switch fs-switch--small">
                         <input id="previous-settings" type="checkbox" name="save_transfer_preferences"  <?php echo isChecked($user->save_transfer_preferences); ?> />
