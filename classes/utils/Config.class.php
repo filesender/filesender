@@ -174,7 +174,8 @@ class Config
                                 continue;
                         }
                         foreach ($regex_and_configs as $regex => $extra_config_name) {
-                                if (isset($auth_attrs[$attr]) && preg_match('`'.$regex.'`', $auth_attrs[$attr])) {
+                                if ((isset($auth_attrs[$attr]) && preg_match('`'.$regex.'`', $auth_attrs[$attr])) ||
+                                    (isset($auth_attrs['additional'][$attr][0]) && preg_match('`'.$regex.'`', $auth_attrs['additional'][$attr][0]))) {
                                         $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
                                         if (file_exists($extra_config_file)) {
                                                 $config = array();
