@@ -85,9 +85,10 @@ try {
                 GUI::currentPage('service_aup');
             }
         }
-        
-        if(!in_array($page, array('download', 'maintenance')))
+
+        if(!in_array($page, array('maintenance'))) {
             Template::display('menu');
+        }
 
         Template::display('page', array('vars' => $vars));
 
@@ -95,7 +96,9 @@ try {
         Template::display('exception', array('exception' => $e));
     }
 
-    Template::display('!!footer');
+    if(!in_array($page, array('maintenance'))) {
+        Template::display('!!footer');
+    }
 
 } catch(Exception $e) {
     // If all exceptions are catched as expected we should not get there

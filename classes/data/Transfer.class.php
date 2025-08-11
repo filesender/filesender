@@ -242,30 +242,20 @@ class Transfer extends DBObject
                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                         . '  group by t.id,f.size ';
 
-            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
-                                     . ' from '
+            $sizeidpviewdev[$dbtype] = 'SELECT t.id, t.idpid, sum(f.size) as size, t.created, t.expires, DATE(t.created) as date_created, DATE(t.expires) as date_expires, t.made_available, t.status, t.options '
+                                     . 'FROM '
                                      . self::getDBTable().' t '
-                                           . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
                                            . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                           . '  group by t.id,idp.id';
+                                           . ' GROUP BY t.id';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
                                        . self::getDBTable().' t LEFT JOIN '
                                              . call_user_func('Recipient::getDBTable').' r ON t.id=r.transfer_id';
-
-            $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
+            $filesview[$dbtype] = 'SELECT t.*, f.name as filename, f.size as filesize, DATE(t.created) as date_created, DATE(t.expires) as date_expires FROM '
                                 . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
-
-            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
-                                   . ' from '
-                                   . self::getDBTable().' t LEFT JOIN '
-                                      . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                         . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
-                                         . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
-
             
-            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, t.idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, max(t.idpid) as idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
                                            . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
                                            . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
@@ -275,7 +265,14 @@ class Transfer extends DBObject
             $idpview[$dbtype] = 'select t.*, idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
                               . ' from '
                               . self::getDBTable() . ' t '
-                                    . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
+                                    . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
+
+            $filesidpview[$dbtype] = 'select 1';
+            $auditlogsview[$dbtype] = 'select 1';
+            $auditlogsviewdlcss[$dbtype] = 'select 1';
+            $auditlogsviewdlc[$dbtype] = 'select 1';
+            
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -283,9 +280,12 @@ class Transfer extends DBObject
                     , 'transferssizeidpview' => $sizeidpviewdev
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
-                    , 'transfersfilesidpview' => $filesidpview
                     , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
                     , 'transferidpview' => $idpview
+                    , 'transfersfilesidpview' => $filesidpview
+                    , 'transfersauditlogsview' => $auditlogsview
+                    , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
+                    , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
         );
     }
     
@@ -617,6 +617,9 @@ class Transfer extends DBObject
                 throw new BadEmailException($user_email);
             }
         }
+
+        
+        
         
         $transfer->__set('user_email', $user_email);
         $transfer->__set('expires', $expires);
@@ -624,6 +627,20 @@ class Transfer extends DBObject
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
 
+        if(Auth::isSP()) {
+            if(Auth::isRegularUser() || Auth::isAdmin()) {
+                $attrs = Auth::attributes();
+                $entityId = $attrs['idp'];
+                if( $entityId ) {
+                    $idp = IdP::ensure($entityId);
+                    $transfer->idpid = $idp->id;
+
+                    AuthSP::ensureLocalIdPMetadata($entityId,$idp);
+                    $transfer->save();
+                }
+            }
+        }
+        
         return $transfer;
     }
     
@@ -668,19 +685,35 @@ class Transfer extends DBObject
      *
      * @return array
      */
-    public static function getUsage()
+    public static function getUsage( $idp = null )
     {
         $quota = Config::get('host_quota');
         
         $used = 0;
-        $s = DBI::query('SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
-        foreach ($s->fetchAll() as $r) {
+        $sql = 'SELECT SUM(size) AS size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE '.self::AVAILABLE_NO_ORDER;
+        $statement = DBI::query($sql);
+        foreach ($statement->fetchAll() as $r) {
             $used += $r['size'];
+        }
+
+        $idpused = false;
+        if ($idp) {
+
+            $idpused = 0;
+            $d = self::pick('sizesum',
+                array(
+                    'view'  => 'transferidpviewsizesumperidp',
+                    'where' => self::FROM_IDP_NO_ORDER
+                ),
+                array(':idp' => $idp)
+            );
+            $idpused = $d['sizesum'];
         }
         
         return array(
             'total' => $quota,
             'used' => $used,
+            'idpused' => $idpused,
             'available' => $quota ? max(0, $quota - $used) : null
         );
     }
@@ -690,9 +723,38 @@ class Transfer extends DBObject
      *
      * @return array of Transfer
      */
-    public static function allUploading()
+    public static function allAvailable( $idp = null )
     {
-        return self::all(self::UPLOADING);
+        if (!$idp) {
+            return self::all(self::AVAILABLE);
+        }
+
+        return self::all(array(
+                             'view'  => 'transferidpview',
+                             'where' => self::FROM_IDP_AVAILABLE
+                         ),
+                         array(':idp' => $idp)
+        );
+    }
+
+    /**
+     * Get uploading transfers
+     *
+     * @return array of Transfer
+     */
+    public static function allUploading( $idp = null )
+    {
+        if (!$idp) {
+            return self::all(self::UPLOADING);
+        }
+
+        return self::all(array(
+                             'view'  => 'transferidpview',
+                             'where' => self::FROM_IDP_UPLOADING
+                         ),
+                         array(':idp' => $idp)
+        );
+        
     }
     
     /**
@@ -700,9 +762,20 @@ class Transfer extends DBObject
      *
      * @return array of Transfer
      */
-    public static function allExpired()
+    public static function allExpired( $idp = null )
     {
-        return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+        if (!$idp) {
+            return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+        }
+
+        return self::all(array(
+                             'view'  => 'transferidpview',
+                             'where' => self::FROM_IDP_EXPIRED
+                         ),
+                         array(':idp' => $idp,
+                               ':date' => date('Y-m-d')
+                         )
+        );
     }
     
     /**
@@ -731,8 +804,8 @@ class Transfer extends DBObject
             $days = 0;
         }
         return self::all(self::EXPIRED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
-    }
-    
+    }    
+
     /**
      * Delete the transfer related objects
      */
@@ -769,6 +842,8 @@ class Transfer extends DBObject
         }
         
         Logger::info($this.' deleted');
+        Logger::logActivity(LogEventTypes::TRANSFER_DELETED, $this);
+        
     }
 
     public function userCanSeeTransfer()
@@ -945,13 +1020,12 @@ class Transfer extends DBObject
                         'default' => false
                     );
                 }
-                
+
+                // default is false if not specified
                 foreach (array('available', 'advanced', 'default') as $p) {
                     if (!array_key_exists($p, $options[$name])) {
                         $options[$name][$p] = false;
                     }
-                    
-                    $options[$name][$p] = $options[$name][$p];
                 }
             }
             
@@ -1109,7 +1183,6 @@ class Transfer extends DBObject
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
           , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
-            
         ))) {
             return $this->$property;
         }
@@ -1215,6 +1288,13 @@ class Transfer extends DBObject
             }
             return $this->upload_end - $this->upload_start;
         }
+
+        if ($property == 'days_to_expire') {
+            $now = time();
+            $datediff = $this->expires - $now;
+            $days_to_expire = round($datediff / (60 * 60 * 24));
+            return $days_to_expire;
+        }
         
         if ($property == 'link') {
             $tr_url = Utilities::http_build_query(array('s' => 'transfers#transfer_'.$this->id));
@@ -1247,6 +1327,10 @@ class Transfer extends DBObject
             $this->salt = Crypto::generateSaltString(32);
             $this->save();
             return $this->salt;
+        }
+        if ($property == 'idp_entityid') {
+            $d = $this->fetchFromViewForId('transferidpview','idp_entityid');
+            return $d['idp_entityid'];
         }
         throw new PropertyAccessException($this, $property);
     }
@@ -1327,6 +1411,8 @@ class Transfer extends DBObject
             $this->storage_filesystem_per_idp = $value;
         } elseif ($property == 'download_count') {
             $this->download_count = $value;
+        } elseif ($property == 'idpid') {
+            $this->idpid = $value;
         } else {
             throw new PropertyAccessException($this, $property);
         }
@@ -1703,7 +1789,7 @@ class Transfer extends DBObject
         if (!count($rms)) {
             return;
         }
-        
+
         foreach (self::all(self::AVAILABLE) as $transfer) {
             $recipients_downloaded_ids = array_map(function ($l) {
                 return $l->author_id;
@@ -1737,7 +1823,7 @@ class Transfer extends DBObject
                 $recipient->remind();
             }
 
-            $send_owner_autoreminder = true;
+            $send_owner_autoreminder = Config::get('owner_automatic_reminder');
 
             // no not leak this transfer in a reminder if the system wants
             // private guests

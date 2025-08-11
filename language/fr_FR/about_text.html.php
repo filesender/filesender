@@ -8,6 +8,5 @@
 // 
 ?>
 <p>
-    {cfg:site_name} est une installation de FileSender (<a rel="nofollow" href="http://filesender.org/" target="_blank">filesender.org</a>),
-    développé pour les besoins de la communauté de l'éducation supérieure et de la recherche.
+    {cfg:site_name} est une installation de FileSender (<a rel="nofollow" href="https://www.filesender.org/" target="_blank">www.filesender.org</a>), développée pour les besoins de la communauté de l'éducation supérieure et de la recherche.
 </p>

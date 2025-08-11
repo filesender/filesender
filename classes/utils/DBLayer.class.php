@@ -77,7 +77,7 @@ class DBLayer
     public static function datediff($f1, $f2)
     {
         if (self::isPostgress()) {
-            return "extract(day from " . $f1 . "-" . $f2 . " )";
+            return "(extract(day from " . $f1 . ") - " . $f2 . " )";
         }
         if (self::isMySQL()) {
             return "DATEDIFF(" . $f1 . "," . $f2 . ")";
@@ -122,5 +122,24 @@ class DBLayer
             'SQLUNIMP toViewVarChar() called on unsupported backend'
         );
     }
-    
+
+
+    public static function IF($expr,$exprtrue,$exprfalse)
+    {
+        if (self::isPostgress()) {
+            return '  CASE WHEN ('
+                 . $expr . ')' 
+                 . ' THEN ' . $exprtrue
+                 . ' ELSE ' . $exprfalse 
+                 . ' END ';
+        }
+
+        if (self::isMySQL()) {
+            return ' IF('.$expr.','.$exprtrue.','.$exprfalse.') ';
+        }
+        throw new DBIBackendExplicitHandlerUnimplementedException(
+            'SQLUNIMP toViewVarChar() called on unsupported backend'
+        );
+        
+    }
 }

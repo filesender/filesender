@@ -959,7 +959,7 @@ window.filesender.crypto_app = function () {
          */
         handleXHRError: function( xhr, link, defaultMsg )
         {
-            $this = this;
+            var $this = this;
             
             if(xhr.responseURL && xhr.responseURL.includes("/?s=exception&"))
             {
@@ -1124,7 +1124,7 @@ window.filesender.crypto_app = function () {
             // Perhaps we should change the default policy from converting errors
             // to assumed password failures.
             //
-            callbackError = function (error) {
+            var callbackError = function (error) {
                 window.filesender.log("decryptDownloadToBlobSink() explicit error " + error);
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
@@ -1133,7 +1133,8 @@ window.filesender.crypto_app = function () {
                 if( error && error.message && error.message != "" ) {
                     msg = error.message;
                 } 
-                alert( msg );
+                filesender.ui.alert( "error", msg );
+
                 if (progress){
                     progress.html( msg );
                 }
@@ -1143,7 +1144,7 @@ window.filesender.crypto_app = function () {
                 blobSink.error( error );
             };
 
-            onProgressCallback = function( ts, chunkid, totalrecv, percentComplete, percentOfFileComplete ) {
+            var onProgressCallback = function( ts, chunkid, totalrecv, percentComplete, percentOfFileComplete ) {
 
                 var msg = lang.tr('download_chunk_progress').r({chunkid: chunkid,
                                                                 chunkcount: encryption_details.chunkcount,
@@ -1243,10 +1244,10 @@ window.filesender.crypto_app = function () {
 
             filesender.crypto_encrypted_archive_download = false;
             
-            callbackError = function (error) {
+            var callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
-                alert( window.filesender.config.language.file_encryption_wrong_password );
+                filesender.ui.alert("error",window.filesender.config.language.file_encryption_wrong_password);
                 if (progress){
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
@@ -1324,12 +1325,16 @@ window.filesender.crypto_app = function () {
                 blobSinkStreamed = window.filesender.streamsaver_sink( name, filesize, callbackError );
                 blobSink = blobSinkStreamed;
             }
-            window.filesender.log("Using blobSink " + blobSink.name());
+
+            var defaultPasswordValue = '';
+            if( window.filesender.crypto_last_password_succeeded ) {
+                defaultPasswordValue = window.filesender.crypto_last_password;
+            }
             
-            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
-                var pass = $(this).find('input').val();
+            window.filesender.log("Using blobSink " + blobSink.name());
+            var prompt = window.filesender.ui.promptPassword(window.filesender.config.language.file_encryption_enter_password, function (pass) {
+            
                 window.filesender.crypto_last_password = pass;
-                
                 $this.decryptDownloadToBlobSink( blobSink, pass, transferid, chunk_size, crypted_chunk_size,
                                                  link, mime, name, filesize, encrypted_filesize,
                                                  key_version, salt,
@@ -1338,31 +1343,27 @@ window.filesender.crypto_app = function () {
                                                  progress);
             }, function(){
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
-            });
+            }, defaultPasswordValue );
 
+            
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
 
             if( window.filesender.crypto_last_password_succeeded ) {
                 $('<p>' + lang.tr('previous_password_shown_for_next_action').out() + '</p>').appendTo(prompt);
-            }            
-            var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
-            if( window.filesender.crypto_last_password_succeeded ) {
-                input.attr("value", window.filesender.crypto_last_password );
-            }
+            }                        
+            
             window.filesender.crypto_last_password_succeeded = false;
-
-            var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
             prompt.append(toggleView);
             $('#showdlpass').on(
                 "click",
                 function() {
                     var v = $('#showdlpass').is(':checked');
-                    if( v ) { $('#dlpass').attr('type','text'); }
-                    else    { $('#dlpass').attr('type','password'); }
+                    if( v ) { $('.bootbox-input').attr('type','text'); }
+                    else    { $('.bootbox-input').attr('type','password'); }
                 }
             );
-            input.focus();
                 
         },
         // Note that this can not include : in the time part as that
@@ -1387,19 +1388,23 @@ window.filesender.crypto_app = function () {
         decryptDownloadToZip: function(link,transferid,chunk_size,crypted_chunk_size,selectedFiles,progress,onFileOpen,onFileClose,onComplete) {
 
             var $this = this;
+            window.filesender.crypto_encrypted_archive_download = true;
 
-            callbackError = function (error) {
+            var callbackError = function (error) {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
-                alert( window.filesender.config.language.file_encryption_wrong_password );
+                filesender.ui.alert("error",window.filesender.config.language.file_encryption_wrong_password);
                 if (progress){
                     progress.html(window.filesender.config.language.file_encryption_wrong_password);
                 }
             };
-            filesender.crypto_encrypted_archive_download = true;
 
-            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
-                var pass = $(this).find('input').val();
+            var defaultPasswordValue = '';
+            if( window.filesender.crypto_last_password_succeeded ) {
+                defaultPasswordValue = window.filesender.crypto_last_password;
+            }
+            
+            var prompt = window.filesender.ui.promptPassword(window.filesender.config.language.file_encryption_enter_password, function (pass) {
                 window.filesender.crypto_last_password = pass;
 
                 var archiveName = $this.getArchiveFileName(link,selectedFiles,"zip");
@@ -1437,27 +1442,24 @@ window.filesender.crypto_app = function () {
                 
             }, function(){
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
-            });
+            }, defaultPasswordValue );
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input" type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
+
             if( window.filesender.crypto_last_password_succeeded ) {
                 $('<p>' + lang.tr('previous_password_shown_for_next_action').out() + '</p>').appendTo(prompt);
-            }            
-            var input = $('<input id="dlpass" type="password" class="wide" autocomplete="new-password" />').appendTo(prompt);
-            if( window.filesender.crypto_last_password_succeeded ) {
-                input.attr("value", window.filesender.crypto_last_password );
-            }
+            }                        
             window.filesender.crypto_last_password_succeeded = false;
-
-            var toggleView = $('<br/><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label>');
+            
             prompt.append(toggleView);
             $('#showdlpass').on(
                 "click",
                 function() {
                     var v = $('#showdlpass').is(':checked');
-                    if( v ) { $('#dlpass').attr('type','text'); }
-                    else    { $('#dlpass').attr('type','password'); }
+                    if( v ) { $('.bootbox-input').attr('type','text'); }
+                    else    { $('.bootbox-input').attr('type','password'); }
                 }
             );
             input.focus();

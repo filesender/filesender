@@ -49,7 +49,6 @@ class StorageFilesystem
      */
     protected static $hashing = null;
 
-    
     /**
      * Storage setup, loads options from config
      */
@@ -81,7 +80,6 @@ class StorageFilesystem
         if ($hashing) {
             self::$hashing = $hashing;
         }
-
     }
     
     /**
@@ -182,13 +180,12 @@ class StorageFilesystem
                 $filesystems[$filesystem]['free_space'] -= $remaining_to_upload;
             }
         }
-        
         // Check if there is enough remaining space
         foreach ($filesystems as $filesystem => $info) {
             $required_space = array_sum(array_map(function ($file) {
                 return $file->size;
             }, $info['files']));
-            
+
             if ($required_space > $info['free_space']) {
                 return false;
             }
@@ -326,6 +323,8 @@ class StorageFilesystem
      * Build file storage path (without filename)
      *
      * @param File $file
+     * @param string fillPath This is currently only used in the test suite. Using it might break
+     *                        migration of path mangling settings.
      *
      * @return string path
      */
@@ -338,7 +337,19 @@ class StorageFilesystem
         } else {
             $path = "";
         }
-        
+
+        // Is idp in storage path enabled
+        if ($file->transfer->storage_filesystem_per_idp) {
+            $subpath = '';
+            $idp = $file->transfer->idp_entityid;
+            //sanatise idp to safe path
+            $subpath = preg_replace('/[^a-z0-9]+/', '_', 
+                                   str_replace(['http://','https://'], '',
+                                              strtolower(rtrim(trim($idp), '/'))
+                                              )
+                                   );
+            $path = self::ensurePath( $path, $subpath );
+        }
         
         // Is storage path hashing enabled
         if (self::$hashing) {
@@ -419,6 +430,15 @@ class StorageFilesystem
             } catch (Exception $e) {
                 Logger::error("Issue with per day buckets and UUID");
                 return $path;
+            }
+        }
+
+        // cache the subpath
+        if( $fullPath ) {
+            if( Config::get('storage_filesystem_explicitly_store_subpath_per_file')) {
+                if( !$file->storage_path ) {
+                    $file->storage_path = $path;
+                }
             }
         }
   
@@ -523,7 +543,7 @@ class StorageFilesystem
             }
 
             if ($chunk_size != $written) {
-                Logger::info('writeChunk() Can not write to : '.$chunkFile);
+                Logger::info('writeChunk() Can not write to : '.$file_path);
                 throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written);
             }
 

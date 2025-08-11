@@ -18,7 +18,9 @@ You can also select just the files you are interested in and download
 those as a zip or tar archive.
 
 If files are encrypted you will be prompted for the password when you 
-start a download.
+start a download. Also, if your files are encrypted, you may not be able
+to download all files at once unless your browser supports streamsaver or
+fileSystemWritableFileStream
 
 
 

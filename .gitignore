@@ -20,7 +20,8 @@ import-all-poeditor-langs-and-push.sh
 import-all-poeditor-langs-and-push3.sh
 scripts/client/test.php
 scripts/testing/test1.php
-
+simplesaml
+simplesamlphp-*
 /.phpactor.json
 /docs/.bundle/
 

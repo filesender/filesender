@@ -44,6 +44,7 @@ class Autoloader
      */
     private static $mappers = array(
         'PropertyAccessException' => 'exceptions/DBObjectExceptions',
+        'ObjectLookupInViewFailedException' => 'exceptions/DBObjectExceptions',
         '*Exception' => 'exceptions/@package(Exception)',
         
         // CONSTANTS

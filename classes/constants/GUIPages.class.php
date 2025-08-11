@@ -39,7 +39,10 @@ class GUIPages extends Enum
 {
     const UPLOAD          = 'upload';
     const TRANSFERS       = 'transfers';
+    const TRANSFER_DETAIL = 'transfer_detail';
     const GUESTS          = 'guests';
+    const NEW_INVITATION          = 'new_invitation';
+    const INVITATION_DETAIL          = 'invitation_detail';
     const STATISTICS      = 'statistics';
     const ADMIN           = 'admin';
     const LOGON           = 'logon';
@@ -55,4 +58,5 @@ class GUIPages extends Enum
     const PRIVACY         = 'privacy';
     const HELP            = 'help';
     const APISECRETAUP    = 'apisecretaup';
+    const TERMS           = 'terms';
 }

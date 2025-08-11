@@ -37,7 +37,6 @@ if (!defined('FILESENDER_BASE')) {
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
-use function PHP81_BC\strftime;
 
 /**
  * Utility functions holder
@@ -111,13 +110,39 @@ class Utilities
     /**
      * Validates a personal message
      *
+     * This can now throw on a bad input for OpenPGP messages. 
      */
     public static function isValidMessage($msg)
     {
+        if( Config::isTrue('openpgp_enabled')) {
+            if( self::isValidOpenPGPMessage($msg)) {
+                return true;
+            }
+        }
         $r = Config::get('message_can_not_contain_urls_regex');
         if (strlen($r) && preg_match('/' . $r . '/', $msg)) {
             return false;
         }
+        return true;
+    }
+
+    public static function isValidOpenPGPMessage($msg)
+    {
+        $originalmsg = $msg;
+        
+        $rex = '/^(-----BEGIN PGP MESSAGE-----)([\n\r]*).*([a-zA-Z]+:[a-zA-Z 0-9\.\:\/]+[\n\r]*)*([\/a-zA-Z0-9\n\.\:\+\ \=]{63}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{1,64}[\n\r]*)([\/a-zA-Z0-9\n\.\:\+\ \=]{0,64}[\n\r]*)+(-----END PGP MESSAGE-----[\n\r]*)[\n\r]*$/';
+        
+        $msg = filter_var( $msg, FILTER_VALIDATE_REGEXP,
+                           array( "flags" => FILTER_NULL_ON_FAILURE,
+                                  "options" => array("regexp" => $rex ))
+        );
+
+        if( !$msg ) {
+            if( str_starts_with( $originalmsg, "-----BEGIN PGP MESSAGE-----")) {
+                throw new PKIOpenPGPBadMesageException('');
+            }
+        }
+
         return true;
     }
     
@@ -183,17 +208,61 @@ class Utilities
 
         Lang::setlocale_fromUserLang( LC_TIME );
 
-        $lid = $with_time ? 'datetime_format' : 'date_format';
-        $dateFormat = Lang::trWithConfigOverride($lid);
-        if ($dateFormat == '{date_format}') {
-            $dateFormat = '%d %b %Y';
+        $dateFormatStyle = IntlDateFormatter::MEDIUM;
+        $timeFormatStyle = IntlDateFormatter::NONE;
+        if( $with_time ) {
+            $timeFormatStyle = IntlDateFormatter::MEDIUM;
         }
-        if ($dateFormat == '{datetime_format}') {
-            $dateFormat = '%d %b %Y %T';
+        $v = Config::get("date_format_style");
+        switch($v) {
+            case "full":   $dateFormatStyle = IntlDateFormatter::FULL; break;
+            case "long":   $dateFormatStyle = IntlDateFormatter::LONG; break;
+            case "medium": $dateFormatStyle = IntlDateFormatter::MEDIUM; break;
+            case "short":  $dateFormatStyle = IntlDateFormatter::SHORT; break;
+        }
+        if( $with_time ) {
+            $v = Config::get("time_format_style");
+            switch($v) {
+                case "full":   $timeFormatStyle = IntlDateFormatter::FULL; break;
+                case "long":   $timeFormatStyle = IntlDateFormatter::LONG; break;
+                case "medium": $timeFormatStyle = IntlDateFormatter::MEDIUM; break;
+                case "short":  $timeFormatStyle = IntlDateFormatter::SHORT; break;
+            }
         }
 
-        $ts = strftime($dateFormat, (int)$timestamp);
-        return mb_convert_encoding( $ts, 'UTF-8' );
+
+        $timezone = null;
+        $al = Lang::getUserAcceptedLanguages();
+        // use default php.ini value if all else fails
+        $al[] = null; 
+        $dateFormat = null;
+
+        if( !empty($_COOKIE["x-filesender-timezone"])) {
+            $tz = $_COOKIE["x-filesender-timezone"];
+            if( !empty(Config::get("valid_timezone_regex"))
+                && preg_match(Config::get("valid_timezone_regex"), $tz)) {
+                $timezone = $tz;
+            }
+        }
+        
+        foreach ($al as $k => $v) {
+
+            $fmt = new IntlDateFormatter(
+                $v,
+                $dateFormatStyle,
+                $timeFormatStyle,
+                $timezone,
+                IntlDateFormatter::GREGORIAN,
+                $dateFormat
+            );        
+            $ts = datefmt_format( $fmt , (int)$timestamp );
+            if( false !== $ts ) {
+                return mb_convert_encoding( $ts, 'UTF-8' );
+            }
+        }
+
+        Logger::error("formatDate() did not find a locale which should never happen");
+        return "";
     }
     
     /**
@@ -665,6 +734,45 @@ class Utilities
         $r = filter_var($r, $filter, $options);
         return $r;
     }
+    /**
+     * Calls arrayKeyOrDefault for a string. As the filtering for a string might change over time
+     * this one call is created if you want a general purpose string that you might then
+     * call filter_regex on after this call.
+     */
+    public static function arrayKeyOrDefaultString($array, $key, $def = '' )
+    {        
+        return self::arrayKeyOrDefault($array,$key,$def,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
+    
+    /**
+     * Call filter_var with the supplied default value and regular expression
+     * 
+     * @param string v the value to filter
+     * @param string rex to match against. See FILTER_REGEX constants in this class for one
+     * that might work. Feel free to add more of those constants to make it easier to maintain
+     * things and audit in the future. NOTE that an empty, invalid, or null rex value is a terminal
+     * case and control may not return from the function in those cases.
+     * 
+     * @param string def default value if filter fails
+     */
+    public static function filter_regex( $v, $rex, $def = '' )
+    {
+        if( !$rex || $rex == '' ) {
+            Logger::haltWithErorr('filter_regex called without a valid regex. This should never happen');           
+        }
+
+        
+        $r = filter_var($v, FILTER_VALIDATE_REGEXP,
+                        array( 'options' => array('default' => $def,
+                                                  'regexp' => $rex,
+                        )));
+        return $r;
+    }
+    const FILTER_REGEX_PLAIN_STRING = '/^[A-Za-z]+$/';
+    const FILTER_REGEX_PLAIN_STRING_OR_NUMBER = '/^[A-Za-z0-9]+$/';
+    const FILTER_REGEX_PLAIN_STRING_UNDERSCORE = '/^[A-Za-z_]+$/';
+    
 
     /**
      * true if $v is array( array( ... ) )
@@ -729,7 +837,7 @@ class Utilities
     {
         $ret = $def;
         if(array_key_exists($name, $_GET)) {
-            $ret = $_GET[$name];
+            $ret = htmlspecialchars($_GET[$name]);
         }
         return $ret;
     }
@@ -801,5 +909,12 @@ class Utilities
             throw new RestBadParameterException('base64_data_badly_encoded');
         }
         return json_decode( $t, null, 4, JSON_THROW_ON_ERROR );
+    }
+    
+    public static function validateCheckboxValue( $v )
+    {
+        if( $v == 'true' || $v )
+            return true;
+        return false;
     }
 }

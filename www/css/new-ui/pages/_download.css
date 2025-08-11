@@ -1,0 +1,121 @@
+.fs-download {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-download__title {
+    text-align: center;
+}
+
+.fs-download__title p {
+    margin-top: var(--fs-spacing-2x);
+}
+
+.fs-download__details,
+.fs-download__files {
+    margin-top: var(--fs-spacing-3x);
+}
+
+.fs-download h2 + .fs-info,
+.fs-download h2 + p {
+    margin-top: var(--fs-spacing-4x);
+}
+
+.fs-download .fs-info strong {
+    display: inline-block;
+    word-break: break-word;
+}
+
+.fs-download__check-all {
+    padding-left: calc(var(--fs-spacing-3x) + 1px);
+    margin-top: var(--fs-spacing-6x);
+}
+
+.fs-download__total-size {
+    display: none;
+    text-align: right;
+}
+
+.fs-download__total-size--show {
+    display: block;
+}
+
+.fs-download__total-size strong,
+.fs-download__total-size span {
+    display: inline-block;
+}
+
+.fs-download__total-size strong {
+    margin-right: var(--fs-spacing-4x);
+}
+
+.fs-download__total-size span {
+    margin-right: 94px;
+}
+
+.fs-download__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--fs-spacing-4x) !important;
+}
+
+.fs-download__actions--hide {
+    display: none;
+}
+
+.fs-download__actions button + button {
+    margin-left: var(--fs-spacing-2x);
+}
+
+.fs-download__zip64-info {
+    margin-top: var(--fs-spacing-4x);
+    padding: 0 20%;
+}
+
+.fs-download__zip64-info--hide {
+    display: none;
+}
+
+.fs-transfer__list {
+    margin-bottom: var(--fs-spacing-2x) !important;
+}
+
+.fs-transfer__files__thead {
+    display: none;
+}
+
+/* XS */
+@media (max-width: 575px) {
+
+    .fs-download {
+        font-size: 0.8rem;
+        flex: 1;
+        background: var(--fs-light);
+    }
+}
+
+/* XS,SM,MD */
+@media (max-width: 991px) {
+
+    .fs-download__actions {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .fs-download__actions button {
+        width: 100%;
+    }
+
+    .fs-download__actions button + button {
+        margin-top: var(--fs-spacing-2x);
+        margin-left: 0;
+    }
+}
+
+.verify_email_to_download {
+    display: none;
+}
+

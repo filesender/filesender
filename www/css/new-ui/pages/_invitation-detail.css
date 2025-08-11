@@ -1,0 +1,53 @@
+.fs-invitation-detail {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-invitation-detail__header .fs-link {
+    margin-left: calc(-1 * var(--fs-spacing-10x));
+}
+
+.fs-invitation-detail__header {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-invitation-detail__header .fs-link {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.fs-invitation-detail__information,
+.fs-invitation-detail__recipients,
+.fs-invitation-detail__guest-list,
+.fs-invitation-detail__options,
+.fs-invitation-detail__actions {
+    margin-top: var(--fs-spacing-5x);
+}
+
+.fs-invitation-detail h2 {
+    margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-invitation-detail__recipients p {
+    margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-invitation-detail__recipients .fs-list {
+    margin-top: var(--fs-spacing-3x);
+}
+
+.fs-invitation-detail__check {
+    margin-top: var(--fs-spacing-3x);
+}
+
+.fs-invitation-detail__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}

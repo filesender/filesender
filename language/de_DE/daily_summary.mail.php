@@ -7,20 +7,20 @@
 // 
 // 
 ?>
-subject: Zusammenfassung der täglichen Dateiübertragungen
+subject: Tageszusammenfassung der Dateitransfers
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-hier finden Sie eine Zusammenfassung der Downloads Ihrer Dateiübertragung Nr. {transfer.id} (uploaded {date:transfer.created}) :
+hier finden Sie eine Zusammenfassung der Downloads Ihres Dateitransfer Nr. {transfer.id} (uploaded {date:transfer.created}) :
 
 {if:events}
 {each:events as event}
   - Empfänger {event.who} hat heruntergeladen {if:event.what == "archive"}archive{else}file {event.what_name}{endif} am {datetime:event.when}
 {endeach}
 {else}
-Keine Downloads
+Keine Downlads
 {endif}
 
 Weitere Details finden Sie unter {transfer.link}
@@ -35,7 +35,7 @@ Mit freundlichen Grüßen
 </p>
 
 <p>
-    hier finden Sie eine Zusammenfassung der Downloads Ihrer Dateiübertragung Nr. {transfer.id} (uploaded {date:transfer.created}) :
+    hier finden Sie eine Zusammenfassung der Downloads Ihres Dateitransfers Nr. {transfer.id} (uploaded {date:transfer.created}) :
 </p>
 
 {if:events}
@@ -46,7 +46,7 @@ Mit freundlichen Grüßen
 </ul>
 {else}
 <p>
-    Keine Downloads
+    Keine Downlaods
 </p>
 {endif}
 

@@ -1,0 +1,128 @@
+header {
+  position: fixed;
+  height: var(--fs-spacing-12x);
+  width: 100%;
+  padding: 0 var(--fs-spacing-base);
+  background: var(--fs-bg-color-secondary);
+  border-bottom: 1px solid var(--fs-border);
+  z-index: 1;
+}
+
+header nav {
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+header nav a {
+  display: inline-block;
+  height: 100%;
+}
+
+header nav ul li + li {
+  margin-left: var(--fs-spacing-base);
+}
+
+header nav img {
+  max-height: var(--fs-spacing-8x);
+}
+
+header .fs-link {
+  padding: var(--fs-spacing-base) calc(var(--fs-spacing-2x) + var(--fs-spacing-half));
+}
+
+header nav .fs-link--active {
+  color: var(--fs-accent);
+  background: var(--fs-hover);
+}
+
+header nav .fs-link--active i {
+  color: var(--fs-accent) !important;
+}
+
+header nav .fs-link--active span {
+  text-shadow: 0.5px 0px 0px black;
+}
+
+header nav > .fs-link:hover {
+  color: var(--fs-text-color) !important;
+  background: transparent !important;
+}
+
+header nav > .fs-link {
+  font-size: 2rem;
+}
+
+header nav > .fs-link img + * {
+  margin-left: var(--fs-spacing-base);
+}
+
+/* XS */
+@media (max-width: 575px) {
+
+  header {
+    height: var(--fs-spacing-15x);
+  }
+
+  header nav {
+    flex-direction: column;
+  }
+
+  header nav ul {
+    margin: var(--fs-spacing-2x) 0;
+  }
+}
+
+/* XS/SM */
+@media (max-width: 767px) {
+
+  header nav > a img {
+    max-height: var(--fs-spacing-6x);
+  }
+
+  header nav > a span {
+    font-size: 1.3rem;
+  }
+
+  header nav ul li .fs-link {
+    padding: var(--fs-spacing-half) var(--fs-spacing-2x);
+  }
+
+  header nav ul li .fs-link span {
+    display: none;
+  }
+}
+
+/* MD */
+@media (min-width: 768px) and (max-width: 991px) {
+
+  header nav > a img {
+    max-height: var(--fs-spacing-6x);
+  }
+
+  header nav > a span {
+    font-size: 1.3rem;
+  }
+
+  header nav ul li .fs-link {
+    padding: var(--fs-spacing-base) calc(var(--fs-spacing-base) + var(--fs-spacing-quarter));
+  }
+
+  header nav ul li .fs-link i + span {
+    margin-left: var(--fs-spacing-half);
+  }
+}
+

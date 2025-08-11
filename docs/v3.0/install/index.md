@@ -7,10 +7,12 @@ title: Installation - Linux Source 3.x from Git
 This is the installation documentation for installing the FileSender
 3.x releases on Linux. See the
 [releases](https://github.com/filesender/filesender/releases) page for
-up to date information about recent releases. This guide is written
-for installation from source on the RedHat/CentOS or Debian platform
-but any Linux variant should work with some modifications (most
-notably about installing the required additional software packages).
+up to date information about recent releases. 
+
+This guide is written for installation from source on the
+RedHat/CentOS or Debian platform but any Linux variant should work
+with some modifications (most notably about installing the required
+additional software packages).
 
 Our hope is that FileSender installation should take less than an hour.
 There are docker images of FileSender available which you might like
@@ -25,16 +27,16 @@ you can report issues with and update the documentation.
 
 ### This documentation was tested with
 
-* RedHat/CentOS (7)
+* RedHat/CentOS
 * Debian (9, Stretch with [apache and postgresql] and [apache and mariadb])
-* Fedora (28 with apache and postgresql)
+* Fedora (42 with apache and mariadb or postgresql)
 
 ### Dependencies
 
-* Apache (or nginx) and PHP version 8.2 or later.
+* Apache (or nginx) and PHP version 8.4 or later.
 * A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
-* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.2 or newer.
+* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.4 or newer.
 
 Note that older versions of PHP may work, but they are not supported
 by the PHP project so it is recommended to avoid them in production. Likewise,
@@ -53,13 +55,13 @@ for the Web server setup, one for each supported server.
 On RedHat/CentOS, run:
 
 ```
-dnf install -y httpd mod_ssl php php-mbstring php-xml php-json
+dnf install -y httpd mod_ssl php php-mbstring php-xml php-json php-intl
 ```
 
 On Debian, run:
 
 ```
-apt-get install -y apache2 php php-mbstring php-xml php-json libapache2-mod-php
+apt-get install -y apache2 libapache2-mod-php php php-mbstring php-xml php-json php-intl
 ```
 
 # Step 1-nginx - Install NGINX and PHP
@@ -92,8 +94,8 @@ see something like the following:
 # ls -l /opt/filesender
 total 8
 drwxrwxr-x. 21 root root 4096 Jun  6 15:28 filesender
-lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.2.3
-drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.2.3
+lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.4.2
+drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.4.2
 
 # ls -l /opt/filesender/filesender/
 total 160
@@ -118,6 +120,9 @@ mkdir -p /opt/filesender
 cd       /opt/filesender
 tar xzvf /tmp/filesender-3.0.tar.gz
 mv filesender-filesender-3.0  filesender
+cd filesender
+composer install --no-dev
+
 ```
 
 
@@ -164,6 +169,8 @@ git clone --depth 1 --branch master https://github.com/filesender/filesender.git
 
 cd /opt/filesender/filesender
 git checkout master
+
+composer install --no-dev
 ```
 
 You can bring down new releases to an existing git repository and then
@@ -240,7 +247,7 @@ authentication for development and testing. When you move to a
 production service you probably want to change that to only support
 authentication sources of your choice.
 
-All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.2.3 of SimpleSAMLphp.
+All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.2 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
 [(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
 probably work. The continuous integration in FileSender has an
@@ -255,17 +262,17 @@ Extract SimpleSAMLphp in a suitable directory and create symlink:
 ```
 mkdir -p ~/src
 cd ~/src
-wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v2.2.3/simplesamlphp-2.2.3-full.tar.gz
+wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v2.4.2/simplesamlphp-2.4.2-full.tar.gz
 
 php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v1.19.7 >| checklist
-echo " simplesamlphp-2.2.3-full.tar.gz" >> checklist
+echo " simplesamlphp-2.4.2-full.tar.gz" >> checklist
 sha256sum --check checklist
- simplesamlphp-2.2.3-full.tar.gz: OK
+ simplesamlphp-2.4.2-full.tar.gz: OK
 
 mkdir -p /opt/filesender
 cd /opt/filesender
-tar xvzf ~/src/simplesamlphp-2.2.3-full.tar.gz
-ln -s simplesamlphp-2.2.3 simplesaml
+tar xvzf ~/src/simplesamlphp-2.4.2-full.tar.gz
+ln -s simplesamlphp-2.4.2 simplesaml
 ```
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web directory with a web server alias.

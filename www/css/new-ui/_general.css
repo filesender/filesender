@@ -1,0 +1,128 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--fs-bg-color);
+  color: var(--fs-text-color);
+}
+
+main {
+  position: relative;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: var(--fs-spacing-12x) 0 0 0;
+}
+
+main .core {
+  background: var(--fs-bg-color);
+  border-radius: var(--fs-spacing-base);
+}
+
+main .logon_page {
+  text-align: center;
+  padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+hr {
+  margin-top: var(--fs-spacing-3x) !important;
+  margin-bottom: var(--fs-spacing-3x) !important;
+  border-top: 1px solid var(--fs-gray-200);
+  opacity: 1;
+}
+
+#notifications {
+  position: fixed;
+  left: auto;
+  right: 20px;
+  top: 110px;
+  width: 30%;
+  z-index: 10000;
+  transform: translate(0, 0);
+}
+
+.warning {
+  background: transparent;
+}
+
+.fs-theme {
+  position: fixed;
+  right: 0;
+  bottom: 130px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: var(--fs-light);
+  background: var(--fs-btn-hover);
+  border-top-left-radius: 48px;
+  border-bottom-left-radius: 48px;
+  align-items: center;
+  padding: 10px 10px 10px 20px;
+  font-size: 0.8rem;
+}
+
+.fs-theme ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+  justify-content: center;
+  margin-left: 10px;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.fs-theme ul li {
+  margin: 4px 0;
+}
+
+.fs-theme ul li a {
+  color: var(--fs-light) !important;
+  padding: 4px 10px;
+}
+
+.toggle-select-all::before {
+  display: none;
+}
+
+.modal-content {
+  background: var(--fs-bg-color-secondary);
+  white-space: pre-wrap;      /* CSS3 */   
+  white-space: -moz-pre-wrap; /* Firefox */    
+  white-space: -pre-wrap;     /* Opera <7 */   
+  white-space: -o-pre-wrap;   /* Opera 7 */    
+  word-wrap: break-word;      /* IE */
+}
+
+.modal-content .btn-close, .modal-content .btn-close * {
+  color: var(--fs-danger) !important;
+  background: transparent url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='red'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") center / 1em auto no-repeat !important;
+}
+
+a {
+  color: var(--fs-accent);
+}
+
+.hidden-at-page-load {
+  display: none;
+}
+
+.width25 {
+    width:25%;
+}
+
+.width75 {
+    width:75%;
+}
+
+/* XS */
+@media (max-width: 575px) {
+
+  main {
+    padding: var(--fs-spacing-15x) 0 0 0;
+  }
+}

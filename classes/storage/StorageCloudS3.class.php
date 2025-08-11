@@ -366,7 +366,6 @@ class StorageCloudS3 extends StorageFilesystem
 
         if (!Config::get('cloud_s3_use_daily_bucket')) {
             throw new Exception('Function StorageCloudS3::dailyBucketMaintenance was called but configuration option cloud_s3_use_daily_bucket is not set to true!');
-            return fail;
         }
 
         // Array of New Buckets (should be created if they don't exist)

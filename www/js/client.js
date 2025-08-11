@@ -247,18 +247,11 @@ window.filesender.client = {
                     (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
                     (options.auth_prompt === undefined || options.auth_prompt)
                 ) {
-                    filesender.client.authentication_required = filesender.ui.popup(
-                        lang.tr('authentication_required'),
-                        filesender.config.logon_url ? {
-                            logon: function() {
-                                filesender.ui.redirect(filesender.config.logon_url);
-                            }
-                        } : {
-                            ok: function() {}
-                        },
-                        {noclose: true}
-                    );
-                    filesender.client.authentication_required.text(lang.tr('authentication_required_explanation'));
+                    filesender.ui.confirmTitle(lang.tr('authentication_required'),
+                                               lang.tr('authentication_required_explanation'),
+                                               function() {
+                                                   filesender.ui.redirect(filesender.config.logon_url);
+                                               });
                     return;
                 }
 
@@ -494,7 +487,7 @@ window.filesender.client = {
    	        'csrfptoken': filesender.client.getCSRFToken()
             },
             xhr: function() {
-                uxhr = $.ajaxSettings.xhr();
+                var uxhr = $.ajaxSettings.xhr();
                 
                 if((typeof uxhr.upload != 'unknown') && uxhr.upload) uxhr.upload.addEventListener('progress', function(e) {
                     if(!e.lengthComputable) return;
@@ -508,6 +501,11 @@ window.filesender.client = {
         var chunkid = Math.floor(offset / window.filesender.config.upload_chunk_size);
         var $this = this;
         if(encrypted){
+            var cryptedBlob = null;
+            var blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
+                // nothing todo here.. 
+            });
+            blobReader.blobSlice = blob;
 
             var origsz = blob.size;
             var response = new Response(blob);
@@ -803,6 +801,24 @@ window.filesender.client = {
                          callback );
     },
 
+    getOpenPGPPublicKey: function(emailaddr, callback) {
+        return this.post('/user/@me',
+                         {
+                             property: 'openpgp_key',
+                             email: emailaddr
+                         },
+                         callback );
+    },
+
+    testOpenPGPPublicKey: function(message,callback) {
+        return this.post('/user/@me',
+                         {
+                             property: 'test_openpgp_key',
+                             message: message
+                         },
+                         callback );
+    },
+    
     getTransferOption: function(id, option, token, callback) {
         return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
@@ -818,10 +834,6 @@ window.filesender.client = {
             tailer = '/file/' + filterid;
         }
         return this.get('/transfer/' + id + '/auditlog/mail' + tailer, callback);
-    },
-    
-    getLegacyUploadProgress: function(key, callback, error) {
-        return this.get('/legacyuploadprogress/' + key, callback, {error: error});
     },
     
     updateUserPreferences: function(preferences, callback) {
@@ -874,8 +886,7 @@ window.filesender.client = {
 
     changeLocalAuthDBPassword: function(username,callback) {
         
-        var prompt = window.filesender.ui.prompt('new password', function (password) {
-            var pass = $(this).find('input').val();
+        var prompt = window.filesender.ui.prompt('new password', function (pass) {
             filesender.client.createLocalDBAuthUser( username, pass, function() {
                 filesender.ui.notify('success', lang.tr('password_updated'));
                 if( callback ) {
@@ -885,8 +896,8 @@ window.filesender.client = {
             
         });
         // Add a field to the prompt
-        var input = $('<input type="text" class="wide" />').appendTo(prompt);
-        input.focus();
+//        var input = $('<input type="text" class="wide" />').appendTo(prompt);
+//        input.focus();
     },
 
     remindLocalAuthDBPassword: function(id, password, callback ) {

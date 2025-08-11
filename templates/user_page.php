@@ -1,230 +1,530 @@
-<div class="box">
+<?php
 
-    
-    
-    <?php
+function isChecked( $v ) {
+    return $v ? 'checked="checked"' : '';
+}
+
+$user = Auth::user();
+
+?>
+<div class="fs-settings">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__header">
+                    <h1>{tr:user_page}</h1>
+                </div>
+            </div>
+        </div>
+
+        <?php
+        if(GUI::isUserAllowedToAccessPage('admin'))
+        {
+            echo "<div class='row'>
+                    <div class='col-12 col-sm-12 col-md-12 col-lg-6'>
+                        <div class='fs-settings__admin'>
+                            <h2>".Lang::tr('admin_page')."</h2>
+                            <p>".Lang::tr('profile_page_text_linking_to_admin_page')."</p>
+                        </div>
+                    </div>
+                </div>";
+        }
+
+        $page = (array)Config::get('user_page');
+
+        if( $page['id'] ) {
+            $page['saml_user_identification_uid'] = $page['id'];
+        }
+
+        ?>
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                <div class="fs-settings__preferences">
+                    <h2>{tr:user_preferences}</h2>
+
+                    <?php
+                    if (Config::get('lang_userpref_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
+                        $id = 'lang';
+
+                        if($page[$id]) {
+                            $value = Auth::user()->$id;
+                            if(!$value) {
+                                $value = Lang::getBaseCode();
+                            }
+
+                            if($value) {
+                                $mode = $page[$id];
+
+                                if($mode == 'write') {
+                                    $opts = array();
+				    $code = Lang::getCode();
+				    $prevname = null;
+                                    foreach(Lang::getAvailableLanguages() as $id => $language) {
+                                        $selected = ($id == $value) ? 'selected="selected"' : '';
+					if( $prevname && $prevname == $language['name'] ) {
+						continue;
+					}
+                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($language['name']).'</option>';
+                                    }
+
+                                    echo "<div class='fs-select'>";
+                                    echo "<label for='user_lang'>{tr:language}</label>";
+                                    echo '<select id="user_lang" name="user_lang">'.implode('', $opts).'</select>';
+                                    echo "</div>";
+                                } else {
+                                    $languages = Lang::getAvailableLanguages();
+                                    if(array_key_exists($value, $languages)) {
+                                        $value = $languages[$value]['name'];
+                                    }
+
+                                    echo "<div class='fs-input-group fs-input-group--auto fs-input-group--center'>";
+                                    echo "<label for='lang'>{tr:language}</label>";
+                                    echo "<input id='lang' type='text' value='".$value."' disabled>";
+                                    echo "</div>";
+                                }
+                            }
+                        }
+                    }
+                    ?>
 
 
-    if(GUI::isUserAllowedToAccessPage('admin'))
-    {
-        echo "<h2>".Lang::tr('admin_page')."</h2>\n";
-        echo " <p>".Lang::tr('profile_page_text_linking_to_admin_page')."</p>\n";
-    }
+                    <div class="fs-switch fs-switch--small">
+                        <input id="previous-settings" type="checkbox" name="save_transfer_preferences"  <?php echo isChecked($user->save_transfer_preferences); ?> />
+                        <label for="previous-settings">
+                            {tr:previous_settings}
+                        </label>
+                    </div>
 
-    if(Config::get('using_local_saml_dbauth'))
-    {
-        echo "<h2>".Lang::tr('password')."</h2>\n";
+                    <div class="fs-switch fs-switch--small">
+                        <input id="save-recipients-emails" name="save_frequent_email_address" type="checkbox"  <?php echo isChecked($user->save_frequent_email_address); ?> />
+                        <label for="save-recipients-emails">
+                            {tr:save_recipients_emails}
+                        </label>
+                    </div>
+
+                    <button type="submit" id="save-preferences" class="fs-button">
+                        <i class="fa fa-save"></i>
+                        <span>
+                            {tr:save_preferences}
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-5 offset-xl-1">
+                <div class="fs-settings__account-info">
+                    <h2>{tr:account_information}</h2>
+
+                    <?php
+
+                    $value = Auth::user()->email_addresses;
+                    $email = $value[0];
+
+                    echo "<div class='fs-info'>";
+                    echo "<strong>{tr:email_address}:</strong>";
+                    echo "<span>".$email."</span>";
+                    echo "</div>";
+
+                    $value = Auth::user()->saml_user_identification_uid;
+
+                    echo "<div class='fs-info'>";
+                    echo "<strong>{tr:user_id}:</strong>";
+                    echo "<span>".$value."</span>";
+                    echo "</div>";
+
+                    $value = Auth::user()->created;
+
+                    echo "<div class='fs-info'>";
+                    echo "<strong>{tr:user_created}:</strong>";
+                    echo "<span>".Utilities::formatDate($value)."</span>";
+                    echo "</div>";
+
+                    if( Config::get('user_quota') > 0 ) {
+                        $value = Auth::user()->quota;
+
+                        echo "<div class='fs-info'>";
+                        echo "<strong>{tr:current_quota_storage}:</strong>";
+                        echo "<span>".$value."</span>";
+                        echo "</div>";
+                    }
+                    
+                    ?>
+
+                    <div class="fs-settings__account-actions">
+                        <?php
+                        if(Config::get('using_local_saml_dbauth'))
+                        {
+
+                            echo "<button type='button' id='change_password' class='fs-button'>";
+                            echo "<i class='fa fa-key'></i>";
+                            echo "<span>{tr:change_password}</span>";
+                            echo "</button>";
+                        }
+                        ?>
+
+                        <?php
+                        if (Auth::isAuthenticated() && Auth::isSP())
+                        {
+                            $faicon = 'fa-sign-out';
+                            $icon = '<i class="fa '.$faicon.'"></i> ';
+
+                            $url = AuthSP::logoffURL();
+                            if($url) {
+                                echo '<a class="fs-button fs-button--danger" href="'.Utilities::sanitizeOutput($url).'">'.$icon.Lang::tr('logoff').'</a>';
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                <div class="fs-settings__privacy">
+                    <h2><?php echo Lang::tr('privacy_page'); ?></h2>
+
+                    <p><?php echo Lang::tr('profile_page_text_linking_to_privacy_page'); ?></p>
+                </div>
+            </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__actions">
+                    <h2>{tr:actions}</h2>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="fs-settings__saved-info">
+                                <h3>{tr:saved_information}</h3>
+
+                                <ul class="fs-listx">
+                                    <li>
+                                        <button type="button" id="clear_user_transfer_preferences" class="fs-button fs-button--danger">
+                                            <i class="fa fa-close"></i>
+                                            <span>{tr:clear_transfer_settings}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:clear_stored_transfer_settings}
+                                        </span>
+                                    </li>
+                                </ul>
+
+                                <ul class="fs-listx">
+                                    <li>
+                                        <button type="button" id="clear_frequent_recipients" class="fs-button fs-button--danger">
+                                            <i class="fa fa-close"></i>
+                                            <span>{tr:clear_recipients_emails}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:clear_stored_recipients_emails}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="fs-settings__general">
+                                <h3>{tr:general}</h3>
+
+                                <button type="button" id="delete_my_account" class="fs-button fs-button--danger">
+                                    <i class="fa fa-close"></i>
+                                    <span>{tr:delete_my_account}</span>
+                                </button>
+
+                                {tr:user_profile_delete_about_description_text}
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="fs-settings__logs">
+                                <h3>{tr:logs}</h3>
+
+                                <ul class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                    <li>
+                                        <button type="button" id="send_client_logs" class="fs-button">
+                                            <i class="fa fa-arrow-right"></i>
+                                            <span>{tr:send_client_logs}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:send_logs_to_server}
+                                        </span>
+                                    </li>
+                                </ul>
+
+                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                    <li>
+                                        <button type="button" id="export_client_logs" class="fs-button">
+                                            <i class="fa fa-download"></i>
+                                            <span>{tr:export_logs}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:export_logs_to_file}
+                                        </span>
+                                    </li>
+                                </div>
+
+                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                    <li>
+                                        <button type="button" id="clear_client_logs" class="fs-button fs-button--danger">
+                                            <i class="fa fa-close"></i>
+                                            <span>{tr:clear_logs}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:clear_client_logs}
+                                        </span>
+                                    </li>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                <div class="fs-settings__about">
+                    <h2>{tr:about_title}</h2>
+
+                    <p>
+                        {tr:agree_text}
+                    </p>
+                    <p>
+                        {tr:about_more_info}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <?php
+        if( Config::isTrue('openpgp_enabled')) {
+        ?>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__about">
+        <?php
+    echo "<h2>".Lang::tr('OpenPGP')."</h2>\n";
+    echo "<div>";
+    $user = Auth::user();
+    $v = $user->openpgp_key;
+    if( $v ) {
+        echo "{tr:you_have_a_openpgp_public_key_known_to_system}";
+
         echo <<<EOF
-                   <div class="change_password">
-                      <a href="#">
-                         {tr:change_password}
-                      </a>
-                   </div>
+        <div class="openpgpkey" id="openpgpkey" hidden="true">$v
+        </div>
+        <div class="openpgpkeyinfo" id="openpgpkeyinfo">
+          <table>
+          <tr><td>{tr:email_address}</td><td id="openpgpkeyinfoemail"></td></tr>
+          <tr><td>{tr:created}</td><td id="openpgpkeyinfocreated"></td></tr>
+          </table>
+        </div>
+EOF;
+        
+        echo <<<EOF
+       <br>
+       <ul class="fs-listx">
+       <li>
+           <button type="button" class="fs-button test_my_openpgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:test_my_openpgp_key}</span>
+           </button>
+       </li><li>
+           <button type="button" class="fs-button fs-button--danger delete_my_openpgp_key">
+             <i class="fa fa-lg fa-times"></i>
+             <span>{tr:delete_my_openpgp_keys}</span>
+           </button>
+       </li></ul>
+EOF;
+        
+    }
+    else
+    {
+        echo "{tr:the_system_does_not_know_your_openpgp_key}<br><br>";
+    }
+    if( !$v ) {
+    echo <<<EOF
+            <div class="form-group upload_new_openpgp_public_key">
+                <label for="openpgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_openpgp_public_key}</label><br>
+                <input id="openpgp_public_key_file" name="openpgp_public_key_file" type="file" class="form-control-file" hidden="true" />
+            </div>
 EOF;
     }
-    
-    $readonly = function($info) {
-        $extraclass = 'readonly';
-        if( !$info['value'] ) {
-            $info['value'] = '';
-            $extraclass = 'unknown';
-            if( $info['key'] == 'auth_secret' ) {
-                $info['value'] = Lang::tr('api_secret_use_the_button_below_to_create');
-            }
-        }
-        
-        echo "<div class='$extraclass'>".Utilities::sanitizeOutput($info['value']).'</div>';
-    };
-    
-    $infos = array(
-        'preferences' => array(
-            'lang' => function($info) use($readonly) {
-                if(!Config::get('lang_userpref_enabled')) return;
-                if($info['mode'] == 'write') {
-                    $opts = array();
-                    foreach(Lang::getAvailableLanguages() as $id => $language) {
-                        $selected = ($id == $info['value']) ? 'selected="selected"' : '';
-                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($language['name']).'</option>';
-                    }
-                    
-                    echo '<select name="user_lang">'.implode('', $opts).'</select>';
-                } else {
-                    $languages = Lang::getAvailableLanguages();
-                    if(array_key_exists($info['value'], $languages))
-                        $info['value'] = $languages[$info['value']]['name'];
-                    
-                    $readonly($info);
-                }
-            },
-        ),
-        'remote_authentication' => array(
-            'auth_secret' => function($info) use($readonly) {
-                if(!Config::get('auth_remote_user_enabled')) return;
+    echo "</div>";
+        ?>
+                    </div>
+            </div>
+            </div>
 
-                $v = Auth::user()->auth_secret_created_formatted;
-                if( $v == '' ) {
-                } else {
-                    $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
-                    echo "<p class='datetime'>$tt</p>";
-                }
-                $info['key'] = 'auth_secret';
-                $readonly($info);
-//                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
+        <?php
+        } // if(openpgp_enabled)
+        ?>
+            
+        <?php
+        if (Config::get('auth_remote_user_enabled')) {
 
-                echo <<<EOT
-                <div>
-                   <div class="api_secret_delete">
-                      <a href="#">
-                         <span class="fa fa-lg fa-times"></span>
-                         {tr:api_secret_delete}
-                      </a>
-                   </div>
-                   <div class="api_secret_create">
-                      <a href="#">
-                         <span class="fa fa-lg fa-plus"></span>
-                         {tr:api_secret_recreate}
-                      </a>
-                   </div>
+        ?>
+        <div class="row">
+            <div class="col-12">
+                <div class="fs-settings__remote-authentication">
+                    <h2>{tr:user_remote_authentication}</h2>
+
+                    <?php
+                        $tt = 0;
+                        $id = 'auth_secret';
+
+                        if($page[$id]) {
+                            $value = Auth::user()->$id;
+
+                            $v = Auth::user()->auth_secret_created_formatted;
+                            if( $v == '' ) {
+                            } else {
+                                $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
+                            }
+                            $info['key'] = 'auth_secret';
+                            //                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
+                        }
+
+                    ?>
+                    <p>
+                        {tr:user_remote_authentication_body}
+                    </p>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="fs-settings__api-secret">
+                                <h3>{tr:api_secret}</h3>
+
+                                <?php if($tt) { echo "<p>$tt</p>"; } ?>
+
+                                <?php
+                                if ($value) {
+                                    echo <<<EOT
+                                    <div class='fs-copy'>
+                                        <span>$value</span>
+                                        <button id='copy-api-secret' type='button' class='fs-button'>
+                                            <i class='fa fa-copy'></i>
+                                            {tr:copy}
+                                        </button>
+                                    </div>
+                                    EOT;
+
+                                }
+                                ?>
+
+                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                    <li>
+                                        <button type="button" id="api_secret_create" class="fs-button">
+                                            <i class="fa fa-plus"></i>
+                                            <span>{tr:new_api_secret}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:generate_new_api_secret}
+                                        </span>
+                                    </li>
+                                </div>
+
+                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
+                                    <li>
+                                        <button type="button" id="api_secret_delete" class="fs-button fs-button--danger">
+                                            <i class="fa fa-close"></i>
+                                            <span>{tr:clear_api_secret}</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span>
+                                            {tr:delete_current_api_secret}
+                                        </span>
+                                    </li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="fs-settings__cli">
+                                <h3><?php echo Lang::tr('python_cli_client_heading'); ?></h3>
+
+                                {tr:python_cli_client_setup_information}
+
+                                <div class="fs-copy">
+                                    <span>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</span>
+
+                                    <button id="copy-python-command" type="button" class="fs-button">
+                                        <i class="fa fa-copy"></i>
+                                        {tr:copy}
+                                    </button>
+                                </div>
+
+                                <ul class="fs-list fs-list--inline">
+                                    <li>
+                                    <?php
+                                    if (Config::get('cli_client_from_github')) {
+                                    ?>
+                                        <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py">
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client" download="filesender.py" >
+                                    <?php
+                                    }
+                                    ?>
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli}
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
+                                            <button type="button" id="api_secret_delete" class="fs-button">
+                                                {tr:download_python_cli_configuration}
+                                            </button>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-EOT;
-                
-                echo <<<EOT
-                   <h2>{tr:python_cli_client_heading}</h2>
-                   {tr:python_cli_client_setup_information}
-EOT;
-            },
-        ),
-        'additional' => array(
-            'saml_user_identification_uid' => function($info) use($readonly) {
-                $readonly($info);
-            },
-            'created' => function($info) use($readonly) {
-                $info['value'] = Utilities::formatDate($info['value']);
-                $readonly($info);
-            },
-        ),
-    );
-    
-    $page = (array)Config::get('user_page');
-    if( $page['id'] ) {
-        $page['saml_user_identification_uid'] = $page['id'];
-    }
-    foreach($infos as $category => $set) {
+            </div>
+        </div>
 
-        $displayed = array();
-        foreach($set as $id => $generator) {
-            if(array_key_exists($id, $page)) {
-                if(!$page[$id]) continue;
-
-                $value = Auth::user()->$id;
-                if( $id == 'lang' ) {
-                    if( !$value ) {
-                        $value = Lang::getBaseCode();
-                    }
-                }
-                
-                if($value || $id=='auth_secret') $displayed[] = array(
-                    'id' => $id,
-                    'mode' => $page[$id],
-                    'generator' => $generator,
-                    'value' => $value
-                );
-            }
+        <?php
         }
-        
-        if(!count($displayed)) continue;
-        
-        echo '<h2>'.Lang::tr('user_'.$category).'</h2>'."\n";
-        echo '<p>'.Lang::tr('user_'.$category.'_body').'</p>'."\n";
-        foreach($displayed as $info) {
-            $tag = $info['id'];
-            if( $tag == 'saml_user_identification_uid' ) {
-                $tag = 'id';
-            }
-            echo '<div class="info" data-info="'.$tag.'">';
-            echo '  <h3>'.Lang::tr('user_'.$tag).'</h3>'."\n";
-            $info['generator']($info);
-            echo '</div>';
-
-            // We want the privacy to appear near the top, and we want
-            // the language selector to be very high to assist folks
-            // who do not speak the default language.
-            if( $info['id'] == 'lang' ) {
-                echo "<h2>".Lang::tr('privacy_page')."</h2>\n";
-                echo " <p>".Lang::tr('profile_page_text_linking_to_privacy_page')."</p>\n";
-            }
-        }
-    }
-    
-    if(
-        array_key_exists('remote_auth_sync_request', $_REQUEST) &&
-        Config::get('auth_remote_user_enabled') &&
-        Auth::user()->auth_secret
-    ) {
-        $code = substr(Utilities::generateUID(), -6);
-        
-        $_SESSION['remote_auth_sync_request'] = array(
-            'code' => $code,
-            'expires' => time() + 60
-        );
-        
-        echo '<span data-remote-auth-sync-request="'.$code.'">'.Utilities::sanitizeOutput($_REQUEST['remote_auth_sync_request']).'</span>';
-    }
-    
-    ?>
-    
-
-    <h2>{tr:actions}</h2>
-
-        {tr:user_profile_send_client_logs_description_text}
-    
-    <div class="send_client_logs">
-        <a href="#">
-            <span class="fa fa-lg fa-send"></span>
-            {tr:send_client_logs}
-        </a>
+        ?>
     </div>
-
-    <div class="export_client_logs">
-        <a href="#">
-            <span class="fa fa-lg fa-save"></span>
-            {tr:export_client_logs}
-        </a>
-    </div>
-    
-    <div class="clear_client_logs">
-        <a href="#">
-            <span class="fa fa-lg fa-times"></span>
-            {tr:clear_client_logs}
-        </a>
-    </div>
-    <br/>
-
-    <div class="clear_frequent_recipients">
-        <a href="#">
-            <span class="fa fa-lg fa-times"></span>
-            {tr:clear_frequent_recipients}
-        </a>
-    </div>
-    <div class="clear_user_transfer_preferences">
-        <a href="#">
-            <span class="fa fa-lg fa-times"></span>
-            {tr:clear_user_transfer_preferences}
-        </a>
-    </div>
-    <br/>
-    
-        {tr:user_profile_delete_about_description_text}
-    
-    <div class="delete_my_account">
-        <a href="#">
-            <span class="fa fa-lg fa-times"></span>
-            {tr:delete_my_account}
-        </a>
-    </div>
-
-
-    
 </div>
+
+<?php
+
+if(
+    array_key_exists('remote_auth_sync_request', $_REQUEST) &&
+    Config::get('auth_remote_user_enabled') &&
+    Auth::user()->auth_secret
+) {
+    $code = substr(Utilities::generateUID(), -6);
+
+    $_SESSION['remote_auth_sync_request'] = array(
+        'code' => $code,
+        'expires' => time() + 60
+    );
+
+    echo '<span data-remote-auth-sync-request="'.$code.'">'.Utilities::sanitizeOutput($_REQUEST['remote_auth_sync_request']).'</span>';
+}
+
+?>
+
 
 <script type="text/javascript" src="{path:js/user_page.js}"></script>

@@ -16,15 +16,15 @@
 // 
 // 
 ?>
-subject: ダウンロードのためのワンタイム確認コード
+subject: {cfg:site_name}: One time verification code for download
 
 {alternative:plain}
 
-こんにちは。
+Hello,
 
-誰か（おそらくあなた）が、あなたに対して {cfg:site_name} サービスにアップロードされたファイルを
-ダウンロードするために1回使い切りの確認コードをリクエストしました。
-以下がこの転送をダウンロードするためのメール確認コードです:
+Somebody (probably you) has requested a one time verification code in order to
+download a file which was made available to you through the {cfg:site_name} service.
+This is your email verification code to download this transfer:
 
 {verificationCode}
 
@@ -32,19 +32,19 @@ subject: ダウンロードのためのワンタイム確認コード
 {alternative:html}
 
 <p>
-    こんにちは。
+    Hello,
 </p>
 
 <p>
-誰か（おそらくあなた）が、あなたに対して {cfg:site_name} サービスにアップロードされたファイルを
-ダウンロードするために1回使い切りの確認コードをリクエストしました。
-以下がこの転送をダウンロードするためのメール確認コードです:
+Somebody (probably you) has requested a one time verification code in order to
+download a file which was made available to you through the {cfg:site_name} service.
+This is your email verification code to download this transfer:
 </p>
 <p>
 {verificationCode}
 </p>
 
 <p>
-    よろしくおねがいします。<br />
+    Best regards,<br />
     {cfg:site_name}
 </p>

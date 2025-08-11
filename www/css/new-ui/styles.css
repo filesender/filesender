@@ -1,0 +1,9 @@
+/*New FilSender UI styles*/
+@import "variables/variables.css";
+
+@import "_general.css";
+
+@import "components/components.css";
+@import "utilities/utilities.css";
+
+@import "pages/pages.css";

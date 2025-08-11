@@ -1,4 +1,3 @@
-<div class="box">
     <?php
     
     $sections = array('transfers', 'guests', 'users', 'testing' );
@@ -20,18 +19,18 @@
     if(!in_array($section, $sections)) throw new GUIUnknownAdminSectionException($section);
     
     ?>
-    
-    <div class="menu">
-        <ul>
+
+    <ul class="nav nav-tabs nav-tabs-coretop">
         <?php foreach($sections as $s) { ?>
-            <li class="<?php if($s == $section) echo 'current' ?>">
-                <a href="?s=admin&as=<?php echo $s ?>">
+            <li class="nav-item">
+                <a class="nav-link <?php if($s == $section) echo 'active'; else echo 'nav-link-coretop ' ?>" href="?s=admin&as=<?php echo $s ?>">
                     <?php echo Lang::tr('admin_'.$s.'_section') ?>
                 </a>
             </li>
         <?php } ?>
-        </ul>
-    </div>
+    </ul>
+    
+<div class="core">
     
     <div class="<?php echo $section ?>_section section">
         <?php Template::display('admin_'.$section.'_section') ?>

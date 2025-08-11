@@ -52,7 +52,8 @@ class TransferOptions extends Enum
     const HIDE_SENDER_EMAIL                         = 'hide_sender_email';
     
     const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
-
+    const POPUP_ON_COMPLETE                         = 'popup_on_complete';
+    
     const ENCRYPTION                                = 'encryption';
     const COLLECTION                                = 'collection';
     const MUST_BE_LOGGED_IN_TO_DOWNLOAD             = 'must_be_logged_in_to_download';
@@ -63,5 +64,7 @@ class TransferOptions extends Enum
     const WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE  = 'web_notification_when_upload_is_complete';
 
     const VERIFY_EMAIL_TO_DOWNLOAD                  = 'verify_email_to_download';
+    
+    const OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL           = 'openpgp_encrypt_passphrase_to_email';
     
 }

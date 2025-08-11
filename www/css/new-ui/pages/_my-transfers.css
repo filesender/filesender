@@ -1,0 +1,40 @@
+.fs-my-transfers {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-my-transfers table th a {
+    color: var(--fs-text-color);
+}
+
+.fs-my-transfers__title {
+    text-align: center;
+}
+
+.fs-my-transfers__title p {
+    margin-top: var(--fs-spacing-4x);
+}
+
+.fs-my-transfers__active-transfers {
+    margin-bottom: var(--fs-spacing-6x);
+}
+
+.fs-my-transfers .fs-table {
+    margin-top: var(--fs-spacing-2x);
+}
+
+.fs-my-transfers__active-transfers,
+.fs-my-transfers__expired-transfers {
+    margin-top: var(--fs-spacing-3x);
+}
+
+/* XS */
+@media (max-width: 575px) {
+
+    .fs-my-transfers {
+        font-size: 0.8rem;
+        flex: 1;
+        background: var(--fs-bg-color);
+    }
+}

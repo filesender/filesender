@@ -417,7 +417,7 @@ class Mail
                 . $html . "\n"
                 . "\t" . '</body>'
                 . "\n" . '</html>';
-        
+
         // Encode contents
         $plain = quoted_printable_encode($plain);
         $html = quoted_printable_encode($html);

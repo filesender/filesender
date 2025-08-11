@@ -21,7 +21,7 @@ window.filesender.supports.reader = typeof(FileReader) !== 'undefined';
 window.filesender.supports.crypto = typeof(crypto) !== 'undefined' && typeof(crypto.subtle) !== 'undefined'
 
 if (window.filesender.supports.workers) {
-    w = new Worker('js/crypter/crypto_test.js');
+    var w = new Worker('js/crypter/crypto_test.js');
     w.onmessage = function(event) {
         window.filesender.supports.workerCrypto = event.data;
     }
@@ -35,3 +35,11 @@ if (window.filesender.supports.workers) {
 window.filesender.log = function( msg ) {
     console.log( msg );
 }
+
+
+$(document).ready(function() {
+    if( window.filesender.config && window.filesender.config.client_send_current_timezone_to_server ) {
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        document.cookie = "x-filesender-timezone=" + tz;
+    }
+});

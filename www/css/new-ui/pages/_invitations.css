@@ -1,0 +1,45 @@
+.fs-invitations {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-invitations__header h1 {
+    margin-left: 0;
+    margin-bottom: var(--fs-spacing-8x);
+}
+
+.fs-invitations__action {
+    text-align: center;
+}
+
+.fs-invitations__action h2 {
+    margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-invitations__action p {
+    margin-left: 10%;
+    width: 80%;
+    margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-invitations__action .fs-button {
+    width: 80%;
+}
+
+.fs-invitations__list {
+    margin-top: var(--fs-spacing-8x);
+}
+
+.fs-invitations__list h2,
+.fs-invitations__list p {
+    text-align: center;
+}
+
+.fs-invitations__list .fs-table {
+    margin-top: var(--fs-spacing-5x);
+}
+
+.fs-invitations .fa-exclamation-circle {
+    color: var(--fs-info);
+}

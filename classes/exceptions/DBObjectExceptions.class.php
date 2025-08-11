@@ -56,3 +56,23 @@ class PropertyAccessException extends DetailedException
         );
     }
 }
+
+/**
+ */
+class ObjectLookupInViewFailedException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param mixed $object object or class name to report access about
+     * @param string $property name of the property that was wanted
+     */
+    public function __construct($object, $view, $id)
+    {
+        $name = is_object($object) ? get_class($object) : (string)$object;
+        parent::__construct(
+            'no_matching_tuple_in_view', // Message to give to the user
+            array('class' => $name, 'view' => $view, 'id', $id ) // Real message to log
+        );
+    }
+}

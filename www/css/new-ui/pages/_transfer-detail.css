@@ -1,0 +1,155 @@
+.fs-transfer-detail {
+    flex: 1;
+    background: var(--fs-bg-color);
+    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+}
+
+.fs-transfer-detail__header .fs-link {
+    margin-left: calc(-1 * var(--fs-spacing-10x));
+}
+
+.fs-transfer-detail__header {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.fs-transfer-detail__header .fs-link {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.fs-transfer-detail__details,
+.fs-transfer-detail__files {
+    margin-top: var(--fs-spacing-3x);
+}
+
+.fs-transfer-detail p {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+.fs-transfer-detail h2 + .fs-info,
+.fs-transfer-detail h2 + p {
+    margin-top: var(--fs-spacing-4x);
+}
+
+.fs-transfer-detail h3 {
+    margin: var(--fs-spacing-3x) 0;
+}
+
+.fs-transfer-detail__check {
+    margin-top: var(--fs-spacing-3x);
+}
+
+.fs-transfer-detail__total-size {
+    display: none;
+    text-align: right;
+}
+
+.fs-transfer-detail__total-size--show {
+    display: block;
+}
+
+.fs-transfer-detail__total-size strong,
+.fs-transfer-detail__total-size span {
+    display: inline-block;
+}
+
+.fs-transfer-detail__total-size strong {
+    margin-right: var(--fs-spacing-4x);
+}
+
+.fs-transfer-detail__total-size span {
+    margin-right: 94px;
+}
+
+.fs-transfer-detail__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: var(--fs-spacing-6x) !important;
+}
+
+.fs-transfer-detail__actions--hide {
+    display: none;
+}
+
+.fs-transfer-detail__actions button + button {
+    margin-left: var(--fs-spacing-2x);
+}
+
+.fs-transfer-detail__zip64-info {
+    margin-top: var(--fs-spacing-4x);
+    padding: 0 20%;
+}
+
+.fs-transfer-detail__zip64-info--hide {
+    display: none;
+}
+
+.fs-transfer__list {
+    margin-bottom: var(--fs-spacing-2x) !important;
+}
+
+.fs-transfer-detail__details,
+.fs-transfer-detail__files,
+.fs-transfer-detail__recipients,
+.fs-transfer-detail__link,
+.fs-transfer-detail__options {
+    margin-top: var(--fs-spacing-5x);
+}
+
+.fs-transfer-detail .fs-transfer-detail__total-size {
+    display: block;
+    text-align: left;
+    padding-left: var(--fs-spacing-5x);
+}
+
+.fs-transfer-detail[data-status="uploading"] [data-action],
+.fs-transfer-detail[data-status="closed"] [data-action],
+.fs-transfer-detail[data-status="closed"] .fs-transfer-detail__link {
+    display: none;
+}
+
+/* XS */
+@media (max-width: 575px) {
+
+    .fs-transfer-detail {
+        font-size: 0.8rem;
+        flex: 1;
+        background: var(--fs-light);
+    }
+}
+
+/* XS,SM,MD */
+@media (max-width: 991px) {
+
+    .fs-transfer-detail__actions {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .fs-transfer-detail__actions button {
+        width: 100%;
+    }
+
+    .fs-transfer-detail__actions button + button {
+        margin-top: var(--fs-spacing-2x);
+        margin-left: 0;
+    }
+}
+
+/* XS */
+@media (max-width: 575px) {
+
+    .fs-transfer-detail {
+        font-size: 0.8rem;
+        flex: 1;
+        background: var(--fs-bg-color);
+    }
+}

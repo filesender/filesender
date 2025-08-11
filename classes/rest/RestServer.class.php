@@ -329,7 +329,7 @@ class RestServer
                 }
                 exit;
             }
-            
+
             header('Content-Type: application/json');
             if (($method == 'post') && $data) {
                 RestUtilities::sendResponseCode(201);

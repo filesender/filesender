@@ -1,0 +1,84 @@
+.fs-badge-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--fs-accent);
+  border-radius: var(--fs-spacing-4x);
+  height: var(--fs-spacing-4x);
+  padding: 0 var(--fs-spacing-2x);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  color: var(--fs-accent);
+  background: var(--fs-hightlight-bg);
+  margin-right: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-2x);
+}
+
+.fs-badge a {
+  font-size: 1rem !important;
+  color: var(--fs-accent) !important;
+  text-decoration: none !important;
+}
+
+.fs-badge-list .fs-button {
+  border-radius: var(--fs-spacing-4x);
+  height: var(--fs-spacing-4x);
+  padding: 0 var(--fs-spacing-2x);
+  margin-right: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-2x);
+}
+
+
+.fs-badge-buttons-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: var(--fs-spacing-2x);
+}
+
+.fs-badge-buttons {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--fs-accent);
+  border-radius: var(--fs-spacing-4x);
+  height: var(--fs-spacing-5x);
+  padding: 0 var(--fs-spacing-2x);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  color: var(--fs-accent);
+  background: var(--fs-hightlight-bg);
+  margin-right: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-2x);
+}
+
+.fs-badge-buttons-shell {
+  padding: 0 var(--fs-spacing-2x);
+}
+
+.fs-badge-buttons a {
+  font-size: 1rem !important;
+  color: var(--fs-accent) !important;
+  text-decoration: none !important;
+}
+
+.fs-badge-buttons-listx .fs-button {
+  border-radius: var(--fs-spacing-4x);
+  height: var(--fs-spacing-4x);
+  padding: 0 var(--fs-spacing-2x);
+  margin-right: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-2x);
+}

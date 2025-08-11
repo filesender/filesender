@@ -58,7 +58,19 @@
         </testsuite>
         
         <testsuite name="selenium">
-            <directory>./selenium/tests</directory>
+
+          <file>./selenium/tests/UploadAutoResumeTest.php</file>
+          <file>./selenium/tests/EncryptionTest.php</file>
+          <file>./selenium/tests/ConfigurationOptionsTest.php</file>
+          <file>./selenium/tests/TransferExpiredTest.php</file>
+
+          <file>./selenium/tests/InvalidExtensionsTest.php</file>
+          <file>./selenium/tests/MaxFilesTest.php</file>
+          <file>./selenium/tests/MaxUploadSizeTest.php</file>
+          <file>./selenium/tests/TemplatingTest.php</file>
+          <file>./selenium/tests/HeaderMenuTest.php</file>
+          <file>./selenium/tests/LanguageSelectTest.php</file>
+
         </testsuite>
 
         <testsuite name="dataset" >

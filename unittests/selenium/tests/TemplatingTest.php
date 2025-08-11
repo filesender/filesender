@@ -41,7 +41,8 @@ class TemplatingTest extends SeleniumTest
 
         $this->teardown_function = array($this, 'moveBackOldSkinCss');
     }
-
+ 
+    
     public function testJavascript()
     {
         $this->setupUnauthenticated();
@@ -53,7 +54,7 @@ class TemplatingTest extends SeleniumTest
 
         file_put_contents($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file, 'document.write("<div id=\''.$test_div_id.'\'>'.$test_div_message.'</div>");');
 
-        $this->refresh();
+        $this->waitForPageLoaded();
 
         $this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message);
 

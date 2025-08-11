@@ -142,7 +142,7 @@ window.filesender.lang = {
     },
 
     trWithConfigOverride: function(id) {
-        s = filesender.config['tr_' + id];
+        var s = filesender.config['tr_' + id];
         if (/\S/.test(s)) {
             // the config option has somthing in it
             return new this.translatedString(s, true);

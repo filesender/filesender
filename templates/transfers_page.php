@@ -25,7 +25,7 @@
     $user = Auth::user();
     if (Auth::isAuthenticated()) {
         if (Auth::isAdmin()) {
-            
+
             $uid = Utilities::arrayKeyOrDefault( $_GET, 'uid', 0, FILTER_VALIDATE_INT  );
             if( $uid ) {
                 if( Config::get('admin_can_view_user_transfers_page')) {
@@ -36,53 +36,80 @@
         }
     }
 ?>
-<div class="box">
 
-    <div class="menu">
-        <ul>
-        <?php foreach($sections as $s) { ?>
-            <li class="<?php if($s == $section) echo 'current' ?>">
-                <a href="?s=transfers&as=<?php echo $s . $cgiuid ?>">
-                    <?php echo Lang::tr($s.'_transfers') ?>
-                </a>
-            </li>
-        <?php } ?>
-        </ul>
+<div class="fs-my-transfers">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="fs-my-transfers__title">
+                    <h1>{tr:transfers_page}</h1>
+                    <p>{tr:transfer_page_subtitle}</p>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <div class="fs-my-transfers__active-transfers">
+                    <div class="row">
+                        <div class="col">
+                            <h2>{tr:active_transfers}</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?php
+                            Template::display('transfers_table', array(
+                                'status' => 'available',
+                                'mode' => 'user',
+                                'transfers' => Transfer::fromUserOrdered($user,
+                                    $trsort->getViewName(),
+                                    $trsort->getOrderByClause(),
+                                    false, $openlimit+1, $openoffset ),
+                                'limit' => $openlimit,
+                                'offset' => $openoffset,
+                                'pagerprefix' => 'open',
+                                'header' => '{tr:available_transfers}',
+                                'trsort' => $trsort
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="fs-my-transfers__expired-transfers">
+                    <div class="row">
+                        <div class="col">
+                            <h2>{tr:expired_transfers}</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?php
+                            Template::display('transfers_table', array(
+                                'status' => 'closed',
+                                'mode' => 'user',
+                                'transfers' => Transfer::fromUserOrdered($user,
+                                    $trsort->getViewName(),
+                                    $trsort->getOrderByClause(),
+                                    true, $closedlimit+1, $closedoffset ),
+                                'limit' => $closedlimit,
+                                'offset' => $closedoffset,
+                                'pagerprefix' => 'closed',
+                                'header' => '{tr:closed_transfers}',
+                                'trsort' => $trsort
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="<?php echo $section ?>_section section">
-
-        <?php 
-        if( $section == 'closed' ) {
-            Template::display('transfers_table', array(
-                'status' => 'closed',
-                'mode' => 'user',
-                'transfers' => Transfer::fromUserOrdered($user,
-                                                         $trsort->getViewName(),
-                                                         $trsort->getOrderByClause(),
-                                                         true, $closedlimit+1, $closedoffset ),
-                'limit' => $closedlimit,
-                'offset' => $closedoffset,
-                'pagerprefix' => 'closed',
-                'header' => '{tr:closed_transfers}',
-                'trsort' => $trsort
-            ));
-        } else {
-            Template::display('transfers_table', array(
-                'status' => 'available',
-                'mode' => 'user',
-                'transfers' => Transfer::fromUserOrdered($user,
-                                                         $trsort->getViewName(),
-                                                         $trsort->getOrderByClause(),
-                                                         false, $openlimit+1, $openoffset ),
-                'limit' => $openlimit,
-                'offset' => $openoffset,
-                'pagerprefix' => 'open',
-                'header' => '{tr:available_transfers}',
-                'trsort' => $trsort
-            ));
-        }
-        ?>
-    </div>
-
 </div>

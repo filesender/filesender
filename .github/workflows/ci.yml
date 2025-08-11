@@ -7,7 +7,9 @@ on:
       - '2021/jan/ghatest*'
       - 'savage-*'
   pull_request:
-    branches: [ development ]
+    branches:
+      - 'development'
+      - 'development3'
 
     
 jobs:
@@ -197,7 +199,7 @@ jobs:
         echo "testing $TESTSUITE on database $DB "
         if [ "$TESTSUITE" != "selenium" ]; then
           sudo -u www-data id
-          sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
+          sudo -u www-data ./vendor/bin/phpunit --configuration ./unittests/config_tests_filesender.xml --do-not-cache-result --testsuite=$TESTSUITE
         fi
 
     - name: Run Primary Selenium Tests (MAIN JOB)
@@ -213,20 +215,20 @@ jobs:
 
 
 
-    - name: Debug Information
-      if: ${{ always() }}
-      run: |
-        ls -l log
-        echo "-------------------"
-        echo "FileSender logs...."
-        echo "-------------------"
-        sudo cat log/*.log
-        echo "--------------------"
-        echo "Apache logs....     "
-        echo "--------------------"
-        cat /var/log/apache2/access.log
-        cat /var/log/apache2/error.log
-        echo "--------------------"
+    # - name: Debug Information
+    #   if: ${{ always() }}
+    #   run: |
+    #     ls -l log
+    #     echo "-------------------"
+    #     echo "FileSender logs...."
+    #     echo "-------------------"
+    #     sudo cat log/*.log
+    #     echo "--------------------"
+    #     echo "Apache logs....     "
+    #     echo "--------------------"
+    #     cat /var/log/apache2/access.log
+    #     cat /var/log/apache2/error.log
+    #     echo "--------------------"
         
 
 

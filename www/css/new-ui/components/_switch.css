@@ -1,0 +1,92 @@
+.fs-switch {
+  display: flex;
+  flex-direction: row;
+  margin-top: var(--fs-spacing-3x);
+  margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-switch--hide {
+  display: none;
+}
+
+.fs-switch--small label {
+  font-size: 0.9rem !important;
+  padding-left: var(--fs-spacing-9x) !important;
+}
+
+.fs-switch label {
+  align-items: center;
+  color: var(--fs-text-color);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.9rem;
+  margin-bottom: 0;
+  position: relative;
+  padding-left: var(--fs-spacing-11x);
+}
+
+.fs-switch label:before {
+  background: #fff;
+  border: 1px solid var(--fs-bg-color-quarternary);
+  border-radius: 100em;
+  content: "";
+  height: 34px;
+  position: absolute;
+  width: 64px;
+  left: 0;
+}
+
+.fs-switch label:after {
+  background-color: var(--fs-bg-color-quarternary);
+  border-radius: 50%;
+  content: "";
+  height: 28px;
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+  width: 28px;
+  left: 4px;
+  right: auto;
+}
+
+.fs-switch input {
+  appearance: none;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 0;
+  margin-left: var(--fs-spacing-base);
+}
+
+.fs-switch input + label:after {
+  left: 4px;
+}
+
+.fs-switch input:checked + label:before {
+  background: var(--fs-hover);
+  border: 1px solid var(--fs-accent);
+}
+
+.fs-switch input:checked + label:after {
+  background-color: var(--fs-accent);
+  left: 32px;
+}
+
+.fs-switch input:focus-visible + label:before {
+  border-color: #c2860b !important;
+  box-shadow: 0 0 0 2px #c2850c;
+  outline: none;
+}
+
+.fs-switch input:hover:not([disabled]):checked + label:before {
+  background-color: var(--fs-gray-100);
+}
+
+.fs-switch input:hover:not([disabled]):not(checked) + label:before {
+  background-color: var(--fs-gray-100);
+}
+
+.fs-switch input:disabled,
+.fs-switch input:disabled + label {
+  opacity: 0.5;
+}

@@ -80,7 +80,6 @@ class TransferFileNameInvalidException extends DetailedException
     /**
      * Constructor
      *
-     * @param int $wanted
      * @param int $max
      */
     public function __construct($name)
@@ -97,7 +96,6 @@ class TransferCollectionNameInvalidException extends DetailedException
     /**
      * Constructor
      *
-     * @param int $wanted
      * @param int $max
      */
     public function __construct($name)
@@ -195,7 +193,7 @@ class TransferMaximumSizeExceededException extends DetailedException
      */
     public function __construct($size, $max)
     {
-        parent::__construct('transfer_maximum_size_exceeded', 'size='.$wanted.' max='.$max);
+        parent::__construct('transfer_maximum_size_exceeded', 'size='.$size.' max='.$max);
     }
 }
 
@@ -212,7 +210,7 @@ class TransferMaximumFileSizeExceededException extends DetailedException
      */
     public function __construct($size, $max)
     {
-        parent::__construct('transfer_maximum_file_size_exceeded', 'size='.$wanted.' max='.$max);
+        parent::__construct('transfer_maximum_file_size_exceeded', 'size='.$size.' max='.$max);
     }
 }
 
@@ -229,7 +227,7 @@ class TransferMaximumEncryptedFileSizeExceededException extends DetailedExceptio
      */
     public function __construct($size, $max)
     {
-        parent::__construct('transfer_maximum_encrypted_file_size_exceeded', 'size='.$wanted.' max='.$max);
+        parent::__construct('transfer_maximum_encrypted_file_size_exceeded', 'size='.$size.' max='.$max);
     }
 }
 

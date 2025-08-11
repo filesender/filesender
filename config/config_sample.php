@@ -110,8 +110,7 @@ $config['auth_sp_saml_simplesamlphp_location'] ='/opt/filesender/simplesaml/';  
 // // Get name attribute from authentication service
 // $config['auth_sp_saml_name_attribute'] = 'cn';
 // 
-// // Get uid attribute from authentication service.  Usually eduPersonTargetedID or eduPersonPrincipalName
-// $config['auth_sp_saml_uid_attribute'] = 'eduPersonTargetedId';
+// $config['auth_sp_saml_uid_attribute'] = 'pairwise-id';
 //
 // // Attribute to use for entitlement. Usually eduPersonEntitlement or isMemberOf
 // $config['auth_sp_saml_entitlement_attribute'] = 'eduPersonEntitlement';

@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Podmínky užití
+Podmínky a pravidla užití...
