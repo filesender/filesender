@@ -218,8 +218,8 @@ class Config
 
         // Load config regex overrides if used and present
         // if not authenticated then do not throw, just do not load these files
-        self::handleConfigRegexFiles( 'auth_config_regex_files', false );
         self::handleConfigRegexFiles( 'auth_config_additional_regex_files', true );
+        self::handleConfigRegexFiles( 'auth_config_regex_files', false );
         
         // ensure mandatory config settings file exists
         $mandatory_config_file = FILESENDER_BASE.'/includes/ConfigMandatorySettings.php';
