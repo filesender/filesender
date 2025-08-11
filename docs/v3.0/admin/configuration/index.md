@@ -328,6 +328,7 @@ A note about colours;
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
+* [auth_config_value_regex_files](#auth_config_value_regex_files)
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
 * [statistics_table_rows_per_page](#statistics_table_rows_per_page)
 * [tenant_admin](#tenant_admin)
@@ -3206,7 +3207,10 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
-* __example:__ <span style="background-color:orange">need an example here!</span>
+* __example:__ 
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+	</code></pre>
 
 ### auth_sp_save_user_additional_attributes
 
@@ -3575,6 +3579,40 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
         If the idp is 'idp.customer2.com', the config file config-customer2.php in the config subdir will be loaded.
+
+### auth_config_additional_regex_files
+* __description:__ This is like auth_config_regex_files but it works on the value(s) in attributes['addtional']. Such attributes can be gathered by setting auth_sp_additional_attributes. Note that you have to explicitly gather these attributes using the auth_sp_additional_attributes config key in order to match against them. 
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: no overrides loaded.
+* __available:__ since version 2.58
+* __1.x name:__
+* __comment:__ example:
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+
+	$config['auth_config_additional_regex_files'] = [
+		'quota' => [
+			'500mb$' => 'quotafor500mbfile',
+			'10gb$'  => 'quotafor10gbfile',
+		],
+		'eduPersonAffiliation' => [
+			'student$' => 'quotaforstdentfile',
+			'employee$ => 'quotaforemployeefile',
+		],
+    ];
+	</code></pre>
+
+    If the selected key is an array then each value in that array will
+    be attempted to match in turn. The items are considered in the
+    order presented by the authentication system. So in the below you
+    can match various items in an array 'eduPersonAffiliation' to
+    config files. If a user has a list eduPersonAffiliation =
+    array('student','employee') then both keys will match and employee
+    will be last.
+
+
+
 	
 ### show_storage_statistics_in_admin
 * __description:__ Lists used and free diskspace in admin section
