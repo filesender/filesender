@@ -147,7 +147,7 @@ class Template
                 // deprecated.
                 return Utilities::sanitizeOutput(Config::get($k));
             } else {
-                if( array_search($k,$configWhiteList)) { 
+                if(array_search($k,$configWhiteList) !== false) { 
                     return Utilities::sanitizeOutput(Config::get($k));
                 }
             }
