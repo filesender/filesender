@@ -17,13 +17,14 @@ function html_selectidp( $idp, $row ) {
             <div class="col">
                 <div class="fs-statistics__title">
                     <h1>{tr:admin_statistics_section}<?php if ($idp) {
-$sql='SELECT name FROM idpsview WHERE id=:idp';
+$sql='SELECT name, entityid FROM idpsview WHERE id=:idp';
 $placeholders=array();
 $placeholders[':idp'] = $idp;
 $statement = DBI::prepare($sql);
 $statement->execute($placeholders);
 $result = $statement->fetchAll();
 $row = array_pop($result);
+$row['name'] ??= $row['entityid'];
 echo '<br>('.Template::Q($row['name']).')'; } ?></h1>
                 </div>
             </div>
@@ -46,11 +47,12 @@ if (Auth::isAdmin()) {
     <select id="idpselect">
         <option value="0">All</option>
 <?php
-$sql='SELECT id, name FROM idpsview ORDER BY name';
+$sql='SELECT id, name, entityid FROM idpsview ORDER BY name';
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
 foreach($result as $row) {
+    $row['name'] ??= $row['entityid'];
     echo '        <option value="'.$row['id'].'"'.html_selectidp( $idp, $row ).'>'.$row['name'].'</option>'."\n";
 }
 ?>
