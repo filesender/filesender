@@ -117,7 +117,7 @@ class Config
 
                     if( $matchAdditionalAttributes ) {
 
-                        if (!array_search($attr, Config::get('auth_sp_additional_attributes'))) {
+                        if (array_search($attr, Config::get('auth_sp_additional_attributes')) === false) {
                             Logger::error("CONFIG ERROR: Please add attriubte $attr to auth_sp_additional_attributes or remove it from your auth_config*regex_files config");
                         }
                         
@@ -125,7 +125,6 @@ class Config
                         $a = $auth_attrs['additional'][$attr];
                         foreach( $a as $matchValue ) {                            
                             self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
-                            
                         }
                     } else {
                         // work on single main value.
