@@ -123,8 +123,10 @@ class Config
                         
                         // additional attributes handles an array of values
                         $a = $auth_attrs['additional'][$attr];
-                        foreach( $a as $matchValue ) {                            
-                            self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
+                        if ($a) {
+                            foreach( $a as $matchValue ) {                            
+                                self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
+                            }
                         }
                     } else {
                         // work on single main value.
