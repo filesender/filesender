@@ -1,11 +1,11 @@
-<?php
+<?php 
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-//
-//
+// 
+// 
 ?>
 <?php
 $lang['OpenPGP'] = 'OpenPGP';
@@ -158,10 +158,10 @@ $lang['confirm_remind_transfer'] = 'Envoyer le rappel aux destinataires ?';
 $lang['confirm_remove_daily_stats_transfer'] = 'Êtes-vous sûr de ne plus vouloir recevoir de statistiques quotidiennes pour ce transfert';
 $lang['confirm_stop_upload'] = 'Souhaitez-vous vraiment arrêter le téléversement et supprimer les données déjà stockées ?';
 $lang['confirm_upload_add_to_recipients_with_no_explicit_address'] = 'Vous avez choisi de n\'envoyer ces fichiers qu\'à la personne qui vous a invité à utiliser le système. Si c\'est ce que vous vouliez, sélectionnez ok. Si vous souhaitez ajouter un autre destinataire, annulez cette boîte de dialogue et ajoutez les destinataires avant de cliquer à nouveau sur envoyer.';
-$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use OpenPGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
+$lang['confirm_use_openpgp_to_send_passphrase'] = 'Souhaitez-vous générer une phrase secrète aléatoire pour ce transfert et utiliser OpenPGP pour la chiffrer et l\'envoyer à l\'utilisateur en toute sécurité ? Cette phrase secrète ne quitte jamais votre navigateur sans être chiffrée.';
 $lang['continue'] = 'Continuer';
-$lang['copied_to_clipboard'] = 'Copied to clipboard!';
-$lang['copied_to_clipboard_error'] = 'Error copying to clipboard!';
+$lang['copied_to_clipboard'] = 'Copié dans le presse-papiers !';
+$lang['copied_to_clipboard_error'] = 'Erreur lors de la copie dans le presse-papiers !';
 $lang['copy'] = 'Copier';
 $lang['copy_text'] = 'Copier le texte ci-dessous';
 $lang['core_class_not_found'] = 'Classe système introuvable';
@@ -193,7 +193,7 @@ $lang['delete'] = 'Supprimer';
 $lang['delete_current_api_secret'] = 'Supprimer la clé API actuelle.';
 $lang['delete_invitation'] = 'Supprimer l\'invitation';
 $lang['delete_my_account'] = 'Supprimer mon compte';
-$lang['delete_my_openpgp_keys'] = 'Delete my OpenPGP public key on the system';
+$lang['delete_my_openpgp_keys'] = 'Supprimer ma clé publique OpenPGP du système';
 $lang['delete_transfer'] = 'Supprimer le dépôt';
 $lang['delete_transfer_nicely'] = 'Supprimer le dépôt et notifier les destinataires';
 $lang['delete_transfer_roughly'] = 'Supprimer le dépôt sans notifications';
@@ -201,7 +201,7 @@ $lang['description'] = 'Description';
 $lang['details'] = 'Détails';
 $lang['device'] = 'Appareil';
 $lang['dialog_autoclose'] = 'Ce message disparaitra dans {seconds} secondes';
-$lang['directory_issue'] = 'An issue has occurred while adding the directory.';
+$lang['directory_issue'] = 'Un problème est survenu lors de l\'ajout du répertoire.';
 $lang['disable_terasender'] = 'Désactiver l\'envoi en parallèle (Cochez si votre connexion est limitée)';
 $lang['does_not_expire'] = 'N\'expire pas dans le temps';
 $lang['done'] = 'Fait';
@@ -339,7 +339,7 @@ $lang['file_encryption_show_password'] = 'Voir / Cacher le mot de passe';
 $lang['file_encryption_wrong_password'] = 'Mot de passe incorrect';
 $lang['file_extension_not_allowed'] = 'Extension de fichier non-acceptée';
 $lang['file_integrity_check_failed'] = 'Le test d\'intégrité du fichier a échoué';
-$lang['file_issue'] = 'An issue has occurred while adding the file.';
+$lang['file_issue'] = 'Un problème est survenu lors de l\'ajout du fichier.';
 $lang['file_not_found'] = 'Fichier introuvable';
 $lang['file_size_does_not_match'] = 'La taille du fichier ne correspond pas';
 $lang['files'] = 'Fichiers';
@@ -423,7 +423,7 @@ $lang['is_default'] = 'Valeur par défaut';
 $lang['iterations'] = 'Itérations';
 $lang['job'] = 'tâche';
 $lang['kb_per_second'] = 'Kb/sec';
-$lang['key_import_failed'] = 'Failed to import the provided OpenPGP key';
+$lang['key_import_failed'] = 'Erreur lors de l\'importation de la clé OpenPGP fournie';
 $lang['language'] = 'Langue';
 $lang['last_activity'] = 'Dernière activité';
 $lang['later'] = 'Me re-demander plus tard';
@@ -435,7 +435,7 @@ $lang['logs'] = 'Journaux';
 $lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant : <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
 $lang['maintenance_autoresume'] = 'Les opérations en cours redémarreront automatiquement après la fin de la maintenance.';
 $lang['make_default'] = 'Revenir à la valeur par défaut';
-$lang['mandatory'] = 'Mandatory';
+$lang['mandatory'] = 'Obligatoire';
 $lang['max_email_recipients_exceeded'] = 'Nombre maximum de destinataires dépassé';
 $lang['maximum'] = 'Maximum';
 $lang['maximum_encrypted_file_size_exceeded'] = 'La taille maximale d\'un fichier chiffré a été dépassée';
@@ -471,8 +471,8 @@ $lang['no_such_property'] = 'Propriété inexistante';
 $lang['no_transfers'] = 'Aucun dépôt';
 $lang['none'] = 'aucun';
 $lang['noscript'] = 'Cette application utilise Javascript massivement, vous devez l\'activer afin de pouvoir commencer.';
-$lang['not_a_public_key'] = 'The selected file is not a OpenPGP public key';
-$lang['not_found'] = 'Not found';
+$lang['not_a_public_key'] = 'Le fichier sélectionné n\'est pas une clé publique OpenPGP';
+$lang['not_found'] = 'Introuvable';
 $lang['nothing_happened_as_of_late_you_can_send_client_logs'] = 'Aucune avancée n\'a été constatée sur ce téléversement depuis un moment. Si vous estimez que celui-ci est bloqué, avant de notifier votre support, veuillez lui envoyer les dernières actions effectuées depuis cette interface en cliquant sur ce bouton :';
 $lang['number_of_files'] = 'Nombre de fichiers';
 $lang['ok'] = 'OK';
@@ -481,13 +481,13 @@ $lang['oneweek'] = 'une semaine';
 $lang['open_auditlog'] = 'Consulter l\'audit';
 $lang['open_file_auditlog'] = 'Voir l\'activité de ce fichier';
 $lang['open_recipient_auditlog'] = 'Voir l\'activité de ce destinataire';
-$lang['openpgp_adding_to_transfer_with_some_public_keys_missing'] = 'The OpenPGP key is not found for the email {email} so they can not be securely notified.';
-$lang['openpgp_blurb_guests_page'] = 'Note: if you <a href="?s=user">upload your OpenPGP public key</a> you can nominate that the passphrase used by a guest for encryption is randomly generated and a OpenPGP encrypted message be sent to you with that passphrase. When the system knows your OpenPGP public key this option will be shown above.';
-$lang['openpgp_encrypt_passphrase_to_email'] = 'Use OpenPGP: When uploading, a passphrase will be randomly generated and will be sent to the recipient as a OpenPGP encrypted message. Note that the recipient must have uploaded their public key to the server in order for this feature to work.';
-$lang['openpgp_functionality_limited_to_one_recipient'] = 'The OpenPGP key is not found for the email {email} so they can not be securely notified.';
-$lang['openpgp_invalid_key_guest_upload'] = 'The OpenPGP key is invalid. Please contact the user who invited you to the system.';
-$lang['openpgp_public_key_invalid'] = 'The OpenPGP public key is invalid';
-$lang['openpgp_upload_page_description'] = 'Note that the password has been encrypted into an email shown above. Only the person who is listed as a recipient and has uploaded a valid public key to the system system should be able to decrypt this email. This allows you t upload a file that is encrypted in the browser and the password to decrypt that is then put into a secure message shown above so that only the recipient can decode the password and then download the files.';
+$lang['openpgp_adding_to_transfer_with_some_public_keys_missing'] = 'La clé OpenPGP n\'est pas trouvée pour l\'e-mail {email}, ils ne peuvent donc pas être notifiés en toute sécurité.';
+$lang['openpgp_blurb_guests_page'] = 'Remarque : si vous <a href="?s=user">téléchargez votre clé publique OpenPGP</a>, vous pouvez configurer la génération aléatoire de la phrase secrète utilisée par un invité pour le chiffrement et l\'envoi d\'un message chiffré OpenPGP contenant cette phrase secrète. Lorsque le système disposera de votre clé publique OpenPGP, cette option s\'affichera ci-dessus.';
+$lang['openpgp_encrypt_passphrase_to_email'] = 'Utilisez OpenPGP : lors du téléchargement, une phrase secrète sera générée de manière aléatoire et envoyée au destinataire sous forme de message crypté OpenPGP. Veuillez noter que le destinataire doit avoir téléchargé sa clé publique sur le serveur pour que cette fonctionnalité puisse fonctionner.';
+$lang['openpgp_functionality_limited_to_one_recipient'] = 'La clé OpenPGP n\'est pas trouvée pour l\'e-mail {email}, ils ne peuvent donc pas être notifiés en toute sécurité.';
+$lang['openpgp_invalid_key_guest_upload'] = 'La clé OpenPGP n\'est pas valide. Veuillez contacter l\'utilisateur qui vous a invité à utiliser le système.';
+$lang['openpgp_public_key_invalid'] = 'La clé publique OpenPGP n\'est pas valide';
+$lang['openpgp_upload_page_description'] = 'Notez que le mot de passe a été chiffré dans l\'e-mail ci-dessus. Seule la personne indiquée comme destinataire et ayant téléchargé une clé publique valide sur le système devrait pouvoir déchiffrer cet e-mail. Cela vous permet de charger un fichier chiffré dans le navigateur, puis de déchiffrer le mot de passe, qui est ensuite placé dans le message sécurisé ci-dessus, afin que seul le destinataire puisse le déchiffrer et télécharger les fichiers.';
 $lang['optional'] = 'optionnel';
 $lang['optional_message'] = 'Message facultatif';
 $lang['options'] = 'Options';
@@ -717,12 +717,12 @@ $lang['terasender_worker_count'] = 'Nombre de workers TeraSender';
 $lang['terasender_worker_failed_to_start'] = 'Impossible d\'initialiser une ou plusieurs des tâches de téléversement';
 $lang['terms_text'] = 'Lorem Ipsum';
 $lang['terms_title'] = 'Conditions générales d\'utilisation';
-$lang['test_my_openpgp_key'] = 'Send a test email to me encrypted with my OpenPGP key';
-$lang['test_my_openpgp_message'] = 'This is an encrypted message generated at {time} on {date}. Have a nice day!';
-$lang['test_openpgp_message'] = 'This is an encrypted message generated at {time} on {date}. Have a nice day!';
+$lang['test_my_openpgp_key'] = 'Envoyez-moi un e-mail de test crypté avec ma clé OpenPGP';
+$lang['test_my_openpgp_message'] = 'Ceci est un message chiffré généré à {time} le {date}. Bonne journée !';
+$lang['test_openpgp_message'] = 'Ceci est un message chiffré généré à {time} le {date}. Bonne journée !';
 $lang['testterm'] = 'valeur test';
 $lang['text_desc_of_file_count_and_size'] = 'Vous téléchargez {filecount} fichier(s) d\'une taille totale de {totalsize}';
-$lang['the_system_does_not_know_your_openpgp_key'] = 'You do not have a OpenPGP public key in the system';
+$lang['the_system_does_not_know_your_openpgp_key'] = 'Vous ne disposez pas d\'une clé publique OpenPGP dans le système';
 $lang['theme'] = 'Thème';
 $lang['theme_info'] = 'Le thème est uniquement sauvegardé dans le navigateur';
 $lang['then_enter_verification_code_below'] = 'Saisissez ensuite le code de vérification ci-dessous pour continuer. Vous aurez {config:download_verification_code_valid_duration_minutes} minutes pour terminer ce processus.';
@@ -793,7 +793,7 @@ $lang['transfers_uid_page'] = 'Dépôts Utilisateur';
 $lang['translatable_email_not_found'] = 'Le message email demandé n\'a pas pu être trouvé.';
 $lang['translate_to'] = 'Traduire en :';
 $lang['turning_on_guests_get_a_link_disables_can_only_send_to_me'] = 'Autoriser les invités a générer un lien signifie que l\'option "Être seul et unique destinataire" a été désactivée';
-$lang['turning_on_guests_openpgp_encryption_disables_can_only_send_to_me'] = 'Turning on OpenPGP encryption forces the guest to only be able to send to you.';
+$lang['turning_on_guests_openpgp_encryption_disables_can_only_send_to_me'] = 'L\'activation du chiffrement OpenPGP oblige l\'invité à ne pouvoir envoyer des messages qu\'à vous.';
 $lang['twoeightdays'] = '28 jours';
 $lang['ui2_accept_aup_1'] = 'J\'accepte ces conditions';
 $lang['ui2_accept_aup_2'] = 'lors de l\'utilisation de ce service';
@@ -825,7 +825,7 @@ $lang['undergoing_maintenance'] = 'Cette application est en maintenance';
 $lang['unexpected_file'] = 'Ce fichier ne fait pas parti du dépôt en cours de re-démarrage';
 $lang['unknown_page'] = 'Page inconnue';
 $lang['unreadable_file'] = 'Impossible de lire le fichier';
-$lang['upload_a_new_openpgp_public_key'] = 'Upload a new OpenPGP public key';
+$lang['upload_a_new_openpgp_public_key'] = 'Charger une nouvelle clé publique OpenPGP';
 $lang['upload_all_terasender_workers_completed_pbkdf2'] = 'Tous les workers d\'envoi sont maintenant prêts et devraient transférer des données chiffrées.';
 $lang['upload_completed'] = 'Téléversement terminé';
 $lang['upload_log_header'] = 'Messages importants de téléversement';
@@ -838,7 +838,7 @@ $lang['upload_progressing_again'] = 'Le téléversement a repris';
 $lang['upload_stalled_and_resumed'] = 'Téléversement bloqué et a repris...';
 $lang['upload_stalled_due_to_testing'] = 'Téléversement bloqué par un test...';
 $lang['upload_started'] = 'Téléversement commencé...';
-$lang['upload_will_use_openpgp_to_share_passphrase'] = '<i class="fa fa-lock"></i> This upload will be encrypted with a randonly generated passphrase. That passphrase will be encrypted with OpenPGP and emailed to the authorized recipient {email}';
+$lang['upload_will_use_openpgp_to_share_passphrase'] = '<i class="fa fa-lock"></i> Ce téléchargement sera chiffré avec une phrase secrète générée aléatoirement. Cette phrase secrète sera chiffrée avec OpenPGP et envoyée par courriel à {email}; destinataire autorisé.';
 $lang['uploaded'] = 'Déposé';
 $lang['uploading_transfers'] = 'Dépôts en cours de téléversement';
 $lang['uploading_your_transfer'] = 'Téléversement de votre dépôt';
@@ -890,7 +890,7 @@ $lang['you_can_report_exception'] = 'En rapportant cette erreur merci de mention
 $lang['you_can_report_exception_by_email'] = 'Vous pouvez rapporter cette erreur par email';
 $lang['you_can_send_client_logs'] = 'Afin d\'aider votre support à identifier votre problème, vous pouvez envoyer l\'audit des actions en cliquant sur ce bouton :';
 $lang['you_generated_this_auth_secret_at'] = 'Vous avez généré cette clé API en date du:<strong>{datetime}</strong>';
-$lang['you_have_a_openpgp_public_key_known_to_system'] = 'You have a OpenPGP public key in the system.';
+$lang['you_have_a_openpgp_public_key_known_to_system'] = 'Vous disposez d\'une clé publique OpenPGP dans le système.';
 $lang['your_download_link'] = 'Voici votre lien de téléchargement';
 $lang['your_invitation_was_sent_to'] = 'Votre invitation a été envoyée à';
 $lang['your_transfer_was_sent'] = 'Votre dépôt a été envoyé aux adresses électroniques suivantes';

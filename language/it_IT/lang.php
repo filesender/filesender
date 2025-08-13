@@ -1,11 +1,11 @@
-<?php
+<?php 
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-//
-//
+// 
+// 
 ?>
 <?php
 $lang['OpenPGP'] = 'OpenPGP';
@@ -157,7 +157,7 @@ $lang['confirm_remind_transfer'] = 'Vuoi davvero mandare un propemoria a questi 
 $lang['confirm_remove_daily_stats_transfer'] = 'Sei sicuro di non voler più ricevere statistiche giornaliere per questo trasferimento';
 $lang['confirm_stop_upload'] = 'Vuoi davvero arrestare l\'upload e rimuovere i dati già caricati?';
 $lang['confirm_upload_add_to_recipients_with_no_explicit_address'] = 'Avete scelto di inviare questi file solo alla persona che vi ha invitato al sistema. Se questo è ciò che desiderate, selezionate Ok. Se desiderate aggiungere un altro destinatario, annullate questa finestra di dialogo e aggiungete i destinatari prima di cliccare nuovamente su invia.';
-$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use OpenPGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
+$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use OpenPGP to encrypt that passphrase to securely send it to the user? The passphrase never leaves your browser without being encrypted.';
 $lang['continue'] = 'Continua';
 $lang['copied_to_clipboard'] = 'Copied to clipboard!';
 $lang['copied_to_clipboard_error'] = 'Error copying to clipboard!';
