@@ -1,11 +1,11 @@
-<?php
+<?php 
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-//
-//
+// 
+// 
 ?>
 <?php
 $lang['OpenPGP'] = 'PGP';
@@ -159,8 +159,8 @@ $lang['confirm_stop_upload'] = 'Sikker på du vil standse uploaden og slette all
 $lang['confirm_upload_add_to_recipients_with_no_explicit_address'] = 'Du har valgt at sende filerne kun til den person som inviterede dig til systemet. Hvis det er meningen, så vælg bare O.k. Men hvis du vil tilføje en anden modtager, skal du afbryde dialogen her og tilføje modtagerne før du trykker Send igen.';
 $lang['confirm_use_openpgp_to_send_passphrase'] = 'Kunne du tænke dig at få dannet en tilfældig adgangskode for den her overførsel og bruge OpenPGP til at kryptere koden og sende den sikkert til brugeren? Adgangskoden kommer aldrig uden for din browser uden at være krypteret.';
 $lang['continue'] = 'Fortsæt';
-$lang['copied_to_clipboard'] = 'Copied to clipboard!';
-$lang['copied_to_clipboard_error'] = 'Error copying to clipboard!';
+$lang['copied_to_clipboard'] = 'Kopieret til klippebordet!';
+$lang['copied_to_clipboard_error'] = 'Fejl ved kopiering til klippebord!';
 $lang['copy'] = 'Kopiér';
 $lang['copy_text'] = 'Kopiér teksten herunder';
 $lang['core_class_not_found'] = 'Kunne ikke finde kerneklasse';
@@ -200,7 +200,7 @@ $lang['description'] = 'Beskrivelse';
 $lang['details'] = 'Detaljer';
 $lang['device'] = 'Enhed';
 $lang['dialog_autoclose'] = 'Dialogen vil lukke om {seconds} sekunder';
-$lang['directory_issue'] = 'An issue has occurred while adding the directory.';
+$lang['directory_issue'] = 'Der skete en fejl i forsøget på at tilføje mappen.';
 $lang['disable_terasender'] = 'Slå upload i parallel fra. (Vælg hvis din forbindelse er langsom).';
 $lang['does_not_expire'] = 'Udløber ikke';
 $lang['done'] = 'Færdig';
@@ -338,7 +338,7 @@ $lang['file_encryption_show_password'] = 'Vis / Skjul adgangskode';
 $lang['file_encryption_wrong_password'] = 'Forkert adgangskode';
 $lang['file_extension_not_allowed'] = 'Filnavnsendelse ikke tilladt';
 $lang['file_integrity_check_failed'] = 'Filens integritet kunne ikke bekræftes';
-$lang['file_issue'] = 'An issue has occurred while adding the file.';
+$lang['file_issue'] = 'Der skete en fejl i forsøget på at tilføje filen.';
 $lang['file_not_found'] = 'Kunne ikke finde filen';
 $lang['file_size_does_not_match'] = 'Filstørrelsen passer ikke';
 $lang['files'] = 'Filer';
@@ -522,9 +522,7 @@ $lang['profile_page_text_linking_to_admin_page'] = 'Du må godt besøge <a href=
 $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender tager dit privatliv alvorligt. Se venligst <a href="{cfg:site_url}/?s=privacy">her</a> hvor længe data opbevares i den her installation af FileSender.';
 $lang['python_cli_client_heading'] = 'Python-CLI-klient';
 $lang['python_cli_client_setup_information'] = 'For at bruge Pyhton-CLI-klientkonfigurationen skal du oprette et katalog ~/.filesender og kopiere konfigurationsfilen filesender.py.ini ind i kataloget ~/.filesender. Det er valgfrit at have konfigurationsfilen, men anbefales, fordi du dermed ikke behøver angive alle parametre på kommandolinjen hver gang. Pyhton-CLI-klienten kan hentes til hvor det skal være, og kræver Python version 3 for at kunne køre.<p>Med konfigurationsfilen på plads kan du uploade en fil vha. <pre>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</pre>';
-$lang['quota_usage'] = '
-{size:used} af i alt {size:total} brugt; {size:available} tilbage
-';
+$lang['quota_usage'] = '{size:used} af i alt {size:total} brugt; {size:available} tilbage';
 $lang['rate_limit_exceeded'] = 'Du har forsøgt at gøre det her flere gange end man må på et døgn.';
 $lang['read_only_mode'] = 'Den her FileSender er i skrivebeskyttet tilstand. Du kan godt hente uploadede filer, men lige nu ikke uploade nye filer eller oprette nye gæster.';
 $lang['reader_not_supported'] = 'Du bruger en ældre browser, som ikke understøtter HTML5<br /><br />Derfor kan du ikke vælge filer ved at trække deres ikoner herhen.<br /><br />Den maksimale størrelse på hver uploadet fil er {size}.';

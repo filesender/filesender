@@ -1,11 +1,11 @@
-<?php
+<?php 
 // WARNING, this is a read only file created by import scripts
 // WARNING
 // WARNING,  Changes made to this file will be clobbered
 // WARNING
 // WARNING,  Please make changes on poeditor instead of here
-//
-//
+// 
+// 
 ?>
 <?php
 $lang['OpenPGP'] = 'OpenPGP';
@@ -157,7 +157,7 @@ $lang['confirm_remind_transfer'] = 'Do you really want to send a reminder to thi
 $lang['confirm_remove_daily_stats_transfer'] = 'Are you sure you no longer wish to receive daily statistics for this transfer';
 $lang['confirm_stop_upload'] = 'Do you really want to stop the upload and remove already uploaded data ?';
 $lang['confirm_upload_add_to_recipients_with_no_explicit_address'] = 'You have chosen to only send these files to the person who invited you to the system. If this is what you wanted please select ok. If you would like to add another recipient please cancel this dialog and add the recipients before clicking send again.';
-$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use OpenPGP to encrypt that passphrase to securely send it to the user. The passphrase never leaves your browser without being encrypted.';
+$lang['confirm_use_openpgp_to_send_passphrase'] = 'Would you like to generate a random passphrase for this transfer and use OpenPGP to encrypt that passphrase to securely send it to the user? The passphrase never leaves your browser without being encrypted.';
 $lang['continue'] = 'Continue';
 $lang['copied_to_clipboard'] = 'Copied to clipboard!';
 $lang['copied_to_clipboard_error'] = 'Error copying to clipboard!';
@@ -262,7 +262,7 @@ $lang['email_recipient_when_transfer_expires'] = 'Email recipient when transfer 
 $lang['email_report_on_closing'] = 'Send me a report when expired';
 $lang['email_sent'] = 'Message Sent';
 $lang['email_separator_msg'] = 'Multiple email addresses separated by , or ;';
-$lang['email_upload_complete'] = 'Notify me when upload and forward to another server(if you choose) are done';
+$lang['email_upload_complete'] = 'Notify me when upload is done';
 $lang['email_upload_page_access'] = 'Notify me when guests access the upload page';
 $lang['email_upload_started'] = 'Notify me when upload starts';
 $lang['empty_file'] = 'Empty file';
@@ -352,9 +352,9 @@ $lang['forget'] = 'Forget about it';
 $lang['forward'] = 'Forward';
 $lang['forward_guest_voucher'] = 'Forward guest voucher';
 $lang['forward_in_progress'] = 'Forward in progress';
+$lang['forward_not_completed'] = 'But the forwarding has not yet been completed';
 $lang['forward_server_name'] = 'Destination server';
 $lang['forward_to_another_server'] = 'Forward to another server';
-$lang['forward_not_completed'] = 'But the forwarding has not yet been completed';
 $lang['from'] = 'From';
 $lang['gb_per_second'] = 'Gb/sec';
 $lang['general'] = 'General';
