@@ -132,7 +132,13 @@ class File extends DBObject
             'size' => 170,
             'null' => true
         ),
-        
+
+        'forward_id' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
+        ),
+
     );
 
     protected static $secondaryIndexMap = array(
@@ -188,6 +194,7 @@ class File extends DBObject
     protected $have_avresults = false;
     protected $storage_class_name = ''; // set in constructor
     protected $storage_path = null;
+    protected $forward_id = null;
    
     /**
      * Related objects cache
@@ -351,15 +358,7 @@ class File extends DBObject
         $file->transferCache = $transfer;
 
         // Generate timestamped uid until it is indeed unique
-        $file->uid = Utilities::generateUID(true, function ($uid, $tries) {
-            $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
-            $data = $statement->fetch();
-            if (!$data) {
-                Logger::info('File uid generation took '.$tries.' tries');
-            }
-            return !$data;
-        });
+        $file->uid = Utilities::generateUID(true, 'File::unicityUid');
         
         $file->storage_class_name = Storage::getDefaultStorageClass();
 
@@ -372,12 +371,35 @@ class File extends DBObject
         
         return $file;
     }
+
+    /**
+     * uid unicity
+     *
+     * @param string $uid
+     * @param int $tries
+     */
+    public static function unicityUid($uid, $tries)
+    {
+        $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
+        $statement->execute(array(':uid' => $uid));
+        $data = $statement->fetch();
+        if (!$data) {
+            Logger::info('File uid generation took '.$tries.' tries');
+        }
+        return !$data;
+    }
     
     /**
      * Delete the file
      */
     public function beforeDelete()
     {
+        if ($this->needForward()) {
+            ForwardAnotherServer::deleteFile($this);
+            $this->forward_id = null;
+            $this->save();
+        }
+
         Storage::deleteFile($this);
         FileCollection::removeFile( $this );
         Logger::info($this.' deleted');
@@ -397,7 +419,7 @@ class File extends DBObject
         $data = $s->fetch();
         
         if (!$data) {
-            throw FileNotFoundException('uid = '.$uid);
+            throw new FileNotFoundException('uid = '.$uid);
         }
         
         return self::fromData($data['id'], $data); // Don't query twice, use loaded data
@@ -488,6 +510,32 @@ class File extends DBObject
     }
     
     /**
+     * End file forward
+     */
+    public function forwarded()
+    {
+        $r = ForwardAnotherServer::completeFile($this);
+        Logger::logActivity(LogEventTypes::FILE_FORWARDED, $this);
+        return $r;
+    }
+    
+    /**
+     * Record activity
+     */
+    public function recordActivity($event, $created = null, $ip = null, $author = null )
+    {
+        Logger::logActivity($event, $this, $author, $created, $ip);
+    }
+    
+    /**
+     * need forward?
+     */
+    public function needForward($tofrom = 'to')
+    {
+        return $this->transfer->needForward($tofrom);
+    }
+
+    /**
      * Read a chunk at offset
      *
      * @param int $offset the chunk offset in the file, if null reads next chunk (Storage keeps track of it)
@@ -514,6 +562,7 @@ class File extends DBObject
         if (in_array($property, array(
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
           , 'storage_class_name', 'iv', 'aead', 'have_avresults', 'storage_path'
+          , 'forward_id'
         ))) {
             return $this->$property;
         }
@@ -631,6 +680,16 @@ class File extends DBObject
             $this->have_avresults = $value;
         } elseif ($property == 'storage_path') {
             $this->storage_path = $value;
+        } elseif (Utilities::isTrue(Config::get('file_forwarding_enabled'))) {
+            if ($property == 'uid') {
+                $this->uid = $value;
+            } elseif ($property == 'forward_id') {
+                if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadForwardIDException($value);
+                }
+                $value = (int)$value;
+                $this->forward_id = (string)$value;
+            }
         } else {
             throw new PropertyAccessException($this, $property);
         }

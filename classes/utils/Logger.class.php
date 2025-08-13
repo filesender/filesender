@@ -531,12 +531,13 @@ class Logger
      * @param string $logEvent
      * @param object $target
      * @param object $author
+     * @param object $created
      */
-    public static function logActivity($logEvent, $target, $author = null)
+    public static function logActivity($logEvent, $target, $author = null, $created = null, $ip = null)
     {
-        AuditLog::create($logEvent, $target, $author);
-        StatLog::create($logEvent, $target);
-        AggregateStatistic::create($logEvent, $target,$author);
+        $auditlog = AuditLog::create($logEvent, $target, $author, $created, $ip);
+        StatLog::create($logEvent, $target, $created);
+        AggregateStatistic::create($logEvent, $target, $author);
 
         if( $logEvent == LogEventTypes::DOWNLOAD_ENDED || $logEvent == LogEventTypes::ARCHIVE_DOWNLOAD_ENDED ) {
             if ($target instanceof File) {
@@ -547,6 +548,7 @@ class Logger
         }
         
         self::info('Event#'.$logEvent.' on '.(string)$target.($author ? ' by '.(string)$author : ''));
+        return $auditlog;
     }
 
     /**
