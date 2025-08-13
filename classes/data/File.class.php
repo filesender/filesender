@@ -691,6 +691,15 @@ class File extends DBObject
                 $this->forward_id = (string)$value;
             }
         } else {
+            if(!Utilities::isTrue(Config::get('file_forwarding_enabled'))) {
+                // you don't get to set these if forwarding feature is set
+                // allow and ignore attempts
+                if ($property == 'uid') {
+                    return;
+                } elseif ($property == 'forward_id') {
+                    return;
+                }
+            }
             throw new PropertyAccessException($this, $property);
         }
     }
