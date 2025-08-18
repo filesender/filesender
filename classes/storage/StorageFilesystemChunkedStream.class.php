@@ -47,6 +47,8 @@ class StorageFilesystemChunkedStream
     protected $fh     = null;
     protected $currentChunkFile = null;
     protected $gameOver = false;
+
+    public $context = null;
     
     public function stream_open($path, $mode, $options, &$opened_path)
     {
@@ -56,7 +58,6 @@ class StorageFilesystemChunkedStream
         $this->file = File::fromUid($this->uid);
         return true;
     }
-
 
     public function stream_read($count)
     {
@@ -70,8 +71,7 @@ class StorageFilesystemChunkedStream
         $file_path = StorageFilesystem::buildPath($file).$file->uid;
         $chunkFile = StorageFilesystemChunked::getChunkFilename($file, $file_path, $offset);
 
-
-        if (strcmp($this->currentChunkFile, $chunkFile)) {
+        if (!$this->currentChunkFile || ($this->currentChunkFile && strcmp($this->currentChunkFile, $chunkFile))) {
 
             // if we try to open the file after the last chunk then we return FALSE
             $fh = fopen($chunkFile, 'r');

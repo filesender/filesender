@@ -113,18 +113,18 @@ $padding_size = $transfer->is_encrypted ? Config::get('upload_crypted_chunk_padd
 
 foreach ($files as $file) {
     Logger::debug("file: $file->name");
+
     $path = Storage::buildPath($file) . $file->uid;
-    $size = filesize($path);
+    $size = $transfer->is_encrypted ? $file->encrypted_size : $file->size;
+    $stream = Storage::getStream($file);
 
-    $fh = fopen($path, 'rb');
-    if(!$fh) throw new ForwardException('Cannot read file: '.$path);
-
+    if(!$stream) throw new ForwardException('Cannot read storage: '.$path);
     for($offset=0; $offset<=$size; $offset+=$chunk_size) {
-        $data = fread($fh, $chunk_size + $padding_size);
+        $data = fread($stream, $chunk_size + $padding_size);
         ForwardAnotherServer::putFileChunk($file, $data, $offset);
     }
 
-    fclose($fh);
+    fclose($stream);
     $file->forwarded();
 }
 
