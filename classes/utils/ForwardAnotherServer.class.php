@@ -530,7 +530,7 @@ class ForwardAnotherServer
      *
      * This will always return a valid IPv4 or IPv6 address.
      */
-    public static function getIP( ?Auditlog $auditlog = null )
+    public static function getIPForAuditlogOrClient( ?Auditlog $auditlog = null )
     {
         $clientip = Utilities::getClientIP();
         $ip = $clientip;
@@ -571,7 +571,7 @@ class ForwardAnotherServer
         $content = array(
             'record_activity' => $event,
             'created' => ($auditlog ? $auditlog->created : time()),
-            'ip' => self::getIP( $auditlog ),
+            'ip' => self::getIPForAuditlogOrClient( $auditlog ),
             'author' => ($auditlog ? $auditlog->author : ($recipient ? $recipient->email : null)),
             'fileids' => $fileids,
         );
@@ -594,7 +594,7 @@ class ForwardAnotherServer
         $content = array(
             'record_activity' => $event,
             'created' => ($auditlog ? $auditlog->created : time()),
-            'ip' => self::getIP( $auditlog ),
+            'ip' => self::getIPForAuditlogOrClient( $auditlog ),
             'author' => ($auditlog ? $auditlog->author : ($recipient ? $recipient->email : null)),
         );
         $r = $client->put('/file/'.$file->forward_id, null, $content);
