@@ -773,8 +773,10 @@ class RestEndpointTransfer extends RestEndpoint
             }
 
             // forward to another server
-            if (Utilities::isTrue( Config::get('file_forwarding_enabled')) &&
-                Auth::isRemoteApplication() && $data->forward_server) {
+            if (Utilities::isTrue( Config::get('file_forwarding_enabled'))
+                && Auth::isRemoteApplication()
+                && $data->forward_server)
+            {
                 Logger::debug($data->forward_server);
                 $applications = Config::get('auth_remote_applications');
                 if (isset($data->forward_server->appname) &&
