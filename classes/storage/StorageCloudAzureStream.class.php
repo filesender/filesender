@@ -46,6 +46,8 @@ class StorageCloudAzureStream
     protected $gameOver = false;
     protected $file   = null;
     
+    public $context = null;
+
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         $url = parse_url($path);
@@ -54,7 +56,6 @@ class StorageCloudAzureStream
         $this->file = File::fromUid($this->uid);
         return true;
     }
-
 
     public function stream_read($count)
     {
