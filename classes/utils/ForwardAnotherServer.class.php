@@ -525,6 +525,32 @@ class ForwardAnotherServer
         return $response;
     }
 
+    /*
+     * Try to get the IP from the auditlog, otherwise use teh client ip
+     *
+     * This will always return a valid IPv4 or IPv6 address.
+     */
+    public static function getIPForAuditlogOrClient( ?Auditlog $auditlog = null )
+    {
+        $clientip = Utilities::getClientIP();
+        $ip = $clientip;
+        
+        if( $auditlog )
+        {
+            if( $auditlog->ip ) {
+                $ip = $auditlog->ip;
+            
+                if ($ip &&
+                    !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
+                    !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+                {
+                    $ip = $clientip;
+                }
+            }
+        }
+        return $ip;
+    }
+
     /**
      * Record Activity
      * Call API: PUT /transfer/{id}/record_activity/{event}
@@ -545,7 +571,7 @@ class ForwardAnotherServer
         $content = array(
             'record_activity' => $event,
             'created' => ($auditlog ? $auditlog->created : time()),
-            'ip' => Utilities::getClientIP(), //($auditlog ? $auditlog->ip : Utilities::getClientIP()),
+            'ip' => self::getIPForAuditlogOrClient( $auditlog ),
             'author' => ($auditlog ? $auditlog->author : ($recipient ? $recipient->email : null)),
             'fileids' => $fileids,
         );
@@ -568,7 +594,7 @@ class ForwardAnotherServer
         $content = array(
             'record_activity' => $event,
             'created' => ($auditlog ? $auditlog->created : time()),
-            'ip' => Utilities::getClientIP(), //($auditlog ? $auditlog->ip : Utilities::getClientIP()),
+            'ip' => self::getIPForAuditlogOrClient( $auditlog ),
             'author' => ($auditlog ? $auditlog->author : ($recipient ? $recipient->email : null)),
         );
         $r = $client->put('/file/'.$file->forward_id, null, $content);
