@@ -1224,7 +1224,7 @@ class RestEndpointTransfer extends RestEndpoint
             $transfer->uploadCompleted();
         }
 
-        // record download start and end for Auditlog
+        // record download start and end for Auditlog (file_forwarding_enabled only)
         if ($data->record_activity) {
             if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
                 !$transfer->forward_id) {
