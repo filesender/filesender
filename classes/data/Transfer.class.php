@@ -2070,9 +2070,15 @@ class Transfer extends DBObject
 
     /**
      * need forward?
+     *
+     * If file_forwarding_enabled is false then this always return false.
      */
     public function needForward($tofrom = 'to')
     {
+        if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+            return false;
+        }
+
         $forward = $this->forward_server;
         if (is_array($forward) && isset($forward[$tofrom])) {
             $forward = $forward[$tofrom];
@@ -2086,9 +2092,15 @@ class Transfer extends DBObject
 
     /**
      * has been forward?
+     *
+     * If file_forwarding_enabled is false then this always return false.
      */
     public function hasBeenForwarded()
     {
+        if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+            return false;
+        }
+
         $forward = $this->forward_server;
         if (isset($forward['from'])) {
             $forward = $forward['from'];
