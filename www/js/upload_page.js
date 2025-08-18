@@ -2228,6 +2228,8 @@ $(function() {
         need_recipients: form.attr('data-need-recipients') == '1'
     };
 
+    $("#forward_server_name").select2({width:'100%'});
+
     filesender.ui.getALink = false;
     filesender.ui.nodes.gal.checkbox.prop('checked', false);
 
