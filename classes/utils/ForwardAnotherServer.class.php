@@ -537,13 +537,15 @@ class ForwardAnotherServer
         
         if( $auditlog )
         {
-            $ip = $auditlog->ip;
+            if( $auditlog->ip ) {
+                $ip = $auditlog->ip;
             
-            if ($ip &&
-                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
-                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-            {
-                $ip = $clientip;
+                if ($ip &&
+                    !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
+                    !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+                {
+                    $ip = $clientip;
+                }
             }
         }
         return $ip;
