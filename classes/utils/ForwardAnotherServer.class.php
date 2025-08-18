@@ -530,7 +530,7 @@ class ForwardAnotherServer
      * Call API: PUT /transfer/{id}/record_activity/{event}
      *
      */
-    public static function recordActivityTransfer(string $event, Transfer $transfer, Auditlog $auditlog = null, Recipient $recipient = null, $files = null)
+    public static function recordActivityTransfer(string $event, Transfer $transfer, ?Auditlog $auditlog = null, ?Recipient $recipient = null, $files = null)
     {
         Logger::debug('call REST API: PUT /transfer - record_activity:'.$event);
         $client = self::setupRestClient($transfer);
@@ -560,7 +560,7 @@ class ForwardAnotherServer
      * Call API: PUT /file/{id}/record_activity/{event}
      *
      */
-    public static function recordActivityFile(string $event, File $file, Auditlog $auditlog = null, Recipient $recipient = null)
+    public static function recordActivityFile(string $event, File $file, ?Auditlog $auditlog = null, ?Recipient $recipient = null)
     {
         Logger::debug('call REST API: PUT /file - record_activity:'.$event);
         $client = self::setupRestClient($file->transfer);
