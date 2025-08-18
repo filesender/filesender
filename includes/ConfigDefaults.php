@@ -398,6 +398,8 @@ $default = array(
     
     'validate_csrf_token_for_guests' => true,
 
+    'file_forwarding_enabled' => false,
+    
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',
         'default_transfer_days_valid',

@@ -609,24 +609,29 @@ class RestEndpointTransfer extends RestEndpoint
                 unset($options[TransferOptions::FORWARD_SERVER_NAME]);
             }
 
-            if (isset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]) &&
-                !empty($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER])) {
-                if (isset($options[TransferOptions::FORWARD_SERVER_NAME]) &&
-                    !empty($options[TransferOptions::FORWARD_SERVER_NAME])) {
-                    $server = ForwardAnotherServer::getServer($options[TransferOptions::FORWARD_SERVER_NAME]);
-                    if (!empty($server) &&
-                        isset($server['need_encrypt']) &&
-                        !empty($server['need_encrypt']) &&
-                        empty($data->encryption)) {
-                        throw new RestBadParameterException('forward_server_encrypt');
+            if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+                unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+            } else {
+                if (isset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]) &&
+                    !empty($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER])) {
+                    if (isset($options[TransferOptions::FORWARD_SERVER_NAME]) &&
+                        !empty($options[TransferOptions::FORWARD_SERVER_NAME])) {
+                        $server = ForwardAnotherServer::getServer($options[TransferOptions::FORWARD_SERVER_NAME]);
+                        if (!empty($server) &&
+                            isset($server['need_encrypt']) &&
+                            !empty($server['need_encrypt']) &&
+                            empty($data->encryption)) {
+                            throw new RestBadParameterException('forward_server_encrypt');
+                        }
+                        unset($options[TransferOptions::MUST_BE_LOGGED_IN_TO_DOWNLOAD]);
+                    } else {
+                        unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                        unset($options[TransferOptions::FORWARD_SERVER_NAME]);
                     }
-                    unset($options[TransferOptions::MUST_BE_LOGGED_IN_TO_DOWNLOAD]);
                 } else {
-                    unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
                     unset($options[TransferOptions::FORWARD_SERVER_NAME]);
                 }
-            } else {
-                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
             }
             
             // No recipients, not get_a_link and no way to get a recipient from options ? Fail if so
@@ -768,8 +773,10 @@ class RestEndpointTransfer extends RestEndpoint
             }
 
             // forward to another server
-            if (Utilities::isTrue( Config::get('file_forwarding_enabled')) &&
-                Auth::isRemoteApplication() && $data->forward_server) {
+            if (Utilities::isTrue( Config::get('file_forwarding_enabled'))
+                && Auth::isRemoteApplication()
+                && $data->forward_server)
+            {
                 Logger::debug($data->forward_server);
                 $applications = Config::get('auth_remote_applications');
                 if (isset($data->forward_server->appname) &&
@@ -1217,7 +1224,7 @@ class RestEndpointTransfer extends RestEndpoint
             $transfer->uploadCompleted();
         }
 
-        // record download start and end for Auditlog
+        // record download start and end for Auditlog (file_forwarding_enabled only)
         if ($data->record_activity) {
             if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
                 !$transfer->forward_id) {
