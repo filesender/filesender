@@ -1,4 +1,5 @@
 OpenPGP
+PGP
 a_transfer_link
 a_transfer_link_tip
 about
@@ -152,6 +153,8 @@ confirm_stop_upload
 confirm_upload_add_to_recipients_with_no_explicit_address
 confirm_use_openpgp_to_send_passphrase
 continue
+copied_to_clipboard
+copied_to_clipboard_error
 copy
 copy_text
 core_class_not_found
@@ -192,6 +195,7 @@ description
 details
 device
 dialog_autoclose
+directory_issue
 disable_terasender
 does_not_expire
 done
@@ -330,6 +334,7 @@ file_encryption_show_password
 file_encryption_wrong_password
 file_extension_not_allowed
 file_integrity_check_failed
+file_issue
 file_not_found
 file_size_does_not_match
 files
@@ -343,6 +348,10 @@ find_users_who_might_be_abusing_the_system
 forget
 forward
 forward_guest_voucher
+forward_in_progress
+forward_not_completed
+forward_server_name
+forward_to_another_server
 from
 gb_per_second
 general
@@ -483,6 +492,13 @@ oneweek
 open_auditlog
 open_file_auditlog
 open_recipient_auditlog
+openpgp_adding_to_transfer_with_some_public_keys_missing
+openpgp_blurb_guests_page
+openpgp_encrypt_passphrase_to_email
+openpgp_functionality_limited_to_one_recipient
+openpgp_invalid_key_guest_upload
+openpgp_public_key_invalid
+openpgp_upload_page_description
 optional
 optional_message
 options
@@ -498,13 +514,6 @@ pause
 paused
 perform_these_actions_on_all_users
 performed
-openpgp_adding_to_transfer_with_some_public_keys_missing
-openpgp_blurb_guests_page
-openpgp_encrypt_passphrase_to_email
-openpgp_functionality_limited_to_one_recipient
-openpgp_invalid_key_guest_upload
-openpgp_public_key_invalid
-openpgp_upload_page_description
 please_add_file_again
 preferences_updated
 previous
@@ -552,7 +561,10 @@ report_event_archive_download_started
 report_event_download_ended
 report_event_download_resumed
 report_event_download_started
+report_event_file_forwarded
 report_event_file_uploaded
+report_event_forward_ended
+report_event_forward_started
 report_event_transfer_available
 report_event_transfer_closed
 report_event_transfer_decrypt_failed
@@ -731,6 +743,7 @@ terms_title
 test_my_openpgp_key
 test_my_openpgp_message
 test_openpgp_message
+test_pgp_message
 testterm
 text_desc_of_file_count_and_size
 the_system_does_not_know_your_openpgp_key
