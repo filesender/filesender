@@ -545,7 +545,7 @@ class ForwardAnotherServer
         $content = array(
             'record_activity' => $event,
             'created' => ($auditlog ? $auditlog->created : time()),
-            'ip' => ($auditlog ? $auditlog->ip : Utilities::getClientIP()),
+            'ip' => Utilities::getClientIP(), //($auditlog ? $auditlog->ip : Utilities::getClientIP()),
             'author' => ($auditlog ? $auditlog->author : ($recipient ? $recipient->email : null)),
             'fileids' => $fileids,
         );
@@ -568,7 +568,7 @@ class ForwardAnotherServer
         $content = array(
             'record_activity' => $event,
             'created' => ($auditlog ? $auditlog->created : time()),
-            'ip' => ($auditlog ? $auditlog->ip : Utilities::getClientIP()),
+            'ip' => Utilities::getClientIP(), //($auditlog ? $auditlog->ip : Utilities::getClientIP()),
             'author' => ($auditlog ? $auditlog->author : ($recipient ? $recipient->email : null)),
         );
         $r = $client->put('/file/'.$file->forward_id, null, $content);
