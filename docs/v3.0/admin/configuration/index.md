@@ -3610,7 +3610,7 @@ $config['auth_remote_applications'] = array (
         'isAdmin' => true,
         'acl' => array(
             'info' => array( 'get' => true ),
-            'transfer' => array( 'put' => true, 'post' => true ),
+            'transfer' => array( 'put' => true, 'post' => true, 'delete' => true ),
             'file' => array( 'put' => true ),
             'recipient' => array( 'put' => true ),
         )
