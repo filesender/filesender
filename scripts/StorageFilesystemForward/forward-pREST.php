@@ -49,6 +49,7 @@ set_error_handler("customErrorHandler");
 //
 $target = (count($argv) > 1) ? $argv[1] : false;
 $server = (count($argv) > 2) ? $argv[2] : false;
+$mode   = (count($argv) > 3) ? $argv[3] : 'master';
 if (!$target) {
     echo "forward-pREST.php: no target-id\n";
     Logger::error("forward-REST.php: no target-id");
@@ -59,7 +60,6 @@ if (!$server) {
     Logger::error("forward-REST.php: no server");
     exit(1);
 }
-$mode   = (count($argv) > 3) ? $argv[3] : 'master';
 
 $testingMode = false;//true;
 if( $testingMode ) {
@@ -78,8 +78,8 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
-//$server = ForwardAnotherServer::getServerByTransfer($transfer);
-$server = ForwardAnotherServer::getServer($server);
+$server = ForwardAnotherServer::getServerByTransfer($transfer);
+//$server = ForwardAnotherServer::getServer($server);
 
 $files = File::fromTransfer($transfer);
 if(!$files) {
@@ -138,7 +138,6 @@ if ($mode == 'master') {
 
 } else if ($mode == 'worker') {
     $line = explode(',',$argv[4]);
-    //echo 'worker: '.print_r($line,true);
     $file=$files[$line[0]];
     $offset=$line[1];
     $stream = Storage::getStream($file);
