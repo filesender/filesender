@@ -33,7 +33,6 @@
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
 Logger::setProcess(ProcessTypes::ASYNC);
-Logger::info('Send files to another server via FileSender pREST API started');
 
 //
 // Error handler
@@ -92,6 +91,7 @@ $chunk_size = isset($server['method_options']['chunk_size']) ? $server['method_o
 $padding_size = $transfer->is_encrypted ? Config::get('upload_crypted_chunk_padding_size') : 0;
 
 if ($mode == 'master') {
+    Logger::info('Send files to another server via FileSender pREST API started');
     $workers = isset($server['method_options']['workers']) ? $server['method_options']['workers'] : 8;
 
     $command = __DIR__.'/pREST/pREST "'.__FILE__.'" "'.$argv[1].'" "'.$argv[2].'" "'.$workers.'"';
@@ -128,6 +128,9 @@ if ($mode == 'master') {
             Logger::debug("file: $file->name forwarded");
             $file->forwarded();
         }
+
+        // Need to make the transfer available (sends email to recipients) ?
+        $transfer->makeAvailable();
     } else {
         Logger::error("Something went wrong with opening pREST process");
         exit(1);
