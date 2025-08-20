@@ -3573,9 +3573,9 @@ $config['rest_allow_jsonp'] = array(
     - __url__ (string): the URL for REST API
     - __appname__ (string): the name of `auth_remote_applications`
     - __need_encrypt__ (string): 0 or 1
-    - __method__ (string): `MMCFTP`, `SCP`, or `REST`
+    - __method__ (string): `MMCFTP`, `SCP`, `pREST` or `REST`
     - __method_params__ (array): The parameters for method(command).
-    - __method_options__ (array): The options for method(command). MMCFTP supports `retry_wait_time` and `retry_num_max`
+    - __method_options__ (array): The options for method(command). MMCFTP supports `retry_wait_time` and `retry_num_max`. pREST supports `workers`
 
 Example:
 ```
@@ -3610,7 +3610,7 @@ $config['auth_remote_applications'] = array (
         'isAdmin' => true,
         'acl' => array(
             'info' => array( 'get' => true ),
-            'transfer' => array( 'put' => true ),
+            'transfer' => array( 'put' => true, 'post' => true, 'delete' => true ),
             'file' => array( 'put' => true ),
             'recipient' => array( 'put' => true ),
         )

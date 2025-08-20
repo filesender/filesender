@@ -57,6 +57,15 @@ class StorageCloudS3Stream
         return true;
     }
 
+    public function stream_seek($offset, $whence) {
+        $this->offset = $offset;
+        return true;
+    }
+
+    public function stream_tell() {
+        return $this->offset;
+    }
+
     public function stream_read($count)
     {
         $file   = $this->file;
