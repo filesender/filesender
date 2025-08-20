@@ -115,9 +115,12 @@ if(!$server || !isset($server['hostname'])) {
 }
 $hostname = $server['hostname'];
 
-$retry_wait_time = isset($server['method_options']['retry_wait_time']) ? $server['method_options']['retry_wait_time'] : 60;
-$retry_num_max = isset($server['method_options']['retry_num_max']) ? $server['method_options']['retry_num_max'] : 10;
-$params = is_array($server['method_params']) ? implode(' ', $server['method_params']) : '';
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'pREST');
+Logger::debug('method_config: '.print_r($method_config,true));
+
+$retry_wait_time = isset($method_config['method_options']['retry_wait_time']) ? $method_config['method_options']['retry_wait_time'] : 60;
+$retry_num_max = isset($method_config['method_options']['retry_num_max']) ? $method_config['method_options']['retry_num_max'] : 10;
+$params = is_array($method_config['method_params']) ? implode(' ', $method_config['method_params']) : '';
 
 $command = Config::get('storage_filesystem_forward_mmcftp_command');
 

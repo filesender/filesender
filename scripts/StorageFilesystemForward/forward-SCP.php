@@ -102,6 +102,9 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'pREST');
+Logger::debug('method_config: '.print_r($method_config,true));
+
 $files = File::fromTransfer($transfer);
 if(!$files) {
     Logger::error("Transfer files not found: $target");
@@ -115,9 +118,9 @@ if(!$server || !isset($server['hostname'])) {
 }
 $hostname = $server['hostname'];
 
-$remote_user = isset($server['method_options']['remote_user']) ? $server['method_options']['remote_user'].'@' : '';
-$remote_dir = isset($server['method_options']['remote_dir']) ? $server['method_options']['remote_dir'] : '.';
-$params = is_array($server['method_params']) ? implode(' ', $server['method_params']) : '';
+$remote_user = isset($method_config['method_options']['remote_user']) ? $method_config['method_options']['remote_user'].'@' : '';
+$remote_dir = isset($method_config['method_options']['remote_dir']) ? $method_config['method_options']['remote_dir'] : '.';
+$params = is_array($method_config['method_params']) ? implode(' ', $method_config['method_params']) : '';
 
 $command = Config::get('storage_filesystem_forward_scp_command');
 

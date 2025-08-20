@@ -327,6 +327,7 @@ A note about colours;
 
 * [file_forwarding_enabled](#file_forwarding_enabled)
 * [forward_server_list](#forward_server_list)
+* [forward_capabilities](#forward_capabilities)
 * [storage_filesystem_forward_mmcftp_command](#storage_filesystem_forward_mmcftp_command)
 * [storage_filesystem_forward_scp_command](#storage_filesystem_forward_scp_command)
 
@@ -3573,9 +3574,6 @@ $config['rest_allow_jsonp'] = array(
     - __url__ (string): the URL for REST API
     - __appname__ (string): the name of `auth_remote_applications`
     - __need_encrypt__ (string): 0 or 1
-    - __method__ (string): `MMCFTP`, `SCP`, `pREST` or `REST`
-    - __method_params__ (array): The parameters for method(command).
-    - __method_options__ (array): The options for method(command). MMCFTP supports `retry_wait_time` and `retry_num_max`. pREST supports `workers`
 
 Example:
 ```
@@ -3618,17 +3616,57 @@ $config['auth_remote_applications'] = array (
 );
 
 $config['forward_server_list'] = array(
-    'server-B-mmcftp' => array(
+    'server-B' => array(
         'label' => array(
-            'en' => 'NII Amsterdam(MMCFTP)',
-            'ja' => 'NII アムステルダム(MMCFTP)',
+            'en' => 'NII Amsterdam',
+            'ja' => 'NII アムステルダム',
         ),
-        'description' => 'NII: Amsterdam-NL by MMCFTP',
+        'description' => 'NII: Amsterdam-NL',
         'protocol_version' => 1,
         'hostname' => 'server-b',
         'url' => 'https://server-b.filesender.nii.ac.jp',
         'appname' => 'gfs:server-A_to_server-B',
         'need_encrypt' => 1,
+    ),
+    'server-C' => array(
+        'label' => array(
+            'en' => 'NII New York',
+            'ja' => 'NII ニューヨーク',
+        ),
+        'description' => 'NII: NewYork-US',
+        'protocol_version' => 0,
+        'hostname' => 'server-c',
+        'url' => 'https://server-c.filesender.nii.ac.jp',
+        'appname' => 'gfs:server-A_to_server-C',
+        'need_encrypt' => 0,
+    ),
+);
+```
+### forward_capabilities
+
+* __description:__ List of methods that can be used for forwarding.
+* __mandatory:__ no.
+* __type:__ array
+* __default:__ `array( 0 => array( 'method' => 'REST' ), )`
+* __available:__ since version 3.x
+* __comment:__ An array of methods, each element key is used to rank preference, 0 being least prefered.
+    - __method__ (string): `MMCFTP`, `SCP`, `pREST` or `REST`
+    - __method_params__ (array): The parameters for method(command).
+    - __method_options__ (array): The options for method(command). MMCFTP supports `retry_wait_time` and `retry_num_max`. pREST supports `workers`
+
+Example:
+```
+$config['forward_capabilities'] = array(
+    0 => array(
+        'method' => 'REST',
+    ),
+    1 => array(
+        'method' => 'pREST',
+        'method_options' => array(
+            'workers' => 12,
+        ),
+    ),
+    2 => array(
         'method' => 'MMCFTP',
         'method_params' => array(
             '20',     // timer_p
@@ -3639,21 +3677,6 @@ $config['forward_server_list'] = array(
         'method_options' => array(
             'retry_wait_time' => 30,
             'retry_num_max' => 10,
-        ),
-    ),
-    'server-C-rest' => array(
-        'label' => array(
-            'en' => 'NII New York(REST API)',
-            'ja' => 'NII ニューヨーク(REST API)',
-        ),
-        'description' => 'NII: NewYork-US by REST API',
-        'protocol_version' => 0,
-        'hostname' => 'server-c',
-        'url' => 'https://server-c.filesender.nii.ac.jp',
-        'appname' => 'gfs:server-A_to_server-C',
-        'need_encrypt' => 0,
-        'method' => 'REST',
-        'method_options' => array(
         ),
     ),
 );

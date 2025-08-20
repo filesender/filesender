@@ -495,6 +495,11 @@ $default = array(
 
     'forward_server_list' => array(
     ),
+    'forward_capabilities' => array(
+        0 => array(
+            'method' => 'REST'
+        ),
+    ),
 
     'guest_upload_page_hide_unchangable_options' => false,
 

@@ -102,13 +102,16 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'pREST');
+Logger::debug('method_config: '.print_r($method_config,true));
+
 $files = File::fromTransfer($transfer);
 if(!$files) {
     Logger::error("Transfer files not found: $target");
     exit(1);
 }
 
-$chunk_size = isset($server['method_options']['chunk_size']) ? $server['method_options']['chunk_size'] : Config::get('upload_chunk_size');
+$chunk_size = isset($method_config['method_options']['chunk_size']) ? $method_config['method_options']['chunk_size'] : Config::get('upload_chunk_size');
 $padding_size = $transfer->is_encrypted ? Config::get('upload_crypted_chunk_padding_size') : 0;
 
 foreach ($files as $file) {
