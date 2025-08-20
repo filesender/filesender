@@ -175,9 +175,12 @@ class ForwardAnotherServer
         $client = self::setupRestClient($transfer);
         $client_info = $client->getInfo();
         $remote_caps = $client_info->forward_capabilities;        
-        $method_config = array_find($remote_caps, function($value,$key) use ($method) {
+        $method_config = json_decode(json_encode(array_find($remote_caps, function($value,$key) use ($method) {
             return $value->method == $method;
-        });
+        })), true);
+        if (!isset($method_config['method']) || $method_config['method']!=$method) {
+            throw new ForwardException('No forward method config found');
+	}
         return $method_config;
     }
 
