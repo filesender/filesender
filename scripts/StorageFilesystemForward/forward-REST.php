@@ -33,8 +33,10 @@
 
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
+$method=substr($_SERVER['SCRIPT_FILENAME'],8,-4);
+
 Logger::setProcess(ProcessTypes::ASYNC);
-Logger::info('Send files to another server via FileSender REST API started');
+Logger::info("Send files to another server via FileSender $method API started");
 
 //
 // Error handler
@@ -70,13 +72,13 @@ function getBoolArg( $name )
 $target = (count($argv) > 1) ? $argv[1] : false;
 $server = (count($argv) > 2) ? $argv[2] : false;
 if (!$target) {
-    echo "forward-REST.php: no target-id\n";
-    Logger::error("forward-REST.php: no target-id");
+    echo "forward-$method.php: no target-id\n";
+    Logger::error("forward-$method.php: no target-id");
     exit(1);
 }
 if (!$server) {
-    echo "forward-REST.php: no server\n";
-    Logger::error("forward-REST.php: no server");
+    echo "forward-$method.php: no server\n";
+    Logger::error("forward-$method.php: no server");
     exit(1);
 }
 
@@ -102,7 +104,7 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
-$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'REST');
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,$method);
 Logger::debug('method_config: '.print_r($method_config,true));
 
 $files = File::fromTransfer($transfer);

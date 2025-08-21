@@ -33,8 +33,10 @@
 
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
+$method=substr($_SERVER['SCRIPT_FILENAME'],8,-4);
+
 Logger::setProcess(ProcessTypes::ASYNC);
-Logger::info('Send files to another server via MMCFTP started');
+Logger::info("Send files to another server via $method started");
 
 //
 // Error handler
@@ -70,13 +72,13 @@ function getBoolArg( $name )
 $target = (count($argv) > 1) ? $argv[1] : false;
 $server = (count($argv) > 2) ? $argv[2] : false;
 if (!$target) {
-    echo "forward-MMCFTP.php: no target-id\n";
-    Logger::error("forward-MMCFTP.php: no target-id");
+    echo "forward-$method.php: no target-id\n";
+    Logger::error("forward-$method.php: no target-id");
     exit(1);
 }
 if (!$server) {
-    echo "forward-MMCFTP.php: no server\n";
-    Logger::error("forward-MMCFTP.php: no server");
+    echo "forward-$method.php: no server\n";
+    Logger::error("forward-$method.php: no server");
     exit(1);
 }
 
@@ -115,7 +117,7 @@ if(!$server || !isset($server['hostname'])) {
 }
 $hostname = $server['hostname'];
 
-$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'MMCFTP');
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,$method);
 Logger::debug('method_config: '.print_r($method_config,true));
 
 $retry_wait_time = isset($method_config['method_options']['retry_wait_time']) ? $method_config['method_options']['retry_wait_time'] : 60;
@@ -144,7 +146,7 @@ foreach ($files as $file) {
                 sleep($retry_wait_time);
                 continue;
             } else {
-                Logger::error("MMCFTP command failed:");
+                Logger::error("$method command failed:");
                 Logger::error($output);
                 return;
             }

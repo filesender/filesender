@@ -32,6 +32,8 @@
 
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
+$method=substr($_SERVER['SCRIPT_FILENAME'],8,-4);
+
 Logger::setProcess(ProcessTypes::ASYNC);
 
 //
@@ -51,13 +53,13 @@ $target = (count($argv) > 1) ? $argv[1] : false;
 $server = (count($argv) > 2) ? $argv[2] : false;
 $mode   = (count($argv) > 3) ? $argv[3] : 'master';
 if (!$target) {
-    echo "forward-pREST.php: no target-id\n";
-    Logger::error("forward-REST.php: no target-id");
+    echo "forward-$method.php: no target-id\n";
+    Logger::error("forward-$method.php: no target-id");
     exit(1);
 }
 if (!$server) {
-    echo "forward-pREST.php: no server\n";
-    Logger::error("forward-REST.php: no server");
+    echo "forward-$method.php: no server\n";
+    Logger::error("forward-$method.php: no server");
     exit(1);
 }
 
@@ -80,7 +82,7 @@ Logger::debug("transfer: $transfer");
 
 $server = ForwardAnotherServer::getServerByTransfer($transfer);
 //$server = ForwardAnotherServer::getServer($server);
-$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'pREST');
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,$method);
 Logger::debug('method_config: '.print_r($method_config,true));
 
 $files = File::fromTransfer($transfer);
@@ -93,7 +95,7 @@ $chunk_size = isset($method_config['method_options']['chunk_size']) ? $method_co
 $padding_size = $transfer->is_encrypted ? Config::get('upload_crypted_chunk_padding_size') : 0;
 
 if ($mode == 'master') {
-    Logger::info('Send files to another server via FileSender pREST API started');
+    Logger::info("Send files to another server via FileSender $method API started");
     $workers = isset($method_config['method_options']['workers']) ? $method_config['method_options']['workers'] : 8;
 
     $command = __DIR__.'/pREST/pREST "'.__FILE__.'" "'.$argv[1].'" "'.$argv[2].'" "'.$workers.'"';
@@ -122,7 +124,7 @@ if ($mode == 'master') {
 
         $return_value = proc_close($process);
         if ($return_value != 0) {
-            Logger::error("Something went wrong with the pREST script: $command, return value: $return_value");
+            Logger::error("Something went wrong with the $method script: $command, return value: $return_value");
             exit(1);
         }
 
@@ -134,7 +136,7 @@ if ($mode == 'master') {
         // Need to make the transfer available (sends email to recipients) ?
         $transfer->makeAvailable();
     } else {
-        Logger::error("Something went wrong with opening pREST process");
+        Logger::error("Something went wrong with opening $method process");
         exit(1);
     }
 
