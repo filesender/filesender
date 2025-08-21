@@ -115,7 +115,7 @@ if(!$server || !isset($server['hostname'])) {
 }
 $hostname = $server['hostname'];
 
-$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'pREST');
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'MMCFTP');
 Logger::debug('method_config: '.print_r($method_config,true));
 
 $retry_wait_time = isset($method_config['method_options']['retry_wait_time']) ? $method_config['method_options']['retry_wait_time'] : 60;

@@ -102,7 +102,7 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
-$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'pREST');
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,'REST');
 Logger::debug('method_config: '.print_r($method_config,true));
 
 $files = File::fromTransfer($transfer);
