@@ -118,7 +118,6 @@ if(!is_null($storage_usage)) {
 StatLog::createGlobal(LogEventTypes::GLOBAL_ACTIVE_USERS, count(User::getActive()));
 StatLog::createGlobal(LogEventTypes::GLOBAL_AVAILABLE_TRANSFERS, count(Transfer::all(Transfer::AVAILABLE)));
 
-
 // Close expired transfers
 if( $verbose ) echo "cron.php closing expired transfers...\n";
 foreach(Transfer::allExpired() as $transfer) {
@@ -126,7 +125,17 @@ foreach(Transfer::allExpired() as $transfer) {
         continue;
     }
     Logger::info($transfer.' expired, closing it');
-    $transfer->close(false, $force );
+    try {
+        $transfer->close(false, $force);
+    } catch (Exception $e) {
+        Logger::warn("Closing expired transfer failed. error:" . $e->getMessage());
+        Logger::warn("Forcing: closing expired transfer: $transfer");
+        try {
+            $transfer->close(false, true);
+        } catch (Exception $e) {
+            Logger::warn("Force closing expired transfer failed. error:" . $e->getMessage());
+        }
+    }
 }
 
 // Delete failed transfers
