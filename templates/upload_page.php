@@ -19,6 +19,7 @@ function render_forward_to_another_server($advanced=false) {
         echo '            <select id="forward_server_name" name="forward_server_name">'."\n";
         $forwardServers = ForwardAnotherServer::getServersList();
         foreach ($forwardServers as $key => $value) {
+            if (rtrim($value['url'],'/')==rtrim(Config::get('site_url'),'/')) continue;
             $server_label = ForwardAnotherServer::getServerLabel($key);
             if (isset($value['need_encrypt']) && !empty($value['need_encrypt'])) {
                 $need_encrypt = 'class="need-encrypt"';
