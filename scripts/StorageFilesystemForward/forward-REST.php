@@ -33,7 +33,7 @@
 
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
-$method=substr($_SERVER['SCRIPT_FILENAME'],8,-4);
+$method=substr(basename(__FILE__),8,-4);
 
 Logger::setProcess(ProcessTypes::ASYNC);
 Logger::info("Send files to another server via FileSender $method API started");
