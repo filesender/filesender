@@ -2,13 +2,12 @@
 
 PHPFILE="${1}"
 TARGET="${2}"
-SERVER="${3}"
-MAX_JOBS="${4}"
+MAX_JOBS="${3}"
 CURRENT_JOBS=0
 
 function process() {
   line="${1}"
-  php "${PHPFILE}" "${TARGET}" "${SERVER}" "worker" "${line}" 2>&1
+  php "${PHPFILE}" "${TARGET}" "worker" "${line}" 2>&1
 }
 
 while read -r line; do
