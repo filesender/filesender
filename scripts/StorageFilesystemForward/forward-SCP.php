@@ -33,8 +33,10 @@
 
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
+$method=substr(basename(__FILE__),8,-4);
+
 Logger::setProcess(ProcessTypes::ASYNC);
-Logger::info('Send files to another server via SCP started');
+Logger::info("Send files to another server via $method started");
 
 //
 // Error handler
@@ -70,13 +72,13 @@ function getBoolArg( $name )
 $target = (count($argv) > 1) ? $argv[1] : false;
 $server = (count($argv) > 2) ? $argv[2] : false;
 if (!$target) {
-    echo "forward-SCP.php: no target-id\n";
-    Logger::error("forward-SCP.php: no target-id");
+    echo "forward-$method.php: no target-id\n";
+    Logger::error("forward-$method.php: no target-id");
     exit(1);
 }
 if (!$server) {
-    echo "forward-SCP.php: no server\n";
-    Logger::error("forward-SCP.php: no server");
+    echo "forward-$method.php: no server\n";
+    Logger::error("forward-$method.php: no server");
     exit(1);
 }
 
@@ -102,6 +104,9 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,$method);
+Logger::debug('method_config: '.print_r($method_config,true));
+
 $files = File::fromTransfer($transfer);
 if(!$files) {
     Logger::error("Transfer files not found: $target");
@@ -115,9 +120,9 @@ if(!$server || !isset($server['hostname'])) {
 }
 $hostname = $server['hostname'];
 
-$remote_user = isset($server['method_options']['remote_user']) ? $server['method_options']['remote_user'].'@' : '';
-$remote_dir = isset($server['method_options']['remote_dir']) ? $server['method_options']['remote_dir'] : '.';
-$params = is_array($server['method_params']) ? implode(' ', $server['method_params']) : '';
+$remote_user = isset($method_config['method_options']['remote_user']) ? $method_config['method_options']['remote_user'].'@' : '';
+$remote_dir = isset($method_config['method_options']['remote_dir']) ? $method_config['method_options']['remote_dir'] : '.';
+$params = is_array($method_config['method_params']) ? implode(' ', $method_config['method_params']) : '';
 
 $command = Config::get('storage_filesystem_forward_scp_command');
 

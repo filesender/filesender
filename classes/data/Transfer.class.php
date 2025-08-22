@@ -1744,14 +1744,15 @@ class Transfer extends DBObject
 
         $server_id = $this->getOption(TransferOptions::FORWARD_SERVER_NAME);
         $server = ForwardAnotherServer::getServer($server_id);;
-        if (!$server || !$server['appname'] || !$server['method'] || !$server['url']) {
+        if (!$server || !$server['appname'] || !$server['url']) {
             throw new RestBadParameterException('server_id');
         }
         $this->forward_server = array(
             'appname' => $server['appname'],
-            'method' => $server['method'],
             'to' => $server['url'],
         );
+        $method=ForwardAnotherServer::findBestForwardMethod($this);
+        $this->forward_server['method'] = $method;
 
         $forwarded_transfer = ForwardAnotherServer::forwardTransfer($this);
         $this->forward_id = $forwarded_transfer->forward_id;

@@ -108,6 +108,36 @@ class ForwardAnotherServer
     }
 
     /**
+     * find the best method that both sites support
+     *
+     *  @param Transfer $transfer
+     */
+    public static function findBestForwardMethod(Transfer $transfer)
+    {
+        $client = self::setupRestClient($transfer);
+        $client_info = $client->getInfo();
+        $my_caps = Config::get('forward_capabilities');
+        $remote_caps = $client_info->forward_capabilities;
+        krsort($my_caps);
+        Logger::debug('my_caps (sorted):'.print_r($my_caps,true));
+        Logger::debug('remote_caps:'.print_r($remote_caps,true));
+        $method='';
+        foreach($my_caps as $my_cap) {
+            if (array_find($remote_caps, function($value,$key) use ($my_cap) {
+                    return $value->method == $my_cap['method'];
+                }) != null) {
+                $method = $my_cap['method'];
+                Logger::debug('best method: '.$method);
+                break;
+            }
+        }
+        if ($method=='') {
+            throw new ForwardException('No forward method found');
+        }
+        return $method;
+    }
+
+    /**
      * get Forward server information
      *
      * @param string server_id
@@ -133,19 +163,38 @@ class ForwardAnotherServer
     }
 
     /**
+     * get Forward server method config information
+     *
+     * @param string appname
+     */
+    public static function getServerMethodConfig(Transfer $transfer, $method)
+    {
+        if (!isset($transfer->forward_server['appname']) ||
+            !isset($transfer->forward_server['method']) ||
+            !$method || !is_string($method)) return null;
+        $client = self::setupRestClient($transfer);
+        $client_info = $client->getInfo();
+        $remote_caps = $client_info->forward_capabilities;        
+        $method_config = json_decode(json_encode(array_find($remote_caps, function($value,$key) use ($method) {
+            return $value->method == $method;
+        })), true);
+        if (!isset($method_config['method']) || $method_config['method']!=$method) {
+            throw new ForwardException('No forward method config found');
+	}
+        return $method_config;
+    }
+
+    /**
      * get Forward server information
      *
      * @param string appname
-     * @param string method
      */
-    public static function getServerByApp($appname, $method)
+    public static function getServerByApp($appname)
     {
-        if (!$appname || !is_string($appname) ||
-            !$method || !is_string($method)) return null;
+        if (!$appname || !is_string($appname)) return null;
         $servers = self::getServersList();
         foreach ($servers as $server_id => $server) {
-            if ($server['appname'] === $appname &&
-                $server['method'] === $method) {
+            if ($server['appname'] === $appname) {
                 return $server;
             }
         }
@@ -162,8 +211,7 @@ class ForwardAnotherServer
         if (!isset($transfer->forward_server['appname']) ||
             !isset($transfer->forward_server['method'])) return null;
         $appname = $transfer->forward_server['appname'];
-        $method = $transfer->forward_server['method'];
-        return self::getServerByApp($appname, $method);
+        return self::getServerByApp($appname);
     }
 
     /**

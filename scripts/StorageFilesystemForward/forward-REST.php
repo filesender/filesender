@@ -33,8 +33,10 @@
 
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
+$method=substr(basename(__FILE__),8,-4);
+
 Logger::setProcess(ProcessTypes::ASYNC);
-Logger::info('Send files to another server via FileSender REST API started');
+Logger::info("Send files to another server via FileSender $method API started");
 
 //
 // Error handler
@@ -70,13 +72,13 @@ function getBoolArg( $name )
 $target = (count($argv) > 1) ? $argv[1] : false;
 $server = (count($argv) > 2) ? $argv[2] : false;
 if (!$target) {
-    echo "forward-REST.php: no target-id\n";
-    Logger::error("forward-REST.php: no target-id");
+    echo "forward-$method.php: no target-id\n";
+    Logger::error("forward-$method.php: no target-id");
     exit(1);
 }
 if (!$server) {
-    echo "forward-REST.php: no server\n";
-    Logger::error("forward-REST.php: no server");
+    echo "forward-$method.php: no server\n";
+    Logger::error("forward-$method.php: no server");
     exit(1);
 }
 
@@ -102,13 +104,16 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
+$method_config = ForwardAnotherServer::getServerMethodConfig($transfer,$method);
+Logger::debug('method_config: '.print_r($method_config,true));
+
 $files = File::fromTransfer($transfer);
 if(!$files) {
     Logger::error("Transfer files not found: $target");
     exit(1);
 }
 
-$chunk_size = isset($server['method_options']['chunk_size']) ? $server['method_options']['chunk_size'] : Config::get('upload_chunk_size');
+$chunk_size = isset($method_config['method_options']['chunk_size']) ? $method_config['method_options']['chunk_size'] : Config::get('upload_chunk_size');
 $padding_size = $transfer->is_encrypted ? Config::get('upload_crypted_chunk_padding_size') : 0;
 
 foreach ($files as $file) {
