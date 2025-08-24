@@ -49,14 +49,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
 set_error_handler("customErrorHandler");
 
 
-//
-// False by default, if present it is set
-//
-function getBoolArg( $name )
-{
-    global $argv;
-    return in_array($name,$argv);    
-}
 
 //
 // Target transfer id
@@ -71,7 +63,7 @@ if (!$target) {
 //
 // Mainly a developer feature. Do not send emails to allow rapid testing
 //
-$testingMode = getBoolArg('--testing-mode'); // (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
+$testingMode = Args::getBoolArg('--testing-mode'); // (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
 //$testingMode = true;
 if( $testingMode ) {
     Mail::TESTING_SET_DO_NOT_SEND_EMAIL();

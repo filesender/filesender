@@ -36,27 +36,11 @@ require_once(dirname(__FILE__).'/../../includes/init.php');
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('Cron started');
 
-//
-// False by default, if present it is set
-//
-function getBoolArg( $name )
-{
-    global $argv;
-    
-    $ret = (count($argv) > 1) ? $argv[1]==$name : false;
-    if( !$ret && count($argv) > 2 ) {
-        $ret = ($argv[2]==$name);
-        if( !$ret && count($argv) > 3 ) {
-            $ret = ($argv[3]==$name);
-        }
-    }
-    return $ret;
-}
 
 //
 // Print some messages to give a hint to the user on progress
 //
-$verbose = getBoolArg('--verbose');
+$verbose = Args::getBoolArg('--verbose');
 
 //
 // If one or more files in the transfer can not be deleted
@@ -66,12 +50,12 @@ $verbose = getBoolArg('--verbose');
 // deleted some files and the system is halting when it tries
 // to delete those same files.
 //
-$force = getBoolArg('--force');
+$force = Args::getBoolArg('--force');
 
 //
 // Mainly a developer feature. Do not send emails to allow rapid testing
 //
-$testingMode = getBoolArg('--testing-mode'); // (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
+$testingMode = Args::getBoolArg('--testing-mode'); // (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
 if( $testingMode ) {
     Mail::TESTING_SET_DO_NOT_SEND_EMAIL();
 }
