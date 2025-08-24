@@ -197,4 +197,19 @@ class Args
     {
         return max($min, min($max, $current));
     }
+
+
+    /**
+     * A simple method to get --verbose and --dry-run type single arguments
+     * without needing to do full arg passing
+     *
+     * @param name Full binary arg, for example '--verbose'
+     * @return false by default, true of arg is set
+     */
+    public static function getBoolArg( $name )
+    {
+        global $argv;
+        return in_array($name,$argv);
+    }
+    
 }
