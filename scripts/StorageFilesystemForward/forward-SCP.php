@@ -55,30 +55,16 @@ set_error_handler("customErrorHandler");
 function getBoolArg( $name )
 {
     global $argv;
-    
-    $ret = (count($argv) > 1) ? $argv[1]==$name : false;
-    if( !$ret && count($argv) > 2 ) {
-        $ret = ($argv[2]==$name);
-        if( !$ret && count($argv) > 3 ) {
-            $ret = ($argv[3]==$name);
-        }
-    }
-    return $ret;
+    return in_array($name,$argv);
 }
 
 //
 // Target transfer id
 //
 $target = (count($argv) > 1) ? $argv[1] : false;
-$server = (count($argv) > 2) ? $argv[2] : false;
 if (!$target) {
     echo "forward-$method.php: no target-id\n";
     Logger::error("forward-$method.php: no target-id");
-    exit(1);
-}
-if (!$server) {
-    echo "forward-$method.php: no server\n";
-    Logger::error("forward-$method.php: no server");
     exit(1);
 }
 

@@ -79,13 +79,12 @@ class ForwardAnotherServer
         if (!$server) {
             throw new ForwardException('Not found server: '.$transfer->forward_server);
         }
-        $hostname = $server['hostname'];
         Logger::logActivity(LogEventTypes::FORWARD_STARTED, $transfer);
         Logger::debug('forward script exec start, id=' . $id);
-        Logger::debug("exec: nohup php $script $id $hostname >> $output 2>&1 &");
-        exec("nohup php $script $id $hostname >> $output 2>&1 &");
+        Logger::debug("exec: nohup php $script $id >> $output 2>&1 &");
+        exec("nohup php $script $id >> $output 2>&1 &");
         Logger::debug('forward script executed asynchronously');
-        Logger::info('Transfer#' . $id . ' is beeing sent to ' . $hostname);
+        Logger::info('Transfer#' . $id . ' is beeing sent to ' . $server['hostname']);
     }
 
     /**

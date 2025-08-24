@@ -50,16 +50,10 @@ set_error_handler("customErrorHandler");
 // Target transfer id
 //
 $target = (count($argv) > 1) ? $argv[1] : false;
-$server = (count($argv) > 2) ? $argv[2] : false;
-$mode   = (count($argv) > 3) ? $argv[3] : 'master';
+$mode   = (count($argv) > 2) ? $argv[2] : 'master';
 if (!$target) {
     echo "forward-$method.php: no target-id\n";
     Logger::error("forward-$method.php: no target-id");
-    exit(1);
-}
-if (!$server) {
-    echo "forward-$method.php: no server\n";
-    Logger::error("forward-$method.php: no server");
     exit(1);
 }
 
@@ -80,8 +74,6 @@ if(!$transfer || $transfer->status != TransferStatuses::FORWARDING &&
 }
 Logger::debug("transfer: $transfer");
 
-$server = ForwardAnotherServer::getServerByTransfer($transfer);
-//$server = ForwardAnotherServer::getServer($server);
 $method_config = ForwardAnotherServer::getServerMethodConfig($transfer,$method);
 Logger::debug('method_config: '.print_r($method_config,true));
 
@@ -98,7 +90,7 @@ if ($mode == 'master') {
     Logger::info("Send files to another server via FileSender $method API started");
     $workers = isset($method_config['method_options']['workers']) ? $method_config['method_options']['workers'] : 8;
 
-    $command = __DIR__.'/pREST/pREST "'.__FILE__.'" "'.$argv[1].'" "'.$argv[2].'" "'.$workers.'"';
+    $command = __DIR__.'/pREST/pREST "'.__FILE__.'" "'.$argv[1].'" "'.$workers.'"';
     $descriptorspec = [
         0 => ["pipe", "r"], // stdin
         1 => ["pipe", "w"], // stdout
@@ -141,7 +133,7 @@ if ($mode == 'master') {
     }
 
 } else if ($mode == 'worker') {
-    $line = explode(',',$argv[4]);
+    $line = explode(',',$argv[3]);
     $file=$files[$line[0]];
     $offset=$line[1];
     $stream = Storage::getStream($file);
