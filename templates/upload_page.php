@@ -5,10 +5,10 @@ function render_forward_to_another_server($advanced=false) {
         !Auth::isGuest()) {
         echo '<div class="row">'."\n";
         if ($advanced) {
-            echo '    <div class="col-12 basic_options">'."\n";
+            echo '    <div id="fs-forward_options" class="col-12 basic_options">'."\n";
             echo '        <strong>{tr:forward_to_another_server}<strong>'."\n";
         } else {
-            echo '    <div class="col-12">'."\n";
+            echo '    <div id="fs-forward_options" class="col-12">'."\n";
         }
         echo '        <div data-option="forward_to_another_server" class="fs-switch fs-switch--hide">'."\n";
         echo '            <input id="forward_to_another_server" name="forward_to_another_server" type="checkbox">'."\n";

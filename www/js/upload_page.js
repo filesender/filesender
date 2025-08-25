@@ -2049,6 +2049,7 @@ filesender.ui.onChangeTransferType = function (transferType) {
         const addMeToRecipientsField = $(`#fs-transfer__add-me-to-recipients`);
         const sendAnotherServerField = $(`[data-option='forward_to_another_server']`);
         const sendServerNameField = $(`[data-option='forward_server_name']`);
+        const forwardOptions = $(`#fs-forward_options`);
 
         switch (transferType) {
             case TRANSFER_TYPES.TRANSFER_LINK:
@@ -2056,6 +2057,7 @@ filesender.ui.onChangeTransferType = function (transferType) {
                 addMeToRecipientsField.addClass('fs-switch--hide');
                 sendAnotherServerField.hide();
                 sendServerNameField.hide();
+                forwardOptions.hide();
                 filesender.ui.nodes.options.forward_to_another_server.prop("checked", false);
                 filesender.ui.nodes.encryption.toggle.prop("disabled", false);
                 filesender.ui.getALink = true;
@@ -2070,6 +2072,7 @@ filesender.ui.onChangeTransferType = function (transferType) {
             case TRANSFER_TYPES.TRANSFER_EMAIL:
                 emailField.removeClass('fs-input-group--hide');
                 addMeToRecipientsField.removeClass('fs-switch--hide');
+                forwardOptions.show();
                 sendAnotherServerField.show();
                 $('[data-option="add_me_to_recipients"]').removeClass('fs-switch--hide');
                 filesender.ui.getALink = false;
