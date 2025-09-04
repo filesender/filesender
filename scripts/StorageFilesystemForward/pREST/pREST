@@ -1,0 +1,23 @@
+#!/bin/sh
+
+PHPFILE="${1}"
+TARGET="${2}"
+MAX_JOBS="${3}"
+CURRENT_JOBS=0
+
+function process() {
+  line="${1}"
+  php "${PHPFILE}" "${TARGET}" "worker" "${line}" 2>&1
+}
+
+while read -r line; do
+  # Wait if the maximum number of jobs is reached
+  while [[ ${CURRENT_JOBS} -ge ${MAX_JOBS} ]]; do
+    wait -n # Wait for any background job to finish
+    CURRENT_JOBS=$(jobs -r | wc -l) # Update count of running jobs
+  done
+
+  process "${line}" &
+  CURRENT_JOBS=$(jobs -r | wc -l) # Update count
+done
+wait # Wait for all remaining background jobs to complete

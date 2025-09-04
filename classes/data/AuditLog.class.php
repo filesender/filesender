@@ -196,10 +196,12 @@ class AuditLog extends DBObject
      * @param LogEventTypes $event the event to be logged
      * @param DBObject the target to be logged
      * @param DBObject the author of the action
+     * @param datetime $created: created datetime if forwarded
+     * @param string $ip: ip address if forwarded
      *
      * @return AuditLog auditlog
      */
-    public static function create($event, DBObject $target, $author = null)
+    public static function create($event, DBObject $target, $author = null, $created = null, $ip = null)
     {
         if (is_null(Config::get('auditlog_lifetime'))) { // Auditlog disabled
             return;
@@ -209,12 +211,18 @@ class AuditLog extends DBObject
         if (!LogEventTypes::isValidValue($event)) {
             throw new AuditLogUnknownEventException($event);
         }
+
+        if( !Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+            !Auth::isAdmin()) {
+            $created = time();
+            $ip = Utilities::getClientIP();
+        }
         
         $auditLog = new self();
         
         $auditLog->event = $event;
-        $auditLog->created = time();
-        $auditLog->ip = Utilities::getClientIP();
+        $auditLog->created = $created;
+        $auditLog->ip = $ip;
         $auditLog->target_id = $target->id;
         $auditLog->target_type = get_class($target);
         

@@ -90,6 +90,11 @@ if( !$found ) {
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__details">
                     <h2>{tr:transfer_details}</h2>
+                    <?php if($transfer->status == TransferStatuses::FORWARDING) { ?>
+                        <div class="fs-info fs-info--aligned">
+                            <strong>{tr:forward_in_progress}</strong>
+                        </div>
+                    <?php } ?>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_sent_on}:</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></span>
@@ -306,12 +311,20 @@ if( !$found ) {
                                         foreach (array_keys(array_filter($transfer->options)) as $o) {
                                             if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
                                                 // this option will never be shown to the user
+                                            } else if ( $o == TransferOptions::FORWARD_SERVER_NAME ) {
+                                                // no show
                                             } else {
                                                 $checkboxClass = "fs-checkbox--disabled";
 
                                                 $optionshtml .= "<div class='fs-transfer-detail__check'>";
                                                 $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
-                                                $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
+                                                if( $o == TransferOptions::FORWARD_TO_ANOTHER_SERVER ) {
+                                                    $server_label = ForwardAnotherServer::getServerLabel($transfer->options[TransferOptions::FORWARD_SERVER_NAME]);
+                                                    $optionshtml .= "<label for='".$o."'>".Lang::tr($o)." : "
+                                                                 .$server_label."</label>";
+                                                } else {
+                                                    $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
+                                                }
 
                                                 if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
                                                     $optionshtml .= "<input id='".$o."' data-option='".TransferOptions::EMAIL_DAILY_STATISTICS."' type='checkbox' checked disabled>";

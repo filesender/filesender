@@ -323,11 +323,21 @@ A note about colours;
 * [aggregate_statlog_send_report_email_address](#aggregate_statlog_send_report_email_address)
 
 
+## File forwarding
+
+* [file_forwarding_enabled](#file_forwarding_enabled)
+* [forward_server_list](#forward_server_list)
+* [forward_capabilities](#forward_capabilities)
+* [storage_filesystem_forward_mmcftp_command](#storage_filesystem_forward_mmcftp_command)
+* [storage_filesystem_forward_scp_command](#storage_filesystem_forward_scp_command)
+
+
 ## Other
 
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
+* [auth_config_value_regex_files](#auth_config_value_regex_files)
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
 * [statistics_table_rows_per_page](#statistics_table_rows_per_page)
 * [tenant_admin](#tenant_admin)
@@ -1921,6 +1931,20 @@ If you want to find out the expiry timer for your SAML Identity Provider install
  	* __popup_on_complete:__ When the transfer upload completes, prompts the user with an additional confirmation modal. This should not be configured as available, as no translation exist.
 	* __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
 	* __web_notification_when_upload_is_complete__: Added in release 2.32. Options include available, advanced, and default. If you wish to use this feature you should set available=true to allow the user to see the option. Some browsers such as Firefox require the user to explicitly click a link to start the acceptance dialog so being able to see the option (available=true) on the web page is very useful. Using notifications will require the user to accept them for the site. Currently as of release 2.32 a notification can be sent when the upload is complete.
+	* __forward_to_another_server__: Set this to true when using the file forwarding feature. Configuration example for the sender:
+        ```
+        'forward_to_another_server' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+        'forward_server_name' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => ''
+        )
+        ```
+	* __forward_server_name__: Set this to true when using the file forwarding feature.
 
 * __*Configuration example:*__
 
@@ -3206,7 +3230,10 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
-* __example:__ <span style="background-color:orange">need an example here!</span>
+* __example:__ 
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+	</code></pre>
 
 ### auth_sp_save_user_additional_attributes
 
@@ -3521,6 +3548,163 @@ $config['rest_allow_jsonp'] = array(
 
 ---
 
+## File forwarding
+
+### file_forwarding_enabled
+
+* __description:__ If this option is true, the file forwarding feature will be enabled. The file forwarding feature is a function that asynchronously and quickly forwards uploaded files to another FileSender site. The user can instruct forward to another server using the Transfer setting(`forward_to_another_server` and `forward_server_name`). The receiver will receive a download notification mail from the server at the destination. The file transfer tool used is MMCFTP, developed by NII, but other methods (SCP, REST API) can also be used. Currently, the `storage_type` supported by these transfer tools is only `filesystem`.
+* __mandatory:__ no.  
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.x
+* __comment:__ If you enable this feature as sender, you have to define `forward_to_another_server` and `forward_server_name` in `transfer_options`, too.
+
+### forward_server_list
+
+* __description:__ List of servers to forward to.
+* __mandatory:__ no.  
+* __type:__ array
+* __default:__ -
+* __available:__ since version 3.x
+* __comment:__ The array above contains the server name and all the information for that is in an array under the key. 
+    - __label__ (array): Labels in the corresponding locale is displayed as options for the destination server.
+    - __description__(string): description (The system doesn't use it)
+    - __protocol_version__ (string): 1
+    - __hostname__ (string): the hostname for MMCFTP and SCP
+    - __url__ (string): the URL for REST API
+    - __appname__ (string): the name of `auth_remote_applications`
+    - __need_encrypt__ (string): 0 or 1
+
+Example:
+```
+$config['auth_remote_application_enabled'] = true;
+$config['file_forwarding_enabled'] = true;
+$config['auth_remote_applications'] = array (
+    'gfs:server-A_to_server-B' => array(
+        'description' => 'Global FileSender with server-B / sender',
+        'secret' => 'secretkey-A_to_B',
+        'isAdmin' => true,
+        'acl' => array(
+            'info' => array( 'get' => true ),
+            'transfer' => array( 'put' => true ),
+            'file' => array( 'put' => true ),
+            'recipient' => array( 'put' => true ),
+        )
+    ),
+    'gfs:server-B_to_server-A' => array(
+        'description' => 'Global FileSender with server-B / reciever',
+        'secret' => 'secretkey-B_to_A',
+        'isAdmin' => false,
+        'acl' => array(
+            'info' => array( 'get' => true ),
+            'transfer' => array( '*' => true ),
+            'file' => array( '*' => true ),
+            'recipient' => array( '*' => true ),
+        )
+    ),
+    'gfs:server-A_to_server-C' => array(
+        'description' => 'Global FileSender with server-C / sender',
+        'secret' => 'secretkey-A_to_C',
+        'isAdmin' => true,
+        'acl' => array(
+            'info' => array( 'get' => true ),
+            'transfer' => array( 'put' => true, 'post' => true, 'delete' => true ),
+            'file' => array( 'put' => true ),
+            'recipient' => array( 'put' => true ),
+        )
+    ),
+);
+
+$config['forward_server_list'] = array(
+    'server-B' => array(
+        'label' => array(
+            'en' => 'NII Amsterdam',
+            'ja' => 'NII アムステルダム',
+        ),
+        'description' => 'NII: Amsterdam-NL',
+        'protocol_version' => 1,
+        'hostname' => 'server-b',
+        'url' => 'https://server-b.filesender.nii.ac.jp',
+        'appname' => 'gfs:server-A_to_server-B',
+        'need_encrypt' => 1,
+    ),
+    'server-C' => array(
+        'label' => array(
+            'en' => 'NII New York',
+            'ja' => 'NII ニューヨーク',
+        ),
+        'description' => 'NII: NewYork-US',
+        'protocol_version' => 0,
+        'hostname' => 'server-c',
+        'url' => 'https://server-c.filesender.nii.ac.jp',
+        'appname' => 'gfs:server-A_to_server-C',
+        'need_encrypt' => 0,
+    ),
+);
+```
+### forward_capabilities
+
+* __description:__ List of methods that can be used for forwarding.
+* __mandatory:__ no.
+* __type:__ array
+* __default:__ `array( 0 => array( 'method' => 'REST' ), )`
+* __available:__ since version 3.x
+* __comment:__ An array of methods, each element key is used to rank preference, 0 being least prefered.
+    - __method__ (string): `MMCFTP`, `SCP`, `pREST` or `REST`
+    - __method_params__ (array): The parameters for method(command).
+    - __method_options__ (array): The options for method(command). MMCFTP supports `retry_wait_time` and `retry_num_max`. pREST supports `workers`
+
+Example:
+```
+$config['forward_capabilities'] = array(
+    0 => array(
+        'method' => 'REST',
+    ),
+    1 => array(
+        'method' => 'pREST',
+        'method_options' => array(
+            'workers' => 12,
+        ),
+    ),
+    2 => array(
+        'method' => 'MMCFTP',
+        'method_params' => array(
+            '20',     // timer_p
+            '100',    // chunks
+            '/W4',    // thread num
+            '/G2',    // async IO num
+        ),
+        'method_options' => array(
+            'retry_wait_time' => 30,
+            'retry_num_max' => 10,
+        ),
+    ),
+);
+```
+
+
+### storage_filesystem_forward_mmcftp_command
+
+* __description:__ The path of MMCFTP command when enabling forward_to_another_server.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.x
+* __comment:__ 
+
+### storage_filesystem_forward_scp_command
+
+* __description:__ The path of SCP command when enabling forward_to_another_server.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.x
+* __comment:__ 
+
+
+
+---
+
 ## Other
 
 ---
@@ -3575,6 +3759,40 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
         If the idp is 'idp.customer2.com', the config file config-customer2.php in the config subdir will be loaded.
+
+### auth_config_additional_regex_files
+* __description:__ This is like auth_config_regex_files but it works on the value(s) in attributes['addtional']. Such attributes can be gathered by setting auth_sp_additional_attributes. Note that you have to explicitly gather these attributes using the auth_sp_additional_attributes config key in order to match against them. 
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: no overrides loaded.
+* __available:__ since version 2.58
+* __1.x name:__
+* __comment:__ example:
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+
+	$config['auth_config_additional_regex_files'] = [
+		'quota' => [
+			'500mb$' => 'quotafor500mbfile',
+			'10gb$'  => 'quotafor10gbfile',
+		],
+		'eduPersonAffiliation' => [
+			'student$' => 'quotaforstdentfile',
+			'employee$ => 'quotaforemployeefile',
+		],
+    ];
+	</code></pre>
+
+    If the selected key is an array then each value in that array will
+    be attempted to match in turn. The items are considered in the
+    order presented by the authentication system. So in the below you
+    can match various items in an array 'eduPersonAffiliation' to
+    config files. If a user has a list eduPersonAffiliation =
+    array('student','employee') then both keys will match and employee
+    will be last.
+
+
+
 	
 ### show_storage_statistics_in_admin
 * __description:__ Lists used and free diskspace in admin section

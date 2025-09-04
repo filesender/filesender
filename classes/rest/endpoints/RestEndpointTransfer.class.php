@@ -499,9 +499,11 @@ class RestEndpointTransfer extends RestEndpoint
                 // Add recipient
                 $recipient = $transfer->addRecipient($data->recipient);
                 
-                // Send email if transfer is live already
-                if ($transfer->status == TransferStatuses::AVAILABLE) {
-                    TranslatableEmail::quickSend('transfer_available', $recipient, $transfer);
+                if (! $transfer->hasBeenForwarded()) {
+                    // Send email if transfer is live already
+                    if ($transfer->status == TransferStatuses::AVAILABLE) {
+                        TranslatableEmail::quickSend('transfer_available', $recipient, $transfer);
+                    }
                 }
                 
                 return array(
@@ -552,6 +554,8 @@ class RestEndpointTransfer extends RestEndpoint
                 TransferOptions::GET_A_LINK => $allOptions[TransferOptions::GET_A_LINK]['default'],
                 TransferOptions::ADD_ME_TO_RECIPIENTS => $allOptions[TransferOptions::ADD_ME_TO_RECIPIENTS]['default'],
                 TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES => $allOptions[TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES]['default'],
+                TransferOptions::FORWARD_TO_ANOTHER_SERVER => $allOptions[TransferOptions::FORWARD_TO_ANOTHER_SERVER]['default'],
+                TransferOptions::FORWARD_SERVER_NAME => $allOptions[TransferOptions::FORWARD_SERVER_NAME]['default'],
                 TransferOptions::HIDE_SENDER_EMAIL => $allOptions[TransferOptions::HIDE_SENDER_EMAIL]['default'],
             );
             
@@ -596,6 +600,38 @@ class RestEndpointTransfer extends RestEndpoint
                 unset($options[TransferOptions::EMAIL_ME_COPIES]);
                 unset($options[TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE]);
                 unset($options[TransferOptions::ADD_ME_TO_RECIPIENTS]);
+                unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+            }
+
+            if (Auth::isGuest()) {
+                unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+            }
+
+            if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+                unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+            } else {
+                if (isset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]) &&
+                    !empty($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER])) {
+                    if (isset($options[TransferOptions::FORWARD_SERVER_NAME]) &&
+                        !empty($options[TransferOptions::FORWARD_SERVER_NAME])) {
+                        $server = ForwardAnotherServer::getServer($options[TransferOptions::FORWARD_SERVER_NAME]);
+                        if (!empty($server) &&
+                            isset($server['need_encrypt']) &&
+                            !empty($server['need_encrypt']) &&
+                            empty($data->encryption)) {
+                            throw new RestBadParameterException('forward_server_encrypt');
+                        }
+                        unset($options[TransferOptions::MUST_BE_LOGGED_IN_TO_DOWNLOAD]);
+                    } else {
+                        unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                        unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+                    }
+                } else {
+                    unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+                }
             }
             
             // No recipients, not get_a_link and no way to get a recipient from options ? Fail if so
@@ -735,6 +771,35 @@ class RestEndpointTransfer extends RestEndpoint
             if (Config::get('transfer_recipients_lang_selector_enabled') && $data->lang) {
                 $transfer->lang = $data->lang;
             }
+
+            // forward to another server
+            if (Utilities::isTrue( Config::get('file_forwarding_enabled'))
+                && Auth::isRemoteApplication()
+                && $data->forward_server)
+            {
+                Logger::debug($data->forward_server);
+                $applications = Config::get('auth_remote_applications');
+                if (isset($data->forward_server->appname) &&
+                    isset($data->forward_server->method) &&
+                    isset($data->forward_server->from) &&
+                    isset($data->forward_id) &&
+                    isset($applications[$data->forward_server->appname])) {
+                    $transfer->forward_server = array(
+                        'appname' => $data->forward_server->appname,
+                        'method' => $data->forward_server->method,
+                        'from' => $data->forward_server->from,
+                    );
+                    $transfer->forward_id = $data->forward_id;
+                } else {
+                    throw new RestBadParameterException('forward_server');
+                }
+                if ($data->encryption_salt) {
+                    if (!Crypto::validateSaltString($data->encryption_salt, 32)) {
+                        throw new RestBadParameterException('base64_data_badly_encoded');
+                    }
+                    $transfer->salt = $data->encryption_salt;
+                }
+            }
             
             // Guest owner decides about guest options
             if ($guest) {
@@ -818,7 +883,7 @@ class RestEndpointTransfer extends RestEndpoint
                                             ["options" => ["regexp" => "|^[-A-Za-z0-9+/]*={0,3}$|" ]] );                
 
                 $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
-                                           $filedata->iv, $filedata->aead );
+                                           $filedata->iv, $filedata->aead, $filedata->forward_id);
                 $files_cids[$file->id] = $filedata->cid;
             }
 
@@ -926,7 +991,7 @@ class RestEndpointTransfer extends RestEndpoint
             Logger::logActivity(LogEventTypes::TRANSFER_DECRYPT_FAILED, $transfer, Auth::actor());
             return array();
         }
-        
+
         // Get transfer to update and current user
         $transfer = Transfer::fromId($id);
         $user = Auth::user();
@@ -1004,7 +1069,7 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Need to extend expiry date
             if ($data->extend_expiry_date) {
-                $transfer->extendObjectExpiryDate();
+                $transfer->extendTransferExpiryDate($data->extend_expiry_date);
             }
             
             // Need to remind the transfer's availability to its recipients ?
@@ -1106,9 +1171,108 @@ class RestEndpointTransfer extends RestEndpoint
             
         }
         
+        if ($data->sendVerificationCodeToYourEmailAddress) {
+
+            $bytes = random_bytes(Config::get('download_verification_code_random_bytes_used'));
+            $bytes = sha1( $bytes, true );
+            $pass = bin2hex($bytes);
+            
+            $rid = 0;
+            $token = $data->token;
+                
+            if(Utilities::isValidUID($token)) {
+                    
+                try {
+                    // Getting recipient from the token
+                    $recipient = Recipient::fromToken($token); // Throws
+                    $rid = $recipient->id;
+                } catch (RecipientNotFoundException $e) {
+                }
+            }
+
+            if( !$rid ) {
+                throw new RestBadParameterException('transfer = '.$transfer->id);
+            }
+            
+            foreach ($transfer->recipients as $recipient) {
+
+                if( $recipient->id != $rid ) {
+                    continue;
+                }
+                
+                $otp = DownloadOneTimePassword::create( $transfer, $recipient, $pass );
+
+                $verificationCode = $recipient->id . ',' . $pass;
+                $verificationCode = base64_encode( $verificationCode );
+                
+                TranslatableEmail::quickSend('transfer_email_verify_to_download',
+                                             $recipient, $transfer,
+                                             array(
+                                                 'verificationCode' => $verificationCode
+                                             )
+                );
+            }
+            return array(
+                'id' => $transfer->id,
+                'ok' => true,
+                );
+            
+        }
+
         // Need to make the transfer available (sends email to recipients) ?
         if ($data->complete) {
-            $transfer->makeAvailable();
+            $transfer->uploadCompleted();
+        }
+
+        // record download start and end for Auditlog (file_forwarding_enabled only)
+        if ($data->record_activity) {
+            if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+                !$transfer->forward_id) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $record_activity = $data->record_activity;
+            if (!LogEventTypes::isValidName($record_activity)) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $created = $data->created;
+            if ($created &&
+                (!is_numeric($created) || (int)$created != $created ||
+                 $transfer->created > $created || $created > time())) {
+                throw new RestBadParameterException('created = '.$data->created);
+            }
+            $ip = $data->ip;
+            if ($ip &&
+                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
+                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                throw new RestBadParameterException('ip = '.$data->ip);
+            }
+            $author = $data->author;
+            if ($author) {
+                if (is_string($author)) {
+                    $email = $author;
+                } else if (isset($author->email)) {
+                    $email = $author->email;
+                } else {
+                    $email = '';
+                }
+                $author = null;
+                foreach ($transfer->recipients as $r) {
+                    if ($r->email == $email) {
+                        $author = $r;
+                    }
+                }
+            }
+            $files = array();
+            if (is_array($data->fileids)) {
+                foreach ($data->fileids as $id) {
+                    foreach ($transfer->files as $f) {
+                        if ($f->forward_id == $id) {
+                            $files[] = $f;
+                        }
+                    }
+                }
+            }
+            $transfer->recordActivity($record_activity, $created, $ip, $author, $files);
         }
 
 

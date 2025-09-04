@@ -35,8 +35,6 @@ function presentAVName( $v )
     return Template::Q($ret);
 }
 
-
-
 $rid = 0;
 if(Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
     if(array_key_exists('token', $_REQUEST)) {

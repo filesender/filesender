@@ -482,6 +482,9 @@ class Utilities
      */
     public static function sanitizeOutput($output)
     {
+        if( !$output ) {
+            $output = '';
+        }
         return htmlentities($output, ENT_QUOTES, 'UTF-8');
     }
 
@@ -532,13 +535,13 @@ class Utilities
     public static function http_build_query($q, $path = null)
     {
         if ($path == null) {
-            $path = Config::get('site_url') . '?';
+            $path = Config::get('site_url');
         } else {
             if (!Utilities::startsWith($path, 'http')) {
                 $path = Config::get('site_url') . $path;
             }
         }
-        $ret = $path;
+        $ret = $path . '?';
         $sep = ini_get('arg_separator.output');
         if (phpversion() < 5.4) {
             // CIFIXME remove this branch when CI php is upgraded.
