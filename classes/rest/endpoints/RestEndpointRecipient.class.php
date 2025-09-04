@@ -147,6 +147,17 @@ class RestEndpointRecipient extends RestEndpoint
         if ($data->remind) {
             TranslatableEmail::rateLimit( false, 'transfer_reminder', $recipient->transfer );
             $recipient->remind();
+
+        } elseif ($data->record_activity) {
+            if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+                !$recipient->transfer->forward_id) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $record_activity = $data->record_activity;
+            if (!LogEventTypes::isValidName($record_activity)) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $recipient->recordActivity();
         }
 
         return self::cast($recipient);
@@ -192,9 +203,11 @@ class RestEndpointRecipient extends RestEndpoint
         if (count($recipient->transfer->recipients) > 1) {
             // If transfer has several recipients remove the requested one
             $recipient->transfer->removeRecipient($recipient);
-            
-            if ($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
-                $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
+
+            if (!$recipient->transfer->hasBeenForwarded()) {
+                if ($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
+                    $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
+                }
             }
         } else {
             // Last/only recipient deletion => close transfer

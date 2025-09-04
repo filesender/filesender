@@ -15,8 +15,8 @@ $sql =
    .'  SUM(case WHEN options LIKE \'%\\"encryption\\":false%\' THEN 1 ELSE 0 END) as "Unencrypted", '
    .'  SUM(case WHEN options LIKE \'%\\"encryption\\":true%\'  THEN 1 ELSE 0 END) as "Encrypted" '
    .'FROM transferssizeidpview '
-   .'WHERE (date_created >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
-   .'      (date_expires >= NOW() - '.DBLayer::toIntervalDays(30).' AND date_expires <= NOW())';
+   .'WHERE ((date_created >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
+   .'       (date_expires >= NOW() - '.DBLayer::toIntervalDays(30).' AND date_expires <= NOW()))';
 if ($idp) {
     $sql.=' AND idpid = :idp';
     $placeholders[':idp'] = $idp;

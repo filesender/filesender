@@ -182,6 +182,10 @@ $default = array(
     'storage_filesystem_per_day_max_days_to_clean_empty_directories' => 150,
     'storage_filesystem_per_idp' => false,
     'storage_filesystem_explicitly_store_subpath_per_file' => false,
+
+    'storage_filesystem_forward_mmcftp_command' => '',
+    'storage_filesystem_forward_scp_command' => '',
+
     'transfers_table_show_admin_full_path_to_each_file' => false,
     
     'email_from' => 'no-reply@',
@@ -291,6 +295,7 @@ $default = array(
                                                                 , 'add_me_to_recipients', 'redirect_url_on_complete'
                                                                 , 'hide_sender_email', 'popup_on_complete'
                                                                 , 'openpgp_encrypt_passphrase_to_email'
+                                                                , 'forward_to_another_server', 'forward_server_name'
     ),
 
     'header_x_frame_options' => 'sameorigin',
@@ -393,6 +398,8 @@ $default = array(
     
     'validate_csrf_token_for_guests' => true,
 
+    'file_forwarding_enabled' => false,
+    
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',
         'default_transfer_days_valid',
@@ -473,6 +480,24 @@ $default = array(
             'available' => true,
             'advanced' => true,
             'default' => false
+        ),
+        'forward_to_another_server' => array(
+            'available' => false,
+            'advanced' => false,
+            'default' => false
+        ),
+        'forward_server_name' => array(
+            'available' => false,
+            'advanced' => false,
+            'default' => ''
+        ),
+    ),
+
+    'forward_server_list' => array(
+    ),
+    'forward_capabilities' => array(
+        0 => array(
+            'method' => 'REST'
         ),
     ),
 

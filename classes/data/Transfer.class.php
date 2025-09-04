@@ -203,6 +203,19 @@ class Transfer extends DBObject
             'size'    => 'big',
             'null'    => true
         ),
+
+        'forward_server' => array(
+            'type' => 'text',
+            'transform' => 'json',
+            //'type' => 'string',
+            //'size' => 250,
+            'null' => true
+        ),
+        'forward_id' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
+        ),
         
     );
 
@@ -367,6 +380,8 @@ class Transfer extends DBObject
     protected $chunk_size = 0;
     protected $crypted_chunk_size = 0;
     protected $idpid = null;
+    protected $forward_server = null;
+    protected $forward_id = null;
 
     
     
@@ -441,6 +456,10 @@ class Transfer extends DBObject
         
         if (is_object($this->options)) {
             $this->options = (array)$this->options;
+        }
+
+        if (is_object($this->forward_server)) {
+            $this->forward_server = (array)$this->forward_server;
         }
 
         $this->password_encoding_string = DBConstantPasswordEncoding::reverseLookup($this->password_encoding);
@@ -812,7 +831,12 @@ class Transfer extends DBObject
     public function beforeDelete()
     {
         AuditLog::clean($this);
-        
+
+        if ($this->needForward()) {
+            ForwardAnotherServer::deleteTransfer($this);
+            $this->forward_id = null;
+        }
+
         if (!is_null($this->collections)) {
             foreach ($this->collections as $collection_type_id => $collectionList) {
                 foreach ($collectionList as $collection) {
@@ -867,6 +891,7 @@ class Transfer extends DBObject
             case TransferStatuses::CREATED:
             case TransferStatuses::STARTED:
             case TransferStatuses::UPLOADING:
+            case TransferStatuses::FORWARDING:
                 // Transfer still not available, delete it
                 $this->delete();
                 return;
@@ -885,24 +910,29 @@ class Transfer extends DBObject
         if ($manualy) {
             $this->expires = time();
         } // Set expiration date so that auditlogs are cleaned the right way
+        if ($this->needForward()) {
+            ForwardAnotherServer::closeTransfer($this);
+        }
         $this->save();
         
         // Log action
         Logger::logActivity($manualy ? LogEventTypes::TRANSFER_CLOSED : LogEventTypes::TRANSFER_EXPIRED, $this);
 
         if (!$this->getOption(TransferOptions::GET_A_LINK)) {
+            if (!$this->hasBeenForwarded()) {
 
-            $email_message_type = 'transfer_expired';
-            if( $manualy ) {
-                $email_message_type = 'transfer_deleted';
-            }
-            
-            // always email deleted transfers
-            //     or optionally notify when a transfer has expired.
-            if( $manualy || $this->getOption(TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES)) {
-                // Send notification to all recipients
-                foreach ($this->recipients as $recipient) {
-                    $this->sendToRecipient( $email_message_type, $recipient );
+                $email_message_type = 'transfer_expired';
+                if( $manualy ) {
+                    $email_message_type = 'transfer_deleted';
+                }
+
+                // always email deleted transfers
+                //     or optionally notify when a transfer has expired.
+                if( $manualy || $this->getOption(TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES)) {
+                    // Send notification to all recipients
+                    foreach ($this->recipients as $recipient) {
+                        $this->sendToRecipient( $email_message_type, $recipient );
+                    }
                 }
             }
         }
@@ -991,7 +1021,16 @@ class Transfer extends DBObject
         }
         
         if (!$this->isOwner($user)) {
-            if( !Auth::isAdmin()) {
+            if( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
+                if( AuthRemote::isAuthenticated() && $this->needForward('to') ) {
+                    $server = ForwardAnotherServer::getServerByTransfer($this);
+                    if ($server['appname'] != $user->saml_user_identification_uid) {
+                        return FALSE;
+                    }
+                } else if( !Auth::isAdmin()) {
+                    return FALSE;
+                }
+            } else if( !Auth::isAdmin()) {
                 return FALSE;
             }
         }
@@ -1154,6 +1193,10 @@ class Transfer extends DBObject
                 }
             } elseif ($name == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
                 // no validation as this is only set server side.
+            } elseif ($name == TransferOptions::FORWARD_SERVER_NAME) {
+                if (!ForwardAnotherServer::getServer($value)) {
+                    throw new RestBadParameterException('forward_server_name');
+                }
             } else {
                 $value = (bool)$value;
             }
@@ -1182,7 +1225,8 @@ class Transfer extends DBObject
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
-          , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
+            , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
+            , 'forward_server', 'forward_id'
         ))) {
             return $this->$property;
         }
@@ -1413,6 +1457,21 @@ class Transfer extends DBObject
             $this->download_count = $value;
         } elseif ($property == 'idpid') {
             $this->idpid = $value;
+        } elseif( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
+            if ($property == 'salt') {
+                if (!Crypto::validateSaltString($value, 32)) {
+                    throw new BadSaltException($value);
+                }
+                $this->salt = $value;
+            } elseif ($property == 'forward_server') {
+                $this->forward_server = $value;
+            } elseif ($property == 'forward_id') {
+                if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadForwardIDException($value);
+                }
+                $value = (int)$value;
+                $this->forward_id = (string)$value;
+            }
         } else {
             throw new PropertyAccessException($this, $property);
         }
@@ -1425,10 +1484,11 @@ class Transfer extends DBObject
      * @param string $size the file size
      * @param string $mime_type the optional file mime_type
      * @param string $iv base64 encoded IV used to encrypt file 
+     * @param string $forward_id the forwarded id
      *
      * @return File
      */
-    public function addFile($path, $size, $mime_type = null, $iv = null, $aead = null )
+    public function addFile($path, $size, $mime_type = null, $iv = null, $aead = null, $forward_id = null )
     {
         if (is_null($this->filesCache)) {
             $this->filesCache = File::fromTransfer($this);
@@ -1451,6 +1511,7 @@ class Transfer extends DBObject
         $file = File::create($this, $path, $size, $mime_type);
         $file->iv = $iv;
         $file->aead = $aead;
+        $file->forward_id = $forward_id;
         $file->save();
  
         // Update local cache
@@ -1637,6 +1698,69 @@ class Transfer extends DBObject
     }
     
     /**
+     * This function does stuffs when a transfer complete
+     */
+    public function uploadCompleted()
+    {
+        if ($this->getOption(TransferOptions::FORWARD_TO_ANOTHER_SERVER)) {
+            $this->forwardAnotherServer();
+        } else {
+            $this->makeAvailable();
+        }
+    }
+
+    /**
+     * Forward files to another server
+     */
+    public function forwardAnotherServer()
+    {
+        if ($this->status == TransferStatuses::FORWARDING ||
+            $this->status == TransferStatuses::AVAILABLE) {
+            return;
+        } // Already available
+        
+        // Log to audit/stats that upload ended
+        Logger::logActivity(LogEventTypes::UPLOAD_ENDED, $this);
+        
+        // Fail if no files
+        if (!count($this->files)) {
+            throw new TransferNoFilesException();
+        }
+        
+        // Fail if any file not complete
+        foreach ($this->files as $file) {
+            if (!$file->upload_end) {
+                throw new TransferFilesIncompleteException($this);
+            }
+        }
+        
+        // Fail if no recipients
+        if (!count($this->recipients)) {
+            throw new TransferNoRecipientsException();
+        }
+
+        // Update status and log to audit/stat
+        $this->status = TransferStatuses::FORWARDING;
+
+        $server_id = $this->getOption(TransferOptions::FORWARD_SERVER_NAME);
+        $server = ForwardAnotherServer::getServer($server_id);;
+        if (!$server || !$server['appname'] || !$server['url']) {
+            throw new RestBadParameterException('server_id');
+        }
+        $this->forward_server = array(
+            'appname' => $server['appname'],
+            'to' => $server['url'],
+        );
+        $method=ForwardAnotherServer::findBestForwardMethod($this);
+        $this->forward_server['method'] = $method;
+
+        $forwarded_transfer = ForwardAnotherServer::forwardTransfer($this);
+        $this->forward_id = $forwarded_transfer->forward_id;
+
+        $this->save();
+    }
+
+    /**
      * This function does stuffs when a transfer become available
      */
     public function makeAvailable()
@@ -1668,6 +1792,10 @@ class Transfer extends DBObject
         $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
         $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
         $this->storage_filesystem_per_idp = Config::get('storage_filesystem_per_idp');
+        
+        if ($this->needForward()) {
+            ForwardAnotherServer::completeTransfer($this);
+        }
         
         // Update status and log to audit/stat
         $this->status = TransferStatuses::AVAILABLE;
@@ -1730,10 +1858,12 @@ class Transfer extends DBObject
                     $this->addRecipient($rcpt);
                 }
             }
-            
-            // Send notification of availability to recipients
-            foreach ($this->recipients as $recipient) {
-                $this->sendToRecipient('transfer_available', $recipient);
+
+            if (!$this->hasBeenForwarded()) {
+                // Send notification of availability to recipients
+                foreach ($this->recipients as $recipient) {
+                    $this->sendToRecipient('transfer_available', $recipient);
+                }
             }
             
             // Log to audit/stat
@@ -1939,4 +2069,104 @@ class Transfer extends DBObject
                $this->status == TransferStatuses::UPLOADING;
     }
 
+    /**
+     * need forward?
+     *
+     * If file_forwarding_enabled is false then this always return false.
+     */
+    public function needForward($tofrom = 'to')
+    {
+        if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+            return false;
+        }
+
+        $forward = $this->forward_server;
+        if (is_array($forward) && isset($forward[$tofrom])) {
+            $forward = $forward[$tofrom];
+        } else if (isset($forward->$tofrom)) {
+            $forward = $forward->$tofrom;
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * has been forward?
+     *
+     * If file_forwarding_enabled is false then this always return false.
+     */
+    public function hasBeenForwarded()
+    {
+        if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+            return false;
+        }
+
+        $forward = $this->forward_server;
+        if (isset($forward['from'])) {
+            $forward = $forward['from'];
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * get Forward or Forwarded Server
+     */
+    public function getForwardedServer()
+    {
+        $forward = $this->forward_server;
+        if (isset($forward['to'])) {
+            $forward = $forward['to'];
+        } else if (isset($forward['from'])) {
+            $forward = $forward['from'];
+        } else {
+            return null;
+        }
+        return $forward;
+    }
+
+    /**
+     * Extend expiry date
+     *
+     * @param string expires
+     */
+    public function extendTransferExpiryDate($expires = 0)
+    {
+        if ((int)$expires <= 1) {
+            $this->extendObjectExpiryDate();
+            $expires = $this->expires;
+        } else {
+            $this->__set('expires', $expires);
+            $this->expiry_extensions++;
+            $this->save();
+        }
+        if ($this->needForward()) {
+            ForwardAnotherServer::extendTransferExpiryDate($this, $expires);
+        }
+    }
+
+    /**
+     * record Activity
+     *
+     */
+    public function recordActivity($event, $created = null, $ip = null, $author = null, $files = null)
+    {
+        if ($event == LogEventTypes::DOWNLOAD_ENDED) {
+            if ($this->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
+                try {
+                    // do not email too often
+                    TranslatableEmail::rateLimit( true, 'files_downloaded', $this->owner, $this);
+                    ApplicationMail::quickSend('files_downloaded', $this->owner, array('files'=> $files, 'recipient' => $author));
+                }
+                catch ( RateLimitException $e ) {
+                    // we hit a rate limit so do not email this time
+                }
+            }
+
+        } else {
+            Logger::logActivity($event, $this, $author, $created, $ip);
+        }
+    }
 }

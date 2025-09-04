@@ -100,7 +100,7 @@ class StorageFilesystemChunked extends StorageFilesystem
             $offset=$offset / $chunk_size * $crypted_chunk_size;
         }
 
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
         $chunkFile = self::getChunkFilename( $file, $filePath, $offset);
 
         if (!file_exists($chunkFile)) {
@@ -123,7 +123,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function buildPath(File $file, $fullPath = true )
     {
-        return parent::buildPath($file).$file->uid;
+        return parent::buildPath($file);
     }
 
     /**
@@ -142,7 +142,7 @@ class StorageFilesystemChunked extends StorageFilesystem
     {
         
         $chunkSize = \strlen($data);
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
 
         // If the user is doing something with FUSE
         // then they might not want to check disk space.
@@ -315,7 +315,7 @@ class StorageFilesystemChunked extends StorageFilesystem
     public static function completeFile(File $file)
     {
         self::setup();
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
         $onDiskSize = self::calculateOnDiskFileSize($file);
         $expectedSize = $file->size;
         if ($file->transfer->is_encrypted) {
@@ -337,7 +337,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function calculateOnDiskFileSize(File $file)
     {
-        $path = self::buildPath($file);
+        $path = self::buildPath($file).$file->uid;
         $totalSize = 0;
         foreach (new DirectoryIterator($path) as $fileChunk) {
             if ($fileChunk->isFile()) {
@@ -356,7 +356,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function deleteFile(File $file)
     {
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
         Filesystem::deleteTreeRecursive($filePath, $file);
     }
 

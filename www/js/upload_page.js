@@ -239,6 +239,47 @@ function resume( force, resetResumeCount )
     filesender.ui.uploading_again_started_at_time_touch();
 }
 
+function toggleEncryption(e) {
+    const isChecked = filesender.ui.nodes.encryption.toggle.is(':checked');
+
+    if (isChecked) {
+        $('#encgroup1').show();
+    } else {
+        $('#encgroup1').slideToggle();
+    }
+
+    // $('#encgroup1').slideToggle();
+    // $('#encgroup2').slideToggle();
+    // $('#encgroup3').slideToggle();
+
+    filesender.ui.transfer.encryption = isChecked;
+
+    filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
+
+    for(var i=0; i<filesender.ui.transfer.getFileCount(); i++) {
+        var file = filesender.ui.transfer.files[i];
+
+        var node = filesender.ui.nodes.files.list.find('.file[data-name="' + file.name + '"][data-size="' + file.size + '"]');
+        filesender.ui.transfer.checkFileAsStillValid(
+            file,
+            function(ok) {
+                node.removeClass('invalid');
+                node.find('.invalid').remove();
+                node.find('.invalid_reason').remove();
+                node.find('.error').text('');
+            },
+            function(error) {
+                var tt = 1;
+                if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
+                node.addClass('invalid');
+                node.find('.error').text(lang.tr(error.message));
+            });
+    }
+    filesender.ui.evalUploadEnabled();
+
+    return false;
+}
+
 /**
  * Because the checkEncryptionPassword() uses toggle and also wants to read
  * the state of the message to see if it should call toggle there is a potential
@@ -1570,6 +1611,11 @@ filesender.ui.startUpload = function() {
         // show the completed stage.
         filesender.ui.stage = 4;
 
+        if(!filesender.ui.isUserGettingALink() &&
+           filesender.ui.transfer.options.forward_to_another_server) {
+            $('.fs-transfer__forward-not-finished > span').html(lang.tr('forward_not_completed').out());
+        }
+
         $('.fs-transfer__upload-link .fs-copy > span').html(filesender.ui.transfer.download_link);
         if( filesender.config.make_download_links_clickable ) {
             $('.fs-transfer__upload-link .fs-copy > span').on('click', function(e){
@@ -1854,11 +1900,15 @@ filesender.ui.handle_get_a_link_change = function() {
         ' .emailonly'
     ).toggle(!choice);
     
+    form.find(
+        ' .fieldcontainer[data-option="forward_to_another_server"],' +
+        ' .fieldcontainer[data-option="forward_server_name"]'
+    ).toggle(!choice);
+
     if( choice ) {
         form.find('#subject').val('');
         form.find('#message').val('');
-        }
-        
+    }
     filesender.ui.evalUploadEnabled();
 }
 
@@ -1997,11 +2047,19 @@ filesender.ui.onChangeTransferType = function (transferType) {
 
         const emailField = $(`[data-transfer-type='${TRANSFER_TYPES.TRANSFER_EMAIL}']`);
         const addMeToRecipientsField = $(`#fs-transfer__add-me-to-recipients`);
+        const sendAnotherServerField = $(`[data-option='forward_to_another_server']`);
+        const sendServerNameField = $(`[data-option='forward_server_name']`);
+        const forwardOptions = $(`#fs-forward_options`);
 
         switch (transferType) {
             case TRANSFER_TYPES.TRANSFER_LINK:
                 emailField.addClass('fs-input-group--hide');
                 addMeToRecipientsField.addClass('fs-switch--hide');
+                sendAnotherServerField.hide();
+                sendServerNameField.hide();
+                forwardOptions.hide();
+                filesender.ui.nodes.options.forward_to_another_server.prop("checked", false);
+                filesender.ui.nodes.encryption.toggle.prop("disabled", false);
                 filesender.ui.getALink = true;
                 filesender.ui.nodes.gal.checkbox.prop('checked', true);
 
@@ -2014,6 +2072,8 @@ filesender.ui.onChangeTransferType = function (transferType) {
             case TRANSFER_TYPES.TRANSFER_EMAIL:
                 emailField.removeClass('fs-input-group--hide');
                 addMeToRecipientsField.removeClass('fs-switch--hide');
+                forwardOptions.show();
+                sendAnotherServerField.show();
                 $('[data-option="add_me_to_recipients"]').removeClass('fs-switch--hide');
                 filesender.ui.getALink = false;
                 filesender.ui.nodes.gal.checkbox.prop('checked', false);
@@ -2143,7 +2203,9 @@ $(function() {
         options: {
             get_a_link: form.find('input[id="get_a_link"]'),
             hide_sender_email: form.find('input[name="hide_sender_email"]'),
-            openpgp_encrypt_passphrase_to_email: form.find('input[name="openpgp_encrypt_passphrase_to_email"]')
+            openpgp_encrypt_passphrase_to_email: form.find('input[name="openpgp_encrypt_passphrase_to_email"]'),
+            forward_to_another_server: form.find('input[name="forward_to_another_server"]'),
+            forward_server_name: form.find('select[name="forward_server_name"]'),
         },
         buttons: {
             start: form.find('.buttons .start'),
@@ -2168,6 +2230,8 @@ $(function() {
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };
+
+    $("#forward_server_name").select2({width:'100%'});
 
     filesender.ui.getALink = false;
     filesender.ui.nodes.gal.checkbox.prop('checked', false);
@@ -2626,6 +2690,11 @@ $(function() {
             ' .fieldcontainer[data-option="hide_sender_email"]'
         ).toggle(choice);
 
+        form.find(
+            ' .fieldcontainer[data-option="forward_to_another_server"],' +
+            ' .fieldcontainer[data-option="forward_server_name"]'
+        ).toggle(!choice);
+
         filesender.ui.evalUploadEnabled();
     });
 
@@ -2663,6 +2732,36 @@ $(function() {
         });
     }
 
+    filesender.ui.nodes.options.forward_to_another_server.on('change', function(e) {
+        const isChecked = filesender.ui.nodes.options.forward_to_another_server.is(':checked');
+        if (isChecked) {
+            $('div[data-option="forward_server_name"]').show();
+            const selected = $('div[data-option="forward_server_name"]').find(':selected');
+            if (selected.hasClass('need-encrypt')) {
+                filesender.ui.nodes.encryption.toggle.prop('checked', true);
+                filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+                toggleEncryption();
+            }
+            $('input[id="must_be_logged_in_to_download"]').prop("checked", false);
+            $('input[id="must_be_logged_in_to_download"]').prop("disabled", true);
+        } else {
+            $('div[data-option="forward_server_name"]').hide();
+            filesender.ui.nodes.encryption.toggle.prop("disabled", false);
+            $('input[id="must_be_logged_in_to_download"]').prop("disabled", false);
+        }
+    });
+
+    filesender.ui.nodes.options.forward_server_name.on('change', function(e) {
+        const selected = $('div[data-option="forward_server_name"]').find(':selected');
+        if (selected.hasClass('need-encrypt')) {
+            filesender.ui.nodes.encryption.toggle.prop('checked', true);
+            filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+            toggleEncryption();
+        } else {
+            filesender.ui.nodes.encryption.toggle.prop("disabled", false);
+        }
+    });
+
     if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
         $('#encryption_password_container').show();
         $('#encryption_password_container_generate').show();
@@ -2679,46 +2778,7 @@ $(function() {
     }
 
     // Bind encryption
-    filesender.ui.nodes.encryption.toggle.on('change', function(e) {
-        const isChecked = filesender.ui.nodes.encryption.toggle.is(':checked');
-
-        if (isChecked) {
-            $('#encgroup1').show();
-        } else {
-            $('#encgroup1').slideToggle();
-        }
-
-        // $('#encgroup1').slideToggle();
-        // $('#encgroup2').slideToggle();
-        // $('#encgroup3').slideToggle();
-
-        filesender.ui.transfer.encryption = isChecked;
-
-        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
-
-        for(var i=0; i<filesender.ui.transfer.getFileCount(); i++) {
-            var file = filesender.ui.transfer.files[i];
-
-            var node = filesender.ui.nodes.files.list.find('.file[data-name="' + file.name + '"][data-size="' + file.size + '"]');
-            filesender.ui.transfer.checkFileAsStillValid(
-                file,
-                function(ok) {
-                    node.removeClass('invalid');
-                    node.find('.invalid').remove();
-                    node.find('.invalid_reason').remove();
-                    node.find('.error').text('');
-                },
-                function(error) {
-                    var tt = 1;
-                    if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
-                    node.addClass('invalid');
-                    node.find('.error').text(lang.tr(error.message));
-                });
-        }
-        filesender.ui.evalUploadEnabled();
-
-        return false;
-    });
+    filesender.ui.nodes.encryption.toggle.on('change', toggleEncryption);
 
     filesender.ui.nodes.encryption.use_generated.on('change', function() {
         var v = filesender.ui.nodes.encryption.use_generated.is(':checked');

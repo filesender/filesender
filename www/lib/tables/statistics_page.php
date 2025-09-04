@@ -59,26 +59,21 @@ switch ($topic) {
         $sql=
             'SELECT '
            .'  t.user_email as "User", '
-           .'  COUNT(DISTINCT t.id) AS "Transfers", '
-           . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
+           .'  COUNT(t.id) AS "Transfers", '
+           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as "Size", '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
-           .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
-           .((!$idp) ?
-             ''
-             :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id '
-           )
+           .'  '.call_user_func('Transfer::getDBTable').' t '
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             'a.idpid = :idp AND '
+             't.idpid = :idp AND '
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-                                                        ."    AND t.status = 'available' "
-           .' GROUP BY t.user_email      '
+           ."    AND t.status = 'available' "
+           .' GROUP BY t.user_email '
            .' ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
@@ -108,25 +103,20 @@ switch ($topic) {
         $sql=
             'SELECT '
            .'  t.user_email as "User", '
-           .'  COUNT(DISTINCT t.id) AS "Transfers", '
-          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
+           .'  COUNT(t.id) AS "Transfers", '
+           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as "Size", '
            .'  SUM(t.download_count) as "Downloads" '
            .'FROM '
-           .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
-           .((!$idp) ?
-             ''
-             :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id '
-           )
+           .'  '.call_user_func('Transfer::getDBTable').' t '
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             'a.idpid = :idp AND '
+             't.idpid = :idp AND '
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-           .' GROUP BY t.user_email         '
+           .' GROUP BY t.user_email '
            .' ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
@@ -158,16 +148,11 @@ switch ($topic) {
            .'  f.mime_type as mime_type, count(f.mime_type) as total '
            .'FROM '
            .'  filesbywhoview f '
-           .((!$idp) ?
-             ''
-             :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN authidpview a ON u.authid=a.id '
-           )
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             'a.idpid = :idp AND '
+             'f.idpid = :idp AND '
            )
            .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '

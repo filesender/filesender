@@ -49,6 +49,7 @@ class LogEventTypes extends Enum
    /* FILE */
     const FILE_CREATED             = 'file_created';   // File has been updated
    const FILE_UPLOADED            = 'file_uploaded';  // File has been uploaded
+   const FILE_FORWARDED           = 'file_forwarded'; // File has been forwarded
    const FILE_UPDATED             = 'file_updated';   // File has been updated
    const FILE_MOVED               = 'file_moved';     // File has been moved
    const FILE_DELETED             = 'file_deleted';   // File has been deleted
@@ -81,6 +82,11 @@ class LogEventTypes extends Enum
     const UPLOAD_STARTED           = 'upload_started';   // Upload stated
    const UPLOAD_RESUMED           = 'upload_resumed';  // Upload resumed
    const UPLOAD_ENDED             = 'upload_ended';     // Upload ended
+   
+    /* FORWARD */
+    const FORWARD_STARTED           = 'forward_started';   // Forward stated
+    const FORWARD_RESUMED           = 'forward_resumed';  // Forward resumed
+    const FORWARD_ENDED             = 'forward_ended';     // Forward ended
    
    /* DOWNLOAD */
     const DOWNLOAD_STARTED         = 'download_started';     // Download started
