@@ -399,6 +399,8 @@ $default = array(
     'validate_csrf_token_for_guests' => true,
 
     'file_forwarding_enabled' => false,
+
+    'ui3_allow_selecting_files_on_transfer_details_page' => true,
     
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',

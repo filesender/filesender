@@ -162,7 +162,7 @@ A note about colours;
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
 * [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
-
+* [ui3_allow_selecting_files_on_transfer_details_page](#ui3_allow_selecting_files_on_transfer_details_page)
 
 ## Transfers
 
@@ -1730,7 +1730,14 @@ Inside of files_downloaded.mail.php for example
      list and they can be added to the default.
 
 
-* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
+
+### ui3_allow_selecting_files_on_transfer_details_page
+* __description:__  Allow the user to select which files to download in an archive on the transfers details page.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 3.0 rc12
+* __comment:__ 
 
 
 ---
