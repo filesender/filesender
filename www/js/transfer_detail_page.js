@@ -31,6 +31,8 @@
  */
 
 $(function() {
+    var page = $('.transfer_detail_page');
+    if(!page.length) return;
 
     // File download buttons when the files are encrypted
     $('.transfer_detail_page .file [data-action="download"]').on('click', function() {
@@ -410,5 +412,13 @@ $(function() {
             filesender.ui.redirect($(this).text());
         });
     }
+
+
+    filesender.client.setPage( $(this) );
+    filesender.client.setToken( $('.token').text() );
+    filesender.client.bindDownloadButton('.file .download');
+    filesender.client.bindDownloadArchive();
+    filesender.client.bindFileCheckButtons();
+    
     
 });
