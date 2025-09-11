@@ -1054,7 +1054,13 @@ window.filesender.client = {
         }
         
     },
-    
+
+    makeTokenString: function() {
+        if( filesender.client.token ) {
+            return 'token=' + filesender.client.token;
+        }
+        return "";
+    },
     dl: function(ids, confirm, encrypted, progress, archive_format ) {
         if(typeof ids == 'string') ids = [ids];
 
@@ -1073,7 +1079,7 @@ window.filesender.client = {
                 } else {
                     filesender.ui.redirect(
                         filesender.config.base_path
-                            + 'download.php?token=' + filesender.client.token
+                            + 'download.php?' + filesender.client.makeTokenString()
                             + '&archive_format=' + archive_format
                             + '&files_ids=' + ids.join(',') + notify);
                 }
@@ -1169,7 +1175,7 @@ window.filesender.client = {
                     }
                     window.filesender.crypto_encrypted_archive_download = true;
                     crypto_app.decryptDownloadToZip( filesender.config.base_path
-                                                     + 'download.php?token=' + filesender.client.token
+                                                     + 'download.php?' + filesender.client.makeTokenString()
                                                      + '&files_ids='
                                                      , transferid
                                                      , chunk_size
@@ -1207,7 +1213,7 @@ window.filesender.client = {
 
                     window.filesender.crypto_encrypted_archive_download = false;
                     crypto_app.decryptDownload( filesender.config.base_path
-                                                + 'download.php?token=' + filesender.client.token
+                                                + 'download.php?' + filesender.client.makeTokenString()
                                                 + '&files_ids=' + ids.join(','),
                                                 transferid, chunk_size, crypted_chunk_size,
                                                 mime, filename, filesize, encrypted_filesize,
