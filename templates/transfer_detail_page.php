@@ -198,7 +198,15 @@ if(empty($transfer->options['encryption'])) {
                                 <tbody>
                                 <?php foreach($transfer->files as $file) { ?>
                                     <tr class="file"
+                                        data-action="download"
                                         data-id="<?php echo $file->id ?>"
+                                        data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
+                                        data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>"
+                                        data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
+                                        data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"
+                                        data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
+                                        data-size="<?php echo $file->size; ?>"
+                                        data-encrypted-size="<?php echo $file->encrypted_size; ?>"
                                         data-key-version="<?php echo $transfer->key_version; ?>"
                                         data-key-salt="<?php echo $transfer->salt; ?>"
                                         data-password-version="<?php echo $transfer->password_version; ?>"
@@ -479,6 +487,8 @@ if(empty($transfer->options['encryption'])) {
     
 </div>
 
-<div class="token not_displayed"><?php echo $transfer->first_recipient->token ?></div>
+<div class="transfer_is_encrypted not_displayed">
+    <?php echo $isEncrypted ? 1 : 0;  ?>
+</div>
 
 <script type="text/javascript" src="{path:js/transfer_detail_page.js}"></script>

@@ -151,8 +151,23 @@ class RestEndpointTransfer extends RestEndpoint
         // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer
         if ($property == 'options' && 'enable_recipient_email_download_complete' == $property_id) {
 
+            // Check that we have a valid transfer id
+            if (!is_numeric($id)) {
+                throw new RestBadParameterException('transfer_id');
+            }
+            
             // Check that we have a valid token in the url
             if (!array_key_exists('token', $_GET)) {
+                if( Auth::isAuthenticated()) {
+                    $user = Auth::user();
+                    $transfer = Transfer::fromId($id);
+                    // If they own the file then they do not need to confirm download.
+                    // this is used in the transfer details page
+                    if( $user->id == $transfer->userid ) {
+                        $rc = false;
+                        return $rc;
+                    }
+                }
                 throw new RestBadParameterException('token');
             }
             $token = $_GET['token'];
@@ -160,10 +175,6 @@ class RestEndpointTransfer extends RestEndpoint
                 throw new RestBadParameterException('token');
             }
             
-            // Check that we have a valid transfer id
-            if (!is_numeric($id)) {
-                throw new RestBadParameterException('transfer_id');
-            }
             
             // Get transfer and recipient from above data
             $transfer = Transfer::fromId($id);

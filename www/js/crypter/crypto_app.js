@@ -1462,7 +1462,6 @@ window.filesender.crypto_app = function () {
                     else    { $('.bootbox-input').attr('type','password'); }
                 }
             );
-            input.focus();
                 
         },
         /**
