@@ -469,7 +469,14 @@ window.filesender.ui = {
     /**
      * Relocate a dialog
      */
-    relocatePopup: function(popup) {
+    relocatePopup: function(popup, extra = {} ) {
+        params = {
+            position: {
+                my: 'center',
+                at: 'center'
+            },
+        };
+        popup.dialog({...params,...extra});
     },
 
     /**

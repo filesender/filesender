@@ -1123,53 +1123,6 @@ class RestEndpointTransfer extends RestEndpoint
                 );
         }
         
-        if ($data->sendVerificationCodeToYourEmailAddress) {
-
-            $bytes = random_bytes(Config::get('download_verification_code_random_bytes_used'));
-            $bytes = sha1( $bytes, true );
-            $pass = bin2hex($bytes);
-            
-            $rid = 0;
-            $token = $data->token;
-                
-            if(Utilities::isValidUID($token)) {
-                    
-                try {
-                    // Getting recipient from the token
-                    $recipient = Recipient::fromToken($token); // Throws
-                    $rid = $recipient->id;
-                } catch (RecipientNotFoundException $e) {
-                }
-            }
-
-            if( !$rid ) {
-                throw new RestBadParameterException('transfer = '.$transfer->id);
-            }
-            
-            foreach ($transfer->recipients as $recipient) {
-
-                if( $recipient->id != $rid ) {
-                    continue;
-                }
-                
-                $otp = DownloadOneTimePassword::create( $transfer, $recipient, $pass );
-
-                $verificationCode = $recipient->id . ',' . $pass;
-                $verificationCode = base64_encode( $verificationCode );
-                
-                TranslatableEmail::quickSend('transfer_email_verify_to_download',
-                                             $recipient, $transfer,
-                                             array(
-                                                 'verificationCode' => $verificationCode
-                                             )
-                );
-            }
-            return array(
-                'id' => $transfer->id,
-                'ok' => true,
-                );
-            
-        }
         
         if ($data->sendVerificationCodeToYourEmailAddress) {
 
