@@ -752,13 +752,12 @@ This way the encryption_key_version_new_files can be updated and existing upload
 * __comment:__ This enables strong encryption of passwords. This setting is deprecated and will be removed in a future version.
 
 ### upload_crypted_chunk_size
-* __description:__ Internal only setting. This is the entire size of an encrypted chunk, including any padding for per chunk IV
+* __description:__ Internal only setting. Any setting you have in config.php will be overridden by FileSender
 * __mandatory:__ no
 * __type:__ int
-* __default:__ 5 * 1024 * 1024 + 16 + 16
-* __available:__ since before version 2.30
-* __comment:__ It is highly recommended that you leave this setting as the default value. This is the size, including any IV and padding
-           needed for an encrypted chunk that is uploaded.
+* __default:__ Calculated from other values
+* __available:__ Deprecated and overridden in 3.0rc12
+* __comment:__ This setting is calculated and set by FileSender. Please remove it from your config.php if it is there.
 
 ### upload_crypted_chunk_padding_size
 * __description:__ Internal only setting. This is the size of padding and IV for an encrypted chunk
