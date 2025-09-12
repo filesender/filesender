@@ -1129,10 +1129,17 @@ window.filesender.crypto_app = function () {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
                 var msg = window.filesender.config.language.file_encryption_wrong_password;
-                
-                if( error && error.message && error.message != "" ) {
-                    msg = error.message;
-                } 
+
+                if( error && error.name != "OperationError" ) {
+                    if( error && error.message && error.message != "" ) {
+                        window.filesender.log("decryptDownloadToBlobSink(msg!)");
+                        window.filesender.log("decryptDownloadToBlobSink(msg) " + error.message );
+                        window.filesender.log("decryptDownloadToBlobSink(msg) " + error.code );
+                        window.filesender.log("decryptDownloadToBlobSink(msg) " + error.name );
+                        window.filesender.log( error );
+                        msg = error.message;
+                    }
+                }
                 filesender.ui.alert( "error", msg );
 
                 if (progress){
