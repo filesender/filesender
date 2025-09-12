@@ -1132,11 +1132,6 @@ window.filesender.crypto_app = function () {
 
                 if( error && error.name != "OperationError" ) {
                     if( error && error.message && error.message != "" ) {
-                        window.filesender.log("decryptDownloadToBlobSink(msg!)");
-                        window.filesender.log("decryptDownloadToBlobSink(msg) " + error.message );
-                        window.filesender.log("decryptDownloadToBlobSink(msg) " + error.code );
-                        window.filesender.log("decryptDownloadToBlobSink(msg) " + error.name );
-                        window.filesender.log( error );
                         msg = error.message;
                     }
                 }
