@@ -140,13 +140,13 @@ commands. Starting with the 3.0 series each major version will have
 it's own master and development branch. As these documents describe
 the 3.x series you will be interested in `master3` and `development3`.
 
-The `master` branch will always contain the latest release.
+The `master3` branch will always contain the latest release.
 You can select explicit versions using the release tag of the version
 you wish to run from the
 [Releases](https://github.com/filesender/filesender/releases) page. If
 you wish to test a feature that is in development and has been merged
 but is not part of any release yet you might like to checkout the
-`development` branch which contains all merged updates.
+`development3` branch which contains all merged updates.
 
 The version 3.0 alpha series has an updated UI using Bootstrap.
 Similar to the master and development there are `master3` and
