@@ -238,6 +238,12 @@ wants to authenticate a user. SimpleSAMLphp provides many different
 mechanisms to authenticate users and can handle large amounts of
 users.
 
+If you are setting up FileSender at an academic institute you likely
+have knowledge of SPs, IdPs, and SimpleSAMLphp. If you wish to use
+FileSender on a smaller local network there are a few options such as
+using a local user table or using sspsmall to install SimpleSAMLphp to
+authenticate against a local database.
+
 Following these instructions will set you up with a SimpleSAMLphp
 installation that uses Feide RnD's OpenIdP to authenticate users.
 There is also [some
