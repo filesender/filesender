@@ -247,6 +247,10 @@ authentication for development and testing. When you move to a
 production service you probably want to change that to only support
 authentication sources of your choice.
 
+You might also like to consider taking a look at
+[sspsmall](https://github.com/monkeyiq/sspsmall) to install and SP and
+IdP with SimpleSAMLphp on your system.
+
 All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.2 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
 [(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
