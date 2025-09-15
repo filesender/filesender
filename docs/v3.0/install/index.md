@@ -136,18 +136,20 @@ apt-get install -y git
 
 
 Install the FileSender 3.0 from the GIT repository use the following
-commands. The `master` branch will always contain the latest release.
+commands. Starting with the 3.0 series each major version will have
+it's own master and development branch. As these documents describe
+the 3.x series you will be interested in `master3` and `development3`.
+
+The `master3` branch will always contain the latest release.
 You can select explicit versions using the release tag of the version
 you wish to run from the
 [Releases](https://github.com/filesender/filesender/releases) page. If
 you wish to test a feature that is in development and has been merged
 but is not part of any release yet you might like to checkout the
-`development` branch which contains all merged updates.
+`development3` branch which contains all merged updates.
 
-The version 3.0 alpha series has an updated UI using Bootstrap.
-Similar to the master and development there are `master3` and
-`development3` which are the latest release and current development
-code respectively.
+The version 3.0 release candidate series has an updated UI using
+modern CSS and some bootstrap. 
 
 In the example code below I am going to use the latest release in the
 3.x series. You can see the tag (version string) that you need for git
@@ -161,16 +163,17 @@ ticket icon.
 su -l
 mkdir /opt/filesender
 cd    /opt/filesender
-git clone --depth 1 --branch master https://github.com/filesender/filesender.git filesender
+git clone --depth 1 --branch master3 https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
-git checkout master
+git checkout master3
 
 composer install --no-dev
 ```
 
 You can bring down new releases to an existing git repository and then
-directly checkout new releases in the future.
+directly checkout new releases in the future. You can also select an
+older version by using the git tag for that release.
 
 
 
