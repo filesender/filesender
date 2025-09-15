@@ -217,8 +217,16 @@ chown www-data:www-data tmp files log
 chgrp www-data config/config.php
 ```
 
-* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, mount it with the following option: `context=system_u:object_r:httpd_sys_rw_content_t:s0`.
-* **DO NOT** enable `httpd_use_nfs`. If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
+If you are using NFS for your storage then please take note of the following:
+
+* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, 
+            mount it with the following option: 
+```
+context=system_u:object_r:httpd_sys_rw_content_t:s0
+```
+
+* **DO NOT** enable `httpd_use_nfs`. 
+           If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
 
 
 
