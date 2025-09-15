@@ -136,8 +136,9 @@ apt-get install -y git
 
 
 Install the FileSender 3.0 from the GIT repository use the following
-commands. Starting with the 3.0 series each major version will have it's
-own master and development branch. 
+commands. Starting with the 3.0 series each major version will have
+it's own master and development branch. As these documents describe
+the 3.x series you will be interested in `master3` and `development3`.
 
 The `master` branch will always contain the latest release.
 You can select explicit versions using the release tag of the version
