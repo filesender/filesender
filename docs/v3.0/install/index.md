@@ -179,9 +179,9 @@ older version by using the git tag for that release.
 
 # Step 3 - Setup the FileSender configuration
 
-We ship the FileSender tarball with `config_sample.php` file rather
-than directly providing a `config.php` to make life easier when
-packaging the software.
+The FileSender tarball contains a `config_sample.php` file to get you
+started with your own `config.php`. This is done to make life easier
+when packaging the software.
 
 Note that if you wish to support old browsers there are some options you
 might like to add to your configuration.
