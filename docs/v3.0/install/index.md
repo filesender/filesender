@@ -183,11 +183,11 @@ The FileSender tarball contains a `config_sample.php` file to get you
 started with your own `config.php`. This is done to make life easier
 when packaging the software.
 
-The below commands will initialise a config file and set permissions correctly.
-Make the files, tmp and log directories writable by the web
-daemon user (`apache` on RedHat/CentOS, `www-data` on Debian), copy
-the config file in place from the template and allow the web daemon
-user to read the config.php configuration file:
+The below commands will initialise a config file and set permissions
+correctly. The commands make the files, tmp and log directories
+writable by the web daemon user (`apache` on RedHat/CentOS, `www-data`
+on Debian), copy the config file in place from the template and allow
+the web daemon user to read the config.php configuration file:
 
 On all distributions run:
 
