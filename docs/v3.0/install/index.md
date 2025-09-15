@@ -244,14 +244,11 @@ FileSender on a smaller local network there are a few options such as
 using a local user table or using sspsmall to install SimpleSAMLphp to
 authenticate against a local database.
 
-Following these instructions will set you up with a SimpleSAMLphp
-installation that uses Feide RnD's OpenIdP to authenticate users.
-There is also [some
-information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing)
-if you would prefer to setup some username and passwords for local
-authentication for development and testing. When you move to a
-production service you probably want to change that to only support
-authentication sources of your choice.
+If you would prefer to setup some username and passwords for local
+authentication for development and testing see [this
+information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing).
+When you move to a production service you probably want to change that
+to only support authentication sources of your choice.
 
 You might also like to consider taking a look at
 [sspsmall](https://github.com/monkeyiq/sspsmall) to install and SP and
