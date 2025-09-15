@@ -179,23 +179,15 @@ older version by using the git tag for that release.
 
 # Step 3 - Setup the FileSender configuration
 
-We ship the FileSender tarball with `config_sample.php` file rather
-than directly providing a `config.php` to make life easier when
-packaging the software.
+The FileSender tarball contains a `config_sample.php` file to get you
+started with your own `config.php`. This is done to make life easier
+when packaging the software.
 
-Note that if you wish to support old browsers there are some options you
-might like to add to your configuration.
-
-* If you would like to support IE11 and use encryption then you will
-  need to enable a legacy encryption key version using the
-  [encryption_key_version_new_files](https://docs.filesender.org/filesender/v3.0/admin/configuration/#encryption_key_version_new_files)
-  directive.
-
-Initialise config file and set permissions right. Make the files, tmp
-and log directories writable by the web daemon user (`apache` on
-RedHat/CentOS, `www-data` on Debian), copy the config file in place
-from the template and allow the web daemon user to read the config.php
-configuration file:
+The below commands will initialise a config file and set permissions
+correctly. The commands make the files, tmp and log directories
+writable by the web daemon user (`apache` on RedHat/CentOS, `www-data`
+on Debian), copy the config file in place from the template and allow
+the web daemon user to read the config.php configuration file:
 
 On all distributions run:
 
@@ -225,8 +217,17 @@ chown www-data:www-data tmp files log
 chgrp www-data config/config.php
 ```
 
-* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, mount it with the following option: `context=system_u:object_r:httpd_sys_rw_content_t:s0`.
-* **DO NOT** enable `httpd_use_nfs`. If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
+If you are using NFS for your storage then please take note of the following. Otherwise skip
+to the next title section.
+
+* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, 
+            mount it with the following option: 
+```
+context=system_u:object_r:httpd_sys_rw_content_t:s0
+```
+
+* **DO NOT** enable `httpd_use_nfs`. 
+           If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
 
 
 
@@ -237,14 +238,21 @@ wants to authenticate a user. SimpleSAMLphp provides many different
 mechanisms to authenticate users and can handle large amounts of
 users.
 
-Following these instructions will set you up with a SimpleSAMLphp
-installation that uses Feide RnD's OpenIdP to authenticate users.
-There is also [some
-information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing)
-if you would prefer to setup some username and passwords for local
-authentication for development and testing. When you move to a
-production service you probably want to change that to only support
-authentication sources of your choice.
+If you are setting up FileSender at an academic institute you likely
+have knowledge of SPs, IdPs, and SimpleSAMLphp. If you wish to use
+FileSender on a smaller local network there are a few options such as
+using a local user table or using sspsmall to install SimpleSAMLphp to
+authenticate against a local database.
+
+If you would prefer to setup some username and passwords for local
+authentication for development and testing see [this
+information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing).
+When you move to a production service you probably want to change that
+to only support authentication sources of your choice.
+
+You might also like to consider taking a look at
+[sspsmall](https://github.com/monkeyiq/sspsmall) to install and SP and
+IdP with SimpleSAMLphp on your system.
 
 All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.2 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
