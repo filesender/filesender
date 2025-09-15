@@ -183,19 +183,11 @@ The FileSender tarball contains a `config_sample.php` file to get you
 started with your own `config.php`. This is done to make life easier
 when packaging the software.
 
-Note that if you wish to support old browsers there are some options you
-might like to add to your configuration.
-
-* If you would like to support IE11 and use encryption then you will
-  need to enable a legacy encryption key version using the
-  [encryption_key_version_new_files](https://docs.filesender.org/filesender/v3.0/admin/configuration/#encryption_key_version_new_files)
-  directive.
-
-Initialise config file and set permissions right. Make the files, tmp
-and log directories writable by the web daemon user (`apache` on
-RedHat/CentOS, `www-data` on Debian), copy the config file in place
-from the template and allow the web daemon user to read the config.php
-configuration file:
+The below commands will initialise a config file and set permissions correctly.
+Make the files, tmp and log directories writable by the web
+daemon user (`apache` on RedHat/CentOS, `www-data` on Debian), copy
+the config file in place from the template and allow the web daemon
+user to read the config.php configuration file:
 
 On all distributions run:
 
