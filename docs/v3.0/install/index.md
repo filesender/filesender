@@ -148,10 +148,10 @@ you wish to test a feature that is in development and has been merged
 but is not part of any release yet you might like to checkout the
 `development3` branch which contains all merged updates.
 
-The version 3.0 alpha series has an updated UI using Bootstrap.
-Similar to the master and development there are `master3` and
-`development3` which are the latest release and current development
-code respectively.
+The version 3.0 release candidate series has an updated UI using
+modern CSS and some bootstrap. Similar to the master and development
+there are `master3` and `development3` which are the latest release
+and current development code respectively.
 
 In the example code below I am going to use the latest release in the
 3.x series. You can see the tag (version string) that you need for git
