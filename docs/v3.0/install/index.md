@@ -163,16 +163,17 @@ ticket icon.
 su -l
 mkdir /opt/filesender
 cd    /opt/filesender
-git clone --depth 1 --branch master https://github.com/filesender/filesender.git filesender
+git clone --depth 1 --branch master3 https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
-git checkout master
+git checkout master3
 
 composer install --no-dev
 ```
 
 You can bring down new releases to an existing git repository and then
-directly checkout new releases in the future.
+directly checkout new releases in the future. You can also select an
+older version by using the git tag for that release.
 
 
 
