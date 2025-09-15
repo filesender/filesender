@@ -365,9 +365,9 @@ and log the event for investigation.
 
 # Step 5 - Web Server Security
 
-It is highly recommended to only offer the FileSender service over
-HTTPS. This prevents information used in a secure session from
-accidentally being leaked by unintended unsure HTTP requests.
+You should only offer the FileSender service over HTTPS. This prevents
+information used in a secure session from accidentally being leaked by
+unintended unsure HTTP requests.
 
 By default the configuration and setup for Apache and NGINX both use
 X-Frame-Options sameorigin and the configuration for FileSender itself
@@ -398,9 +398,10 @@ not just php pages.
 
 # Step 5-apache - Configure Apache
 
-A default configuration file for apache is shipped with FileSender in the
-config-templates/apache directory. You might like to view
-the current version [online](https://github.com/filesender/filesender/tree/master/config-templates/apache).
+A default configuration file for apache is shipped with FileSender in
+the config-templates/apache directory. You might like to view the
+current version
+[online](https://github.com/filesender/filesender/tree/master/config-templates/apache).
 
 The apache config file is provided in config-templates/apache and
 should be copied to one of the following locations depending on your
