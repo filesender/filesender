@@ -217,7 +217,8 @@ chown www-data:www-data tmp files log
 chgrp www-data config/config.php
 ```
 
-If you are using NFS for your storage then please take note of the following:
+If you are using NFS for your storage then please take note of the following. Otherwise skip
+to the next title section.
 
 * **NOTE**: If you use NFS storage for user files on RedHat/CentOS, 
             mount it with the following option: 
