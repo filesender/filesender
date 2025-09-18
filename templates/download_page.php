@@ -145,7 +145,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <hr />
 
         <div class="row">
-            <div class="col col-sm-12 col-md-5 col-lg-4">
+            <div class="col col-sm-12 col-md-5 col-lg-6">
                 <div class="fs-download__details">
                     <h2>{tr:transfer_details}</h2>
                     <div class="fs-info fs-info--aligned">
@@ -195,7 +195,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     </div>
                 </div>
             </div>
-            <div class="col col-sm-12 col-md-7 col-lg-8">
+            <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-download__files">
                     <h2>{tr:download_files}</h2>
                     <p>{tr:select_files_to_download}</p>
