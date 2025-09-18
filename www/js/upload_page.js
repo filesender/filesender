@@ -2464,6 +2464,9 @@ $(function() {
     filesender.ui.nodes.encryption.password.on(
         'keyup',
         delayAndCallOnlyOnce(function(e) {
+            if( filesender.config.encryption_mandatory_with_generated_password ) {
+                return;
+            }
             // as soon as they edit anything it can no longer be considered "generated".
             filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
             filesender.ui.transfer.encryption_password_encoding = 'none';
@@ -2828,9 +2831,19 @@ $(function() {
 
     if( filesender.config.encryption_mandatory_with_generated_password ) {
         setTimeout( function() {
-            filesender.ui.nodes.encryption.use_generated.click();
-            filesender.ui.nodes.encryption.password.attr('type','text');
-            filesender.ui.nodes.encryption.use_generated.attr('disabled', 'disabled' )
+
+            // trying to disable that slider, pita
+            filesender.ui.nodes.encryption.generate.click();
+            filesender.ui.nodes.encryption.toggle.attr('readonly','true');
+            filesender.ui.nodes.encryption.show_hide.attr('readonly','true');
+            filesender.ui.nodes.encryption.password.attr('readonly','true');
+            $('#enctest1').attr('readonly','true');
+            filesender.ui.nodes.encryption.toggle.prop('checked', true);
+            filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+
+            $('.encryption-toggle-group').hide();
+            $('.password-gen-button').hide();
+            document.getElementById('encmand2').hidden = false;            
         }, 0 );
     }
 

@@ -195,3 +195,14 @@
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+.xdisabled,
+.xdisabled label,
+.xdisabled input,
+.xdisabled .fs-switch {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  cursor: not-allowed !important;
+}
