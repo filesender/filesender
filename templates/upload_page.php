@@ -643,13 +643,20 @@ if( $openpgp_encrypt_passphrase ) {
                                     <div class="row">
                                         <div id="encryption_options"  class="<?php echo $openpgp_encrypt_passphrase_add_class ?>"> </div>
                                         <div class="col-12">
-                                            <div class="fs-switch" data-related-to="encryption">
+                                            <div class="fs-switch encryption-toggle-group" data-related-to="encryption">
                                                 <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
-                                                <label for="encryption">
+                                                <label for="encryption" id="enctest1">
                                                     {tr:encrypt_files_with_password}
                                                 </label>
                                             </div>
 
+                                            <div class="encmand2" id="encmand2" data-related-to="encryption" hidden="true">
+                                                <label id="enctest2">
+                                                    {tr:encrypt_files_with_password}
+                                                </label>
+                                            </div>
+                                            
+                                            
                                             <div id="encgroup1openpgp">
                                             <div id="encgroup1" class="fs-transfer__password">
                                                 <div class="fs-transfer__password-top" id="encryption_password_container">
@@ -659,11 +666,11 @@ if( $openpgp_encrypt_passphrase ) {
                                                                 <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-auto">
+                                                        <div class="col-md-auto password-gen-button">
                                                                 <span>{tr:or}</span>
                                                         </div>
                                                         <div class="col-6">
-                                                            <div class="fs-transfer__generate-password">
+                                                            <div class="fs-transfer__generate-password password-gen-button">
                                                                 <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
                                                             </div>
                                                         </div>
