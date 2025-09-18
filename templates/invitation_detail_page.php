@@ -62,7 +62,7 @@ if( $found ) {
         </div>
 
         <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-7">
+            <div class="col-8 col-sm-12 col-md-12 col-lg-8">
                 <div class="fs-invitation-detail__information">
                     <h2>{tr:invitation_information}</h2>
                     <div class="fs-info fs-info--aligned">
@@ -95,7 +95,7 @@ if( $found ) {
 <!--                    </div>-->
                 </div>
             </div>
-            <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+            <div class="col-4 col-sm-12 col-md-12 col-lg-4">
                 <div class="fs-invitation-detail__recipients">
                     <h2>{tr:recipient}</h2>
                     <p>
