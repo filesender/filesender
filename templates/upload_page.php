@@ -222,9 +222,18 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 
 
 $possibleExpireDays = array( 7, 15, 30, 40 );
-$expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
+array_push( $possibleExpireDays, Config::get('default_transfer_days_valid'));
+asort( $possibleExpireDays );
+$expireDays = array_filter( $possibleExpireDays, function($k) {
     return $k < Config::get('max_transfer_days_valid');
 });
+$expireDaysSelected = Config::get('default_transfer_days_valid');
+if( !in_array( $expireDaysSelected, $expireDays )) {
+    // got filtered? $possibleExpireDays count should be >1 from default setup
+    $v = array_slice($expireDays, -1);
+    $expireDaysSelected = $v[0];
+}
+
 
 if( Auth::isGuest() && $openpgp_encrypt_passphrase ) {
     $guest = AuthGuest::getGuest();
@@ -716,8 +725,14 @@ if( $openpgp_encrypt_passphrase ) {
                                                 {tr:expires_after}
                                             </label>
                                             <select id="expires-select" name="expires-select">
-                                                <?php foreach( $expireDays as $v ) { ?>
-                                                    <option value="<?php echo $v ?>" selected><?php echo $v ?> {tr:days}</option>
+                                                <?php foreach( $expireDays as $k => $v ) { ?>
+                                                    <?php 
+                                                    $sel = "";
+                                                    if( $expireDaysSelected == $v ) {
+                                                        $sel = " selected ";
+                                                    }
+                                                     ?>
+                                                    <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
                                                 <?php } ?>
                                             </select>
                                         </div>

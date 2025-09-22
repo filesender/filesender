@@ -52,6 +52,22 @@ foreach (Guest::allOptions() as $name => $dfn) {
 }
 
 
+$possibleExpireDays = array( 7, 15, 30, 40 );
+array_push( $possibleExpireDays, Config::get('default_guest_days_valid'));
+asort( $possibleExpireDays );
+$expireDays = array_filter( $possibleExpireDays, function($k) {
+    return $k < Config::get('max_guest_days_valid')
+        && $k > Config::get('min_guest_days_valid');
+});
+$expireDaysSelected = Config::get('default_guest_days_valid');
+if( !in_array( $expireDaysSelected, $expireDays )) {
+    // got filtered? $possibleExpireDays count should be >1 from default setup
+    $v = array_slice($expireDays, -1);
+    $expireDaysSelected = $v[0];
+}
+
+
+
 //
 // Note that this needs to be called inside a div with guest_options or transfer_options
 //
@@ -196,10 +212,15 @@ use ( $new_guests_can_only_send_to_creator,
                                             {tr:expires_after}
                                         </label>
                                         <select id="expires-select" name="expires-select">
-                                            <option value="7" selected>7 {tr:days}</option>
-                                            <option value="15">15 {tr:days}</option>
-                                            <option value="30">30 {tr:days}</option>
-                                            <option value="40">40 {tr:days}</option>
+                                                <?php foreach( $expireDays as $k => $v ) { ?>
+                                                    <?php 
+                                                    $sel = "";
+                                                    if( $expireDaysSelected == $v ) {
+                                                        $sel = " selected ";
+                                                    }
+                                                     ?>
+                                                    <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
+                                                <?php } ?>
                                         </select>
                                     </div>
 
