@@ -241,6 +241,7 @@ A note about colours;
 ## Guest use
 
 * [guest_support_enabled](#guest_support_enabled)
+* [guest_transfers_page_support_enabled](#guest_transfers_page_support_enabled)
 * [guest_options](#guest_options)
 * [default_guest_days_valid](#default_guest_days_valid)
 * [min_guest_days_valid](#min_guest_days_valid)
@@ -2607,6 +2608,18 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__ Setting this to false will disable the guest system and fail on attempts to create a guest if they are directly attempted.
 
+### guest_transfers_page_support_enabled
+
+* __description:__ Allow a guest to see a list of their uploads
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ The list of uploads is somewhat limited, for example it does not allow downloading those files
+
+
+* [guest_transfers_page_support_enabled](#guest_transfers_page_support_enabled)
 
 
 ### guest_options
