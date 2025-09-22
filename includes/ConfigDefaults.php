@@ -219,6 +219,7 @@ $default = array(
     'guest_create_limit_per_day' => 0,
     'guest_reminder_limit' => 50,
     'guest_reminder_limit_per_day' => 0,
+    'guest_transfers_page_support_enabled' => true,
     'recipient_reminder_limit' => 50,
     'owner_automatic_reminder' => true,
 
@@ -366,7 +367,8 @@ $default = array(
 
     'allow_pages_add_for_guest' => array( GUIPages::HOME,
                                           GUIPages::UPLOAD,
-                                          GUIPages::APISECRETAUP ),
+                                          GUIPages::APISECRETAUP,
+                                          GUIPages::TRANSFERS_GUEST, ),
 
     'allow_pages_add_for_user' => array( GUIPages::HOME,
                                          GUIPages::USER,

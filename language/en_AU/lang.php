@@ -773,6 +773,7 @@ $lang['transfer_not_availabe'] = 'Transfer not available';
 $lang['transfer_not_found'] = 'Transfer not found';
 $lang['transfer_option_modified'] = 'Transfer option modified';
 $lang['transfer_page_subtitle'] = 'An onverview of all the transfers you sent. Click in any transfer to see its details.';
+$lang['transfer_guest_page_subtitle'] = 'An onverview of all the transfers you sent.';
 $lang['transfer_presumed_expired'] = 'The transfer has expired and files have been deleted from {cfg:site_name}.';
 $lang['transfer_rejected'] = 'Transfer creation rejected';
 $lang['transfer_reminded'] = 'Transfer reminded to recipients';

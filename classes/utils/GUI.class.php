@@ -467,4 +467,35 @@ class GUI
 
         return $embed;
     }
+
+
+    public static function getFileNamesForDisplay( $transfer, $accountForDL = true, $maxlen = 32, $maxfiles = 3 )
+    {
+        $items = array();
+        foreach(array_slice($transfer->files, 0, $maxfiles) as $file) {
+            $name = $file->path;
+            
+            $dlcount = $transfer->downloads;
+            if( !$accountForDL ) {
+                // do not leak this info on some pages                
+                $dlcount = 0;
+            }
+            $name_shorten_by = intval(ceil(intval (mb_strlen((string) $dlcount)+mb_strlen(Lang::tr('see_all'))+3)/2));
+            
+            if(mb_strlen($name) > 28-$name_shorten_by) {
+                if($dlcount) {
+                    $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
+                } else {
+                    $name = mb_substr($name, 0, 23).'...';
+                }
+            }
+            $items[] = '<span title="'.Template::Q($file->path).'">'.Template::replaceTainted($name).'</span>';
+        }
+
+        if(count($transfer->files) > 3)
+            $items[] = '<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>';
+
+        return $items;
+    }
+    
 }
