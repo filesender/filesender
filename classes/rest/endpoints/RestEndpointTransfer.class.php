@@ -558,28 +558,34 @@ class RestEndpointTransfer extends RestEndpoint
                 TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES => $allOptions[TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES]['default'],
                 TransferOptions::HIDE_SENDER_EMAIL => $allOptions[TransferOptions::HIDE_SENDER_EMAIL]['default'],
             );
-            
+
             foreach ($allOptions as $name => $dfn) {
                 $shouldBeAvailable = Utilities::isTrue( $dfn['available'] );
                 $clientProvidedAValue = false;
-                                
-                if (in_array($name, $allowed_options)) {
-                    // check if options is object
-                    if (is_object( $data->options) ) {
-                        if (method_exists($data->options, 'exists')) {
-                            if ($data->options->exists($name)) {
-                                $clientProvidedAValue = 1;
-                                $options[$name] = $data->options->$name;
-                            }
-                        }
-                    } else {
-                        if (array_search($name, $data->options) !== false) {
+
+                // check if options is object
+                $v = '';
+                if (is_object( $data->options) ) {
+                    if (method_exists($data->options, 'exists')) {
+                        if ($data->options->exists($name)) {
                             $clientProvidedAValue = 1;
-                            $options[$name] = 1;
+                            $v = $data->options->$name;
                         }
+                    }
+                } else {
+                    if (array_search($name, $data->options) !== false) {
+                        $clientProvidedAValue = 1;
+                        $v = 1;
                     }
                 }
 
+                if( $name == 'redirect_url_on_complete' ) {
+                        $clientProvidedAValue = 0;                  
+                }
+                if (in_array($name, $allowed_options)) {
+                    $options[$name] = $v;
+                }
+                                
                 if( Utilities::isTrue(Config::get('advanced_validation_transfer_options_not_available_but_selected'))) {
                     if( !$shouldBeAvailable && $clientProvidedAValue ) {
                         throw new BadOptionValueException(
