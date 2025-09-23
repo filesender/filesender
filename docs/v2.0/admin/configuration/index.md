@@ -57,6 +57,7 @@ A note about colours;
 * [cookie_domain](#cookie_domain)
 * [rate_limits](#rate_limits) (rate limits for some actions)
 * [valid_filename_regex](#valid_filename_regex)
+* [advanced_validation_transfer_options_not_available_but_selected](#advanced_validation_transfer_options_not_available_but_selected)
 
 
 ## Backend storage
@@ -803,6 +804,19 @@ $config['rate_limits'] = array(
   //  adds '+' in ASCII
   //  adds special character areas, for example MIDDLE DOT U+30FB
 $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
+
+
+### advanced_validation_transfer_options_not_available_but_selected
+* __description:__ Validate that options given by client during transfer creation do not include options that are explicitly not available.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.58
+* __comment:__ This will catch explicit nefarious attempts to select options which have no UI elements created for them
+               
+
+
+* [advanced_validation_transfer_options_not_available_but_selected](#advanced_validation_transfer_options_not_available_but_selected)
 
 
 
