@@ -582,8 +582,10 @@ class RestEndpointTransfer extends RestEndpoint
                 if( $name == 'redirect_url_on_complete' ) {
                         $clientProvidedAValue = 0;                  
                 }
-                if (in_array($name, $allowed_options)) {
-                    $options[$name] = $v;
+                if( $clientProvidedAValue ) {
+                  if( in_array($name, $allowed_options)) {
+                      $options[$name] = $v;
+                  }
                 }
                                 
                 if( Utilities::isTrue(Config::get('advanced_validation_transfer_options_not_available_but_selected'))) {
