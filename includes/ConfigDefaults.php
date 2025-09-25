@@ -358,6 +358,8 @@ $default = array(
 
     'read_only_mode' => false,
 
+    'advanced_validation_transfer_options_not_available_but_selected' => true,
+
     'validate_csrf_token_for_guests' => true,
 
     'template_config_values_that_can_be_read_in_templates' => array(
