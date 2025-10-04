@@ -255,6 +255,9 @@ class Template
      */
     public static function Q($data)
     {
+        if( !$data ) {
+            return "";
+        }
         return self::sanitizeOutput($data);
     }
     
