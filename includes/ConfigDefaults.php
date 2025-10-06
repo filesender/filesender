@@ -358,7 +358,7 @@ $default = array(
 
     'read_only_mode' => false,
 
-    'advanced_validation_transfer_options_not_available_but_selected' => true,
+    'advanced_validation_transfer_options_not_available_but_selected' => false,
 
     'validate_csrf_token_for_guests' => true,
 
