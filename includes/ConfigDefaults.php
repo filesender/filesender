@@ -396,9 +396,11 @@ $default = array(
 
     'valid_timezone_regex' => '@^[_/a-z]+$@i',
     'client_send_current_timezone_to_server' => false,
-    
-    'advanced_validation_transfer_options_not_available_but_selected' => true,
 
+    
+    'advanced_validation_transfer_options_not_available_but_selected' => false,
+
+    
     'validate_csrf_token_for_guests' => true,
 
     'file_forwarding_enabled' => false,
