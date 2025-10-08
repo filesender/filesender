@@ -417,6 +417,7 @@ class File extends DBObject
     
     /**
      * Get files from Transfer
+     * Note that the default ordering is a human sorting so file-2 will appear before file-100.
      *
      * @param Transfer $transfer the relater transfer
      *
@@ -424,7 +425,18 @@ class File extends DBObject
      */
     public static function fromTransfer(Transfer $transfer)
     {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id order by name desc');
+        $dbtype = Config::get('db_type');
+
+        $sql = 'SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id order by ';
+
+        // add natural, human sorting, in both databases
+        if ($dbtype == 'pgsql') {
+            $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS INT) ";
+        }
+        if ($dbtype == 'mysql') {
+            $sql .= " NATURAL_SORT_KEY(name) ";
+        }
+        $s = DBI::prepare($sql);
         $s->execute(array(':transfer_id' => $transfer->id));
         $tree_files = array();
         $files = array();

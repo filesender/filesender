@@ -80,7 +80,6 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
     if($transfer->status != TransferStatuses::AVAILABLE) throw new TransferNotAvailableException($transfer);
 
     $sortedFiles = $transfer->files;
-    usort($sortedFiles, function( $a, $b ) { return strnatcmp( $a->name, $b->name ); });
 
     $downloadLinks = array();
     $archiveDownloadLink = '#';
