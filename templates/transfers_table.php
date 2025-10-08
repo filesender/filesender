@@ -256,9 +256,9 @@ if (!function_exists('clickableHeader')) {
                 $items = array();
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
                     $name = $file->path;
-                    $name_shorten_by = intval(ceil(intval (mb_strlen((string) count($transfer->downloads))+mb_strlen(Lang::tr('see_all'))+3)/2));
+                    $name_shorten_by = intval(ceil(intval (mb_strlen((string) $transfer->download_count)+mb_strlen(Lang::tr('see_all'))+3)/2));
                     if(mb_strlen($name) > 28-$name_shorten_by) {
-                        if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
+                        if($transfer->download_count) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
                         else $name = mb_substr($name, 0, 23).'...';
                     }
                     $items[] = '<span title="'.Template::Q($file->path).'">'.Template::Q($name).'</span>';
@@ -272,7 +272,7 @@ if (!function_exists('clickableHeader')) {
             </td>
             
             <td class="downloads">
-                <?php $dc = count($transfer->downloads); echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
+                <?php $dc = $transfer->download_count; echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
             </td>
            
             <td class="expires" data-rel="expires">
@@ -471,7 +471,7 @@ if (!function_exists('clickableHeader')) {
                              data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
                              data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"
                         >
-                            <?php echo Template::Q($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            <?php echo Template::Q($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo $file->download_count ?> {tr:downloads}
                             
                             <?php if(!$transfer->is_expired) { ?>
                                
