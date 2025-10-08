@@ -565,6 +565,13 @@ try {
 
                     $tbl_files      = call_user_func('File::getDBTable');
                     $tbl_auditlogs  = call_user_func('AuditLog::getDBTable');
+
+                    $class = 'Files';
+                    // add new authentication table
+                    echo "Adding columns to Files table table...\n";
+                    updateTable( call_user_func($class.'::getDBTable'),
+                                 call_user_func($class.'::getDataMap'));
+                    
                     
                     $sql = " update $tbl_files \n"
                          . " set download_count = ( \n"
