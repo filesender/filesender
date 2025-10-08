@@ -570,7 +570,7 @@ try {
                          . " set download_count = ( \n"
                          . "                    select count(*) from $tbl_auditlogs \n"
                          . "                         where target_type = 'File' \n"
-                         . "                           and target_id = cast(files.id as varchar) \n"
+                         . "                           and target_id = cast($tbl_files.id as varchar) \n"
                          . "                           and event = 'download_ended' \n"
                          . "                      ); \n";
 
