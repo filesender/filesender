@@ -566,7 +566,7 @@ try {
                     $tbl_files      = call_user_func('File::getDBTable');
                     $tbl_auditlogs  = call_user_func('AuditLog::getDBTable');
 
-                    $class = 'Files';
+                    $class = 'File';
                     // add new authentication table
                     echo "Adding columns to Files table table...\n";
                     updateTable( call_user_func($class.'::getDBTable'),
