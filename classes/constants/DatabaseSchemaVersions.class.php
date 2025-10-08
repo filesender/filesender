@@ -43,5 +43,6 @@ class DatabaseSchemaVersions extends Enum
 
     // the last version should also be the same as _CURRENT
     const VERSION_22       = 22;
-    const VERSION_CURRENT  = 22;
+    const VERSION_258      = 258;
+    const VERSION_CURRENT  = 258;
 }
