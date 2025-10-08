@@ -362,6 +362,9 @@ $default = array(
 
     'validate_csrf_token_for_guests' => true,
 
+
+    'large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page' => -1,
+    
     
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',

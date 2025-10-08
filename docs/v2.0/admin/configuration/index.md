@@ -207,6 +207,7 @@ A note about colours;
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
 * [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
+* [large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page](#large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page)
 
 ## Graphs
 
@@ -2324,7 +2325,14 @@ This is only for old, existing transfers which have no roundtriptoken set.
                will be subdirectories that are calculated from the timestamp in the uuid which may not
                be immediately obvious to a human.
 
+### large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page
 
+* __description:__ Transfers with more than this many files will not have their files shown on the my transfers page
+* __mandatory:__ no
+* __type:__ int
+* __default:__ -1
+* __available:__ since before version 2.58
+* __comment:__ The default -1 is "no limit". One might consider using something like 1000 here for reasonable sizes to limit page load times.
 
 
 
