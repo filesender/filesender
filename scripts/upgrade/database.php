@@ -577,13 +577,14 @@ try {
                          . " set download_count = ( \n"
                          . "                    select count(*) from $tbl_auditlogs \n"
                          . "                         where target_type = 'File' \n"
-                         . "                           and target_id = cast($tbl_files.id as varchar) \n"
+                         . "                           and target_id = " . DBView::cast_as_string($tbl_files.'.id') . "  \n"
                          . "                           and event = 'download_ended' \n"
                          . "                      ); \n";
 
                     echo "SQL: $sql \n";
                     $s = DBI::prepare($sql);
                     $s->execute(array());
+                    
                 }
                 // migtrating from the schema in [2.58,...,X] inclusive
                 if( $schemaVersion == DatabaseSchemaVersions::VERSION_258 )
