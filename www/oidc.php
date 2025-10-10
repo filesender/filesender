@@ -12,7 +12,7 @@ function getOidcClient() {
 
     if ($oidcClient === null) {
         $oidcIssuer = Config::get('auth_sp_oidc_issuer');
-        $oidcClientId = Config::get('auth_sp_oidc_client_id');
+        $oidcClientId = ConfigPrivate::get('auth_sp_oidc_client_id');
         $oidcClientSecret = ConfigPrivate::get('auth_sp_oidc_client_secret');
 
         if (empty($oidcIssuer)) {
