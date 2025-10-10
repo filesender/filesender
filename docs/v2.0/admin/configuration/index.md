@@ -2690,7 +2690,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __cookies:__ saml uses them by default
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ <span style="background-color:orange">to use type "fake" you need ...</span>
+* __comment:__ To use type "oidc" please see the dependency and configuration setup instructions listed in the [OpenIDConnectClient](#authentication-openidconnectclient) section.
 
 
 ### auth_sp_force_session_start_first
@@ -2823,6 +2823,23 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ---
 
+**Optional Dependencies Setup**
+
+To install the optional dependencies for OpenID Connect support:
+
+```
+cd optional-dependencies/oidc
+.. download composer.phar and check it    ...
+.. see https://getcomposer.org/download/  ...
+php composer.phar install
+```
+
+**OpenID Connect Provider Configuration**
+
+Configure the redirect URIs with the following pattern: `https://filesender.example.org/*`
+
+This wildcard pattern allows all redirect URIs under your FileSender instance to be valid for authentication callbacks.
+
 ### auth_sp_oidc_issuer
 * __description:__ The URL of the OpenID Connect Issuer. This is the authority that authenticates the user.
 * __mandatory:__ yes
@@ -2837,7 +2854,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __type:__ string
 * __default:__ 
 * __available:__ since version 2.57
-* __comment:__
+* __comment:__ Value is expected in `config_private.php`.
 
 ### auth_sp_oidc_client_secret
 * __description:__ The Client Secret associated with the Client ID.  Keep this value confidential.
