@@ -31,6 +31,8 @@ return $oidcClient;
 }
 
 function oidcLogin($target = null) {
+    Logger::info("OIDC login attempt.");
+
     global $oidcClient;
     $client = getOidcClient();
 
