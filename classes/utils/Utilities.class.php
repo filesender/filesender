@@ -287,6 +287,8 @@ class Utilities
      *
      * @return string
      */
+    private static $formatBytes_unit = null;
+    
     public static function formatBytes($bytes, $precision = 1)
     {
         // Default
@@ -295,13 +297,16 @@ class Utilities
         }
         // allow sloppy $bytes
         $bytes = floor($bytes);
-        
-        // Variants
-        $unit = Lang::tr('size_unit')->out();
-        if ($unit == '{size_unit}') {
-            $unit = 'b';
+
+        if( !self::$formatBytes_unit ) {
+            // Variants
+            $unit = Lang::tr('size_unit')->out();
+            if ($unit == '{size_unit}') {
+                $unit = 'b';
+            }
+            self::$formatBytes_unit = $unit;
         }
-        
+        $unit = self::$formatBytes_unit;
         $multipliers = array('', 'k', 'M', 'G', 'T');
         
         // Compute multiplier

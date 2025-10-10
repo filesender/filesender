@@ -57,6 +57,7 @@ A note about colours;
 * [cookie_domain](#cookie_domain)
 * [rate_limits](#rate_limits) (rate limits for some actions)
 * [valid_filename_regex](#valid_filename_regex)
+* [advanced_validation_transfer_options_not_available_but_selected](#advanced_validation_transfer_options_not_available_but_selected)
 
 
 ## Backend storage
@@ -204,6 +205,7 @@ A note about colours;
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
 * [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
+* [large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page](#large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page)
 
 ## Graphs
 
@@ -321,6 +323,7 @@ A note about colours;
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
+* [auth_config_value_regex_files](#auth_config_value_regex_files)
 
 ## Data Protection
 
@@ -807,6 +810,19 @@ $config['rate_limits'] = array(
   //  adds '+' in ASCII
   //  adds special character areas, for example MIDDLE DOT U+30FB
 $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
+
+
+### advanced_validation_transfer_options_not_available_but_selected
+* __description:__ Validate that options given by client during transfer creation do not include options that are explicitly not available.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.58
+* __comment:__ This will catch explicit nefarious attempts to select options which have no UI elements created for them
+               
+
+
+* [advanced_validation_transfer_options_not_available_but_selected](#advanced_validation_transfer_options_not_available_but_selected)
 
 
 
@@ -2314,7 +2330,14 @@ This is only for old, existing transfers which have no roundtriptoken set.
                will be subdirectories that are calculated from the timestamp in the uuid which may not
                be immediately obvious to a human.
 
+### large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page
 
+* __description:__ Transfers with more than this many files will not have their files shown on the my transfers page
+* __mandatory:__ no
+* __type:__ int
+* __default:__ -1
+* __available:__ since before version 2.58
+* __comment:__ The default -1 is "no limit". One might consider using something like 1000 here for reasonable sizes to limit page load times.
 
 
 
@@ -3143,7 +3166,10 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
-* __example:__ <span style="background-color:orange">need an example here!</span>
+* __example:__ 
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+	</code></pre>
 
 ### auth_sp_save_user_additional_attributes
 
@@ -3472,6 +3498,40 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
 	
+### auth_config_additional_regex_files
+* __description:__ This is like auth_config_regex_files but it works on the value(s) in attributes['addtional']. Such attributes can be gathered by setting auth_sp_additional_attributes. Note that you have to explicitly gather these attributes using the auth_sp_additional_attributes config key in order to match against them. 
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: no overrides loaded.
+* __available:__ since version 2.58
+* __1.x name:__
+* __comment:__ example:
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+    
+	$config['auth_config_additional_regex_files'] = [
+		'quota' => [
+			'500mb$' => 'quotafor500mbfile',
+			'10gb$'  => 'quotafor10gbfile',
+		],
+		'eduPersonAffiliation' => [
+			'student$' => 'quotaforstdentfile',
+			'employee$ => 'quotaforemployeefile',
+		],
+    ];
+	</code></pre>
+    
+    If the selected key is an array then each value in that array will
+    be attempted to match in turn. The items are considered in the
+    order presented by the authentication system. So in the below you
+    can match various items in an array 'eduPersonAffiliation' to
+    config files. If a user has a list eduPersonAffiliation =
+    array('student','employee') then both keys will match and employee
+    will be last.
+
+    
+
+
 ###
 
 ---

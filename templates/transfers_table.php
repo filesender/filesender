@@ -256,9 +256,9 @@ if (!function_exists('clickableHeader')) {
                 $items = array();
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
                     $name = $file->path;
-                    $name_shorten_by = intval(ceil(intval (mb_strlen((string) count($transfer->downloads))+mb_strlen(Lang::tr('see_all'))+3)/2));
+                    $name_shorten_by = intval(ceil(intval (mb_strlen((string) $transfer->download_count)+mb_strlen(Lang::tr('see_all'))+3)/2));
                     if(mb_strlen($name) > 28-$name_shorten_by) {
-                        if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
+                        if($transfer->download_count) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
                         else $name = mb_substr($name, 0, 23).'...';
                     }
                     $items[] = '<span title="'.Template::Q($file->path).'">'.Template::Q($name).'</span>';
@@ -272,7 +272,7 @@ if (!function_exists('clickableHeader')) {
             </td>
             
             <td class="downloads">
-                <?php $dc = count($transfer->downloads); echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
+                <?php $dc = $transfer->download_count; echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
             </td>
            
             <td class="expires" data-rel="expires">
@@ -453,50 +453,82 @@ if (!function_exists('clickableHeader')) {
                     <?php } ?>
                 </div>
                 <?php } ?>
+
+                <?php
+                $showfiles = true;
+                $file_count = count($transfer->files);
+                if( Config::get('large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page') >= 0 ) {
+                    $showfiles = $file_count < Config::get('large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page');
+                }
+
+                if( $showfiles ) {
+                ?>
                 
                 <div class="files">
                     <h2>{tr:files}</h2>
+
+                    <?php
+
+                    $tp_transfer_key_version      = Template::Q($transfer->key_version);
+                    $tp_transfer_salt             = Template::Q($transfer->salt);
+                    $tp_transfer_password_version = Template::Q($transfer->password_version);
+                    $tp_transfer_password_encoding_string = Template::Q($transfer->password_encoding_string);
+                    $tp_transfer_password_hash_iterations = Template::Q($transfer->password_hash_iterations);
+                    $tp_transfer_client_entropy   = Template::Q($transfer->client_entropy);
+                    $tp_transfer_id               = Template::Q($transfer->id);
+                    $tp_transfer_is_encrypted     = $transfer->is_encrypted ? 'true' : 'false';
+                    ?>
                     
-                    <?php foreach($transfer->files as $file) { ?>
-                        <div class="file" data-id="<?php          echo Template::Q($file->id) ?>"
-                             data-key-version="<?php              echo Template::Q($transfer->key_version); ?>"
-                             data-key-salt="<?php                 echo Template::Q($transfer->salt); ?>"
-                             data-password-version="<?php         echo Template::Q($transfer->password_version); ?>"
-                             data-password-encoding="<?php        echo Template::Q($transfer->password_encoding_string); ?>"
-                             data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
-                             data-client-entropy="<?php           echo Template::Q($transfer->client_entropy); ?>"
-                             data-fileiv="<?php                   echo Template::Q($file->iv); ?>"
-                             data-fileaead="<?php                 echo Template::Q($file->aead); ?>"
-                             data-transferid="<?php               echo Template::Q($transfer->id); ?>"
-                             data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
-                             data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"
+                    <?php foreach($transfer->files as $file) {
+                        $tp_file_id                   = Template::Q($file->id);
+                        $tp_file_iv                   = Template::Q($file->iv);
+                        $tp_file_aead                 = Template::Q($file->aead);
+                        $tp_file_chunk_size           = Template::Q($file->chunk_size);
+                        $tp_file_crypted_chunk_size   = Template::Q($file->crypted_chunk_size);
+                        $tp_file_mime_type            = Template::Q($file->mime_type);
+                        $tp_file_path                 = Template::Q($file->path);
+                        $tp_file_size                 = Template::Q($file->size);
+                        $tp_file_encrypted_size       = Template::Q($file->encrypted_size);
+                    ?>
+                        <div class="file" data-id="<?php          echo $tp_file_id ?>"
+                             data-key-version="<?php              echo $tp_transfer_key_version ?>"
+                             data-key-salt="<?php                 echo $tp_transfer_salt; ?>"
+                             data-password-version="<?php         echo $tp_transfer_password_version ?>"
+                             data-password-encoding="<?php        echo $tp_transfer_password_encoding_string ?>"
+                             data-password-hash-iterations="<?php echo $tp_transfer_password_hash_iterations ?>"
+                             data-client-entropy="<?php           echo $tp_transfer_client_entropy; ?>"
+                             data-fileiv="<?php                   echo $tp_file_iv; ?>"
+                             data-fileaead="<?php                 echo $tp_file_aead; ?>"
+                             data-transferid="<?php               echo $tp_transfer_id; ?>"
+                             data-chunk-size="<?php               echo $tp_file_chunk_size; ?>"
+                             data-crypted-chunk-size="<?php       echo $tp_file_crypted_chunk_size; ?>"
                         >
-                            <?php echo Template::Q($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            <?php echo $tp_file_path ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo $file->download_count ?> {tr:downloads}
                             
                             <?php if(!$transfer->is_expired) { ?>
                                
                                 <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
-                                <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo Template::Q($file->id) ?>" 
-                                        data-encrypted="<?php echo isset($transfer->options['encryption'])?Template::Q($transfer->options['encryption']):'false'; ?>" 
-                                        data-mime="<?php              echo Template::Q($file->mime_type); ?>" 
-                                        data-name="<?php              echo Template::Q($file->path); ?>"
-                                        data-size="<?php              echo Template::Q($file->size); ?>"
-                                        data-encrypted-size="<?php    echo Template::Q($file->encrypted_size); ?>"
-                                        data-key-version="<?php       echo Template::Q($transfer->key_version); ?>"
-                                        data-key-salt="<?php          echo Template::Q($transfer->salt); ?>"
-                                        data-password-version="<?php  echo Template::Q($transfer->password_version); ?>"
-                                        data-password-encoding="<?php echo Template::Q($transfer->password_encoding_string); ?>"
-                                        data-password-hash-iterations="<?php echo Template::Q($transfer->password_hash_iterations); ?>"
-                                        data-client-entropy="<?php    echo Template::Q($transfer->client_entropy); ?>"
-                                        data-fileiv="<?php            echo Template::Q($file->iv); ?>"
-                                        data-fileaead="<?php          echo Template::Q($file->aead); ?>"
-                                        data-transferid="<?php        echo Template::Q($transfer->id); ?>"
-                                        data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
-                                        data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"
+                                <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo $tp_file_id ?>" 
+                                        data-encrypted="<?php                echo $tp_transfer_is_encrypted; ?>" 
+                                        data-mime="<?php                     echo $tp_file_mime_type ?>" 
+                                        data-name="<?php                     echo $tp_file_path ?>"
+                                        data-size="<?php                     echo $tp_file_size ?>"
+                                        data-encrypted-size="<?php           echo $tp_file_encrypted_size ?>"
+                                        data-key-version="<?php              echo $tp_transfer_key_version ?>"
+                                        data-key-salt="<?php                 echo $tp_transfer_salt ?>"
+                                        data-password-version="<?php         echo $tp_transfer_password_version ?>"
+                                        data-password-encoding="<?php        echo $tp_transfer_password_encoding_string ?>"
+                                        data-password-hash-iterations="<?php echo $tp_transfer_password_hash_iterations ?>"
+                                        data-client-entropy="<?php           echo $tp_transfer_client_entropy; ?>"
+                                        data-fileiv="<?php                   echo $tp_file_iv; ?>"
+                                        data-fileaead="<?php                 echo $tp_file_aead; ?>"
+                                        data-transferid="<?php               echo $tp_transfer_id; ?>"
+                                        data-chunk-size="<?php               echo $tp_file_chunk_size; ?>"
+                                        data-crypted-chunk-size="<?php       echo $tp_file_crypted_chunk_size; ?>"
                                 ></span>
                                         
                                 <?php } else {?>
-                            <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo Template::Q($file->id) ?>"></a>
+                            <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $tp_file_id ?>"></a>
                                 <?php } ?>
                             <?php } ?>
 
@@ -520,6 +552,7 @@ if (!function_exists('clickableHeader')) {
                         </div>
                     <?php } ?>
                 </div>
+                <?php } ?>
                 <div class="fieldcontainer" id="encryption_description_not_supported">
                     {tr:file_encryption_disabled}
                 </div>

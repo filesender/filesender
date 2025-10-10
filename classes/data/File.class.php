@@ -132,13 +132,23 @@ class File extends DBObject
             'size' => 170,
             'null' => true
         ),
+
+        'download_count' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'default' => 0,
+            'null'    => false,
+        ),
         
     );
 
     protected static $secondaryIndexMap = array(
         'transfer_id' => array(
             'transfer_id' => array()
-        )
+        ),
+        'uid' => array(
+            'uid' => array()
+        ),
     );
 
 
@@ -188,6 +198,7 @@ class File extends DBObject
     protected $have_avresults = false;
     protected $storage_class_name = ''; // set in constructor
     protected $storage_path = null;
+    protected $download_count = 0;
    
     /**
      * Related objects cache
@@ -314,6 +325,7 @@ class File extends DBObject
     public function __construct($id = null, $data = null)
     {
         $this->storage_class_name = Storage::getDefaultStorageClass();
+        $this->download_count = 0;
         
         if (!is_null($id)) {
             // Load from database if id given
@@ -405,6 +417,7 @@ class File extends DBObject
     
     /**
      * Get files from Transfer
+     * Note that the default ordering is a human sorting so file-2 will appear before file-100.
      *
      * @param Transfer $transfer the relater transfer
      *
@@ -412,7 +425,18 @@ class File extends DBObject
      */
     public static function fromTransfer(Transfer $transfer)
     {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id order by name desc');
+        $dbtype = Config::get('db_type');
+
+        $sql = 'SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id order by ';
+
+        // add natural, human sorting, in both databases
+        if ($dbtype == 'pgsql') {
+            $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS INT) ";
+        }
+        if ($dbtype == 'mysql') {
+            $sql .= " NATURAL_SORT_KEY(name) ";
+        }
+        $s = DBI::prepare($sql);
         $s->execute(array(':transfer_id' => $transfer->id));
         $tree_files = array();
         $files = array();
@@ -514,6 +538,7 @@ class File extends DBObject
         if (in_array($property, array(
             'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
           , 'storage_class_name', 'iv', 'aead', 'have_avresults', 'storage_path'
+          , 'download_count'
         ))) {
             return $this->$property;
         }
@@ -608,6 +633,8 @@ class File extends DBObject
     {
         if ($property == 'name') {
             $this->setName((string)$value);
+        } elseif ($property == 'download_count') {
+            $this->download_count = $value;
         } elseif ($property == 'auditlogs') {
             $this->logsCache = (array)$value;
         } elseif ($property == 'mime_type') {

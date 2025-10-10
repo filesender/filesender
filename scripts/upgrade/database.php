@@ -545,6 +545,7 @@ try {
     if( Database::tableExists($tbl_user)) {
         
         // Perform larger migrations
+        // see classes/constants/DatabaseSchemaVersions.class.php
         if( $currentSchemaVersion != DatabaseSchemaVersions::VERSION_CURRENT ) {
             $schemaVersion = $currentSchemaVersion;
             $dbtype = Config::get('db_type');
@@ -554,7 +555,42 @@ try {
             
             for( ; $schemaVersion <= DatabaseSchemaVersions::VERSION_CURRENT; $schemaVersion++ ) {
 
-                echo "checking for $schemaVersion \n";
+                echo "checking with schemaversion $schemaVersion \n";
+
+                // migtrating from the schema in [2.2,...,2.57] inclusive
+                if( $schemaVersion == DatabaseSchemaVersions::VERSION_22 )
+                {
+                    echo "Migrating database schema to version 2.58\n";
+                    echo "this will take some time to perform...\n";
+
+                    $tbl_files      = call_user_func('File::getDBTable');
+                    $tbl_auditlogs  = call_user_func('AuditLog::getDBTable');
+
+                    $class = 'File';
+                    // add new authentication table
+                    echo "Adding columns to Files table table...\n";
+                    updateTable( call_user_func($class.'::getDBTable'),
+                                 call_user_func($class.'::getDataMap'));
+                    
+                    
+                    $sql = " update $tbl_files \n"
+                         . " set download_count = ( \n"
+                         . "                    select count(*) from $tbl_auditlogs \n"
+                         . "                         where target_type = 'File' \n"
+                         . "                           and target_id = " . DBView::cast_as_string($tbl_files.'.id') . "  \n"
+                         . "                           and event = 'download_ended' \n"
+                         . "                      ); \n";
+
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+                    
+                }
+                // migtrating from the schema in [2.58,...,X] inclusive
+                if( $schemaVersion == DatabaseSchemaVersions::VERSION_258 )
+                {
+                }
+                    
                 //
                 // Version 22
                 // ----------
@@ -569,7 +605,7 @@ try {
                 // The saml information is then associated with a specific user using UserPreferences.authid.
                 // These id columns are bigint (8 byte numbers) and should index a lot better than email addresses.
                 //
-                if( $schemaVersion == DatabaseSchemaVersions::VERSION_22 )
+                if( $schemaVersion < DatabaseSchemaVersions::VERSION_22 )
                 {
                     echo "Migrating database schema to version 22.\n";
                     echo "this will take some time to perform...\n";
