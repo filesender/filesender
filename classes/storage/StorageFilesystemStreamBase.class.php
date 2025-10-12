@@ -1,6 +1,6 @@
 <?php
 /*
- * Store the file using external script
+ * Store the file as chunks instead of as a single file on disk.
  *
  * FileSender www.filesender.org
  *
@@ -36,53 +36,43 @@ if (!defined('FILESENDER_BASE')) {
 }
 
 /**
- * Allow reading a file as a normal php stream
+ * Allow reading a chunked file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
-class StorageFilesystemExternalStream extends StorageFilesystemStreamBase
+class StorageFilesystemStreamBase
 {
-    public function stream_open($path, $mode, $options, &$opened_path)
+    protected $offset = 0;
+    protected $id     = null;
+    protected $uid    = null;
+    protected $file   = null;
+    protected $fh     = null;
+    protected $currentChunkFile = null;
+    protected $gameOver = false;
+    
+    public function stream_open( $path, $mode, $options, &$opened_path )
     {
-        $rc = parent::stream_open_base( $path, $mode, $options, $opened_path );
-        return $rc;
-    }
-    
-    
-    public function stream_read($count)
-    {
-        $file   = $this->file;
-        $offset = $this->offset;
-
-        if ($this->gameOver) {
-            return false;
-        }
-    
-        $out = StorageFilesystemExternal::run('fs_readChunk "'.$file->uid.'" '.$offset.' '.$count);
-        if ($out['status']!=0) {
-            //something bad
-            $this->gameOver = true;
+        $this->currentChunkFile = "";
+        
+        $url = parse_url($path);
+        $this->offset = 0;
+        $this->id  = $url["fragment"];
+        $this->uid = $url["host"];
+        if( $this->id ) {
+            // if we have the id in the fragment we can lookup the file quicker
+            $this->file = File::fromId($this->id);
+            
+            // check uid after lookup to make sure we have the right file
+            if( $this->file->uid != $this->uid ) {
+                // This should never happen.
+                Logger::error("StorageFilesystemStreamBase ERROR given file id does not match uid! file.id: " . $this->id  );
+                Logger::error("StorageFilesystemStreamBase      got: " . $this->file->uid  );
+                Logger::error("StorageFilesystemStreamBase expected: " . $this->uid  );
+                $this->file = File::fromUid($this->uid);
+            }           
         } else {
-            $data = $out['stdout'];
+            $this->file = File::fromUid($this->uid);
         }
-
-        if ($data === false) {
-            $this->gameOver = true;
-            return false;
-        }
-        $this->offset += strlen($data);
-        return $data;
-    }
-
-    public function stream_eof()
-    {
-        return $this->offset >= $this->file->size;
-    }
-
-    public static function ensureRegistered()
-    {
-        // this happens when the file is parsed
+        return true;
     }
 };
 
-stream_wrapper_register("StorageFilesystemExternalStream", "StorageFilesystemExternalStream")
-or die("Failed to register protocol");
