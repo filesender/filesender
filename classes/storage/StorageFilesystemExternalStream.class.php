@@ -39,24 +39,15 @@ if (!defined('FILESENDER_BASE')) {
  * Allow reading a file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
-class StorageFilesystemExternalStream
+class StorageFilesystemExternalStream extends StorageFilesystemStreamBase
 {
-    protected $offset = 0;
-    protected $uid    = null;
-    protected $file   = null;
-    protected $fh     = null;
-    protected $currentChunkFile = null;
-    protected $gameOver = false;
-
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        $url = parse_url($path);
-        $this->offset = 0;
-        $this->uid = $url["host"];
-        $this->file = File::fromUid($this->uid);
-        return true;
+        $rc = parent::stream_open_base( $path, $mode, $options, $opened_path );
+        return $rc;
     }
-
+    
+    
     public function stream_read($count)
     {
         $file   = $this->file;
