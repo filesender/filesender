@@ -57,7 +57,8 @@ class File extends DBObject
         ),
         'uid' => array(
             'type' => 'string',
-            'size' => 60
+            'size' => 60,
+            'unique' => true            
         ),
         'name' => array(
             'type' => 'string',
@@ -145,9 +146,6 @@ class File extends DBObject
     protected static $secondaryIndexMap = array(
         'transfer_id' => array(
             'transfer_id' => array()
-        ),
-        'uid' => array(
-            'uid' => array()
         ),
     );
 
