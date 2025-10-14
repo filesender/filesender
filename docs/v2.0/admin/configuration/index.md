@@ -2332,7 +2332,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __mandatory:__ no
 * __type:__ int
 * __default:__ -1
-* __available:__ since before version 2.58
+* __available:__ since version 2.58
 * __comment:__ The default -1 is "no limit". One might consider using something like 1000 here for reasonable sizes to limit page load times.
 
 
@@ -2344,7 +2344,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __mandatory:__ no
 * __type:__ int
 * __default:__ 0
-* __available:__ since before version 2.58
+* __available:__ since version 2.58
 * __comment:__ The default 0 will disable the feature. You might like
                to consider something like 5000. Note that bulk
                transfers are created without checking in code for
