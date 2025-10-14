@@ -135,15 +135,16 @@ class ShredFile extends DBObject
         }
 
         // Generate uid until it is indeed unique
-        $file->name = Utilities::generateUID(true, function ($uid, $tries) {
-            $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
-            $data = $statement->fetch();
-            if (!$data) {
-                Logger::info('File uid generation took '.$tries.' tries');
-            }
-            return !$data;
-        });
+        $file->name = Utilities::generateRandomUID(
+            function ($uid, $tries) {
+                $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
+                $statement->execute(array(':uid' => $uid));
+                $data = $statement->fetch();
+                if (!$data) {
+                    Logger::info('File uid generation took '.$tries.' tries');
+                }
+                return !$data;
+            });
 
         if (!rename($original_path, $shredpath.$file->name)) {
             throw new StorageFilesystemCannotDeleteException($original_path, $file);

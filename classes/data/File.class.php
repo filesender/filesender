@@ -59,6 +59,12 @@ class File extends DBObject
             'type' => 'string',
             'size' => 60
         ),
+        'puid' => array(
+            'type' => 'string',
+            'size' => 60,
+            'unique' => true,
+            'null' => true,   // needed for migration            
+        ),
         'name' => array(
             'type' => 'string',
             'size' => 255,
@@ -186,6 +192,7 @@ class File extends DBObject
     protected $id = null;
     protected $transfer_id = null;
     protected $uid = null;
+    protected $puid = null;
     protected $name = null;
     protected $mime_type = null;
     protected $size = 0;
@@ -362,16 +369,21 @@ class File extends DBObject
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
 
+        // puid should always be uuidv4
+        $file->puid = Utilities::generateRandomUID();
+        
         // Generate timestamped uid until it is indeed unique
-        $file->uid = Utilities::generateUID(true, function ($uid, $tries) {
-            $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
-            $data = $statement->fetch();
-            if (!$data) {
-                Logger::info('File uid generation took '.$tries.' tries');
+        $file->uid = Utilities::generateTemporalUID(
+            function ($uid, $tries) {
+                $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
+                $statement->execute(array(':uid' => $uid));
+                $data = $statement->fetch();
+                if (!$data) {
+                    Logger::info('File uid generation took '.$tries.' tries');
+                }
+                return !$data;
             }
-            return !$data;
-        });
+        );
         
         $file->storage_class_name = Storage::getDefaultStorageClass();
 
@@ -409,7 +421,20 @@ class File extends DBObject
         $data = $s->fetch();
         
         if (!$data) {
-            throw FileNotFoundException('uid = '.$uid);
+            throw new FileNotFoundException('uid = '.$uid);
+        }
+        
+        return self::fromData($data['id'], $data); // Don't query twice, use loaded data
+    }
+
+    public static function fromPuid($puid)
+    {
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE puid = :puid');
+        $s->execute(array(':puid' => $puid));
+        $data = $s->fetch();
+        
+        if (!$data) {
+            throw new FileNotFoundException('puid = '.$puid);
         }
         
         return self::fromData($data['id'], $data); // Don't query twice, use loaded data
@@ -536,7 +561,7 @@ class File extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
+            'transfer_id', 'uid', 'puid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
           , 'storage_class_name', 'iv', 'aead', 'have_avresults', 'storage_path'
           , 'download_count'
         ))) {

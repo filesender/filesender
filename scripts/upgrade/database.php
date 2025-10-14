@@ -584,6 +584,17 @@ try {
                     echo "SQL: $sql \n";
                     $s = DBI::prepare($sql);
                     $s->execute(array());
+
+                    // uid was a v4 uuid in this version
+                    // puid was moved to uuid v4
+                    // uid  was moved to a temporal v7 uuid
+                    $sql = " update $tbl_files \n"
+                         . " set puid = uid; \n";
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+                    
+                    
                     
                 }
                 // migtrating from the schema in [2.58,...,X] inclusive
