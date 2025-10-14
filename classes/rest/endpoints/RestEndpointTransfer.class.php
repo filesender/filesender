@@ -819,7 +819,6 @@ class RestEndpointTransfer extends RestEndpoint
                                          [ 'transfer_id', 'uid', 'name',
                                            'size', 'encrypted_size',
                                            'mime_type', 'iv', 'aead',
-                                           // 'forward_id',
                                            'storage_class_name' ],
                                          $tuple_count );
                 $dbb->begin();
@@ -865,7 +864,6 @@ class RestEndpointTransfer extends RestEndpoint
                            $filedata->mime_type,
                            $flat_data[] = $filedata->iv,
                            $flat_data[] = $filedata->aead,
-//                           $flat_data[] = $filedata->forward_id,
                            $flat_data[] = Storage::getDefaultStorageClass()
                     ];                   
                     $dbb->add( $r );
@@ -873,9 +871,7 @@ class RestEndpointTransfer extends RestEndpoint
                 else
                 {
                     $file = $transfer->addFile( $filedata->name, $filedata->size, $filedata->mime_type,
-                                                $filedata->iv, $filedata->aead
-                                             //,  $filedata->forward_id 
-                                              );
+                                                $filedata->iv, $filedata->aead );
                 }
                 
                 $files_cids[$file->id] = $filedata->cid;
