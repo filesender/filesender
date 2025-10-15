@@ -819,7 +819,7 @@ class RestEndpointTransfer extends RestEndpoint
             if( $usebulk ) {
                 Logger::debug("Using bulk load for new transfer with $tuple_count files. thresh:$bulk_threshold ");                
                 $dbb = new DatabaseBulk( File::getDBTable(),
-                                         [ 'transfer_id', 'uid', 'name',
+                                         [ 'transfer_id', 'uid', 'puid', 'name',
                                            'size', 'encrypted_size',
                                            'mime_type', 'iv', 'aead',
                                            'storage_class_name' ],
@@ -860,8 +860,10 @@ class RestEndpointTransfer extends RestEndpoint
 
                 if( $usebulk ) {
 
-                    $uid = Utilities::generateUID();
-                    $r = [ $transfer->id, $uid,
+                    $puid = Utilities::generateRandomUID();
+                    $uid = Utilities::generateTemporalUID();
+                    $r = [ $transfer->id,
+                           $uid, $puid,
                            $filedata->name, $filedata->size,
                            File::calculateEncryptedFileSizeStatic( $filedata->size, $transfer->key_version ),
                            $filedata->mime_type,
