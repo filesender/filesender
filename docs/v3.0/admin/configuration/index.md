@@ -143,7 +143,6 @@ A note about colours;
 * [crypto_pbkdf2_dialog_enabled](#crypto_pbkdf2_dialog_enabled)
 * [crypto_pbkdf2_delay_to_show_dialog](#crypto_pbkdf2_delay_to_show_dialog)
 * [crypto_pbkdf2_expected_secure_to_year](#crypto_pbkdf2_expected_secure_to_year)
-* [crypto_pbkdf2_dialog_custom_webasm_delay](#crypto_pbkdf2_dialog_custom_webasm_delay)
 * [upload_page_password_can_not_be_part_of_message_handling](#upload_page_password_can_not_be_part_of_message_handling)
 * [user_page](#user_page)
 * [allow_pages_core](#allow_pages_core)
@@ -1530,13 +1529,6 @@ Inside of files_downloaded.mail.php for example
 * __default:__ 2027
 * __available:__ since version 2.12
 
-
-### crypto_pbkdf2_dialog_custom_webasm_delay
-* __description:__ The custom webasm PBKDF2 code can stop the PBKDF2 dialog from appearing because the webasm code takes control until key generation is complete. This delay allows the dialog to appear so the user does not think things are frozen. Note that this delay is not used for native WebCrypto PBKDF2, only for the custom webasm that is used when the browser does not support PBKDF2.
-* __mandatory:__ no
-* __type:__ integer
-* __default:__ 1000
-* __available:__ since version 2.14
 
 
 ### upload_page_password_can_not_be_part_of_message_handling

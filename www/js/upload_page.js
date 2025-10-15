@@ -48,10 +48,6 @@ function isEdge()
     }
     return false;
 }
-function use_webasm_pbkdf2_implementation()
-{
-    return isIE11() || isEdge();
-}
 
 function delayAndCallOnlyOnce(callback, ms) {
     var timer = 0;
@@ -1167,12 +1163,6 @@ filesender.ui.startUpload = function() {
         can_use_terasender = false;
     }
     var v2018_importKey_deriveKey = window.filesender.crypto_app().crypto_key_version_constants.v2018_importKey_deriveKey;
-    if(this.transfer.encryption
-       && filesender.config.encryption_key_version_new_files == v2018_importKey_deriveKey
-       && use_webasm_pbkdf2_implementation()) {
-        can_use_terasender = false;
-        filesender.config.terasender_enabled = can_use_terasender;
-    }
     window.filesender.pbkdf2dialog.setup(!can_use_terasender);
     window.filesender.pbkdf2dialog.reset();
 

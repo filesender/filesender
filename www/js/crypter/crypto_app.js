@@ -323,37 +323,6 @@ window.filesender.crypto_app = function () {
             {
                 window.filesender.onPBKDF2Starting();
 
-                //
-                // The is set in filesender-config.js.php based on the browser
-                //
-                if( window.filesender.config.crypto_use_custom_password_code ) 
-                {
-                    setTimeout(
-                        function(){
-                    
-                            window.filesender.log("***** USING CUSTOM CODE ON PASSWORD ****");
-                            
-                            window.filesender.asmcrypto().importKeyFromPasswordUsingPBKDF2(
-                                passwordBuffer,
-                                saltBuffer,
-                                hashRounds,                                
-                                function(key) {
-                                    window.filesender.onPBKDF2Ended();
-                                    callback(key);
-                                },
-                                function(e) {
-                                    window.filesender.onPBKDF2Ended();
-                                    efunc(e);
-                                }
-                            );
-                        },
-                        window.filesender.config.crypto_pbkdf2_dialog_custom_webasm_delay
-                    );
-                    
-                    return;
-                }
- 
-
                 crypto.subtle.importKey(
                     'raw', 
                     passwordBuffer,
