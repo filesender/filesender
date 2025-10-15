@@ -1537,7 +1537,7 @@ Inside of files_downloaded.mail.php for example
 
 
 ### crypto_pbkdf2_dialog_custom_webasm_delay
-* __description:__ DEPRECATED at 2.58+. The custom webasm PBKDF2 code can stop the PBKDF2 dialog from appearing because the webasm code takes control until key generation is complete. This delay allows the dialog to appear so the user does not think things are frozen. Note that this delay is not used for native WebCrypto PBKDF2, only for the custom webasm that is used when the browser does not support PBKDF2.
+* __description:__ REMOVED at 2.58+. The custom webasm PBKDF2 code can stop the PBKDF2 dialog from appearing because the webasm code takes control until key generation is complete. This delay allows the dialog to appear so the user does not think things are frozen. Note that this delay is not used for native WebCrypto PBKDF2, only for the custom webasm that is used when the browser does not support PBKDF2.
 * __mandatory:__ no
 * __type:__ integer
 * __default:__ 1000
