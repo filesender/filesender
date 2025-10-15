@@ -808,6 +808,26 @@ class RestEndpointTransfer extends RestEndpoint
             }
             $extension_whitelist_regex = Config::get('extension_whitelist_regex');
             
+            $tuple_count = count($data->files);
+            $dbb = null;
+            $usebulk = false;
+            
+            $bulk_threshold = Config::get('create_transfer_uses_bulk_insert_threshold');
+            if( $bulk_threshold != 0 && $tuple_count >= $bulk_threshold ) {
+                $usebulk = true;
+            }           
+            if( $usebulk ) {
+                Logger::debug("Using bulk load for new transfer with $tuple_count files. thresh:$bulk_threshold ");                
+                $dbb = new DatabaseBulk( File::getDBTable(),
+                                         [ 'transfer_id', 'uid', 'name',
+                                           'size', 'encrypted_size',
+                                           'mime_type', 'iv', 'aead',
+                                           'storage_class_name' ],
+                                         $tuple_count );
+                $dbb->begin();
+            }
+            
+            
             // Add files after checking that they do not have a banned extension, fail otherwise
             $files_cids = array();
             foreach ($data->files as $filedata) {
@@ -836,8 +856,27 @@ class RestEndpointTransfer extends RestEndpoint
                                             FILTER_VALIDATE_REGEXP,
                                             ["options" => ["regexp" => "|^[-A-Za-z0-9+/]*={0,3}$|" ]] );                
 
-                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
-                                           $filedata->iv, $filedata->aead );
+
+
+                if( $usebulk ) {
+
+                    $uid = Utilities::generateUID();
+                    $r = [ $transfer->id, $uid,
+                           $filedata->name, $filedata->size,
+                           File::calculateEncryptedFileSizeStatic( $filedata->size, $transfer->key_version ),
+                           $filedata->mime_type,
+                           $flat_data[] = $filedata->iv,
+                           $flat_data[] = $filedata->aead,
+                           $flat_data[] = Storage::getDefaultStorageClass()
+                    ];                   
+                    $dbb->add( $r );
+                }
+                else
+                {
+                    $file = $transfer->addFile( $filedata->name, $filedata->size, $filedata->mime_type,
+                                                $filedata->iv, $filedata->aead );
+                }
+                
                 $files_cids[$file->id] = $filedata->cid;
             }
 
@@ -867,6 +906,10 @@ class RestEndpointTransfer extends RestEndpoint
                 if ($transfer->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$transfer->isRecipient($email)) {
                     $transfer->addRecipient($email);
                 }
+            }
+
+            if( $usebulk ) {
+                $dbb->commit();
             }
             
             // Here we have everything (uids ...) to check if the transfer fits in storage

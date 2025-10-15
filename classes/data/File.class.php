@@ -57,7 +57,8 @@ class File extends DBObject
         ),
         'uid' => array(
             'type' => 'string',
-            'size' => 60
+            'size' => 60,
+            'unique' => true            
         ),
         'puid' => array(
             'type' => 'string',
@@ -151,9 +152,6 @@ class File extends DBObject
     protected static $secondaryIndexMap = array(
         'transfer_id' => array(
             'transfer_id' => array()
-        ),
-        'uid' => array(
-            'uid' => array()
         ),
     );
 
@@ -294,31 +292,7 @@ class File extends DBObject
      */
     private function calculateEncryptedFileSize()
     {
-        $upload_chunk_size = Config::get('upload_chunk_size');
-
-        
-        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
-        $chunksMinusOne = ceil($this->size / $upload_chunk_size)-1;
-        $lastChunkSize = $this->size - ($chunksMinusOne * $upload_chunk_size);
-
-        // padding on the last chunk of the file
-        // may not be a full chunk so need to calculate
-        $lastChunkPadding = 16 - $lastChunkSize % 16;
-        if ($lastChunkPadding == 0) {
-            $lastChunkPadding = 16;
-        }
-
-        switch( $this->transfer->key_version ) {
-            case CryptoAppConstants::v2018_importKey_deriveKey:
-            case CryptoAppConstants::v2017_digest_importKey:
-                return $this->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
-            case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
-            case CryptoAppConstants::v2019_gcm_digest_importKey:
-                return $this->size + (($chunksMinusOne+1) * $echunkdiff);
-            default:
-        }
-        // fall through is an error
-        throw new BadCryptoKeyVersionException( $this->transfer->key_version );
+        return self::calculateEncryptedFileSizeStatic( $this->size, $this->transfer->key_version );
     }
 
     /**
@@ -710,4 +684,40 @@ class File extends DBObject
         ));
         
     }
+
+
+    /**
+     * Calculate the encrypted file size
+     *
+     * @return int What $file->encrypted_size should be for this file.
+     */
+    public static function calculateEncryptedFileSizeStatic( $size, $kv )
+    {
+        $upload_chunk_size = Config::get('upload_chunk_size');
+
+        
+        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
+        $chunksMinusOne = ceil($size / $upload_chunk_size)-1;
+        $lastChunkSize = $size - ($chunksMinusOne * $upload_chunk_size);
+
+        // padding on the last chunk of the file
+        // may not be a full chunk so need to calculate
+        $lastChunkPadding = 16 - $lastChunkSize % 16;
+        if ($lastChunkPadding == 0) {
+            $lastChunkPadding = 16;
+        }
+
+        switch( $kv ) {
+            case CryptoAppConstants::v2018_importKey_deriveKey:
+            case CryptoAppConstants::v2017_digest_importKey:
+                return $size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+            case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
+            case CryptoAppConstants::v2019_gcm_digest_importKey:
+                return $size + (($chunksMinusOne+1) * $echunkdiff);
+            default:
+        }
+        // fall through is an error
+        throw new BadCryptoKeyVersionException( $kv );
+    }
+    
 }

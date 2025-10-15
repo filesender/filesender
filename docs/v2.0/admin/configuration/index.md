@@ -208,6 +208,7 @@ A note about colours;
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
 * [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
 * [large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page](#large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page)
+* [create_transfer_uses_bulk_insert_threshold](#create_transfer_uses_bulk_insert_threshold)
 
 ## Graphs
 
@@ -2331,8 +2332,29 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __mandatory:__ no
 * __type:__ int
 * __default:__ -1
-* __available:__ since before version 2.58
+* __available:__ since version 2.58
 * __comment:__ The default -1 is "no limit". One might consider using something like 1000 here for reasonable sizes to limit page load times.
+
+
+### create_transfer_uses_bulk_insert_threshold
+
+* __description:__ Beta feature. When creating transfers with this
+                   many files or more a bulk api to the database will be used to
+                   initialize the transfer
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.58
+* __comment:__ The default 0 will disable the feature. You might like
+               to consider something like 5000. Note that bulk
+               transfers are created without checking in code for
+               conflicts in the generated uuids. The RDBMs will reject
+               duplicate attempts which will cause the bulk upload to
+               fail. That will happen extremely infrequently, see
+               uuidv4 collision probability. If this happens it will
+               happen early in the upload so the user can retry and if
+               they get it again something statistically magical has
+               happened to them.
 
 
 
