@@ -249,12 +249,15 @@ class RestEndpointTransfer extends RestEndpoint
             }
         }
         
-        
+        $puid = null;
+        if( array_key_exists('puid', $_GET) && $_GET['puid'] ) {
+            $puid = $_GET['puid'];
+        }
         // If key was provided we validate it and return the transfer (guest restart)
-        if (is_numeric($id) && array_key_exists('key', $_GET) && $_GET['key']) {
+        if (is_numeric($id) && $puid ) {
             $transfer = Transfer::fromId($id);
             try {
-                if (!File::fromUid($_GET['key'])->transfer->is($transfer)) {
+                if (!File::fromPuid($puid)->transfer->is($transfer)) {
                     throw new Exception();
                 }
                 if (!$transfer->isStatusUploading()) {
@@ -816,7 +819,7 @@ class RestEndpointTransfer extends RestEndpoint
             if( $usebulk ) {
                 Logger::debug("Using bulk load for new transfer with $tuple_count files. thresh:$bulk_threshold ");                
                 $dbb = new DatabaseBulk( File::getDBTable(),
-                                         [ 'transfer_id', 'uid', 'name',
+                                         [ 'transfer_id', 'uid', 'puid', 'name',
                                            'size', 'encrypted_size',
                                            'mime_type', 'iv', 'aead',
                                            'storage_class_name' ],
@@ -857,8 +860,10 @@ class RestEndpointTransfer extends RestEndpoint
 
                 if( $usebulk ) {
 
-                    $uid = Utilities::generateUID();
-                    $r = [ $transfer->id, $uid,
+                    $puid = Utilities::generateRandomUID();
+                    $uid = Utilities::generateTemporalUID();
+                    $r = [ $transfer->id,
+                           $uid, $puid,
                            $filedata->name, $filedata->size,
                            File::calculateEncryptedFileSizeStatic( $filedata->size, $transfer->key_version ),
                            $filedata->mime_type,
@@ -997,7 +1002,7 @@ class RestEndpointTransfer extends RestEndpoint
         if ($security == 'key') {
             try {
 
-                $key = null;
+                $puid = null;
                 
                 if ($data->sendVerificationCodeToYourEmailAddress || $data->checkVerificationCodeWithServer) {
                     $token = $data->token;
@@ -1015,15 +1020,15 @@ class RestEndpointTransfer extends RestEndpoint
                     
                 } else {
                 
-                    if (!array_key_exists('key', $_GET)) {
+                    if (!array_key_exists('puid', $_GET)) {
                         throw new Exception();
                     }
-                    if (!$_GET['key']) {
+                    if (!$_GET['puid']) {
                         throw new Exception();
                     }
                     
-                    $key = $_GET['key'];
-                    if (!File::fromUid($key)->transfer->is($transfer)) {
+                    $puid = $_GET['puid'];
+                    if (!File::fromPuid($puid)->transfer->is($transfer)) {
                         throw new Exception();
                     }
                 }

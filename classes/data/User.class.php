@@ -259,7 +259,7 @@ class User extends DBObject
     }
 
     public function authSecretCreate() {
-        $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
+        $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateRandomUID());
         $this->auth_secret_created = time();
         $this->save();
     }

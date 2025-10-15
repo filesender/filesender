@@ -140,7 +140,7 @@ try {
         $transaction_id = $_REQUEST['transaction_id'];
 
     if(!$transaction_id || !Utilities::isValidUID($transaction_id)) {
-        $transaction_id = Utilities::generateUID();
+        $transaction_id = Utilities::generateRandomUID();
         header('Location: '.Utilities::http_build_query(array_merge($_REQUEST, ['transaction_id' => $transaction_id]), 'download.php?'));
         exit;
     }
