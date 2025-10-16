@@ -36,7 +36,11 @@ function oidcLogin($target = null) {
     global $oidcClient;
     $client = getOidcClient();
 
-    $redirectUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?target=" . urlencode($target);
+    if ($target) {
+        $_SESSION['oidc_target_url'] = $target;
+    }
+
+    $redirectUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
     $client->setRedirectURL($redirectUrl);
     $client->addScope(['openid', 'profile', 'email']);
 
@@ -51,10 +55,13 @@ function oidcLogin($target = null) {
         throw new Exception("OIDC login failed", 1, $e);
     }
 
+    $target = $_SESSION['oidc_target_url'] ?? null;
     if (!$target) {
         $landing_page = Config::get('landing_page') ?: 'upload';
         $target = Utilities::http_build_query(['s' => $landing_page]);
     }
+
+    unset($_SESSION['oidc_target_url']);
     
     header('Location: ' . $target);
     exit;

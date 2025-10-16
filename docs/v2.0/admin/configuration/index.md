@@ -2859,9 +2859,9 @@ php composer.phar install
 
 **OpenID Connect Provider Configuration**
 
-Configure the redirect URIs with the following pattern: `https://filesender.example.org/*`
+Configure the redirect URIs with the following pattern: `https://filesender.example.org/oidc.php`
 
-This wildcard pattern allows all redirect URIs under your FileSender instance to be valid for authentication callbacks.
+This should be configured at your OpenID Connect provider's client configuration for the filesender service.
 
 ### auth_sp_oidc_issuer
 * __description:__ The URL of the OpenID Connect Issuer. This is the authority that authenticates the user.
