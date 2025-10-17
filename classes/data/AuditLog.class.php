@@ -93,8 +93,7 @@ class AuditLog extends DBObject
             'type' => 'uint',
             'size' => 'big',
             'null' => true,
-        ),
-        
+        ),        
     );
 
     protected static $secondaryIndexMap = array(
