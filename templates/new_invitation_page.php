@@ -4,6 +4,9 @@ $cgiuid = "";
 $section = 'invite';
 $sections = array('invite','current','transfers');
 
+$guest_options_to_force_to_top_array = Config::get('guest_options_to_force_to_top_array');
+
+
 if(array_key_exists('as', $_REQUEST))
     $section = $_REQUEST['as'];
 if(!strlen($section)) {
@@ -200,7 +203,7 @@ use ( $new_guests_can_only_send_to_creator,
                                     <div class="guest_options options_box">
                                     <?php
                                     foreach(Guest::availableOptions() as $name => $cfg) {
-                                        if( $name == 'can_only_send_to_me' || $name == 'valid_only_one_time') {
+                                        if( in_array( $name, $guest_options_to_force_to_top_array )) {
                                             $displayoption($name, $cfg, false);
                                         }
                                     }
@@ -248,7 +251,7 @@ use ( $new_guests_can_only_send_to_creator,
 
                                                 <div class="guest_options">
                                                     <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
-                                                        if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                        if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                             $displayoption($name, $cfg, false);
                                                         }
                                                     } ?>
@@ -258,7 +261,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                 <?php if(count(Guest::availableOptions(true))) {
                                                     foreach(Guest::availableOptions(true) as $name => $cfg) {
                                                         if( !array_key_exists($name, $guest_options_handled)) {
-                                                            if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                            if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                                 $displayoption($name, $cfg, false);
                                                             }
                                                         }
@@ -271,7 +274,7 @@ use ( $new_guests_can_only_send_to_creator,
 
                                                 <div class="transfer_options">
                                                     <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                        if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                        if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                             $displayoption($name, $cfg, true);
                                                         }
                                                     } ?>
@@ -280,7 +283,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                 <div class="transfer_options">
                                                 <?php if(count(Transfer::availableOptions(true))) {
                                                     foreach(Transfer::availableOptions(true) as $name => $cfg) {
-                                                        if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                        if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                             $displayoption($name, $cfg, true);
                                                         }
                                                     }

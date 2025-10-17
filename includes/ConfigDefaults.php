@@ -510,6 +510,8 @@ $default = array(
 
     'guest_upload_page_hide_unchangable_options' => false,
 
+    'guest_options_to_force_to_top_array' => array( 'can_only_send_to_me', 'valid_only_one_time' ),
+    
     'guest_options' => array(
         'email_upload_started' => array(
             'available' => true,

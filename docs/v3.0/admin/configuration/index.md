@@ -243,6 +243,7 @@ A note about colours;
 * [guest_support_enabled](#guest_support_enabled)
 * [guest_transfers_page_support_enabled](#guest_transfers_page_support_enabled)
 * [guest_options](#guest_options)
+* [guest_options_to_force_to_top_array](#guest_options_to_force_to_top_array)
 * [default_guest_days_valid](#default_guest_days_valid)
 * [min_guest_days_valid](#min_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
@@ -2661,6 +2662,33 @@ This is only for old, existing transfers which have no roundtriptoken set.
 				'default' => false
 			)
 		);
+
+### guest_options_to_force_to_top_array
+
+* __description:__ An array of options that are picked out and placed out of the advanced section on the UI3 new guest page
+* __mandatory:__ no
+* __type:__ array of string
+* __default:__ array( 'can_only_send_to_me', 'valid_only_one_time' ),
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ Some items were hard code lifted to the top in the UI3. You can use this option in 
+               combination with the existing  guest_options / 'valid_only_one_time' / 'advanced' => true,
+               to allow an option to be presented as advanced when it would have previously been force lifted.
+
+* __*Configuration example:*__
+        $config['guest_options_to_force_to_top_array'] = [  'can_only_send_to_me' ];
+		$config['guest_options'] = array(
+           ...               
+               
+           'valid_only_one_time' => array(
+              'available' => true,
+              'advanced' => true,
+              'default' => false
+           ),
+           ...
+
+This conflicts with the code in 'advanced' => false but is a hard coded option that is lifted out here to allow it to be modified by sites who want to use guest_options.advanced.
+
 
 ### default_guest_days_valid
 
