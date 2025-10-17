@@ -569,7 +569,7 @@ class AuditLog extends DBObject
             array( ':trid' => $trid,
                    'type' => $transfer->getClassName(),
                    'id' => (string)$transfer->id)));
-        
+
         
         // Add events related to the transfer's files
         foreach (self::all('transfer_id=:trid AND target_type=\'File\' AND target_id IN :ids',
