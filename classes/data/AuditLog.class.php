@@ -88,7 +88,7 @@ class AuditLog extends DBObject
             'type' => 'uint',
             'size' => 'big',
             'null' => true,
-        ),        
+        ),
         'file_id' => array(
             'type' => 'uint',
             'size' => 'big',
