@@ -355,6 +355,47 @@ window.filesender.ui = {
 
     },
 
+    promptEmailMany: function(title, onok, oncancel) {
+
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else if(!title.jquery) {
+                title = title.toString();
+            }
+        }
+
+        var r = bootbox.prompt({
+            title: title,
+            message: ' ',
+            className: 'prompt-dialog',
+            centerVertical: true,
+            required: true,
+            buttons: {
+                confirm: {
+                    label: lang.tr('OK').out(),
+                    className: 'fs-button fs-button--success'
+                },
+                cancel: {
+                    label: lang.tr('Cancel').out(),
+                    className: 'fs-button fs-button--danger'
+                }
+            },
+            callback: function (result) {
+                console.log('This was logged in the callback!  result:' + result);
+                if( result ) {
+                    var r = onok(result);
+                    if( !r )
+                        return false;
+                } else {
+                    if(oncancel) { oncancel(); }
+                }
+            }
+        });
+        return r.find('.bootbox-body');
+
+    },
+    
     promptEmail: function(title, onok, oncancel) {
 
         if(typeof title != 'string') {

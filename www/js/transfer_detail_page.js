@@ -219,7 +219,7 @@ $(function() {
             recipients.push($(this).attr('data-email'));
         });
 
-        var prompt = filesender.ui.promptEmail(lang.tr('enter_to_email'), function(input) {
+        var prompt = filesender.ui.promptEmailMany(lang.tr('enter_to_email'), function(input) {
             $('p.error', this).remove();
             var raw_emails = input.split(/[,;]/);
 
