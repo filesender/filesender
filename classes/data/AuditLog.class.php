@@ -378,7 +378,6 @@ class AuditLog extends DBObject
     public static function fromTarget(DBObject $target, $event = null)
     {
         $trid = self::getTransferID( $target );
-        
 
         if( $trid ) {
             $logs = self::all(self::FROM_TRID_TARGET,
