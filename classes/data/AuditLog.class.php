@@ -83,7 +83,17 @@ class AuditLog extends DBObject
         ),
         'created' => array(
             'type' => 'datetime'
-        )
+        ),
+        'transfer_id' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true,
+        ),
+        'file_id' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true,
+        ),
     );
 
     protected static $secondaryIndexMap = array(
@@ -107,7 +117,18 @@ class AuditLog extends DBObject
             'event' => array(),
             'target_type' => array(),
             'target_id'   => array()
-        )            
+        ),
+        'trid' => array(
+            'transfer_id' => array(),
+            'target_type' => array(),
+            'target_id'   => array(),
+        ),
+        'fileid' => array(
+            'file_id'     => array(),
+            'target_type' => array(),
+            'target_id'   => array(),
+        ),
+
         
 //        'Type_ID_AType_AID_IP_Event_Created' => array(
 //            'target_type' => array(),
@@ -137,6 +158,7 @@ class AuditLog extends DBObject
      * Set selectors
      */
     const FROM_TARGET = 'target_type = :type AND target_id = :id ORDER BY created ASC, id ASC';
+    const FROM_TRID_TARGET = 'transfer_id = :trid AND target_type = :type AND target_id = :id ORDER BY created ASC, id ASC';
     const FROM_AUTHOR = 'author_type = :type AND author_id = :id ORDER BY created ASC, id ASC';
     const FROM_TARGET_AND_AUTHOR = 'event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ORDER BY created DESC limit 10 ';
     const FROM_TARGET_AND_AUTHOR_SINCE = 'created > :created AND event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ';    
@@ -217,6 +239,8 @@ class AuditLog extends DBObject
         $auditLog->ip = Utilities::getClientIP();
         $auditLog->target_id = $target->id;
         $auditLog->target_type = get_class($target);
+        $auditLog->transfer_id = self::getTransferID( $target );
+        $auditLog->file_id     = self::getFileID( $target );
         
         if(array_key_exists('transaction_id', $_REQUEST)) {
             $transaction_id = $_REQUEST['transaction_id'];
@@ -353,7 +377,17 @@ class AuditLog extends DBObject
      */
     public static function fromTarget(DBObject $target, $event = null)
     {
-        $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => (string)$target->id));
+        $trid = self::getTransferID( $target );
+
+        if( $trid ) {
+            $logs = self::all(self::FROM_TRID_TARGET,
+                              array(
+                                  'trid' => $trid,
+                                  'type' => $target->getClassName(),
+                                  'id' => (string)$target->id));
+        } else {
+            $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => (string)$target->id));
+        }
         
         if ($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function ($log) use ($event) {
@@ -526,16 +560,27 @@ class AuditLog extends DBObject
         ) {
             throw new TransferNotFoundException($transfer->id);
         }
-        
+        $trid = $transfer->id;
+
         // Get and delete all audit logs related to the transfer
-        $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => (string)$transfer->id)));
+        $logs = array_values(self::all(
+            self::FROM_TRID_TARGET,
+            array( ':trid' => $trid,
+                   'type' => $transfer->getClassName(),
+                   'id' => (string)$transfer->id)));
+
         
         // Add events related to the transfer's files
-        foreach (self::all('target_type=\'File\' AND target_id IN :ids', array(':ids' => array_map(function ($file) {
-            return $file->id;
-        }, $transfer->files))) as $log) {
+        foreach (self::all('transfer_id=:trid AND target_type=\'File\' AND target_id IN :ids',
+                           array(
+                               ':trid' => $trid,
+                               ':ids' => array_map(function ($file) {
+                                   return $file->id;
+                               }, $transfer->files)
+                           )) as $log) {
             $logs[] = $log;
         }
+        
         
         // Add events related to the transfer's recipients
         foreach (self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function ($recipient) {
@@ -696,4 +741,43 @@ class AuditLog extends DBObject
         
     }
 
+    public static function getTransferID( DBObject $target )
+    {
+        $trid = null;
+        
+        if( !$target ) {
+            return $trid;
+        }
+        $tt = $target->getClassName();
+
+        if( $tt ) {
+            if ($tt == 'Transfer') {
+                $trid = $target->id;
+            }
+            if ($tt == 'File') {
+                $trid = $target->transfer_id;
+            }
+        }
+        
+        return $trid;
+    }
+
+    public static function getFileID( DBObject $target )
+    {
+        $fileid = null;
+        
+        if( !$target ) {
+            return $fileid;
+        }
+        $tt = $target->getClassName();
+
+        if( $tt ) {
+            if ($tt == 'File') {
+                $fileid = $target->id;
+            }
+        }
+        
+        return $fileid;
+    }
+    
 }

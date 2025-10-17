@@ -572,6 +572,11 @@ try {
                     updateTable( call_user_func($class.'::getDBTable'),
                                  call_user_func($class.'::getDataMap'));
                     
+                    $class = 'AuditLog';
+                    // add new authentication table
+                    echo "Adding columns to Files table table...\n";
+                    updateTable( call_user_func($class.'::getDBTable'),
+                                 call_user_func($class.'::getDataMap'));
                     
                     $sql = " update $tbl_files \n"
                          . " set download_count = ( \n"
@@ -589,11 +594,41 @@ try {
                     // puid was moved to uuid v4
                     // uid  was moved to a temporal v7 uuid
                     $sql = " update $tbl_files \n"
-                         . " set puid = uid; \n";
+                         . "    set puid = uid; \n";
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+
+
+
+                    // populate the new trasfer_id and file_id columns from the data in
+                    // the table and bring in the trid when the target_type is a file.
+                    $sql = " update $tbl_auditlogs \n"
+                         . "    set transfer_id = " . DBLayer::fromVarCharToBigIntCast("target_id")
+                         . "  where target_type = 'Transfer' ";
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+
+
+                    if( $dbtype == 'pgsql' ) {
+                        $sql = " update $tbl_auditlogs a \n"
+                             . "    set (transfer_id,file_id) =  \n"
+                             . " (select transfer_id,id as file_id FROM $tbl_files f where f.id = cast( a.target_id as bigint )) \n"
+                             . " where a.target_type = 'File'  \n";
+                        
+                    } else {
+                        $sql = " update $tbl_auditlogs a \n"
+                             . " join $tbl_files f on f.id = cast( target_id as UNSIGNED INTEGER )  \n"
+                             . "    set a.transfer_id = f.transfer_id, a.file_id = f.id \n"
+                             . " where target_type = 'File'  \n";                       
+                    }
+                    
                     echo "SQL: $sql \n";
                     $s = DBI::prepare($sql);
                     $s->execute(array());
                     
+
                     
                     
                 }
