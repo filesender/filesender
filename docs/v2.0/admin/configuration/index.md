@@ -266,6 +266,7 @@ A note about colours;
 	* [auth_sp_oidc_issuer](#auth_sp_oidc_issuer)
 	* [auth_sp_oidc_client_id](#auth_sp_oidc_client_id)
 	* [auth_sp_oidc_client_secret](#auth_sp_oidc_client_secret)
+  * [auth_sp_oidc_scopes](#auth_sp_oidc_scopes)
   * [auth_sp_oidc_uid_attribute](#auth_sp_oidc_uid_attribute)
 	* [auth_sp_oidc_email_attribute](#auth_sp_oidc_email_attribute)
 	* [auth_sp_oidc_name_attribute](#auth_sp_oidc_name_attribute)
@@ -2886,6 +2887,14 @@ This should be configured at your OpenID Connect provider's client configuration
 * __default:__ 
 * __available:__ since version 2.57
 * __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_scopes
+* __description:__ The OIDC scopes to request during authentication. This allows customization of the information requested from the identity provider.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ ['openid', 'profile', 'email']
+* __available:__ since version 2.57
+* __comment:__ Example: ['openid', 'profile', 'email', 'groups']
 
 ### auth_sp_oidc_uid_attribute
 * __description:__ The name of the claim that contains the user's unique identifier.

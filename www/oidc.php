@@ -25,7 +25,15 @@ function getOidcClient() {
             throw new ConfigMissingParameterException('auth_sp_oidc_client_secret');
         }
 
-    $oidcClient = new OpenIDConnectClient($oidcIssuer, $oidcClientId, $oidcClientSecret);
+        $oidcClient = new OpenIDConnectClient($oidcIssuer, $oidcClientId, $oidcClientSecret);
+
+        $scopes = Config::get('auth_sp_oidc_scopes');
+        if (is_array($scopes)) {
+            $oidcClient->addScope($scopes);
+        } else {
+            // Default scopes if not configured
+            $oidcClient->addScope(['openid', 'profile', 'email']);
+        }
     }
 return $oidcClient;
 }
@@ -42,7 +50,6 @@ function oidcLogin($target = null) {
 
     $redirectUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
     $client->setRedirectURL($redirectUrl);
-    $client->addScope(['openid', 'profile', 'email']);
 
     try {
         $client->authenticate();
