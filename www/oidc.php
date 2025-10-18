@@ -5,43 +5,43 @@ require_once __DIR__.'/../optional-dependencies/oidc/vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
 
-$oidcClient = null;
-
 function getOidcClient() {
-    global $oidcClient;
-
-    if ($oidcClient === null) {
-        $oidcIssuer = Config::get('auth_sp_oidc_issuer');
-        $oidcClientId = ConfigPrivate::get('auth_sp_oidc_client_id');
-        $oidcClientSecret = ConfigPrivate::get('auth_sp_oidc_client_secret');
-
-        if (empty($oidcIssuer)) {
-            throw new ConfigMissingParameterException('auth_sp_oidc_issuer');
-        }
-        if (empty($oidcClientId)) {
-            throw new ConfigMissingParameterException('auth_sp_oidc_client_id');
-        }
-        if (empty($oidcClientSecret)) {
-            throw new ConfigMissingParameterException('auth_sp_oidc_client_secret');
-        }
-
-        $oidcClient = new OpenIDConnectClient($oidcIssuer, $oidcClientId, $oidcClientSecret);
-
-        $scopes = Config::get('auth_sp_oidc_scopes');
-        if (is_array($scopes)) {
-            $oidcClient->addScope($scopes);
-        } else {
-            // Default scopes if not configured
-            $oidcClient->addScope(['openid', 'profile', 'email']);
-        }
+    static $client = null;
+    
+    if ($client !== null) {
+        return $client;
     }
-return $oidcClient;
+
+    $oidcIssuer = Config::get('auth_sp_oidc_issuer');
+    $oidcClientId = ConfigPrivate::get('auth_sp_oidc_client_id');
+    $oidcClientSecret = ConfigPrivate::get('auth_sp_oidc_client_secret');
+
+    if (empty($oidcIssuer)) {
+        throw new ConfigMissingParameterException('auth_sp_oidc_issuer');
+    }
+    if (empty($oidcClientId)) {
+        throw new ConfigMissingParameterException('auth_sp_oidc_client_id');
+    }
+    if (empty($oidcClientSecret)) {
+        throw new ConfigMissingParameterException('auth_sp_oidc_client_secret');
+    }
+
+    $client = new OpenIDConnectClient($oidcIssuer, $oidcClientId, $oidcClientSecret);
+
+    $scopes = Config::get('auth_sp_oidc_scopes');
+    if (is_array($scopes)) {
+        $client->addScope($scopes);
+    } else {
+        // Default scopes if not configured
+        $client->addScope(['openid', 'profile', 'email']);
+    }
+    
+    return $client;
 }
 
 function oidcLogin($target = null) {
     Logger::info("OIDC login attempt.");
 
-    global $oidcClient;
     $client = getOidcClient();
 
     if ($target) {
@@ -77,10 +77,8 @@ function oidcLogin($target = null) {
 function oidcLogout($target = null) {
     Logger::info("OIDC logout attempt.");
 
-    global $oidcClient;
     $client = getOidcClient();
-        
-    $accessToken = $_SESSION['oidc_access_token'];
+    $accessToken = $_SESSION['oidc_access_token'] ?? null;
 
     try {
         if (!empty($accessToken)) {
@@ -102,7 +100,7 @@ function oidcLogout($target = null) {
     exit;
 }
 
-$target = isset($_GET['target']) ? urldecode($_GET['target']) : '';
+$target = isset($_GET['target']) ? filter_var(urldecode($_GET['target']), FILTER_SANITIZE_URL) : '';
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] === 'login') {
