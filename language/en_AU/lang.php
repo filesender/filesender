@@ -902,3 +902,7 @@ $lang['you_have_a_openpgp_public_key_known_to_system'] = 'You have a OpenPGP pub
 $lang['your_download_link'] = 'Here\'s your download link';
 $lang['your_invitation_was_sent_to'] = 'Your invitation was sent to';
 $lang['your_transfer_was_sent'] = 'Your transfer was sent to the following email addresses';
+
+$lang['guest_token_expired_title'] = 'Guest access expired';
+$lang['guest_token_expired_page'] = 'Your guest access has expired. You will need a new guest access token in order to upload new files. Thank you for using FileSender.';
+    

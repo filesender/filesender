@@ -242,6 +242,7 @@ A note about colours;
 
 * [guest_support_enabled](#guest_support_enabled)
 * [guest_transfers_page_support_enabled](#guest_transfers_page_support_enabled)
+* [guest_transfers_page_number_of_days_expired_guest_can_return](#guest_transfers_page_number_of_days_expired_guest_can_return)
 * [guest_options](#guest_options)
 * [guest_options_to_force_to_top_array](#guest_options_to_force_to_top_array)
 * [default_guest_days_valid](#default_guest_days_valid)
@@ -2619,8 +2620,17 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__ The list of uploads is somewhat limited, for example it does not allow downloading those files
 
+### guest_transfers_page_number_of_days_expired_guest_can_return
 
-* [guest_transfers_page_support_enabled](#guest_transfers_page_support_enabled)
+* __description:__ Allow a guest to see a list of their uploads this many days after they have expired.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ The defaut value disables this feature. It is a number of days, for example, 10 for 10 days after the guest has expired.
+
+
 
 
 ### guest_options

@@ -256,6 +256,44 @@ if( $openpgp_encrypt_passphrase ) {
 <?php
     return;
 }
+
+if(Auth::isGuest()) {
+    $guest = AuthGuest::getGuest();
+    $daysAgo = Config::get("guest_transfers_page_number_of_days_expired_guest_can_return");
+    // this default should not happen as the guest can only be
+    // flexible if the above config has been set. But expired
+    // is a good default here.
+    $expired = $guest->isExpired();
+    if( $daysAgo > 0 ) {
+        // do not worry about canStillSeePastUploads() here
+        // we are only hanlding this to present a nice expired
+        // page to the guest if they are not AVAIABLE any more.
+        if( !$expired ) {
+            $expired = ($guest->status != GuestStatuses::AVAILABLE);
+        }
+    }
+    if( $expired ) {
+        echo <<<EOF
+<div id="dialog-expired" title="Access expired" class="fs-base-page">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="fs-base-page__header">
+                    <h1>{tr:guest_token_expired_title}</h1>
+                </div>
+
+                <div class="fs-base-page__content">
+                    {tr:guest_token_expired_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+EOF;
+        return;
+        
+    }
+}
 ?>
 
 <div class="container">
