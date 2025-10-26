@@ -2920,6 +2920,22 @@ This should be configured at your OpenID Connect provider's client configuration
 * __available:__ since version 2.57
 * __comment:__
 
+### auth_sp_oidc_groups_claim
+* __description:__ The name of the claim that contains the user's groups.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ groups
+* __available:__ since version 2.57
+* __comment:__ This claim should contain an array of group names the user belongs to.
+
+### auth_sp_oidc_required_groups
+ * __description:__ Array of group names that users must belong to in order to access FileSender.
+ * __mandatory:__ no
+ __type:__ array
+ __default:__ 
+ * __available:__ since version 2.57
+ * __comment:__ If set, users must belong to at least one of these groups to authenticate.
+
 ## Authentication: Shibboleth
 
 ---

@@ -125,6 +125,31 @@ class AuthSPOidc
                 }
             }
             
+            // Check group requirements
+            $requiredGroups = Config::get('auth_sp_oidc_required_groups');
+            if ($requiredGroups) {
+                $groupsClaim = Config::get('auth_sp_oidc_groups_claim') ?? 'groups';
+                $userGroups = $rawAttributes->{$groupsClaim} ?? [];
+                
+                if (!is_array($userGroups)) {
+                    $userGroups = [$userGroups];
+                }
+                
+                $requiredGroups = is_array($requiredGroups) ? $requiredGroups : [$requiredGroups];
+                
+                $groupMatch = false;
+                foreach ($requiredGroups as $requiredGroup) {
+                    if (in_array($requiredGroup, $userGroups)) {
+                        $groupMatch = true;
+                        break;
+                    }
+                }
+                
+                if (!$groupMatch) {
+                    throw new AuthUserNotAllowedException();
+                }
+            }
+            
             self::$attributes = $attributes;
         }
         
