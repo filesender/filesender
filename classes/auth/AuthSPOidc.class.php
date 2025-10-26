@@ -33,9 +33,9 @@ class AuthSPOidc
     }
 
     /**
-     * Retreive user attributes.
+     * Retrieve user attributes.
      *
-     * @retrun array
+     * @return array
      */
     public static function attributes()
     {
@@ -138,7 +138,7 @@ class AuthSPOidc
      *
      * @param $target
      *
-     * @retrun string
+     * @return string
      */
     public static function logonURL($target = null)
 	{
@@ -155,7 +155,7 @@ class AuthSPOidc
      *
      * @param $target
      *
-     * @retrun string
+     * @return string
      */
     public static function logoffURL($target = null)
 	{
