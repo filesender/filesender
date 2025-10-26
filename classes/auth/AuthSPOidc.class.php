@@ -91,7 +91,7 @@ class AuthSPOidc
                     }
 
                     if (is_callable($from) && !is_string($from)) {
-                        $value = $from($rawAttributes, self::loadSimpleSAML());
+                        $value = $from($rawAttributes);
                     } elseif (isset($rawAttributes->$from)) {
                         $value = $rawAttributes->$from;
                     } else {
