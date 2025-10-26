@@ -30,10 +30,12 @@ function getOidcClient() {
 
     $scopes = Config::get('auth_sp_oidc_scopes');
     if (is_array($scopes)) {
+        // Remove 'openid' from configured scopes to avoid duplication
+        $scopes = array_filter($scopes, function($scope) {
+            return $scope !== 'openid';
+        });
+        $scopes = array_unique($scopes);
         $client->addScope($scopes);
-    } else {
-        // Default scopes if not configured
-        $client->addScope(['openid', 'profile', 'email']);
     }
     
     return $client;
