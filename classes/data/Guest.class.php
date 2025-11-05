@@ -447,6 +447,21 @@ class Guest extends DBObject
         return $this->expires < $today;
     }
 
+    public function canStillSeePastUploads()
+    {
+        if( is_null($this->expires)) {
+            return false;
+        }
+        $d = (24 * 3600) * floor(time() / (24 * 3600));
+        $v = Config::get("guest_transfers_page_number_of_days_expired_guest_can_return");
+        if( !$v ) {
+            return $this->isExpired();
+        }
+        $d -= (24 * 3600 * $v );
+        return $this->expires > $d;
+        
+    }
+    
     /**
      * Tells wether the guest has expired before a given number of days
      * from now
