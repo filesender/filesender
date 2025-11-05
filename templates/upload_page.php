@@ -431,7 +431,7 @@ if(Auth::isGuest()) {
         
         <div class="buttons">
             <a href="#" class="start">
-                <span class="fa fa-cloud-upload fa-lg"></span> {tr:send}
+                <span class="fa-regular fa-cloud-arrow-up fa-lg"></span> {tr:send}
             </a>
             <a href="#" class="restart not_displayed">
                 <span class="fa fa-cloud-upload fa-lg"></span> {tr:restart}

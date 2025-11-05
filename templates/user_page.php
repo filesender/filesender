@@ -180,7 +180,7 @@ EOT;
     
     <div class="send_client_logs">
         <a href="#">
-            <span class="fa fa-lg fa-send"></span>
+            <span class="fa fa-lg fa-paper-plane"></span>
             {tr:send_client_logs}
         </a>
     </div>
