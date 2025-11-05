@@ -378,6 +378,8 @@ guest_reminded
 guest_reminder
 guest_reminder_limit_reached
 guest_reminder_rate_limit_reached
+guest_token_expired_page
+guest_token_expired_title
 guest_too_many_recipients
 guest_transfer_options
 guest_transfer_settings
@@ -781,6 +783,7 @@ transfer_extended_reminded
 transfer_file_name_invalid
 transfer_files
 transfer_files_incomplete
+transfer_guest_page_subtitle
 transfer_host_quota_exceeded
 transfer_id
 transfer_id_short
