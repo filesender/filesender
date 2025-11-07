@@ -49,7 +49,7 @@ $(function() {
             var td = $(this);
             
             // Delete button
-            $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(td).attr({
+            $('<span class="delete clickable fa  fa-trash" />').appendTo(td).attr({
                 title: lang.tr('delete')
             }).on('click', function() {
                 var id = $(this).closest('tr').attr('data-id');
@@ -66,7 +66,7 @@ $(function() {
             if(table.is('[data-mode!="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 if( days > 0 ) {
-                    var extend = $('<span data-action="extendguestexpires" class="extend clickable fa fa-lg fa-clock-o" />');
+                    var extend = $('<span data-action="extendguestexpires" class="extend clickable fa  fa-clock" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({
                             days: $(this).closest('.objectholder').attr('data-expiry-extension')
@@ -81,7 +81,7 @@ $(function() {
             if(table.is('[data-mode="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 if( days > 0 ) {
-                    var extend = $('<span data-action="extendexpires" class="extend adminaction clickable fa fa-lg fa-clock-o" />');
+                    var extend = $('<span data-action="extendexpires" class="extend adminaction clickable fa  fa-clock" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({
                             days: $(this).closest('.objectholder').attr('data-expiry-extension')
@@ -95,7 +95,7 @@ $(function() {
             
             if(table.is('[data-mode="user"]')) {
                 // Send reminder button
-                $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(td).attr({
+                $('<span class="remind clickable fa  fa-rotate-right" />').appendTo(td).attr({
                     title: lang.tr('send_reminder')
                 }).on('click', function() {
                     var id = $(this).closest('tr').attr('data-id');
@@ -109,7 +109,7 @@ $(function() {
                 });
                 
                 // Send forward button
-                $('<span class="forward clickable fa fa-lg fa-mail-forward" />').appendTo(td).attr({
+                $('<span class="forward clickable fa  fa-mail-forward" />').appendTo(td).attr({
                     title: lang.tr('forward')
                 }).on('click', function() {
                     var id = $(this).closest('tr').attr('data-id');
@@ -145,7 +145,7 @@ $(function() {
                         if(invalid) {
                             input.addClass('invalid');
                             if(!marker) {
-                                marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+                                marker = $('<span class="invalid fa fa-exclamation-circle " />').attr({
                                     title: lang.tr('invalid_recipient')
                                 });
                                 input.data('error_marker', marker);
@@ -195,7 +195,7 @@ $(function() {
     
     // Errors details
     guests.find('.guest[data-errors="1"] .to .errors').each(function() {
-        $('<span class="details clickable fa fa-lg fa-info-circle" />').appendTo($(this)).attr({
+        $('<span class="details clickable fa  fa-info-circle" />').appendTo($(this)).attr({
             title: lang.tr('details')
         }).on('click', function() {
             var rcpt = $(this).closest('.guest');

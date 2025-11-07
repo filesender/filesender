@@ -65,7 +65,8 @@ class GUI
         return self::filterSources(array(
             'lib/reset/reset.css',
             'lib/jquery-ui/jquery-ui.min.css',
-            'lib/font-awesome/css/font-awesome.min.css',
+            'lib/font-awesome/css/fontawesome.min.css',
+            'lib/font-awesome/css/solid.min.css',
             'css/default.css',
             'skin/styles.css',
             'css/' . Config::get('site_css')

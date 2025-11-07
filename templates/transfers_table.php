@@ -281,14 +281,14 @@ if (!function_exists('clickableHeader')) {
 
             <td class="actions">
                 <div id="marg3">
-                    <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
-                    <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
-                    <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
+                    <span data-action="delete" class="fa  fa-trash" title="{tr:delete}"></span>
+                    <?php if($extend) { ?><span data-action="extend" class="fa  fa-calendar-plus"></span><?php } ?>
+                    <span data-action="add_recipient" class="fa  fa-envelope-open" title="{tr:add_recipient}"></span>
                 </div>
                 <div id="marg3">
-                    <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                    <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
-                    <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o adminaction" title="{tr:extend_expires}"></span><?php } ?>
+                    <span data-action="remind" class="fa  fa-rotate-right" title="{tr:send_reminder}"></span>
+                    <?php if($audit)           { ?><span data-action="auditlog"      class="fa  fa-timeline" title="{tr:open_auditlog}"></span><?php } ?>
+                    <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa  fa-clock-rotate-left adminaction" title="{tr:extend_expires}"></span><?php } ?>
                 </div>
             </td>
         </tr>
@@ -297,14 +297,14 @@ if (!function_exists('clickableHeader')) {
             <td colspan="8">
                 <div class="actions">
                     <div id="marg3">
-                        <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
-                        <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
-                        <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
+                        <span data-action="delete" class="fa  fa-trash" title="{tr:delete}"></span>
+                        <?php if($extend) { ?><span data-action="extend" class="fa  fa-calendar-plus"></span><?php } ?>
+                        <span data-action="add_recipient" class="fa  fa-envelope-open" title="{tr:add_recipient}"></span>
                     </div>
                     <div id="marg3">
-                        <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                        <?php if($audit)           { ?><span data-action="auditlog"      class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
-                        <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa fa-lg fa-clock-o" title="{tr:extend_expires}"></span><?php } ?>
+                        <span data-action="remind" class="fa  fa-rotate-right" title="{tr:send_reminder}"></span>
+                        <?php if($audit)           { ?><span data-action="auditlog"      class="fa  fa-timeline" title="{tr:open_auditlog}"></span><?php } ?>
+                        <?php if($showAdminExtend) { ?><span data-action="extendexpires" class="fa  fa-clock-rotate-left" title="{tr:extend_expires}"></span><?php } ?>
                     </div>
                 </div>
                 
@@ -416,7 +416,7 @@ if (!function_exists('clickableHeader')) {
                 <div class="auditlog">
                     <h2>{tr:auditlog}</h2>
                     <a href="#">
-                        <span class="fa fa-lg fa-history"></span>
+                        <span class="fa fa-lg fa-timeline"></span>
                         {tr:open_auditlog}
                     </a>
                 </div>
@@ -444,11 +444,11 @@ if (!function_exists('clickableHeader')) {
                         echo ' : '.count($recipient->downloads).' '.Lang::tr('downloads');
                         ?>
                         
-                        <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                        <span data-action="delete" class="fa fa-lg fa-trash" title="{tr:delete}"></span>
                         
-                        <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
+                        <span data-action="auditlog" class="fa fa-lg fa-timeline" title="{tr:open_recipient_auditlog}"></span>
                         
-                        <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                        <span data-action="remind" class="fa fa-lg fa-rotate-right" title="{tr:send_reminder}"></span>
                     </div>
                     <?php } ?>
                 </div>
@@ -532,10 +532,10 @@ if (!function_exists('clickableHeader')) {
                                 <?php } ?>
                             <?php } ?>
 
-                            <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                            <span data-action="delete" class="fa fa-lg fa-trash" title="{tr:delete}"></span>
                             
                             <?php if($audit) { ?>
-                            <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_file_auditlog}"></span>
+                            <span data-action="auditlog" class="fa fa-lg fa-timeline" title="{tr:open_file_auditlog}"></span>
                             <?php } ?>
 
                             <?php
