@@ -276,6 +276,16 @@ A note about colours;
 	* [using_local_saml_dbauth](#using_local_saml_dbauth)
 	* [auth_warn_session_expired](#auth_warn_session_expired)
 	* [auth_sp_idp_metadata_to_capture](#auth_sp_idp_metadata_to_capture)
+* __OpenIDConnectClient__
+	* [auth_sp_oidc_issuer](#auth_sp_oidc_issuer)
+	* [auth_sp_oidc_client_id](#auth_sp_oidc_client_id)
+	* [auth_sp_oidc_client_secret](#auth_sp_oidc_client_secret)
+    * [auth_sp_oidc_scopes](#auth_sp_oidc_scopes)
+    * [auth_sp_oidc_uid_attribute](#auth_sp_oidc_uid_attribute)
+	* [auth_sp_oidc_email_attribute](#auth_sp_oidc_email_attribute)
+	* [auth_sp_oidc_name_attribute](#auth_sp_oidc_name_attribute)
+    * [auth_sp_oidc_groups_claim](#auth_sp_oidc_groups_claim)
+    * [auth_sp_oidc_required_groups](#auth_sp_oidc_required_groups)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -2863,15 +2873,15 @@ This conflicts with the code in 'advanced' => false but is a hard coded option t
 
 ### auth_sp_type
 
-* __description:__ which authentication library to use.  saml=SimpleSAMLphp, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
+* __description:__ which authentication library to use.  saml=SimpleSAMLphp, oidc=OpenIDConnectClient, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
 * __mandatory:__ no
 * __type:__ string, keyword
-* __permissible values:__ "saml", "shibboleth", "fake"
+* __permissible values:__ "saml", "oidc", "shibboleth", "fake"
 * __default:__ saml
 * __cookies:__ saml uses them by default
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ <span style="background-color:orange">to use type "fake" you need ...</span>
+* __comment:__ To use type "oidc" please see the dependency and configuration setup instructions listed in the [OpenIDConnectClient](#authentication-openidconnectclient) section.
 
 
 ### auth_sp_force_session_start_first
@@ -3022,6 +3032,99 @@ This conflicts with the code in 'advanced' => false but is a hard coded option t
 * __available:__ since version 3.0rc9
 * __comment:__ This is to allow automatic refresh of metadata but also not bog the system down by looking at it too frequently. You can also use the cron-update-idp-metadata.php script to reimport the metadata explicitly for existing tuples in the idp table.
 
+
+## Authentication: OpenIDConnectClient
+
+---
+
+**Optional Dependencies Setup**
+
+To install the optional dependencies for OpenID Connect support:
+
+```
+cd optional-dependencies/oidc
+.. download composer.phar and check it    ...
+.. see https://getcomposer.org/download/  ...
+php composer.phar install
+```
+
+**OpenID Connect Provider Configuration**
+
+Configure the redirect URIs with the following pattern: `https://filesender.example.org/oidc.php`
+
+This should be configured at your OpenID Connect provider's client configuration for the filesender service.
+
+### auth_sp_oidc_issuer
+* __description:__ The URL of the OpenID Connect Issuer. This is the authority that authenticates the user.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__  Example: `https://login.example.com/realms/yourrealm`
+
+### auth_sp_oidc_client_id
+* __description:__ The Client ID registered with the OpenID Connect Issuer.  This identifies your FileSender application to the identity provider.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_client_secret
+* __description:__ The Client Secret associated with the Client ID.  Keep this value confidential.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_scopes
+* __description:__ The OIDC scopes to request during authentication. This allows customization of the information requested from the identity provider.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ ['openid', 'profile', 'email']
+* __available:__ since version 2.57
+* __comment:__ Example: ['openid', 'profile', 'email', 'groups']
+
+### auth_sp_oidc_uid_attribute
+* __description:__ The name of the claim that contains the user's unique identifier.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ sub
+* __available:__ since version 2.57
+* __comment:__  `sub` is a standard claim for the subject identifier.
+
+### auth_sp_oidc_email_attribute
+* __description:__ The name of the claim that contains the user's email address.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ email
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_name_attribute
+* __description:__ The name of the claim that contains the user's full name.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ name
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_groups_claim
+* __description:__ The name of the claim that contains the user's groups.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ groups
+* __available:__ since version 2.57
+* __comment:__ This claim should contain an array of group names the user belongs to.
+
+### auth_sp_oidc_required_groups
+ * __description:__ Array of group names that users must belong to in order to access FileSender.
+ * __mandatory:__ no
+ __type:__ array
+ __default:__ 
+ * __available:__ since version 2.57
+ * __comment:__ If set, users must belong to at least one of these groups to authenticate.
 
 
 ## Authentication: Shibboleth

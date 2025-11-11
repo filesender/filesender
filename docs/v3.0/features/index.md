@@ -116,8 +116,8 @@ This document lists most of the features currently implemented in the 3.0-beta1 
 ### Authentication
 
 * Externalised authentication
-* Built-in support for Shibboleth and SimpleSAMLphp authentication libraries
-* In practice this means SAML2, LDAP, RADIUS, Active Directory, Facebook, etc.
+* Built-in support for SimpleSAMLphp, OpenID Connect and Shibboleth authentication libraries
+* In practice this means SAML2, OIDC, LDAP, RADIUS, Active Directory, Facebook, etc.
 
 ### Multi-database support
 
