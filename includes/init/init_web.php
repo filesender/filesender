@@ -53,7 +53,7 @@ if(!session_id()) {
         'domain'   => $site_url_parts['host'],      // and only for the precise domain
         'secure'   => $isSecure,                    // It uses secure mode if ssl forced or in use
         'httponly' => true,                         // not reachable through javascript
-        'samesite' => 'Strict'                      // strict cookie settings
+        'samesite' => 'Lax'                         // lax cookie settings
     ));
 }
 
