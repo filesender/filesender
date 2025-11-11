@@ -270,6 +270,8 @@ A note about colours;
   * [auth_sp_oidc_uid_attribute](#auth_sp_oidc_uid_attribute)
 	* [auth_sp_oidc_email_attribute](#auth_sp_oidc_email_attribute)
 	* [auth_sp_oidc_name_attribute](#auth_sp_oidc_name_attribute)
+  * [auth_sp_oidc_groups_claim](#auth_sp_oidc_groups_claim)
+  * [auth_sp_oidc_required_groups](#auth_sp_oidc_required_groups)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
