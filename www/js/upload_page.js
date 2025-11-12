@@ -2829,6 +2829,17 @@ $(function() {
         filesender.ui.evalUploadEnabled();
     });
 
+    if( filesender.config.encryption_mandatory ) {
+        setTimeout( function() {
+
+            filesender.ui.nodes.encryption.toggle.attr('readonly','true');
+            filesender.ui.nodes.encryption.toggle.prop('checked', true);
+            filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+            $('.encryption-toggle-group').hide();
+            document.getElementById('encmand2').hidden = false
+        }, 0 );
+    }
+
     if( filesender.config.encryption_mandatory_with_generated_password ) {
         setTimeout( function() {
 
@@ -2843,11 +2854,9 @@ $(function() {
 
             $('.encryption-toggle-group').hide();
             $('.password-gen-button').hide();
-            document.getElementById('encmand2').hidden = false;            
+            document.getElementById('encmand2').hidden = false;
         }, 0 );
     }
-
-
 
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if (filesender.ui.nodes.encryption.show_hide.is(':checked')) {
