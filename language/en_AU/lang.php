@@ -375,6 +375,8 @@ $lang['guest_options'] = 'Guest options';
 $lang['guest_reminded'] = 'Guest reminded';
 $lang['guest_reminder_limit_reached'] = 'You have reached the maximum number of reminders you can send to this guest.';
 $lang['guest_reminder_rate_limit_reached'] = 'You can only send {cfg:guest_reminder_limit_per_day} reminders each day. Please try again later.';
+$lang['guest_token_expired_page'] = 'Your guest access has expired. You will need a new guest access token in order to upload new files. Thank you for using FileSender.';
+$lang['guest_token_expired_title'] = 'Guest access expired';
 $lang['guest_too_many_recipients'] = 'Maximum number of recipients exceeded';
 $lang['guest_transfer_options'] = 'Created transfers options';
 $lang['guest_transfer_settings'] = 'Settings for the transfer the guest creates';
@@ -902,7 +904,3 @@ $lang['you_have_a_openpgp_public_key_known_to_system'] = 'You have a OpenPGP pub
 $lang['your_download_link'] = 'Here\'s your download link';
 $lang['your_invitation_was_sent_to'] = 'Your invitation was sent to';
 $lang['your_transfer_was_sent'] = 'Your transfer was sent to the following email addresses';
-
-$lang['guest_token_expired_title'] = 'Guest access expired';
-$lang['guest_token_expired_page'] = 'Your guest access has expired. You will need a new guest access token in order to upload new files. Thank you for using FileSender.';
-    
