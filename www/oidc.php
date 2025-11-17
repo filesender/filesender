@@ -1,6 +1,10 @@
 <?php
 
 require_once('../includes/init.php');
+if( Config::get('auth_sp_type') != 'oidc' ) {
+    Logger::nefarious("attempted access to oidc.php when that auth method is not active");
+    exit;
+}
 require_once __DIR__.'/../optional-dependencies/oidc/vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
