@@ -2738,7 +2738,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __cookies:__ saml uses them by default
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ To use type "oidc" please see the dependency and configuration setup instructions listed in the [OpenIDConnectClient](#authentication-openidconnectclient) section.
+* __comment:__ To use type "oidc" please see the dependency and configuration setup instructions listed in the [OpenIDConnectClient](#authentication-openidconnectclient) section. Note that using OIDC also has an impact on the samesite cookie parameter, forcing it to Lax.
 
 
 ### auth_sp_force_session_start_first
@@ -2870,6 +2870,8 @@ This is only for old, existing transfers which have no roundtriptoken set.
 ## Authentication: OpenIDConnectClient
 
 ---
+
+Note that using OIDC also has an impact on the samesite cookie parameter, forcing it to Lax.
 
 **Optional Dependencies Setup**
 
