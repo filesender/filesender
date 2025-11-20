@@ -96,7 +96,7 @@ try {
         Template::display('exception', array('exception' => $e));
     }
 
-    if(!in_array($page, array('maintenance'))) {
+    if(!(isset($page) && in_array($page, array('maintenance')))) {
         Template::display('!!footer');
     }
 
