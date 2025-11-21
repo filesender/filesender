@@ -498,7 +498,16 @@ window.filesender.crypto_app = function () {
             $this.setCipherAlgorithm( key_version );
             
 
-            var keydesc = JSON.stringify(encryption_details);
+            var pbkdf2details = {
+                password:    encryption_details.password,
+                key_version: encryption_details.key_version,
+                salt:        encryption_details.salt,
+                password_version:         encryption_details.password_version,
+                password_encoding:        encryption_details.password_encoding,
+                password_hash_iterations: encryption_details.password_hash_iterations,
+                client_entropy:           encryption_details.client_entropy,
+            };
+            var keydesc = JSON.stringify(pbkdf2details);
             window.filesender.log("keygen: keydesc cache size " + window.filesender.key_cache.size );
             
             var k = window.filesender.key_cache.get( keydesc );
@@ -1129,10 +1138,12 @@ window.filesender.crypto_app = function () {
                 window.filesender.log(error);
                 window.filesender.crypto_app_downloading = false;
                 var msg = window.filesender.config.language.file_encryption_wrong_password;
-                
-                if( error && error.message && error.message != "" ) {
-                    msg = error.message;
-                } 
+
+                if( error && error.name != "OperationError" ) {
+                    if( error && error.message && error.message != "" ) {
+                        msg = error.message;
+                    }
+                }
                 filesender.ui.alert( "error", msg );
 
                 if (progress){
@@ -1462,7 +1473,6 @@ window.filesender.crypto_app = function () {
                     else    { $('.bootbox-input').attr('type','password'); }
                 }
             );
-            input.focus();
                 
         },
         /**

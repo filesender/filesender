@@ -1,5 +1,5 @@
 ---
-title: Installation - Linux Source 3.x from Git
+title: Installation - FileSender 3.x on Linux
 ---
 
 ## About this documentation
@@ -13,10 +13,6 @@ This guide is written for installation from source on the
 RedHat/CentOS or Debian platform but any Linux variant should work
 with some modifications (most notably about installing the required
 additional software packages).
-
-Our hope is that FileSender installation should take less than an hour.
-There are docker images of FileSender available which you might like
-to use to quickly see if this is the software that you are looking for.
 
 While efforts have been made to make sure this documentation does not
 contain mistakes and is as clear as possible if you see an issue
@@ -34,7 +30,7 @@ you can report issues with and update the documentation.
 ### Dependencies
 
 * Apache (or nginx) and PHP version 8.4 or later.
-* A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
+* A PostgreSQL (recent) or MariaDB database (10.0 or above, 10.2 or later recommended).
 * A big filesystem (or cloud backed).
 * [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.4 or newer.
 
@@ -140,18 +136,20 @@ apt-get install -y git
 
 
 Install the FileSender 3.0 from the GIT repository use the following
-commands. The `master` branch will always contain the latest release.
+commands. Starting with the 3.0 series each major version will have
+it's own master and development branch. As these documents describe
+the 3.x series you will be interested in `master3` and `development3`.
+
+The `master3` branch will always contain the latest release.
 You can select explicit versions using the release tag of the version
 you wish to run from the
 [Releases](https://github.com/filesender/filesender/releases) page. If
 you wish to test a feature that is in development and has been merged
 but is not part of any release yet you might like to checkout the
-`development` branch which contains all merged updates.
+`development3` branch which contains all merged updates.
 
-The version 3.0 alpha series has an updated UI using Bootstrap.
-Similar to the master and development there are `master3` and
-`development3` which are the latest release and current development
-code respectively.
+The version 3.0 release candidate series has an updated UI using
+modern CSS and some bootstrap. 
 
 In the example code below I am going to use the latest release in the
 3.x series. You can see the tag (version string) that you need for git
@@ -165,38 +163,31 @@ ticket icon.
 su -l
 mkdir /opt/filesender
 cd    /opt/filesender
-git clone --depth 1 --branch master https://github.com/filesender/filesender.git filesender
+git clone --depth 1 --branch master3 https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
-git checkout master
+git checkout master3
 
 composer install --no-dev
 ```
 
 You can bring down new releases to an existing git repository and then
-directly checkout new releases in the future.
+directly checkout new releases in the future. You can also select an
+older version by using the git tag for that release.
 
 
 
 # Step 3 - Setup the FileSender configuration
 
-We ship the FileSender tarball with `config_sample.php` file rather
-than directly providing a `config.php` to make life easier when
-packaging the software.
+The FileSender tarball contains a `config_sample.php` file to get you
+started with your own `config.php`. This is done to make life easier
+when packaging the software.
 
-Note that if you wish to support old browsers there are some options you
-might like to add to your configuration.
-
-* If you would like to support IE11 and use encryption then you will
-  need to enable a legacy encryption key version using the
-  [encryption_key_version_new_files](https://docs.filesender.org/filesender/v3.0/admin/configuration/#encryption_key_version_new_files)
-  directive.
-
-Initialise config file and set permissions right. Make the files, tmp
-and log directories writable by the web daemon user (`apache` on
-RedHat/CentOS, `www-data` on Debian), copy the config file in place
-from the template and allow the web daemon user to read the config.php
-configuration file:
+The below commands will initialise a config file and set permissions
+correctly. The commands make the files, tmp and log directories
+writable by the web daemon user (`apache` on RedHat/CentOS, `www-data`
+on Debian), copy the config file in place from the template and allow
+the web daemon user to read the config.php configuration file:
 
 On all distributions run:
 
@@ -226,8 +217,17 @@ chown www-data:www-data tmp files log
 chgrp www-data config/config.php
 ```
 
-* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, mount it with the following option: `context=system_u:object_r:httpd_sys_rw_content_t:s0`.
-* **DO NOT** enable `httpd_use_nfs`. If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
+If you are using NFS for your storage then please take note of the following. Otherwise skip
+to the next title section.
+
+* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, 
+            mount it with the following option: 
+```
+context=system_u:object_r:httpd_sys_rw_content_t:s0
+```
+
+* **DO NOT** enable `httpd_use_nfs`. 
+           If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
 
 
 
@@ -238,14 +238,21 @@ wants to authenticate a user. SimpleSAMLphp provides many different
 mechanisms to authenticate users and can handle large amounts of
 users.
 
-Following these instructions will set you up with a SimpleSAMLphp
-installation that uses Feide RnD's OpenIdP to authenticate users.
-There is also [some
-information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing)
-if you would prefer to setup some username and passwords for local
-authentication for development and testing. When you move to a
-production service you probably want to change that to only support
-authentication sources of your choice.
+If you are setting up FileSender at an academic institute you likely
+have knowledge of SPs, IdPs, and SimpleSAMLphp. If you wish to use
+FileSender on a smaller local network there are a few options such as
+using a local user table or using sspsmall to install SimpleSAMLphp to
+authenticate against a local database.
+
+If you would prefer to setup some username and passwords for local
+authentication for development and testing see [this
+information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing).
+When you move to a production service you probably want to change that
+to only support authentication sources of your choice.
+
+You might also like to consider taking a look at
+[sspsmall](https://github.com/monkeyiq/sspsmall) to install and SP and
+IdP with SimpleSAMLphp on your system.
 
 All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.2 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
@@ -358,9 +365,9 @@ and log the event for investigation.
 
 # Step 5 - Web Server Security
 
-It is highly recommended to only offer the FileSender service over
-HTTPS. This prevents information used in a secure session from
-accidentally being leaked by unintended unsure HTTP requests.
+You should only offer the FileSender service over HTTPS. This prevents
+information used in a secure session from accidentally being leaked by
+unintended unsure HTTP requests.
 
 By default the configuration and setup for Apache and NGINX both use
 X-Frame-Options sameorigin and the configuration for FileSender itself
@@ -391,9 +398,10 @@ not just php pages.
 
 # Step 5-apache - Configure Apache
 
-A default configuration file for apache is shipped with FileSender in the
-config-templates/apache directory. You might like to view
-the current version [online](https://github.com/filesender/filesender/tree/master/config-templates/apache).
+A default configuration file for apache is shipped with FileSender in
+the config-templates/apache directory. You might like to view the
+current version
+[online](https://github.com/filesender/filesender/tree/master/config-templates/apache).
 
 The apache config file is provided in config-templates/apache and
 should be copied to one of the following locations depending on your

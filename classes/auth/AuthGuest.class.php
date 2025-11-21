@@ -87,9 +87,26 @@ class AuthGuest
                 }
                 
                 $guest = Guest::fromToken($vid);
-                    
+
+                $allowExpiredGuestToSeeLimitedPages = false;
+                $daysAgo = Config::get("guest_transfers_page_number_of_days_expired_guest_can_return");
+
+                if( $daysAgo != 0 ) {
+                    if (array_key_exists('s', $_REQUEST)) {
+                        $s = $_REQUEST['s'];
+                        if( $s == "transfers_guest" || $s == "upload" ) {
+                            if( $guest->status == GuestStatuses::AVAILABLE || $guest->status == GuestStatuses::CLOSED ) {
+                                if( $guest->canStillSeePastUploads()) {
+                                    $allowExpiredGuestToSeeLimitedPages = true;
+                                }
+                            }
+                        }
+                    }
+                }
                 if ($guest->status != GuestStatuses::AVAILABLE || $guest->isExpired()) {
-                    throw new GuestExpiredException($guest);
+                    if( !$allowExpiredGuestToSeeLimitedPages ) {
+                        throw new GuestExpiredException($guest);
+                    }
                 }
                     
                 self::$isAuthenticated = true;

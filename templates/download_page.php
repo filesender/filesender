@@ -145,7 +145,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <hr />
 
         <div class="row">
-            <div class="col col-sm-12 col-md-5 col-lg-4">
+            <div class="col col-sm-12 col-md-5 col-lg-6">
                 <div class="fs-download__details">
                     <h2>{tr:transfer_details}</h2>
                     <div class="fs-info fs-info--aligned">
@@ -195,7 +195,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     </div>
                 </div>
             </div>
-            <div class="col col-sm-12 col-md-7 col-lg-8">
+            <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-download__files">
                     <h2>{tr:download_files}</h2>
                     <p>{tr:select_files_to_download}</p>
@@ -379,14 +379,15 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <div class="row">
             <div class="col">
                 <h2>{tr:verify_your_email_address_to_download}</h2>
-                <table columns="2" border="1">
+                <table columns="2" border="0">
                     <col class="width25">
                     <col class="width75">
                     <tr>
                         <td>
-                            <a href="#" class="verificationcodesendtoemail">
-                                <span class="fa fa-paper-plane fa-lg"></span>&nbsp;{tr:send}
-                            </a>
+                            <button href="#" class="verificationcodesendtoemail fs-button">
+                                <i class="fa fa-paper-plane fa-lg"></i>
+                                <span>{tr:send}</span>
+                            </button>
                         </td>
                         <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
                     </tr>
@@ -397,9 +398,10 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     </tr>
                     <tr class="verificationcodesendpage">
                         <td>
-                            <a class="verificationcodesend verificationcodesendelement" href="#">
-                                <span class="fa fa-unlock fa-lg"></span>&nbsp;{tr:verify}
-                            </a>
+                            <button href="#" class="verificationcodesend verificationcodesendelement fs-button">
+                                <i class="fa fa-unlock fa-lg"></i>
+                                <span>{tr:verify}</span>
+                            </button>
                         </td>
                         <td class="verify_labels2">
                             <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
@@ -453,6 +455,8 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                 </table>
             </div>
         </div>
+        <div class="transfer" data-id="<?php echo Template::Q($transfer->id); ?>"></div>
+        <div class="rid" data-id="<?php echo Template::Q($rid); ?>"></div>
     </div>
 </div>
 

@@ -127,7 +127,6 @@ $default = array(
     'encryption_encode_encrypted_chunks_in_base64_during_upload' => false,
 
     'upload_crypted_chunk_padding_size' => 16 + 16, // CONST the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
-    'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
     'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used
     'crypto_hash_name' => "SHA-256", // The hash used to convert password to hashencryption_enabled
@@ -220,6 +219,7 @@ $default = array(
     'guest_create_limit_per_day' => 0,
     'guest_reminder_limit' => 50,
     'guest_reminder_limit_per_day' => 0,
+    'guest_transfers_page_support_enabled' => true,
     'recipient_reminder_limit' => 50,
     'owner_automatic_reminder' => true,
 
@@ -367,7 +367,8 @@ $default = array(
 
     'allow_pages_add_for_guest' => array( GUIPages::HOME,
                                           GUIPages::UPLOAD,
-                                          GUIPages::APISECRETAUP ),
+                                          GUIPages::APISECRETAUP,
+                                          GUIPages::TRANSFERS_GUEST, ),
 
     'allow_pages_add_for_user' => array( GUIPages::HOME,
                                          GUIPages::USER,
@@ -395,10 +396,16 @@ $default = array(
 
     'valid_timezone_regex' => '@^[_/a-z]+$@i',
     'client_send_current_timezone_to_server' => false,
+
+    
+    'advanced_validation_transfer_options_not_available_but_selected' => false,
+
     
     'validate_csrf_token_for_guests' => true,
 
     'file_forwarding_enabled' => false,
+
+    'ui3_allow_selecting_files_on_transfer_details_page' => true,
     
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',
@@ -503,6 +510,11 @@ $default = array(
 
     'guest_upload_page_hide_unchangable_options' => false,
 
+    'guest_options_to_force_to_top_array' => array( 'can_only_send_to_me', 'valid_only_one_time' ),
+
+    'guest_transfers_page_number_of_days_expired_guest_can_return' => 0,
+
+    
     'guest_options' => array(
         'email_upload_started' => array(
             'available' => true,

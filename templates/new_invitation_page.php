@@ -4,6 +4,9 @@ $cgiuid = "";
 $section = 'invite';
 $sections = array('invite','current','transfers');
 
+$guest_options_to_force_to_top_array = Config::get('guest_options_to_force_to_top_array');
+
+
 if(array_key_exists('as', $_REQUEST))
     $section = $_REQUEST['as'];
 if(!strlen($section)) {
@@ -50,6 +53,22 @@ foreach (Guest::allOptions() as $name => $dfn) {
         }
     }
 }
+
+
+$possibleExpireDays = array( 7, 15, 30, 40 );
+array_push( $possibleExpireDays, Config::get('default_guest_days_valid'));
+asort( $possibleExpireDays );
+$expireDays = array_filter( $possibleExpireDays, function($k) {
+    return $k < Config::get('max_guest_days_valid')
+        && $k > Config::get('min_guest_days_valid');
+});
+$expireDaysSelected = Config::get('default_guest_days_valid');
+if( !in_array( $expireDaysSelected, $expireDays )) {
+    // got filtered? $possibleExpireDays count should be >1 from default setup
+    $v = array_slice($expireDays, -1);
+    $expireDaysSelected = $v[0];
+}
+
 
 
 //
@@ -184,7 +203,7 @@ use ( $new_guests_can_only_send_to_creator,
                                     <div class="guest_options options_box">
                                     <?php
                                     foreach(Guest::availableOptions() as $name => $cfg) {
-                                        if( $name == 'can_only_send_to_me' || $name == 'valid_only_one_time') {
+                                        if( in_array( $name, $guest_options_to_force_to_top_array )) {
                                             $displayoption($name, $cfg, false);
                                         }
                                     }
@@ -196,10 +215,15 @@ use ( $new_guests_can_only_send_to_creator,
                                             {tr:expires_after}
                                         </label>
                                         <select id="expires-select" name="expires-select">
-                                            <option value="7" selected>7 {tr:days}</option>
-                                            <option value="15">15 {tr:days}</option>
-                                            <option value="30">30 {tr:days}</option>
-                                            <option value="40">40 {tr:days}</option>
+                                                <?php foreach( $expireDays as $k => $v ) { ?>
+                                                    <?php 
+                                                    $sel = "";
+                                                    if( $expireDaysSelected == $v ) {
+                                                        $sel = " selected ";
+                                                    }
+                                                     ?>
+                                                    <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
+                                                <?php } ?>
                                         </select>
                                     </div>
 
@@ -227,7 +251,7 @@ use ( $new_guests_can_only_send_to_creator,
 
                                                 <div class="guest_options">
                                                     <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
-                                                        if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                        if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                             $displayoption($name, $cfg, false);
                                                         }
                                                     } ?>
@@ -237,7 +261,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                 <?php if(count(Guest::availableOptions(true))) {
                                                     foreach(Guest::availableOptions(true) as $name => $cfg) {
                                                         if( !array_key_exists($name, $guest_options_handled)) {
-                                                            if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                            if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                                 $displayoption($name, $cfg, false);
                                                             }
                                                         }
@@ -250,7 +274,7 @@ use ( $new_guests_can_only_send_to_creator,
 
                                                 <div class="transfer_options">
                                                     <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                        if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                        if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                             $displayoption($name, $cfg, true);
                                                         }
                                                     } ?>
@@ -259,7 +283,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                 <div class="transfer_options">
                                                 <?php if(count(Transfer::availableOptions(true))) {
                                                     foreach(Transfer::availableOptions(true) as $name => $cfg) {
-                                                        if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                        if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                             $displayoption($name, $cfg, true);
                                                         }
                                                     }

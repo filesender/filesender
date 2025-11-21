@@ -162,7 +162,7 @@ A note about colours;
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
 * [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
-
+* [ui3_allow_selecting_files_on_transfer_details_page](#ui3_allow_selecting_files_on_transfer_details_page)
 
 ## Transfers
 
@@ -241,7 +241,10 @@ A note about colours;
 ## Guest use
 
 * [guest_support_enabled](#guest_support_enabled)
+* [guest_transfers_page_support_enabled](#guest_transfers_page_support_enabled)
+* [guest_transfers_page_number_of_days_expired_guest_can_return](#guest_transfers_page_number_of_days_expired_guest_can_return)
 * [guest_options](#guest_options)
+* [guest_options_to_force_to_top_array](#guest_options_to_force_to_top_array)
 * [default_guest_days_valid](#default_guest_days_valid)
 * [min_guest_days_valid](#min_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
@@ -752,13 +755,12 @@ This way the encryption_key_version_new_files can be updated and existing upload
 * __comment:__ This enables strong encryption of passwords. This setting is deprecated and will be removed in a future version.
 
 ### upload_crypted_chunk_size
-* __description:__ Internal only setting. This is the entire size of an encrypted chunk, including any padding for per chunk IV
+* __description:__ Internal only setting. Any setting you have in config.php will be overridden by FileSender
 * __mandatory:__ no
 * __type:__ int
-* __default:__ 5 * 1024 * 1024 + 16 + 16
-* __available:__ since before version 2.30
-* __comment:__ It is highly recommended that you leave this setting as the default value. This is the size, including any IV and padding
-           needed for an encrypted chunk that is uploaded.
+* __default:__ Calculated from other values
+* __available:__ Deprecated and overridden in 3.0rc12
+* __comment:__ This setting is calculated and set by FileSender. Please remove it from your config.php if it is there.
 
 ### upload_crypted_chunk_padding_size
 * __description:__ Internal only setting. This is the size of padding and IV for an encrypted chunk
@@ -1730,7 +1732,14 @@ Inside of files_downloaded.mail.php for example
      list and they can be added to the default.
 
 
-* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
+
+### ui3_allow_selecting_files_on_transfer_details_page
+* __description:__  Allow the user to select which files to download in an archive on the transfers details page.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 3.0 rc12
+* __comment:__ 
 
 
 ---
@@ -2601,6 +2610,27 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__ Setting this to false will disable the guest system and fail on attempts to create a guest if they are directly attempted.
 
+### guest_transfers_page_support_enabled
+
+* __description:__ Allow a guest to see a list of their uploads
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ The list of uploads is somewhat limited, for example it does not allow downloading those files
+
+### guest_transfers_page_number_of_days_expired_guest_can_return
+
+* __description:__ Allow a guest to see a list of their uploads this many days after they have expired.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ The defaut value disables this feature. It is a number of days, for example, 10 for 10 days after the guest has expired.
+
+
 
 
 ### guest_options
@@ -2642,6 +2672,33 @@ This is only for old, existing transfers which have no roundtriptoken set.
 				'default' => false
 			)
 		);
+
+### guest_options_to_force_to_top_array
+
+* __description:__ An array of options that are picked out and placed out of the advanced section on the UI3 new guest page
+* __mandatory:__ no
+* __type:__ array of string
+* __default:__ array( 'can_only_send_to_me', 'valid_only_one_time' ),
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ Some items were hard code lifted to the top in the UI3. You can use this option in 
+               combination with the existing  guest_options / 'valid_only_one_time' / 'advanced' => true,
+               to allow an option to be presented as advanced when it would have previously been force lifted.
+
+* __*Configuration example:*__
+        $config['guest_options_to_force_to_top_array'] = [  'can_only_send_to_me' ];
+		$config['guest_options'] = array(
+           ...               
+               
+           'valid_only_one_time' => array(
+              'available' => true,
+              'advanced' => true,
+              'default' => false
+           ),
+           ...
+
+This conflicts with the code in 'advanced' => false but is a hard coded option that is lifted out here to allow it to be modified by sites who want to use guest_options.advanced.
+
 
 ### default_guest_days_valid
 

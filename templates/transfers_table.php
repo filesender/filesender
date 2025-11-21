@@ -228,21 +228,7 @@ EOF;
 
             <td data-label="{tr:files}">
                 <?php
-                $maxlen = 32;
-                $items = array();
-                foreach(array_slice($transfer->files, 0, 3) as $file) {
-                    $name = $file->path;
-                    $name_shorten_by = intval(ceil(intval (mb_strlen((string) count($transfer->downloads))+mb_strlen(Lang::tr('see_all'))+3)/2));
-                    if(mb_strlen($name) > 28-$name_shorten_by) {
-                        if(count($transfer->downloads)) $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
-                        else $name = mb_substr($name, 0, 23).'...';
-                    }
-                    $items[] = '<span title="'.Template::Q($file->path).'">'.Template::replaceTainted($name).'</span>';
-                }
-
-                if(count($transfer->files) > 3)
-                    $items[] = '<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>';
-
+                $items = GUI::getFileNamesForDisplay( $transfer, true );
                 echo implode('<br />', $items);
                 ?>
             </td>

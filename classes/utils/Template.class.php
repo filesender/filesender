@@ -147,7 +147,7 @@ class Template
                 // deprecated.
                 return Utilities::sanitizeOutput(Config::get($k));
             } else {
-                if(array_search($k,$configWhiteList) !== false) { 
+                if(array_search($k,$configWhiteList) !== false) {
                     return Utilities::sanitizeOutput(Config::get($k));
                 }
             }
@@ -255,6 +255,9 @@ class Template
      */
     public static function Q($data)
     {
+        if( !$data ) {
+            return "";
+        }
         return self::sanitizeOutput($data);
     }
     

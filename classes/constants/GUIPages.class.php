@@ -59,4 +59,5 @@ class GUIPages extends Enum
     const HELP            = 'help';
     const APISECRETAUP    = 'apisecretaup';
     const TERMS           = 'terms';
+    const TRANSFERS_GUEST = 'transfers_guest';
 }
