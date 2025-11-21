@@ -21,6 +21,13 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
         <ul>
             <?php
 
+            if( Config::get('guest_transfers_page_support_enabled')) {
+                if(Auth::isGuest()) {
+                    pagemenuitem('transfers_guest');
+                    pagemenuitem('upload');
+                }
+            }
+                
                 if(!Auth::isGuest()) {
                     pagemenuitem('upload');
 

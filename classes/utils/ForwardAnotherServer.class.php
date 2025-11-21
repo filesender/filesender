@@ -122,7 +122,7 @@ class ForwardAnotherServer
         Logger::debug('remote_caps:'.print_r($remote_caps,true));
         $method='';
         foreach($my_caps as $my_cap) {
-            if (array_find($remote_caps, function($value,$key) use ($my_cap) {
+            if (self::array_find($remote_caps, function($value,$key) use ($my_cap) {
                     return $value->method == $my_cap['method'];
                 }) != null) {
                 $method = $my_cap['method'];
@@ -174,7 +174,7 @@ class ForwardAnotherServer
         $client = self::setupRestClient($transfer);
         $client_info = $client->getInfo();
         $remote_caps = $client_info->forward_capabilities;        
-        $method_config = json_decode(json_encode(array_find($remote_caps, function($value,$key) use ($method) {
+        $method_config = json_decode(json_encode(self::array_find($remote_caps, function($value,$key) use ($method) {
             return $value->method == $method;
         })), true);
         if (!isset($method_config['method']) || $method_config['method']!=$method) {
@@ -648,6 +648,15 @@ class ForwardAnotherServer
         $response = $r;
         Logger::debug('end REST: PUT /file');
         return $response;
+    }
+
+    private static function array_find(array $array, callable $callback) {
+        foreach ($array as $key => $value) {
+            if ($callback($value, $key)) {
+                return $value;
+            }
+        }
+        return null;
     }
 
 }

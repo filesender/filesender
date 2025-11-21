@@ -267,6 +267,13 @@ class Transfer extends DBObject
             $filesview[$dbtype] = 'SELECT t.*, f.name as filename, f.size as filesize, DATE(t.created) as date_created, DATE(t.expires) as date_expires FROM '
                                 . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
+
+            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+                                   . ' from '
+                                   . self::getDBTable().' t LEFT JOIN '
+                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
+                                         . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                         . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
             
             $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, max(t.idpid) as idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
@@ -280,7 +287,6 @@ class Transfer extends DBObject
                               . self::getDBTable() . ' t '
                                     . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
 
-            $filesidpview[$dbtype] = 'select 1';
             $auditlogsview[$dbtype] = 'select 1';
             $auditlogsviewdlcss[$dbtype] = 'select 1';
             $auditlogsviewdlc[$dbtype] = 'select 1';
@@ -293,9 +299,9 @@ class Transfer extends DBObject
                     , 'transferssizeidpview' => $sizeidpviewdev
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
+                    , 'transfersfilesidpview' => $filesidpview
                     , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
                     , 'transferidpview' => $idpview
-                    , 'transfersfilesidpview' => $filesidpview
                     , 'transfersauditlogsview' => $auditlogsview
                     , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc

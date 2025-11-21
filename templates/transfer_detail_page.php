@@ -59,6 +59,44 @@ if( !$found ) {
     echo $transfer_not_found;
     return;
 }
+
+$canDownloadArchive = count($transfer->files) > 1;
+$canDownloadAsTar = true;
+$canDownloadAsZip = true;
+if($isEncrypted) {
+    // Streaming to a local decrypted archive requires StreamSaver feature
+    $canDownloadArchive = false;
+    // no stream to tar file support yet.
+    $canDownloadAsTar = false;
+    if( Browser::instance()->allowStreamSaver ) {
+        $canDownloadArchive = true;
+    }
+}
+$ui3_allow_file_selection = Utilities::isTrue(Config::get('ui3_allow_selecting_files_on_transfer_details_page'));
+if( !$ui3_allow_file_selection ) {
+    $canDownloadArchive = false;
+}
+
+      
+$downloadLinks = array();
+$archiveDownloadLink = '#';
+$archiveDownloadLinkFileIDs = '';
+
+if(empty($transfer->options['encryption'])) {
+    $fileIds = array();
+    foreach($transfer->files as $file) {
+        $downloadLinks[$file->id] = Utilities::http_build_query(array(
+            'token' => $token,
+            'files_ids' => $file->id,
+        ), 'download.php?' );
+        $fileIds[] = $file->id;
+    }
+    $archiveDownloadLink = Utilities::http_build_query(array(
+        'token' => $token,
+    ), 'download.php?' );
+    $archiveDownloadLinkFileIDs = implode(',', $fileIds);
+}
+
 ?>
 
 <div class="fs-transfer-detail transfer_details"
@@ -140,13 +178,35 @@ if( !$found ) {
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__files">
                     <h2>{tr:transferred_files}</h2>
+                    <?php if($canDownloadArchive) { ?>
+                        <p>{tr:select_files_to_download}</p>
+
+                        <div class="fs-download__check-all select_all">
+                            <label class="fs-checkbox">
+                                <label for="check-all" class="select_all_text">
+                                    {tr:click_to_check_all}
+                                </label>
+                                <input id="check-all" type="checkbox">
+                                <span class="fs-checkbox__mark toggle-select-all"></span>
+                            </label>
+                        </div>
+                    <?php } ?>
+                    
                     <div class="fs-transfer__list">
-                        <div class="fs-transfer__files"">
+                        <div class="fs-transfer__files" data-count="<?php echo ($canDownloadArchive)?count($transfer->files):'1' ?>" >
                             <table class="fs-table files">
                                 <tbody>
                                 <?php foreach($transfer->files as $file) { ?>
                                     <tr class="file"
+                                        data-action="download"
                                         data-id="<?php echo $file->id ?>"
+                                        data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
+                                        data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>"
+                                        data-chunk-size="<?php               echo Template::Q($file->chunk_size); ?>"
+                                        data-crypted-chunk-size="<?php       echo Template::Q($file->crypted_chunk_size); ?>"
+                                        data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
+                                        data-size="<?php echo $file->size; ?>"
+                                        data-encrypted-size="<?php echo $file->encrypted_size; ?>"
                                         data-key-version="<?php echo $transfer->key_version; ?>"
                                         data-key-salt="<?php echo $transfer->salt; ?>"
                                         data-password-version="<?php echo $transfer->password_version; ?>"
@@ -157,6 +217,15 @@ if( !$found ) {
                                         data-fileaead="<?php echo $file->aead; ?>"
                                         data-transferid="<?php echo $transfer->id; ?>"
                                     >
+                                            <?php if($canDownloadArchive) { ?>
+                                                <td class="fs-table__check-action">
+                                                    <label class="fs-checkbox select" title="{tr:select_for_archive_download}">
+                                                        <input id="check-<?php echo Template::Q($file->id) ?>" type="checkbox">
+                                                        <span class="fs-checkbox__mark"></span>
+                                                    </label>
+                                                </td>
+                                            <?php } ?>
+                                        
                                         <td>
                                             <div>
                                                 <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
@@ -229,6 +298,34 @@ if( !$found ) {
                             <?php echo Utilities::formatBytes($transfer->size) ?>
                         </span>
                     </div>
+                    <?php if($canDownloadArchive) { ?>
+                        <div class="fs-download__actions archive">
+                            <button type="button" class="fs-button archive_download_frame archive_download" title="{tr:archive_download}">
+                                <i class="fa fa-download"></i>
+                                <span>{tr:archive_download}</span>
+                            </button>
+                            <?php if($canDownloadAsTar) { ?>
+                                <button type="button" class="fs-button archive_tar_download_frame archive_tar_download" title="{tr:archive_tar_download}">
+                                    <i class="fa fa-download"></i>
+                                    <span>{tr:archive_tar_download}</span>
+                                </button>
+
+                            <?php } ?>
+
+                            <div class="archive_download_framex hidden">
+                                <form id="dlarchivepost" action="<?php echo Template::Q($archiveDownloadLink) ?>" method="post">
+                                    <input class="hidden archivefileids" name="files_ids" value="<?php echo Template::Q($archiveDownloadLinkFileIDs); ?>" />
+                                    <input id="dlarchivepostformat" class="hidden " name="archive_format" value="zip" />
+                                    <button type="submit"
+                                            name="your_name" value="your_value"
+                                            class="btn-link">DOWNLOAD
+                                    </button>
+                                </form>
+                            </div>
+                            <span class="downloadprogress"/>
+                        </div>
+                    <?php } ?>
+                    
                 </div>
             </div>
         </div>
@@ -386,6 +483,12 @@ if( !$found ) {
             </div>
         </div>
     </div>
+
+    
+</div>
+
+<div class="transfer_is_encrypted not_displayed">
+    <?php echo $isEncrypted ? 1 : 0;  ?>
 </div>
 
 <script type="text/javascript" src="{path:js/transfer_detail_page.js}"></script>

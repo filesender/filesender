@@ -27,6 +27,10 @@ function pagemenuitem($page) {
             }
         }
     }
+    if( $page == 'transfers_guest' ) {
+        $label = Lang::tr('transfers_page');
+    }
+    
     $icon = '';
     $faicon = '';
     if($page == 'guests') {
@@ -48,6 +52,9 @@ function pagemenuitem($page) {
         $faicon = 'fa-cogs';
     }
     if($page == 'transfers') {
+        $faicon = 'fa-list';
+    }
+    if($page == 'transfers_guest') {
         $faicon = 'fa-list';
     }
     if($page == 'help') {

@@ -357,10 +357,18 @@ class Config
                 break;
         }
 
+        
         $crypt_padding_size = self::get('upload_crypted_chunk_padding_size');
-        if ((self::get('upload_chunk_size')+$crypt_padding_size) != self::get('upload_crypted_chunk_size')) {
-            throw new ConfigBadParameterException('You must set upload_crypted_chunk_size to upload_chunk_size + '.$crypt_padding_size.'.');
+        // force to right value.
+        if( self::get('upload_crypted_chunk_size')) {
+            Logger::error("The value of upload_crypted_chunk_size is set by FileSender in 3.x."
+                        . " Any value you have set in your config.php will be overridden");
         }
+        self::$parameters['upload_crypted_chunk_size'] =  self::get('upload_chunk_size')
+                                                        + self::get('upload_crypted_chunk_padding_size');
+        
+
+        
 
         $themeName = self::get('theme');
         if( strlen($themeName) && preg_match('@[./]@',$themeName)) {

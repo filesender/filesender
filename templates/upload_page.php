@@ -222,9 +222,18 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 
 
 $possibleExpireDays = array( 7, 15, 30, 40 );
-$expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
+array_push( $possibleExpireDays, Config::get('default_transfer_days_valid'));
+asort( $possibleExpireDays );
+$expireDays = array_filter( $possibleExpireDays, function($k) {
     return $k < Config::get('max_transfer_days_valid');
 });
+$expireDaysSelected = Config::get('default_transfer_days_valid');
+if( !in_array( $expireDaysSelected, $expireDays )) {
+    // got filtered? $possibleExpireDays count should be >1 from default setup
+    $v = array_slice($expireDays, -1);
+    $expireDaysSelected = $v[0];
+}
+
 
 if( Auth::isGuest() && $openpgp_encrypt_passphrase ) {
     $guest = AuthGuest::getGuest();
@@ -246,6 +255,44 @@ if( $openpgp_encrypt_passphrase ) {
     </div>
 <?php
     return;
+}
+
+if(Auth::isGuest()) {
+    $guest = AuthGuest::getGuest();
+    $daysAgo = Config::get("guest_transfers_page_number_of_days_expired_guest_can_return");
+    // this default should not happen as the guest can only be
+    // flexible if the above config has been set. But expired
+    // is a good default here.
+    $expired = $guest->isExpired();
+    if( $daysAgo > 0 ) {
+        // do not worry about canStillSeePastUploads() here
+        // we are only hanlding this to present a nice expired
+        // page to the guest if they are not AVAIABLE any more.
+        if( !$expired ) {
+            $expired = ($guest->status != GuestStatuses::AVAILABLE);
+        }
+    }
+    if( $expired ) {
+        echo <<<EOF
+<div id="dialog-expired" title="Access expired" class="fs-base-page">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="fs-base-page__header">
+                    <h1>{tr:guest_token_expired_title}</h1>
+                </div>
+
+                <div class="fs-base-page__content">
+                    {tr:guest_token_expired_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+EOF;
+        return;
+        
+    }
 }
 ?>
 
@@ -643,13 +690,20 @@ if( $openpgp_encrypt_passphrase ) {
                                     <div class="row">
                                         <div id="encryption_options"  class="<?php echo $openpgp_encrypt_passphrase_add_class ?>"> </div>
                                         <div class="col-12">
-                                            <div class="fs-switch" data-related-to="encryption">
+                                            <div class="fs-switch encryption-toggle-group" data-related-to="encryption">
                                                 <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
-                                                <label for="encryption">
+                                                <label for="encryption" id="enctest1">
                                                     {tr:encrypt_files_with_password}
                                                 </label>
                                             </div>
 
+                                            <div class="encmand2" id="encmand2" data-related-to="encryption" hidden="true">
+                                                <label id="enctest2">
+                                                    {tr:encrypt_files_with_password}
+                                                </label>
+                                            </div>
+                                            
+                                            
                                             <div id="encgroup1openpgp">
                                             <div id="encgroup1" class="fs-transfer__password">
                                                 <div class="fs-transfer__password-top" id="encryption_password_container">
@@ -659,11 +713,11 @@ if( $openpgp_encrypt_passphrase ) {
                                                                 <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-auto">
+                                                        <div class="col-md-auto password-gen-button">
                                                                 <span>{tr:or}</span>
                                                         </div>
                                                         <div class="col-6">
-                                                            <div class="fs-transfer__generate-password">
+                                                            <div class="fs-transfer__generate-password password-gen-button">
                                                                 <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
                                                             </div>
                                                         </div>
@@ -709,8 +763,14 @@ if( $openpgp_encrypt_passphrase ) {
                                                 {tr:expires_after}
                                             </label>
                                             <select id="expires-select" name="expires-select">
-                                                <?php foreach( $expireDays as $v ) { ?>
-                                                    <option value="<?php echo $v ?>" selected><?php echo $v ?> {tr:days}</option>
+                                                <?php foreach( $expireDays as $k => $v ) { ?>
+                                                    <?php 
+                                                    $sel = "";
+                                                    if( $expireDaysSelected == $v ) {
+                                                        $sel = " selected ";
+                                                    }
+                                                     ?>
+                                                    <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
                                                 <?php } ?>
                                             </select>
                                         </div>

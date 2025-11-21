@@ -151,8 +151,23 @@ class RestEndpointTransfer extends RestEndpoint
         // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer
         if ($property == 'options' && 'enable_recipient_email_download_complete' == $property_id) {
 
+            // Check that we have a valid transfer id
+            if (!is_numeric($id)) {
+                throw new RestBadParameterException('transfer_id');
+            }
+            
             // Check that we have a valid token in the url
             if (!array_key_exists('token', $_GET)) {
+                if( Auth::isAuthenticated()) {
+                    $user = Auth::user();
+                    $transfer = Transfer::fromId($id);
+                    // If they own the file then they do not need to confirm download.
+                    // this is used in the transfer details page
+                    if( $user->id == $transfer->userid ) {
+                        $rc = false;
+                        return $rc;
+                    }
+                }
                 throw new RestBadParameterException('token');
             }
             $token = $_GET['token'];
@@ -160,10 +175,6 @@ class RestEndpointTransfer extends RestEndpoint
                 throw new RestBadParameterException('token');
             }
             
-            // Check that we have a valid transfer id
-            if (!is_numeric($id)) {
-                throw new RestBadParameterException('transfer_id');
-            }
             
             // Get transfer and recipient from above data
             $transfer = Transfer::fromId($id);
@@ -558,20 +569,41 @@ class RestEndpointTransfer extends RestEndpoint
                 TransferOptions::FORWARD_SERVER_NAME => $allOptions[TransferOptions::FORWARD_SERVER_NAME]['default'],
                 TransferOptions::HIDE_SENDER_EMAIL => $allOptions[TransferOptions::HIDE_SENDER_EMAIL]['default'],
             );
-            
+
             foreach ($allOptions as $name => $dfn) {
-                if (in_array($name, $allowed_options)) {
-                    // check if options is object
-                    if (is_object( $data->options) ) {
-                        if (method_exists($data->options, 'exists')) {
-                            if ($data->options->exists($name)) {
-                                $options[$name] = $data->options->$name;
-                            }
+                $shouldBeAvailable = Utilities::isTrue( $dfn['available'] );
+                $clientProvidedAValue = false;
+
+                // check if options is object
+                $v = '';
+                if (is_object( $data->options) ) {
+                    if (method_exists($data->options, 'exists')) {
+                        if ($data->options->exists($name)) {
+                            $clientProvidedAValue = 1;
+                            $v = $data->options->$name;
                         }
-                    } else {
-                        if (array_search($name, $data->options) !== false) {
-                            $options[$name] = 1;
-                        }
+                    }
+                } else {
+                    if (array_search($name, $data->options) !== false) {
+                        $clientProvidedAValue = 1;
+                        $v = 1;
+                    }
+                }
+
+                if( $name == 'redirect_url_on_complete' ) {
+                        $clientProvidedAValue = 0;                  
+                }
+                if( $clientProvidedAValue ) {
+                  if( in_array($name, $allowed_options)) {
+                      $options[$name] = $v;
+                  }
+                }
+                                
+                if( Utilities::isTrue(Config::get('advanced_validation_transfer_options_not_available_but_selected'))) {
+                    if( !$shouldBeAvailable && $clientProvidedAValue ) {
+                        throw new BadOptionValueException(
+                            $name,
+                            "The option $name is not available to the user but they provided a value for it.");                    
                     }
                 }
             }
@@ -1123,53 +1155,6 @@ class RestEndpointTransfer extends RestEndpoint
                 );
         }
         
-        if ($data->sendVerificationCodeToYourEmailAddress) {
-
-            $bytes = random_bytes(Config::get('download_verification_code_random_bytes_used'));
-            $bytes = sha1( $bytes, true );
-            $pass = bin2hex($bytes);
-            
-            $rid = 0;
-            $token = $data->token;
-                
-            if(Utilities::isValidUID($token)) {
-                    
-                try {
-                    // Getting recipient from the token
-                    $recipient = Recipient::fromToken($token); // Throws
-                    $rid = $recipient->id;
-                } catch (RecipientNotFoundException $e) {
-                }
-            }
-
-            if( !$rid ) {
-                throw new RestBadParameterException('transfer = '.$transfer->id);
-            }
-            
-            foreach ($transfer->recipients as $recipient) {
-
-                if( $recipient->id != $rid ) {
-                    continue;
-                }
-                
-                $otp = DownloadOneTimePassword::create( $transfer, $recipient, $pass );
-
-                $verificationCode = $recipient->id . ',' . $pass;
-                $verificationCode = base64_encode( $verificationCode );
-                
-                TranslatableEmail::quickSend('transfer_email_verify_to_download',
-                                             $recipient, $transfer,
-                                             array(
-                                                 'verificationCode' => $verificationCode
-                                             )
-                );
-            }
-            return array(
-                'id' => $transfer->id,
-                'ok' => true,
-                );
-            
-        }
         
         if ($data->sendVerificationCodeToYourEmailAddress) {
 
