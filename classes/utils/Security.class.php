@@ -78,6 +78,7 @@ class Security
              . " style-src 'self' ; "
              . " img-src 'self' data:; "
              . " media-src 'none'; "
+             . " frame-ancestors 'self'; "
              . " frame-src 'self'; "
              . " font-src 'self'; "
              . " connect-src 'self'";
