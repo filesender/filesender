@@ -357,9 +357,6 @@ $(function() {
                 return false;
             });
 
-            // Reset popup position as we may have added lengthy content
-            filesender.ui.relocatePopup(popup);
-
         });
     };
 
