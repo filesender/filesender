@@ -2109,14 +2109,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 
 ### encryption_key_version_new_files
-* __description:__ Select which user password hashing is performed and which AES mode is used for encryption.
-    Some mores have versions with and without key hashing because some browsers do not support the key hashing.
-    The choices in order of newest to oldest are: 3 is v2019_gcm_importKey_deriveKey
-     which is AES-GCM mode for encryption and using PBKDF2 to derive a key from user supplied passwords.
-     A PBKDF2 related configuration setting is crypto_pbkdf2_expected_secure_to_year.
-     The setting 3 is the recommended setting unless you have to support older browsers which can not
-     work with this level of security.
-
+* __description:__ The setting 3 is the recommended setting unless you have to support much 
+       older browsers which can not work with this level of security. In 2025 all contemporary 
+       browsers should work with setting 3. Select which user password hashing is 
+       performed and which AES mode is used for encryption. Some mores have versions 
+       with and without key hashing because some browsers do not support the key hashing. 
+       The choices in order of newest to oldest are: 3 is v2019_gcm_importKey_deriveKey 
+       which is AES-GCM mode for encryption and using PBKDF2 to derive a key from user 
+       supplied passwords. A PBKDF2 related configuration setting 
+       is crypto_pbkdf2_expected_secure_to_year.
+     
      The setting 2 is v2019_gcm_digest_importKey which uses AES-GCM for encryption but almost directly imports the user password without any key hashing.
      The setting 1 is v2018_importKey_deriveKey which uses AES-CBC mode for encryption and PBKDF2 for hashing the password.
      The setting 0 is v2017_digest_importKey which uses AES-CBC mode for encryption and directly imports the password without hashing.
