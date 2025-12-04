@@ -18,20 +18,11 @@ branch just prior to the release.
 This arrangement of development and master branches was desired by the
 Filesender board.
 
-For the 2.x series changes should be made on a branch of development and a pull
-request made for the development branch on the Filesender github project.
-
-For changes that apply only to the 3.x series one should make a pull
-request against development3. The respective master branch is called
-master3 for the 3.x series.
+For the 3.x series changes should be made on a branch of development and a pull
+request made for the development3 branch on the Filesender github project.
 
 This naming convention will allow future major releases to be made and
 avoid confusion about which git branch will match which major release.
 
-You should make changes against the development branch and pull requests
-against that branch. The exception to this is if you are updating something
-in the UI for the 3.x series, in which case please make pull requests 
-against development3.
-
-Changes made in development are ported and merged into development3 at
-release time.
+You should make changes against the development3 branch and pull requests
+against that branch.

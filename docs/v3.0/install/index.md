@@ -609,9 +609,7 @@ On Debian, run:
 
 Create the filesender database. It is recommended to create two users for the database,
 one for normal web usage and another with higher abilities to allow the database setup
-and migration script to use. This setup requires the code in FileSender release 2.6 or above to work.
-If you are on a lower version of FileSender you will have to grant permission to the normal filesender
-user and perhaps grant and remove the DROP and REFERENCES from that user when running database.php.
+and migration script to use. 
 
 ```
 mysql -u root -p
