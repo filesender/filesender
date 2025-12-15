@@ -435,7 +435,7 @@ def putChunk(t, f, chunk, offset):
   return call(
     'put',
     '/file/'+str(f['id'])+'/chunk/'+str(offset),
-    { 'key': f['uid'], 'roundtriptoken': t['roundtriptoken'] },
+    { 'key': f['puid'], 'roundtriptoken': t['roundtriptoken'] },
     None,
     chunk,
     { 'Content-Type': 'application/octet-stream' }
@@ -445,7 +445,7 @@ def fileComplete(t,f):
   return call(
     'put',
     '/file/'+str(f['id']),
-    { 'key': f['uid'], 'roundtriptoken': t['roundtriptoken'] },
+    { 'key': f['puid'], 'roundtriptoken': t['roundtriptoken'] },
     { 'complete': True },
     None,
     {}
@@ -455,7 +455,7 @@ def transferComplete(transfer):
   return call(
     'put',
     '/transfer/'+str(transfer['id']),
-    { 'key': transfer['files'][0]['uid'] },
+    { 'key': transfer['files'][0]['puid'] },
     { 'complete': True },
     None,
     {}
@@ -465,7 +465,7 @@ def deleteTransfer(transfer):
   return call(
     'delete',
     '/transfer/'+str(transfer['id']),
-    { 'key': transfer['files'][0]['uid'] },
+    { 'key': transfer['files'][0]['puid'] },
     None,
     None,
     {}

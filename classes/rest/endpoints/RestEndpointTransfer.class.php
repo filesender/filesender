@@ -249,12 +249,15 @@ class RestEndpointTransfer extends RestEndpoint
             }
         }
         
-        
+        $puid = null;
+        if( array_key_exists('puid', $_GET) && $_GET['puid'] ) {
+            $puid = $_GET['puid'];
+        }
         // If key was provided we validate it and return the transfer (guest restart)
-        if (is_numeric($id) && array_key_exists('key', $_GET) && $_GET['key']) {
+        if (is_numeric($id) && $puid ) {
             $transfer = Transfer::fromId($id);
             try {
-                if (!File::fromUid($_GET['key'])->transfer->is($transfer)) {
+                if (!File::fromPuid($puid)->transfer->is($transfer)) {
                     throw new Exception();
                 }
                 if (!$transfer->isStatusUploading()) {
@@ -558,20 +561,41 @@ class RestEndpointTransfer extends RestEndpoint
                 TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES => $allOptions[TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES]['default'],
                 TransferOptions::HIDE_SENDER_EMAIL => $allOptions[TransferOptions::HIDE_SENDER_EMAIL]['default'],
             );
-            
+
             foreach ($allOptions as $name => $dfn) {
-                if (in_array($name, $allowed_options)) {
-                    // check if options is object
-                    if (is_object( $data->options) ) {
-                        if (method_exists($data->options, 'exists')) {
-                            if ($data->options->exists($name)) {
-                                $options[$name] = $data->options->$name;
-                            }
+                $shouldBeAvailable = Utilities::isTrue( $dfn['available'] );
+                $clientProvidedAValue = false;
+
+                // check if options is object
+                $v = '';
+                if (is_object( $data->options) ) {
+                    if (method_exists($data->options, 'exists')) {
+                        if ($data->options->exists($name)) {
+                            $clientProvidedAValue = 1;
+                            $v = $data->options->$name;
                         }
-                    } else {
-                        if (array_search($name, $data->options) !== false) {
-                            $options[$name] = 1;
-                        }
+                    }
+                } else {
+                    if (array_search($name, $data->options) !== false) {
+                        $clientProvidedAValue = 1;
+                        $v = 1;
+                    }
+                }
+
+                if( $name == 'redirect_url_on_complete' ) {
+                        $clientProvidedAValue = 0;                  
+                }
+                if( $clientProvidedAValue ) {
+                  if( in_array($name, $allowed_options)) {
+                      $options[$name] = $v;
+                  }
+                }
+                                
+                if( Utilities::isTrue(Config::get('advanced_validation_transfer_options_not_available_but_selected'))) {
+                    if( !$shouldBeAvailable && $clientProvidedAValue ) {
+                        throw new BadOptionValueException(
+                            $name,
+                            "The option $name is not available to the user but they provided a value for it.");                    
                     }
                 }
             }
@@ -784,6 +808,26 @@ class RestEndpointTransfer extends RestEndpoint
             }
             $extension_whitelist_regex = Config::get('extension_whitelist_regex');
             
+            $tuple_count = count($data->files);
+            $dbb = null;
+            $usebulk = false;
+            
+            $bulk_threshold = Config::get('create_transfer_uses_bulk_insert_threshold');
+            if( $bulk_threshold != 0 && $tuple_count >= $bulk_threshold ) {
+                $usebulk = true;
+            }           
+            if( $usebulk ) {
+                Logger::debug("Using bulk load for new transfer with $tuple_count files. thresh:$bulk_threshold ");                
+                $dbb = new DatabaseBulk( File::getDBTable(),
+                                         [ 'transfer_id', 'uid', 'puid', 'name',
+                                           'size', 'encrypted_size',
+                                           'mime_type', 'iv', 'aead',
+                                           'storage_class_name' ],
+                                         $tuple_count );
+                $dbb->begin();
+            }
+            
+            
             // Add files after checking that they do not have a banned extension, fail otherwise
             $files_cids = array();
             foreach ($data->files as $filedata) {
@@ -812,8 +856,29 @@ class RestEndpointTransfer extends RestEndpoint
                                             FILTER_VALIDATE_REGEXP,
                                             ["options" => ["regexp" => "|^[-A-Za-z0-9+/]*={0,3}$|" ]] );                
 
-                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
-                                           $filedata->iv, $filedata->aead );
+
+
+                if( $usebulk ) {
+
+                    $puid = Utilities::generateRandomUID();
+                    $uid = Utilities::generateTemporalUID();
+                    $r = [ $transfer->id,
+                           $uid, $puid,
+                           $filedata->name, $filedata->size,
+                           File::calculateEncryptedFileSizeStatic( $filedata->size, $transfer->key_version ),
+                           $filedata->mime_type,
+                           $flat_data[] = $filedata->iv,
+                           $flat_data[] = $filedata->aead,
+                           $flat_data[] = Storage::getDefaultStorageClass()
+                    ];                   
+                    $dbb->add( $r );
+                }
+                else
+                {
+                    $file = $transfer->addFile( $filedata->name, $filedata->size, $filedata->mime_type,
+                                                $filedata->iv, $filedata->aead );
+                }
+                
                 $files_cids[$file->id] = $filedata->cid;
             }
 
@@ -843,6 +908,10 @@ class RestEndpointTransfer extends RestEndpoint
                 if ($transfer->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$transfer->isRecipient($email)) {
                     $transfer->addRecipient($email);
                 }
+            }
+
+            if( $usebulk ) {
+                $dbb->commit();
             }
             
             // Here we have everything (uids ...) to check if the transfer fits in storage
@@ -933,7 +1002,7 @@ class RestEndpointTransfer extends RestEndpoint
         if ($security == 'key') {
             try {
 
-                $key = null;
+                $puid = null;
                 
                 if ($data->sendVerificationCodeToYourEmailAddress || $data->checkVerificationCodeWithServer) {
                     $token = $data->token;
@@ -951,15 +1020,15 @@ class RestEndpointTransfer extends RestEndpoint
                     
                 } else {
                 
-                    if (!array_key_exists('key', $_GET)) {
+                    if (!array_key_exists('puid', $_GET)) {
                         throw new Exception();
                     }
-                    if (!$_GET['key']) {
+                    if (!$_GET['puid']) {
                         throw new Exception();
                     }
                     
-                    $key = $_GET['key'];
-                    if (!File::fromUid($key)->transfer->is($transfer)) {
+                    $puid = $_GET['puid'];
+                    if (!File::fromPuid($puid)->transfer->is($transfer)) {
                         throw new Exception();
                     }
                 }

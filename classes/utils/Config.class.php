@@ -85,6 +85,61 @@ class Config
             }
         }
     }
+
+    
+    private static function handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name )
+    {
+        if( !isset($matchValue)) {
+            return;
+        }
+
+        if (preg_match('`'.$regex.'`', $matchValue)) {
+            $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
+            if (file_exists($extra_config_file)) {
+                $config = array();
+                include_once($extra_config_file);
+                self::merge(self::$parameters, $config);
+            }
+        }
+    }
+    
+    private static function handleConfigRegexFiles( $configKey, $matchAdditionalAttributes = false )
+    {
+        $configRegexList = self::get($configKey);
+        
+        if( !empty($configRegexList) && is_array($configRegexList) && Auth::isAuthenticated(false)) {
+            $auth_attrs = Auth::attributes();
+            foreach ($configRegexList as $attr=>$regex_and_configs) {
+                if (!is_array($regex_and_configs)) {
+                    continue;
+                }
+                foreach ($regex_and_configs as $regex => $extra_config_name) {
+
+                    if( $matchAdditionalAttributes ) {
+
+                        if (array_search($attr, Config::get('auth_sp_additional_attributes')) === false) {
+                            Logger::error("CONFIG ERROR: Please add attriubte $attr to auth_sp_additional_attributes or remove it from your auth_config*regex_files config");
+                        }
+
+                        if( array_key_exists( $attr, $auth_attrs['additional'] )) {
+                            // additional attributes handles an array of values
+                            $a = $auth_attrs['additional'][$attr];
+                            if ($a) {
+                                foreach( $a as $matchValue ) {
+                                    self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
+                                }
+                            }
+                        }
+                    } else {
+                        // work on single main value.
+                        $matchValue = $auth_attrs[$attr];
+                        self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
+                    }
+                }
+            }
+        }
+    }
+    
     
     /**
      * Main loader, loads defaults, main config and virtualhost config if it exists
@@ -166,26 +221,9 @@ class Config
 
         // Load config regex overrides if used and present
         // if not authenticated then do not throw, just do not load these files
-        $auth_config_regex_files = self::get('auth_config_regex_files');
-        if( !empty($auth_config_regex_files) && is_array($auth_config_regex_files) && Auth::isAuthenticated(false)) {
-                $auth_attrs = Auth::attributes();
-                foreach ($auth_config_regex_files as $attr=>$regex_and_configs) {
-                        if (!is_array($regex_and_configs)) {
-                                continue;
-                        }
-                        foreach ($regex_and_configs as $regex => $extra_config_name) {
-                                if (preg_match('`'.$regex.'`', $auth_attrs[$attr])) {
-                                        $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
-                                        if (file_exists($extra_config_file)) {
-                                                $config = array();
-                                                include_once($extra_config_file);
-                                                self::merge(self::$parameters, $config);
-                                        }
-                                }
-                        }
-                }
-        }
-
+        self::handleConfigRegexFiles( 'auth_config_additional_regex_files', true );
+        self::handleConfigRegexFiles( 'auth_config_regex_files', false );
+        
         // ensure mandatory config settings file exists
         $mandatory_config_file = FILESENDER_BASE.'/includes/ConfigMandatorySettings.php';
         if (!file_exists($mandatory_config_file)) {

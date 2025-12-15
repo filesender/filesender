@@ -239,7 +239,7 @@ class StorageCloudAzure extends StorageFilesystem
     public static function getStream(File $file)
     {
         StorageCloudAzureStream::ensureRegistered();
-        $path = "StorageCloudAzureStream://" . $file->uid;
+        $path = self::makeCustomStreamPath( $file, "StorageCloudAzureStream" );
         $fp = fopen($path, "r+");
         return $fp;
     }

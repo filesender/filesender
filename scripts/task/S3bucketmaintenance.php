@@ -41,27 +41,11 @@ require_once(dirname(__FILE__).'/../../includes/init.php');
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('S3 Bucket Maintenance script started');
 
-//
-// False by default, if present it is set
-//
-function getBoolArg( $name )
-{
-    global $argv;
-    
-    $ret = (count($argv) > 1) ? $argv[1]==$name : false;
-    if( !$ret && count($argv) > 2 ) {
-        $ret = ($argv[2]==$name);
-        if( !$ret && count($argv) > 3 ) {
-            $ret = ($argv[3]==$name);
-        }
-    }
-    return $ret;
-}
 
 //
 // Print some messages to give a hint to the user on progress
 //
-$verbose = getBoolArg('--verbose');
+$verbose = Args::getBoolArg('--verbose');
 
 if( $verbose ) {
     echo "S3bucketmaintenance.php starting up...\n";

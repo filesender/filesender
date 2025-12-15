@@ -152,6 +152,25 @@ class BadOptionNameException extends DetailedException
 }
 
 /**
+ * Bad option name value
+ */
+class BadOptionValueException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $name
+     */
+    public function __construct($name, $notetoadmin = '')
+    {
+        parent::__construct(
+            'bad_option_value', // Message to give to the user
+            array('name' => $name,'noteToAdmin' => $notetoadmin) // Details to log
+        );
+    }
+}
+
+/**
  * Bad URL exception
  */
 class BadURLException extends DetailedException

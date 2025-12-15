@@ -384,7 +384,7 @@ class StorageFilesystemChunked extends StorageFilesystem
     public static function getStream(File $file)
     {
         StorageFilesystemChunkedStream::ensureRegistered();
-        $path = "StorageFilesystemChunkedStream://" . $file->uid;
+        $path = self::makeCustomStreamPath( $file, "StorageFilesystemChunkedStream" );
         $fp = \fopen($path, "r+");
         stream_set_chunk_size($fp, Config::get('upload_chunk_size'));
         return $fp;

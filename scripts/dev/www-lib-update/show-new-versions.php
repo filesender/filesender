@@ -2,7 +2,7 @@
 
 $packages = array(
     'chart.js'             => array(),
-    'font-awesome'         => array(),
+    '@fortawesome/fontawesome-free' => array(),
     'jquery'               => array(),
     'jquery-ui-dist'       => array(),
     'promise-polyfill'     => array(),

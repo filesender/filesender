@@ -161,7 +161,7 @@ EOT;
         Config::get('auth_remote_user_enabled') &&
         Auth::user()->auth_secret
     ) {
-        $code = substr(Utilities::generateUID(), -6);
+        $code = substr(Utilities::generateRandomUID(), -6);
         
         $_SESSION['remote_auth_sync_request'] = array(
             'code' => $code,
@@ -180,7 +180,7 @@ EOT;
     
     <div class="send_client_logs">
         <a href="#">
-            <span class="fa fa-lg fa-send"></span>
+            <span class="fa fa-lg fa-paper-plane"></span>
             {tr:send_client_logs}
         </a>
     </div>
