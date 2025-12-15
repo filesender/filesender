@@ -2108,7 +2108,8 @@ $(function() {
     } else if(failed) {
         var id = failed.id;
         if(filesender.config.chunk_upload_security == 'key') {
-            id += '?key=' + failed.files[0].uid;
+            var puid = failed.files[0].puid;
+            id += '?puid=' + puid + '&key=' + puid;
             
         } else if(!auth || auth == 'guest') {
             id = null; // Cancel

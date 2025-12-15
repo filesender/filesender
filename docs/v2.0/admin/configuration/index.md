@@ -57,6 +57,7 @@ A note about colours;
 * [cookie_domain](#cookie_domain)
 * [rate_limits](#rate_limits) (rate limits for some actions)
 * [valid_filename_regex](#valid_filename_regex)
+* [advanced_validation_transfer_options_not_available_but_selected](#advanced_validation_transfer_options_not_available_but_selected)
 
 
 ## Backend storage
@@ -153,8 +154,6 @@ A note about colours;
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
 
-
-
 ## Transfers
 
 * [aup_default](#aup_default)
@@ -206,6 +205,8 @@ A note about colours;
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
 * [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
+* [large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page](#large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page)
+* [create_transfer_uses_bulk_insert_threshold](#create_transfer_uses_bulk_insert_threshold)
 
 ## Graphs
 
@@ -262,6 +263,16 @@ A note about colours;
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
     * [using_local_saml_dbauth](#using_local_saml_dbauth)
     * [auth_warn_session_expired](#auth_warn_session_expired)
+* __OpenIDConnectClient__
+	* [auth_sp_oidc_issuer](#auth_sp_oidc_issuer)
+	* [auth_sp_oidc_client_id](#auth_sp_oidc_client_id)
+	* [auth_sp_oidc_client_secret](#auth_sp_oidc_client_secret)
+  * [auth_sp_oidc_scopes](#auth_sp_oidc_scopes)
+  * [auth_sp_oidc_uid_attribute](#auth_sp_oidc_uid_attribute)
+	* [auth_sp_oidc_email_attribute](#auth_sp_oidc_email_attribute)
+	* [auth_sp_oidc_name_attribute](#auth_sp_oidc_name_attribute)
+  * [auth_sp_oidc_groups_claim](#auth_sp_oidc_groups_claim)
+  * [auth_sp_oidc_required_groups](#auth_sp_oidc_required_groups)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -316,6 +327,7 @@ A note about colours;
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
+* [auth_config_value_regex_files](#auth_config_value_regex_files)
 
 ## Data Protection
 
@@ -802,6 +814,19 @@ $config['rate_limits'] = array(
   //  adds '+' in ASCII
   //  adds special character areas, for example MIDDLE DOT U+30FB
 $config['valid_filename_regex'] = '^['."\u{2010}-\u{2027}\u{2030}-\u{205F}\u{2070}-\u{FFEF}\u{10000}-\u{10FFFF}".' \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*+)(\\]\\[_-]+';
+
+
+### advanced_validation_transfer_options_not_available_but_selected
+* __description:__ Validate that options given by client during transfer creation do not include options that are explicitly not available.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 2.58
+* __comment:__ This will catch explicit nefarious attempts to select options which have no UI elements created for them
+               
+
+
+* [advanced_validation_transfer_options_not_available_but_selected](#advanced_validation_transfer_options_not_available_but_selected)
 
 
 
@@ -2309,7 +2334,35 @@ This is only for old, existing transfers which have no roundtriptoken set.
                will be subdirectories that are calculated from the timestamp in the uuid which may not
                be immediately obvious to a human.
 
+### large_transfer_handling_maximum_files_to_show_inline_on_my_transfers_page
 
+* __description:__ Transfers with more than this many files will not have their files shown on the my transfers page
+* __mandatory:__ no
+* __type:__ int
+* __default:__ -1
+* __available:__ since version 2.58
+* __comment:__ The default -1 is "no limit". One might consider using something like 1000 here for reasonable sizes to limit page load times.
+
+
+### create_transfer_uses_bulk_insert_threshold
+
+* __description:__ Beta feature. When creating transfers with this
+                   many files or more a bulk api to the database will be used to
+                   initialize the transfer
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.58
+* __comment:__ The default 0 will disable the feature. You might like
+               to consider something like 5000. Note that bulk
+               transfers are created without checking in code for
+               conflicts in the generated uuids. The RDBMs will reject
+               duplicate attempts which will cause the bulk upload to
+               fail. That will happen extremely infrequently, see
+               uuidv4 collision probability. If this happens it will
+               happen early in the upload so the user can retry and if
+               they get it again something statistically magical has
+               happened to them.
 
 
 
@@ -2677,15 +2730,15 @@ This is only for old, existing transfers which have no roundtriptoken set.
 
 ### auth_sp_type
 
-* __description:__ which authentication library to use.  saml=SimpleSAMLphp, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
+* __description:__ which authentication library to use.  saml=SimpleSAMLphp, oidc=OpenIDConnectClient, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
 * __mandatory:__ no
 * __type:__ string, keyword
-* __permissible values:__ "saml", "shibboleth", "fake"
+* __permissible values:__ "saml", "oidc", "shibboleth", "fake"
 * __default:__ saml
 * __cookies:__ saml uses them by default
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ <span style="background-color:orange">to use type "fake" you need ...</span>
+* __comment:__ To use type "oidc" please see the dependency and configuration setup instructions listed in the [OpenIDConnectClient](#authentication-openidconnectclient) section. Note that using OIDC also has an impact on the samesite cookie parameter, forcing it to Lax.
 
 
 ### auth_sp_force_session_start_first
@@ -2814,9 +2867,100 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
                The warning does not happen during an upload because the session may expire there and the upload can still complete.
 
+## Authentication: OpenIDConnectClient
 
+---
 
+Note that using OIDC also has an impact on the samesite cookie parameter, forcing it to Lax.
 
+**Optional Dependencies Setup**
+
+To install the optional dependencies for OpenID Connect support:
+
+```
+cd optional-dependencies/oidc
+.. download composer.phar and check it    ...
+.. see https://getcomposer.org/download/  ...
+php composer.phar install
+```
+
+**OpenID Connect Provider Configuration**
+
+Configure the redirect URIs with the following pattern: `https://filesender.example.org/oidc.php`
+
+This should be configured at your OpenID Connect provider's client configuration for the filesender service.
+
+### auth_sp_oidc_issuer
+* __description:__ The URL of the OpenID Connect Issuer. This is the authority that authenticates the user.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__  Example: `https://login.example.com/realms/yourrealm`
+
+### auth_sp_oidc_client_id
+* __description:__ The Client ID registered with the OpenID Connect Issuer.  This identifies your FileSender application to the identity provider.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_client_secret
+* __description:__ The Client Secret associated with the Client ID.  Keep this value confidential.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_scopes
+* __description:__ The OIDC scopes to request during authentication. This allows customization of the information requested from the identity provider.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ ['openid', 'profile', 'email']
+* __available:__ since version 2.57
+* __comment:__ Example: ['openid', 'profile', 'email', 'groups']
+
+### auth_sp_oidc_uid_attribute
+* __description:__ The name of the claim that contains the user's unique identifier.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ sub
+* __available:__ since version 2.57
+* __comment:__  `sub` is a standard claim for the subject identifier.
+
+### auth_sp_oidc_email_attribute
+* __description:__ The name of the claim that contains the user's email address.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ email
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_name_attribute
+* __description:__ The name of the claim that contains the user's full name.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ name
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_groups_claim
+* __description:__ The name of the claim that contains the user's groups.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ groups
+* __available:__ since version 2.57
+* __comment:__ This claim should contain an array of group names the user belongs to.
+
+### auth_sp_oidc_required_groups
+ * __description:__ Array of group names that users must belong to in order to access FileSender.
+ * __mandatory:__ no
+ __type:__ array
+ __default:__ 
+ * __available:__ since version 2.57
+ * __comment:__ If set, users must belong to at least one of these groups to authenticate.
 
 ## Authentication: Shibboleth
 
@@ -2873,6 +3017,8 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__
 * __example:__ $prot.$_SERVER['SERVER_NAME'].'/Shibboleth.sso/Logout?return={target}';
+
+---
 
 ## Authentication: SP_fake
 
@@ -3071,7 +3217,10 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
-* __example:__ <span style="background-color:orange">need an example here!</span>
+* __example:__ 
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+	</code></pre>
 
 ### auth_sp_save_user_additional_attributes
 
@@ -3400,6 +3549,40 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
 	
+### auth_config_additional_regex_files
+* __description:__ This is like auth_config_regex_files but it works on the value(s) in attributes['addtional']. Such attributes can be gathered by setting auth_sp_additional_attributes. Note that you have to explicitly gather these attributes using the auth_sp_additional_attributes config key in order to match against them. 
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: no overrides loaded.
+* __available:__ since version 2.58
+* __1.x name:__
+* __comment:__ example:
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+    
+	$config['auth_config_additional_regex_files'] = [
+		'quota' => [
+			'500mb$' => 'quotafor500mbfile',
+			'10gb$'  => 'quotafor10gbfile',
+		],
+		'eduPersonAffiliation' => [
+			'student$' => 'quotaforstdentfile',
+			'employee$ => 'quotaforemployeefile',
+		],
+    ];
+	</code></pre>
+    
+    If the selected key is an array then each value in that array will
+    be attempted to match in turn. The items are considered in the
+    order presented by the authentication system. So in the below you
+    can match various items in an array 'eduPersonAffiliation' to
+    config files. If a user has a list eduPersonAffiliation =
+    array('student','employee') then both keys will match and employee
+    will be last.
+
+    
+
+
 ###
 
 ---

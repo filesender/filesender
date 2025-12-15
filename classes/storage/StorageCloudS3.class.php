@@ -335,7 +335,7 @@ class StorageCloudS3 extends StorageFilesystem
     public static function getStream(File $file)
     {
         StorageCloudS3Stream::ensureRegistered();
-        $path = "StorageCloudS3Stream://" . $file->uid;
+        $path = self::makeCustomStreamPath( $file, "StorageCloudS3Stream" );
         $fp = fopen($path, "r+");
         stream_set_chunk_size($fp, Config::get('upload_chunk_size'));
         return $fp;
