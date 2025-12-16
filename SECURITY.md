@@ -4,13 +4,13 @@
 
 We provide security updates for the following versions:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 3.x     | ⚠️ Not supported (yet) |
-| 2.x     | ✅ Supported       |
-| < 2.x   | ⚠️ Not supported   |
+| Version | Support Status |
+|---------|----------------|
+| 3.x     | ✅ Supported |
+| 2.x     | ⚠️  Security fixes only |
+| < 2.x   | ❌ Not supported |
 
-We do not provide security patches to any releases below 2.x and expect to start supporting 3.x as soon as the first release is made.
+We do not provide security patches to any releases below 2.x and fully support version 3.x.
 We encourage all users to upgrade to the latest stable release.
 
 ---
