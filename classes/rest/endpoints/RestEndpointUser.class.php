@@ -222,7 +222,7 @@ class RestEndpointUser extends RestEndpoint
             // Compute size used by user's transfers
             $used = array_sum(array_map(function ($t) {
                 return $t->size;
-            }, Transfer::fromUser(Auth::user())));
+            }, Transfer::fromUser($user)));
             
             return array(
                 'total' => $user_quota,
