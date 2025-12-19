@@ -187,6 +187,7 @@ window.filesender.transfer = function() {
     this.uploader = null;
     this.aup_checked = false;
     this.roundtriptoken = '';
+    this.completed_files = 0;
     
     this.watchdog_processes = {};
     
@@ -1079,7 +1080,7 @@ window.filesender.transfer = function() {
      * Report progress
      * 
      * @param object file
-     * @param callable complete is file done
+     * @param bool complete is file done
      */
     this.reportProgress = function(file, complete) {
         var now = (new Date()).getTime();
@@ -1097,35 +1098,9 @@ window.filesender.transfer = function() {
             filesender.ui.log('Uploading ' + file.name + ' (' + file.size + ' bytes) : ' + (100 * uploaded / file.size).toFixed(2) + '%');
         }
         
-        if (complete) {
-            var transfer = this;
-            window.setTimeout(function() {
-                filesender.client.fileComplete(file, undefined, function(data) {
-                    transfer.updateFileInRestartTracker(file);
-                    
-                    if (transfer.onprogress)
-                        transfer.onprogress.call(transfer, file, true);
-                    
-                    complete();
-                }, function(error) {
-                    window.filesender.log("transfer encountered an error: " + JSON.stringify(error));
-                    if (error.message === 'file_integrity_check_failed') {
-                        // reset the file progress to make it retry the whole file
-                        file.fine_progress = 0;
-                        file.fine_progress_done = 0;
-                        file.progress_reported = 0;
-                        file.uploaded = 0;
-                        file.status = '';
-                        file.complete = false;
-                        file.min_uploaded_offset = 0;
-                        transfer.updateFileInRestartTracker(file);
-                        transfer.reportError(error);
-                    }
-                });
-            }, 100);//750);
-        } else if (this.onprogress) {
+        if (this.onprogress) {
             this.updateFileInRestartTracker(file);
-            this.onprogress.call(this, file, false);
+            this.onprogress.call(this, file, complete);
         } else {
 	    window.filesender.log("transfer has not onprogress");
 	}
@@ -1136,21 +1111,25 @@ window.filesender.transfer = function() {
      */
     this.reportComplete = function() {
         if(this.status == 'done') return; // Already reported
-        
-        this.status = 'done';
-        
-        var time = (new Date()).getTime() - this.time; // ms
-        
-        filesender.ui.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
-        
+
         var transfer = this;
         window.setTimeout(function() {
-            filesender.client.transferComplete(transfer, undefined, function(data) {
-                transfer.removeFromRestartTracker();
-                
-                if (transfer.oncomplete)
-                    transfer.oncomplete.call(transfer, time);
-            });
+            if (transfer.completed_files === transfer.files.length) {
+                transfer.status = 'done';
+
+                var time = (new Date()).getTime() - transfer.time; // ms
+
+                filesender.ui.log('Transfer ' + transfer.id + ' (' + transfer.size + ' bytes) complete, took ' + (time / 1000) + 's');
+
+                filesender.client.transferComplete(transfer, undefined, function(data) {
+                    transfer.removeFromRestartTracker();
+
+                    if (transfer.oncomplete)
+                        transfer.oncomplete.call(transfer, time);
+                });
+            } else {
+                transfer.reportComplete();
+            }
         }, 300);//1500); //so it doesnt miss the last chunk
     };
     
@@ -1448,12 +1427,31 @@ window.filesender.transfer = function() {
                 file.uploaded = file_uploaded_when_chunk_complete;
                 
                 if (last) { // File done
-                    transfer.reportProgress(file, function() {
-                        if(was_last_file) {
-                            transfer.reportComplete();
-                        }
-                    });
-                    
+
+                    window.setTimeout(function() {
+                        filesender.client.fileComplete(file, undefined, function(data) {
+                            transfer.reportProgress(file, true);
+                            transfer.completed_files++;
+                        }, function(error) {
+                            window.filesender.log("transfer encountered an error: " + JSON.stringify(error));
+                            if (error.message === 'file_integrity_check_failed') {
+                                // reset the file progress to make it retry the whole file
+                                file.fine_progress = 0;
+                                file.fine_progress_done = 0;
+                                file.progress_reported = 0;
+                                file.uploaded = 0;
+                                file.status = '';
+                                file.complete = false;
+                                file.min_uploaded_offset = 0;
+                                transfer.updateFileInRestartTracker(file);
+                                transfer.reportError(error);
+                            }
+                        });
+                    }, 100);
+
+                    if(was_last_file) {
+                        transfer.reportComplete();
+                    }
                     
                 } else {
                     transfer.reportProgress(file);
