@@ -259,8 +259,8 @@ EOF;
                         <?php
                         
                         makeAction("delete", "fs-button--danger delete", "{tr:delete_transfer}", "fa-trash" );
-                        if($extend) { makeAction("extend", "", "", "fa-calendar-plus-o" ); }  
-                        makeAction("add_recipient", "", "{tr:add_recipient}", "fa-envelope-o" );
+                        if($extend) { makeAction("extend", "", "", "fa-calendar-plus" ); }  
+                        makeAction("add_recipient", "", "{tr:add_recipient}", "fa-envelope-open" );
                         makeAction("details", "", "{tr:details}", "fa-info" );
                         
                         ?>
@@ -270,7 +270,7 @@ EOF;
                         
                         makeAction("remind", "", "{tr:send_reminder}", "fa-repeat" );
                         if($audit) { makeAction("auditlog", "", "{tr:open_auditlog}", "fa-history" ); }
-                        if($showAdminExtend) { makeAction("extendexpires", "", "{tr:extend_expires}", "fa-clock-o" ); }
+                        if($showAdminExtend) { makeAction("extendexpires", "", "{tr:extend_expires}", "fa-clock-rotate-left" ); }
                         
                         ?>
                     </div>
