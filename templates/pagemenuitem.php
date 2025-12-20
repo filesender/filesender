@@ -37,7 +37,7 @@ function pagemenuitem($page) {
         $faicon = 'fa-users';
     }
     if($page == 'upload') {
-        $faicon = 'fa-send';
+        $faicon = 'fa-paper-plane';
     }
     if($page == 'user') {
         $faicon = 'fa-user';

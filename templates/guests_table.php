@@ -78,7 +78,7 @@
                             <i class="fa fa-repeat"></i>
                         </button>
                         <button type="button" class="fs-button fs-button--circle fs-button--no-text forward" title="{tr:resend_invitation}">
-                            <i class="fa fa-envelope-o"></i>
+                            <i class="fa fa-envelope-open"></i>
                         </button>
                     <?php } ?>
                     <button type="button" class="fs-button fs-button--circle fs-button--no-text details" title="{tr:details}">

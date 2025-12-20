@@ -116,7 +116,7 @@ if( $found ) {
                             </li>
                             <li>
                                 <button type="button" class="fs-button forward">
-                                    <i class="fa fa-envelope-o"></i>
+                                    <i class="fa fa-envelope-open"></i>
                                     <span>{tr:resend_invitation}</span>
                                 </button>
                             </li>
