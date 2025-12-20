@@ -100,5 +100,18 @@ class DBView
         return ', (select description from '.$dbconstantTableName
               .' where '.$dbconstantTableName.'.id = '.$baseTableName.'.'.$baseTableColumn.' limit 1) as ' . $baseTableGeneratedColumn.' ';
     }
+
+   public static function cast_as_string(
+       $basecolname
+   ) {
+       $dbtype = Config::get('db_type');
+       
+       if ($dbtype == 'pgsql') {
+           return ' cast(' . $basecolname . '  as varchar) ';
+        }
+        if ($dbtype == 'mysql') {
+           return ' cast(' . $basecolname . '  as char) ';
+        }
+    }    
     
 };

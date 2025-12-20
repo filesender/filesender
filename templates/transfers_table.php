@@ -235,7 +235,7 @@ EOF;
 
             <td data-label="{tr:downloads}">
                 <?php
-                    $dc = count($transfer->downloads);
+                    $dc = $transfer->download_count;
                     echo $dc;
                 ?>
             </td>

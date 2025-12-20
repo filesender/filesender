@@ -209,7 +209,7 @@ class StorageFilesystemExternal extends StorageFilesystem
     public static function getStream(File $file)
     {
         StorageFilesystemExternalStream::ensureRegistered();
-        $path = "StorageFilesystemExternalStream://" . $file->uid;
+        $path = self::makeCustomStreamPath( $file, "StorageFilesystemExternalStream" );
         $fp = fopen($path, "r+");
         return $fp;
     }

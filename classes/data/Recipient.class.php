@@ -222,7 +222,7 @@ class Recipient extends DBObject
         $recipient->created = time();
         
         // Generate token until it is indeed unique
-        $recipient->token = Utilities::generateUID(false, 'Recipient::unicityToken');
+        $recipient->token = Utilities::generateRandomUID('Recipient::unicityToken');
 
         if ($recipient->needForward()) {
             $dest = ForwardAnotherServer::addRecipient($transfer, $email);
