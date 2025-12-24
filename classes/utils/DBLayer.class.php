@@ -142,4 +142,19 @@ class DBLayer
         );
         
     }
+
+    public static function fromVarCharToBigIntCast($exp)
+    {
+        if (self::isPostgress()) {
+            return "cast( $exp as bigint )";
+        }
+        if (self::isMySQL()) {
+            return "cast( $exp as UNSIGNED INTEGER)";
+        }
+        throw new DBIBackendExplicitHandlerUnimplementedException(
+            'SQLUNIMP toViewVarCharToBigIntCast() called on unsupported backend'
+        );
+    }
+    
+
 }

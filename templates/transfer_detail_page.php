@@ -364,7 +364,7 @@ if(empty($transfer->options['encryption'])) {
                                 <?php } ?>
 
                                 <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
-                                    <i class="fa fa-lg fa-envelope-o"></i>
+                                    <i class="fa fa-lg fa-envelope-open"></i>
                                     <span><?php echo Lang::tr('add_recipient') ?></span>
                                 </button>
                                 <br/>
@@ -474,7 +474,7 @@ if(empty($transfer->options['encryption'])) {
 
                     <?php if($extend) { ?>
                         <button type="button" data-action="extend" class="fs-button objectholder" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
-                            <i class="fa fa-calendar-plus-o"></i>
+                            <i class="fa fa-calendar-plus"></i>
                             <span>{tr:extend_expires}</span>
                         </button>                        
                     <?php } ?>

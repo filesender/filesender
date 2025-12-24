@@ -52,7 +52,7 @@ class RestEndpointFile extends RestEndpoint
         return array(
             'id' => $file->id,
             'transfer_id' => $file->transfer_id,
-            'uid' => $file->uid,
+            'puid' => $file->puid,
             'name' => $file->path,
             'size' => $file->size,
             'sha1' => $file->sha1
@@ -243,7 +243,7 @@ class RestEndpointFile extends RestEndpoint
         
         // Check access rights depending on config
         if ($security == 'key') {
-            if (!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid)) {
+            if (!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->puid)) {
                 throw new RestAuthenticationRequiredException();
             }
         } else {
@@ -378,7 +378,7 @@ class RestEndpointFile extends RestEndpoint
 
         // Check access rights depending on config
         if ($security == 'key') {
-            if (!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid)) {
+            if (!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->puid)) {
                 throw new RestAuthenticationRequiredException();
             }
         } else {

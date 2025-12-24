@@ -58,6 +58,7 @@ foreach (Guest::allOptions() as $name => $dfn) {
 $possibleExpireDays = array( 7, 15, 30, 40 );
 array_push( $possibleExpireDays, Config::get('default_guest_days_valid'));
 asort( $possibleExpireDays );
+$possibleExpireDays = array_unique( $possibleExpireDays, SORT_NUMERIC );
 $expireDays = array_filter( $possibleExpireDays, function($k) {
     return $k < Config::get('max_guest_days_valid')
         && $k > Config::get('min_guest_days_valid');

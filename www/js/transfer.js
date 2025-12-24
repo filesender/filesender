@@ -648,7 +648,7 @@ window.filesender.transfer = function() {
         for(var i=0; i<this.files.length; i++) {
             stored.files.push({
                 id: this.files[i].id,
-                uid: this.files[i].uid,
+                puid: this.files[i].puid,
                 cid: this.files[i].cid,
                 size: this.files[i].size,
                 uploaded: 0,
@@ -1053,11 +1053,13 @@ window.filesender.transfer = function() {
      */
     this.authenticatedEndpoint = function(resource, file) {
         var args = {};
-        if(filesender.config.chunk_upload_security == 'key' && (file || (this.files.length && this.files[0].uid))) {
+        if(filesender.config.chunk_upload_security == 'key' && (file || (this.files.length && this.files[0].puid))) {
             if(file) {
-                args.key = file.uid;
-            } else if(this.files.length && this.files[0].uid) {
-                args.key = this.files[0].uid;
+                args.puid = file.puid;
+                args.key = args.puid;
+            } else if(this.files.length && this.files[0].puid) {
+                args.puid = this.files[0].puid;
+                args.key = args.puid;
             }
         }
         
@@ -1071,7 +1073,6 @@ window.filesender.transfer = function() {
         for(var k in args) q.push(k + '=' + args[k]);
         
         if(q.length) resource += (resource.match(/\?/) ? '&' : '?') + q.join('&');
-        
         return resource;
     };
     
@@ -1254,7 +1255,7 @@ window.filesender.transfer = function() {
                         )
                     ) {
                         transfer.files[i].id = data.files[j].id;
-                        transfer.files[i].uid = data.files[j].uid;
+                        transfer.files[i].puid = data.files[j].puid;
                     }
                 }
                 
