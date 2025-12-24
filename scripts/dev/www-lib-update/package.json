@@ -15,7 +15,7 @@
     "bootstrap-icons": "^1.13.1",
     "flag-icons": "^7.5.0",
     "chart.js": "^4.5.0",
-    "font-awesome": "^4.7.0",
+    "@fortawesome/fontawesome-free": "^7.1.0",
     "jquery": "^3.7.1",
     "jquery-ui-dist": "^1.13.3",
     "kbpgp": "^2.1.15",

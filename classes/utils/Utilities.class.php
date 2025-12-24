@@ -52,7 +52,6 @@ class Utilities
     
     /**
      * Generate a unique ID to be used as token.
-     * All generated UUID are version 4.
      *
      * @param bool $timestamped in the future requests a timestamped (uuidv7) or non-timestamped (uuidv4) uid
      * @param callable $unicity_checker callback used to check for uid unicity (takes uid as sole argument, returns bool telling if uid is unique), null if check not needed
@@ -63,7 +62,7 @@ class Utilities
      * @throws UtilitiesUidGeneratorBadUnicityCheckerException
      * @throws UtilitiesUidGeneratorTriedTooMuchException
      */
-    public static function generateUID($timestamped = false, $unicity_checker = null, $max_tries = 1000)
+    private static function generateUID( $timestamped = false, $unicity_checker = null, $max_tries = 1000 )
     {
         // Do we need to generate a unicity-checked random UID ?
         if ($unicity_checker) {
@@ -75,7 +74,7 @@ class Utilities
             // Try to generate until uniquely-checked or max tries reached
             $tries = 0;
             do {
-                $uid = self::generateUID();
+                $uid = self::generateUID($timestamped);
                 $tries++;
             } while (!call_user_func($unicity_checker, $uid, $tries) && ($tries <= $max_tries));
             
@@ -87,8 +86,24 @@ class Utilities
             return $uid;
         }
 
-        $uuid = Ramsey\Uuid\Uuid::uuid4();
+        if( $timestamped ) {
+            $uuid = Ramsey\Uuid\Uuid::uuid7();
+        } else {
+            $uuid = Ramsey\Uuid\Uuid::uuid4();
+        }
         return $uuid->toString();
+    }
+    
+    // uuidv4
+    public static function generateRandomUID( $unicity_checker = null, $max_tries = 1000 )
+    {
+        return self::generateUID( false, $unicity_checker, $max_tries );
+    }
+    
+    // uuidv7 not user facing
+    public static function generateTemporalUID( $unicity_checker = null, $max_tries = 1000 )
+    {
+        return self::generateUID( true, $unicity_checker, $max_tries );
     }
 
     /**
@@ -356,6 +371,8 @@ class Utilities
      *
      * @return string
      */
+    private static $formatBytes_unit = null;
+    
     public static function formatBytes($bytes, $precision = 1)
     {
         // Default
@@ -364,13 +381,16 @@ class Utilities
         }
         // allow sloppy $bytes
         $bytes = floor($bytes);
-        
-        // Variants
-        $unit = Lang::tr('size_unit')->out();
-        if ($unit == '{size_unit}') {
-            $unit = 'b';
+
+        if( !self::$formatBytes_unit ) {
+            // Variants
+            $unit = Lang::tr('size_unit')->out();
+            if ($unit == '{size_unit}') {
+                $unit = 'b';
+            }
+            self::$formatBytes_unit = $unit;
         }
-        
+        $unit = self::$formatBytes_unit;
         $multipliers = array('', 'k', 'M', 'G', 'T');
         
         // Compute multiplier
@@ -583,7 +603,7 @@ class Utilities
         
         if (!$token) { // First access
             $token = array(
-                'value' => Utilities::generateUID(),
+                'value' => Utilities::generateRandomUID(),
                 'valid_until' => time() + self::SECURITY_TOKEN_LIFETIME,
                 'old' => null
             );
@@ -596,7 +616,7 @@ class Utilities
                 'valid_until' => time() + self::OLD_SECURITY_TOKEN_LIFETIME
             );
             
-            $token['value'] = Utilities::generateUID();
+            $token['value'] = Utilities::generateRandomUID();
             $token['valid_until'] = time() + self::SECURITY_TOKEN_LIFETIME;
             
             Logger::debug('Generated new security token, value is '.$token['value'].', valid until '.date('Y-m-d H:i:s', $token['valid_until']));

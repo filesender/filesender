@@ -15,20 +15,16 @@ Current priorities for the Filesender Roadmap are:
 
 ### Priority 1
 
+* Security updates
 * Bugfix release
-* Object-store storage
 * Complete automated CI tests
-* Translation portal
 * Packaging and documentation
-
 
 ### Priority 2
 
 * Smooth UI
 * Statistics
 * Download link protection
-* Improve TeraSender speed and robustness
-* Address-book: link with group info sources
 
 ### Unofficial
 
@@ -145,16 +141,12 @@ stored in the same filesender database.
 https://github.com/filesender/filesender/issues/100
 
 
-### Selenium
-
-Improved UI testing with Selenium and renabling this in github actions.
-
 ### Better documentation and email handling
 
 Clearly documentation is an issue for this. It seems that the bounce
 handling is a great example of an area that documentation can still
-improve. The current [admin configuration](v2.0/admin/configuration/)
-still has much orange "to be checked" areas relating to email.
+improve. The current [admin configuration](v3.0/admin/configuration/)
+still has some orange "to be checked" areas relating to email.
 
 It seems that the cited bounce script is this one scripts/task/
 emailfeedback.php. The emailfeedback.php script is looking at incoming
@@ -218,5 +210,5 @@ Perhaps include previews of files?
 Have a look at the following to see if there are best practices not
 yet followed.
 
-https://github.com/coreinfrastructure/best-practices-badge/blob/master/doc/criteria.md
+https://github.com/coreinfrastructure/best-practices-badge/blob/master3/doc/criteria.md
 

@@ -47,13 +47,20 @@ if(!session_id()) {
     if(!$session_cookie_path) $session_cookie_path = $site_url_parts['path'];
     
     $isSecure = Config::get('force_ssl') || Utilities::httpsInUse();
+
+    // strict cookie settings
+    $samesite = 'Strict';
+    if( Config::get('auth_sp_type') == 'oidc' ) {
+        $samesite = 'Lax';
+    }
+    
     session_set_cookie_params( array(
         'lifetime' => 0,                            // Cookie lives as long as browser isn't closed
         'path'     => $session_cookie_path,         // It is only valid for the filesender app
         'domain'   => $site_url_parts['host'],      // and only for the precise domain
         'secure'   => $isSecure,                    // It uses secure mode if ssl forced or in use
         'httponly' => true,                         // not reachable through javascript
-        'samesite' => 'Strict'                      // strict cookie settings
+        'samesite' => $samesite,
     ));
 }
 

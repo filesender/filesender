@@ -788,4 +788,11 @@ class StorageFilesystem
         $stream = fopen($file_path, 'r');
         return $stream;
     }
+
+    protected static function makeCustomStreamPath( $file, $c )
+    {
+        $path = $c . "://" . $file->uid . "#" . $file->id;
+        return $path;
+    }
+    
 }

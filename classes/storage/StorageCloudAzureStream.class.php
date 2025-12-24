@@ -39,22 +39,12 @@ if (!defined('FILESENDER_BASE')) {
  * Allow reading a chunked file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
-class StorageCloudAzureStream
+class StorageCloudAzureStream extends StorageFilesystemStreamBase
 {
-    protected $offset = 0;
-    protected $uid    = null;
-    protected $gameOver = false;
-    protected $file   = null;
-    
-    public $context = null;
-
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        $url = parse_url($path);
-        $this->offset = 0;
-        $this->uid = $url["host"];
-        $this->file = File::fromUid($this->uid);
-        return true;
+        $rc = parent::stream_open( $path, $mode, $options, $opened_path );
+        return $rc;
     }
 
     public function stream_seek($offset, $whence) {

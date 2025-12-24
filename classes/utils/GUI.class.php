@@ -65,7 +65,8 @@ class GUI
         return self::filterSources(array(
             'lib/select2/select2.min.css',
             'lib/jquery-ui/jquery-ui.min.css',
-            'lib/font-awesome/css/font-awesome.min.css',
+            'lib/font-awesome/css/fontawesome.min.css',
+            'lib/font-awesome/css/solid.min.css',
             'lib/bootstrap/dist/css/bootstrap.min.css',
             'lib/bootstrap-icons/font/bootstrap-icons.css',
             'lib/flag-icons/css/flag-icons.min.css',

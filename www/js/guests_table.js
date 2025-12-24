@@ -76,7 +76,7 @@ $(function() {
             if(table.is('[data-mode!="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 if( days > 0 ) {
-                    var extend = $('<span data-action="extendguestexpires" class="extend fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock-o" />');
+                    var extend = $('<span data-action="extendguestexpires" class="extend fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({
                             days: $(this).closest('.objectholder').attr('data-expiry-extension')
@@ -91,7 +91,7 @@ $(function() {
             if(table.is('[data-mode="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 if( days > 0 ) {
-                    var extend = $('<span data-action="extendexpires" class="extend adminaction fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock-o" />');
+                    var extend = $('<span data-action="extendexpires" class="extend adminaction fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({
                             days: $(this).closest('.objectholder').attr('data-expiry-extension')
@@ -150,7 +150,7 @@ $(function() {
                         if(invalid) {
                             input.addClass('invalid');
                             if(!marker) {
-                                marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+                                marker = $('<span class="invalid fa fa-exclamation-circle " />').attr({
                                     title: lang.tr('invalid_recipient')
                                 });
                                 input.data('error_marker', marker);
@@ -200,7 +200,7 @@ $(function() {
 
     // Errors details
     guests.find('.guest[data-errors="1"] .to .errors').each(function() {
-        $('<span class="details clickable fa fa-lg fa-info-circle" />').appendTo($(this)).attr({
+        $('<span class="details clickable fa  fa-info-circle" />').appendTo($(this)).attr({
             title: lang.tr('details')
         }).on('click', function() {
             var rcpt = $(this).closest('.guest');

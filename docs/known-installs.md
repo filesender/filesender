@@ -23,7 +23,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Europe   | EOSC EU Node | [https://open-science-cloud.ec.europa.eu/services/large-file-transfer](https://open-science-cloud.ec.europa.eu/services/large-file-transfer) | Oct 2024| 25 Apr 2025 |
 | Finland  | FUNET/CSC  | [https://filesender.funet.fi/](https://filesender.funet.fi/)      | Sep 2012| 25 Apr 2025 |
 | France  | RENATER  | [https://filesender.renater.fr/](https://filesender.renater.fr/)    | Nov 2013| 25 Apr 2025 |
-| Hungary  | KIFÜ    | [https://filesender.hu](https://filesender.hu)      | Feb 2012| 25 Apr 2025 |
+| Hungary  | Pro-M   | [https://filesender.hu](https://filesender.hu)      | Feb 2012| 25 Apr 2025 |
 | Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016| 25 Apr 2025 |
 | Ireland  | HEAnet  | [https://filesender.heanet.ie](https://filesender.heanet.ie)      | 2009 | 25 Apr 2025 |
 | Israel  | IUCC  | [https://filesender.iucc.ac.il](https://filesender.iucc.ac.il)      | Jun 2024 | 25 Apr 2025 |
@@ -35,7 +35,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Netherlands  | SURF  | [https://filesender.surf.nl/](https://filesender.surf.nl/)      | Jun 2010| 25 Apr 2025 |
 | Norway  | Sikt  | [https://filesender.sikt.no/](https://filesender.sikt.no/)    | 2009| 25 Apr 2025 |
 | Oman  | OMREN  | [https://mirsal.omren.om/](https://mirsal.omren.om/)   | 2020 | 25 Apr 2025 |
-| Poland  | PSNC/PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013| 25 Apr 2025 |
+| Poland  | PCSS/PIONIER  | [https://files.pionier.net.pl/](https://files.pionier.net.pl/)      | Apr 2013| 25 Apr 2025 |
 | Portugal  | FCCN    | [https://filesender.fccn.pt](https://filesender.fccn.pt)      | Jan 2011| 25 Apr 2025 |
 | Romania | RoEduNet | [https://fisiere.roedu.net/](https://fisiere.roedu.net/) | 2013 | 25 Apr 2025 |
 | Russian Federation | RUNNet | [https://filesender.runnet.ru/](https://filesender.runnet.ru/) | Mar 2018 | 6 Sep 2025 |
@@ -54,7 +54,9 @@ If you want to add your FileSender installation to this list use one of the foll
 | Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021| 25 Apr 2025 |
 | Cyprus  | University of Cyprus | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| 25 Apr 2025 |
 | France  | National Center for Meteorological Research | [https://filesender.umr-cnrm.fr/filesender/](https://filesender.umr-cnrm.fr/filesender/) | Jul 2025 | 30 Jul 2025 |
+| France  | University of Reunion Island | [https://filesender.univ-reunion.fr/filesender/](https://filesender.univ-reunion.fr/filesender/) | Oct 2025 | 2 Nov 2025 |
 | Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://filesender.hifis.dkfz.de/](https://filesender.hifis.dkfz.de/) | Aug 2023| 25 Apr 2025 |
+| Germany  | Johannes Gutenberg University Mainz | [https://filesender.zdv.net/filesender/](https://filesender.zdv.net/filesender/) | Oct 2025 | 2 Nov 2025 |
 | Germany  | Trier University of Applied Sciences | [https://filesender.hochschule-trier.de/filesender/](https://filesender.hochschule-trier.de/filesender/) | Sep 2025 | 6 Sep 2025 |
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018| 25 Apr 2025 |
 | Israel  | Hebrew University of Jerusalem (HUJI)  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 25 Apr 2025 |
@@ -99,6 +101,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Country/Region | Organisation | Service URL | Known since | Last checked |
 | --- | --- | --- |---|---|
 | Canada | Mohawk College | [https://filesender.mohawkcollege.ca/filesender/](https://filesender.mohawkcollege.ca/filesender/) | Jul 2023 | 30 Jul 2025 |
+| USA | Mississippi State University | [https://filesender.msstate.edu/](https://filesender.msstate.edu/) | Oct 2025 | 2 Nov 2025 |
 | USA | Warner College of Natural Resources at Colorado State University | [https://filesender.warnercnr.colostate.edu/filesender/](https://filesender.warnercnr.colostate.edu/filesender/) | Oct 2021 | 30 Jul 2025 |
 
 ## National R&E Services - Africa
@@ -109,9 +112,9 @@ If you want to add your FileSender installation to this list use one of the foll
 | East and South Africa | UbuntuNet Alliance | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | Mar 2018| 25 Apr 2025 |
 | Ethiopia | EthERNet | [https://filesender.ethernet.edu.et/](https://filesender.ethernet.edu.et/) | Oct 2023 | 25 Apr 2025 |
 | Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 | 25 Apr 2025 |
-| Malawi | MAREN | [https://filesender.maren.ac.mw](filesender.maren.ac.mw) | Jul 2025 | 30 Jul 2025 |
+| Malawi | MAREN | [https://filesender.maren.ac.mw](https://filesender.maren.ac.mw) | Jul 2025 | 30 Jul 2025 |
 | Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015| 30 Apr 2025 |
-| Nigeria | NgREN | [https://filesender.ngren.edu.ng](filesender.ngren.edu.ng) | Jul 2025 | 30 Jul 2025
+| Nigeria | NgREN | [https://filesender.ngren.edu.ng](https://filesender.ngren.edu.ng) | Jul 2025 | 30 Jul 2025
 | Somalia | SomaliREN | [https://filesender.somaliren.org.so/filesender/](https://filesender.somaliren.org.so/filesender/) | May 2022 | 25 Apr 2025 |
 | South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014| 25 Apr 2025 |
 | Tanzania  | TERNET | [https://filesender.ternet.or.tz/](https://filesender.ternet.or.tz/) | May 2023 | 25 Apr 2025 |
@@ -127,7 +130,10 @@ If you want to add your FileSender installation to this list use one of the foll
 | France | Occitania Regional Council | [https://filesender.laregion.fr/](https://filesender.laregion.fr/) | Jun 2025 | 23 Jun 2025 |
 | France | Regional e-Health Development Support Group Bourgogne-Franche-Comté | [https://filesender.bfc-sante.fr/](https://filesender.bfc-sante.fr/) | Jul 2025 | 30 Jul 2025 |
 | France | SEM Plaine Commune Development | [https://filesender.semplaine.fr/](https://filesender.semplaine.fr/) | Jul 2025 | 30 Jul 2025 |
+| Italy | Religious community | [https://filesender.salesianinordest.it/](https://filesender.salesianinordest.it/) | Oct 2025 | 2 Nov 2025 |
 | Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 25 Apr 2025 |
+| Norway | Municipality digital services in Sunnmøre | [https://filesender.esunnmore.no/filesender/](https://filesender.esunnmore.no/filesender/) | Oct 2025 | 2 Nov 2025 |
+| Vatican | Congregation for the Evangelization of Peoples | [https://filesender.evang.va/](https://filesender.evang.va/) | Oct 2025 | 2 Nov 2025 |
 
 
 ## Unreachable installations

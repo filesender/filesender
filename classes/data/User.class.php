@@ -258,7 +258,7 @@ class User extends DBObject
     }
 
     public function authSecretCreate() {
-        $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
+        $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateRandomUID());
         $this->auth_secret_created = time();
         $this->save();
     }
@@ -777,7 +777,7 @@ class User extends DBObject
         }
         
         if ($property == 'remote_config') {
-            return $this->auth_secret ? Config::get('site_url').'|'.$this->id.'|'.$this->auth_secret : '';
+            return $this->auth_secret ? Config::get('site_url').'|'.$this->saml_user_identification_uid.'|'.$this->auth_secret : '';
         }
         
         if ($property == 'identity') {
