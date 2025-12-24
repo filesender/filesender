@@ -513,7 +513,7 @@ if(
     Config::get('auth_remote_user_enabled') &&
     Auth::user()->auth_secret
 ) {
-    $code = substr(Utilities::generateUID(), -6);
+    $code = substr(Utilities::generateRandomUID(), -6);
 
     $_SESSION['remote_auth_sync_request'] = array(
         'code' => $code,
