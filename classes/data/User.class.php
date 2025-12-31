@@ -721,7 +721,7 @@ class User extends DBObject
         }
         
         if ($property == 'remote_config') {
-            return $this->auth_secret ? Config::get('site_url').'|'.$this->id.'|'.$this->auth_secret : '';
+            return $this->auth_secret ? Config::get('site_url').'|'.$this->saml_user_identification_uid.'|'.$this->auth_secret : '';
         }
         
         if ($property == 'identity') {

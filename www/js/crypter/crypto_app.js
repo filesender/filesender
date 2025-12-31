@@ -497,7 +497,6 @@ window.filesender.crypto_app = function () {
             var key_version = encryption_details.key_version;
             $this.setCipherAlgorithm( key_version );
             
-
             var pbkdf2details = {
                 password:    encryption_details.password,
                 key_version: encryption_details.key_version,
@@ -1319,32 +1318,106 @@ window.filesender.crypto_app = function () {
             window.filesender.log('Newer streaming API information.'
                                   + ' Use streamsaver: ' + window.filesender.config.use_streamsaver
                                   + ' use FileSystemWritableFileStream (FSWF) ' + window.filesender.config.useFileSystemWritableFileStreamForDownload());
-            /*
-             * As of 2023 we can use either streamsaver or FileSystemWritableFileStream
-             * to stream the contents to a file on disk. Note that the final else case is already
-             * attended to above as blobSink is already a blobSinkLegacy
-             */
-            if( window.filesender.config.useFileSystemWritableFileStreamForDownload()) {
-                window.filesender.log('Using FSWF code for storing data...' );
-                blobSinkStreamed = window.filesender.filesystemwritablefilestream_sink( name, filesize, callbackError );
-                blobSink = blobSinkStreamed;
-            } else if( window.filesender.config.use_streamsaver ) {
-                window.filesender.log('Using new StreamSaver code for storing data...' );
-                blobSinkStreamed = window.filesender.streamsaver_sink( name, filesize, callbackError );
-                blobSink = blobSinkStreamed;
-            }
-            window.filesender.log("Using blobSink " + blobSink.name());
+
+            var canFallbackFromFSWF = function(error) {
+                if( !error ) return false;
+                var fallbackNames = ['NotAllowedError','SecurityError'];
+                if( error.name && fallbackNames.indexOf(error.name) >= 0 ) {
+                    return true;
+                }
+                if( error.name === 'TypeError' ) {
+                    // API missing or not available in this context
+                    return true;
+                }
+                if( error.message && error.message.indexOf('showSaveFilePicker') >= 0 ) {
+                    return true;
+                }
+                return false;
+            };
+
+            var selectPreferredSink = async function() {
+                var fswfError = null;
+
+                if( window.filesender.config.useFileSystemWritableFileStreamForDownload()) {
+                    try {
+                        window.filesender.log('Attempting FSWF sink...');
+                        var fswfSink = window.filesender.filesystemwritablefilestream_sink( name, filesize, callbackError );
+                        await fswfSink.init();
+                        window.filesender.log('FSWF sink ready.');
+                        return { sink: fswfSink, method: 'fswf' };
+                    } catch (error) {
+                        if( canFallbackFromFSWF(error) ) {
+                            fswfError = error;
+                            window.filesender.log('FSWF sink unavailable, will try fallback. ' + error);
+                        } else {
+                            throw error;
+                        }
+                    }
+                }
+
+                if( window.filesender.config.use_streamsaver && typeof streamSaver !== 'undefined' && window.filesender.streamsaver_sink ) {
+                    try {
+                        window.filesender.log('Attempting StreamSaver sink...');
+                        var streamSink = window.filesender.streamsaver_sink( name, filesize, callbackError );
+                        await streamSink.init();
+                        window.filesender.log('StreamSaver sink ready.');
+                        return { sink: streamSink, method: 'streamsaver', originError: fswfError };
+                    } catch (error) {
+                        window.filesender.log('StreamSaver sink unavailable, will fallback to legacy. ' + error);
+                        return { sink: blobSinkLegacy, method: 'legacy', originError: error, fswfError: fswfError };
+                    }
+                }
+
+                if( fswfError ) {
+                    return { sink: blobSinkLegacy, method: 'legacy', originError: fswfError };
+                }
+
+                return { sink: blobSinkLegacy, method: 'legacy' };
+            };
             
             var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
                 window.filesender.crypto_last_password = pass;
-                
-                $this.decryptDownloadToBlobSink( blobSink, pass, transferid, chunk_size, crypted_chunk_size,
-                                                 link, mime, name, filesize, encrypted_filesize,
-                                                 key_version, salt,
-                                                 password_version, password_encoding, password_hash_iterations,
-                                                 client_entropy, fileiv, fileaead,
-                                                 progress);
+
+                var startWithSink = function(selection) {
+                    blobSink = selection.sink;
+                    blobSinkStreamed = selection.sink;
+
+                    if( selection.method !== 'fswf' ) {
+                        var notifyMsg = null;
+                        if( selection.method === 'streamsaver' && selection.originError ) {
+                            notifyMsg = window.filesender.config.language.download_fallback_streamsaver || 'Falling back to StreamSaver download.';
+                        }
+                        if( selection.method === 'legacy' && selection.originError ) {
+                            notifyMsg = window.filesender.config.language.download_fallback_legacy || 'Falling back to browser-based download.';
+                        }
+                        if( notifyMsg ) {
+                            window.filesender.ui.notify('info', notifyMsg);
+                        }
+                    }
+
+                    window.filesender.log('Using blobSink ' + blobSink.name());
+
+                    $this.decryptDownloadToBlobSink( blobSink, pass, transferid, chunk_size, crypted_chunk_size,
+                                                     link, mime, name, filesize, encrypted_filesize,
+                                                     key_version, salt,
+                                                     password_version, password_encoding, password_hash_iterations,
+                                                     client_entropy, fileiv, fileaead,
+                                                     progress);
+                };
+
+                selectPreferredSink()
+                    .then(function(selection) {
+                        startWithSink(selection);
+                    })
+                    .catch(function(error) {
+                        if( error && error.name === 'AbortError' ) {
+                            window.filesender.log('User cancelled save dialog, aborting download.');
+                            return;
+                        }
+                        window.filesender.log('Falling back to legacy sink after unexpected error selecting sink: ' + error);
+                        startWithSink({ sink: blobSinkLegacy, method: 'legacy' });
+                    });
             }, function(){
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
             });
@@ -1439,6 +1512,10 @@ window.filesender.crypto_app = function () {
                         blobSink.downloadNext();
                     })
                     .catch( e => {
+                        if( e && e.name === 'AbortError' ) {
+                            window.filesender.log('User cancelled save dialog for archive download.');
+                            return;
+                        }
                         callbackError(e);
                     });
 
