@@ -433,6 +433,8 @@ class Utilities
      */
     public static function sanitizeOutput($output)
     {
+        if(!$output)
+            return $output;
         return htmlentities($output, ENT_QUOTES, 'UTF-8');
     }
 
