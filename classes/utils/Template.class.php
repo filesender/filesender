@@ -223,6 +223,9 @@ class Template
      */
     public static function sanitize($data)
     {
+        if($data === null) {
+            return $data;
+        }
         return str_replace(array('{', '}'), array('&#123;', '&#125;'), $data);
     }
     
