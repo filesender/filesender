@@ -411,6 +411,15 @@ $default = array(
 
 
     'create_transfer_uses_bulk_insert_threshold' => 0,    
+
+
+
+    'advanced_validation_create_transfer' => true,
+    'advanced_validation_create_guest' => true,
+    'advanced_validation_token' => true,
+    'advanced_validation_user' => true,
+    'advanced_validation_principal' => true,
+    
     
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',

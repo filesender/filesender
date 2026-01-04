@@ -433,6 +433,7 @@ class RestEndpointTransfer extends RestEndpoint
         
         return $out;
     }
+
     
     /**
      * Create new transfer or add recipient to an existing transfer
@@ -530,6 +531,81 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Raw data
             $data = $this->request->input;
+
+            
+            if( Utilities::isTrue(Config::get('advanced_validation_create_transfer'))) {
+                
+                $data->encryption = Validate::filter_var_bool("encryption", $data->encryption);
+                $data->encryption_key_version = Validate::filter_var_regex_log(
+                    "transfer.encryption_key_version",
+                    $data->encryption_key_version,
+                    "|^[0-9]+$|" );
+                $data->encryption_password_encoding = Validate::filter_var_regex_log(
+                    "transfer.encryption_password_encoding",
+                    $data->encryption_password_encoding,
+                    '/^(none|base64|ascii85)$/' );
+                $data->encryption_password_version = Validate::filter_var_regex_log(
+                    "transfer.encryption_password_version",
+                    $data->encryption_password_version,
+                    "|^[0-9]+$|"  );
+                $data->encryption_password_hash_iterations = Validate::filter_var_regex_log(
+                    "transfer.encryption_password_hash_iterations",
+                    $data->encryption_password_hash_iterations,
+                    "|^[0-9]{1,15}$|"  );
+                $data->encryption_client_entropy = Validate::filter_var_regex_log(
+                    "transfer.encryption_client_entropy",
+                    $data->encryption_client_entropy,
+                    "|^[-A-Za-z0-9+/]*={0,3}$|"  );
+                foreach ($data->files as $d) {
+                    $d->name = Validate::filter_var_regex_log(
+                        "transfer.files.name",
+                        $d->name,
+                        '/^.*$/'  );
+                    $d->size = Validate::filter_var_regex_log(
+                        "transfer.files.size",
+                        $d->size,
+                        "|^[0-9]+$|"  );
+                    $d->mime_type = Validate::filter_var_mimetype(
+                        "transfer.files.mime_type",
+                        $d->mime_type );
+                    $d->cid = Validate::filter_var_regex_log(
+                        "transfer.files.cid",
+                        $d->cid,
+                        '/^file_[0-9]+_[0-9]+_[0-9]+_$/'  ); 
+                    $d->iv = Validate::filter_var_regex_log(
+                        "transfer.files.iv",
+                        $d->iv,
+                        '|^[-A-Za-z0-9+/]*={0,3}$|'  ); 
+                    $d->aead = Validate::filter_var_regex_log(
+                        "transfer.files.aead",
+                        $d->aead,
+                        '|^[-A-Za-z0-9+/]*={0,3}$|'  );
+                    
+                }            
+                
+                $r = Utilities::ensureArray($data->recipients);
+                foreach ($r as $email) {
+                    $value = Validate::filter_var_email( "recipients.email", $email );
+                    if($value == "" ) {
+                        Validate::filter_var_log("transfer.recipients email");
+                        $data->recipients = array();
+                        break;
+                    }
+                }
+                
+                $data->subject = Validate::filter_var_regex_log(
+                    "transfer.subject",
+                    $data->subject,
+                    '/^.*$/'  );
+                $data->lang = Validate::filter_var_lang(
+                    "transfer.lang",
+                    $data->lang );
+                $data->expires = Validate::filter_var_regex_log(
+                    "transfer.expires", $data->expires,
+                    "|^[0-9]{1,32}$|"  );
+                $data->aup_checked = Validate::filter_var_bool("aup_checked", $data->aup_checked);
+            }
+            
             
             // Is it created by a guest ?
             $guest = null;
@@ -938,6 +1014,8 @@ class RestEndpointTransfer extends RestEndpoint
                                             ["options" => ["regexp" => "|^[-A-Za-z0-9+/]*={0,3}$|" ]] );                
 
 
+                $file = null;
+
                 if( $usebulk ) {
 
                     $puid = Utilities::generateRandomUID();
@@ -958,8 +1036,10 @@ class RestEndpointTransfer extends RestEndpoint
                     $file = $transfer->addFile( $filedata->name, $filedata->size, $filedata->mime_type,
                                                 $filedata->iv, $filedata->aead, $filedata->forward_id );
                 }
-                
-                $files_cids[$file->id] = $filedata->cid;
+
+                if($file) {
+                    $files_cids[$file->id] = $filedata->cid;
+                }
             }
 
             // recheck that get_a_link is not being attempted
@@ -1085,8 +1165,11 @@ class RestEndpointTransfer extends RestEndpoint
                 $puid = null;
                 
                 if ($data->sendVerificationCodeToYourEmailAddress || $data->checkVerificationCodeWithServer) {
+                    if( Utilities::isTrue(Config::get('advanced_validation_token'))) {
+                        $data->token = Validate::filter_var_token( "token", $data->token );
+                    }
                     $token = $data->token;
-                    
+                        
                     if(!Utilities::isValidUID($token)) {
                         throw new Exception();
                     }
@@ -1210,6 +1293,9 @@ class RestEndpointTransfer extends RestEndpoint
             $pass = bin2hex($bytes);
             
             $rid = 0;
+            if( Utilities::isTrue(Config::get('advanced_validation_token'))) {
+                $data->token = Validate::filter_var_token( "token", $data->token );
+            }
             $token = $data->token;
                 
             if(Utilities::isValidUID($token)) {

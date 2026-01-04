@@ -174,6 +174,24 @@ class RestEndpointGuest extends RestEndpoint
         // Raw guest data
         $data = $this->request->input;
 
+        if( Utilities::isTrue(Config::get('advanced_validation_create_guest')))
+        {
+            $data->from = Validate::filter_var_email(
+                "guest.from",
+                $data->from );
+            $data->recipient = Validate::filter_var_email(
+                "guest.recipient",
+                $data->recipient );
+            $data->subject = Validate::filter_var_regex_log(
+                "transfer.subject",
+                $data->subject,
+                '/^.*$/'  );
+            $data->expires = Validate::filter_var_regex_log(
+                "transfer.expires", $data->expires,
+                "|^[0-9]{1,32}$|"  );
+        }
+
+
         // Check Guest creation limits
         $existingGuests = Guest::fromUserAvailable($user);
         if (count($existingGuests) >= Config::get('guest_limit_per_user')) {
