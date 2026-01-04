@@ -81,6 +81,12 @@ class RestEndpointPrincipal extends RestEndpoint
         
         if( $data->service_aup_version ) {
 
+            if( Utilities::isTrue(Config::get('advanced_validation_principal'))) {
+                $data->service_aup_version = Validate::filter_var_number(
+                    "service_aup_version",
+                    $data->service_aup_version );
+            }
+        
             if( $data->service_aup_version != Config::get('service_aup_min_required_version')) {
                 throw new RestBadParameterException('service_aup_version');
             }
