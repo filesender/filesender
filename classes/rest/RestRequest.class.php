@@ -173,4 +173,9 @@ class RestInput
         
         return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
+
+    public function __set($key, $v)
+    {
+        $this->data[$key] = $v;
+    }
 }

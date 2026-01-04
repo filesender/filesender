@@ -298,8 +298,14 @@ class RestEndpointUser extends RestEndpoint
         
         // Update data
         $data = $this->request->input;
-        
+
         if ($data->lang) {
+            if( Utilities::isTrue(Config::get('advanced_validation_user'))) {
+                $data->lang = Validate::filter_var_lang(
+                    "user.lang",
+                    $data->lang );
+            }
+            
             // Lang property update, fail if not allowed
             
             if (!Config::get('lang_userpref_enabled')) {
@@ -349,6 +355,12 @@ class RestEndpointUser extends RestEndpoint
             if (!Auth::isAdmin()) {
                 throw new RestAdminRequiredException();
             }
+            if( Utilities::isTrue(Config::get('advanced_validation_user'))) {
+                $data->guest_expiry_default_days = Validate::filter_var_number(
+                    "user.lang",
+                    $data->guest_expiry_default_days );
+            }
+            
             $user->guest_expiry_default_days = $data->guest_expiry_default_days;
             $user->save();
             
