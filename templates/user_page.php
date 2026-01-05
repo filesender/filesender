@@ -165,12 +165,9 @@ $user = Auth::user();
                         <?php
                         if (Auth::isAuthenticated() && Auth::isSP())
                         {
-                            $faicon = 'fa-sign-out';
-                            $icon = '<i class="fa '.$faicon.'"></i> ';
-
                             $url = AuthSP::logoffURL();
                             if($url) {
-                                echo '<a class="fs-button fs-button--danger" href="'.Utilities::sanitizeOutput($url).'">'.$icon.Lang::tr('logoff').'</a>';
+                                echo '<a class="fs-button fs-button--danger" href="'.Utilities::sanitizeOutput($url).'"><i class="fa fa-sign-out"></i> '.Lang::tr('logoff').'</a>';
                             }
                         }
                         ?>
@@ -480,6 +477,7 @@ EOF;
                                     }
                                     ?>
                                             <button type="button" id="api_secret_delete" class="fs-button">
+                                                <i class="fa fa-download"></i>
                                                 {tr:download_python_cli}
                                             </button>
                                         </a>
@@ -487,6 +485,7 @@ EOF;
                                     <li>
                                         <a href="{config:site_url}rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
                                             <button type="button" id="api_secret_delete" class="fs-button">
+                                                <i class="fa fa-download"></i>
                                                 {tr:download_python_cli_configuration}
                                             </button>
                                         </a>
@@ -522,8 +521,6 @@ if(
 
     echo '<span data-remote-auth-sync-request="'.$code.'">'.Utilities::sanitizeOutput($_REQUEST['remote_auth_sync_request']).'</span>';
 }
-
 ?>
-
 
 <script type="text/javascript" src="{path:js/user_page.js}"></script>
