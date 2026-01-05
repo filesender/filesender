@@ -1094,7 +1094,7 @@ EOF;
                 <?php if(!Auth::isGuest()) { ?>
                 <div class="fs-transfer__upload-actions">
                     <a id="detail-link" href=""type="button" class="fs-button fs-button--info" role="button">
-                        <i class="fa fa-file-text-o"></i>
+                        <i class="fa fa-file-lines"></i>
                         {tr:transfer_details}
                     </a>
                     <a href="?s=transfers" class="fs-button fs-button--info" role="button">
