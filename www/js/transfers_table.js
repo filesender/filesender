@@ -344,7 +344,7 @@ $(function() {
 
             var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(lang.tr('send_to_my_email'));
             $('<p>&nbsp;</p>').prependTo(send_by_email);
-            $('<span class="fa fa-lg fa-envelope-o" />').prependTo(send_by_email);
+            $('<span class="fa fa-lg fa-envelope" />').prependTo(send_by_email);
             send_by_email.appendTo(actions)
             send_by_email.on('click', function(e) {
                 e.stopPropagation();

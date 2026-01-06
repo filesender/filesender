@@ -267,7 +267,7 @@ if(empty($transfer->options['encryption'])) {
                                                 <?php } ?>
 
                                                 <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text download" title="{tr:delete}">
-                                                    <i class="fa fa-trash-o"></i>
+                                                    <i class="fa fa-trash"></i>
                                                 </span>
 
                                                 <?php if($audit) { ?>
