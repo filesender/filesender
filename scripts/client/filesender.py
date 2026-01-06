@@ -791,7 +791,7 @@ try:
     #Prepare files for transfer
     if f['size'] == 0: #f size can be 0 because of directories, these can be safely skipped.
       continue
-    transfer['files'][indexOfFile]['p_total_chunks'] = ceil(f['size']/upload_chunk_size)
+    transfer['files'][indexOfFile]['p_total_chunks'] = ceil(int(f['size'])/upload_chunk_size)
     transfer['files'][indexOfFile]['p_progressed_chunks'] = 0
     path = files[f['name']+':'+str(f['size'])]['path']
     size = files[f['name']+':'+str(f['size'])]['size']
