@@ -221,12 +221,12 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 }
 
 
-$possibleExpireDays = array( 7, 15, 30, 40 );
+$possibleExpireDays = Config::get('selectable_transfer_days_valid');
 array_push( $possibleExpireDays, Config::get('default_transfer_days_valid'));
 asort( $possibleExpireDays );
 $possibleExpireDays = array_unique( $possibleExpireDays, SORT_NUMERIC );
 $expireDays = array_filter( $possibleExpireDays, function($k) {
-    return $k < Config::get('max_transfer_days_valid');
+    return $k <= Config::get('max_transfer_days_valid');
 });
 $expireDaysSelected = Config::get('default_transfer_days_valid');
 if( !in_array( $expireDaysSelected, $expireDays )) {

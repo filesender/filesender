@@ -172,6 +172,7 @@ A note about colours;
 * [ban_extension](#ban_extension)
 * [chunk_upload_security](#chunk_upload_security)
 * [default_transfer_days_valid](#default_transfer_days_valid)
+* [selectable_transfer_days_valid](#selectable_transfer_days_valid)
 * [max_transfer_days_valid](#max_transfer_days_valid)
 * [allow_transfer_expiry_date_extension](#allow_transfer_expiry_date_extension)
 * [allow_transfer_expiry_date_extension_admin](#allow_transfer_expiry_date_extension_admin)
@@ -246,6 +247,7 @@ A note about colours;
 * [guest_options](#guest_options)
 * [guest_options_to_force_to_top_array](#guest_options_to_force_to_top_array)
 * [default_guest_days_valid](#default_guest_days_valid)
+* [selectable_guest_days_valid](#selectable_guest_days_valid)
 * [min_guest_days_valid](#min_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
 * [max_guest_recipients](#max_guest_recipients)
@@ -1814,6 +1816,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__ default_daysvalid
 * __comment:__ Be aware of the changed semantic from 1.6 to 2.0.
 
+### selectable_transfer_days_valid
+
+* __description:__ specifies the list of selectable expiry date options in the "Expiry date" date picker in the Upload form. Users can choose from these options to set the expiry date for the transfer.
+* __mandatory:__ no
+* __type:__ an array of integers
+* __default:__ array( 7, 15, 30, 40 )
+* __available:__ since version 3.4
+* __1.x name:__
+* __comment:__
+
 ### max_transfer_days_valid
 
 * __description:__ specifies the maximum expiry date for a transfer.  A user can not choose a larger value than this.
@@ -2709,6 +2721,16 @@ This conflicts with the code in 'advanced' => false but is a hard coded option t
 * __type:__ int
 * __default:__ same as default_transfer_days_valid
 * __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+### selectable_guest_days_valid
+
+* __description:__ specifies the list of selectable expiry date options in the "Expiry date" date picker in the Guest form. Users can choose from these options to set the expiry date for the guest invitation.
+* __mandatory:__ no
+* __type:__ an array of integers
+* __default:__ array( 7, 15, 30, 40 )
+* __available:__ since version 3.4
 * __1.x name:__
 * __comment:__
 
