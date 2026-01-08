@@ -430,7 +430,7 @@ class File extends DBObject
 
         // add natural, human sorting, in both databases
         if ($dbtype == 'pgsql') {
-            $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS INT) ";
+            $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS BIGINT) ";
         }
         if ($dbtype == 'mysql') {
             $sql .= " NATURAL_SORT_KEY(name) ";
