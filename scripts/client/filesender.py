@@ -181,7 +181,7 @@ except requests.exceptions.SSLError as exc:
     print(exc)
     print('Running with --insecure flag, ignoring warning...')
     info_response = requests.get(base_url+'/info', verify=False)
-    config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
+    config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=False)
 
 upload_chunk_size = info_response.json()['upload_chunk_size']
 
