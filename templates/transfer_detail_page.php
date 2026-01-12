@@ -83,6 +83,15 @@ $archiveDownloadLink = '#';
 $archiveDownloadLinkFileIDs = '';
 
 if(empty($transfer->options['encryption'])) {
+
+    $token = '';
+    if(array_key_exists('token', $_REQUEST)) {
+        $token = $_REQUEST['token'];
+    }
+    if(!Utilities::isValidUID($token)) {
+        $token = '';
+    }
+
     $fileIds = array();
     foreach($transfer->files as $file) {
         $downloadLinks[$file->id] = Utilities::http_build_query(array(
@@ -95,6 +104,9 @@ if(empty($transfer->options['encryption'])) {
         'token' => $token,
     ), 'download.php?' );
     $archiveDownloadLinkFileIDs = implode(',', $fileIds);
+
+    // forget this here to limit scope.
+    $token = '';
 }
 
 ?>
