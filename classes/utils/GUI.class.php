@@ -476,7 +476,7 @@ class GUI
         foreach(array_slice($transfer->files, 0, $maxfiles) as $file) {
             $name = $file->path;
             
-            $dlcount = $transfer->downloads;
+            $dlcount = $transfer->download_count;
             if( !$accountForDL ) {
                 // do not leak this info on some pages                
                 $dlcount = 0;
