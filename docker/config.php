@@ -46,7 +46,9 @@
 // ---------------------------------------------
 //
 $config['force_ssl'] = false;
-$config['default_timezone'] = 'Europe/London';
+$config['default_timezone'] = getenv('FILESENDER_DEFAULT_TIMEZONE');
+$config['maintenance'] = false;
+$config['auth_remote_user_enabled'] = false;
 //$config['site_url'] = 'https://127.0.0.1/filesender';                // String, URL of the application
 $config['site_url'] = getenv('FILESENDER_SITE_URL');                // String, URL of the application
 //
@@ -110,21 +112,21 @@ $config['auth_sp_saml_simplesamlphp_location'] ='/opt/filesender/simplesamlphp/'
 $config['auth_sp_type'] = 'saml';
 //
 // // Get email attribute from authentication service
-// $config['auth_sp_saml_email_attribute'] = 'mail';
+$config['auth_sp_saml_email_attribute'] = 'mail';
 //
 // // Get name attribute from authentication service
-// $config['auth_sp_saml_name_attribute'] = 'cn';
+$config['auth_sp_saml_name_attribute'] = 'cn';
 //
-// $config['auth_sp_saml_uid_attribute'] = 'pairwise-id';
+$config['auth_sp_saml_uid_attribute'] = 'pairwise-id';
 //
 // // Attribute to use for entitlement. Usually eduPersonEntitlement or isMemberOf
-// $config['auth_sp_saml_entitlement_attribute'] = 'eduPersonEntitlement';
+$config['auth_sp_saml_entitlement_attribute'] = 'eduPersonEntitlement';
 //
 // // Also make sure the above addtional attribute is actually retrieved
-// $config['auth_sp_additional_attributes'] = array('eduPersonEntitlement');
+$config['auth_sp_additional_attributes'] = array('eduPersonEntitlement');
 //
 // // What entitlement value denotes the admin privilege
-// $config['auth_sp_saml_admin_entitlement'] = 'urn:x-geant:eduteams.org:filesender:admin';
+$config['auth_sp_saml_admin_entitlement'] = 'urn:x-geant:eduteams.org:filesender:admin';
 //
 // // Get path  attribute from authentication service
 // $config['auth_sp_saml_authentication_source'] = 'default-sp';

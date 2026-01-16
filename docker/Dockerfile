@@ -6,10 +6,8 @@ LABEL version="0.1.0" \
       documentation="https://docs.filesender.org"
 
 ENV FILESENDER_VERSION=3.3 \
-    FILESENDER_SUM="ef6da83e7ac46303e5f8d620f6858565fd746d7c4b054a12439a561d79b515a2" \
-    SSP_VERSION=1.19.5 \
-    SSP_VERSION_SUM="ab1a71a4eed2c086774829d47ce72137e4d1a7bd6b8a2535b4a1ddfd6e7da51f" \
-    FILESENDER_SITE_URL="http://localhost:8080" \
+    SSP_VERSION=2.4.4 \
+    FILESENDER_SITE_URL="http://localhost" \
     FILESENDER_ADMIN="root@localhost.localdomain" \
     FILESENDER_ADMIN_EMAIL="root@localhost.localdomain" \
     FILESENDER_EMAIL_REPLY_TO="" \
@@ -20,7 +18,8 @@ ENV FILESENDER_VERSION=3.3 \
     FILESENDER_DB_PASSWORD="" \
     FILESENDER_DB_USERNAME_ADMIN="filesenderadmin" \
     FILESENDER_DB_PASSWORD_ADMIN="" \
-    FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL="http://localhost:8080/simplesamlphp/"
+    FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL="http://localhost/simplesamlphp/" \
+    FILESENDER_DEFAULT_TIMEZONE="Europe/Stockholm"
 
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
@@ -40,7 +39,7 @@ RUN cd /opt && mkdir filesender && \
     mv filesender-${FILESENDER_VERSION} filesender
 
 RUN cd /opt/filesender && \
-    wget -O simplesamlphp.tar.gz https://github.com/simplesamlphp/simplesamlphp/releases/download/v${SSP_VERSION}/simplesamlphp-${SSP_VERSION}.tar.gz && \
+    wget -O simplesamlphp.tar.gz https://github.com/simplesamlphp/simplesamlphp/releases/download/v${SSP_VERSION}/simplesamlphp-${SSP_VERSION}-slim.tar.gz && \
     tar xzf simplesamlphp.tar.gz && \
     mv simplesamlphp-${SSP_VERSION} simplesamlphp
 
@@ -48,25 +47,26 @@ ADD config.php /opt/filesender/filesender/config/config.php
 
 RUN cd /opt/filesender/filesender && \
     # cp config/config_sample.php config/config.php && \
-    mkdir -p tmp files log && \
+    mkdir -p tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin && \
     chmod o-rwx tmp files log config/config.php && \
-    chown www-data:www-data tmp files log && \
+    chown www-data:www-data tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin && \
     chgrp www-data config/config.php && \
-    cd /opt/filesender/simplesamlphp && \
-    cp -r config-templates/*.php config/ && \
-    cp -r metadata-templates/*.php metadata/
+    cd /opt/filesender/simplesamlphp
 
 RUN mkdir -p /config/fpm /config/filesender /config/simplesamlphp/config /config/simplesamlphp/metadata && \
     mv -f /usr/local/etc/php-fpm.d/www.conf /config/fpm/www.conf && \
     mv -f /opt/filesender/filesender/config/config.php /config/filesender/config.php && \
-    mv -f /opt/filesender/simplesamlphp/config/*.php /config/simplesamlphp/config/ && \
-    mv -f /opt/filesender/simplesamlphp/metadata/*.php /config/simplesamlphp/metadata/ && \
+    mv -f /opt/filesender/simplesamlphp/config/*.php.dist /config/simplesamlphp/config/ && \
+    mv -f /opt/filesender/simplesamlphp/metadata/*.php.dist /config/simplesamlphp/metadata/ && \
     ln -s /config/fpm/www.conf /usr/local/etc/php-fpm.d/filesender.conf && \
     ln -s /config/filesender/config.php /opt/filesender/filesender/config/config.php && \
-    ln -s /config/simplesamlphp/config/acl.php /opt/filesender/simplesamlphp/config/acl.php && \
-    ln -s /config/simplesamlphp/config/authsource.php /opt/filesender/simplesamlphp/config/authsource.php && \
-    ln -s /config/simplesamlphp/config/config.php /opt/filesender/simplesamlphp/config/config.php && \
-    ln -s /config/simplesamlphp/metadata/active.php /opt/filesender/simplesamlphp/metadata/active.php
+    ln -s /config/simplesamlphp/config/acl.php.dist /opt/filesender/simplesamlphp/config/acl.php && \
+    ln -s /config/simplesamlphp/config/authsources.php.dist /opt/filesender/simplesamlphp/config/authsources.php && \
+    ln -s /config/simplesamlphp/config/config.php.dist /opt/filesender/simplesamlphp/config/config.php && \
+    ln -s /config/simplesamlphp/metadata/active.php.dist /opt/filesender/simplesamlphp/metadata/active.php
+
+RUN sed -i -e 's/123/456/g' /config/simplesamlphp/config/config.php.dist
+RUN sed -i -e "s/'exampleauth' => false,/'exampleauth' => true,/g" /config/simplesamlphp/config/config.php.dist
 
 ADD assets/usr /usr
 ADD assets/etc/nginx /etc/nginx

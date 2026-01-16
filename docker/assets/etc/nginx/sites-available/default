@@ -20,13 +20,16 @@ server {
             fastcgi_param PATH_INFO       $fastcgi_path_info;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         }
-        location ^~ /simplesamlphp {
-            alias /opt/filesender/simplesamlphp/saml/www;
-            location ~ ^(?<prefix>/saml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
-                include fastcgi_params;
-                fastcgi_pass  localhost:9000;
+        location ^~ /simplesaml {
+            alias /opt/filesender/simplesamlphp/public;
+            location ~^(?<prefix>/simplesaml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
+                include          fastcgi_params;
                 fastcgi_param SCRIPT_FILENAME $document_root$phpfile;
-                fastcgi_param PATH_INFO       $pathinfo if_not_empty;
+                fastcgi_pass     localhost:9000;
+
+                # Must be prepended with the baseurlpath
+                fastcgi_param SCRIPT_NAME /simplesaml$phpfile;
+                fastcgi_param PATH_INFO $pathinfo if_not_empty;
             }
         }
         location ~* \.(ico|docx|doc|xls|xlsx|rar|zip|jpg|jpeg|txt|xml|pdf|gif|png|css|js)$ {
