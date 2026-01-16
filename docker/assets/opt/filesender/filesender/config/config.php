@@ -132,7 +132,7 @@ $config['auth_sp_saml_admin_entitlement'] = 'urn:x-geant:eduteams.org:filesender
 // $config['auth_sp_saml_authentication_source'] = 'default-sp';
 
 // If you want to use hard coded user/pass in /opt/filesender/simplesaml/config/authsources.php for testing.
-$config['auth_sp_saml_authentication_source'] = 'example-userpass';
+$config['auth_sp_saml_authentication_source'] = 'example-sp';
 
 // --------------------------------------------------
 //    TeraSender high speed upload module

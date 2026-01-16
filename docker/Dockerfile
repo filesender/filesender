@@ -68,11 +68,8 @@ RUN mkdir -p /config/fpm /config/filesender /config/simplesamlphp/config /config
 ADD assets/config/simplesamlphp/config/authsources.php.dist /config/simplesamlphp/config/authsources.php.dist
 ADD assets/config/simplesamlphp/config/config.php.dist /config/simplesamlphp/config/config.php.dist
 
-# RUN sed -i -e 's/123/456/g' /config/simplesamlphp/config/config.php.dist
-# RUN sed -i -e "s/'exampleauth' => false,/'exampleauth' => true,/g" /config/simplesamlphp/config/config.php.dist
-# RUN sed -i -e "s/'enable.http_post' => false,/'enable.http_post' => true,/g" /config/simplesamlphp/config/config.php.dist
-# RUN sed -i -e "s/'saml' => false,/'saml' => true,/g" /config/simplesamlphp/config/config.php.dist
-# RUN sed -i -e "s/Logger::NOTICE/Logger::DEBUG/g" /config/simplesamlphp/config/config.php.dist
+RUN ln -s /config/simplesamlphp/metadata/saml20-idp-hosted.php.dist /opt/filesender/simplesamlphp/metadata/saml20-idp-hosted.php
+RUN ln -s /config/simplesamlphp/metadata/saml20-sp-remote.php.dist /opt/filesender/simplesamlphp/metadata/saml20-sp-remote.php
 
 ADD assets/usr /usr
 ADD assets/etc/nginx /etc/nginx
