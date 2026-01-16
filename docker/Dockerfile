@@ -47,9 +47,9 @@ ADD config.php /opt/filesender/filesender/config/config.php
 
 RUN cd /opt/filesender/filesender && \
     # cp config/config_sample.php config/config.php && \
-    mkdir -p tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin && \
+    mkdir -p tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
     chmod o-rwx tmp files log config/config.php && \
-    chown www-data:www-data tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin && \
+    chown www-data:www-data tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
     chgrp www-data config/config.php && \
     cd /opt/filesender/simplesamlphp
 
