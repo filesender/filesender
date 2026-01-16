@@ -73,7 +73,7 @@ $config['email_reply_to'] = getenv('FILESENDER_EMAIL_REPLY_TO');
 // ---------------------------------------------
 // MariaDB/MySQL DB configuration
 // ---------------------------------------------
-$config["db_type"] = getenv('FILESENDER_DB_TYPE');
+$config['db_type'] = getenv('FILESENDER_DB_TYPE');
 $config['db_host'] = getenv('FILESENDER_DB_HOST');
 $config['db_database'] = getenv('FILESENDER_DB_DATABASE');
 $config['db_username'] = getenv('FILESENDER_DB_USERNAME');
@@ -98,8 +98,8 @@ $config['db_password_admin'] =  getenv('FILESENDER_DB_PASSWORD_ADMIN');
 //              SAML configuration
 // ---------------------------------------------
 // NOTE: These MUST have trailing slash
-//$config['auth_sp_saml_simplesamlphp_url'] =getenv('FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL');     // Url of simplesamlphp
-$config['auth_sp_saml_simplesamlphp_location'] ='/opt/filesender/simplesamlphp/';   // Location of simplesamlphp libraries
+$config['auth_sp_saml_simplesamlphp_url'] = getenv('FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL');     // Url of simplesamlphp
+$config['auth_sp_saml_simplesamlphp_location'] = '/opt/filesender/simplesamlphp/';   // Location of simplesamlphp libraries
 
 //      ----------------------------
 //      -------- [optional] --------

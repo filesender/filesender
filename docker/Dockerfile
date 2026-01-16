@@ -18,7 +18,7 @@ ENV FILESENDER_VERSION=3.3 \
     FILESENDER_DB_PASSWORD="" \
     FILESENDER_DB_USERNAME_ADMIN="filesenderadmin" \
     FILESENDER_DB_PASSWORD_ADMIN="" \
-    FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL="http://localhost/simplesamlphp/" \
+    FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL="http://localhost/simplesaml/" \
     FILESENDER_DEFAULT_TIMEZONE="Europe/Stockholm"
 
 RUN apt-get update && \
