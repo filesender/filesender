@@ -15,9 +15,9 @@ ENV FILESENDER_VERSION=3.3 \
     FILESENDER_DB_HOST="localhost" \
     FILESENDER_DB_DATABASE="filesender" \
     FILESENDER_DB_USERNAME="filesender" \
-    FILESENDER_DB_PASSWORD="" \
+    FILESENDER_DB_PASSWORD="filesender_db_pass" \
     FILESENDER_DB_USERNAME_ADMIN="filesenderadmin" \
-    FILESENDER_DB_PASSWORD_ADMIN="" \
+    FILESENDER_DB_PASSWORD_ADMIN="filesender_db_admin_pass" \
     FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL="http://localhost/simplesaml/" \
     FILESENDER_DEFAULT_TIMEZONE="Europe/Stockholm"
 
@@ -75,8 +75,8 @@ ADD assets/config/simplesamlphp/metadata/saml20-idp-hosted.php.dist /config/simp
 ADD assets/config/simplesamlphp/metadata/saml20-sp-remote.php.dist /config/simplesamlphp/metadata/saml20-sp-remote.php.dist
 ADD assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist /config/simplesamlphp/metadata/saml20-idp-remote.php.dist
 
-ADD assets/opt/filesender/simplesamlphp/cert/localhost.crt /opt/filesender/simplesamlphp/cert/localhost.crt
-ADD assets/opt/filesender/simplesamlphp/cert/localhost.pem /opt/filesender/simplesamlphp/cert/localhost.pem
+ADD assets/config/simplesamlphp/cert/localhost.crt /opt/filesender/simplesamlphp/cert/localhost.crt
+ADD assets/config/simplesamlphp/cert/localhost.pem /opt/filesender/simplesamlphp/cert/localhost.pem
 
 RUN cd /opt/filesender/simplesamlphp/ && \
     chown -R www-data:www-data cert
