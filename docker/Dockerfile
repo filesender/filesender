@@ -12,11 +12,11 @@ ENV FILESENDER_VERSION=3.3 \
     FILESENDER_ADMIN_EMAIL="root@localhost.localdomain" \
     FILESENDER_EMAIL_REPLY_TO="" \
     FILESENDER_DB_TYPE="mysql" \
-    FILESENDER_DB_HOST="localhost" \
+    FILESENDER_DB_HOST="filesender-db" \
     FILESENDER_DB_DATABASE="filesender" \
-    FILESENDER_DB_USERNAME="filesender" \
-    FILESENDER_DB_PASSWORD="filesender_db_pass" \
-    FILESENDER_DB_USERNAME_ADMIN="filesenderadmin" \
+    FILESENDER_DB_USERNAME="root" \
+    FILESENDER_DB_PASSWORD="filesender_db_admin_pass" \
+    FILESENDER_DB_USERNAME_ADMIN="root" \
     FILESENDER_DB_PASSWORD_ADMIN="filesender_db_admin_pass" \
     FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL="http://localhost/simplesaml/" \
     FILESENDER_DEFAULT_TIMEZONE="Europe/Stockholm"
@@ -27,10 +27,13 @@ RUN apt-get update && \
         nginx \
         wget \
         nano \
+        mariadb-client \
         runit && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable pdo_mysql
 
 RUN cd /opt && mkdir filesender && \
     cd /opt/filesender && \

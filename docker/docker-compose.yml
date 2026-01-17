@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mariadb
+    container_name: filesender-db
+    restart: always
+    user: root
+    environment:
+      MYSQL_ROOT_PASSWORD: ${FILESENDER_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${FILESENDER_MYSQL_DATABASE}
+      MYSQL_USER: ${FILESENDER_MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: ${FILESENDER_MYSQL_HOST}
+      MYSQL_PORT: ${FILESENDER_MYSQL_PORT}
+    volumes:
+      - ~/mysql_data:/var/lib/mysql
+      # - ${FILESENDER_MYSQL_DATA_PATH}:/var/lib/mysql
+      - ./database/create_tables.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+  filesender:
+    image: filesender
+    container_name: filesender
+    restart: always
+    depends_on:
+      - db
+    links:
+      - "db:filesender-db"
+    ports:
+      - 80:80
