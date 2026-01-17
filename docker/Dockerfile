@@ -65,11 +65,21 @@ RUN mkdir -p /config/fpm /config/filesender /config/simplesamlphp/config /config
     ln -s /config/simplesamlphp/config/config.php.dist /opt/filesender/simplesamlphp/config/config.php && \
     ln -s /config/simplesamlphp/metadata/active.php.dist /opt/filesender/simplesamlphp/metadata/active.php
 
-ADD assets/config/simplesamlphp/config/authsources.php.dist /config/simplesamlphp/config/authsources.php.dist
-ADD assets/config/simplesamlphp/config/config.php.dist /config/simplesamlphp/config/config.php.dist
-
 RUN ln -s /config/simplesamlphp/metadata/saml20-idp-hosted.php.dist /opt/filesender/simplesamlphp/metadata/saml20-idp-hosted.php
 RUN ln -s /config/simplesamlphp/metadata/saml20-sp-remote.php.dist /opt/filesender/simplesamlphp/metadata/saml20-sp-remote.php
+RUN ln -s /config/simplesamlphp/metadata/saml20-idp-remote.php.dist /opt/filesender/simplesamlphp/metadata/saml20-idp-remote.php
+
+ADD assets/config/simplesamlphp/config/authsources.php.dist /config/simplesamlphp/config/authsources.php.dist
+ADD assets/config/simplesamlphp/config/config.php.dist /config/simplesamlphp/config/config.php.dist
+ADD assets/config/simplesamlphp/metadata/saml20-idp-hosted.php.dist /config/simplesamlphp/metadata/saml20-idp-hosted.php.dist
+ADD assets/config/simplesamlphp/metadata/saml20-sp-remote.php.dist /config/simplesamlphp/metadata/saml20-sp-remote.php.dist
+ADD assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist /config/simplesamlphp/metadata/saml20-idp-remote.php.dist
+
+ADD assets/opt/filesender/simplesamlphp/cert/localhost.crt /opt/filesender/simplesamlphp/cert/localhost.crt
+ADD assets/opt/filesender/simplesamlphp/cert/localhost.pem /opt/filesender/simplesamlphp/cert/localhost.pem
+
+RUN cd /opt/filesender/simplesamlphp/ && \
+    chown -R www-data:www-data cert
 
 ADD assets/usr /usr
 ADD assets/etc/nginx /etc/nginx

@@ -112,27 +112,27 @@ $config['auth_sp_saml_simplesamlphp_location'] = '/opt/filesender/simplesamlphp/
 $config['auth_sp_type'] = 'saml';
 //
 // // Get email attribute from authentication service
-$config['auth_sp_saml_email_attribute'] = 'mail';
+//$config['auth_sp_saml_email_attribute'] = 'mail';
 //
 // // Get name attribute from authentication service
-$config['auth_sp_saml_name_attribute'] = 'cn';
+//$config['auth_sp_saml_name_attribute'] = 'cn';
 //
-$config['auth_sp_saml_uid_attribute'] = 'pairwise-id';
+//$config['auth_sp_saml_uid_attribute'] = 'pairwise-id';
 //
 // // Attribute to use for entitlement. Usually eduPersonEntitlement or isMemberOf
-$config['auth_sp_saml_entitlement_attribute'] = 'eduPersonEntitlement';
+//$config['auth_sp_saml_entitlement_attribute'] = 'eduPersonEntitlement';
 //
 // // Also make sure the above addtional attribute is actually retrieved
-$config['auth_sp_additional_attributes'] = array('eduPersonEntitlement');
+//$config['auth_sp_additional_attributes'] = array('eduPersonEntitlement');
 //
 // // What entitlement value denotes the admin privilege
-$config['auth_sp_saml_admin_entitlement'] = 'urn:x-geant:eduteams.org:filesender:admin';
+//$config['auth_sp_saml_admin_entitlement'] = 'urn:x-geant:eduteams.org:filesender:admin';
 //
 // // Get path  attribute from authentication service
-// $config['auth_sp_saml_authentication_source'] = 'default-sp';
+$config['auth_sp_saml_authentication_source'] = 'example-sp';
 
 // If you want to use hard coded user/pass in /opt/filesender/simplesaml/config/authsources.php for testing.
-$config['auth_sp_saml_authentication_source'] = 'example-sp';
+//$config['auth_sp_saml_authentication_source'] = 'example-static';
 
 // --------------------------------------------------
 //    TeraSender high speed upload module
