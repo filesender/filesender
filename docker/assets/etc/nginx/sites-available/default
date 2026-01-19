@@ -2,7 +2,7 @@ server {
         add_header X-Frame-Options sameorigin always;
         client_body_buffer_size 256k;
         client_max_body_size 32m;
-        server_name _;
+        server_name localhost;
         index index.php;
         error_page 500 502 503 504 /50x.html;
         root /opt/filesender/filesender/www;
