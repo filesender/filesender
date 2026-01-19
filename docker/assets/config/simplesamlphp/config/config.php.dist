@@ -613,7 +613,7 @@ $config = [
      * Example:
      *  'session.cookie.path' => '/simplesaml/',
      */
-    'session.cookie.path' => '/',
+    //'session.cookie.path' => '/simplsaml/',
 
     /*
      * Cookie domain.
