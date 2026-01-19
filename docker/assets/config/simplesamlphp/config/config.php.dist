@@ -31,7 +31,7 @@ $config = [
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => 'simplesaml/',
+    'baseurlpath' => 'http://localhost/simplesaml/',
 
     /*
      * The 'application' configuration array groups a set configuration options
@@ -52,7 +52,7 @@ $config = [
          * need to compute the right URLs yourself and pass them dynamically
          * to SimpleSAMLphp's API.
          */
-        //'baseURL' => 'https://example.com',
+        'baseURL' => 'http://localhost',
     ],
 
     /*
@@ -236,7 +236,7 @@ $config = [
      * Example:
      *   'trusted.url.domains' => ['sp.example.com', 'app.example.com'],
      */
-    'trusted.url.domains' => [],
+    'trusted.url.domains' => ['localhost'],
 
     /*
      * Enable regular expression matching of trusted.url.domains.
@@ -623,7 +623,7 @@ $config = [
      * Example:
      *  'session.cookie.domain' => '.example.org',
      */
-    'session.cookie.domain' => '',
+    'session.cookie.domain' => 'localhost',
 
     /*
      * Set the secure flag in the cookie.
@@ -634,7 +634,7 @@ $config = [
      *
      * If unset, SimpleSAMLphp will try to automatically determine the right value
      */
-    //'session.cookie.secure' => true,
+    'session.cookie.secure' => false,
 
     /*
      * Set the SameSite attribute in the cookie.
@@ -652,11 +652,15 @@ $config = [
      *
      * Example:
      *  'session.cookie.samesite' => 'None',
+     * 'session.cookie.samesite' => $httpUtils->canSetSameSiteNone() ? 'None' : null,
      */
-    'session.cookie.samesite' => $httpUtils->canSetSameSiteNone() ? 'None' : null,
+    'session.cookie.samesite' => 'Lax',
 
     /*
      * Options to override the default settings for php sessions.
+     * 'session.phpsession.cookiename' => 'SimpleSAML',
+     * 'session.phpsession.savepath' => null,
+     * 'session.phpsession.httponly' => true,
      */
     'session.phpsession.cookiename' => 'SimpleSAML',
     'session.phpsession.savepath' => null,

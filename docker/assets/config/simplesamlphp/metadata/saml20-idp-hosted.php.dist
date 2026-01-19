@@ -4,8 +4,9 @@ $metadata['urn:x-simplesamlphp:hosted-idp'] = [
      * The hostname for this IdP. This makes it possible to run multiple
      * IdPs from the same configuration. '__DEFAULT__' means that this one
      * should be used by default.
+     * 'host' => '__DEFAULT__',
      */
-    'host' => '__DEFAULT__',
+    'host' => 'localhost',
 
     /*
      * The private key and certificate to use when signing responses.
