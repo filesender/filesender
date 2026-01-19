@@ -28,12 +28,18 @@ RUN apt-get update && \
         wget \
         nano \
         mariadb-client \
+        procps \
+        net-tools \
+        nmap \
+        libicu-dev \
         runit && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable pdo_mysql
+RUN docker-php-ext-configure intl && \
+    docker-php-ext-install mysqli pdo pdo_mysql intl && \
+    docker-php-ext-enable pdo_mysql
 
 RUN cd /opt && mkdir filesender && \
     cd /opt/filesender && \
@@ -52,7 +58,7 @@ RUN cd /opt/filesender/filesender && \
     # cp config/config_sample.php config/config.php && \
     mkdir -p tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
     chmod o-rwx tmp files log config/config.php && \
-    chown www-data:www-data tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
+    chown -R www-data:www-data www tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
     chgrp www-data config/config.php && \
     cd /opt/filesender/simplesamlphp
 

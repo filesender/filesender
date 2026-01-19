@@ -49,8 +49,9 @@ $config['force_ssl'] = false;
 $config['default_timezone'] = getenv('FILESENDER_DEFAULT_TIMEZONE');
 $config['maintenance'] = false;
 $config['auth_remote_user_enabled'] = false;
-//$config['site_url'] = 'https://127.0.0.1/filesender';                // String, URL of the application
+//$config['site_url'] = 'http://localhost';                // String, URL of the application
 $config['site_url'] = getenv('FILESENDER_SITE_URL');                // String, URL of the application
+
 //
 //$config['admin'] = 'root@localhost.localdomain'; // String, UID's (from  $config['saml_uid_attribute'])
 $config['admin'] = getenv('FILESENDER_ADMIN');
