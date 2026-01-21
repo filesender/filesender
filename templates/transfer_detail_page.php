@@ -94,15 +94,18 @@ if(empty($transfer->options['encryption'])) {
 
     $fileIds = array();
     foreach($transfer->files as $file) {
-        $downloadLinks[$file->id] = Utilities::http_build_query(array(
-            'token' => $token,
-            'files_ids' => $file->id,
-        ), 'download.php?' );
+        $linkParams = array('files_ids' => $file->id);
+        if (!empty($token)) {
+            $linkParams['token'] = $token;
+        }
+        $downloadLinks[$file->id] = Utilities::http_build_query($linkParams, 'download.php?');
         $fileIds[] = $file->id;
     }
-    $archiveDownloadLink = Utilities::http_build_query(array(
-        'token' => $token,
-    ), 'download.php?' );
+    $archiveParams = array();
+    if (!empty($token)) {
+        $archiveParams['token'] = $token;
+    }
+    $archiveDownloadLink = Utilities::http_build_query($archiveParams, 'download.php?');
     $archiveDownloadLinkFileIDs = implode(',', $fileIds);
 
     // forget this here to limit scope.
