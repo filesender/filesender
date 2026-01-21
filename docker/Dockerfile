@@ -1,8 +1,8 @@
 FROM php:8.5-fpm
 LABEL version="0.1.0" \
       license="BSD3" \
-      maintainer="Nils Vogels <n.vogels@aves-it.nl>" \
-      description="Filesender and simplesamlphp based on php7-fpm" \
+      maintainer="Richard Freitag <freitag@sunet.se>" \
+      description="Filesender and simplesamlphp based on php8.5-fpm" \
       documentation="https://docs.filesender.org"
 
 ENV FILESENDER_VERSION=3.3 \
@@ -86,6 +86,7 @@ ADD assets/config/simplesamlphp/cert/localhost.crt /opt/filesender/simplesamlphp
 ADD assets/config/simplesamlphp/cert/localhost.pem /opt/filesender/simplesamlphp/cert/localhost.pem
 
 ADD AuditLog.class.php /opt/filesender/filesender/classes/data/AuditLog.class.php
+ADD GUI.class.php /opt/filesender/filesender/classes/utils/GUI.class.php
 
 RUN cd /opt/filesender/filesender && \
     # cp config/config_sample.php config/config.php && \
