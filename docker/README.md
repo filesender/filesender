@@ -1,11 +1,3 @@
-# filesender-phpfpm
-
-- [Introduction](#introduction)
-- [Dependencies](#dependencies)
-- [Environment Variables](#environment-variables)
-- [Deployment](#deployment)
-  - [simplesamlphp](#simplesamlphp)
-
 ## Introduction
 [Docker](https://www.docker.com/what-docker) example image of [filesender](https://filesender.org) based on [php-fpm](https://php-fpm.org/).
 
