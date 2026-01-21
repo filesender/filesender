@@ -49,8 +49,8 @@ $config['force_ssl'] = false;
 $config['default_timezone'] = getenv('FILESENDER_DEFAULT_TIMEZONE');
 $config['maintenance'] = false;
 $config['auth_remote_user_enabled'] = false;
-//$config['site_url'] = 'http://localhost';                // String, URL of the application
-$config['site_url'] = getenv('FILESENDER_SITE_URL');                // String, URL of the application
+$config['site_url'] = 'http://localhost';                // String, URL of the application
+//$config['site_url'] = getenv('FILESENDER_SITE_URL');                // String, URL of the application
 $config['session_cookie_path'] = '/';
 
 //

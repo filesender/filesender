@@ -67,7 +67,8 @@ $config = [
      * When specified as a relative path, this is relative to the SimpleSAMLphp
      * root directory.
      */
-    'cachedir' => '/var/cache/simplesamlphp',
+    //'cachedir' => '/var/cache/simplesamlphp',
+    'cachedir' => '/tmp/simplesamlphp',
     //'loggingdir' => '/var/log/',
     //'datadir' => '/var/data/',
     //'tempdir' => '/tmp/simplesamlphp',
@@ -1236,8 +1237,9 @@ $config = [
      * - 'redis': Key-value datastore, based on redis.
      *
      * The default datastore is 'phpsession'.
+     * 'store.type' => 'phpsession',
      */
-    'store.type'                    => 'phpsession',
+    'store.type' => 'phpsession',
 
     /*
      * The DSN the sql datastore should connect to.

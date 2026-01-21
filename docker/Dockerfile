@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM php:8.5-fpm
 LABEL version="0.1.0" \
       license="BSD3" \
       maintainer="Nils Vogels <n.vogels@aves-it.nl>" \
@@ -32,6 +32,11 @@ RUN apt-get update && \
         net-tools \
         nmap \
         libicu-dev \
+        curl \
+        gnupg2 \
+        ca-certificates \
+        lsb-release \
+        debian-keyring \
         runit && \
     apt-get autoremove -y && \
     apt-get clean && \
@@ -53,15 +58,7 @@ RUN cd /opt/filesender && \
     mv simplesamlphp-${SSP_VERSION} simplesamlphp
 
 ADD assets/opt/filesender/filesender/config/config.php /opt/filesender/filesender/config/config.php
-
-RUN cd /opt/filesender/filesender && \
-    # cp config/config_sample.php config/config.php && \
-    mkdir -p tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
-    chmod o-rwx tmp files log config/config.php && \
-    chown -R www-data:www-data www tmp files log classes /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
-    chown -R www-data:www-data config && \
-    chgrp www-data config/config.php && \
-    cd /opt/filesender/simplesamlphp
+ADD filesender-config.js.php /opt/filesender/filesender/www/filesender-config.js.php
 
 RUN mkdir -p /config/fpm /config/filesender /config/simplesamlphp/config /config/simplesamlphp/metadata && \
     mv -f /usr/local/etc/php-fpm.d/www.conf /config/fpm/www.conf && \
@@ -88,8 +85,22 @@ ADD assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist /config/simp
 ADD assets/config/simplesamlphp/cert/localhost.crt /opt/filesender/simplesamlphp/cert/localhost.crt
 ADD assets/config/simplesamlphp/cert/localhost.pem /opt/filesender/simplesamlphp/cert/localhost.pem
 
-RUN cd /opt/filesender/simplesamlphp/ && \
-    chown -R www-data:www-data cert
+ADD AuditLog.class.php /opt/filesender/filesender/classes/data/AuditLog.class.php
+
+RUN cd /opt/filesender/filesender && \
+    # cp config/config_sample.php config/config.php && \
+    mkdir -p tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
+    chmod o-rwx tmp files log config/config.php && \
+    chown -R www-data:www-data tmp files log /var/cache/simplesamlphp/core /var/cache/simplesamlphp/admin /var/cache/simplesamlphp/saml && \
+    # chown -R www-data:www-data config && \
+    chgrp www-data config/config.php
+
+RUN cd /opt/filesender/simplesamlphp/cert && \
+    chgrp www-data ./localhost.crt ./localhost.pem && \
+    chmod g+r ./localhost.pem
+
+# RUN cd /opt/filesender/simplesamlphp/ && \
+#     chown -R www-data:www-data cert
 
 ADD assets/usr /usr
 ADD assets/etc/nginx /etc/nginx
