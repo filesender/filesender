@@ -224,7 +224,7 @@ window.filesender.client = {
         
         // Needs to be done after "var settings" because handler needs that settings variable exists
         settings.error = function(xhr, status, error) {
-            var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
+            var msg = (xhr.responseText || '').replace(/^\s+/, '').replace(/\s+$/, '');
             
             if( // Ignore 40x, 50x and timeouts if undergoing maintenance
                 (xhr.status >= 400 || status == 'timeout') &&
