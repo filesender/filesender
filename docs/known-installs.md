@@ -60,7 +60,9 @@ If you want to add your FileSender installation to this list use one of the foll
 | Germany  | Trier University of Applied Sciences | [https://filesender.hochschule-trier.de/filesender/](https://filesender.hochschule-trier.de/filesender/) | Sep 2025 | 6 Sep 2025 |
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018| 25 Apr 2025 |
 | Israel  | Hebrew University of Jerusalem (HUJI)  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 25 Apr 2025 |
+| Norway  | NORCE research institute | [https://filesender.norceresearch.no/](https://filesender.norceresearch.no/) | Dec 2025 | 27 Jan 2026 |
 | Serbia  | University of Belgrade, Faculty of Geography | [https://filesender.gef.bg.ac.rs/filesender/](https://filesender.gef.bg.ac.rs/filesender/) | Sep 2025 | 6 Sep 2025 | 
+| Spain  | Universidade de Vigo | [https://filesender.uvigo.es/filesender/](https://filesender.uvigo.es/filesender/) | Dec 2025 | 27 Jan 2026 |
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 25 Apr 2025, version 1.x |
 | Spain/Sevilla  | Universidad "Pablo de Olavide"  | [https://consigna.upo.es](https://consigna.upo.es)  | May 2014| 25 Apr 2025 |
 | United Kingdom | Cancer Research UK Cambridge Centre | [https://filesender.cruk.cam.ac.uk/](https://filesender.cruk.cam.ac.uk/)  | Sep 2025 | 6 Sep 2025 |
@@ -124,6 +126,7 @@ If you want to add your FileSender installation to this list use one of the foll
 
 | Country/Region| Organisation | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
+| Australia | WMAwater hydrological and hydraulic consultancy | [https://filesender.wmawater.com.au/](https://filesender.wmawater.com.au/) | 2016 | 27 Jan 2026 |
 | Belgium | Autosécurité Group | [https://filesender.autosecurite.be/filesender/](https://filesender.autosecurite.be/filesender/) |Aug 2025 | 6 Sep 2025 |
 | Czech Republic | National Film Archive | [https://filesender.nfa.cz/](https://filesender.nfa.cz/) |Jul 2025 | 30 Jul 2025 |
 | France | CDG 33 - Gironde Management Center | [https://filesender.cdg33.fr/](https://filesender.cdg33.fr/) | Apr 2025 | 25 Apr 2025 |
