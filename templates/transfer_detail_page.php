@@ -110,6 +110,8 @@ if(empty($transfer->options['encryption'])) {
 
     // forget this here to limit scope.
     $token = '';
+    $linkParams = null;
+    $archiveParams = null;
 }
 
 ?>
