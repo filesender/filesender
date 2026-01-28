@@ -182,7 +182,8 @@ class AuditLog extends DBObject
     protected $created = null;
     protected $ip = null;
     protected $transaction_id = null;
-    
+    protected $transfer_id = null;
+    protected $file_id = null;
     
     /**
      * Constructor
