@@ -54,7 +54,7 @@ stop-docker:
 .PHONY: certificate
 certificate:
 	-rm assets/config/simplesamlphp/cert/localhost.*
-	rm assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist
+	-rm assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist
 	mkdir -p assets/config/simplesamlphp/cert/
 	cp assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist.template assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist
 	openssl req -newkey rsa:3072 -new -x509 -days 3652 -nodes -out assets/config/simplesamlphp/cert/localhost.crt -keyout assets/config/simplesamlphp/cert/localhost.pem -subj "/C=XX/ST=StateName/L=CityName/O=CompanyName/OU=CompanySectionName/CN=CommonNameOrHostname"
