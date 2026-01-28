@@ -505,7 +505,7 @@ var terasender_worker = {
             return;
             
         }else{ // We have an error
-            var msg = (xhr.responseText || '').replace(/^\s+/, '').replace(/\s+$/, '');
+            var msg = window.filesender.client.xhrResponse( xhr );
             
             try {
                 var error = JSON.parse(msg);

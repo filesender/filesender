@@ -224,7 +224,7 @@ window.filesender.client = {
         
         // Needs to be done after "var settings" because handler needs that settings variable exists
         settings.error = function(xhr, status, error) {
-            var msg = (xhr.responseText || '').replace(/^\s+/, '').replace(/\s+$/, '');
+            var msg = window.filesender.client.xhrResponse( xhr );
             
             if( // Ignore 40x, 50x and timeouts if undergoing maintenance
                 (xhr.status >= 400 || status == 'timeout') &&
@@ -1398,5 +1398,15 @@ window.filesender.client = {
         const i = Math.floor(Math.log(bytes) / Math.log(k))
 
         return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
-    },    
+    },
+
+    /**
+     * Get the responseText from an XHR or an empty string
+     * leading and trailing whitespace in the return has always been removed
+     */
+    xhrResponse: function( xhr ) {
+        var ret = (xhr.responseText || '');
+        ret = ret.replace(/^\s+/, '').replace(/\s+$/, '');
+        return ret;
+    },
 };
