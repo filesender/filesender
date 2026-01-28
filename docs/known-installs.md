@@ -55,7 +55,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Cyprus  | University of Cyprus | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| 25 Apr 2025 |
 | France  | National Center for Meteorological Research | [https://filesender.umr-cnrm.fr/filesender/](https://filesender.umr-cnrm.fr/filesender/) | Jul 2025 | 30 Jul 2025 |
 | France  | University of Reunion Island | [https://filesender.univ-reunion.fr/filesender/](https://filesender.univ-reunion.fr/filesender/) | Oct 2025 | 2 Nov 2025 |
-| Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://filesender.hifis.dkfz.de/](https://filesender.hifis.dkfz.de/) | Aug 2023| 25 Apr 2025 |
+| Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://transcrypt.helmholtz.cloud/](https://transcrypt.helmholtz.cloud/) | Aug 2023| 28 Jan 2026 |
 | Germany  | Johannes Gutenberg University Mainz | [https://filesender.zdv.net/filesender/](https://filesender.zdv.net/filesender/) | Oct 2025 | 2 Nov 2025 |
 | Germany  | Trier University of Applied Sciences | [https://filesender.hochschule-trier.de/filesender/](https://filesender.hochschule-trier.de/filesender/) | Sep 2025 | 6 Sep 2025 |
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018| 25 Apr 2025 |
