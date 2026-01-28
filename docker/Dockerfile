@@ -5,21 +5,8 @@ LABEL version="0.1.0" \
       description="Filesender and simplesamlphp based on php8.5-fpm" \
       documentation="https://docs.filesender.org"
 
-ENV FILESENDER_VERSION=3.3 \
-    SSP_VERSION=2.4.4 \
-    FILESENDER_SITE_URL="http://localhost" \
-    FILESENDER_ADMIN="root@localhost.localdomain" \
-    FILESENDER_ADMIN_EMAIL="root@localhost.localdomain" \
-    FILESENDER_EMAIL_REPLY_TO="" \
-    FILESENDER_DB_TYPE="mysql" \
-    FILESENDER_DB_HOST="filesender-db" \
-    FILESENDER_DB_DATABASE="filesender" \
-    FILESENDER_DB_USERNAME="root" \
-    FILESENDER_DB_PASSWORD="filesender_db_admin_pass" \
-    FILESENDER_DB_USERNAME_ADMIN="root" \
-    FILESENDER_DB_PASSWORD_ADMIN="filesender_db_admin_pass" \
-    FILESENDER_AUTH_SP_SAML_SIMPLESAMLPHP_URL="http://localhost/simplesaml/" \
-    FILESENDER_DEFAULT_TIMEZONE="Europe/Stockholm"
+ARG FILESENDER_VERSION=3.3
+ARG SSP_VERSION=2.4.4
 
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
@@ -85,8 +72,22 @@ ADD assets/config/simplesamlphp/metadata/saml20-idp-remote.php.dist /config/simp
 ADD assets/config/simplesamlphp/cert/localhost.crt /opt/filesender/simplesamlphp/cert/localhost.crt
 ADD assets/config/simplesamlphp/cert/localhost.pem /opt/filesender/simplesamlphp/cert/localhost.pem
 
-ADD AuditLog.class.php /opt/filesender/filesender/classes/data/AuditLog.class.php
-ADD GUI.class.php /opt/filesender/filesender/classes/utils/GUI.class.php
+ADD AuditLog.class.php.3.3.patch /opt/filesender/filesender/classes/data/AuditLog.class.php.3.3.patch
+ADD GUI.class.php.3.3.patch /opt/filesender/filesender/classes/utils/GUI.class.php.3.3.patch
+ADD transfer_detail_page.php.3.3.patch /opt/filesender/filesender/templates/transfer_detail_page.php.3.3.patch
+
+# ADD AuditLog.class.php /opt/filesender/filesender/classes/data/AuditLog.class.php
+# ADD AuditLog.class.php /opt/filesender/filesender/classes/data/AuditLog.class.php.full
+# ADD GUI.class.php /opt/filesender/filesender/classes/utils/GUI.class.php.full
+
+RUN if [ "$FILESENDER_VERSION" = "3.3" ]; then \
+      echo "Apply Filesender 3.3 patches"; \
+      patch -f /opt/filesender/filesender/classes/data/AuditLog.class.php < /opt/filesender/filesender/classes/data/AuditLog.class.php.3.3.patch; \
+      patch -f /opt/filesender/filesender/classes/utils/GUI.class.php < /opt/filesender/filesender/classes/utils/GUI.class.php.3.3.patch; \
+      patch -f /opt/filesender/filesender/templates/transfer_detail_page.php < /opt/filesender/filesender/templates/transfer_detail_page.php.3.3.patch; \
+    else \
+      echo "Not patching $$FILESENDER_VERSION"; \
+    fi
 
 RUN cd /opt/filesender/filesender && \
     # cp config/config_sample.php config/config.php && \

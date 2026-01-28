@@ -11,7 +11,7 @@ This container image of filesender requires the following dependencies:
 ## Running the image
 In the docker folder, run
 
-    ./firstrun.sh
+    make firstrun
 
 Once the script is done, go to [localhost](http://localhost), and log on with one of the following users:
 * employee:employeepass
@@ -19,18 +19,22 @@ Once the script is done, go to [localhost](http://localhost), and log on with on
 
 ## Things to do/test
 Here are some things you might want to do and/or test with this test version:
-* Change FILESENDER_VERSION in Dockerfile - If you want to test with another Filesender Release
-* Change SSP_VERSION in Dockerfile - If you want to test another version of SimpleSAMLphp
-After you changed the configuration you can build and run the new image:
+* Change FILESENDER_VERSION in the .env file - If you want to test with another Filesender Release
+* Change SSP_VERSION in the .env file - If you want to test another version of SimpleSAMLphp
+After you changed the configuration you can build and run the new image throuth either command:
 
-        ./build.sh
-        ./run.sh
+        make rebuild
+        make no-cache-rebuild
 
-If you want to start with a clean deployment, you can run cleanall.sh. **Note:** cleanall.sh will remove all local containers, images, and data. After you run cleanall.sh, you can execute firstrun.sh again.
+If you want to start with a clean deployment, you can run 
+
+        make cleanall
+        make firstrun
+
+**Note:** cleanall will remove all local containers, images, and data.
 
 ## TODO
-* Remove hard coded values from Dockerfile
+* Add option to build latest filesender from git
 * Separate database access (user/root)
-* Use passwords from environment variables
 * https configuration with self-signed certificates
 * Update nginx in trixie, currently it uses 1.26, with 1.29 being the most recent at the time of writing
