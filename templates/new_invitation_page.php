@@ -336,7 +336,7 @@ use ( $new_guests_can_only_send_to_creator,
 
                                     <div class="fs-new-invitation__actions">
                                         <button type="button" class="fs-button send">
-                                            <i class="fa fa-send"></i>
+                                            <i class="fa fa-paper-plane"></i>
                                             <span>{tr:send_invitation}</span>
                                         </button>
                                     </div>
