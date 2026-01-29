@@ -25,11 +25,23 @@ firstrun: stop-docker certificate
 	docker compose up -d
 
 .PHONY: rebuild
-rebuild: stop-docker
+rebuild: stop-docker certificate docker
+
+.PHONY: docker
+docker: stop-docker certificate
+	@test -f .env || { echo "Error: Copy .env.example to .env and configure it"; exit 1; }
 	. ./.env; \
+	mkdir -p tmp; \
 	echo "Making Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
-	docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
-	docker compose up -d
+	if [ "$${FILESENDER_VERSION}" = "branch" ]; then \
+        # wget -O tmp/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$${FILESENDER_BRANCH}.tar.gz; \
+        docker build -t filesender-local/filesender:branch-$${FILESENDER_BRANCH} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
+    elif [ "$${FILESENDER_VERSION}" = "localdev" ]; then \
+        echo "Make from localdev is not implemented yet!"; \
+    else \
+        # wget -O tmp/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/tags/$${FILESENDER_VERSION}.tar.gz; \
+		docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
+	fi
 
 .PHONY: no-cache-rebuild
 no-cache-rebuild: stop-docker
