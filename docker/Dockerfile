@@ -1,8 +1,8 @@
-FROM php:8.4-fpm
+FROM php:8.5-fpm
 LABEL version="0.1.0" \
       license="BSD3" \
       maintainer="Richard Freitag <freitag@sunet.se>" \
-      description="Filesender and simplesamlphp based on php8.4-fpm" \
+      description="Filesender and simplesamlphp based on php8.5-fpm" \
       documentation="https://docs.filesender.org"
 
 ARG FILESENDER_VERSION=3.3
