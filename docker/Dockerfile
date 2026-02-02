@@ -31,6 +31,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
     RUN mkdir -p /opt/filesender/
+
+    # Only works if FILESENDER_VERSION is localdev
+    COPY tmp/filesender.tar.gz /opt/filesender/filesender.tar.gz
+
     RUN if [ "$FILESENDER_VERSION" = "branch" ]; then \
             echo "Building $FILESENDER_VERSION from $FILESENDER_BRANCH"; \
             wget -O /opt/filesender/filesender.tar.gz filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$FILESENDER_BRANCH.tar.gz; \
@@ -38,13 +42,13 @@ RUN apt-get update && \
             tar xzf filesender.tar.gz && \
             mv filesender-${FILESENDER_BRANCH} filesender; \
         elif [ "$FILESENDER_VERSION" = "localdev" ]; then \
-            echo "Building $FILESENDER_VERSION from current local directory is not implemented yet!"; exit 1; \
-            # ADD /tmp/filesender-localdev.tar.gz /opt/filesender/filesender.tar.gz; \
+            echo "Building $FILESENDER_VERSION from current local directory!"; \
+            cd /opt/filesender && \
+            tar xzf filesender.tar.gz; \
         else \
             echo "Building Filesender version $FILESENDER_VERSION";  \
             wget -O /opt/filesender/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/tags/$FILESENDER_VERSION.tar.gz; \
             cd /opt/filesender && \
-            ls -hall && \
             tar xzf filesender.tar.gz && \
             mv filesender-${FILESENDER_VERSION} filesender; \
         fi
