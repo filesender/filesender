@@ -30,7 +30,7 @@ docker: testenv stop-docker certificate
 	. ./.env; \
 	mkdir -p tmp; \
 	rm tmp/filesender.tar.gz; \
-    tar --exclude='../../filesender/docker/tmp' -czf tmp/filesender.tar.gz ../../filesender; \ 	# We create a .tar.gz of the local folder so that the Dockerfile does not fail
+    tar --exclude='../../filesender/docker/tmp' -czf tmp/filesender.tar.gz ../../filesender; \
 	echo "Making Filesender $${FILESENDER_VERSION} from $${FILESENDER_BRANCH} with SimpleSAMLphp $${SSP_VERSION}"; \
 	if [ "$${FILESENDER_VERSION}" = "branch" ]; then \
         # wget -O tmp/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$${FILESENDER_BRANCH}.tar.gz; \
