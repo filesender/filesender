@@ -13,11 +13,9 @@ CONTAINER_NAME_FSDB=filesender-db
 CERT_DATA_COMMAND=$(shell awk '/-----BEGIN CERTIFICATE-----/{flag=1;next}/-----END CERTIFICATE-----/{flag=0}flag' assets/config/simplesamlphp/cert/localhost.crt | tr -d '\n')
 
 .PHONY: firstrun
-firstrun: stop-docker certificate
-	cp .env.example .env
+firstrun: testenv stop-docker certificate docker
 	. ./.env; \
-	echo "Making Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
-	docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
+	echo "First run of Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
 	docker compose up -d
 	sleep 15
 	docker exec -ti filesender php /opt/filesender/filesender/scripts/upgrade/database.php
@@ -25,17 +23,30 @@ firstrun: stop-docker certificate
 	docker compose up -d
 
 .PHONY: rebuild
-rebuild: stop-docker
-	. ./.env; \
-	echo "Making Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
-	docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
-	docker compose up -d
+rebuild: testenv stop-docker certificate docker
 
-.PHONY: no-cache-rebuild
+.PHONY: docker
+docker: testenv stop-docker certificate
+	. ./.env; \
+	mkdir -p tmp; \
+	rm tmp/filesender.tar.gz; \
+    tar --exclude='../../filesender/docker/tmp' -czf tmp/filesender.tar.gz ../../filesender; \
+	echo "Making Filesender $${FILESENDER_VERSION} from $${FILESENDER_BRANCH} with SimpleSAMLphp $${SSP_VERSION}"; \
+	if [ "$${FILESENDER_VERSION}" = "branch" ]; then \
+        # wget -O tmp/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$${FILESENDER_BRANCH}.tar.gz; \
+        docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg FILESENDER_BRANCH=$${FILESENDER_BRANCH} --build-arg SSP_VERSION=$${SSP_VERSION}; \
+    elif [ "$${FILESENDER_VERSION}" = "localdev" ]; then \
+    echo "Making localdev version!"; \
+        docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
+    else \
+		docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
+	fi
+
+.PHONY: testenv no-cache-rebuild
 no-cache-rebuild: stop-docker
 	. ./.env; \
 	echo "Making Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
-	docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION} --no-cache; \
+	docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg FILESENDER_BRANCH=$${FILESENDER_BRANCH} --build-arg SSP_VERSION=$${SSP_VERSION} --no-cache; \
 	docker compose up -d
 
 .PHONY: stop-docker
@@ -66,16 +77,20 @@ certificate:
 .PHONY: cleanall
 cleanall: stop-docker
 	echo Prune system and voumes and remove containers, images and volumes in 5s. Press Ctrl-C to cancel.
-	# for i in {5..1}; do \
-	#     echo $$i & sleep 1; \
-	# done
+	for i in {5..1}; do \
+	    echo $$i & sleep 1; \
+	done
 	-docker rm -vf $$(docker ps -aq)
 	-docker rmi -f $$(docker images -aq)
 	docker system prune -f
 	docker volume prune -f
-	-rm .env
 
 	rm -rf assets/config/simplesamlphp/cert/
 	mkdir -p assets/config/simplesamlphp/cert/
-	rm -rf mysql_data
+	echo "Removing mysql_data using sudo. If you are uncomfortable with this, please remove the folder manually."
+	sudo rm -rf mysql_data
 	mkdir -p mysql_data
+
+.PHONY: testenv
+testenv:
+	@test -f .env || { echo "Error: Copy .env.example to .env and configure it"; exit 1; }

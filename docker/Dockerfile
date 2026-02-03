@@ -7,6 +7,7 @@ LABEL version="0.1.0" \
 
 ARG FILESENDER_VERSION=3.3
 ARG SSP_VERSION=2.4.4
+ARG FILESENDER_BRANCH=development
 
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
@@ -29,15 +30,32 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+    RUN mkdir -p /opt/filesender/
+
+    # Only works if FILESENDER_VERSION is localdev
+    COPY tmp/filesender.tar.gz /opt/filesender/filesender.tar.gz
+
+    RUN if [ "$FILESENDER_VERSION" = "branch" ]; then \
+            echo "Building $FILESENDER_VERSION from $FILESENDER_BRANCH"; \
+            wget -O /opt/filesender/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$FILESENDER_BRANCH.tar.gz; \
+            cd /opt/filesender && \
+            tar xzf filesender.tar.gz && \
+            mv filesender-${FILESENDER_BRANCH} filesender; \
+        elif [ "$FILESENDER_VERSION" = "localdev" ]; then \
+            echo "Building $FILESENDER_VERSION from current local directory!"; \
+            cd /opt/filesender && \
+            tar xzf filesender.tar.gz; \
+        else \
+            echo "Building Filesender version $FILESENDER_VERSION";  \
+            wget -O /opt/filesender/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/tags/$FILESENDER_VERSION.tar.gz; \
+            cd /opt/filesender && \
+            tar xzf filesender.tar.gz && \
+            mv filesender-${FILESENDER_VERSION} filesender; \
+        fi
+
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install mysqli pdo pdo_mysql intl && \
     docker-php-ext-enable pdo_mysql
-
-RUN cd /opt && mkdir filesender && \
-    cd /opt/filesender && \
-    wget -O filesender.tar.gz https://github.com/filesender/filesender/archive/refs/tags/${FILESENDER_VERSION}.tar.gz && \
-    tar xzf filesender.tar.gz && \
-    mv filesender-${FILESENDER_VERSION} filesender
 
 RUN cd /opt/filesender && \
     wget -O simplesamlphp.tar.gz https://github.com/simplesamlphp/simplesamlphp/releases/download/v${SSP_VERSION}/simplesamlphp-${SSP_VERSION}-slim.tar.gz && \
