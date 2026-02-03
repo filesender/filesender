@@ -37,7 +37,7 @@ RUN apt-get update && \
 
     RUN if [ "$FILESENDER_VERSION" = "branch" ]; then \
             echo "Building $FILESENDER_VERSION from $FILESENDER_BRANCH"; \
-            wget -O /opt/filesender/filesender.tar.gz filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$FILESENDER_BRANCH.tar.gz; \
+            wget -O /opt/filesender/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$FILESENDER_BRANCH.tar.gz; \
             cd /opt/filesender && \
             tar xzf filesender.tar.gz && \
             mv filesender-${FILESENDER_BRANCH} filesender; \
