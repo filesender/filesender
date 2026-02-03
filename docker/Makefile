@@ -29,10 +29,10 @@ rebuild: testenv stop-docker certificate docker
 docker: testenv stop-docker certificate
 	. ./.env; \
 	mkdir -p tmp; \
-	echo "Making Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
+	echo "Making Filesender $${FILESENDER_VERSION} from $${FILESENDER_BRANCH} with SimpleSAMLphp $${SSP_VERSION}"; \
 	if [ "$${FILESENDER_VERSION}" = "branch" ]; then \
         # wget -O tmp/filesender.tar.gz https://github.com/filesender/filesender/archive/refs/heads/$${FILESENDER_BRANCH}.tar.gz; \
-        docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION}; \
+        docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg FILESENDER_BRANCH=$${FILESENDER_BRANCH} --build-arg SSP_VERSION=$${SSP_VERSION}; \
     elif [ "$${FILESENDER_VERSION}" = "localdev" ]; then \
     echo "Making localdev version!"; \
         rm tmp/filesender.tar.gz; \
