@@ -46,7 +46,7 @@ docker: testenv stop-docker certificate
 no-cache-rebuild: stop-docker
 	. ./.env; \
 	echo "Making Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
-	docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg SSP_VERSION=$${SSP_VERSION} --no-cache; \
+	docker build -t filesender-local/filesender:$${FILESENDER_VERSION} . --progress plain --build-arg FILESENDER_VERSION=$${FILESENDER_VERSION} --build-arg FILESENDER_BRANCH=$${FILESENDER_BRANCH} --build-arg SSP_VERSION=$${SSP_VERSION} --no-cache; \
 	docker compose up -d
 
 .PHONY: stop-docker
