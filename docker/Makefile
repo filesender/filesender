@@ -84,7 +84,6 @@ cleanall: stop-docker
 	-docker rmi -f $$(docker images -aq)
 	docker system prune -f
 	docker volume prune -f
-	-rm .env
 
 	rm -rf assets/config/simplesamlphp/cert/
 	mkdir -p assets/config/simplesamlphp/cert/
