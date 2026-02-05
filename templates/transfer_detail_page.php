@@ -283,12 +283,12 @@ if(empty($transfer->options['encryption'])) {
                                                     <?php } ?>
                                                 <?php } ?>
 
-                                                <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text download" title="{tr:delete}">
+                                                <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text" title="{tr:delete}">
                                                     <i class="fa fa-trash"></i>
                                                 </span>
 
                                                 <?php if($audit) { ?>
-                                                    <span data-action="auditlog" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:open_file_auditlog}">
+                                                    <span data-action="auditlog" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text" title="{tr:open_file_auditlog}">
                                                         <i class="fa fa-history"></i>
                                                     </span>
                                                 <?php } ?>
