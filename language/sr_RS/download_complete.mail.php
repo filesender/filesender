@@ -13,7 +13,7 @@ subject: Preuzimanje završeno
 
 Poštovani,
 
-Vaše preuzimanje {if:files>1}fajlova{else}fajla{endif} niže navedeno je završeno :
+Vaše preuzimanje {if:files>1}fajlova{else}fajla{endif} ispod navedeno je završeno :
 
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
@@ -31,7 +31,7 @@ Lep pozdrav,
 </p>
 
 <p>
-    Vaše preuzimanje {if:files>1}fajlova{else}fajla{endif} niže navedeno je završeno :
+    Vaše preuzimanje {if:files>1}fajlova{else}fajla{endif} ispod navedeno je završeno :
 </p>
 
 <p>

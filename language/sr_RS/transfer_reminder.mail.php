@@ -14,7 +14,7 @@ subject: {transfer.subject}
 
 Poštovani,
 
-Ovo je podsetnik da {if:transfer.files>1}su fajlovi transferisani{else}je fajl transferisan{endif} na {cfg:site_name} od {transfer.user_email} i vi imate ovlašćenje za preuzimanje {if:transfer.files>1}njihovog{else}njegovog{endif}  sadržaja :
+Ovo je podsetnik da {if:transfer.files>1}su fajlovi otpremljeni{else}je fajl otpremljen{endif} na {cfg:site_name} od {transfer.user_email} i Vi imate ovlašćenje za preuzimanje {if:transfer.files>1}njihovog{else}njegovog{endif}  sadržaja :
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -42,7 +42,7 @@ Lep pozdrav,
 </p>
 
 <p>
-    Sledeći {if:transfer.files>1}fajlovi su transferisani{else}fajl je transferisan{endif}  na <a href="{cfg:site_url}">{cfg:site_name}</a> od <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> i Vi imate ovlašćenje za preuzimanje {if:transfer.files>1}njihovog{else}njegovog{endif} sadržaja.
+    Ovo je podsetnik da {if:transfer.files>1}su fajlovi otpremljeni{else}fajl je otpremljen{endif}  na <a href="{cfg:site_url}">{cfg:site_name}</a> od <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> i Vi imate ovlašćenje za preuzimanje {if:transfer.files>1}njihovog{else}njegovog{endif} sadržaja.
 </p>
 
 <table rules="rows">
@@ -68,7 +68,7 @@ Lep pozdrav,
         </tr>
         {if:transfer.files>1}
         <tr>
-            <td>Veličina</td>
+            <td>Veličina transfera</td>
             <td>{size:transfer.size}</td>
         </tr>
         {endif}
