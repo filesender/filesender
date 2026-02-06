@@ -34,6 +34,15 @@ $(function() {
     var page = $('.download_page');
     if(!page.length) return;
 
+    const copyToClipboard = (value) => {
+        navigator.clipboard.writeText(value).then((x) => {
+            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
+        }).catch((e) => {
+            console.error(e);
+            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
+        });
+    }
+
     // Get recipient token
     var m = window.location.search.match(/token=([0-9a-f-]+)/);
     var token = m[1];
@@ -48,5 +57,35 @@ $(function() {
     filesender.client.bindFileCheckButtons();
 
     $('#check-all').click();
-    
+
+    page.find('.script-links').on('click', function() {
+        var ids = [];
+        page.find('.file[data-selected="1"]').each(function() {
+            ids.push($(this).attr('data-id'));
+        });
+        if(!ids.length) { // No files selected, supose we want all of them
+            page.find('.file').each(function() {
+                ids.push($(this).attr('data-id'));
+            });
+        }
+        script="";
+        for(id in ids) {
+            script+="curl -O -L -J \""+location.origin+"/download.php?token="+filesender.client.token+"&files_ids="+ids[id]+"\"\n";
+        }
+        console.log(script);
+
+        var popup = filesender.ui.wideInfoPopup(lang.tr('script_download_title'));
+        //popup.css('overflow','hidden');
+        var pre = $('<pre />').text(script).appendTo(popup);
+
+        var actions = $('<div class="actions" />').appendTo(popup);
+
+        var clipboard = $('<button id="copy-to-clipboard" type="button" class="fs-button">').html('<i class="fa fa-copy"></i> '+lang.tr('copy')).appendTo(actions);
+        $('<p>&nbsp;</p>').prependTo(clipboard);
+
+        clipboard.on('click', function(e) {
+            copyToClipboard(script);
+        });
+
+    });
 });
