@@ -7,13 +7,15 @@
 // 
 // 
 ?>
-subject: Fajl{if:transfer.files>1}ovi uspešno transferisani{else} uspešno transferisan{endif}
+subject: Fajl{if:transfer.files>1}ovi uspešno otpremljeni{else} uspešno otpremljen{endif}
 
 {alternative:plain}
 
 Poštovani,
 
-{if:transfer.files>1}Sledeći fajlovi su uspešno transferisani{else}Sledeći fajl je uspešno transferisan{endif} na {cfg:site_name}.
+{if:transfer.files>1}Sledeći fajlovi su uspešno otpremljeni{else}Sledeći fajl je uspešno otpremljen{endif} na {cfg:site_name}.
+
+Ovi fajlovi se mogu preuzeti pomoću sledećeg linka: {transfer.download_link}
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -33,7 +35,11 @@ Lep pozdrav,
 </p>
 
 <p>
-    {if:transfer.files>1}Sledeći fajlovi su uspešno transferisani{else}Sledeći fajl je uspešno transferisan{endif} na <a href="{cfg:site_url}">{cfg:site_name}</a>.
+    {if:transfer.files>1}Sledeći fajlovi su uspešno otpremljeni{else}Sledeći fajl je uspešno otpremljen{endif} na <a href="{cfg:site_url}">{cfg:site_name}</a>.
+</p>
+
+<p>
+Ovi fajlovi se mogu preuzeti pomoću sledećeg linka <a href="{transfer.download_link}">{transfer.download_link}</a>
 </p>
 
 <table rules="rows">

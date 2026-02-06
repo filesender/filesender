@@ -7,9 +7,11 @@
 // 
 // 
 ?>
-<h1>Dobrodošli na {cfg:site_name}</h1>
+<h1>Dobrodošli na {cfg:site_name}!</h1>
 
 <p>
- {cfg:site_name} je siguran način deljenja fajlova sa bilo kim !
-  Prijavite se za transfer Vaših fajlova ili pozovite ljude da vam pošalju fajl.
+ Bezbedno delite svoje fajlove sa {cfg:site_name}.
+</p>
+<p>
+  Ovde ste po pozivu? Pratite uputstva iz pozivnog mejla.
 </p>
