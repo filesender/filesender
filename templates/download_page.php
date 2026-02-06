@@ -311,7 +311,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         </div>
                     <?php } ?>
 
-                    <?php if($showdownloadlinks) { ?>
+                    <?php if($showdownloadlinks && !$isEncrypted) { ?>
                         <div class="fs-download__actions">
                             <button type="button" class="fs-button script-links" title="{tr:script_download_links}">
                               <i class="fa fa-code"></i>
