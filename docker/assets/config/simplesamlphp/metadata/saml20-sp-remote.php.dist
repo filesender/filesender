@@ -1,0 +1,28 @@
+<?php
+
+$metadata['http://localhost/simplesaml/example-sp'] = [
+    'SingleLogoutService' => [
+        [
+            'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'Location' => 'http://localhost/simplesaml/module.php/saml/sp/saml2-logout.php/example-sp',
+        ],
+    ],
+    'AssertionConsumerService' => [
+        [
+            'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+            'Location' => 'http://localhost/simplesaml/module.php/saml/sp/saml2-acs.php/example-sp',
+            'index' => 0,
+        ],
+        [
+            'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
+            'Location' => 'http://localhost/simplesaml/module.php/saml/sp/saml2-acs.php/example-sp',
+            'index' => 1,
+        ],
+    ],
+    'DiscoveryResponse' => [
+        [
+            'Binding' => 'urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol',
+            'Location' => 'http://localhost/simplesaml/module.php/saml/sp/discoResponse/example-sp',
+        ],
+    ],
+];
