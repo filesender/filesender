@@ -358,6 +358,9 @@ class RestEndpointGuest extends RestEndpoint
                     throw new RestAdminRequiredException();
                 }
             }
+            if($guest->does_not_expire) {
+                 throw new RestBadParameterException('extend_expiry_date');
+            }
             $guest->extendObjectExpiryDate();
             return self::cast($guest);
         }
