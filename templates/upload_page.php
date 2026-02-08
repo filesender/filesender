@@ -590,16 +590,6 @@ EOF;
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-12">
-                                        <?php
-                                            $ops = Transfer::availableOptions();
-                                            if( array_key_exists( 'hide_sender_email', $ops )) {
-                                                $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), false, array() );
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-12">
@@ -713,6 +703,17 @@ EOF;
                                 </div>
                             </div>
 
+                                <div class="row hide_sender_email_group">
+                                    <div class="col-12 hse">
+                                        <?php
+                                        $ops = Transfer::availableOptions();
+                                            if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array() );
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+                            
                             <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
                                 <hr />
 

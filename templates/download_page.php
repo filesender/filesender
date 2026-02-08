@@ -129,14 +129,25 @@ $days_to_expire = $transfer->days_to_expire;
 
 $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links'));
 
+$sender_email = $transfer->user_email;
+if(array_key_exists('hide_sender_email', $transfer->options) && $transfer->options['hide_sender_email']) {
+    $sender_email = "";
+}
+$sender_email_clean = Template::sanitizeOutputEmail($sender_email);
+
+
 ?>
+
+
 
 <div class="fs-download">
     <div class="container">
         <div class="row">
             <div class="col">
                 <div class="fs-download__title">
-                    <h1><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?> {tr:transferred_these_files}</h1>
+                    <?php if(strlen($sender_email)) { ?>
+                        <h1><?= $sender_email_clean ?> {tr:transferred_these_files}</h1>
+                    <?php } ?>
                     <p><?php  echo Lang::tr('transfer_expires_in_x_days')->r(array('days_to_expire' => Template::Q($days_to_expire), 'days' => Template::Q($days_to_expire))) ?></p>
                 </div>
             </div>
@@ -156,10 +167,12 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         <strong>{tr:expiration_date}:</strong>
                         <span><?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></span>
                     </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:from}:</strong>
-                        <span><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></span>
-                    </div>
+                    <?php if(strlen($sender_email)) { ?>
+                        <div class="fs-info fs-info--aligned">
+                            <strong>{tr:from}:</strong>
+                            <span><?= $sender_email_clean ?></span>
+                        </div>
+                    <?php } ?>
                     <?php if($transfer->subject) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:subject}:</strong>
@@ -430,7 +443,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     <tbody>
         <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
             !$transfer->options['hide_sender_email']) { ?>
-                        <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td></tr>
+                        <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?= $sender_email_clean ?></td></tr>
         <?php } ?>
                         <tr>
                             <td align="right" class="created">{tr:created}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->created)) ?></td>

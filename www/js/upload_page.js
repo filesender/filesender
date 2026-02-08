@@ -1892,9 +1892,8 @@ filesender.ui.handle_get_a_link_change = function() {
 
     $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
-    form.find(
-        ' .fieldcontainer[data-option="hide_sender_email"]'
-    ).toggle(!choice);
+    
+
     
     form.find(
         ' .emailonly'
@@ -2385,6 +2384,7 @@ $(function() {
             filesender.ui.handle_get_a_link_change();
             form.find('.galmodelink').show();
             form.find('.galmodeemail').hide();
+            form.find('.hide_sender_email_group').show();
         }
         return false;
     });
@@ -2395,6 +2395,7 @@ $(function() {
             filesender.ui.handle_get_a_link_change();
             form.find('.galmodelink').hide();
             form.find('.galmodeemail').show();
+            form.find('.hide_sender_email_group').hide();
         }
         return false;
     });
@@ -2685,13 +2686,6 @@ $(function() {
 
         $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
-        form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(!choice);
-
-        form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(choice);
 
         form.find(
             ' .fieldcontainer[data-option="forward_to_another_server"],' +
