@@ -318,7 +318,7 @@ class Transfer extends DBObject
         'expires' => array(
             'expires' => array()
         ),
-        'downlaods' => array(
+        'downloads' => array(
             'download_count' => array()
         )
     );
