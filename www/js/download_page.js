@@ -68,23 +68,56 @@ $(function() {
                 ids.push($(this).attr('data-id'));
             });
         }
-        script="";
+        curlscript="";
+        wgetscript="";
+        links="";
         for(id in ids) {
-            script+="curl -O -L -J \""+location.origin+"/download.php?token="+filesender.client.token+"&files_ids="+ids[id]+"\"\n";
+            url=location.origin+"/download.php?token="+filesender.client.token+"&files_ids="+ids[id];
+            curlscript+="curl -O -L -J \""+url+"\"\n";
+            wgetscript+="wget --content-disposition \""+url+"\"\n";
+            links+=url+"\n";
         }
-        console.log(script);
+        //console.log(curlscript);
 
         var popup = filesender.ui.wideInfoPopup(lang.tr('script_download_title'));
         //popup.css('overflow','hidden');
-        var pre = $('<pre />').text(script).appendTo(popup);
 
-        var actions = $('<div class="actions" />').appendTo(popup);
+        var tabsHtml = `
+          <div id="downloadTabs">
+            <ul>
+              <li><a href="#curltab">Curl</a></li>
+              <li><a href="#wgettab">Wget</a></li>
+              <li><a href="#linkstab">Links</a></li>
+            </ul>
+            <div id="curltab"></div>
+            <div id="wgettab"></div>
+            <div id="linkstab"></div>
+          </div>`;
+        $(tabsHtml).appendTo(popup);
+        $("#downloadTabs").tabs();
 
-        var clipboard = $('<button id="copy-to-clipboard" type="button" class="fs-button">').html('<i class="fa fa-copy"></i> '+lang.tr('copy')).appendTo(actions);
-        $('<p>&nbsp;</p>').prependTo(clipboard);
+        var curlpre = $('<pre />').text(curlscript).appendTo($('#curltab'));
+        var curlactions = $('<div class="actions" />').appendTo($('#curltab'));
+        var curlclipboard = $('<button type="button" class="fs-button">').html('<i class="fa fa-copy"></i> '+lang.tr('copy')).appendTo(curlactions);
+        $('<p>&nbsp;</p>').prependTo(curlclipboard);
+        curlclipboard.on('click', function(e) {
+            copyToClipboard(curlscript);
+        });
 
-        clipboard.on('click', function(e) {
-            copyToClipboard(script);
+        var wgetpre = $('<pre />').text(wgetscript).appendTo($('#wgettab'));
+        var wgetactions = $('<div class="actions" />').appendTo($('#wgettab'));
+        var wgetclipboard = $('<button type="button" class="fs-button">').html('<i class="fa fa-copy"></i> '+lang.tr('copy')).appendTo(wgetactions);
+        $('<p>&nbsp;</p>').prependTo(wgetclipboard);
+        wgetclipboard.on('click', function(e) {
+            copyToClipboard(wgetscript);
+        });
+
+        var linkspre = $('<pre />').text(links).appendTo($('#linkstab'));
+        var linksactions = $('<div class="actions" />').appendTo($('#linkstab'));
+        var linksclipboard = $('<button type="button" class="fs-button">').html('<i class="fa fa-copy"></i> '+lang.tr('copy')).appendTo(linksactions);
+        $('<p>&nbsp;</p>').prependTo(linksclipboard);
+        linksclipboard.on('click', function(e) {
+            copyToClipboard(links);
         });
 
     });
