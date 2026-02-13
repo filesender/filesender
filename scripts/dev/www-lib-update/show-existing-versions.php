@@ -20,8 +20,8 @@ $packages = array(
         'pattern' => '/Chart.js v([0-9.]+).*/m',
     ),
     'font awesome' => array(
-        'path' => 'font-awesome/css/font-awesome.css',
-        'pattern' => '/Font Awesome ([0-9.]+) by/m',
+        'path' => 'font-awesome/css/fontawesome.css',
+        'pattern' => '/Font Awesome Free ([0-9.]+) by/m',
     ),
     'jQuery' => array(
         'path' => 'jquery/jquery.min.js',
