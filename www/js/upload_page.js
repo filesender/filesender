@@ -2298,6 +2298,10 @@ $(function() {
             $('#transfer-link').prop("checked", true);
             filesender.ui.onChangeTransferType("transfer-link");
         }
+        if( form.attr('data-user-has-email-preference') == '1' ) {
+            $('#transfer-email').prop("checked", true);
+            filesender.ui.onChangeTransferType("transfer-email");
+        }
 
         // If there is only one choice then we should already make it
         if($('.get_a_link_top_selector').length==0) {
@@ -2384,7 +2388,6 @@ $(function() {
             filesender.ui.handle_get_a_link_change();
             form.find('.galmodelink').show();
             form.find('.galmodeemail').hide();
-            form.find('.hide_sender_email_group').show();
         }
         return false;
     });
@@ -2395,7 +2398,6 @@ $(function() {
             filesender.ui.handle_get_a_link_change();
             form.find('.galmodelink').hide();
             form.find('.galmodeemail').show();
-            form.find('.hide_sender_email_group').hide();
         }
         return false;
     });
