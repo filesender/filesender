@@ -50,17 +50,22 @@ If you want to add your FileSender installation to this list use one of the foll
 
 | Country/Region | Organisation  | Service URL          | Known since| Last checked |
 | --- | --- | --- |---|---|
+| Austria | Anton Bruckner University | [https://filesender.bruckneruni.at/](https://filesender.bruckneruni.at/) | Feb 2026 | 14 Feb 2026 |
 | Austria | University of Graz | [https://share.uni-graz.at/](https://share.uni-graz.at/) | Aug 2025 | 6 Sep 2025 |
 | Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021| 25 Apr 2025 |
 | Cyprus  | University of Cyprus | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| 25 Apr 2025 |
+| Denmark | Aalborg University | https://filesender.aau.dk/ | Feb 2026 | 14 Feb 2026 |
 | France  | National Center for Meteorological Research | [https://filesender.umr-cnrm.fr/filesender/](https://filesender.umr-cnrm.fr/filesender/) | Jul 2025 | 30 Jul 2025 |
 | France  | University of Reunion Island | [https://filesender.univ-reunion.fr/filesender/](https://filesender.univ-reunion.fr/filesender/) | Oct 2025 | 2 Nov 2025 |
 | Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://transcrypt.helmholtz.cloud/](https://transcrypt.helmholtz.cloud/) | Aug 2023| 28 Jan 2026 |
 | Germany  | Johannes Gutenberg University Mainz | [https://filesender.zdv.net/filesender/](https://filesender.zdv.net/filesender/) | Oct 2025 | 2 Nov 2025 |
 | Germany  | Trier University of Applied Sciences | [https://filesender.hochschule-trier.de/filesender/](https://filesender.hochschule-trier.de/filesender/) | Sep 2025 | 6 Sep 2025 |
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018| 25 Apr 2025 |
+| Hungary | National Széchényi Library | [https://filesender.oszk.hu/](https://filesender.oszk.hu/) | Feb 2026| 14 Feb 2026 |
 | Israel  | Hebrew University of Jerusalem (HUJI)  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 25 Apr 2025 |
+| Italy  | Politecnico di Milano | [https://fs.polimi.it/](https://fs.polimi.it/) | Feb 2026 | 14 Feb 2026 |
 | Norway  | NORCE research institute | [https://filesender.norceresearch.no/](https://filesender.norceresearch.no/) | Dec 2025 | 27 Jan 2026 |
+| Portugal | University of Porto | [https://filesender.up.pt/](https://filesender.up.pt/) | Feb 2026 | 14 Feb 2026 |
 | Serbia  | University of Belgrade, Faculty of Geography | [https://filesender.gef.bg.ac.rs/filesender/](https://filesender.gef.bg.ac.rs/filesender/) | Sep 2025 | 6 Sep 2025 | 
 | Spain  | Universidade de Vigo | [https://filesender.uvigo.es/filesender/](https://filesender.uvigo.es/filesender/) | Dec 2025 | 27 Jan 2026 |
 | Spain/Sevilla  | Universidad Internacional de Andalucia| [https://filesender.unia.es/](https://filesender.unia.es/)  | May 2014| 25 Apr 2025, version 1.x |
@@ -111,6 +116,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Country/Region | NREN/Organisation  | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
 | Botswana | BotsREN | [https://filesender.botsren.org.bw/](https://filesender.botsren.org.bw/) | Sep 2025 | 6 Sep 2025 |
+| Burundi | BERNET | [https://filesender.bernet.edu.bi/](https://filesender.bernet.edu.bi/) | Feb 2026 | 14 Feb 2026 |
 | East and South Africa | UbuntuNet Alliance | [https://filesender.ubuntunet.net/](https://filesender.ubuntunet.net/) | Mar 2018| 25 Apr 2025 |
 | Ethiopia | EthERNet | [https://filesender.ethernet.edu.et/](https://filesender.ethernet.edu.et/) | Oct 2023 | 25 Apr 2025 |
 | Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 | 25 Apr 2025 |
@@ -126,16 +132,20 @@ If you want to add your FileSender installation to this list use one of the foll
 
 | Country/Region| Organisation | Service URL | Known since|Last checked |
 | --- | --- | --- |---|---|
-| Australia | WMAwater hydrological and hydraulic consultancy | [https://filesender.wmawater.com.au/](https://filesender.wmawater.com.au/) | 2016 | 27 Jan 2026 |
+| Australia | WMAwater - hydrological and hydraulic consultancy | [https://filesender.wmawater.com.au/](https://filesender.wmawater.com.au/) | 2016 | 27 Jan 2026 |
 | Belgium | Autosécurité Group | [https://filesender.autosecurite.be/filesender/](https://filesender.autosecurite.be/filesender/) |Aug 2025 | 6 Sep 2025 |
 | Czech Republic | National Film Archive | [https://filesender.nfa.cz/](https://filesender.nfa.cz/) |Jul 2025 | 30 Jul 2025 |
+| Czech Republic | State Regional Archives Litomerice | [https://filesender.soalitomerice.com/](https://filesender.soalitomerice.com/) | Feb 2026 | 14 Feb 2026 |
 | France | CDG 33 - Gironde Management Center | [https://filesender.cdg33.fr/](https://filesender.cdg33.fr/) | Apr 2025 | 25 Apr 2025 |
 | France | Occitania Regional Council | [https://filesender.laregion.fr/](https://filesender.laregion.fr/) | Jun 2025 | 23 Jun 2025 |
 | France | Regional e-Health Development Support Group Bourgogne-Franche-Comté | [https://filesender.bfc-sante.fr/](https://filesender.bfc-sante.fr/) | Jul 2025 | 30 Jul 2025 |
 | France | SEM Plaine Commune Development | [https://filesender.semplaine.fr/](https://filesender.semplaine.fr/) | Jul 2025 | 30 Jul 2025 |
+| France | the Télégramme Group - multimedia | [filesender.groupe-telegramme.fr](filesender.groupe-telegramme.fr) | Feb 2026 | 14 Feb 2026 |
+| France | TransGourmet - food wholesaler | [https://filesender.transgourmet.fr/filesender/](https://filesender.transgourmet.fr/filesender/) | Feb 2026 | 14 Feb 2026 |
 | Italy | Religious community | [https://filesender.salesianinordest.it/](https://filesender.salesianinordest.it/) | Oct 2025 | 2 Nov 2025 |
 | Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 25 Apr 2025 |
 | Norway | Municipality digital services in Sunnmøre | [https://filesender.esunnmore.no/filesender/](https://filesender.esunnmore.no/filesender/) | Oct 2025 | 2 Nov 2025 |
+| Switzerland | Gericke Group - equipment manufacturer | [https://filesender.gerickegroup.com/filesender/](https://filesender.gerickegroup.com/filesender/) | Feb 2026 | 14 Feb 2026 |
 | Vatican | Congregation for the Evangelization of Peoples | [https://filesender.evang.va/](https://filesender.evang.va/) | Oct 2025 | 2 Nov 2025 |
 
 
