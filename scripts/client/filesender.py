@@ -514,9 +514,10 @@ def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
   """Download a given file to disk."""
   try:
     if attempt > 10:
-      print("  Unable to download file.")
       if file_info["encrypted"]:
-        print("  Was the password incorrect?")
+        print("    Unable to download file, was the password incorrect?")
+      else:
+        print("    Unable to download file.")
       sys.exit(1)
     download_url = base_url.replace("rest.php","download.php")
     path = file_info['name'].split("/")
