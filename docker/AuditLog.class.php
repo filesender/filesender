@@ -129,7 +129,7 @@ class AuditLog extends DBObject
             'target_id'   => array(),
         ),
 
-        
+
 //        'Type_ID_AType_AID_IP_Event_Created' => array(
 //            'target_type' => array(),
 //            'target_id'   => array(),
@@ -139,7 +139,7 @@ class AuditLog extends DBObject
 //            'event'       => array(),
 //            'created'     => array()
 //        ),
-        
+
     );
 
     public static function getViewMap()
@@ -153,7 +153,7 @@ class AuditLog extends DBObject
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a );
     }
-    
+
     /**
      * Set selectors
      */
@@ -161,15 +161,15 @@ class AuditLog extends DBObject
     const FROM_TRID_TARGET = 'transfer_id = :trid AND target_type = :type AND target_id = :id ORDER BY created ASC, id ASC';
     const FROM_AUTHOR = 'author_type = :type AND author_id = :id ORDER BY created ASC, id ASC';
     const FROM_TARGET_AND_AUTHOR = 'event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ORDER BY created DESC limit 10 ';
-    const FROM_TARGET_AND_AUTHOR_SINCE = 'created > :created AND event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ';    
-    const FROM_TARGET_TYPE_SINCE = 'created > :created AND event = :event AND target_type = :ttype  ';    
+    const FROM_TARGET_AND_AUTHOR_SINCE = 'created > :created AND event = :event AND target_type = :ttype AND target_id = :tid AND author_type = :atype AND author_id = :aid ';
+    const FROM_TARGET_TYPE_SINCE = 'created > :created AND event = :event AND target_type = :ttype  ';
     const FIND_USERS_SINCE = array( 'select' => 'max(id) as id,target_id',
                                     'where' => 'created > :created AND event = :event AND target_type = :ttype ',
                                     'group' => 'target_id' );
     const FIND_USERS_SINCE_GAID = array( 'select' => 'max(id) as id,author_id',
                                     'where' => 'created > :created AND event = :event AND target_type = :ttype ',
                                     'group' => 'author_id' );
-    
+
     /**
      * Properties
      */
@@ -184,8 +184,8 @@ class AuditLog extends DBObject
     protected $transaction_id = null;
     protected $transfer_id = null;
     protected $file_id = null;
-    
-    
+
+
     /**
      * Constructor
      *
@@ -213,37 +213,46 @@ class AuditLog extends DBObject
             $this->ip = Utilities::getClientIP();
         }
     }
-    
+
     /**
      * Create a new audit log
      *
      * @param LogEventTypes $event the event to be logged
      * @param DBObject the target to be logged
      * @param DBObject the author of the action
+     * @param datetime $created: created datetime if forwarded
+     * @param string $ip: ip address if forwarded
      *
      * @return AuditLog auditlog
      */
-    public static function create($event, DBObject $target, $author = null)
+    public static function create($event, DBObject $target, $author = null, $created = null, $ip = null)
     {
         if (is_null(Config::get('auditlog_lifetime'))) { // Auditlog disabled
             return;
         }
-        
+
         // Check event type
         if (!LogEventTypes::isValidValue($event)) {
             throw new AuditLogUnknownEventException($event);
         }
-        
+
+        if( !Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+            !Auth::isAdmin()) {
+            $created = time();
+            $ip = Utilities::getClientIP();
+        }
+
         $auditLog = new self();
-        
+
         $auditLog->event = $event;
-        $auditLog->created = time();
-        $auditLog->ip = Utilities::getClientIP();
+        $auditLog->created = $created;
+        $auditLog->ip = $ip;
         $auditLog->target_id = $target->id;
         $auditLog->target_type = get_class($target);
         $auditLog->transfer_id = self::getTransferID( $target );
         $auditLog->file_id     = self::getFileID( $target );
-        
+
+
         if(array_key_exists('transaction_id', $_REQUEST)) {
             $transaction_id = $_REQUEST['transaction_id'];
             if(Utilities::isValidUID($transaction_id)) {
@@ -254,17 +263,17 @@ class AuditLog extends DBObject
         if (!$author) {
             $author = Auth::user();
         }
-        
+
         if (is_object($author)) {
             $auditLog->author_type = get_class($author);
             $auditLog->author_id = $author->id;
         }
-        
+
         $auditLog->save();
-        
+
         return $auditLog;
     }
-    
+
     /**
      * Save in database
      */
@@ -275,7 +284,7 @@ class AuditLog extends DBObject
         }
         $this->insertRecord($this->toDBData());
     }
-    
+
     /**
      * Getter
      *
@@ -295,10 +304,12 @@ class AuditLog extends DBObject
             'author_type',
             'author_id',
             'created',
+            'transfer_id',
+            'file_id',
          ))) {
             return $this->$property;
         }
- 
+
         if ($property == 'ip') {
             //Strip out ::ffff: from ipv4 addresses when in ipv6 mode
             $ip = preg_replace('/^::ffff:([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$/', '$1', $this->ip);
@@ -316,7 +327,7 @@ class AuditLog extends DBObject
             }
             return $ip;
         }
-        
+
         if ($property == 'target') {
             try {
                 return call_user_func($this->target_type.'::fromId', $this->target_id);
@@ -331,12 +342,12 @@ class AuditLog extends DBObject
                 );
             }
         }
-        
+
         if ($property == 'author') {
             if (!$this->author_type || !$this->author_id) {
                 return null;
             }
-            
+
             try {
                 return call_user_func($this->author_type.'::fromId', $this->author_id);
             } catch (Exception $e) {
@@ -347,7 +358,7 @@ class AuditLog extends DBObject
                 );
             }
         }
-        
+
         if ($property == 'time_taken') {
             if ($this->target_type == 'Transfer') {
                 if ($this->event == LogEventTypes::TRANSFER_AVAILABLE) {
@@ -357,19 +368,19 @@ class AuditLog extends DBObject
                     return $this->target->upload_time;
                 }
             }
-            
+
             if ($this->target_type == 'File') {
                 if ($this->event == LogEventTypes::FILE_UPLOADED) {
                     return $this->target->upload_time;
                 }
             }
-            
+
             return 0;
         }
-        
+
         throw new PropertyAccessException($this, $property);
     }
-    
+
     /**
      * Get logs related to a target
      *
@@ -390,16 +401,16 @@ class AuditLog extends DBObject
         } else {
             $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => (string)$target->id));
         }
-        
+
         if ($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function ($log) use ($event) {
                 return $log->event == $event;
             });
         }
-        
+
         return $logs;
     }
-    
+
     /**
      * Get logs related to an author
      *
@@ -410,23 +421,23 @@ class AuditLog extends DBObject
     public static function fromAuthor(DBObject $author, $event = null)
     {
         $logs = self::all(self::FROM_AUTHOR, array('type' => $author->getClassName(), 'id' => (string)$author->id));
-        
+
         if ($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function ($log) use ($event) {
                 return $log->event == $event;
             });
         }
-        
+
         return $logs;
     }
 
     /**
-     * Get the most recent audit entry for a specific {$logEvent, $target, $author} 
+     * Get the most recent audit entry for a specific {$logEvent, $target, $author}
      *
      * @param string from LogEventTypes
      * @param DBObject the target to be logged
      * @param DBObject the author of the action
-     * 
+     *
      * @return the database entry for the last log item or array()
      */
     public static function latestEntry($logEvent, $target, $author = null )
@@ -434,7 +445,7 @@ class AuditLog extends DBObject
         if (!$author) {
             $author = Auth::user();
         }
-        
+
         $logs = self::all(self::FROM_TARGET_AND_AUTHOR,
                           array(
                               'event' => $logEvent,
@@ -450,7 +461,7 @@ class AuditLog extends DBObject
 
 
     /**
-     * This is a mirror of AuditLog::create() but you want to find the number 
+     * This is a mirror of AuditLog::create() but you want to find the number
      * of auditlog entries with the same {$logEvent, $target, $author} since a given number
      * of seconds ago. This way you can use the same parameters to a call to AuditLog::create()
      * and countEntries() to rate limit how many times something can happen in a given window of time
@@ -463,7 +474,7 @@ class AuditLog extends DBObject
      * @param DBObject the author of the action
      * @param int secondsAgo where to start the count. Defauts to 1 day in seconds.
      * @param DBObject $author
-     * 
+     *
      */
     public static function countEntries($logEvent, $target, $secondsAgo = null, $author = null )
     {
@@ -471,7 +482,7 @@ class AuditLog extends DBObject
             $secondsAgo = 24*3600;
         }
         $created = time() - $secondsAgo;
-        
+
         if (!$author) {
             $author = Auth::user();
         }
@@ -489,7 +500,7 @@ class AuditLog extends DBObject
         $c = $data['count'];
         return $c;
     }
-    
+
     public static function findUsers($logEvent,$ttype,$secondsAgo = null)
     {
         if(!$secondsAgo) {
@@ -519,7 +530,7 @@ class AuditLog extends DBObject
     }
 
 
-    
+
     public static function findUsersOrderedByCount($logEvent,$atype = 'User',$secondsAgo = null)
     {
         if(!$secondsAgo) {
@@ -544,9 +555,9 @@ class AuditLog extends DBObject
         }
         return $ret;
     }
-    
 
-    
+
+
     /**
      * Get logs related to a transfer
      *
@@ -571,7 +582,7 @@ class AuditLog extends DBObject
                    'type' => $transfer->getClassName(),
                    'id' => (string)$transfer->id)));
 
-        
+
         // Add events related to the transfer's files
         foreach (self::all('transfer_id=:trid AND target_type=\'File\' AND target_id IN :ids',
                            array(
@@ -582,16 +593,16 @@ class AuditLog extends DBObject
                            )) as $log) {
             $logs[] = $log;
         }
-        
-        
+
+
         // Add events related to the transfer's recipients
         foreach (self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function ($recipient) {
             return $recipient->id;
         }, $transfer->recipients))) as $log) {
             $logs[] = $log;
         }
-         
-        
+
+
         // Sort by event date
         usort($logs, function ($a, $b) {
             $d = $a->created - $b->created;
@@ -600,7 +611,7 @@ class AuditLog extends DBObject
             }
             return $a->id - $b->id;
         });
-        
+
         // filter by type if required
         if ($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function ($log) use ($event) {
@@ -611,15 +622,15 @@ class AuditLog extends DBObject
         // Filter out older events.
         if( $since ) {
             $cutoff = time() - $since;
-            
+
             $logs = array_filter($logs, function ($log) use ($cutoff) {
                 return $log->created >= $cutoff;
             });
         }
-        
+
         return $logs;
     }
-    
+
     /**
      * Tells wether the client already downloaded the file set over a past range
      *
@@ -641,11 +652,11 @@ class AuditLog extends DBObject
                 ':since' => date('Y-m-d H:i:s', time() - $range)
             )
         );
-        
+
         // Same number of items means all files where downloaded (individually or not) over the range
         return count($downloaded) == count($files_ids);
     }
-    
+
     /**
      * Remove entries related to a transfer
      *
@@ -660,7 +671,7 @@ class AuditLog extends DBObject
 
     public static function cleanup()
     {
-        $dbtype = Config::get('db_type'); 
+        $dbtype = Config::get('db_type');
 
         // update all AuditLogs Guest targets that point to guests
         // that have already been deleted from the guests table
@@ -681,7 +692,7 @@ class AuditLog extends DBObject
             ""
           . "delete from ".self::getDBTable()." where target_id = 'null' and target_type = 'Guest' "
         );
-        
+
         // if there is a sunset lifetime for the auditlog
         // then cleanup records that are too old.
         $lifetime = Config::get('auditlog_lifetime');
@@ -740,13 +751,13 @@ class AuditLog extends DBObject
             $ret[] = $u;
         }
         return $ret;
-        
+
     }
 
     public static function getTransferID( DBObject $target )
     {
         $trid = null;
-        
+
         if( !$target ) {
             return $trid;
         }
@@ -760,14 +771,14 @@ class AuditLog extends DBObject
                 $trid = $target->transfer_id;
             }
         }
-        
+
         return $trid;
     }
 
     public static function getFileID( DBObject $target )
     {
         $fileid = null;
-        
+
         if( !$target ) {
             return $fileid;
         }
@@ -778,8 +789,8 @@ class AuditLog extends DBObject
                 $fileid = $target->id;
             }
         }
-        
+
         return $fileid;
     }
-    
+
 }
