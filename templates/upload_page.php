@@ -295,10 +295,13 @@ if( $openpgp_encrypt_passphrase ) {
 
 
 $canHideSenderEmail = false;
+$hideSenderEmailIsAdvanced = false;
 
 $ops = Transfer::availableOptions();
 if( array_key_exists( 'hide_sender_email', $ops )) {
     $canHideSenderEmail = true;
+    
+    $hideSenderEmailIsAdvanced = Transfer::getOptionSubSetting( $ops, 'hide_sender_email', 'advanced' );
 }
 
 ?>
@@ -574,6 +577,7 @@ EOF;
                             </div>
 
                             <?php if($canHideSenderEmail) { ?>
+                                <?php if( !$hideSenderEmailIsAdvanced ) {  ?>
                                 <hr data-related-to="topops" />
                                 <div class="row ">
                                     <div class="col-12 hse">
@@ -585,6 +589,7 @@ EOF;
                                         ?>
                                     </div>
                                 </div>
+                                <?php } ?>
                             <?php } ?>
 
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
@@ -887,6 +892,22 @@ EOF;
                                                             {tr:advanced_upload_settings}
                                                         </strong>
 
+                                                        <?php if($canHideSenderEmail) { ?>
+                                                            <?php if( $hideSenderEmailIsAdvanced ) {  ?>
+                                                                <hr data-related-to="topops" />
+                                                                <div class="row ">
+                                                                    <div class="col-12 hse">
+                                                                        <?php
+                                                                        $ops = Transfer::availableOptions();
+                                                                        if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                                            $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
+                                                                        }
+                                                                        ?>
+                                                                    </div>
+                                                                </div>
+                                                            <?php } ?>
+                                                        <?php } ?>
+                                                        
                                                         <?php
                                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
                                                                 if( !array_key_exists($name,$upload_options_handled)) {
@@ -900,6 +921,8 @@ EOF;
                                                                 }
                                                             }
                                                         ?>
+
+                                                        
                                                     </div>
                                                 </div>
                                                 <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
