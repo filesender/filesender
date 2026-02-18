@@ -83,18 +83,35 @@ $archiveDownloadLink = '#';
 $archiveDownloadLinkFileIDs = '';
 
 if(empty($transfer->options['encryption'])) {
+
+    $token = '';
+    if(array_key_exists('token', $_REQUEST)) {
+        $token = $_REQUEST['token'];
+    }
+    if(!Utilities::isValidUID($token)) {
+        $token = '';
+    }
+
     $fileIds = array();
     foreach($transfer->files as $file) {
-        $downloadLinks[$file->id] = Utilities::http_build_query(array(
-            'token' => $token,
-            'files_ids' => $file->id,
-        ), 'download.php?' );
+        $linkParams = array('files_ids' => $file->id);
+        if (!empty($token)) {
+            $linkParams['token'] = $token;
+        }
+        $downloadLinks[$file->id] = Utilities::http_build_query($linkParams, 'download.php?');
         $fileIds[] = $file->id;
     }
-    $archiveDownloadLink = Utilities::http_build_query(array(
-        'token' => $token,
-    ), 'download.php?' );
+    $archiveParams = array();
+    if (!empty($token)) {
+        $archiveParams['token'] = $token;
+    }
+    $archiveDownloadLink = Utilities::http_build_query($archiveParams, 'download.php?');
     $archiveDownloadLinkFileIDs = implode(',', $fileIds);
+
+    // forget this here to limit scope.
+    $token = '';
+    $linkParams = array();
+    $archiveParams = array();
 }
 
 ?>
@@ -266,12 +283,12 @@ if(empty($transfer->options['encryption'])) {
                                                     <?php } ?>
                                                 <?php } ?>
 
-                                                <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text download" title="{tr:delete}">
+                                                <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text" title="{tr:delete}">
                                                     <i class="fa fa-trash"></i>
                                                 </span>
 
                                                 <?php if($audit) { ?>
-                                                    <span data-action="auditlog" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:open_file_auditlog}">
+                                                    <span data-action="auditlog" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text" title="{tr:open_file_auditlog}">
                                                         <i class="fa fa-history"></i>
                                                     </span>
                                                 <?php } ?>

@@ -7,4 +7,4 @@
 // 
 // 
 ?>
-Pravila o prihvatljivoj upotrebi...
+Uslovi korišćenja

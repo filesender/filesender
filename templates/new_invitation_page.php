@@ -55,17 +55,57 @@ foreach (Guest::allOptions() as $name => $dfn) {
 }
 
 
-$possibleExpireDays = array( 7, 15, 30, 40 );
-array_push( $possibleExpireDays, Config::get('default_guest_days_valid'));
-asort( $possibleExpireDays );
-$possibleExpireDays = array_unique( $possibleExpireDays, SORT_NUMERIC );
-$expireDays = array_filter( $possibleExpireDays, function($k) {
-    return $k < Config::get('max_guest_days_valid')
-        && $k > Config::get('min_guest_days_valid');
+// Expiry days selection logic
+// If selectable_guest_days_valid is empty (default), generate progressive options
+// If admin has configured specific values, use those instead
+$configuredDays = Config::get('selectable_guest_days_valid');
+$maxDays = Config::get('max_guest_days_valid');
+$minDays = Config::get('min_guest_days_valid');
+
+if (empty($configuredDays)) {
+    // Dynamic expiry days generation based on max_guest_days_valid
+    // This provides granular options for short invitations and reasonable intervals for longer ones
+    $possibleExpireDays = array();
+    
+    // Days 1-7: show all individually for fine-grained control
+    for ($d = 1; $d <= min(7, $maxDays); $d++) {
+        if ($d >= $minDays) {
+            $possibleExpireDays[] = $d;
+        }
+    }
+    // Days 8-30: show weekly intervals (14, 21, 28)
+    for ($d = 14; $d <= min(30, $maxDays); $d += 7) {
+        if ($d >= $minDays) {
+            $possibleExpireDays[] = $d;
+        }
+    }
+    // Days 31+: show monthly intervals (30, 60, 90, 120...)
+    for ($d = 30; $d <= $maxDays; $d += 30) {
+        if ($d >= $minDays) {
+            $possibleExpireDays[] = $d;
+        }
+    }
+    // Always include the max value if not already present
+    if (!in_array($maxDays, $possibleExpireDays) && $maxDays >= $minDays) {
+        $possibleExpireDays[] = $maxDays;
+    }
+} else {
+    // Use admin-configured list
+    $possibleExpireDays = $configuredDays;
+}
+
+// Include the default value and clean up
+array_push($possibleExpireDays, Config::get('default_guest_days_valid'));
+asort($possibleExpireDays);
+$possibleExpireDays = array_unique($possibleExpireDays, SORT_NUMERIC);
+$expireDays = array_filter($possibleExpireDays, function($k) {
+    return $k <= Config::get('max_guest_days_valid')
+        && $k >= Config::get('min_guest_days_valid');
 });
+
 $expireDaysSelected = Config::get('default_guest_days_valid');
-if( !in_array( $expireDaysSelected, $expireDays )) {
-    // got filtered? $possibleExpireDays count should be >1 from default setup
+if (!in_array($expireDaysSelected, $expireDays)) {
+    // If default is filtered out, use the last available option
     $v = array_slice($expireDays, -1);
     $expireDaysSelected = $v[0];
 }
@@ -296,7 +336,7 @@ use ( $new_guests_can_only_send_to_creator,
 
                                     <div class="fs-new-invitation__actions">
                                         <button type="button" class="fs-button send">
-                                            <i class="fa fa-send"></i>
+                                            <i class="fa fa-paper-plane"></i>
                                             <span>{tr:send_invitation}</span>
                                         </button>
                                     </div>

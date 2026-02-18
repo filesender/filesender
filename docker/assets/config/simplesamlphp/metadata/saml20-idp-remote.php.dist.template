@@ -1,0 +1,22 @@
+<?php
+
+$metadata['urn:x-simplesamlphp:hosted-idp'] = [
+    'metadata-set' => 'saml20-idp-hosted',
+    'entityid' => 'urn:x-simplesamlphp:hosted-idp',
+    'SingleSignOnService' => [
+        [
+            'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'Location' => 'http://localhost/simplesaml/module.php/saml/idp/singleSignOnService',
+        ],
+    ],
+    'SingleLogoutService' => [
+        [
+            'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'Location' => 'http://localhost/simplesaml/module.php/saml/idp/singleLogout',
+        ],
+    ],
+    'NameIDFormat' => [
+        'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+    ],
+    'certData' => 'GENERATED_CERT_DATA',
+];

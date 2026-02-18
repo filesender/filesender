@@ -7,4 +7,4 @@
 // 
 // 
 ?>
- 
+Imate pitanje? Obratite se službi za pomoć vaše institucije.
