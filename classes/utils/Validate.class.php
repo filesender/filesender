@@ -114,7 +114,7 @@ class Validate
 
         return self::filter_var_regex_log( $msg,
                                            $value,
-                                           '|^[.a-zA-Z0-9]+/[.a-zA-Z0-9]+$|' );
+                                           '|^[.a-zA-Z0-9]+/[-.a-zA-Z0-9]+$|' );
             
     }
 
