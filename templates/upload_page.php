@@ -122,7 +122,7 @@ $allow_recipients = true;
  *                        show in the default panels on the left. This allows
  *                        some options to be displayed in other locations on the page.
  */
-$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email','forward_to_another_server', 'forward_server_name')) use ($guest_can_only_send_to_creator) {
+$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email','forward_to_another_server', 'forward_server_name'), $idoverride = '' ) use ($guest_can_only_send_to_creator) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
 
     if( in_array($name, $optionsToFilter)) {
@@ -175,7 +175,11 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
         echo '</div>';
 
     } else {
-        echo '<div id="fs-transfer__add-me-to-recipients" class="fs-switch">';
+        $id = "fs-transfer__add-me-to-recipients";
+        if( $idoverride != '' ) {
+            $id = $idoverride;
+        }
+        echo '<div  id="'.$id.'" class="fs-switch">';
         echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
         echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
         echo '</div>';
@@ -202,13 +206,21 @@ if(Auth::isGuest()) {
     }
 }
 
+$userHasEmailPreference = false;
 $userHasGALPreference = false;
 if( !Auth::isGuest()) {
     $user = Auth::User();
     if( $user->save_transfer_preferences ) {
         $ops = (array)$user->transfer_preferences;
         if( array_key_exists( 'get_a_link', $ops )) {
-            $userHasGALPreference = $ops["get_a_link"];
+            $gal = $ops["get_a_link"];
+            if( $gal ) {
+                $userHasGALPreference = true;
+            } else {
+                $userHasEmailPreference = true;
+            }
+        } else {
+            $userHasEmailPreference = true;
         }
     }
 }
@@ -281,6 +293,17 @@ if( $openpgp_encrypt_passphrase ) {
     $openpgp_encrypt_passphrase_add_class = "hidden";
 }
 
+
+$canHideSenderEmail = false;
+$hideSenderEmailIsAdvanced = false;
+
+$ops = Transfer::availableOptions();
+if( array_key_exists( 'hide_sender_email', $ops )) {
+    $canHideSenderEmail = true;
+    
+    $hideSenderEmailIsAdvanced = Transfer::getOptionSubSetting( $ops, 'hide_sender_email', 'advanced' );
+}
+
 ?>
 
 <?php if( Config::get('read_only_mode')) { ?>
@@ -339,6 +362,7 @@ EOF;
           autocomplete="off"
           data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>"
           data-user-has-gal-preference="<?php echo $userHasGALPreference ? '1' : '0' ?>"
+          data-user-has-email-preference="<?php echo $userHasEmailPreference ? '1' : '0' ?>"
     >
 
         <div class="fs-transfer">
@@ -552,6 +576,22 @@ EOF;
                                 </div>
                             </div>
 
+                            <?php if($canHideSenderEmail) { ?>
+                                <?php if( !$hideSenderEmailIsAdvanced ) {  ?>
+                                <hr data-related-to="topops" />
+                                <div class="row ">
+                                    <div class="col-12 hse">
+                                        <?php
+                                        $ops = Transfer::availableOptions();
+                                            if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                            <?php } ?>
+
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
                                 <hr data-related-to="emailfrom" />
 
@@ -590,16 +630,6 @@ EOF;
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-12">
-                                        <?php
-                                            $ops = Transfer::availableOptions();
-                                            if( array_key_exists( 'hide_sender_email', $ops )) {
-                                                $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), false, array() );
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-12">
@@ -713,6 +743,7 @@ EOF;
                                 </div>
                             </div>
 
+                            
                             <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
                                 <hr />
 
@@ -861,6 +892,22 @@ EOF;
                                                             {tr:advanced_upload_settings}
                                                         </strong>
 
+                                                        <?php if($canHideSenderEmail) { ?>
+                                                            <?php if( $hideSenderEmailIsAdvanced ) {  ?>
+                                                                <hr data-related-to="topops" />
+                                                                <div class="row ">
+                                                                    <div class="col-12 hse">
+                                                                        <?php
+                                                                        $ops = Transfer::availableOptions();
+                                                                        if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                                            $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
+                                                                        }
+                                                                        ?>
+                                                                    </div>
+                                                                </div>
+                                                            <?php } ?>
+                                                        <?php } ?>
+                                                        
                                                         <?php
                                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
                                                                 if( !array_key_exists($name,$upload_options_handled)) {
@@ -874,6 +921,8 @@ EOF;
                                                                 }
                                                             }
                                                         ?>
+
+                                                        
                                                     </div>
                                                 </div>
                                                 <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
