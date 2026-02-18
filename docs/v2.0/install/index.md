@@ -33,7 +33,7 @@ you can report issues with and update the documentation.
 
 
 * Apache (or nginx) and PHP version 8.2 or later.
-* A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
+* A PostgreSQL (recent) or MariaDB database (10.7 or above).
 * A big filesystem (or cloud backed).
 * [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.2 or newer. 
 

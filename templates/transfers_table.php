@@ -126,14 +126,14 @@ if (!function_exists('clickableHeader')) {
         $nextPage  = Template::Q($offset+$limit);
         $transfersort = Template::Q(Utilities::getGETparam('transfersort',''));
         $cgias = Template::Q(Utilities::getGETparam('as',''));
-        $cgilimit = Template::Q($limit);
+        $cgilimitvalue = Template::Q($limit);
         $as = $cgias . Template::Q($cgiuid) . Template::Q($cgiminmax);
         $nextLink  = Template::Q("$base&$cgioffset=$nextPage&$cgilimit=$cgilimit&transfersort=$transfersort&as=$as&nextlink=1");
         
         if( $havePrev ) {
            $prevPage = Template::Q(max(0,$offset-$limit));
-           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
-           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
         }

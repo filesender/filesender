@@ -169,7 +169,8 @@ if hasattr(args, 'from_address'):
 #configs
 try:
   info_response = requests.get(base_url+'/info', verify=True)
-  config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
+  top_url = re.sub("rest.php$", "", base_url)
+  config_response = requests.get(top_url+'/filesender-config.js.php',verify=True)#for terasender config not in info.
 except requests.exceptions.SSLError as exc:
   if not insecure:
     print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
@@ -181,7 +182,7 @@ except requests.exceptions.SSLError as exc:
     print(exc)
     print('Running with --insecure flag, ignoring warning...')
     info_response = requests.get(base_url+'/info', verify=False)
-    config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
+    config_response = requests.get(top_url+'/filesender-config.js.php',verify=False)
 
 upload_chunk_size = info_response.json()['upload_chunk_size']
 
