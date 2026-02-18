@@ -172,6 +172,7 @@ A note about colours;
 * [ban_extension](#ban_extension)
 * [chunk_upload_security](#chunk_upload_security)
 * [default_transfer_days_valid](#default_transfer_days_valid)
+* [selectable_transfer_days_valid](#selectable_transfer_days_valid)
 * [max_transfer_days_valid](#max_transfer_days_valid)
 * [allow_transfer_expiry_date_extension](#allow_transfer_expiry_date_extension)
 * [allow_transfer_expiry_date_extension_admin](#allow_transfer_expiry_date_extension_admin)
@@ -246,6 +247,7 @@ A note about colours;
 * [guest_options](#guest_options)
 * [guest_options_to_force_to_top_array](#guest_options_to_force_to_top_array)
 * [default_guest_days_valid](#default_guest_days_valid)
+* [selectable_guest_days_valid](#selectable_guest_days_valid)
 * [min_guest_days_valid](#min_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
 * [max_guest_recipients](#max_guest_recipients)
@@ -1814,6 +1816,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__ default_daysvalid
 * __comment:__ Be aware of the changed semantic from 1.6 to 2.0.
 
+### selectable_transfer_days_valid
+
+* __description:__ specifies the list of selectable expiry date options in the "Expiry date" date picker in the Upload form. Users can choose from these options to set the expiry date for the transfer.
+* __mandatory:__ no
+* __type:__ an array of integers
+* __default:__ array( 7, 15, 30, 40 )
+* __available:__ since version 3.4
+* __1.x name:__
+* __comment:__
+
 ### max_transfer_days_valid
 
 * __description:__ specifies the maximum expiry date for a transfer.  A user can not choose a larger value than this.
@@ -1935,7 +1947,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __enable\_recipient\_email\_download\_complete:__ this gives the downloader a tick box in the download window which in turn lets the downloader indicate they would like to receive an email once the download is finished.  If you want this option available for all downloaders and do not want to bother the uploader with it, simply configure it with 'default' => false as the only parameter. __Warning:__ if the recipient of a file is a mailinglist and someone ticks the "send me a message on download complete" box, then all members of that mailinglist will receive that message.  That might be a reason why you don't want to make this option available to your users.        
 	* __add\_me\_to\_recipients:__ include the sender as one of the recipients.
 	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can see the download count, but not who downloaded it (obviously, as there are no recipients defined).
-	* __hide\_sender\_email:__ If checked it will hide the sender's email address on the download page. The option is only displayed if the __get\_a\_link__ option is checked. This is useful when sending download links to mailing lists, etc., and you do not want your personal email account to be displayed on the download page.
+	* __hide\_sender\_email:__ If checked it will hide the sender's email address on the download page. As of release 3.4 this option should be effective for both get a link and email transfers. Though it will only hide the sender email on the download page. Before that the option is only displayed if the __get\_a\_link__ option is checked. This is useful when sending download links to mailing lists, etc., and you do not want your personal email account to be displayed on the download page.
 	* __redirect_url_on_complete:__ When the transfer upload completes, instead of showing a success message, redirect the user to a URL. This interferes with __get\_a\_link__ in that the uploader will not see the link after the upload completes. Additionally, if the uploader is a guest, there is no way straightforward way for the uploader to learn the download link, although this must not be used as a security feature.
  	* __popup_on_complete:__ When the transfer upload completes, prompts the user with an additional confirmation modal. This should not be configured as available, as no translation exist.
 	* __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
@@ -2709,6 +2721,16 @@ This conflicts with the code in 'advanced' => false but is a hard coded option t
 * __type:__ int
 * __default:__ same as default_transfer_days_valid
 * __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+### selectable_guest_days_valid
+
+* __description:__ specifies the list of selectable expiry date options in the "Expiry date" date picker in the Guest form. Users can choose from these options to set the expiry date for the guest invitation.
+* __mandatory:__ no
+* __type:__ an array of integers
+* __default:__ array( 7, 15, 30, 40 )
+* __available:__ since version 3.4
 * __1.x name:__
 * __comment:__
 

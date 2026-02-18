@@ -295,16 +295,17 @@ EOF;
         $base = '?s=' . Template::Q(htmlspecialchars($_GET['s']));
         $cgioffset =    Template::Q($pagerprefix) . 'offset';
         $cgilimit  =    Template::Q($pagerprefix) . 'limit';
+        $cgilimitvalue =Template::Q($limit);
         $nextPage  =    Template::Q($offset+$limit);
         $transfersort = Template::Q(Utilities::getGETparam('transfersort',''));
         $cgias =        Template::Q(Utilities::getGETparam('as',''));
         $as = $cgias .  Template::Q($cgiuid) . Template::Q($cgiminmax);        
-        $nextLink  =    Template::Q("$base&$cgioffset=$nextPage&$cgilimit=$limit&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax&nextlink=1");
+        $nextLink  =    Template::Q("$base&$cgioffset=$nextPage&$cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$cgias$cgiuid$cgiminmax&nextlink=1");
 
         if( $havePrev ) {
             $prevPage = Template::Q(max(0,$offset-$limit));
-            echo "<a class='fs-link fs-link--circle' href='$base&cgioffset=0&cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><i class='fa fa-angle-double-left'></i></a>";
-            echo "<a class='fs-link fs-link--circle' href='$base&cgioffset=$prevPage&cgilimit=$cgilimit&transfersort=$transfersort&as=$as'><i class='fa fa-angle-left'></i></a>";
+            echo "<a class='fs-link fs-link--circle' href='$base&cgioffset=0&cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as'><i class='fa fa-angle-double-left'></i></a>";
+            echo "<a class='fs-link fs-link--circle' href='$base&cgioffset=$prevPage&cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as'><i class='fa fa-angle-left'></i></a>";
         } else {
             echo "<a class='fs-link fs-link--circle fs-link--disabled' href='javascript:void(0)'><i class='fa fa-angle-double-left'></i></a>";
             echo "<a class='fs-link fs-link--circle fs-link--disabled' href='javascript:void(0)'><i class='fa fa-angle-left'></i></a>";

@@ -1892,9 +1892,8 @@ filesender.ui.handle_get_a_link_change = function() {
 
     $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
-    form.find(
-        ' .fieldcontainer[data-option="hide_sender_email"]'
-    ).toggle(!choice);
+    
+
     
     form.find(
         ' .emailonly'
@@ -2299,6 +2298,10 @@ $(function() {
             $('#transfer-link').prop("checked", true);
             filesender.ui.onChangeTransferType("transfer-link");
         }
+        if( form.attr('data-user-has-email-preference') == '1' ) {
+            $('#transfer-email').prop("checked", true);
+            filesender.ui.onChangeTransferType("transfer-email");
+        }
 
         // If there is only one choice then we should already make it
         if($('.get_a_link_top_selector').length==0) {
@@ -2685,13 +2688,6 @@ $(function() {
 
         $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
-        form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(!choice);
-
-        form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(choice);
 
         form.find(
             ' .fieldcontainer[data-option="forward_to_another_server"],' +

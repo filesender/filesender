@@ -200,7 +200,8 @@ max_transfer_files = 30
 
 try:
   info_response = requests.get(base_url+'/info', verify=True)
-  config_response = requests.get(base_url[0:-9]+'/filesender-config.js.php',verify=True)#for terasender config not in info.
+  top_url = re.sub("rest.php$", "", base_url)
+  config_response = requests.get(top_url+'/filesender-config.js.php',verify=True)#for terasender config not in info.
 except requests.exceptions.SSLError as exc:
   if not insecure:
     print('Error: the SSL certificate of the server you are connecting to cannot be verified:')
@@ -212,7 +213,7 @@ except requests.exceptions.SSLError as exc:
     print(exc)
     print('Running with --insecure flag, ignoring warning...')
     info_response = requests.get(base_url+'/info', verify=False)
-    config_response = requests.get(base_url[1:-9]+'/filesender-config.js.php',verify=False)
+    config_response = requests.get(top_url+'/filesender-config.js.php',verify=False)
 
 upload_chunk_size = int(info_response.json()['upload_chunk_size'])
 
@@ -306,8 +307,6 @@ if encrypted and not download_link:
   if encryption_details["crypt_type"] == SupportedCryptTypes.AESGCM: 
     encryption_details["key_version"] = "3"
 
-
-
   if encryption_details["password_mixed_case_required"]:
     has_lower = any(map((lambda x: x.islower()) ,encryption_details["password"]))
     has_upper = any(map((lambda x: x.isupper()) ,encryption_details["password"]))
@@ -324,9 +323,6 @@ if encrypted and not download_link:
     if all(map(lambda x: x.isalnum(),encryption_details["password"])):
       print("Password does not meet special character requirement")
       exit(1)
-
-
-
 
 ##########################################################################
 
@@ -518,7 +514,10 @@ def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
   """Download a given file to disk."""
   try:
     if attempt > 10:
-      print("Unable to download file.")
+      if file_info["encrypted"]:
+        print("    Unable to download file, was the password incorrect?")
+      else:
+        print("    Unable to download file.")
       sys.exit(1)
     download_url = base_url.replace("rest.php","download.php")
     path = file_info['name'].split("/")
@@ -530,11 +529,13 @@ def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
     Path(path).mkdir(parents=True, exist_ok=True)
     local_file_path = os.path.join(path, download_file_name)
 
+    print(f"Downloading file \"{file_info['name']}\" to \"{local_file_path}\"")
+
     if file_info["encrypted"]:
       return _downloadEncryptedFile(token,file_info,download_url,local_file_path,download_key)
     return _downloadFile(token,file_info,download_url,local_file_path)
   except Exception as e:
-    print(f"Retrying on file {file_info['name']}")
+    print(f"  Retrying on file {file_info['name']}")
     return downloadFile(token,file_info,download_key,attempt+1)
 
 def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
@@ -664,6 +665,11 @@ def download_transfer(download_link):
   downloaded_total = 0
   download_key = None
   if file_list[0]['encrypted']:
+    if not encryption_supported:
+      print("Failed to import 'cryptography' library, cannot proceed with encrypted transfer.")
+      print("\npip3 install cryptography")
+      exit(1)
+
     encryption_details = {}
     encryption_details["hash_name"] = SupportedHashTypes("SHA-256")
     encryption_details["password"] = encrypted
@@ -680,8 +686,6 @@ def download_transfer(download_link):
       print(f"Complete: {file['name']}")
       print(f"Total transfer {round((downloaded_total/download_size)*100)}% complete")
   return
-
-
 
 ##########################################################################
 

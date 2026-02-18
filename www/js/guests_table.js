@@ -75,7 +75,8 @@ $(function() {
 
             if(table.is('[data-mode!="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
-                if( days > 0 ) {
+                var does_not_expire = $(this).closest('.objectholder').attr('data-does-not-expire');
+                if( days > 0 && does_not_expire != '1') {
                     var extend = $('<span data-action="extendguestexpires" class="extend fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({
@@ -90,7 +91,8 @@ $(function() {
 
             if(table.is('[data-mode="admin"]')) {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
-                if( days > 0 ) {
+                var does_not_expire = $(this).closest('.objectholder').attr('data-does-not-expire');
+                if( days > 0 && does_not_expire != '1') {
                     var extend = $('<span data-action="extendexpires" class="extend adminaction fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock" />');
                     extend.appendTo(td).attr({
                         title: lang.tr('extend_expiry_date').r({

@@ -74,7 +74,8 @@
   content: "\f093";
   position: absolute;
   display: inline-block;
-  font-family: FontAwesome;
+  font-family: "Font Awesome 7 Free";
+  font-weight: 900;
   font-size: 6.5rem;
   z-index: 1;
   text-rendering: auto;

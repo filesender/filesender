@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS filesender DEFAULT CHARACTER SET utf8mb4;
+
+GRANT USAGE ON *.* TO 'filesender'@'localhost'
+      IDENTIFIED BY $(FILESENDER_DB_PASSWORD);
+GRANT CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE
+      ON `filesender`.* TO 'filesender'@'localhost';
+
+GRANT USAGE ON *.* TO 'filesenderadmin'@'localhost'
+      IDENTIFIED BY '$(FILESENDER_DB_PASSWORD_ADMIN)';
+GRANT CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE, DROP, REFERENCES
+      ON `filesender`.* TO 'root'@'localhost';
+
+FLUSH PRIVILEGES;
+exit

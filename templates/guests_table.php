@@ -30,6 +30,7 @@
         <tr class="guest objectholder fs-table__row fs-table__row--clickable"
             data-id="<?php echo $guest->id ?>"
             data-expiry-extension="<?php echo $guest->expiry_date_extension ?>"
+            data-does-not-expire="<?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? '1' : '0' ?>"
             data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
 
             <td class="created d-none d-lg-table-cell" data-label="{tr:invitation_was_sent_on}">

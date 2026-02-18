@@ -318,7 +318,7 @@ class Transfer extends DBObject
         'expires' => array(
             'expires' => array()
         ),
-        'downlaods' => array(
+        'downloads' => array(
             'download_count' => array()
         )
     );
@@ -2174,5 +2174,25 @@ class Transfer extends DBObject
         } else {
             Logger::logActivity($event, $this, $author, $created, $ip);
         }
+    }
+
+    public static function getOptionSubSetting( $options, $k, $setting )
+    {
+        if( array_key_exists($k, $options)) {
+            if( array_key_exists( $setting, $options[$k])) {
+                $v = $options[$k][$setting];
+                return Utilities::isTrue($v);
+            }
+        }
+        $hideSenderEmailIsAdvanced = array_key_exists( $setting,$ops['hide_sender_email']);
+
+        $options = static::allOptions();
+        if (array_key_exists($k, $options)) {
+            if (array_key_exists('default', $options[$k])) {
+                return $options[$k]['default'];
+            }
+        }
+        
+        return false;
     }
 }
