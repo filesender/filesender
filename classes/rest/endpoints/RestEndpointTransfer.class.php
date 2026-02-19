@@ -75,10 +75,14 @@ class RestEndpointTransfer extends RestEndpoint
             'salt' => $transfer->salt,
             'roundtriptoken' => $creatingTransfer ? $transfer->roundtriptoken : '',
             
-            'files' => array_map(function ($file) use ($files_cids) {
+            'files' => array_map(function ($file) use ($files_cids, $transfer) {
+                $file_uid = $file->uid;
                 $file = RestEndpointFile::cast($file);
                 if ($files_cids && array_key_exists($file['id'], $files_cids)) {
                     $file['cid'] = $files_cids[$file['id']];
+                }
+                if ($transfer->hasBeenForwarded()) {
+                    $file['uid'] = $file_uid;
                 }
                 return $file;
             }, array_values($transfer->files)),
