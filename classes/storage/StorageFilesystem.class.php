@@ -296,11 +296,11 @@ class StorageFilesystem
                 $p .= $sub;
                 
                 if (!is_dir($p) && !mkdir($p)) {
-                    throw new StorageFilesystemCannotCreatePathException($p, $file);
+                    throw new StorageFilesystemCannotCreatePathException($p);
                 }
                 
                 if (!is_writable($p)) {
-                    throw new StorageFilesystemCannotWriteException($p, $file);
+                    throw new StorageFilesystemCannotWriteException($p);
                 }
                 
                 $p .= '/';

@@ -82,7 +82,7 @@ function graph(g) {
         url: "js/graph/statistics_"+g+"_graph.php"+$(location).attr('search')
     }).done(function(json) {
         $("#graph_"+g).html('<canvas id="graph_canvas_'+g+'" height="200"></canvas>');
-        var graph = new Chart($("#graph_canvas_"+g),$.parseJSON(json));
+        var graph = new Chart($("#graph_canvas_"+g),JSON.parse(json));
     });
 }
 
