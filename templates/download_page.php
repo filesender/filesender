@@ -324,7 +324,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
                         </div>
                     <?php } ?>
 
-                    <?php if($showdownloadlinks && !$isEncrypted) { ?>
+                    <?php if($showdownloadlinks) { ?>
                         <div class="fs-download__actions">
                             <button type="button" class="fs-button script-links" title="{tr:script_download_links}">
                               <i class="fa fa-code"></i>
