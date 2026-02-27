@@ -522,9 +522,9 @@ def downloadFile(token, file_info: dict, download_key: Optional[bytes], attempt:
     try:
         if attempt > 10:
             if file_info["encrypted"]:
-                print("        Unable to download file, was the password incorrect?")
+                print("    Unable to download file, was the password incorrect?")
             else:
-                print("        Unable to download file.")
+                print("    Unable to download file.")
             sys.exit(1)
         download_url = base_url.replace("rest.php","download.php")
         path = file_info['name'].split("/")
@@ -542,7 +542,7 @@ def downloadFile(token, file_info: dict, download_key: Optional[bytes], attempt:
             return _downloadEncryptedFile(token,file_info,download_url,local_file_path,download_key)
         return _downloadFile(token,file_info,download_url,local_file_path)
     except:
-        print(f"    Retrying on file {file_info['name']}")
+        print(f"  Retrying on file {file_info['name']}")
         return downloadFile(token,file_info,download_key,attempt+1)
 
 def _downloadFile(token, file_info:dict, download_url:str, local_file_path:str):
@@ -771,15 +771,15 @@ for fn_abs in fileList:
             #we need to generate an IV and AEAD for each file.
             #file_transfer_object is used to transfer the files to the filesender instance
             #files is so we can reference the iv and aead later when needed.
-            iv_bytes =    os.urandom(encryption_details["iv_len"]-4)
+            iv_bytes = os.urandom(encryption_details["iv_len"]-4)
             iv = base64.b64encode(iv_bytes).decode("ascii")
             file_transfer_object["iv"] = iv
 
             aead_string = "{"
             aead_string += '"aeadversion":1,'
-            aead_string += '"chunkcount":' + str(ceil( size / upload_chunk_size ))    +','
-            aead_string += '"chunksize":'     + str(upload_chunk_size)     +','
-            aead_string += '"iv":'                    + '"' + iv + '"' + ','
+            aead_string += '"chunkcount":'+str(ceil( size / upload_chunk_size ))+','
+            aead_string += '"chunksize":'+str(upload_chunk_size+','
+            aead_string += '"iv":'+'"'+iv+'"'+','
             aead_string += '"aeadterminator":1'
             aead_string += '}'
             file_transfer_object["aead"] = base64.b64encode(aead_string.encode("ascii")).decode("ascii")
