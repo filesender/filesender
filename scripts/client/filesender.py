@@ -49,6 +49,7 @@ try:
     import configparser
     from os.path import expanduser
     from math import ceil
+    from typing import Optional
 except Exception as e:
   print(type(e))
   print(e.args)
@@ -510,7 +511,7 @@ def getFilesInTransfer(transfer_token) -> list[dict]:
     {},
   )
 
-def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
+def downloadFile(token, file_info: dict, download_key: Optional[bytes], attempt: int = 0):
   """Download a given file to disk."""
   try:
     if attempt > 10:
@@ -538,7 +539,7 @@ def downloadFile(token,file_info:dict,download_key:bytes|None, attempt:int=0):
     print(f"  Retrying on file {file_info['name']}")
     return downloadFile(token,file_info,download_key,attempt+1)
 
-def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
+def _downloadFile(token, file_info:dict, download_url:str, local_file_path:str):
   """save file to disk at local path"""
 
   with requests.get(download_url,params={"token":token,"files_ids":file_info['id']},stream=True,verify=(not insecure)) as download:
@@ -547,7 +548,7 @@ def _downloadFile(token,file_info:dict, download_url:str, local_file_path:str):
             for chunk in download.iter_content(chunk_size=20_000):
                 f.write(chunk)
 
-def _downloadEncryptedFile(token,file_info:dict, download_url:str, local_file_path:str,download_key:bytes):
+def _downloadEncryptedFile(token, file_info:dict, download_url:str, local_file_path:str,download_key:bytes):
   """Internal tool to download encrypted file, should be used via downloadFile"""
   chunk_no = 0
   # calculation taken from crypto_app.js, the end overlaps with the start of the next range
