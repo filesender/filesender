@@ -777,8 +777,8 @@ for fn_abs in fileList:
 
             aead_string = "{"
             aead_string += '"aeadversion":1,'
-            aead_string += '"chunkcount":'+str(ceil( size / upload_chunk_size ))+','
-            aead_string += '"chunksize":'+str(upload_chunk_size+','
+            aead_string += '"chunkcount":'+str(ceil(size/upload_chunk_size))+','
+            aead_string += '"chunksize":'+str(upload_chunk_size)+','
             aead_string += '"iv":'+'"'+iv+'"'+','
             aead_string += '"aeadterminator":1'
             aead_string += '}'
