@@ -1178,7 +1178,8 @@ filesender.ui.startUpload = function() {
     window.filesender.pbkdf2dialog.reset();
 
     if(!filesender.ui.nodes.required_files) {
-        this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+        // Send the selected calendar date as a date string to avoid client timezone epoch drift (off-by-one day).
+        this.transfer.expires = filesender.ui.nodes.expires.val();
         
         if(filesender.ui.nodes.from.length)
             this.transfer.from = filesender.ui.nodes.from.val();
