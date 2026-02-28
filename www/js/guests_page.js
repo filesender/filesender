@@ -210,7 +210,8 @@ filesender.ui.evalSendEnabled = function() {
 filesender.ui.send = function() {
     var options = {guest: {}, transfer: {}};
     
-    var expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+    // Send the selected calendar date as a date string to avoid client timezone epoch drift (off-by-one day).
+    var expires = filesender.ui.nodes.expires.val();
     
     var from = null;
     if(filesender.ui.nodes.from.length)
