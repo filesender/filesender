@@ -105,6 +105,7 @@ parser.add_argument("-p", "--progress", action="store_true")
 parser.add_argument("-s", "--subject")
 parser.add_argument("-m", "--message")
 parser.add_argument("-g", "--guest", action="store_true")
+parser.add_argument("--vid", help="guest invitation token (voucher id) for upload")
 parser.add_argument("-e", "--encrypted")
 parser.add_argument("--threads")
 parser.add_argument("--timeout")
@@ -123,7 +124,7 @@ if apikey is None:
 else:
   parser.add_argument("-a", "--apikey")
   
-requiredNamed.add_argument("-r", "--recipients", required=True)
+parser.add_argument("-r", "--recipients", help="comma-separated recipient emails")
 
 # Do not change this seemingly out-of-place concat as it avoid getting this test messed up by clidownload.php
 if base_url == "[" + "base_url" + "]":
@@ -140,6 +141,7 @@ debug = args.verbose
 progress = args.progress
 insecure = args.insecure
 guest = args.guest
+vid = args.vid
 user_threads = args.threads
 user_timeout = args.timeout
 user_retries = args.retries
@@ -165,6 +167,13 @@ if args.base_url is not None:
 from_address = username
 if hasattr(args, 'from_address'):
   from_address = args.from_address
+
+# Validate recipients requirement:
+# - normal transfer requires recipients
+# - guest creation (--guest) uses -r as guest recipient
+# - voucher upload (--vid) may intentionally omit recipients
+if not args.recipients and not vid:
+  parser.error("the following arguments are required: -r/--recipients (unless --vid is used)")
 
 #configs
 try:
@@ -222,7 +231,7 @@ if debug:
   print('username          : '+username)
   print('apikey            : '+apikey)
   print('upload_chunk_size : '+str(upload_chunk_size)+' bytes')
-  print('recipients        : '+args.recipients)
+  print('recipients        : '+str(args.recipients))
   print('files             : '+','.join(args.files))
   print('insecure          : '+str(insecure))
 
@@ -401,12 +410,14 @@ def call(method, path, data, content=None, rawContent=None, options={}, tryCount
   r['created']=response.json()
   return r
 
-def postTransfer(user_id, files, recipients, subject=None, message=None, expires=None, options=[]):
+def postTransfer(user_id, files, recipients, subject=None, message=None, expires=None, options=[], vid=None):
 
   if expires is None:
     expires = round(time.time()) + (default_transfer_days_valid*24*3600)
 
-  to = [x.strip() for x in recipients.split(',')]
+  to = []
+  if recipients:
+    to = [x.strip() for x in recipients.split(',') if x.strip()]
   transferContent = {
       'from': from_address,
       'files': files,
@@ -423,10 +434,14 @@ def postTransfer(user_id, files, recipients, subject=None, message=None, expires
       transferContent['encryption_password_encoding'] =  encryption_details['password_encoding']
       transferContent['encryption_password_version'] =  encryption_details['password_version']
       transferContent['encryption_password_hash_iterations'] =  encryption_details['password_hash_iterations']
+  request_data = {}
+  if vid:
+    request_data['vid'] = vid
+
   return call(
     'post',
     '/transfer',
-    {},
+    request_data,
     transferContent,
     None,
     {}
