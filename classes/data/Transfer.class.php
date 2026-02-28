@@ -1807,6 +1807,12 @@ class Transfer extends DBObject
      */
     public function sendToRecipient($translation_id, $recipient)
     {
+        // Defensive guard: avoid sending recipient-context emails when recipient address is empty.
+        if (!$recipient || !trim((string)$recipient->email)) {
+            Logger::warning('Mail#'.$translation_id.' skipped due to empty recipient email for '.$this);
+            return;
+        }
+
         $args = func_get_args();
         $args[] = $this;
         
