@@ -702,15 +702,21 @@ class RestEndpointTransfer extends RestEndpoint
             }
             
             // No recipients, not get_a_link and no way to get a recipient from options ? Fail if so
+            // Use safe defaults to avoid undefined-key notices in guest flows.
+            $get_a_link = !empty($options[TransferOptions::GET_A_LINK]);
+            $add_me_to_recipients = !empty($options[TransferOptions::ADD_ME_TO_RECIPIENTS]);
+            $guest_add_me_to_recipients = $guest ? !empty($guest->transfer_options[TransferOptions::ADD_ME_TO_RECIPIENTS]) : false;
+            $guest_can_only_send_to_me = $guest ? !empty($guest->options[GuestOptions::CAN_ONLY_SEND_TO_ME]) : false;
+
             if (
                 !count($data->recipients) &&
-                !$options[TransferOptions::GET_A_LINK] &&
-                !$options[TransferOptions::ADD_ME_TO_RECIPIENTS] &&
+                !$get_a_link &&
+                !$add_me_to_recipients &&
                 (
                     !$guest ||
                     (
-                        !$guest->transfer_options[TransferOptions::ADD_ME_TO_RECIPIENTS] &&
-                        !$guest->options[GuestOptions::CAN_ONLY_SEND_TO_ME]
+                        !$guest_add_me_to_recipients &&
+                        !$guest_can_only_send_to_me
                     )
                 )
             ) {
