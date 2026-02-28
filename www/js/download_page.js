@@ -37,7 +37,13 @@ $(function() {
     var verificationCodeObjectThatTiggeredEvent = null;
     var verificationCodePassedPopup = null;
 
-    if( window.filesender.config.download_verification_code_enabled ) {
+    // Config values may be serialized as strings (e.g. "false").
+    // Normalize to a strict boolean to avoid treating non-empty strings as enabled.
+    var verificationCodeEnabled = (function(v) {
+        return v === true || v === 1 || v === '1' || v === 'true';
+    })(window.filesender.config.download_verification_code_enabled);
+
+    if( verificationCodeEnabled ) {
         verificationCodePassed = false;
     }
     
@@ -330,7 +336,7 @@ $(function() {
     }
 
 
-    if( window.filesender.config.download_verification_code_enabled ) {
+    if( verificationCodeEnabled ) {
 
         var transferid = $('.transfer').attr('data-id');
         var rid        = $('.rid').attr('data-id');
