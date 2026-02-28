@@ -167,7 +167,11 @@ $(function() {
             recipients.push($(this).attr('data-email'));
         });
         
+        var submitting_add_recipient = false;
+
         var prompt = filesender.ui.prompt(lang.tr('enter_to_email'), function() {
+            if(submitting_add_recipient) return false;
+
             var input = $(this).find('input');
             $('p.error', this).remove();
             
@@ -211,6 +215,10 @@ $(function() {
                 return false;
             }
             
+            submitting_add_recipient = true;
+            input.prop('disabled', true);
+            $('.ui-dialog-buttonpane button').prop('disabled', true);
+
             var done = 0;
             for(var i=0; i<emails.length; i++) {
                 filesender.client.addRecipient(id, emails[i], function() {
