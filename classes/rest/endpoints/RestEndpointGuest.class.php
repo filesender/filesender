@@ -230,7 +230,11 @@ class RestEndpointGuest extends RestEndpoint
             foreach (Guest::allOptions() as $name => $dfn) {
                 if (in_array($name, $allowed_options)
                     && $data->options->guest->exists($name)) {
-                    $guest_options[$name] = $data->options->guest->$name;
+                    $v = $data->options->guest->$name;
+                    if (array_key_exists('default', $dfn) && is_bool($dfn['default'])) {
+                        $v = Utilities::isTrue($v);
+                    }
+                    $guest_options[$name] = $v;
                 }
             }
         }
@@ -257,7 +261,11 @@ class RestEndpointGuest extends RestEndpoint
             foreach (Transfer::allOptions() as $name => $dfn) {
                 if (in_array($name, $allowed_transfer_options)
                     && $data->options->transfer->exists($name)) {
-                    $transfer_options[$name] = $data->options->transfer->$name;
+                    $v = $data->options->transfer->$name;
+                    if (array_key_exists('default', $dfn) && is_bool($dfn['default'])) {
+                        $v = Utilities::isTrue($v);
+                    }
+                    $transfer_options[$name] = $v;
                 }
             }
         }
