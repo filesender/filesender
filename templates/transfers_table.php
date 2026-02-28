@@ -128,7 +128,8 @@ if (!function_exists('clickableHeader')) {
         $cgias = Template::Q(Utilities::getGETparam('as',''));
         $cgilimitvalue = Template::Q($limit);
         $as = $cgias . Template::Q($cgiuid) . Template::Q($cgiminmax);
-        $nextLink  = Template::Q("$base&$cgioffset=$nextPage&$cgilimit=$cgilimit&transfersort=$transfersort&as=$as&nextlink=1");
+        // Use actual limit value, not the limit parameter name, when building next-page URL.
+        $nextLink  = Template::Q("$base&$cgioffset=$nextPage&$cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as&nextlink=1");
         
         if( $havePrev ) {
            $prevPage = Template::Q(max(0,$offset-$limit));
