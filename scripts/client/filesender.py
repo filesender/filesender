@@ -472,6 +472,22 @@ def deleteTransfer(transfer):
     {}
   )
 
+def printDownloadLinks(transfer):
+  recipients = transfer.get('recipients', []) if isinstance(transfer, dict) else []
+  printed = 0
+  for r in recipients:
+    email = r.get('email') if isinstance(r, dict) else None
+    link = r.get('download_url') if isinstance(r, dict) else None
+    if link:
+      printed += 1
+      if email:
+        print(f"Download link ({email}): {link}")
+      else:
+        print(f"Download link: {link}")
+
+  if printed == 0 and transfer.get('id'):
+    print(f"Transfer {transfer.get('id')} uploaded successfully.")
+
 def postGuest(user_id, recipient, subject=None, message=None, expires=None, options=[]):
 
   if expires is None:
@@ -663,9 +679,10 @@ try:
   #transferComplete
   if debug:
     print('transferComplete')
-  transferComplete(transfer)
+  transfer = transferComplete(transfer)
   if progress:
     print('Upload Complete')
+  printDownloadLinks(transfer)
 
 except Exception as inst:
   print(type(inst))
