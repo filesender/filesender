@@ -217,9 +217,9 @@ filesender.ui.files = {
     // Sort error cases to the top
     sortErrorLinesToTop: function() {
         var $selector = $("#fileslist");
-        var $element = $selector.children(".file");
+        var elements = [...$selector.children(".file")];
         
-        $element.sort(function(a, b) {
+        elements.sort((a, b) => {
             var ainv = a.className.includes('invalid');
             var binv = b.className.includes('invalid');
             // no difference for files in same group
@@ -231,7 +231,8 @@ filesender.ui.files = {
             return 0;
         });
         
-        $element.detach().appendTo($selector);
+        elements.forEach(el => $selector.append(el));
+        
     },
     
     // File selection (browse / drop) handler

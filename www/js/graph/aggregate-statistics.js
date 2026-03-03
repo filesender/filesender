@@ -6,6 +6,6 @@ function aggregateStatisticsSetup( divElement, epochtype, eventtype, querytype )
         data: { epochtype: epochtype, eventtype: eventtype, querytype: querytype }
     }).done(function(json) {
 	var ctx = $('#' + divElement);
-	var speedChart = new Chart(ctx,$.parseJSON(json));
+	var speedChart = new Chart(ctx,JSON.parse(json));
     });
 }
