@@ -59,6 +59,31 @@ $(function() {
     $('#check-all').click();
 
     page.find('.script-links').on('click', function() {
+        var encrypted = page.find('.file').attr('data-encrypted') == "1";
+
+        if (encrypted) {
+            var popup = filesender.ui.wideInfoPopup(lang.tr('script_download_title'));
+            var tabsHtml = `
+              <div id="downloadTabs">
+                <ul>
+                  <li><a href="#fsclitab">FileSender CLI Client</a></li>
+                </ul>
+                <div id="fsclitab"></div>
+              </div>`;
+            $(tabsHtml).appendTo(popup);
+            $("#downloadTabs").tabs();
+            var fscli = 'python3 filesender.py -d "'+window.location.href+'" -e "<password>"';
+            var fsclip = $('<p>'+lang.tr('script_download_fscli')+'</p>').appendTo($('#fsclitab'));
+            var fsclipre = $('<pre />').text(fscli).appendTo($('#fsclitab'));
+            var fscliactions = $('<div class="actions" />').appendTo($('#fsclitab'));
+            var fscliclipboard = $('<button type="button" class="fs-button">').html('<i class="fa fa-copy"></i> '+lang.tr('copy')).appendTo(fscliactions);
+            $('<p>&nbsp;</p>').prependTo(fscliclipboard);
+            fscliclipboard.on('click', function(e) {
+                copyToClipboard(fscli);
+            });
+            return true;
+        }
+
         var ids = [];
         page.find('.file[data-selected="1"]').each(function() {
             ids.push($(this).attr('data-id'));
@@ -68,16 +93,15 @@ $(function() {
                 ids.push($(this).attr('data-id'));
             });
         }
-        curlscript="";
-        wgetscript="";
-        links="";
+        var curlscript="";
+        var wgetscript="";
+        var links="";
         for(id in ids) {
             url=location.origin+"/download.php?token="+filesender.client.token+"&files_ids="+ids[id];
             curlscript+="curl -O -L -J \""+url+"\"\n";
             wgetscript+="wget --content-disposition \""+url+"\"\n";
             links+=url+"\n";
         }
-        //console.log(curlscript);
 
         var popup = filesender.ui.wideInfoPopup(lang.tr('script_download_title'));
         //popup.css('overflow','hidden');
@@ -88,10 +112,12 @@ $(function() {
               <li><a href="#curltab">Curl</a></li>
               <li><a href="#wgettab">Wget</a></li>
               <li><a href="#linkstab">Links</a></li>
+              <li><a href="#fsclitab">FileSender CLI Client</a></li>
             </ul>
             <div id="curltab"></div>
             <div id="wgettab"></div>
             <div id="linkstab"></div>
+            <div id="fsclitab"></div>
           </div>`;
         $(tabsHtml).appendTo(popup);
         $("#downloadTabs").tabs();
@@ -118,6 +144,16 @@ $(function() {
         $('<p>&nbsp;</p>').prependTo(linksclipboard);
         linksclipboard.on('click', function(e) {
             copyToClipboard(links);
+        });
+
+        var fscli = 'python3 filesender.py -d "'+window.location.href+'"';
+        var fsclip = $('<p>'+lang.tr('script_download_fscli')+'</p>').appendTo($('#fsclitab'));
+        var fsclipre = $('<pre />').text(fscli).appendTo($('#fsclitab'));
+        var fscliactions = $('<div class="actions" />').appendTo($('#fsclitab'));
+        var fscliclipboard = $('<button type="button" class="fs-button">').html('<i class="fa fa-copy"></i> '+lang.tr('copy')).appendTo(fscliactions);
+        $('<p>&nbsp;</p>').prependTo(fscliclipboard);
+        fscliclipboard.on('click', function(e) {
+            copyToClipboard(fscli);
         });
 
     });

@@ -364,6 +364,7 @@ class ForwardAnotherServer
                         throw new ForwardFileCannotRenameException($src->uid, $dest->uid);
                     }
                     $src->uid = $dest->uid;
+                    $src->puid = $dest->puid;
                     $src->forward_id = $dest->id;
                     if ($storage_class_name) $src->storage_class_name = $storage_class_name;
                     $src->save();
