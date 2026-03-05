@@ -1279,6 +1279,17 @@ filesender.ui.doesUploadMessageContainPassword = function() {
     return false;
 }
 
+filesender.ui.guest_can_only_send_to_me = function() {
+    var can_only_send_to_me = false;
+    var auth = $('body').attr('data-auth-type');
+    if(auth == 'guest') {
+        var goelement = $('#guest_options')[0];
+        const go = JSON.parse( goelement.value );
+        can_only_send_to_me = go['can_only_send_to_me'];
+    }
+    return can_only_send_to_me;
+}
+
 filesender.ui.evalUploadEnabledSkipPGP = false;
 filesender.ui.evalUploadEnabled = function() {
     var ok = true;
@@ -1358,7 +1369,7 @@ filesender.ui.evalUploadEnabled = function() {
     }
 
     if (filesender.ui.stage == 3) {
-        configStageOk = configStageOk || filesender.ui.nodes.guest_token.length;
+        configStageOk = configStageOk || (filesender.ui.nodes.guest_token.length && filesender.ui.guest_can_only_send_to_me());
         filesender.ui.nodes.stages.confirm.prop('disabled', !configStageOk);
         if (configStageOk) {
             filesender.ui.nodes.recipients.input.removeClass('invalid');
