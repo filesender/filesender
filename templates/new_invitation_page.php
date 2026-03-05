@@ -136,7 +136,13 @@ use ( $new_guests_can_only_send_to_creator,
     if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$openpgpkey ) {
         return;
     }    
-    
+
+    // don't allow guests to choose the transfer forward to another server
+    if( in_array($name, array(TransferOptions::FORWARD_TO_ANOTHER_SERVER,
+                              TransferOptions::FORWARD_SERVER_NAME))) {
+        return;
+    }
+
     $default = $cfg['default'];
     if(Auth::isSP()) {
         if($transfer) {
