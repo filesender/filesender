@@ -433,7 +433,11 @@ class File extends DBObject
             $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS BIGINT) ";
         }
         if ($dbtype == 'mysql') {
-            $sql .= " NATURAL_SORT_KEY(name) ";
+            if(Config::get('db_mysql_limit_features')) {
+                $sql .= " name desc ";
+            } else {
+                $sql .= " NATURAL_SORT_KEY(name) ";
+            }
         }
         $s = DBI::prepare($sql);
         $s->execute(array(':transfer_id' => $transfer->id));
