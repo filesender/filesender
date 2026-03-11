@@ -54,7 +54,8 @@ If you want to add your FileSender installation to this list use one of the foll
 | Austria | University of Graz | [https://share.uni-graz.at/](https://share.uni-graz.at/) | Aug 2025 | 6 Sep 2025 |
 | Cyprus | Frederick University | [https://transfer.frederick.ac.cy](https://transfer.frederick.ac.cy) | Sep 2021| 25 Apr 2025 |
 | Cyprus  | University of Cyprus | [https://filesender.ucy.ac.cy](https://filesender.ucy.ac.cy)      | Nov 2012| 25 Apr 2025 |
-| Denmark | Aalborg University | https://filesender.aau.dk/ | Feb 2026 | 14 Feb 2026 |
+| Denmark | Aalborg University | [https://filesender.aau.dk/](https://filesender.aau.dk/) | Feb 2026 | 14 Feb 2026 |
+| France  | IFP Energies nouvelles (IFPEN) | [https://filesender.ifpen.fr/](https://filesender.ifpen.fr/) | Mar 2026 | 11 Mar 2026 |
 | France  | National Center for Meteorological Research | [https://filesender.umr-cnrm.fr/filesender/](https://filesender.umr-cnrm.fr/filesender/) | Jul 2025 | 30 Jul 2025 |
 | France  | University of Reunion Island | [https://filesender.univ-reunion.fr/filesender/](https://filesender.univ-reunion.fr/filesender/) | Oct 2025 | 2 Nov 2025 |
 | Germany  | Helmholtz Federated IT Services (HIFIS)/German Cancer Research Center (DKFZ) | [https://transcrypt.helmholtz.cloud/](https://transcrypt.helmholtz.cloud/) | Aug 2023| 28 Jan 2026 |
@@ -65,6 +66,8 @@ If you want to add your FileSender installation to this list use one of the foll
 | Israel  | Hebrew University of Jerusalem (HUJI)  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 25 Apr 2025 |
 | Italy  | Politecnico di Milano | [https://fs.polimi.it/](https://fs.polimi.it/) | Feb 2026 | 14 Feb 2026 |
 | Norway  | NORCE research institute | [https://filesender.norceresearch.no/](https://filesender.norceresearch.no/) | Dec 2025 | 27 Jan 2026 |
+| Poland | Wrocław Centre for Networking and Supercomputing (WCSS) |[https://filesender.e-science.pl/](https://filesender.e-science.pl/) | Mar 2026 | 11 Mar 2026 |
+| Portugal | School of Social and Political Sciences (ISCSP-ULisboa) | [https://filesender.iscsp.ulisboa.pt/filesender/](https://filesender.iscsp.ulisboa.pt/filesender/) | Mar 2026 | 11 Mar 2026 |
 | Portugal | University of Porto | [https://filesender.up.pt/](https://filesender.up.pt/) | Feb 2026 | 14 Feb 2026 |
 | Serbia  | University of Belgrade, Faculty of Geography | [https://filesender.gef.bg.ac.rs/filesender/](https://filesender.gef.bg.ac.rs/filesender/) | Sep 2025 | 6 Sep 2025 | 
 | Spain  | Universidade de Vigo | [https://filesender.uvigo.es/filesender/](https://filesender.uvigo.es/filesender/) | Dec 2025 | 27 Jan 2026 |
@@ -83,6 +86,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Kyrgyzstan | KRENA | [https://filesender.kif.kg/](https://filesender.kif.kg/) | Sep 2024 | 25 Apr 2025 |
 | Malaysia  | MYREN | [https://filesender.myren.net.my](https://filesender.myren.net.my) | Oct 2017| 6 Sep 2025 |
 | New Zealand  | REANNZ  | [https://filesender.reannz.co.nz](https://filesender.reannz.co.nz)    | Aug 2024 | 25 Apr 2025 |
+| Pakistan | PERN | [https://filesender.pern.edu.pk/](https://filesender.pern.edu.pk/) | Mar 2026 | 11 Mar 2026 |
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016| 25 Apr 2025 |
 | Tajikistan | TARENA | [https://sp.tidf.tj/](https://sp.tidf.tj/) | Jan 2019 | 23 Jun 2025 |
 
@@ -137,15 +141,21 @@ If you want to add your FileSender installation to this list use one of the foll
 | Czech Republic | National Film Archive | [https://filesender.nfa.cz/](https://filesender.nfa.cz/) |Jul 2025 | 30 Jul 2025 |
 | Czech Republic | State Regional Archives Litomerice | [https://filesender.soalitomerice.com/](https://filesender.soalitomerice.com/) | Feb 2026 | 14 Feb 2026 |
 | France | CDG 33 - Gironde Management Center | [https://filesender.cdg33.fr/](https://filesender.cdg33.fr/) | Apr 2025 | 25 Apr 2025 |
+| France | Decalog - library management software | [https://filesender.decalog.net/filesender/](https://filesender.decalog.net/filesender/) | Mar 2026 | 11 Mar 2026 |
+| France | French National Institute of Statutory Auditors (CNCC) | [https://filesender.cncc.fr/filesender/](https://filesender.cncc.fr/filesender/) | Mar 2026 | 11 Mar 2026 |
 | France | Occitania Regional Council | [https://filesender.laregion.fr/](https://filesender.laregion.fr/) | Jun 2025 | 23 Jun 2025 |
 | France | Regional e-Health Development Support Group Bourgogne-Franche-Comté | [https://filesender.bfc-sante.fr/](https://filesender.bfc-sante.fr/) | Jul 2025 | 30 Jul 2025 |
 | France | SEM Plaine Commune Development | [https://filesender.semplaine.fr/](https://filesender.semplaine.fr/) | Jul 2025 | 30 Jul 2025 |
-| France | the Télégramme Group - multimedia | [filesender.groupe-telegramme.fr](filesender.groupe-telegramme.fr) | Feb 2026 | 14 Feb 2026 |
+| France | the Télégramme Group - multimedia | [https://filesender.groupe-telegramme.fr](https://filesender.groupe-telegramme.fr) | Feb 2026 | 14 Feb 2026 |
 | France | TransGourmet - food wholesaler | [https://filesender.transgourmet.fr/filesender/](https://filesender.transgourmet.fr/filesender/) | Feb 2026 | 14 Feb 2026 |
+| France | Verallia - glass manufacturer | [https://filesender.verallia.com/](https://filesender.verallia.com/) | Mar 2026 | 11 Mar 2026 |
 | Italy | Religious community | [https://filesender.salesianinordest.it/](https://filesender.salesianinordest.it/) | Oct 2025 | 2 Nov 2025 |
+| Latvia | Maritime Administration of Latvia | [https://filesender.lja.lv/](https://filesender.lja.lv/) | Mar 2026 | 11 Mar 2026 |
 | Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 25 Apr 2025 |
+| Netherlands  | BIT - internet service provider | [https://filesender.bit.nl/](https://filesender.bit.nl/) | Mar 2026 | 11 Mar 2026 |
 | Norway | Municipality digital services in Sunnmøre | [https://filesender.esunnmore.no/filesender/](https://filesender.esunnmore.no/filesender/) | Oct 2025 | 2 Nov 2025 |
 | Switzerland | Gericke Group - equipment manufacturer | [https://filesender.gerickegroup.com/filesender/](https://filesender.gerickegroup.com/filesender/) | Feb 2026 | 14 Feb 2026 |
+| Switzerland | momou! - fediversified services | [https://filesender.momou.ch/](https://filesender.momou.ch/) | Mar 2026 | 11 Mar 2026 |
 | Vatican | Congregation for the Evangelization of Peoples | [https://filesender.evang.va/](https://filesender.evang.va/) | Oct 2025 | 2 Nov 2025 |
 
 
