@@ -414,7 +414,10 @@ $default = array(
 
     'create_transfer_uses_bulk_insert_threshold' => 0,    
 
-
+    'auth_sp_oidc_uid_attribute'   => 'sub',
+    'auth_sp_oidc_email_attribute' => 'email',
+    'auth_sp_oidc_name_attribute'  => 'name',
+    'auth_sp_oidc_groups_claim'    => 'groups',
 
     'advanced_validation_create_transfer' => true,
     'advanced_validation_create_guest' => true,
