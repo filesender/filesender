@@ -655,7 +655,7 @@ class Transfer extends DBObject
         if(Auth::isSP()) {
             if(Auth::isRegularUser() || Auth::isAdmin()) {
                 $attrs = Auth::attributes();
-                $entityId = $attrs['idp'];
+                $entityId = $attrs['idp'] ?? null;
                 if( $entityId ) {
                     $idp = IdP::ensure($entityId);
                     $transfer->idpid = $idp->id;

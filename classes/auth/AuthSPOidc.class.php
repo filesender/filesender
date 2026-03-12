@@ -53,6 +53,23 @@ class AuthSPOidc
             $attributes['email'] = [$rawAttributes->{Config::get('auth_sp_oidc_email_attribute') ?? 'email'}];
             $attributes['name'] = $rawAttributes->{Config::get('auth_sp_oidc_name_attribute') ?? 'name'};
 
+            // IdP identification for audit/statistics.
+            // If the OIDC broker exposes the upstream IdP via a custom claim (e.g. Keycloak's
+            // "identity_provider"), read it from that claim. Otherwise fall back to the issuer URL,
+            // which is always set (required by oidc.php).
+            $idpAttribute = Config::get('auth_sp_oidc_idp_attribute');
+            $idp = null;
+
+            if ($idpAttribute && isset($rawAttributes->$idpAttribute) && $rawAttributes->$idpAttribute) {
+                $idp = trim((string)$rawAttributes->$idpAttribute);
+            }
+
+            if (!$idp) {
+                $idp = Config::get('auth_sp_oidc_issuer');
+            }
+
+            $attributes['idp'] = $idp;
+
             if (!$attributes['uid']) {
                 throw new AuthSPMissingAttributeException(
                     'uid',
@@ -167,4 +184,18 @@ class AuthSPOidc
         return $url;
 	}
 
+    /**
+     * Ensure local IdP metadata is stored/updated.
+     *
+     * Required by Transfer.class.php which statically calls AuthSP::ensureLocalIdPMetadata().
+     * Signature matches AuthSPSaml and AuthSPShibboleth implementations.
+     *
+     * @param string $entityId The IdP entity identifier
+     * @param IdP $idp The IdP data object
+     * @param bool $force Force metadata refresh
+     */
+    public static function ensureLocalIdPMetadata($entityId, $idp, $force = false)
+    {
+        $idp->saveIfChanged();
+    }
 }
