@@ -502,11 +502,20 @@ class File extends DBObject
             $this->upload_start = time();
             $this->save();
         }
-        
+
         $res = Storage::writeChunk($this, $chunk, $offset);
-        
+
+        // Update transfer's last chunk time so the cleanup cron can detect abandoned
+        // uploads vs active ones. Throttled to once per minute to avoid an extra
+        // UPDATE on every single chunk (default 5 MB chunks → thousands per large file).
+        // Since cleanup is measured in days, minute-level precision is more than enough.
+        if (!$this->transfer->last_chunk_time || (time() - $this->transfer->last_chunk_time) >= 60) {
+            $this->transfer->last_chunk_time = time();
+            $this->transfer->save();
+        }
+
         Logger::info($this.' chunk['.((int)$offset).'..'.((int)$offset + strlen($chunk)).'] written'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
-        
+
         return $res;
     }
     
