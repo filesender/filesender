@@ -3170,7 +3170,7 @@ $(function() {
             };
 
             var forget = function() {
-                filesender.client.deleteTransfer(failed, function() {
+                filesender.client.deleteTransfer(failed.id, function() {
                     filesender.ui.transfer.removeFromRestartTracker(failed.id);
                 }, function(error) {
                     // If delete fails (e.g. already cleaned up by cron), clear localStorage anyway
