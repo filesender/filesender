@@ -134,6 +134,8 @@ else:
 # if username is not a valid email address then ensure user supplies a valid email address
 if username is None or not bool(re.match(r'([^@|\s]+@[^@]+\.[^@|\s]+)', username)):
   requiredNamed.add_argument("-f", "--from_address", help="filesender email from address", required=True)
+else:
+  parser.add_argument("-f", "--from_address", help="filesender email from address")
 
 args = parser.parse_args()
 debug = args.verbose
