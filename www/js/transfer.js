@@ -419,6 +419,12 @@ window.filesender.transfer = function() {
         if (typeof filesender.config.valid_filename_regex == 'string') {
             var regexstr = filesender.config.valid_filename_regex;
             var r = XRegExp(regexstr,'g');
+            
+	    // fix NFD unicode characters problem on OS X, convert to NFC
+            if (file.name) {
+                file.name = file.name.normalize('NFC');
+            }
+
             var testResult = r.test(file.name);
             var lastIndex = r.lastIndex;
             if (lastIndex != file.name.length) {
