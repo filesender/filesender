@@ -241,7 +241,7 @@ EOF;
             </td>
 
             <td data-label="{tr:expires}">
-                <?php echo Utilities::formatDate($transfer->expires) ?>
+                <?php echo Utilities::formatDate($transfer->expires, true) ?>
             </td>
 
             
