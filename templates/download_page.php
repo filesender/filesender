@@ -165,7 +165,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}:</strong>
-                        <span><?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></span>
+                        <span><?php echo Template::Q(Utilities::formatDate($transfer->expires, true)) ?></span>
                     </div>
                     <?php if(strlen($sender_email)) { ?>
                         <div class="fs-info fs-info--aligned">
@@ -447,7 +447,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
         <?php } ?>
                         <tr>
                             <td align="right" class="created">{tr:created}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->created)) ?></td>
-                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></td>
+                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->expires, true)) ?></td>
                             <td align="right" class="size">{tr:size}</td><td><?php echo       Template::Q(Utilities::formatBytes($transfer->size)) ?></td>
                         </tr>
         <?php if($transfer->subject) { ?>
