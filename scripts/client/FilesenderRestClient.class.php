@@ -201,7 +201,6 @@ class FilesenderRestClient {
         $response = curl_exec($h);
         $error = curl_error($h);
         $code = (int)curl_getinfo($h, CURLINFO_HTTP_CODE);
-        curl_close($h);
         
         if($error) throw new Exception('Client error : '.$error);
         
