@@ -282,6 +282,7 @@ A note about colours;
 	* [auth_sp_oidc_issuer](#auth_sp_oidc_issuer)
 	* [auth_sp_oidc_client_id](#auth_sp_oidc_client_id)
 	* [auth_sp_oidc_client_secret](#auth_sp_oidc_client_secret)
+    * [auth_sp_oidc_idp_attribute](#auth_sp_oidc_idp_attribute)
   * [auth_sp_oidc_scopes](#auth_sp_oidc_scopes)
   * [auth_sp_oidc_uid_attribute](#auth_sp_oidc_uid_attribute)
 	* [auth_sp_oidc_email_attribute](#auth_sp_oidc_email_attribute)
@@ -3103,6 +3104,14 @@ This should be configured at your OpenID Connect provider's client configuration
 * __default:__ 
 * __available:__ since version 2.57
 * __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_idp_attribute
+* __description:__ IdP identification for audit/statistics.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ null
+* __available:__ since version 3.7
+* __comment:__  If the OIDC broker exposes the upstream IdP via a custom claim (e.g. Keycloak's "identity_provider"), read it from that claim. Otherwise fall back to the issuer URL, which is always set (required by oidc.php).
 
 ### auth_sp_oidc_scopes
 * __description:__ The OIDC scopes to request during authentication. This allows customization of the information requested from the identity provider.
