@@ -103,7 +103,7 @@ class ForwardAnotherServer
             throw new ForwardException('Not found application: '.$appname);
         }
         $secret = $applications[$appname]['secret'];
-        return new FilesenderRestClient($url, 'application', $appname, $secret);
+        return new FilesenderRestClient($url, 'application', $appname, $secret, 'FileSenderForward');
     }
 
     /**
