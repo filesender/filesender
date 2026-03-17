@@ -88,6 +88,10 @@ class Transfer extends DBObject
             'type' => 'datetime',
             'null' => true
         ),
+        'last_chunk_time' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
         'expires' => array(
             'type' => 'datetime'
         ),
@@ -335,7 +339,7 @@ class Transfer extends DBObject
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const CLOSED = "status = 'closed' ORDER BY created DESC";
     const EXPIRED = "expires <= :date ORDER BY expires ASC";
-    const FAILED = "created < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
+    const FAILED = "last_chunk_time < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
     const AUDITLOG_EXPIRED = "expires < :date ORDER BY expires ASC";
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
@@ -367,6 +371,7 @@ class Transfer extends DBObject
     protected $message = null;
     protected $created = 0;
     protected $made_available = null;
+    protected $last_chunk_time = null;
     protected $expires = 0;
     protected $expiry_extensions = 0;
     protected $options = array();
@@ -649,6 +654,7 @@ class Transfer extends DBObject
         $transfer->__set('user_email', $user_email);
         $transfer->__set('expires', $expires);
         $transfer->created = time();
+        $transfer->last_chunk_time = time(); // Initialize to creation time so cleanup can find it even if no chunks were ever uploaded
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
 
@@ -814,7 +820,7 @@ class Transfer extends DBObject
         if (!$days) {
             return array();
         }
-        return self::all(self::FAILED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
+        return self::all(self::FAILED, array(':date' => date('Y-m-d H:i:s', time() - ($days * 24 * 3600))));
     }
     
     /**
@@ -1233,6 +1239,7 @@ class Transfer extends DBObject
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
             , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
             , 'forward_server', 'forward_id'
+            , 'last_chunk_time'
         ))) {
             return $this->$property;
         }
@@ -1463,6 +1470,8 @@ class Transfer extends DBObject
             $this->download_count = $value;
         } elseif ($property == 'idpid') {
             $this->idpid = $value;
+        } elseif ($property == 'last_chunk_time') {
+            $this->last_chunk_time = (int)$value;
         } elseif( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
             if ($property == 'salt') {
                 if (!Crypto::validateSaltString($value, 32)) {
