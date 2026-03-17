@@ -293,6 +293,8 @@ EOF;
     if( $havePrev || $haveNext ) {
         echo "<div class='fs-paginator fs-paginator--center'>";
         $base = '?s=' . Template::Q(htmlspecialchars($_GET['s']));
+        $guest_id_pager = Utilities::arrayKeyOrDefault($_GET, 'guest_id', 0, FILTER_VALIDATE_INT);
+        if ($guest_id_pager) { $base .= '&guest_id=' . $guest_id_pager; }
         $cgioffset =    Template::Q($pagerprefix) . 'offset';
         $cgilimit  =    Template::Q($pagerprefix) . 'limit';
         $cgilimitvalue =Template::Q($limit);
