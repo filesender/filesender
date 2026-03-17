@@ -1505,7 +1505,12 @@ filesender.ui.startUpload = function() {
     if(!filesender.ui.nodes.required_files) {
 
         if( filesender.config.ui_use_datepicker_for_transfer_expire_time_selection ) {
-            this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+            // Set expiry to the current time-of-day on the selected date, so "select March 17"
+            // means "expires March 17 at the same time you created the transfer".
+            var expiresSelected = filesender.ui.nodes.expires.datepicker('getDate');
+            var now = new Date();
+            expiresSelected.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), 0);
+            this.transfer.expires = expiresSelected.getTime() / 1000;
         } else {
             const expiresDays = $('#expires-select').find(":selected").val();
             const now = new Date();
