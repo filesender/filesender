@@ -418,6 +418,7 @@ $default = array(
     'auth_sp_oidc_email_attribute' => 'email',
     'auth_sp_oidc_name_attribute'  => 'name',
     'auth_sp_oidc_groups_claim'    => 'groups',
+    'auth_sp_oidc_idp_attribute'   => null,
 
     'advanced_validation_create_transfer' => true,
     'advanced_validation_create_guest' => true,
