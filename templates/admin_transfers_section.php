@@ -72,7 +72,7 @@ $transfers_page = function($status) {
     // are a bunch of results to avoid hitting the database for a count(*) right
     // at the start (there are three views by default and couint(*) might do a
     // seq scan to complete.
-    if( !$offset && !strstr($selector,' AND')) {
+    if( false ) {
         $total_count = $page_size * $display_page_num;
     } else {
         $total_count = Transfer::count(array(
@@ -132,7 +132,7 @@ $transfers_page = function($status) {
     
     if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
-        $lo = $total_count - ($total_count % $page_size);
+        $lo = max(0, $total_count - ($total_count % $page_size ?: $page_size));
         $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($no).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
         $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($lo).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
