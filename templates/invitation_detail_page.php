@@ -74,7 +74,7 @@ if( $found ) {
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}:</strong>
                         <span>
-                            <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
+                            <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires, true) ?>
                         </span>
                     </div>
                     <div class="fs-info fs-info--aligned">

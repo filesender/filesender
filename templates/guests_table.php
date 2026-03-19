@@ -48,7 +48,7 @@
             </td>
 
             <td class="expires" data-rel="expires" data-label="{tr:expiration}">
-                <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
+                <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires, true) ?>
             </td>
 
             <td class="guest_transfers" data-label="{tr:guest_transfers}">
