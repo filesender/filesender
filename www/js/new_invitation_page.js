@@ -211,16 +211,19 @@ filesender.ui.send = function() {
     var options = {guest: {}, transfer: {}};
 
     var expires = 0;
-    
+    const now = new Date();
+
     if( filesender.config.ui_use_datepicker_for_guest_expire_time_selection ) {
-        expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+        // Set expiry to the current time-of-day on the selected date, so "select March 20"
+        // means "expires March 20 at the same time you created the invitation".
+        var expiresSelected = filesender.ui.nodes.expires.datepicker('getDate');
+        expiresSelected.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), 0);
+        expires = expiresSelected.getTime() / 1000;
     } else {
         const expiresDays = $('#expires-select').find(":selected").val();
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
-
-        expires = expiresDate / 1000;
+        const expiresDate = new Date(now);
+        expiresDate.setDate(expiresDate.getDate() + parseInt(expiresDays, 10));
+        expires = expiresDate.getTime() / 1000;
     }
     
     var from = null;
