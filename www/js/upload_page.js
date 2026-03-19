@@ -1514,9 +1514,9 @@ filesender.ui.startUpload = function() {
         } else {
             const expiresDays = $('#expires-select').find(":selected").val();
             const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
-            this.transfer.expires = expiresDate / 1000;
+            const expiresDate = new Date(now);
+            expiresDate.setDate(expiresDate.getDate() + parseInt(expiresDays, 10));
+            this.transfer.expires = expiresDate.getTime() / 1000;
         }
 
         if(filesender.ui.nodes.from.length)
