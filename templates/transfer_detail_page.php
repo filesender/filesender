@@ -60,7 +60,7 @@ if( !$found ) {
     return;
 }
 
-$canDownloadArchive = count($transfer->files) > 1;
+$canDownloadArchive = count($transfer->files) > 1 && $transfer->status == TransferStatuses::AVAILABLE;
 $canDownloadAsTar = true;
 $canDownloadAsZip = true;
 if($isEncrypted) {
