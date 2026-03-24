@@ -53,6 +53,8 @@ class AuthSPOidc
             $attributes['email'] = [$rawAttributes->{Config::get('auth_sp_oidc_email_attribute') ?? 'email'}];
             $attributes['name'] = $rawAttributes->{Config::get('auth_sp_oidc_name_attribute') ?? 'name'};
 
+            $attributes['idp'] = Config::get('auth_sp_oidc_issuer');
+
             if (!$attributes['uid']) {
                 throw new AuthSPMissingAttributeException(
                     'uid',
