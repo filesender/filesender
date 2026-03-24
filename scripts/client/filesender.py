@@ -46,6 +46,7 @@ try:
     import concurrent.futures
     import hashlib
     import urllib3
+    import urllib.parse
     import json
     from pathlib import Path
     import configparser
@@ -375,8 +376,12 @@ class FileSenderCLI:
         bkey = bytearray()
         bkey.extend(map(ord, self.apikey))
         data['signature'] = hmac.new(bkey, signed, hashlib.sha1).hexdigest()
-            #print("signed: " + str(signed))
-        url = self.base_url+path+'?'+('&'.join(self.flatten(data)))
+        #print("signed: " + str(signed))
+        flatdata_encoded = []
+        for item in self.flatten(data):
+          key, value = item.split('=', 1)
+          flatdata_encoded.append(urllib.parse.quote(key) + '=' + urllib.parse.quote(value))
+        url = self.base_url+path+'?'+('&'.join(flatdata_encoded))
         headers = {
             "Accept": "application/json",
             "Content-Type": content_type

@@ -162,14 +162,13 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Check that we have a valid token in the url
             if (!array_key_exists('token', $_GET)) {
-                if( Auth::isAuthenticated()) {
-                    $user = Auth::user();
+                if (Auth::isAuthenticated()) {
                     $transfer = Transfer::fromId($id);
-                    // If they own the file then they do not need to confirm download.
-                    // this is used in the transfer details page
-                    if( $user->id == $transfer->userid ) {
-                        $rc = false;
-                        return $rc;
+
+                    // Transfer detail page downloads by the owner or an admin do not
+                    // act on behalf of a recipient, so no recipient notification is needed.
+                    if ($transfer->havePermission()) {
+                        return false;
                     }
                 }
                 throw new RestBadParameterException('token');
@@ -575,7 +574,7 @@ class RestEndpointTransfer extends RestEndpoint
                     $d->cid = Validate::filter_var_regex_log(
                         "transfer.files.cid",
                         $d->cid,
-                        '/^file_[0-9]+_[0-9]+_[0-9]+_$/'  ); 
+                        '/^file_[0-9]+_[0-9]+_[0-9]+_[0-9]*$/'  ); 
                     $d->iv = Validate::filter_var_regex_log(
                         "transfer.files.iv",
                         $d->iv,
