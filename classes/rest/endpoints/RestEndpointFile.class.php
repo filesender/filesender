@@ -328,6 +328,113 @@ class RestEndpointFile extends RestEndpoint
         }
     }
 
+    /**
+     *
+     * Helper method called by put() method only.
+     * 
+     * put() $mode == chunk might like to verify the chunk size twice.
+     * Firstly to make sure the client has not sent bogus data from
+     * the size they are claiming. Secondly, with this mildly verified
+     * client data size (not too large etc) the data is written to
+     * disk using that size claim. Then the written size is passed in
+     * with $szIsFromWrittenDataBytes true and a second verification
+     * is performed using the number of bytes stored on disk for the
+     * PUT.
+     *
+     * $sz is either the client claimed bytes to write or the number of bytes written
+     * $szIsFromWrittenDataBytes is true if bytes have been written and $sz is thus accurate.
+     * 
+     */
+    public function putSizeChecks( $id, $file, $client, $sz, $mode, $offset, $szIsFromWrittenDataBytes )
+    {
+        $data_length = $sz;
+
+        if ($file->transfer->options['encryption']) {
+
+            // Calculate the correct length
+            $chunkLength = $sz;
+
+            switch( $file->transfer->key_version ) {
+                case CryptoAppConstants::v2018_importKey_deriveKey:
+                case CryptoAppConstants::v2017_digest_importKey:
+                    // The encryption adds padding and a checksum
+                    $paddedLength = 16 - $client['X-Filesender-Chunk-Size'] % 16;
+                    if ($paddedLength == 0) {
+                        $paddedLength = 16;
+                    }
+                    // The initialization vector
+                    $ivLength = 16;
+                    // Content length
+                    $data_length = ($chunkLength - $paddedLength - $ivLength);
+                    break;
+                case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
+                case CryptoAppConstants::v2019_gcm_digest_importKey:
+                    $data_length = $chunkLength - 32;
+                    break;
+            }
+        }
+
+        // Check that the client sent file size the same as the loaded file if given
+        if (!is_null($client['X-Filesender-File-Size'])) {
+            if ($file->size != $client['X-Filesender-File-Size']) {
+                throw new RestSanityCheckFailedException(
+                    'file_size',
+                    $file->size,
+                    $client['X-Filesender-File-Size'],
+                    $file,
+                    $client
+                );
+            }
+        }
+        
+        // Check that the offset from check data and the one in the url are the same if given
+        if (!is_null($client['X-Filesender-Chunk-Offset'])) {
+            if ($offset != $client['X-Filesender-Chunk-Offset']) {
+                throw new RestSanityCheckFailedException(
+                    'chunk_offset',
+                    $offset,
+                    $client['X-Filesender-Chunk-Offset'],
+                    $file,
+                    $client
+                );
+            }
+        }
+        
+        // Check that the sent data size is the one givent by the client
+        if (!is_null($client['X-Filesender-Chunk-Size'])) {
+            if ($data_length != $client['X-Filesender-Chunk-Size']) {
+                throw new RestSanityCheckFailedException(
+                    'chunk_size',
+                    $data_length,
+                    $client['X-Filesender-Chunk-Size'],
+                    $file,
+                    $client
+                );
+            }
+        }
+
+        // Check that data length does not exceed upload_chunk_size (can be smaller at the end of the file)
+        $upload_chunk_size = Config::get('upload_chunk_size');
+        $upload_crypted_chunk_size = Config::get('upload_crypted_chunk_size');
+
+        if ($data_length > $upload_chunk_size) {
+            if (($file->transfer->options['encryption'] && $data_length > $upload_crypted_chunk_size)) {
+                throw new RestSanityCheckFailedException(
+                    'chunk_size',
+                    $data_length,
+                    'max ' . Config::get('upload_chunk_size'),
+                    $file,
+                    $client
+                );
+            }
+        }
+
+        // Check that chunk offset is inside the file bounds
+        if ($offset + $data_length > $file->size) {
+            throw new FileChunkOutOfBoundsException($file, $offset, $data_length, $file->size);
+        }
+        
+    }
 
     /**
      * Add chunk to a file at offset
@@ -406,6 +513,8 @@ class RestEndpointFile extends RestEndpoint
 
         
         // Get request data
+        // if encryption_encode_encrypted_chunks_in_base64_during_upload is not set
+        // then this will set $data to the real PUT data.
         $data = $this->request->input;
 
         
@@ -426,109 +535,46 @@ class RestEndpointFile extends RestEndpoint
             
             // Get integrity check data sent from the client
             $client = array();
-            foreach (array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size', 'X-Filesender-Encrypted') as $h) {
+            foreach (array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size', 'X-Filesender-Encrypted', 'X-Filesender-Chunk-Size-Encrypted' ) as $h) {
                 $k = 'HTTP_' . strtoupper(str_replace('-', '_', $h));
                 $client[$h] = array_key_exists($k, $_SERVER) ? (int) $_SERVER[$k] : null;
             }
 
-            if ($file->transfer->options['encryption']) {
-
-                // get rid of the base64
-                if(Utilities::isTrue(Config::get('encryption_encode_encrypted_chunks_in_base64_during_upload'))) {
-                    $data = base64_decode($data);
-                }
-                // Calculate the correct length
-                $chunkLength = strlen($data);
-
-                switch( $file->transfer->key_version ) {
-                    case CryptoAppConstants::v2018_importKey_deriveKey:
-                    case CryptoAppConstants::v2017_digest_importKey:
-                        // The encryption adds padding and a checksum
-                        $paddedLength = 16 - $client['X-Filesender-Chunk-Size'] % 16;
-                        if ($paddedLength == 0) {
-                            $paddedLength = 16;
-                        }
-                        // The initialization vector
-                        $ivLength = 16;
-                        // Content length
-                        $data_length = ($chunkLength - $paddedLength - $ivLength);
-                        break;
-                    case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
-                    case CryptoAppConstants::v2019_gcm_digest_importKey:
-                        $data_length = $chunkLength - 32;
-                        break;
-                }
-                
+            if(!Request::$delay_all_reading) {
+                $clientSaysSize = strlen($data);
             } else {
-                $data_length = strlen($data);
-            }
-            
-            // Check that the client sent file size the same as the loaded file if given
-            if (!is_null($client['X-Filesender-File-Size'])) {
-                if ($file->size != $client['X-Filesender-File-Size']) {
-                    throw new RestSanityCheckFailedException(
-                        'file_size',
-                        $file->size,
-                                                             $client['X-Filesender-File-Size'],
-                                                             $file,
-                        $client
-                    );
+                $clientSaysSize = $client['X-Filesender-Chunk-Size'];
+                if ($file->transfer->options['encryption']) {
+                    $clientSaysSize = $client['X-Filesender-Chunk-Size-Encrypted'];
                 }
             }
+            Logger::debug("File::PUT clientSaysSize $clientSaysSize ");
             
-            // Check that the offset from check data and the one in the url are the same if given
-            if (!is_null($client['X-Filesender-Chunk-Offset'])) {
-                if ($offset != $client['X-Filesender-Chunk-Offset']) {
-                    throw new RestSanityCheckFailedException(
-                        'chunk_offset',
-                        $offset,
-                                                             $client['X-Filesender-Chunk-Offset'],
-                                                             $file,
-                        $client
-                    );
-                }
-            }
-            
-            // Check that the sent data size is the one givent by the client
-            if (!is_null($client['X-Filesender-Chunk-Size'])) {
-                if ($data_length != $client['X-Filesender-Chunk-Size']) {
-                    throw new RestSanityCheckFailedException(
-                         'chunk_size',
-                         $data_length,
-                                                              $client['X-Filesender-Chunk-Size'],
-                                                              $file,
-                         $client
-                    );
-                }
-            }
+            $this->putSizeChecks( $id, $file, $client, $clientSaysSize, $mode, $offset, false );
 
-            // Check that data length does not exceed upload_chunk_size (can be smaller at the end of the file)
-            $upload_chunk_size = Config::get('upload_chunk_size');
-            $upload_crypted_chunk_size = Config::get('upload_crypted_chunk_size');
-
-            if ($data_length > $upload_chunk_size) {
-                if (($file->transfer->options['encryption'] && $data_length > $upload_crypted_chunk_size)) {
-                    throw new RestSanityCheckFailedException(
-                        'chunk_size',
-                        $data_length,
-                                                             'max ' . Config::get('upload_chunk_size'),
-                                                             $file,
-                        $client
-                    );
-                }
-            }
-
-            // Check that chunk offset is inside the file bounds
-            if ($offset + $data_length > $file->size) {
-                throw new FileChunkOutOfBoundsException($file, $offset, $data_length, $file->size);
-            }
-            
+            $original_offset = $offset;
             // Write data to file and calculate the offset with crypted size in mind
             if ($file->transfer->options['encryption']) {
                 $offset = $offset / Config::get('upload_chunk_size') * Config::get('upload_crypted_chunk_size');
             }
 
-            $write_info = $file->writeChunk($data, $offset);
+            Logger::debug("File::PUT offset $offset ");
+
+            //
+            // Do the writing
+            //
+            if(Config::isFalse('performance_allow_direct_copy_from_put_to_disk')) {
+                if(Utilities::isTrue(Config::get('encryption_encode_encrypted_chunks_in_base64_during_upload'))) {
+                    $data = base64_decode($data);
+                }
+                $write_info = $file->writeChunk( $data, $offset );
+            } else {
+                $write_info = $file->writeChunkDelayed($clientSaysSize, $offset);
+            }
+
+            // recheck the size of data
+            $this->putSizeChecks( $id, $file, $client, $write_info['written'], $mode, $original_offset, true );
+            
             $file->transfer->isUploading();
             
             return $write_info;

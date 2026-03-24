@@ -108,7 +108,22 @@ class RestServer
             
             // Request data accessor
             $request = new RestRequest();
-            
+
+            if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+                // do not try to read the input for a PUT to file chunks
+                // it will handle that itself.
+                if( $endpoint == "file"  ) {
+                    if( $method == "put" ) {
+                        if (array_key_exists('PATH_INFO', $_SERVER)) {
+                            if( strstr($_SERVER['PATH_INFO'], '/chunk/')) {
+                                Request::$delay_all_reading = true;
+                                Logger::debug("RestServer delaying reading any data for this specific request to later...");
+                            }
+                        }
+                    }
+                }
+            }
+
             // Because php://input can only be read once for PUT requests we rely on a shared getter
             $input = Request::body();
             

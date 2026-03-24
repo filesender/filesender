@@ -370,6 +370,15 @@ class Config
                                                         + self::get('upload_crypted_chunk_padding_size');
         
 
+        if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            if(Config::isTrue('encryption_encode_encrypted_chunks_in_base64_during_upload')) {
+                throw new ConfigBadParameterException(
+                    "You can not use this older compatability option "
+                  . " (encryption_encode_encrypted_chunks_in_base64_during_upload)"
+                  . " with (performance_allow_direct_copy_from_put_to_disk). "
+                  . " You might like to investigate not using encrypted_chunks_in_base64 as it is very old and inefficient.");
+            }
+        }
         
 
         $themeName = self::get('theme');
@@ -449,6 +458,13 @@ class Config
                   + self::$parameters['auditlog_must_be_n_days_longer_than_max_transfer_days_valid'];
             if( self::$parameters['auditlog_lifetime'] < $minv ) {
                 self::$parameters['auditlog_lifetime'] = $minv;
+            }
+        }
+
+        self::$parameters['client_calculate_sha256'] = false;
+        if (Config::isTrue('storage_filesystem_hash_check')) {
+            if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+                self::$parameters['client_calculate_sha256'] = true;
             }
         }
         
@@ -649,6 +665,10 @@ class Config
     public static function isTrue($key)
     {
         return(Utilities::isTrue(Config::get($key)));
+    }
+    public static function isFalse($key)
+    {
+        return !self::isTrue($key);
     }
 
     

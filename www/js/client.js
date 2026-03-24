@@ -470,7 +470,7 @@ window.filesender.client = {
      * @param callable done
      * @param callable error
      */
-    putChunk: function(file, blob, offset, progress, done, error, encrypted, encryption_details ) {
+    putChunk: async function(file, blob, offset, progress, done, error, encrypted, encryption_details ) {
         var sz = blob.size;
         if( typeof blob == "string" ) {
             sz = blob.length;
@@ -516,7 +516,19 @@ window.filesender.client = {
                         arrayBuffer,
                         chunkid,
                         encryption_details,
-                        function(encrypted_blob) {
+                        async function(encrypted_blob) {
+
+                            var contentHash = '';
+                            var hashArray = '';
+                            var hashHex = '';
+                            if(window.filesender.config.client_calculate_sha256) {
+                                contentHash = await crypto.subtle.digest('SHA-256', encrypted_blob );
+                                hashArray = Array.from(new Uint8Array(contentHash));
+                                hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                            }
+                            opts.headers['X-Filesender-Digest-SHA256'] = hashHex;
+                            
+                            opts.headers['X-Filesender-Chunk-Size-Encrypted'] = encrypted_blob.length;
                             var result = $this.put(
                                 file.transfer.authenticatedEndpoint(
                                     '/file/' + file.id + '/chunk/' + offset,
@@ -526,7 +538,21 @@ window.filesender.client = {
                 }
             );
         }else{
-            var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
+            
+            var contentHash = '';
+            var hashArray = '';
+            var hashHex = '';
+            if(window.filesender.config.client_calculate_sha256) {
+                var ab = await blob.arrayBuffer();
+                contentHash = await crypto.subtle.digest('SHA-256', ab);
+                hashArray = Array.from(new Uint8Array(contentHash));
+                hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                blob = ab;
+            }
+            opts.headers['X-Filesender-Digest-SHA256'] = hashHex;
+            
+            var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file),
+                                   blob, done, opts);
         }
         
         if(error) opts.error = error;
