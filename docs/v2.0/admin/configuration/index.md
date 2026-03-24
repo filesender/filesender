@@ -1213,6 +1213,16 @@ $config['db_driver_options'] = array( PDO::ATTR_PERSISTENT => true );
   See https://www.php.net/manual/en/pdo.construct.php
 
 
+### db_mysql_limit_features
+
+* __description:__ Limit use of more advanced features which may be only available in MariaDB.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.67
+* __comment:__
+   Avoid using features like NATURAL_SORT_KEY. 
+   If and when features that may be limited are added to the code they will be added here.
 
 ---
 
