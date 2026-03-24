@@ -119,7 +119,7 @@ $config['auth_sp_type'] = 'saml';
 // // Get name attribute from authentication service
 //$config['auth_sp_saml_name_attribute'] = 'cn';
 //
-//$config['auth_sp_saml_uid_attribute'] = 'pairwise-id';
+$config['auth_sp_saml_uid_attribute'] = 'uid';
 //
 // // Attribute to use for entitlement. Usually eduPersonEntitlement or isMemberOf
 //$config['auth_sp_saml_entitlement_attribute'] = 'eduPersonEntitlement';

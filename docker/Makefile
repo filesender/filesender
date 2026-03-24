@@ -24,6 +24,7 @@ firstrun: testenv stop-docker certificate docker
 
 .PHONY: rebuild
 rebuild: testenv stop-docker certificate docker
+	docker compose up -d
 
 .PHONY: docker
 docker: testenv stop-docker certificate

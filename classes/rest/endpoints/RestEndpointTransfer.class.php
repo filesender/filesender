@@ -574,7 +574,7 @@ class RestEndpointTransfer extends RestEndpoint
                     $d->cid = Validate::filter_var_regex_log(
                         "transfer.files.cid",
                         $d->cid,
-                        '/^file_[0-9]+_[0-9]+_[0-9]+_$/'  ); 
+                        '/^file_[0-9]+_[0-9]+_[0-9]+_[0-9]*$/'  ); 
                     $d->iv = Validate::filter_var_regex_log(
                         "transfer.files.iv",
                         $d->iv,
