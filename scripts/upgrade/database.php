@@ -855,8 +855,26 @@ try {
     $placeholders =  array(':chunk_size' => $chunk_size,
                            ':crypted_chunk_size' => $crypted_chunk_size);
     $statement->execute($placeholders);
-    
-    
+
+    // Backfill last_chunk_time for transfers that existed before this column was added.
+    // Active uploads (created/started/uploading) get NOW() so they are not immediately
+    // cleaned up by the cron — they get a fresh window of failed_transfer_cleanup_days.
+    // Completed transfers (available/closed) get their creation date (irrelevant for
+    // cleanup since the FAILED query only targets incomplete statuses).
+    echo "Backfilling last_chunk_time for existing transfers...\n";
+    $statement = DBI::prepare(
+        "UPDATE $tbl_transfers SET last_chunk_time = NOW() "
+        . "WHERE last_chunk_time IS NULL AND status IN ('created', 'started', 'uploading')"
+    );
+    $statement->execute(array());
+
+    $statement = DBI::prepare(
+        "UPDATE $tbl_transfers SET last_chunk_time = created "
+        . "WHERE last_chunk_time IS NULL"
+    );
+    $statement->execute(array());
+
+
 } catch(Exception $e) {
     echo "Error, Rolling database changes back....\n";
     $dbtype = Config::get('db_type');

@@ -41,6 +41,8 @@ if (!defined('FILESENDER_BASE')) {
  */
 class StorageCloudAzureStream extends StorageFilesystemStreamBase
 {
+    public mixed $context;
+
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         $rc = parent::stream_open( $path, $mode, $options, $opened_path );

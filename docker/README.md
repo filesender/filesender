@@ -18,9 +18,14 @@ In the docker folder:
 
     make firstrun
 
-Once the script is done, go to [localhost](http://localhost), and log on with one of the following users:
+Once the script is done, go to [http://localhost](http://localhost), and log on with one of the following users:
 * employee:employeepass
+* employee2:employee2pass
 * student:studentpass
+* guest:guestpass
+
+SimpleSAMLphp administration: [http://localhost/simplesaml/admin](http://localhost/simplesaml/admin)
+* admin:456
 
 ### Example 1: FileSender 3.3 (default example)
 
@@ -35,8 +40,11 @@ Once the script is done, go to [localhost](http://localhost), and log on with on
 
         FILESENDER_VERSION=localdev
 
-## Redeploying after changing versions
-In some cases it is recommended to start with a clean deployment. In those cases, you should run the following:
+## Rebuild and redeploy
+To rebuild and redeploy, just run:
+        make rebuild
+
+In some cases it is recommended to start with a clean deployment, for example after changing the Filesender version. In those cases, you should run the following:
 
         make cleanall
         make firstrun

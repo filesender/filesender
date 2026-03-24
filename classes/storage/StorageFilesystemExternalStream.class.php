@@ -41,6 +41,8 @@ if (!defined('FILESENDER_BASE')) {
  */
 class StorageFilesystemExternalStream extends StorageFilesystemStreamBase
 {
+    public mixed $context;
+
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         $rc = parent::stream_open_base( $path, $mode, $options, $opened_path );

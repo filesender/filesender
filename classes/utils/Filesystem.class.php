@@ -35,7 +35,6 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
-require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 
 /**
  * Filesystem functions holder

@@ -74,7 +74,7 @@ switch ($topic) {
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
            ."    AND t.status = 'available' "
            .' GROUP BY t.user_email '
-           .' ORDER BY '.$sort.' '.$sortdirection
+           .' ORDER BY "'.$sort.'" '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -117,7 +117,7 @@ switch ($topic) {
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
            .' GROUP BY t.user_email '
-           .' ORDER BY '.$sort.' '.$sortdirection
+           .' ORDER BY "'.$sort.'" '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -157,7 +157,7 @@ switch ($topic) {
            .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
-           .'ORDER BY '.$sort.' '.$sortdirection
+           .'ORDER BY "'.$sort.'" '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -196,7 +196,7 @@ switch ($topic) {
              :
              'AND a.idpid = :idp '
            )
-           .'ORDER BY '.$sort.' '.$sortdirection
+           .'ORDER BY "'.$sort.'" '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start
         ;

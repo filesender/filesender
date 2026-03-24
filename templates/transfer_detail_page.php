@@ -60,7 +60,7 @@ if( !$found ) {
     return;
 }
 
-$canDownloadArchive = count($transfer->files) > 1;
+$canDownloadArchive = count($transfer->files) > 1 && $transfer->status == TransferStatuses::AVAILABLE;
 $canDownloadAsTar = true;
 $canDownloadAsZip = true;
 if($isEncrypted) {
@@ -156,7 +156,7 @@ if(empty($transfer->options['encryption'])) {
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}:</strong>
-                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></span>
+                        <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires, true)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:from}:</strong>
