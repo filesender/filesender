@@ -467,6 +467,13 @@ class Config
                 self::$parameters['client_calculate_sha256'] = true;
             }
         }
+
+        if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            $st = self::$parameters['storage_type'];
+            if( !in_array( $st, ['filesystemChunked', 'filesystem'] )) {
+                self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
+            }
+        }
         
         // verify classes are happy
         Guest::validateConfig();
