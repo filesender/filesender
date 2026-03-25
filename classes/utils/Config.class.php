@@ -474,6 +474,13 @@ class Config
                 self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
             }
         }
+        if (Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            // python client
+            if (array_key_exists('signature', $_GET)) {
+                self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
+            }
+        }
+        
         
         // verify classes are happy
         Guest::validateConfig();
