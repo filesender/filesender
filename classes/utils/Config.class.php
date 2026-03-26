@@ -470,7 +470,7 @@ class Config
 
         if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
             $st = self::$parameters['storage_type'];
-            if( !in_array( $st, ['filesystemChunked', 'filesystem'] )) {
+            if( !in_array( $st, ['filesystemChunked', 'filesystem', 'CloudS3'] )) {
                 self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
             }
         }
