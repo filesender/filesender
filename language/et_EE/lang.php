@@ -843,6 +843,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Krüpteerimine';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Krüpteerimise lõpp';
 $lang['upload_page_graph_mb_per_second'] = 'MB/sek';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Üldine keskmine üleslaadimise kiirus {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Üleslaadimist protsessitakse uuesti';
 $lang['upload_stalled_and_resumed'] = 'Üleslaadimine peatati ja jätkati...';
 $lang['upload_stalled_due_to_testing'] = 'Üleslaadimine peatati testimiseks...';

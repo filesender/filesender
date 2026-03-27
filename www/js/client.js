@@ -182,6 +182,9 @@ window.filesender.client = {
         
         if(urlargs.length) resource += (resource.match(/\?/) ? '&' : '?') + urlargs.join('&');
         
+        var quiet = !!options.quiet;
+        delete options.quiet;
+
         var errorhandler = function(error) {
             filesender.ui.error(error);
         };
@@ -325,9 +328,9 @@ window.filesender.client = {
                     return;
                 }
                 
-                errorhandler(error);
+                if (!quiet) errorhandler(error);
             } catch(e) {
-                filesender.ui.rawError(msg);
+                if (!quiet) filesender.ui.rawError(msg);
             }
         };
         
@@ -433,8 +436,29 @@ window.filesender.client = {
     getTransfer: function(id, callback, onerror, opts) {
         if(!opts) opts = {};
         if(onerror) opts.error = onerror;
-        
+
         return this.get('/transfer/' + id, callback, opts);
+    },
+
+    getTransferProgress: function(id, callback, errorCallback) {
+        return this.get('/transfer/' + id + '/progress', callback, {
+            quiet: true,
+            error: errorCallback || function() {}
+        });
+    },
+
+    /**
+     * Batch progress — fetch progress for multiple transfer IDs in one request.
+     * @param {number[]} ids
+     * @param {function} callback receives {id: {status, progress, bytes_uploaded, bytes_total}}
+     * @param {function} errorCallback optional error handler
+     */
+    getBatchTransferProgress: function(ids, callback, errorCallback) {
+        if (!ids || !ids.length) return;
+        return this.get('/transfer/batch_progress?ids=' + ids.join(','), callback, {
+            quiet: true,
+            error: errorCallback || function() {}
+        });
     },
     
     /**

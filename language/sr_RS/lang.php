@@ -846,6 +846,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Šifrovanje u prenosu';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Šifrovanje u prenosu & skladištenju';
 $lang['upload_page_graph_mb_per_second'] = 'MB/sec';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Prosečna brzina otpremanja fajlova preko {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Ponovo otpremanje u toku';
 $lang['upload_stalled_and_resumed'] = 'Otpremanje je bilo zaustavljeno i nastavlja se...';
 $lang['upload_stalled_due_to_testing'] = 'Otpremanje je zaustavljeno zbog testiranja...';

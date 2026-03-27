@@ -337,4 +337,20 @@ class Storage
         self::setup();
         return call_user_func(self::getStorageClass($file).'::buildPath', $file, $fullPath );
     }
+
+    /**
+     * Calculate on-disk file size (bytes uploaded so far)
+     *
+     * @param File $file
+     * @return int bytes on disk, or -1 if not supported
+     */
+    public static function calculateOnDiskFileSize(File $file)
+    {
+        self::setup();
+        $storageClass = self::getStorageClass($file);
+        if (!method_exists($storageClass, 'calculateOnDiskFileSize')) {
+            return -1;
+        }
+        return call_user_func($storageClass.'::calculateOnDiskFileSize', $file);
+    }
 }

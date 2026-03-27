@@ -839,6 +839,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Salattu tiedonsiirto';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Salattu tiedonsiirto & salattu REST';
 $lang['upload_page_graph_mb_per_second'] = 'MB/s';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Kaikkien siirtojen keskinopeus yli {size} kokoisilla tiedostoilla';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Siirto etenee jälleen';
 $lang['upload_stalled_and_resumed'] = 'Siirto pysähti ja jatkettiin';
 $lang['upload_stalled_due_to_testing'] = 'Testi pysäytti siirron';

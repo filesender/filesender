@@ -190,6 +190,19 @@ if(empty($transfer->options['encryption'])) {
                             <?php echo $downloadsCount ?>
                         </span>
                     </div>
+                    <?php if($transfer->isStatusUploading()) { ?>
+                    <div class="fs-progress-bar" data-transfer-progress="<?php echo $transfer->id; ?>">
+                        <span class="fs-progress-bar__label">
+                            <i class="fa fa-fw fa-circle-o-notch fa-spin"></i>
+                            <strong>{tr:upload_progress}</strong>
+                            <span class="fs-progress-bar__value">0%</span>
+                        </span>
+                        <div class="fs-progress-bar__progress">
+                            <div class="fs-progress-bar__indicator"></div>
+                        </div>
+                        <span class="fs-progress-bar__bytes"></span>
+                    </div>
+                    <?php } ?>
                 </div>
             </div>
             <div class="col col-sm-12 col-md-6 col-lg-6">

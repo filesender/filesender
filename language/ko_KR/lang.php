@@ -857,6 +857,7 @@ $lang['upload_page_graph_encryption_in_transit'] = '전송 중 암호화';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = '전송 및 저장 중 암호화';
 $lang['upload_page_graph_mb_per_second'] = 'MB/sec';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = '{size} 이상의 파일에 대한 글로벌 평균 업로드 속도';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = '업로드가 다시 진행';
 $lang['upload_stalled_and_resumed'] = '업로드가 중단되었다가 재개되었습니다...';
 $lang['upload_stalled_due_to_testing'] = '테스트 사례로 인해 업로드가 중단되었습니다...';

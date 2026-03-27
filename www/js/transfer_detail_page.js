@@ -365,6 +365,63 @@ $(function() {
     filesender.client.bindFileCheckButtons();
 
     $('#check-all').click();
-    
-    
+
+    // Real-time upload progress polling for in-progress transfers
+    (function() {
+        var progressBar = $('[data-transfer-progress]');
+        if (!progressBar.length) return;
+
+        var transferId = parseInt(progressBar.attr('data-transfer-progress'), 10);
+        if (!transferId) return;
+
+        var formatBytes = function(bytes) {
+            if (bytes === 0) return '0 B';
+            var units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            var i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + units[i];
+        };
+
+        var consecutiveErrors = 0;
+        var maxErrors = 30;
+        var intervalId = null;
+
+        var poll = function() {
+            if (document.hidden) return;
+
+            filesender.client.getTransferProgress(transferId, function(data) {
+                consecutiveErrors = 0;
+
+                var pct = data.progress || 0;
+                var uploaded = data.bytes_uploaded || 0;
+                var total = data.bytes_total || 0;
+
+                progressBar.find('.fs-progress-bar__indicator').css('width', pct + '%');
+                progressBar.find('.fs-progress-bar__value').text(pct + '%');
+
+                if (total > 0) {
+                    progressBar.find('.fs-progress-bar__bytes').text(
+                        formatBytes(uploaded) + ' / ' + formatBytes(total)
+                    );
+                }
+
+                if (data.status && data.status !== 'uploading' && data.status !== 'created' && data.status !== 'started') {
+                    clearInterval(intervalId);
+                    filesender.ui.reload();
+                }
+            }, function() {
+                consecutiveErrors++;
+                if (consecutiveErrors >= maxErrors) {
+                    clearInterval(intervalId);
+                }
+            });
+        };
+
+        intervalId = setInterval(poll, 2000);
+
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) poll();
+        });
+    })();
+
+
 });

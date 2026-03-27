@@ -31,6 +31,30 @@
   top: 0;
   background: var(--fs-success);
   border-radius: var(--fs-spacing-2x);
+  transition: width 0.7s ease;
+}
+
+td .fs-progress-bar {
+  margin-top: 0;
+}
+
+.fs-progress-bar__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fs-spacing-base);
+  margin-right: var(--fs-spacing-2x);
+  white-space: nowrap;
+}
+
+.fs-progress-bar__bytes {
+  margin-left: var(--fs-spacing-2x);
+  font-size: var(--fs-font-size-small);
+  color: var(--fs-text-color-secondary);
+  white-space: nowrap;
+}
+
+.fs-upload-done {
+  color: var(--fs-success);
 }
 
 .fs-progress-bar__indicator--thin {

@@ -858,6 +858,7 @@ $lang['upload_page_graph_encryption_in_transit'] = '正在執行的加密';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = '正在執行和暫停的加密';
 $lang['upload_page_graph_mb_per_second'] = 'MB/秒';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = '超過{size}的整個文件的平均上傳速度';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = '正在重新上傳';
 $lang['upload_stalled_and_resumed'] = '上傳已暫停並恢復';
 $lang['upload_stalled_due_to_testing'] = '上傳被測試用例暫停...';

@@ -855,6 +855,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Şifreleme geçiş halinde';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Şifreleme geçiş ve bekleme halinde';
 $lang['upload_page_graph_mb_per_second'] = 'Mb/sn';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = '{size} üzerindeki Dosyaların Küresel Ortalama Yükleme Hızı';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Yükleme tekrar ilerliyor';
 $lang['upload_stalled_and_resumed'] = 'Yükleme duraksadı ve sürdürüldü...';
 $lang['upload_stalled_due_to_testing'] = 'Yükleme bir sınama olayı tarafından duraksatıldı...';

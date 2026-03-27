@@ -845,6 +845,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Chiffrement en transit';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Chiffrement en transit et repos';
 $lang['upload_page_graph_mb_per_second'] = 'MB/sec';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Vitesse de téléversement moyenne globale des fichiers sur {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Le téléversement a repris';
 $lang['upload_stalled_and_resumed'] = 'Téléversement bloqué et a repris...';
 $lang['upload_stalled_due_to_testing'] = 'Téléversement bloqué par un test...';

@@ -843,6 +843,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Enkripcija u prolazu';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Enkripcija u prolazu & rest';
 $lang['upload_page_graph_mb_per_second'] = 'MB/sec';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Srednja brzina prijenosa datoteka preko {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Prijenos ponovo napreduje';
 $lang['upload_stalled_and_resumed'] = 'Prijenos je bio zaustavljen i nastavlja se...';
 $lang['upload_stalled_due_to_testing'] = 'Prijenos zaustavljen testiranjem...';

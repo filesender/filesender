@@ -845,6 +845,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Criptografia em trânsito ';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Criptografia em trânsito & repouso';
 $lang['upload_page_graph_mb_per_second'] = 'MB/seg';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Velocidade média global de upload de arquivos acima de {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Upload progredindo novamente';
 $lang['upload_stalled_and_resumed'] = 'Envio parado e foi retomado...';
 $lang['upload_stalled_due_to_testing'] = 'Envio parado por um caso de teste...';

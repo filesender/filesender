@@ -846,6 +846,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'ٹرانزٹ میں خفیہ
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'ٹرانزٹ اور آرام میں خفیہ کاری';
 $lang['upload_page_graph_mb_per_second'] = 'ایم بی/سیکنڈ';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = '{ سائز } سے زیادہ فائلوں کی عالمی اوسط اپ لوڈ کی رفتار';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'اپ لوڈ دوبارہ جاری ہے۔';
 $lang['upload_stalled_and_resumed'] = 'اپ لوڈ رک گیا اور دوبارہ شروع کر دیا گیا...';
 $lang['upload_stalled_due_to_testing'] = 'اپ لوڈ ایک ٹیسٹ کیس کی وجہ سے رک گیا...';

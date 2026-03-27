@@ -344,6 +344,7 @@ class Transfer extends DBObject
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
+    const FROM_GUEST_WITH_UPLOADING = "guest_id = :guest_id AND (status='available' OR status='created' OR status='started' OR status='uploading') ORDER BY created DESC";
     const COUNT_UPLOADED_FROM_GUEST = "guest_id = :guest_id AND status!='created' ";
     const UPLOADING_NO_ORDER = "status = 'uploading' ";
     const AVAILABLE_NO_ORDER = "status = 'available' ";
@@ -555,6 +556,21 @@ class Transfer extends DBObject
         return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
     }
 
+    /**
+     * Get transfers created by a guest including those still uploading
+     *
+     * @param mixed $guest Guest or Guest id
+     *
+     * @return array of Transfer
+     */
+    public static function fromGuestIncludingUploading($guest)
+    {
+        if ($guest instanceof Guest) {
+            $guest = $guest->id;
+        }
+
+        return self::all(self::FROM_GUEST_WITH_UPLOADING, array(':guest_id' => $guest));
+    }
 
     /**
      * Get number of transfers created by guest that were at some stage

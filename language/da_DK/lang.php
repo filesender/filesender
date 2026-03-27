@@ -848,6 +848,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Krypteret undervejs';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Krypteret undervejs og under opbevaring';
 $lang['upload_page_graph_mb_per_second'] = 'MB/s';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Global gennemsnitshastighed for upload af filer over {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Uploaden går fremad igen';
 $lang['upload_stalled_and_resumed'] = 'Upload gik i stå og blev genoptaget ...';
 $lang['upload_stalled_due_to_testing'] = 'Upload standset på grund af afprøvning ...';
