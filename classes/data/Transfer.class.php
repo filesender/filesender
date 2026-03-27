@@ -702,7 +702,7 @@ class Transfer extends DBObject
             $days = Config::get('default_daysvalid');
         } // @deprecated legacy
         
-        return strtotime('+'.$days.' day');
+        return strtotime('+'.date('G').' hour', strtotime('+'.$days.' day'))+3599;
     }
     
     /**
