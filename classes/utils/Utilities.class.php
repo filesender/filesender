@@ -200,7 +200,22 @@ class Utilities
         return preg_match('/' .  Config::get('valid_filename_regex') . '$/u', $filename);
     }
 
-    
+    /**
+     * Get timezone offset
+     *
+     * @param string $custom_timezone_string the timezone you want to convert from
+     *
+     * @return int offset in seconds
+     */
+    public static function getTimezoneOffset($custom_timezone_string) {
+        $server_tz = new DateTimeZone(Config::get('default_timezone'));
+        $custom_tz = new DateTimeZone($custom_timezone_string);
+        $datetime = new DateTime("now", $server_tz);
+        $server_offset = $server_tz->getOffset($datetime);
+        $custom_offset = $custom_tz->getOffset($datetime);
+        $offset_difference = $custom_offset - $server_offset;
+        return $offset_difference;
+    }
     
     /**
      * Format a date according to configuration

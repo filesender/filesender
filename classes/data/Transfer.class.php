@@ -707,7 +707,10 @@ class Transfer extends DBObject
         if (!$days) {
             $days = Config::get('default_daysvalid');
         } // @deprecated legacy
-        
+
+        if (!empty($_COOKIE['x-filesender-timezone'])) {
+            return strtotime('+'.$days.' day') + Utilities::getTimezoneOffset($_COOKIE['x-filesender-timezone']);
+        }
         return strtotime('+'.$days.' day');
     }
     
