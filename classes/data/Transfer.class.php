@@ -703,7 +703,7 @@ class Transfer extends DBObject
         } // @deprecated legacy
 
         if (!empty($_COOKIE['x-filesender-timezone'])) {
-            return strtotime('+'.$days.' day') + (new Utilities)->getTimezoneOffset($_COOKIE['x-filesender-timezone']);
+            return strtotime('+'.$days.' day') + Utilities::getTimezoneOffset($_COOKIE['x-filesender-timezone']);
         }
         return strtotime('+'.$days.' day');
     }

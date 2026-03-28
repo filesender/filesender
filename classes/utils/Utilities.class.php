@@ -208,7 +208,7 @@ class Utilities
      *
      * @return int offset in seconds
      */
-    function getTimezoneOffset($custom_timezone_string) {
+    public static function getTimezoneOffset($custom_timezone_string) {
         $server_tz = new DateTimeZone(Config::get('default_timezone'));
         $custom_tz = new DateTimeZone($custom_timezone_string);
         $datetime = new DateTime("now", $server_tz);
