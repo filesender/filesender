@@ -224,6 +224,9 @@ if( !Auth::isGuest()) {
         }
     }
 }
+if( !$userHasEmailPreference && !$userHasGALPreference ) {
+    $userHasGALPreference = true;
+}
 foreach(Transfer::allOptions() as $name => $dfn)  {
     if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
         if(Auth::isGuest()) {
