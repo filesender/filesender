@@ -524,6 +524,37 @@ class File extends DBObject
     }
     
     /**
+     * Store a chunk from PUT input to an offset in the file
+     *
+     * @param int chunkSize the chunk data size
+     * @param int $offset the chunk offset in the file, if null appends at end of file
+     */
+    public function writeChunkDelayed($chunkSize, $offset = null)
+    {
+        if (!$this->upload_start) {
+            $this->upload_start = time();
+            $this->save();
+        }
+        
+        $res = Storage::writeChunkDelayed($this, $chunkSize, $offset);
+
+        // Update transfer's last chunk time so the cleanup cron can detect abandoned
+        // uploads vs active ones. Throttled to once per minute to avoid an extra
+        // UPDATE on every single chunk (default 5 MB chunks → thousands per large file).
+        // Since cleanup is measured in days, minute-level precision is more than enough.
+        if (!$this->transfer->last_chunk_time || (time() - $this->transfer->last_chunk_time) >= 60) {
+            $this->transfer->last_chunk_time = time();
+            $this->transfer->save();
+        }
+        
+        Logger::info($this.' chunk['.((int)$offset).'..'.((int)$offset + $chunkSize).'] written'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
+        
+        return $res;
+    }
+
+    
+    
+    /**
      * End file upload
      */
     public function complete()

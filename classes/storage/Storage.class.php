@@ -210,6 +210,51 @@ class Storage
     }
     
     /**
+     * Delegates chunk write delayed if that method is implemented. Otherwise the data is slurped
+     * in from stdin just as in FileSender version late 2023 and before and then handled as an in memory
+     * blob of data.
+     *
+     * @param File $file
+     * @param uint $chunkSize is the number of bytes to expect on the PUT input
+     * @param uint $offset offset in bytes
+     *
+     * @return array with offset and written amount of bytes
+     *
+     * @throws StorageChunkTooLongException
+     */
+    public static function writeChunkDelayed(File $file, $chunkSize, $offset = null)
+    {
+        self::setup();
+        
+        // Forbid to write chunks whose size is over upload_chunk_size config parameter's value
+        if ($chunkSize > (int)Config::get('upload_crypted_chunk_size')) {
+            throw new StorageChunkTooLargeException(strlen($data), (int)Config::get('upload_chunk_size'));
+        }
+        
+        $bench = new Benchmark('writeChunk', 'benchmark_writeChunk');
+        $bench->start();
+
+        $data = '';
+        // Ask underlying class to write data
+        if( is_callable( self::getStorageClass($file).'::writeChunkDelayed' ))
+        {
+            $ret = call_user_func(self::getStorageClass($file).'::writeChunkDelayed', $file, $chunkSize, $offset);
+        }
+        else
+        {
+            // We only get called if performance_allow_direct_copy_from_put_to_disk is true
+            // so we can just slurp the data from stdin and
+            // use the old code path here.
+            Request::$delay_all_reading = false;
+            $data = @file_get_contents('php://input');
+            $ret = self::writeChunk( $file, $data, $offset );
+        }
+        $bench->log();
+        return $ret;
+    }
+    
+    
+    /**
      * Delegates file completion (delegation classes can implement it optionaly)
      *
      * @param File $file

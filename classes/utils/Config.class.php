@@ -370,6 +370,15 @@ class Config
                                                         + self::get('upload_crypted_chunk_padding_size');
         
 
+        if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            if(Config::isTrue('encryption_encode_encrypted_chunks_in_base64_during_upload')) {
+                throw new ConfigBadParameterException(
+                    "You can not use this older compatability option "
+                  . " (encryption_encode_encrypted_chunks_in_base64_during_upload)"
+                  . " with (performance_allow_direct_copy_from_put_to_disk). "
+                  . " You might like to investigate not using encrypted_chunks_in_base64 as it is very old and inefficient.");
+            }
+        }
         
 
         $themeName = self::get('theme');
@@ -451,6 +460,27 @@ class Config
                 self::$parameters['auditlog_lifetime'] = $minv;
             }
         }
+
+        self::$parameters['client_calculate_sha256'] = false;
+        if (Config::isTrue('storage_filesystem_hash_check')) {
+            if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+                self::$parameters['client_calculate_sha256'] = true;
+            }
+        }
+
+        if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            $st = self::$parameters['storage_type'];
+            if( !in_array( $st, ['filesystemChunked', 'filesystem', 'CloudS3'] )) {
+                self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
+            }
+        }
+        if (Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            // python client
+            if (array_key_exists('signature', $_GET)) {
+                self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
+            }
+        }
+        
         
         // verify classes are happy
         Guest::validateConfig();
@@ -649,6 +679,10 @@ class Config
     public static function isTrue($key)
     {
         return(Utilities::isTrue(Config::get($key)));
+    }
+    public static function isFalse($key)
+    {
+        return !self::isTrue($key);
     }
 
     
