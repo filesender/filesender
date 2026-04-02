@@ -556,6 +556,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = 'File {file.path} ({size:file.size}) uploaded (took {time:time_taken})';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = 'Transfer became available (took {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Transfer was closed on request';
 $lang['report_event_transfer_decrypt_failed'] = 'Decryption failed';

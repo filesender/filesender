@@ -70,13 +70,14 @@ class LogEventTypes extends Enum
 
    
    /* TRANSFER */
-    const TRANSFER_STARTED         = 'transfer_started';         // Transfer started
-   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer started
-   const TRANSFER_SENT            = 'transfer_sent';     // Transfer started
+    const TRANSFER_STARTED         = 'transfer_started';      // Transfer started
+   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer available
+   const TRANSFER_SENT            = 'transfer_sent';          // Transfer sent
    const TRANSFER_EXPIRED         = 'transfer_expired';       // Transfer expired
    const TRANSFER_CLOSED          = 'transfer_closed';        // Transfer closed
    const TRANSFER_DELETED         = 'transfer_deleted';       // Transfer deleted
    const TRANSFER_DECRYPT_FAILED  = 'transfer_decrypt_failed';// Transfer decrypt failed at client
+   const TRANSFER_ADDED_RECIPIENT = 'transfer_added_recipient';// Transfer added recipient
    
    /* UPLOAD */
     const UPLOAD_STARTED           = 'upload_started';   // Upload stated

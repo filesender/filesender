@@ -522,6 +522,7 @@ class RestEndpointTransfer extends RestEndpoint
                     // Send email if transfer is live already
                     if ($transfer->status == TransferStatuses::AVAILABLE) {
                         TranslatableEmail::quickSend('transfer_available', $recipient, $transfer);
+                        Logger::logActivity(LogEventTypes::TRANSFER_ADDED_RECIPIENT, $transfer, $recipient);
                     }
                 }
                 
