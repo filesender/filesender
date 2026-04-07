@@ -351,7 +351,7 @@ if(empty($transfer->options['encryption'])) {
             <div class="row">
                 <div class="col">
                     <div class="fs-transfer-detail__recipients">
-                        <h2>Recipients</h2>
+                        <h2>{tr:recipients}</h2>
 
                         <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
                             <span>
@@ -402,7 +402,7 @@ if(empty($transfer->options['encryption'])) {
 
                             <button id="copy-to-clipboard" type="button" class="fs-button">
                                 <i class="fa fa-copy"></i>
-                                Copy
+                                {tr:copy}
                             </button>
                         </div>
                     </div>

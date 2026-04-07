@@ -551,6 +551,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = 'Die Datei {file.path} ({size:file.size}) wurde hochgeladen (took {time:time_taken})';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = 'Dateitransfer steht nun zur Verfügung (es dauerte {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Der Dateitransfer wurde auf Wunsch geschlossen';
 $lang['report_event_transfer_deleted'] = 'Dateitransfer wurde gelöscht';
@@ -607,6 +608,7 @@ $lang['save'] = 'Speichern';
 $lang['save_preferences'] = 'Präferenzen speichern';
 $lang['save_recipients_emails'] = 'E-Mail-Empfänger aus der Vergangenheit speichern (zum automatischen Ausfüllen von E-Mail-Feldern).';
 $lang['saved_information'] = 'Gespeicherte Informationen';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = 'Suchen';

@@ -106,7 +106,7 @@ var terasender_worker = {
      * 
      * @param object job job to execute
      */
-    executeJob: function(job) {
+    executeJob: async function(job) {
 
         if(job) {
             var worker = this;
@@ -344,6 +344,19 @@ var terasender_worker = {
         try {
 
 	    if (!job.encryption) {
+
+                var contentHash = '';
+                var hashArray = '';
+                var hashHex = '';
+                if(window.filesender.config.client_calculate_sha256) {
+                    var ab = await blob.arrayBuffer();
+                    contentHash = await crypto.subtle.digest('SHA-256', ab);
+                    hashArray = Array.from(new Uint8Array(contentHash));
+                    hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    blob = ab;
+                }
+
+                xhr.setRequestHeader('X-Filesender-Digest-SHA256', hashHex );
                 xhr.send(blob);
 	    } else {
 		var cryptedBlob = null;
@@ -356,9 +369,21 @@ var terasender_worker = {
                         arrayBuffer,
                         job.chunk.id,
                         job.encryption_details,
-                        function (encrypted_blob) {
+                        async function (encrypted_blob) {
+
+                            var contentHash = '';
+                            var hashArray = '';
+                            var hashHex = '';
+                            if(window.filesender.config.client_calculate_sha256) {
+                                contentHash = await crypto.subtle.digest('SHA-256', encrypted_blob);
+                                hashArray = Array.from(new Uint8Array(contentHash));
+                                hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                            }
 			    xhr.setRequestHeader('X-Filesender-Encrypted', '1');
-			    xhr.send(encrypted_blob);
+                            xhr.setRequestHeader('X-Filesender-Chunk-Size-Encrypted', encrypted_blob.length);
+                            xhr.setRequestHeader('X-Filesender-Digest-SHA256', hashHex );
+                            xhr.send(encrypted_blob);
+                            
 			},
                         function (e) { $this.error(e); } );
                 });
@@ -505,6 +530,7 @@ var terasender_worker = {
             return;
             
         }else{ // We have an error
+            console.log(xhr);
             var msg = window.filesender.client.xhrResponse( xhr );
             
             try {

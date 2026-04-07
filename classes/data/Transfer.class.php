@@ -338,9 +338,9 @@ class Transfer extends DBObject
     const UPLOADING = "status = 'uploading' ORDER BY created DESC";
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const CLOSED = "status = 'closed' ORDER BY created DESC";
-    const EXPIRED = "expires <= :date ORDER BY expires ASC";
+    const EXPIRED = "expires < :datetime ORDER BY expires ASC";
     const FAILED = "last_chunk_time < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
-    const AUDITLOG_EXPIRED = "expires < :date ORDER BY expires ASC";
+    const AUDITLOG_EXPIRED = "expires < :datetime ORDER BY expires ASC";
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
@@ -353,7 +353,7 @@ class Transfer extends DBObject
     const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     const FROM_IDP_UPLOADING = "status = 'uploading' and idpid = :idp ORDER BY created DESC";
     const FROM_IDP_AVAILABLE = "status = 'available' and idpid = :idp ORDER BY created DESC";
-    const FROM_IDP_EXPIRED   = "expires <= :date and idpid = :idp ORDER BY expires ASC";
+    const FROM_IDP_EXPIRED   = "expires < :datetime and idpid = :idp ORDER BY expires ASC";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -707,7 +707,10 @@ class Transfer extends DBObject
         if (!$days) {
             $days = Config::get('default_daysvalid');
         } // @deprecated legacy
-        
+
+        if (!empty($_COOKIE['x-filesender-timezone'])) {
+            return strtotime('+'.$days.' day') + Utilities::getTimezoneOffset($_COOKIE['x-filesender-timezone']);
+        }
         return strtotime('+'.$days.' day');
     }
     
@@ -796,7 +799,7 @@ class Transfer extends DBObject
     public static function allExpired( $idp = null )
     {
         if (!$idp) {
-            return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+            return self::all(self::EXPIRED, array(':datetime' => date('Y-m-d H:i:s')));
         }
 
         return self::all(array(
@@ -804,7 +807,7 @@ class Transfer extends DBObject
                              'where' => self::FROM_IDP_EXPIRED
                          ),
                          array(':idp' => $idp,
-                               ':date' => date('Y-m-d')
+                               ':datetime' => date('Y-m-d H:i:s')
                          )
         );
     }
@@ -834,7 +837,7 @@ class Transfer extends DBObject
         if (is_null($days)) {
             $days = 0;
         }
-        return self::all(self::EXPIRED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
+        return self::all(self::EXPIRED, array(':datetime' => date('Y-m-d H:i:s', time() - ($days * 24 * 3600))));
     }    
 
     /**

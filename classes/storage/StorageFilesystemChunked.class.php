@@ -232,6 +232,86 @@ class StorageFilesystemChunked extends StorageFilesystem
         );
     }
 
+
+    /**
+     * Write a chunk of data to file at offset
+     *
+     * @param File $file
+     * @param uint $chunkSize is the number of bytes to expect on the PUT input
+     * @param uint $offset offset in bytes
+     *
+     * @return array with offset and written amount of bytes
+     *
+     * @throws StorageFilesystemOutOfSpaceException
+     * @throws StorageFilesystemCannotWriteException
+     */
+    public static function writeChunkDelayed(File $file, $chunkSize, $offset = null)
+    {
+        $filePath = self::buildPath($file).$file->uid;
+
+        // If the user is doing something with FUSE
+        // then they might not want to check disk space.
+        if (!Config::get('storage_filesystem_ignore_disk_full_check')) {
+	        // Check that there is enough free space on the storage
+	        $freeSpace = disk_free_space(self::$path);
+	        if ($freeSpace <= $chunkSize) {
+	            throw new StorageNotEnoughSpaceLeftException($chunkSize);
+	        }
+        }
+
+        if (self::file_exists($filePath) === false) {
+            mkdir($filePath, 0770, true);
+        }
+
+        $chunkFile = self::getChunkFilename($file, $filePath, $offset);
+        $validUpload = false;
+
+
+        $data = '';
+        
+        $fromss = \fopen("php://input", 'r');
+        $toss   = \fopen($chunkFile, 'wb' );
+        $rc = \stream_copy_to_stream( $fromss, $toss, $chunkSize );
+        $written = $rc;
+        Logger::debug("AAA writeChunkDelayed to file $chunkFile chunkSize $chunkSize rc $rc ");
+
+        // Check that the right amount of data was written and move to next iteration if it fails
+        if ($chunkSize != $written) {
+            throw new ChunkWriteException('chunk_size != bytes written');
+        }
+
+        // Clear cached values and check the chunk file now exists, otherwise we retry from the beginning
+        if (!self::file_exists($chunkFile)) {
+            throw new ChunkWriteException('file does not exist after write');
+        }
+
+        // Check file size
+        if ($chunkSize != self::filesize($chunkFile)) {
+            throw new ChunkWriteException('chunk_size != filesize()');
+        }
+
+        if (Config::isTrue('storage_filesystem_hash_check')) {
+            $clientHash = Validate::filter_var_sha256("client hash sha256",$_SERVER['HTTP_X_FILESENDER_DIGEST_SHA256']);
+            $fileHash = self::hash_file('sha256', $chunkFile);
+            if ($fileHash !== $clientHash) {
+                throw new ChunkWriteException('checksum validation failed');
+            }
+        }
+        
+        $validUpload = true;
+
+        // Don't reach the end if the chunk is invalid.
+        if( !$validUpload ) {
+            Logger::error("writeChunk() failed: {$chunkFile} was an invalid upload");
+            throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
+        }
+        
+        return array(
+            'offset' => $offset,
+            'written' => $written
+        );
+    }
+    
     /**
      * Helper method for file_get_contents()
      * @param resource $handle

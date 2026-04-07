@@ -165,7 +165,7 @@ class Guest extends DBObject
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     // Note that if the guest does not expire then expires is null 
     // so that tuple will not be returned by the below fragment.
-    const EXPIRED = "expires < :date ORDER BY expires ASC";
+    const EXPIRED = "expires < :datetime ORDER BY expires ASC";
     // For these fragments we want to find the guests that have
     // expires is null because they are still considered active
     const FROM_USER           = "userid = :userid AND (expires is null or expires > :date) ORDER BY created DESC";
@@ -355,10 +355,13 @@ class Guest extends DBObject
         if (!$days) {
             $days = Config::get('default_daysvalid');
         } // @deprecated legacy
-        
+
+        if (!empty($_COOKIE['x-filesender-timezone'])) {
+            return strtotime('+'.$days.' day') + Utilities::getTimezoneOffset($_COOKIE['x-filesender-timezone']);
+        }
         return strtotime('+'.$days.' day');
     }
-    
+
     /**
      * Get available guests
      *
@@ -376,7 +379,7 @@ class Guest extends DBObject
      */
     public static function allExpired()
     {
-        return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+        return self::all(self::EXPIRED, array(':datetime' => date('Y-m-d H:i:s')));
     }
     
     /**

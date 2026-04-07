@@ -215,6 +215,46 @@ class StorageCloudS3 extends StorageFilesystem
         }
     }
 
+
+    public static function writeChunkDelayed(File $file, $chunkSize, $offset = null)
+    {
+        $chunk_size     = $chunkSize;
+
+        $bucket_name = self::getBucketName( $file );
+        $object_name = self::getObjectName( $file, $offset );
+        
+        try {
+            $client = self::getClient();
+
+            if( !self::usingCustomBucketName( $file )) {
+                $client->createBucket(array(
+                    'Bucket' => $bucket_name,
+                ));
+            }
+
+            $fromss = \fopen("php://input", 'r');
+            
+            $result = $client->putObject(array(
+                'Bucket' => $bucket_name,
+                'Key'    => $object_name,
+                'Body'   => $fromss,
+            ));
+            
+            return array(
+                'offset' => $offset,
+                'written' => $chunk_size
+            );
+        } catch (Exception $e) {
+            $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
+            Logger::info($msg);
+            if (is_a($e, 'ConfigMissingParameterException')) {
+                Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
+                $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
+            }
+            throw new StorageFilesystemCannotWriteException($msg);
+        }
+    }
+    
     /**
      * Handles file completion checks
      *
