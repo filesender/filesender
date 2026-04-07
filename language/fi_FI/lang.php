@@ -551,6 +551,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = 'Tiedoston {file.path} ({size:file.size}) siirretty (kesti {time:time_taken})';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = 'Tiedostojako saatavilla (kesti {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Jako suljettiin pyynnöstä';
 $lang['report_event_transfer_deleted'] = 'Tiedot poistettiin';
@@ -607,6 +608,7 @@ $lang['save'] = 'Tallenna';
 $lang['save_preferences'] = 'Tallenna asetukset';
 $lang['save_recipients_emails'] = 'Tallenna käytetyt sähköpostiosoitteet palveluun (käytetään osoitteiden automaattiseen täyttöön).';
 $lang['saved_information'] = 'Tallennetut tiedot';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = 'Etsi';

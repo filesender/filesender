@@ -564,6 +564,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = '파일 {file.path} ({size:file.size})이 업로드 됨({time:time_taken} 걸림)';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = ' {time:time_taken} 후에 전송이 가능 함';
 $lang['report_event_transfer_closed'] = '요구에 따라 전송이 종료 됨';
 $lang['report_event_transfer_decrypt_failed'] = '복호화 실패';
@@ -622,6 +623,7 @@ $lang['save'] = '저장';
 $lang['save_preferences'] = '환경 설정 저장';
 $lang['save_recipients_emails'] = '이전에 사용한 이메일 수신자 저장 (이메일 필드 자동 완성에 사용됨).';
 $lang['saved_information'] = '저장된 정보';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = '검색';

@@ -567,6 +567,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = '文件{file.path} ({size:file.size})已上傳(耗時{time:time_taken})';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = '傳輸可用(耗時{time:time_taken})';
 $lang['report_event_transfer_closed'] = '應請求關閉傳輸';
 $lang['report_event_transfer_deleted'] = '傳輸數據已刪除';
@@ -623,6 +624,7 @@ $lang['save'] = '保存';
 $lang['save_preferences'] = 'Save preferences';
 $lang['save_recipients_emails'] = 'Save email recipients from past use (used to automatically complete email fields).';
 $lang['saved_information'] = 'Saved information';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = '搜索';

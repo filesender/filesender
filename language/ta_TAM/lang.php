@@ -582,6 +582,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = 'கோப்பு {file.path} ({size:file.size}) பதிவேற்றப்பட்டது ({நேரம்: time_taken} ஆனது)';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = 'இடமாற்றம் கிடைத்தது ({time:time_taken} ஆனது)';
 $lang['report_event_transfer_closed'] = 'கோரிக்கையின் பேரில் இடமாற்றம் மூடப்பட்டது';
 $lang['report_event_transfer_deleted'] = 'பரிமாற்ற தரவு நீக்கப்பட்டது';
@@ -640,6 +641,7 @@ $lang['save'] = 'சேமிக்கவும்';
 $lang['save_preferences'] = 'Save preferences';
 $lang['save_recipients_emails'] = 'Save email recipients from past use (used to automatically complete email fields).';
 $lang['saved_information'] = 'Saved information';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = 'Search';

@@ -561,6 +561,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = 'फाइल {file.path} ({size:file.size}) अपलोड गरियो ({time:time_taken} लाग्यो)';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = 'स्थानान्तरण उपलब्ध भयो ({time:time_taken} लाग्यो)';
 $lang['report_event_transfer_closed'] = 'अनुरोधमा स्थानान्तरण बन्द गरिएको थियो';
 $lang['report_event_transfer_deleted'] = 'स्थानान्तरण डाटा मेटाइयो';
@@ -617,6 +618,7 @@ $lang['save'] = 'बचत गर्नुहोस्';
 $lang['save_preferences'] = 'Save preferences';
 $lang['save_recipients_emails'] = 'Save email recipients from past use (used to automatically complete email fields).';
 $lang['saved_information'] = 'Saved information';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = 'खोज्नुहोस्';

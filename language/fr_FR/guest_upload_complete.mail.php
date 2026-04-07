@@ -16,9 +16,9 @@ Madame, Monsieur,
 Votre invité {guest.email} a fini de déposer des fichiers.
 
 Invité: {guest.email}
-Lien de dépôt: {cfg:site_url}?s=upload&vid={guest.token}
+Lien du dépôt: {cfg:site_url}?s=upload&vid={guest.token}
 
-Le dépôt est disponible jusqu'au {date:guest.expires}, après coup il sera automatiquement supprimé.
+Le dépôt est disponible jusqu'au {date:guest.expires}; passé ce délai, il sera automatiquement supprimé.
 
 Cordialement,
 {cfg:site_name}
