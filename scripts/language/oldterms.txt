@@ -567,6 +567,7 @@ report_event_file_forwarded
 report_event_file_uploaded
 report_event_forward_ended
 report_event_forward_started
+report_event_transfer_added_recipient
 report_event_transfer_available
 report_event_transfer_closed
 report_event_transfer_decrypt_failed
@@ -627,6 +628,7 @@ save
 save_preferences
 save_recipients_emails
 saved_information
+script_download_fscli
 script_download_links
 script_download_title
 search
