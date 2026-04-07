@@ -554,6 +554,7 @@ $lang['report_event_file_forwarded'] = 'ファイル{file.path}({size:file.size}
 $lang['report_event_file_uploaded'] = 'ファイル{file.path}({size:file.size})がアップロードされました({time:time_taken} かかりました)';
 $lang['report_event_forward_ended'] = '他サーバーへの転送が終了';
 $lang['report_event_forward_started'] = '他サーバーへの転送が開始';
+$lang['report_event_transfer_added_recipient'] = '追加された受信者{author.identity}にダウンロードリンクが送信されました';
 $lang['report_event_transfer_available'] = '転送が利用可能になりました({time:time_taken}かかりました)';
 $lang['report_event_transfer_closed'] = '転送はリクエストにより閉鎖されました';
 $lang['report_event_transfer_decrypt_failed'] = '復号に失敗しました';
