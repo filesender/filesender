@@ -30,6 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 // Require environment (fatal)
 if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
@@ -46,6 +47,8 @@ class Request
      * Holds the body
      */
     private static $body = null;
+
+    public static $delay_all_reading = false;
     
     /**
      * Get the body
@@ -53,9 +56,17 @@ class Request
     public static function body()
     {
         if (is_null(self::$body)) {
-            self::$body = @file_get_contents('php://input');
+
+            if( self::$delay_all_reading )
+            {
+                return '';
+            }
+            else
+            {
+                self::$body = @file_get_contents('php://input');
+            }
         }
-        
+
         return self::$body;
     }
 }

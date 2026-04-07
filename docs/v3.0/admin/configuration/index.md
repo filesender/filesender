@@ -95,6 +95,7 @@ A note about colours;
 * [cloud_s3_bucket_prefix](#cloud_s3_bucket_prefix)
 * [cloud_s3_bulk_delete](#cloud_s3_bulk_delete)
 * [cloud_s3_bulk_size](#cloud_s3_bulk_size)
+* [performance_allow_direct_copy_from_put_to_disk](#performance_allow_direct_copy_from_put_to_disk)
 
 ## Shredding
 
@@ -1156,6 +1157,17 @@ deleting up to [cloud_s3_bulk_size](#cloud_s3_bulk_size) chunks per request.
 * __available:__ since version 2.45
 * __comment:__ When [cloud_s3_bulk_delete](#cloud_s3_bulk_delete) is true, this is the maximum size of the delete request.
 Default value to maintain AWS S3 compatibility is 1000. Other storage platforms may use different defaults. OpenStack Swift defaults to 10000, for instance
+
+### performance_allow_direct_copy_from_put_to_disk
+
+* __description:__ Where possible delay reading file PUT data and attempt direct in kernel copy
+* __mandatory:__ no.
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.8
+* __comment:__ Supported only in storage_type filesystemChunked and filesystem as of 3.8. Users of the filesender.py client will be demoted to not using direct copy because of how authorization works for the client.
+               When true this will delay reading bytes in a very specific cases which is uploading file data. By not reading the data until the destination we wish to write those bytes we can allow the opportunity to have the Linux kernel copy the bytes inside the kernel by letting PHP use copy_file_range(2) to avoid memory allocation and extraneous data copying. This significantly reduces CPU use and increases upload speed even on a local installation. See https://github.com/filesender/filesender/pull/2640
+
 
 
 ---
@@ -3292,7 +3304,7 @@ This should be configured at your OpenID Connect provider's client configuration
 * __*Standard parameters for all options:*__
 	* __'level'__ (optional): restricts loglevel of current facility.  Permissible values: debug, warning, info, error
 	* __'output'__ (optional): sets the output mode of log messages.  Permissible values: text, json 
-	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.
+	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: cli, gui, rest, web, cron, feedback, misc, install, upgrade (lowercase).  Comma-separated list.
 * __*Available targets:*__
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly.
 	* __'type' => 'syslog'__ logs to syslog.
@@ -3325,7 +3337,7 @@ array (
   'output' => 'text',   // possible = text, json
   'path' => '&lt;something>/logs/',
   'rotate' => hourly,   // possible = hourly, daily, weekly, monthly, yearly
-  'process' => REST,    // possible = MISC, WEB, CLI, GUI, REST, CRON, FEEDBACK, INSTALL, UPGRADE
+  'process' => 'rest',  // possible = misc, web, cli, gui, rest, cron, feedback, install, upgrade (lowercase strings)
 </code></pre>
 
 The type setting lets you choose where the log will be sent. The error

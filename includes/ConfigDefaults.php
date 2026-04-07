@@ -425,7 +425,8 @@ $default = array(
     'advanced_validation_token' => true,
     'advanced_validation_user' => true,
     'advanced_validation_principal' => true,
-    
+
+    'performance_allow_direct_copy_from_put_to_disk' => true,
     
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',

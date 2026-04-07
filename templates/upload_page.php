@@ -223,6 +223,9 @@ if( !Auth::isGuest()) {
             $userHasEmailPreference = true;
         }
     }
+    if( !$userHasEmailPreference && !$userHasGALPreference ) {
+        $userHasGALPreference = true;
+    }
 }
 foreach(Transfer::allOptions() as $name => $dfn)  {
     if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
@@ -747,7 +750,7 @@ EOF;
                             <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
                                 <hr />
 
-                                <strong>Transfer settings</strong>
+                                <strong>{tr:transfer_settings}</strong>
 
                                 <?php render_forward_to_another_server(); ?>
 

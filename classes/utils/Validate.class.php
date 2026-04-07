@@ -134,5 +134,14 @@ class Validate
             '/^[-a-z]{1,12}$/'  );
         return $ret;
     }
+
+
+    public static function filter_var_sha256( $msg, $value )
+    {
+        $ret = Validate::filter_var_regex_log(
+            $msg, $value,
+            '/^[a-f0-9]{64}$/'  );
+        return $ret;
+    }
     
 }

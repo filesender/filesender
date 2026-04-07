@@ -555,6 +555,67 @@ class StorageFilesystem
             throw new StorageFilesystemCannotWriteException($file_path, $file);
         }
     }
+
+
+    /**
+     * Write a chunk of data to file at offset
+     *
+     * @param File $file
+     * @param uint $chunkSize is the number of bytes to expect on the PUT input
+     * @param uint $offset offset in bytes
+     *
+     * @return array with offset and written amount of bytes
+     *
+     * @throws StorageFilesystemOutOfSpaceException
+     * @throws StorageFilesystemCannotWriteException
+     */
+    public static function writeChunkDelayed(File $file, $chunkSize, $offset = null)
+    {
+        Logger::debug("StorageFilesystem::writeChunkDelayed");
+        
+        $path = static::buildPath($file);
+
+        // If the user is doing something with FUSE
+        // then they might not want to check disk space.
+        if (!Config::get('storage_filesystem_ignore_disk_full_check')) {
+	        // Check that there is enough free space on the storage
+	        $freeSpace = disk_free_space($path);
+	        if ($freeSpace <= $chunkSize) {
+	            throw new StorageNotEnoughSpaceLeftException($chunkSize);
+	        }
+        }
+
+        $file_path = $path.static::buildFilename($file);
+        
+        $mode = file_exists($file_path) ? 'rb+' : 'wb+'; // Create file if it does not exist
+        $fromss = \fopen("php://input", 'r');
+        if ($toss = fopen($file_path, $mode)) {
+
+            if( $offset == null ) {
+                $offset = 0;
+            }
+            // best to seek to the offset ourself and have copy_to_stream() use existing offsets
+            $rc = fseek( $toss, $offset, $whence = SEEK_SET);
+            if( $rc != 0 ) {
+                throw new ChunkWriteException('seek failed on destination file $offset');
+            }
+            $rc = \stream_copy_to_stream( $fromss, $toss, $chunkSize, 0 );
+            $written = $rc;
+
+            // Check that the right amount of data was written and move to next iteration if it fails
+            if ($chunkSize != $written) {
+                throw new ChunkWriteException('chunk_size != bytes written');
+            }
+            
+            return array(
+                'offset' => $offset,
+                'written' => $written
+            );
+        } else {
+            throw new StorageFilesystemCannotWriteException($file_path, $file);
+        }
+    }
+    
     
     /**
      * Handles file completion checks
