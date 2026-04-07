@@ -370,8 +370,11 @@ use ( $new_guests_can_only_send_to_creator,
                             </div>
                         </div>
                         <br />
-                        <p>
+                        <p id="expires-info">
                             {tr:invitation_expires_in} <span id="expires-days">7</span> {tr:days}.
+                        </p>
+                        <p id="no-expiry-info" style="display:none;">
+                            {tr:does_not_expire}.
                         </p>
                         <br />
                         <ul class="fs-list fs-list--inline">

@@ -262,13 +262,20 @@ filesender.ui.send = function() {
                 });
             }
 
-            const expireDays = new Date(expires * 1000);
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            const dateDiff = expireDays.getTime() - now.getTime();
-            const daysToExpire = Math.ceil(dateDiff / (1000 * 3600 * 24));
+            if (filesender.ui.nodes.does_not_expire.is(':checked')) {
+                $('#expires-info').hide();
+                $('#no-expiry-info').show();
+            } else {
+                const expireDays = new Date(expires * 1000);
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                const dateDiff = expireDays.getTime() - now.getTime();
+                const daysToExpire = Math.ceil(dateDiff / (1000 * 3600 * 24));
 
-            $('#expires-days').text(daysToExpire);
+                $('#expires-days').text(daysToExpire);
+                $('#expires-info').show();
+                $('#no-expiry-info').hide();
+            }
 
             filesender.ui.notify('success', lang.tr('guest_vouchers_sent').r({sent: sent}), function() {
                 // filesender.ui.reload();
