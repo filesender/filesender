@@ -556,6 +556,7 @@ $lang['report_event_file_forwarded'] = 'File {file.path} ({size:file.size}) forw
 $lang['report_event_file_uploaded'] = 'Soubor {file.path} ({size:file.size}) nahrán (trvání {time:time_taken})';
 $lang['report_event_forward_ended'] = 'Forward another server ended';
 $lang['report_event_forward_started'] = 'Forward another server started';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = 'Přenos byl zpřístupněn (trvání {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Přenos byl uzavřen na žádost';
 $lang['report_event_transfer_decrypt_failed'] = 'Dešifrování selhalo';
@@ -614,6 +615,7 @@ $lang['save'] = 'Uložit';
 $lang['save_preferences'] = 'Uložit nastavení';
 $lang['save_recipients_emails'] = 'Uložit příjemce e-mailu z minulého použití (slouží k automatickému vyplňování e-mailových polí).';
 $lang['saved_information'] = 'Uložené informace';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = 'Hledat';

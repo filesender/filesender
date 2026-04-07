@@ -553,6 +553,7 @@ $lang['report_event_file_forwarded'] = 'Fajl {file.path} ({size:file.size}) je p
 $lang['report_event_file_uploaded'] = 'Fajl {file.path} ({size:file.size}) otpremljen (vreme: {time:time_taken})';
 $lang['report_event_forward_ended'] = 'Prosleđivanje na drugi server završeno';
 $lang['report_event_forward_started'] = 'Prosleđivanje na drugi server započeto';
+$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
 $lang['report_event_transfer_available'] = 'Transfer je postao dostupan (vreme: {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Transfer je zatvoren na zahtev';
 $lang['report_event_transfer_deleted'] = 'Podaci transfera su obrisani';
@@ -609,6 +610,7 @@ $lang['save'] = 'Sačuvaj';
 $lang['save_preferences'] = 'Sačuvaj podešavanja';
 $lang['save_recipients_emails'] = 'Sačuvaj email adrese primalaca iz prošle upotrebe (koristi se za automatsko popunjavanje email polja)';
 $lang['saved_information'] = 'Sačuvane informacije';
+$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
 $lang['script_download_links'] = 'Generiši skriptu za preuzimanje pomoću curl-a';
 $lang['script_download_title'] = 'Curl skripta za preuzimanje';
 $lang['search'] = 'Pretraga';
