@@ -53,9 +53,9 @@ function is_encrypted_to_html( $v ) {
 
 switch ($topic) {
     case 'top_users':
-        if (!in_array($sort,['User','Transfers','Size','Downloads']))
-            $sort='User';
-        echo '<tr sort="'.$sort.'"><th sort="User">'.Lang::translate('admin_users_section').'</th><th sort="Transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="Size">'.Lang::translate('size').'</th><th sort="Downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,[1,2,3,4]))
+            $sort=1;
+        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('admin_users_section').'</th><th sort="2">'.Lang::translate('admin_transfers_section').'</th><th sort="3">'.Lang::translate('size').'</th><th sort="4">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  t.user_email as "User", '
@@ -74,7 +74,7 @@ switch ($topic) {
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
            ."    AND t.status = 'available' "
            .' GROUP BY t.user_email '
-           .' ORDER BY "'.$sort.'" '.$sortdirection
+           .' ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -97,9 +97,9 @@ switch ($topic) {
         break;
 
     case 'transfer_per_user':
-        if (!in_array($sort,['User','Transfers','Size','Downloads']))
-            $sort='User';
-        echo '<tr sort="'.$sort.'"><th sort="User">'.Lang::translate('admin_users_section').'</th><th sort="Transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="Size">'.Lang::translate('size').'</th><th sort="Downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,[1,2,3,4]))
+            $sort=1;
+        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('admin_users_section').'</th><th sort="2">'.Lang::translate('admin_transfers_section').'</th><th sort="3">'.Lang::translate('size').'</th><th sort="4">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  t.user_email as "User", '
@@ -117,7 +117,7 @@ switch ($topic) {
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
            .' GROUP BY t.user_email '
-           .' ORDER BY "'.$sort.'" '.$sortdirection
+           .' ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -140,9 +140,9 @@ switch ($topic) {
         break;
 
     case 'mime_types':
-        if (!in_array($sort,['mime_type','total']))
-            $sort='total';
-        echo '<tr sort="'.$sort.'"><th sort="mime_type">'.Lang::translate('mime_types').'</th><th sort="total">'.Lang::translate('count').'</th></tr>'."\n";
+        if (!in_array($sort,[1,2]))
+            $sort=2;
+        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('mime_types').'</th><th sort="2">'.Lang::translate('count').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  f.mime_type as mime_type, count(f.mime_type) as total '
@@ -157,7 +157,7 @@ switch ($topic) {
            .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
-           .'ORDER BY "'.$sort.'" '.$sortdirection
+           .'ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -180,9 +180,9 @@ switch ($topic) {
         break;
 
     case 'users_with_api_keys':
-        if (!in_array($sort,['User','Date']))
-            $sort='Date';
-        echo '<tr sort="'.$sort.'"><th sort="User">'.Lang::translate('admin_users_section').'</th><th sort="Date">'.Lang::translate('date').'</th></tr>'."\n";
+        if (!in_array($sort,[1,2]))
+            $sort=2;
+        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('admin_users_section').'</th><th sort="2">'.Lang::translate('date').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  a.saml_user_identification_uid as "User", '
@@ -196,7 +196,7 @@ switch ($topic) {
              :
              'AND a.idpid = :idp '
            )
-           .'ORDER BY "'.$sort.'" '.$sortdirection
+           .'ORDER BY '.$sort.' '.$sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start
         ;
