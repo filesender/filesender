@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: İndirme bilgisi
+subject: İndirme bilgisi
 
 {alternative:plain}
 

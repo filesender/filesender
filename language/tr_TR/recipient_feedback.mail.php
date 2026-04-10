@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Alıcınızdan {if:target_type=="recipient"}geri bildirim{endif}{if:target_type=="guest"}guest{endif} {target.email}
+subject: Alıcınızdan {if:target_type=="recipient"}geri bildirim{endif}{if:target_type=="guest"}guest{endif} {target.email}
 
 {alternative:plain}
 
