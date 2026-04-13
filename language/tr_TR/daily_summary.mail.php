@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Günlük aktarım özeti
+subject: Günlük aktarım özeti
 
 {alternative:plain}
 

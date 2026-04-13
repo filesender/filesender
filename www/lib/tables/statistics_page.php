@@ -53,15 +53,15 @@ function is_encrypted_to_html( $v ) {
 
 switch ($topic) {
     case 'top_users':
-        if (!in_array($sort,[1,2,3,4]))
-            $sort=1;
-        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('admin_users_section').'</th><th sort="2">'.Lang::translate('admin_transfers_section').'</th><th sort="3">'.Lang::translate('size').'</th><th sort="4">'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,['user','transfers','size','downloads']))
+            $sort='User';
+        echo '<tr sort="'.$sort.'"><th sort="user">'.Lang::translate('admin_users_section').'</th><th sort="transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="size">'.Lang::translate('size').'</th><th sort="downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  t.user_email as "User", '
-           .'  COUNT(t.id) AS "Transfers", '
-           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as "Size", '
-           .'  SUM(t.download_count) as "Downloads" '
+           .'  t.user_email as user, '
+           .'  COUNT(t.id) AS transfers, '
+           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as size, '
+           .'  SUM(t.download_count) as downloads '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t '
            .'WHERE '
@@ -74,10 +74,11 @@ switch ($topic) {
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
            ."    AND t.status = 'available' "
            .' GROUP BY t.user_email '
-           .' ORDER BY '.$sort.' '.$sortdirection
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
+        
         if ($idp)
             $placeholders[':idp'] = $idp;
 
@@ -88,7 +89,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.number_format($row['Transfers']).'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.number_format($row['Downloads']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['user'].'</td><td>'.number_format($row['transfers']).'</td><td>'.Utilities::formatBytes($row['size']).'</td><td>'.number_format($row['downloads']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -97,15 +98,15 @@ switch ($topic) {
         break;
 
     case 'transfer_per_user':
-        if (!in_array($sort,[1,2,3,4]))
-            $sort=1;
-        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('admin_users_section').'</th><th sort="2">'.Lang::translate('admin_transfers_section').'</th><th sort="3">'.Lang::translate('size').'</th><th sort="4">'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,['user','transfers','size','downloads']))
+            $sort='User';
+        echo '<tr sort="'.$sort.'"><th sort="user">'.Lang::translate('admin_users_section').'</th><th sort="transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="size">'.Lang::translate('size').'</th><th sort="downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  t.user_email as "User", '
-           .'  COUNT(t.id) AS "Transfers", '
-           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as "Size", '
-           .'  SUM(t.download_count) as "Downloads" '
+           .'  t.user_email as user, '
+           .'  COUNT(t.id) AS transfers, '
+           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as size, '
+           .'  SUM(t.download_count) as downloads '
            .'FROM '
            .'  '.call_user_func('Transfer::getDBTable').' t '
            .'WHERE '
@@ -117,7 +118,7 @@ switch ($topic) {
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
            .' GROUP BY t.user_email '
-           .' ORDER BY '.$sort.' '.$sortdirection
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -131,7 +132,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.number_format($row['Transfers']).'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.number_format($row['Downloads']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['user'].'</td><td>'.number_format($row['transfers']).'</td><td>'.Utilities::formatBytes($row['size']).'</td><td>'.number_format($row['downloads']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -157,7 +158,7 @@ switch ($topic) {
            .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
-           .'ORDER BY '.$sort.' '.$sortdirection
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -180,13 +181,13 @@ switch ($topic) {
         break;
 
     case 'users_with_api_keys':
-        if (!in_array($sort,[1,2]))
-            $sort=2;
-        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('admin_users_section').'</th><th sort="2">'.Lang::translate('date').'</th></tr>'."\n";
+        if (!in_array($sort,['user','date']))
+            $sort='Date';
+        echo '<tr sort="'.$sort.'"><th sort="user">'.Lang::translate('admin_users_section').'</th><th sort="date">'.Lang::translate('date').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  a.saml_user_identification_uid as "User", '
-           .'  DATE(u.auth_secret_created) as "Date" '
+           .'  a.saml_user_identification_uid as user, '
+           .'  DATE(u.auth_secret_created) as date '
            .'FROM '
            .'  authidpview a LEFT JOIN '.call_user_func('User::getDBTable').' u on a.id=u.authid '
            .'WHERE '
@@ -196,10 +197,9 @@ switch ($topic) {
              :
              'AND a.idpid = :idp '
            )
-           .'ORDER BY '.$sort.' '.$sortdirection
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
-           .' OFFSET '.$start
-        ;
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -211,7 +211,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Date'].'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['user'].'</td><td>'.$row['date'].'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -227,7 +227,6 @@ switch ($topic) {
            .'  (CASE WHEN '.$createdDD.' > 0 THEN count/'.$createdDD.' ELSE NULL END) as countperday '
            .'FROM '
            .'  browserstatsview '
-           //.'ORDER BY count DESC, maxsize DESC '
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
 
