@@ -181,9 +181,9 @@ switch ($topic) {
         break;
 
     case 'users_with_api_keys':
-        if (!in_array($sort,['User','Date']))
+        if (!in_array($sort,['user','date']))
             $sort='Date';
-        echo '<tr sort="'.$sort.'"><th sort="User">'.Lang::translate('admin_users_section').'</th><th sort="Date">'.Lang::translate('date').'</th></tr>'."\n";
+        echo '<tr sort="'.$sort.'"><th sort="user">'.Lang::translate('admin_users_section').'</th><th sort="date">'.Lang::translate('date').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  a.saml_user_identification_uid as user, '
