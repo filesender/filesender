@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: İndirme tamamlandı
+subject: İndirme tamamlandı
 
 {alternative:plain}
 

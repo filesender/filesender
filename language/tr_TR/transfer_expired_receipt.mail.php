@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Dosya(lar) zaman aşımına uğradı
+subject: Dosya(lar) zaman aşımına uğradı
 subject: (dosyalar zaman aşımına uğradı) {transfer.subject}
 
 {alternative:plain}

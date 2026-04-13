@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: İndirme izni kaldırıldı
+subject: İndirme izni kaldırıldı
 
 {alternative:plain}
 

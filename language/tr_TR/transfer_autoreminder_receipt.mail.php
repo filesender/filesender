@@ -7,7 +7,8 @@
 // 
 // 
 ?>
-konu: Dosya gönderi numarası {transfer.id} için gönderilen otomatik hatırlatıcılar konu: (automatic reminders sent) {transfer.subject}
+subject: Dosya gönderi numarası {transfer.id} için gönderilen otomatik hatırlatıcılar 
+subject: (automatic reminders sent) {transfer.subject}
 
 {alternative:plain}
 
