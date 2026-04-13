@@ -59,7 +59,6 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function getOffsetWithinChunkedFile($file, $offset)
     {
-        $file_chunk_size = Config::get('upload_chunk_size');
         $file_chunk_size = $file->chunk_size;
         return ($offset % $file_chunk_size);
     }
@@ -462,10 +461,11 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function getStream(File $file)
     {
+        $file_chunk_size = $file->chunk_size;
         StorageFilesystemChunkedStream::ensureRegistered();
         $path = self::makeCustomStreamPath( $file, "StorageFilesystemChunkedStream" );
         $fp = \fopen($path, "r+");
-        stream_set_chunk_size($fp, Config::get('download_chunk_size'));
+        stream_set_chunk_size( $fp, $file_chunk_size );
         return $fp;
     }
 }
