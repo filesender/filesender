@@ -441,6 +441,10 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
         header('Accept-Ranges: bytes');
 
+        // Don't bother reading file chunks off disk if we are only doing a HEAD
+        if ($_SERVER['REQUEST_METHOD']=='HEAD')
+            return array('result' => true, 'files' => array($file));
+
         // Read data (no range means all file)
         Logger::info('User started to download '.$file);
 
