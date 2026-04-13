@@ -141,9 +141,9 @@ switch ($topic) {
         break;
 
     case 'mime_types':
-        if (!in_array($sort,[1,2]))
-            $sort=2;
-        echo '<tr sort="'.$sort.'"><th sort="1">'.Lang::translate('mime_types').'</th><th sort="2">'.Lang::translate('count').'</th></tr>'."\n";
+        if (!in_array($sort,['mime_type','total']))
+            $sort='total';
+        echo '<tr sort="'.$sort.'"><th sort="mime_type">'.Lang::translate('mime_types').'</th><th sort="total">'.Lang::translate('count').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  f.mime_type as mime_type, count(f.mime_type) as total '
