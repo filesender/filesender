@@ -253,6 +253,12 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     if(!$file->transfer->is($transfer))
         throw new FileNotFoundException(array('transfer_id : ' . $transfer->id, 'file_id : ' . $file_id));
 
+    $stream = Storage::getStream($file);
+    if (!$stream) {
+        $path = Storage::buildPath($file) . $file->uid;
+        throw new ForwardException('Cannot read storage: '.$path);
+    }
+
     $ranges = null;
     if (array_key_exists('HTTP_RANGE', $_SERVER) && $_SERVER['HTTP_RANGE']) {
         try {
@@ -309,19 +315,22 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     };
     register_shutdown_function($abort_handler);
 
-    $read_range = function($range = null) use($file, $recipient, $abort_handler, $transfer) {
+    $read_range = function($range = null) use($stream, $file, $recipient, $abort_handler, $transfer) {
 
         $abort_handler();
 
+        $stream = Storage::getStream($file);
+        if (!$stream) {
+            $path = Storage::buildPath($file) . $file->uid;
+            throw new ForwardException('Cannot read storage: '.$path);
+        }
+
         $offset = $range ? $range['start'] : 0;
 
-        $chunk_size = $file->chunk_size;
-        if (!$chunk_size)
-            $chunk_size = 1024 * 1024;
+        $chunk_size = Config::get('download_chunk_size');
 
         if($transfer->options['encryption'] == 1){
             $end = $file->encrypted_size;
-            $chunk_size = $file->crypted_chunk_size;
         }else{
             $end = $file->size;
         }
@@ -334,13 +343,14 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             
             Logger::debug('Send chunk at offset ' . $offset . ' with length ' . $length);
             
-            echo $file->readChunk($offset, $length);
+            //echo $file->readChunk($offset, $length);
+            echo stream_get_contents($stream, $length, $offset);
             
             // TODO Log download progress ?
             
             $abort_handler();
         }
-        
+        fclose($stream);
         return ($offset >= $file->size);
     };
 
