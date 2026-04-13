@@ -385,7 +385,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
-            header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);
+            header('Content-Range: bytes ' . $range['start'] . '-' . ($range['end'] - 1) . '/' . $file->size);
             
             // Read range data
             $done = $read_range($range);
