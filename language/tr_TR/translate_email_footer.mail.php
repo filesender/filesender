@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: e-posta alt bilgisini çevir, tüm dillerce paylaşılmış
+subject: e-posta alt bilgisini çevir, tüm dillerce paylaşılmış
 
 {alternative:plain}
 
