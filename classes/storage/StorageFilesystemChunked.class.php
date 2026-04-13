@@ -73,7 +73,6 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function getChunkFilename($file, $filePath, $offset)
     {
-        $file_chunk_size = Config::get('upload_chunk_size');
         $file_chunk_size = $file->chunk_size;
         $offset = $offset - ($offset % $file_chunk_size);
         return $filePath.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
