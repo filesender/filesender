@@ -131,7 +131,7 @@ class Config
                             }
                         }
                     } else {
-                        if( array_key_exists( $attr, $auth_attrs[$attr] )) {
+                        if( array_key_exists( $attr, $auth_attrs )) {
                             // work on single main value.
                             $matchValue = $auth_attrs[$attr];
                             self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
