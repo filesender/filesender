@@ -309,7 +309,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     };
     register_shutdown_function($abort_handler);
 
-    $read_range = function($range = null) use($stream, $file, $recipient, $abort_handler, $transfer) {
+    $read_range = function($range = null) use($file, $recipient, $abort_handler, $transfer) {
 
         $abort_handler();
 
