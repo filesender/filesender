@@ -253,12 +253,6 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     if(!$file->transfer->is($transfer))
         throw new FileNotFoundException(array('transfer_id : ' . $transfer->id, 'file_id : ' . $file_id));
 
-    $stream = Storage::getStream($file);
-    if (!$stream) {
-        $path = Storage::buildPath($file) . $file->uid;
-        throw new ForwardException('Cannot read storage: '.$path);
-    }
-
     $ranges = null;
     if (array_key_exists('HTTP_RANGE', $_SERVER) && $_SERVER['HTTP_RANGE']) {
         try {
