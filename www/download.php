@@ -313,20 +313,24 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
         $abort_handler();
 
+        $stream = Storage::getStream($file);
+        if (!$stream) {
+            $path = Storage::buildPath($file) . $file->uid;
+            throw new ForwardException('Cannot read storage: '.$path);
+        }
+
         $offset = $range ? $range['start'] : 0;
-
         $chunk_size = $file->chunk_size;
-        if (!$chunk_size)
-            $chunk_size = 1024 * 1024;
+        $end = $file->size;
 
-        if($transfer->options['encryption'] == 1){
+        if ($transfer->options['encryption'] == 1) {
             $end = $file->encrypted_size;
             $chunk_size = $file->crypted_chunk_size;
-        }else{
-            $end = $file->size;
+            stream_set_chunk_size($stream, $chunk_size);
         }
-        if ($range)
+        if ($range) {
             $end = $range['end'];
+        }
         
         for (; $offset < $end; $offset += $chunk_size) {
             $remaining = $end - $offset + 1;
@@ -334,13 +338,14 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             
             Logger::debug('Send chunk at offset ' . $offset . ' with length ' . $length);
             
-            echo $file->readChunk($offset, $length);
+            //echo $file->readChunk($offset, $length);
+            echo stream_get_contents($stream, $length, $offset);
             
             // TODO Log download progress ?
             
             $abort_handler();
         }
-        
+        fclose($stream);
         return ($offset >= $file->size);
     };
 
@@ -385,7 +390,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
-            header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);
+            header('Content-Range: bytes ' . $range['start'] . '-' . ($range['end'] - 1) . '/' . $file->size);
             
             // Read range data
             $done = $read_range($range);

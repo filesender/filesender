@@ -37,7 +37,6 @@ if (!defined('FILESENDER_BASE')) {
 
 /**
  * Allow reading a chunked file as a normal php stream
- * only in order start to finish reading is supported as yet.
  */
 class StorageFilesystemChunkedStream extends StorageFilesystemStreamBase
 {
@@ -62,47 +61,54 @@ class StorageFilesystemChunkedStream extends StorageFilesystemStreamBase
     {
         $file   = $this->file;
         $offset = $this->offset;
+        $totaldata = '';
+        $datalength = 0;
 
         if ($this->gameOver) {
             return false;
         }
-        
-        $file_path = StorageFilesystem::buildPath($file).$file->uid;
-        $chunkFile = StorageFilesystemChunked::getChunkFilename($file, $file_path, $offset);
 
-        if (!$this->currentChunkFile || ($this->currentChunkFile && strcmp($this->currentChunkFile, $chunkFile))) {
+        while ($datalength < $count && $offset < $file->size) {
+            $file_path = StorageFilesystem::buildPath($file).$file->uid;
+            $chunkFile = StorageFilesystemChunked::getChunkFilename($file, $file_path, $offset);
 
-            // if we try to open the file after the last chunk then we return FALSE
-            $fh = fopen($chunkFile, 'r');
-            if ($fh == false) {
-                $this->gameOver = true;
-                return false;
+            if (!$this->currentChunkFile || ($this->currentChunkFile && strcmp($this->currentChunkFile, $chunkFile))) {
+
+                // if we try to open the file after the last chunk then we return FALSE
+                $fh = fopen($chunkFile, 'r');
+                if ($fh == false) {
+                    $this->gameOver = true;
+                    return false;
+                }
+
+                $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($file, $offset));
+                if ($rc == -1) {
+                    $this->gameOver = true;
+                    if ($this->fh) {
+                        fclose($this->fh);
+                    }
+                    return false;
+                }
+
+                $this->fh = $fh;
+                $this->currentChunkFile = $chunkFile;
             }
-            
-            $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($file, $offset));
-            if ($rc == -1) {
+
+            $data = fread($this->fh, $count-$datalength);
+            if ($data == false) {
                 $this->gameOver = true;
                 if ($this->fh) {
                     fclose($this->fh);
                 }
                 return false;
             }
-            
-            $this->fh = $fh;
-            $this->currentChunkFile = $chunkFile;
-        }
 
-        $data = fread($this->fh, $count);
-        if ($data == false) {
-            $this->gameOver = true;
-            if ($this->fh) {
-                fclose($this->fh);
-            }
-            return false;
+            $totaldata.=$data;
+            $datalength = strlen($totaldata);
+            $this->offset += strlen($data);
+            $offset += strlen($data);
         }
-        
-        $this->offset += strlen($data);
-        return $data;
+        return $totaldata;
     }
 
     public function stream_eof()
