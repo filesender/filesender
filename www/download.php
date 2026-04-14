@@ -326,18 +326,17 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         }
 
         $offset = $range ? $range['start'] : 0;
+        $chunk_size = $file->chunk_size;
+        $end = $file->size;
 
-        $chunk_size = Config::get('download_chunk_size');
-
-        if($transfer->options['encryption'] == 1){
+        if ($transfer->options['encryption'] == 1) {
             $end = $file->encrypted_size;
             $chunk_size = $file->crypted_chunk_size;
             stream_set_chunk_size($stream, $chunk_size);
-        }else{
-            $end = $file->size;
         }
-        if ($range)
+        if ($range) {
             $end = $range['end'];
+        }
         
         for (; $offset < $end; $offset += $chunk_size) {
             $remaining = $end - $offset + 1;
