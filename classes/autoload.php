@@ -139,6 +139,10 @@ class Autoloader
                 $file .= '.class.php';
                 
                 if (!file_exists($file)) {
+                    // these are expected failures as of 2026/apr
+                    if( $class == 'src' || $class == 'SimpleSAML' ) {
+                        return;
+                    }
                     Logger::debug('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
                     return;
                 }
