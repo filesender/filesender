@@ -74,5 +74,23 @@ class StorageFilesystemStreamBase
         }
         return true;
     }
+
+    public function stream_stat() {
+        return [
+            'dev'     => 0,
+            'ino'     => 0,
+            'mode'    => 0100644,
+            'nlink'   => 0,
+            'uid'     => 0,
+            'gid'     => 0,
+            'rdev'    => 0,
+            'size'    => $this->file->size,
+            'atime'   => $this->file->upload_end,
+            'mtime'   => $this->file->upload_end,
+            'ctime'   => $this->file->upload_start,
+            'blksize' => -1,
+            'blocks'  => -1,
+        ];
+    }
 };
 
