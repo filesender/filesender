@@ -849,7 +849,14 @@ class Transfer extends DBObject
 
         if ($this->needForward()) {
             ForwardAnotherServer::deleteTransfer($this);
+            foreach ($this->files as $file) {
+                $file->forward_id = null;
+            }
+            foreach ($this->recipients as $recipient) {
+                $recipient->forward_id = null;
+            }
             $this->forward_id = null;
+            $this->forward_server = null;
         }
 
         if (!is_null($this->collections)) {
