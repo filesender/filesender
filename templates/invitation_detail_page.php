@@ -231,7 +231,7 @@ if( $found ) {
             <div class="row">
                 <div class="col-12">
                     <div class="fs-invitation-detail__actions">
-                        <button type="button" class="fs-button fs-button--danger delete">
+                        <button type="button" class="fs-button fs-button--danger delete-invitation">
                             <i class="fa fa-trash"></i>
                             <span>{tr:delete_invitation}</span>
                         </button>
