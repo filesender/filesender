@@ -196,7 +196,7 @@ if(empty($transfer->options['encryption'])) {
                 <div class="fs-transfer-detail__files">
                     <h2>{tr:transferred_files}</h2>
                     <?php if($canDownloadArchive) { ?>
-                        <p>{tr:select_files_to_download}</p>
+                        <p class="fs-download__archive-hint">{tr:select_files_to_download}</p>
 
                         <div class="fs-download__check-all select_all">
                             <label class="fs-checkbox">
