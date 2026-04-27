@@ -110,9 +110,12 @@
     padding-left: var(--fs-spacing-5x);
 }
 
-.fs-transfer-detail[data-status="uploading"] [data-action],
-.fs-transfer-detail[data-status="closed"] [data-action],
-.fs-transfer-detail[data-status="closed"] .fs-transfer-detail__link {
+.fs-transfer-detail:is([data-status="uploading"], [data-status="forwarding"], [data-status="closed"]) [data-action]:not(tr),
+.fs-transfer-detail:is([data-status="uploading"], [data-status="forwarding"], [data-status="closed"]) .fs-transfer-detail__link,
+.fs-transfer-detail:is([data-status="uploading"], [data-status="forwarding"], [data-status="closed"]) .fs-download__actions.archive,
+.fs-transfer-detail:is([data-status="uploading"], [data-status="forwarding"], [data-status="closed"]) .fs-download__check-all,
+.fs-transfer-detail:is([data-status="uploading"], [data-status="forwarding"], [data-status="closed"]) .fs-table__check-action,
+.fs-transfer-detail:is([data-status="uploading"], [data-status="forwarding"], [data-status="closed"]) .fs-download__archive-hint {
     display: none;
 }
 
