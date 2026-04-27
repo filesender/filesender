@@ -186,7 +186,7 @@ except requests.exceptions.SSLError as exc:
     info_response = requests.get(base_url+'/info', verify=False)
     config_response = requests.get(top_url+'/filesender-config.js.php',verify=False)
 
-upload_chunk_size = info_response.json()['upload_chunk_size']
+upload_chunk_size = int(info_response.json()['upload_chunk_size'])
 
 try:
     regex_match = re.search(r"terasender_worker_count\D*(\d+)",config_response.text)
@@ -607,7 +607,7 @@ for fn_abs in fileList:
 
       aead_string = "{"
       aead_string += '"aeadversion":1,'
-      aead_string += '"chunkcount":' + str(ceil( size / upload_chunk_size ))  +','
+      aead_string += '"chunkcount":' + str(ceil( int(size) / upload_chunk_size ))  +','
       aead_string += '"chunksize":'   + str(upload_chunk_size)   +',' 
       aead_string += '"iv":'          + '"' + iv + '"' + ','
       aead_string += '"aeadterminator":1' 
@@ -638,13 +638,13 @@ try:
     #Prepare files for transfer
     if f['size'] == 0: #f size can be 0 because of directories, these can be safely skipped.
       continue
-    transfer['files'][indexOfFile]['p_total_chunks'] = ceil(f['size']/upload_chunk_size)
+    transfer['files'][indexOfFile]['p_total_chunks'] = ceil(int(f['size'])/upload_chunk_size)
     transfer['files'][indexOfFile]['p_progressed_chunks'] = 0
     path = files[f['name']+':'+str(f['size'])]['path']
     size = files[f['name']+':'+str(f['size'])]['size']
     #putChunks
     
-    for i in range(0,size,upload_chunk_size):
+    for i in range(0,int(size),upload_chunk_size):
       fileIndexQueue.append(indexOfFile)
       offsettQueue.append(i)
   #begin transfer
