@@ -450,7 +450,7 @@ class File extends DBObject
 
         // add natural, human sorting, in both databases
         if ($dbtype == 'pgsql') {
-            $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS BIGINT) ";
+            $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS numeric) ";
         }
         if ($dbtype == 'mysql') {
             if(Config::get('db_mysql_limit_features')) {
