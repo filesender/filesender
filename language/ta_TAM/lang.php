@@ -893,6 +893,7 @@ $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Encryption in trans
 ';
 $lang['upload_page_graph_mb_per_second'] = 'MB/sec';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'கோப்புகளின் உலகளாவிய சராசரி பதிவேற்ற வேகம் {size}க்கு மேல்';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Upload progressing again
 ';
 $lang['upload_stalled_and_resumed'] = 'Upload stalled and was resumed...

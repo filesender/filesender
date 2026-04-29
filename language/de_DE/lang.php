@@ -842,6 +842,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Verschlüsselung während de
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Verschlüsselung während des Transfers und auf dem Server';
 $lang['upload_page_graph_mb_per_second'] = 'MB/s';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Gesamtdurchschnittliche Upload-Geschwindigkeit für Dateien größer als 1GB';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Erneuter Uploadvorgang';
 $lang['upload_stalled_and_resumed'] = 'Der Upload war hängen geblieben und wurde fortgesetzt...';
 $lang['upload_stalled_due_to_testing'] = 'Der Upload war hängen geblieben durch einen Test...';

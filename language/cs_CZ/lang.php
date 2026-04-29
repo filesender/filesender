@@ -851,6 +851,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Šifrování při přenosu';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Šifrování při přenosu & rest';
 $lang['upload_page_graph_mb_per_second'] = 'MB/s';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Globální průměrná rychlost nahrávání souborů {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Nahrávání opět pokračuje';
 $lang['upload_stalled_and_resumed'] = 'Nahrávání se zastavilo a bylo obnoveno...';
 $lang['upload_stalled_due_to_testing'] = 'Nahrávání zastavené testovacím případem...';

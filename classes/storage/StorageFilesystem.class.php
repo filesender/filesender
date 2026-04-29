@@ -850,6 +850,22 @@ class StorageFilesystem
         return $stream;
     }
 
+    /**
+     * Calculates on-disk file size (bytes uploaded so far)
+     *
+     * @param File $file
+     * @return int
+     */
+    public static function calculateOnDiskFileSize(File $file)
+    {
+        $file_path = static::buildPath($file).static::buildFilename($file);
+        clearstatcache(true, $file_path);
+        if (!file_exists($file_path)) {
+            return 0;
+        }
+        return filesize($file_path);
+    }
+
     protected static function makeCustomStreamPath( $file, $c )
     {
         $path = $c . "://" . $file->uid . "#" . $file->id;

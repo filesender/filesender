@@ -192,6 +192,11 @@ class RestEndpointTransfer extends RestEndpoint
             return $rc;
         }
 
+        // Batch progress endpoint: GET /transfer/batch_progress?ids=1,2,3
+        if ($id === 'batch_progress') {
+            return self::getBatchProgress();
+        }
+
         if( $id=='fileids' && array_key_exists('token', $_GET)) {
             $token = $_GET['token'];
             if (!Utilities::isValidUID($token)) {
@@ -301,6 +306,11 @@ class RestEndpointTransfer extends RestEndpoint
             // Only want transfer options
             if ($property == 'options') {
                 return $transfer->options;
+            }
+
+            // Upload progress — allows owner, admin, or the user who created the guest invitation
+            if ($property == 'progress') {
+                return self::calculateTransferProgress($transfer, $user);
             }
 
             // get encryption salt
@@ -1442,5 +1452,103 @@ class RestEndpointTransfer extends RestEndpoint
         
         // Delete the transfer (not recoverable)
         $transfer->delete();
+    }
+
+    /**
+     * Calculate progress for a single transfer.
+     * Reusable by both single and batch endpoints.
+     *
+     * @param Transfer $transfer
+     * @param object $user
+     * @return array progress data
+     */
+    private static function calculateTransferProgress($transfer, $user)
+    {
+        $allowed = $transfer->havePermission();
+        if (!$allowed && $transfer->guest_id) {
+            try {
+                $guest = Guest::fromId($transfer->guest_id);
+                if ($guest && $guest->userid == $user->id) {
+                    $allowed = true;
+                }
+            } catch (Exception $e) {
+                Logger::warn('Progress permission check failed for transfer '.$transfer->id.': '.$e->getMessage());
+            }
+        }
+        if (!$allowed) {
+            throw new RestTransferPermissionRequiredException('transfer = '.$transfer->id);
+        }
+
+        if (!$transfer->isStatusUploading()) {
+            return array(
+                'status'         => $transfer->status,
+                'progress'       => 100,
+                'bytes_uploaded' => $transfer->size,
+                'bytes_total'    => $transfer->size,
+            );
+        }
+
+        $totalExpected = 0;
+        $totalUploaded = 0;
+
+        foreach ($transfer->files as $file) {
+            $totalExpected += $transfer->is_encrypted ? $file->encrypted_size : $file->size;
+
+            try {
+                $onDisk = Storage::calculateOnDiskFileSize($file);
+                if ($onDisk < 0) {
+                    Logger::warn('Negative on-disk size for file '.$file->id.' in transfer '.$transfer->id);
+                    return array('status' => $transfer->status, 'progress' => -1);
+                }
+                $totalUploaded += $onDisk;
+            } catch (Exception $e) {
+                Logger::error('Storage size calculation failed for file '.$file->id.': '.$e->getMessage());
+                return array('status' => $transfer->status, 'progress' => -1);
+            }
+        }
+
+        $pct = ($totalExpected > 0) ? min(100, round(($totalUploaded / $totalExpected) * 100, 1)) : 0;
+
+        return array(
+            'status'         => $transfer->status,
+            'progress'       => $pct,
+            'bytes_uploaded' => $totalUploaded,
+            'bytes_total'    => $totalExpected,
+        );
+    }
+
+    /**
+     * Batch progress endpoint — get progress for multiple transfers in a single request.
+     * Called via GET /transfer/batch_progress?ids=1,2,3
+     *
+     * @return array keyed by transfer ID
+     */
+    public static function getBatchProgress()
+    {
+        $user = Auth::user();
+        $ids_raw = Utilities::arrayKeyOrDefault($_GET, 'ids', '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        if (!$ids_raw) return array();
+
+        $ids = array_unique(array_filter(array_map('intval', explode(',', $ids_raw))));
+
+        // Cap batch size to prevent abuse
+        $max_batch = 50;
+        if (count($ids) > $max_batch) {
+            $ids = array_slice($ids, 0, $max_batch);
+        }
+
+        $results = array();
+
+        foreach ($ids as $id) {
+            try {
+                $transfer = Transfer::fromId($id);
+                $results[$id] = self::calculateTransferProgress($transfer, $user);
+            } catch (Exception $e) {
+                Logger::warn('Batch progress failed for transfer '.$id.': '.$e->getMessage());
+                $results[$id] = array('status' => 'error', 'progress' => -1);
+            }
+        }
+
+        return $results;
     }
 }

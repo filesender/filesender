@@ -853,6 +853,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Mã hóa trong quá trình v
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Mã hóa trong quá trình vận chuyển và nghỉ ngơi';
 $lang['upload_page_graph_mb_per_second'] = 'MB/giây';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Tốc độ tải lên trung bình toàn cầu của tệp trên {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Đang tải lên lại';
 $lang['upload_stalled_and_resumed'] = 'Quá trình tải lên bị đình trệ và đã được tiếp tục...';
 $lang['upload_stalled_due_to_testing'] = 'Quá trình tải lên bị đình trệ do một trường hợp thử nghiệm...';

@@ -147,7 +147,8 @@ $transfers_page = function($status) {
         'mode' => 'admin',
         'transfers' => $entries,
         'trsort' => $trsort,
-        'limit' => $page_size
+        'limit' => $page_size,
+        'show_progress' => ($status == 'uploading')
     ));
     
     if($total_count > $page_size)

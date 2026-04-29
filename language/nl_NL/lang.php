@@ -855,6 +855,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Versleuteling tijdens doorvo
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Versleuteling tijdens doorvoer en rust';
 $lang['upload_page_graph_mb_per_second'] = 'MB/sec';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Globale gemiddelde uploadsnelheid van bestanden groter dan {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Uploaden gaat weer verder';
 $lang['upload_stalled_and_resumed'] = 'Upload onderbroken en herstart...';
 $lang['upload_stalled_due_to_testing'] = 'Upload vertraagd door testen...';

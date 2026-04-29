@@ -846,6 +846,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Cifrado en tránsito.';
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Cifrado en tránsito y descanso';
 $lang['upload_page_graph_mb_per_second'] = 'MB/segundo';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Velocidad de carga promedio global de archivos de más de {size}';
+$lang['upload_progress'] = 'Progreso de subida';
 $lang['upload_progressing_again'] = 'Subida progresando de nuevo';
 $lang['upload_stalled_and_resumed'] = 'La carga se detuvo y se reanudó...';
 $lang['upload_stalled_due_to_testing'] = 'La carga se detuvo por un caso de pruebas';

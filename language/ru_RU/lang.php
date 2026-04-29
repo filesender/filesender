@@ -846,6 +846,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'Шифрование в тр
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Шифрование в транзите & rest';
 $lang['upload_page_graph_mb_per_second'] = 'МБ/с';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Глобальная средняя скорость закачки файлов около {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'Upload progressing again';
 $lang['upload_stalled_and_resumed'] = 'Upload stalled and was resumed...';
 $lang['upload_stalled_due_to_testing'] = 'Upload stalled by a test case...';

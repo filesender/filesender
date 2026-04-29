@@ -846,6 +846,7 @@ $lang['upload_page_graph_encryption_in_transit'] = '実行中の暗号化処理'
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = '実行中および休止中の暗号化処理';
 $lang['upload_page_graph_mb_per_second'] = 'MB/秒';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = '{size}を超えるファイル全体の平均アップロード速度';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'アップロードが再び進行中';
 $lang['upload_stalled_and_resumed'] = 'アップロードがストールし、再開されました...';
 $lang['upload_stalled_due_to_testing'] = 'テストケースによってアップロードがストールしました...';
