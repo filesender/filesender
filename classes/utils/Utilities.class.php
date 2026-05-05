@@ -584,12 +584,7 @@ class Utilities
         }
 
         $sep = ini_get('arg_separator.output');
-        if (phpversion() < 5.4) {
-            // CIFIXME remove this branch when CI php is upgraded.
-            $ret .= http_build_query($q, '', $sep);
-        } else {
-            $ret .= http_build_query($q, '', $sep, PHP_QUERY_RFC3986);
-        }
+        $ret .= http_build_query($q, '', $sep, PHP_QUERY_RFC3986);
         return $ret;
     }
     
