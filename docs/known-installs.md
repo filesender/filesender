@@ -84,6 +84,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Kyrgyzstan | KRENA | [https://filesender.kif.kg/](https://filesender.kif.kg/) | Sep 2024 | 30 Apr 2026 |
 | Malaysia  | MYREN | [https://filesender.myren.net.my](https://filesender.myren.net.my) | Oct 2017| 30 Apr 2026 |
 | New Zealand  | REANNZ  | [https://filesender.reannz.co.nz](https://filesender.reannz.co.nz)    | Aug 2024 | 30 Apr 2026 |
+| Pakistan | PERN | [https://filesender.pern.edu.pk/](https://filesender.pern.edu.pk/) | Mar 2026 | 30 Apr 2026 |
 | Singapore  | SingAREN  | [https://filesender.singaren.net.sg/filesender/](https://filesender.singaren.net.sg/filesender/)  | Jun 2016| 30 Apr 2026 |
 | Tajikistan | TARENA | [https://sp.tidf.tj/](https://sp.tidf.tj/) | Jan 2019 | 30 Apr 2026 |
 
@@ -121,6 +122,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | Ethiopia | EthERNet | [https://filesender.ethernet.edu.et/](https://filesender.ethernet.edu.et/) | Oct 2023 | 30 Apr 2026 |
 | Kenya | KENET | [https://filesender.kenet.or.ke/](https://filesender.kenet.or.ke/) | May 2022 | 30 Apr 2026 |
 | Malawi | MAREN | [https://filesender.maren.ac.mw](https://filesender.maren.ac.mw) | Jul 2025 | 30 Apr 2026 |
+| Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015| 30 Apr 2026 |
 | Nigeria | NgREN | [https://filesender.ngren.edu.ng](https://filesender.ngren.edu.ng) | Jul 2025 | 30 Apr 2026 |
 | Somalia | SomaliREN | [https://filesender.somaliren.org.so/filesender/](https://filesender.somaliren.org.so/filesender/) | May 2022 | 30 Apr 2026 |
 | South Africa  | SANReN  | [https://filesender.sanren.ac.za/filesender/](https://filesender.sanren.ac.za/filesender/)  | Apr 2014| 30 Apr 2026 |
@@ -134,11 +136,16 @@ If you want to add your FileSender installation to this list use one of the foll
 | Australia | WMAwater - hydrological and hydraulic consultancy | [https://filesender.wmawater.com.au/](https://filesender.wmawater.com.au/) | 2016 | 30 Apr 2026 |
 | Belgium | Autosécurité Group | [https://filesender.autosecurite.be/filesender/](https://filesender.autosecurite.be/filesender/) |Aug 2025 | 30 Apr 2026 |
 | Czech Republic | National Film Archive | [https://filesender.nfa.cz/](https://filesender.nfa.cz/) |Jul 2025 | 30 Apr 2026 |
+| Czech Republic | SLEEPWALKER - sound producer | [https://filesender.sleepwalker.cz/](https://filesender.sleepwalker.cz/) | May 2026 | 5 May 2026 |
 | Czech Republic | State Regional Archives Litomerice | [https://filesender.soalitomerice.com/](https://filesender.soalitomerice.com/) | Feb 2026 | 30 Apr 2026 |
+| France | Balgoo - cloud provider | [https://filesender.balgoo.com/](https://filesender.balgoo.com/) | May 2026 | 5 May 2026 |
 | France | CDG 33 - Gironde Management Center | [https://filesender.cdg33.fr/](https://filesender.cdg33.fr/) | Apr 2025 | 30 Apr 2026 |
 | France | Decalog - library management software | [https://filesender.decalog.net/filesender/](https://filesender.decalog.net/filesender/) | Mar 2026 | 30 Apr 2026 |
 | France | French National Institute of Statutory Auditors (CNCC) | [https://filesender.cncc.fr/filesender/](https://filesender.cncc.fr/filesender/) | Mar 2026 | 30 Apr 2026 |
+| France | Grand Paris Seine & Oise urban community | [https://filesender.gpseo.fr/](https://filesender.gpseo.fr/) | May 2026 | 5 May 2026 |
+| France | Ploud - cloud fediverse platform | [https://filesender.ploud.fr/](https://filesender.ploud.fr/) | May 2026 | 5 May 2026 |
 | France | SEM Plaine Commune Development | [https://filesender.semplaine.fr/](https://filesender.semplaine.fr/) | Jul 2025 | 30 Apr 2026 |
+| France | SICAE-OISE - electricity supplier and distributor | [https://filesender.sicae-oise.fr/](https://filesender.sicae-oise.fr/) | May 2026 | 5 May 2026 |
 | France | the Télégramme Group - multimedia | [https://filesender.groupe-telegramme.fr](https://filesender.groupe-telegramme.fr) | Feb 2026 | 30 Apr 2026 |
 | France | TransGourmet - food wholesaler | [https://filesender.transgourmet.fr/filesender/](https://filesender.transgourmet.fr/filesender/) | Feb 2026 | 30 Apr 2026 |
 | France | Verallia - glass manufacturer | [https://filesender.verallia.com/](https://filesender.verallia.com/) | Mar 2026 | 30 Apr 2026 |
@@ -146,7 +153,9 @@ If you want to add your FileSender installation to this list use one of the foll
 | Latvia | Maritime Administration of Latvia | [https://filesender.lja.lv/](https://filesender.lja.lv/) | Mar 2026 | 30 Apr 2026 |
 | Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 30 Apr 2026 |
 | Netherlands  | BIT - internet service provider | [https://filesender.bit.nl/](https://filesender.bit.nl/) | Mar 2026 | 30 Apr 2026 |
+| Norway  | IKT Agder - intermunicipal ICT company | [https://filesender.ikt-agder.no/](https://filesender.ikt-agder.no/) | May 2026 | 5 May 2026 |
 | Norway | Municipality digital services in Sunnmøre | [https://filesender.esunnmore.no/filesender/](https://filesender.esunnmore.no/filesender/) | Oct 2025 | 30 Apr 2026 |
+| Portugal  | Portuguese Agency for Competitiveness and Innovation (IAPMEI) | [http://filesender.iapmei.pt/](http://filesender.iapmei.pt/) | May 2026 | 5 May 2026|
 | Switzerland | Gericke Group - equipment manufacturer | [https://filesender.gerickegroup.com/filesender/](https://filesender.gerickegroup.com/filesender/) | Feb 2026 | 30 Apr 2026 |
 | Switzerland | momou! - fediversified services | [https://filesender.momou.ch/](https://filesender.momou.ch/) | Mar 2026 | 30 Apr 2026 |
 | Vatican | Congregation for the Evangelization of Peoples | [https://filesender.evang.va/](https://filesender.evang.va/) | Oct 2025 | 30 Apr 2026 |
@@ -164,8 +173,6 @@ If you want to add your FileSender installation to this list use one of the foll
 | France | Occitania Regional Council | [https://filesender.laregion.fr/](https://filesender.laregion.fr/) | Jun 2025 | 30 Apr 2026 - unreachable |
 | France | Regional e-Health Development Support Group Bourgogne-Franche-Comté | [https://filesender.bfc-sante.fr/](https://filesender.bfc-sante.fr/) | Jul 2025 | 30 Apr 2026 - unreachable |
 | Iran    | IPM/IRANET  | [https://filesender.ipm.ir](https://filesender.ipm.ir)      | Aug 2016| 30 Apr 2026 - unreachable |
-| Morocco  | MARWAN  | [https://filesender.marwan.ma/filesender](https://filesender.marwan.ma/filesender)  | Feb 2015| 30 Apr 2026 - unreachable |
-| Pakistan | PERN | [https://filesender.pern.edu.pk/](https://filesender.pern.edu.pk/) | Mar 2026 | 30 Apr 2026 - unreachable |
 | Philippines  | Government  | [https://pakete.gov.ph](https://pakete.gov.ph)       | Jul 2013| 30 Apr 2026 - unreachable |
 | Spain/Catalonia  | i2CAT    | [https://filesender.i2cat.net](https://filesender.i2cat.net)      | Apr 2011| 30 Apr 2026 - unreachable |
 
