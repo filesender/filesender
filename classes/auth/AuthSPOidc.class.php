@@ -162,7 +162,7 @@ class AuthSPOidc
         $url = Utilities::http_build_query(array(
             'action' => 'login',
             'target' => $target,
-        ), 'oidc.php' . '?');
+        ), 'oidc.php');
         
         return $url;
 	}
@@ -179,7 +179,7 @@ class AuthSPOidc
         $url = Utilities::http_build_query(array(
             'action' => 'logout',
             'target' => $target,
-        ), 'oidc.php' . '?');
+        ), 'oidc.php');
         
         return $url;
 	}
