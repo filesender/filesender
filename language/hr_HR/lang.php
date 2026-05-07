@@ -551,7 +551,8 @@ $lang['report_event_file_forwarded'] = 'Datoteka {file.path} ({size:file.size}) 
 $lang['report_event_file_uploaded'] = 'Datoteka {file.path} ({size:file.size}) prenesena (vrijeme: {time:time_taken})';
 $lang['report_event_forward_ended'] = 'Prosljeđivanje drugog poslužitelja završeno';
 $lang['report_event_forward_started'] = 'Prosljeđivanje drugog poslužitelja započeto';
-$lang['report_event_transfer_added_recipient'] = 'Download link sent to added recipient {author.identity}';
+$lang['report_event_transfer_added_recipient'] = '
+Veza za preuzimanje poslana je dodanom primatelju {author.identity}';
 $lang['report_event_transfer_available'] = 'Datoteka postala dostupna (vrijeme: {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Prijenos je zatvoren na zahtjev';
 $lang['report_event_transfer_deleted'] = 'Podaci prijenosa su obrisani';
@@ -608,9 +609,9 @@ $lang['save'] = 'Spremi';
 $lang['save_preferences'] = 'Spremi postavke';
 $lang['save_recipients_emails'] = 'Spremite e-mail primatelje iz prethodne upotrebe (za automatsko ispunjavanje e-maila).';
 $lang['saved_information'] = 'Spremljene informacije';
-$lang['script_download_fscli'] = 'The FileSender CLI Client will download all files from this page using the following command.<br>The FileSender CLI Client can be downloaded from the <a href="?s=user">My Profile</a> Page';
-$lang['script_download_links'] = 'Generate curl downlaod script';
-$lang['script_download_title'] = 'Curl download script';
+$lang['script_download_fscli'] = 'FileSender CLI klijent će preuzeti sve datoteke s ove stranice pomoću sljedeće naredbe.<br>FileSender CLI klijent može se preuzeti sa <a href="?s=user">Moj profil</a> stranice';
+$lang['script_download_links'] = 'Generiraj Curl skriptu za preuzimanje';
+$lang['script_download_title'] = 'Curl skripta za preuzimanje';
 $lang['search'] = 'Traži';
 $lang['search_transfer_by_sender_email_description'] = 'Pretražujte prijenose prema e-mail adresi pošiljatelja';
 $lang['search_transfer_id_inclusive_description'] = 'Pretraga prijenosa po ID-u unutar min i maks raspona (uključujući)';
