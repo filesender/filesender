@@ -1378,9 +1378,14 @@ window.filesender.crypto_app = function () {
                 return { sink: blobSinkLegacy, method: 'legacy' };
             };
 
-            var prompt = window.filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (pass) {
+            var defaultPasswordValue = '';
+            if( window.filesender.crypto_last_password_succeeded ) {
+                defaultPasswordValue = window.filesender.crypto_last_password;
+            }
+
+            var prompt = window.filesender.ui.promptPassword(window.filesender.config.language.file_encryption_enter_password, function (pass) {
                 window.filesender.crypto_last_password = pass;
-            
+
                 var startWithSink = function(selection) {
                     blobSink = selection.sink;
                     blobSinkStreamed = selection.sink;
@@ -1423,9 +1428,8 @@ window.filesender.crypto_app = function () {
 
             }, function(){
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
-            });
+            }, defaultPasswordValue );
 
-            
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
             var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
