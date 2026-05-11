@@ -3104,7 +3104,7 @@ This should be configured at your OpenID Connect provider's client configuration
 * __*Standard parameters for all options:*__
 	* __'level'__ (optional): restricts loglevel of current facility.  Permissible values: debug, warning, info, error
 	* __'output'__ (optional): sets the output mode of log messages.  Permissible values: text, json 
-	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.
+	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: cli, gui, rest, web, cron, feedback, misc, install, upgrade (lowercase).  Comma-separated list.
 * __*Available targets:*__
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly.
 	* __'type' => 'syslog'__ logs to syslog.
@@ -3137,7 +3137,7 @@ array (
   'output' => 'text',   // possible = text, json
   'path' => '&lt;something>/logs/',
   'rotate' => hourly,   // possible = hourly, daily, weekly, monthly, yearly
-  'process' => REST,    // possible = MISC, WEB, CLI, GUI, REST, CRON, FEEDBACK, INSTALL, UPGRADE
+  'process' => 'rest',  // possible = misc, web, cli, gui, rest, cron, feedback, install, upgrade (lowercase strings)
 </code></pre>
 
 The type setting lets you choose where the log will be sent. The error

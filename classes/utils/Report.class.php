@@ -197,4 +197,81 @@ class Report
         // Send the report
         $mail->send();
     }
+
+    /**
+     * // default format is html
+     *
+     * @param mixed $recipient User, email address
+     */
+    public function getReport($recipient, $format = "inline" ) 
+    {
+        // try to get recipient's lang
+        $lang = null;
+        if (is_object($recipient) && ($recipient instanceof User)) {
+            $lang = $recipient->lang;
+        }
+        
+        // Get format, default if not defined
+        if (!$format) {
+            $format = ReportFormats::INLINE;
+        }
+        
+        // Check format
+        if (!ReportFormats::isValidName($format)) {
+            throw new ReportUnknownFormatException($format);
+        }
+        
+        // Need iconv utility for pdf rendering (dompdf dependency)
+        if (($format == ReportFormats::PDF) && !extension_loaded('iconv')) {
+            throw new ReportFormatNotAvailableException('iconv not found');
+        }
+        
+        $content = array('plain' => '', 'html' => '');
+        $attachment = null;
+        
+        // Build mail body depending on format
+        if ($format == ReportFormats::PDF) {
+            $html = Template::process('!report_pdf', array('report' => $this));
+            
+            $styles = array(
+                'www/css/mail.css',
+                'www/skin/mail.css',
+                'www/css/pdf.css',
+                'www/skin/pdf.css'
+            );
+            $css = '';
+            foreach ($styles as $cssfile) {
+                if (file_exists(FILESENDER_BASE.'/'.$cssfile)) {
+                    $css .= "\n\n".file_get_contents(FILESENDER_BASE.'/'.$cssfile);
+                }
+            }
+            $css = trim($css);
+            
+            if ($css) {
+                $html = '<style type="text/css">'.$css.'</style>'.$html;
+            }
+            $pdf = new Dompdf\Dompdf();
+            $pdf->load_html($html);
+            $pdf->render();
+            
+            $attachment = new MailAttachment('report_'.strtolower($this->target_type).'_'.$this->target->id.'.pdf');
+            return $pdf->output();
+        } else { // INLINE
+            $content['plain'] = Template::process('!report_plain', array('report' => $this));
+            $content['html'] = Template::process('!report_html', array('report' => $this));
+        }
+        
+        // Build translated email
+        $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
+        $mail = TranslatableEmail::prepare('report_'.$lid, $recipient, $this->target, array(
+            'target' => array(
+                'type' => $this->target_type,
+                'id' => $this->target->id
+            ),
+            'content' => $content,
+        ));
+
+        return $content;
+    }
+    
 }
