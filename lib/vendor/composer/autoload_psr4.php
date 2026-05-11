@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'ZipStream\\' => array($vendorDir . '/maennchen/zipstream-php/src'),
-    'Svg\\' => array($vendorDir . '/phenx/php-svg-lib/src/Svg'),
+    'Svg\\' => array($vendorDir . '/dompdf/php-svg-lib/src/Svg'),
     'Sabberworm\\CSS\\' => array($vendorDir . '/sabberworm/php-css-parser/src'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'Ramsey\\Collection\\' => array($vendorDir . '/ramsey/collection/src'),
@@ -18,7 +18,7 @@ return array(
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
-    'FontLib\\' => array($vendorDir . '/phenx/php-font-lib/src/FontLib'),
+    'FontLib\\' => array($vendorDir . '/dompdf/php-font-lib/src/FontLib'),
     'Dompdf\\' => array($vendorDir . '/dompdf/dompdf/src'),
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'Barracuda\\ArchiveStream\\' => array($vendorDir . '/barracudanetworks/archivestream-php/src'),
