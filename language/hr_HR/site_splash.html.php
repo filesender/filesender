@@ -10,6 +10,5 @@
 <h1>Dobrodošli na {cfg:site_name}</h1>
 
 <p>
- {cfg:site_name} je siguran način dijeljenja datoteka s bilo kime !
-  Prijavite se za prijenos Vaših datoteka ili pozovite ljude da vam pošalju datoteku.
-</p>
+ {cfg:site_name} je siguran način dijeljenja datoteka putem e-pošte!
+  Prijavite se kako biste prenijeli svoje datoteke ili uputite poziv drugim korisnicima da vam ih dostave.</p>

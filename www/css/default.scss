@@ -1359,6 +1359,37 @@ table.paginator a {
     background-color: #fff3f3 !important;
 }
 
+/* Site announcement banner - displayed via templates/information.php */
+.site-announcement {
+    display: block;
+    margin: 0 0 var(--fs-spacing-3x, 1.5rem);
+    padding: var(--fs-spacing-2x, 1rem) var(--fs-spacing-3x, 1.5rem);
+    border-left: 4px solid var(--fs-info, #155BCB);
+    background-color: var(--fs-blue-100, #edf5ff);
+    border-radius: 0.25rem;
+}
+
+.site-announcement--warning {
+    border-left-color: var(--fs-warning-hover, #DFB41E);
+    background-color: #fffce6;
+}
+
+.site-announcement--danger {
+    border-left-color: var(--fs-danger, #EA4D3C);
+    background-color: #fff2f0;
+}
+
+.site-announcement h2,
+.site-announcement h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.site-announcement p:last-child {
+    margin-bottom: 0;
+}
+
 @import "local-variables.scss";
 
 

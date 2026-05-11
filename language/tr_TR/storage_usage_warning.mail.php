@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Depolama kullanımı uyarısı
+subject: Depolama kullanımı uyarısı
 
 {alternative:plain}
 

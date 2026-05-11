@@ -43,25 +43,22 @@ class Helpers
     }
 
     /**
-     * builds a full url given a protocol, hostname, base path and url
+     * Builds a full url given a protocol, hostname, base path and URL.
+     *
+     * When the URL provided is a local file reference from the root of the filesystem
+     * (i.e., beginning with a "/") and the file does not resolve to a valid path,
+     * the path is validated against the chroot paths (if provided).
      *
      * @param string $protocol
      * @param string $host
      * @param string $base_path
      * @param string $url
+     * @param array  $chrootDirs array of strings representing the chroot paths
      * @return string
-     *
-     * Initially the trailing slash of $base_path was optional, and conditionally appended.
-     * However on dynamically created sites, where the page is given as url parameter,
-     * the base path might not end with an url.
-     * Therefore do not append a slash, and **require** the $base_url to ending in a slash
-     * when needed.
-     * Vice versa, on using the local file system path of a file, make sure that the slash
-     * is appended (o.k. also for Windows)
      */
-    public static function build_url($protocol, $host, $base_path, $url)
+    public static function build_url($protocol, $host, $base_path, $url, $chrootDirs = [])
     {
-        $protocol = mb_strtolower($protocol);
+        $protocol = mb_strtolower($protocol, "UTF-8");
         if (empty($protocol)) {
             $protocol = "file://";
         }
@@ -69,7 +66,7 @@ class Helpers
             return null;
         }
 
-        $url_lc = mb_strtolower($url);
+        $url_lc = mb_strtolower($url, "UTF-8");
 
         // Is the url already fully qualified, a Data URI, or a reference to a named anchor?
         // File-protocol URLs may require additional processing (e.g. for URLs with a relative path)
@@ -113,13 +110,26 @@ class Helpers
             $ret = preg_replace('/\?(.*)$/', "", $ret);
 
             $filepath = realpath($ret);
-            if ($filepath === false) {
-                return null;
+            if ($filepath !== false) {
+                $ret = "$protocol$filepath$res";
+
+                return $ret;
             }
 
-            $ret = "$protocol$filepath$res";
+            if ($url[0] == '/' && !empty($chrootDirs)) {
+                foreach ($chrootDirs as $dir) {
+                    $ret = realpath($dir) . $url;
+                    $ret = preg_replace('/\?(.*)$/', "", $ret);
 
-            return $ret;
+                    if ($filepath = realpath($ret)) {
+                        $ret = "$protocol$filepath$res";
+
+                        return $ret;
+                    }
+                }
+            }
+
+            return null;
         }
 
         $ret = $protocol;
@@ -240,6 +250,36 @@ class Helpers
     }
 
     /**
+     * Converts decimal numbers to base26 (hexavigesimal)
+     * represented in lower case letters.
+     *
+     * @param int|string $num
+     *
+     * @throws Exception
+     * @return string
+     */
+    public static function dec2base26($num): string
+    {
+        if (!is_numeric($num)) {
+            throw new Exception("dec2base26() requires a numeric argument.");
+        }
+
+        $num = intval($num);
+
+        if ($num <= 0) {
+            return (string) $num;
+        }
+
+        $ret = '';
+        while ($num > 0) {
+            $remainder = ($num - 1) % 26;
+            $ret = chr(97 + $remainder) . $ret;
+            $num = intval(($num - 1) / 26);
+        }
+        return $ret;
+    }
+
+    /**
      * Restrict a length to the given range.
      *
      * If min > max, the result is min.
@@ -277,8 +317,13 @@ class Helpers
      */
     public static function parse_data_uri($data_uri)
     {
-        if (!preg_match('/^data:(?P<mime>[a-z0-9\/+-.]+)(;charset=(?P<charset>[a-z0-9-])+)?(?P<base64>;base64)?\,(?P<data>.*)?/is', $data_uri, $match)) {
-            return false;
+        $expression = '/^data:(?P<mime>[a-z0-9\/+-.]+)(;charset=(?P<charset>[a-z0-9-])+)?(?P<base64>;base64)?\,(?P<data>.*)?/is';
+        if (!preg_match($expression, $data_uri, $match)) {
+            $parts = explode(",", $data_uri);
+            $parts[0] = preg_replace('/\\s/', '', $parts[0]);
+            if (preg_match('/\\s/', $data_uri) && !preg_match($expression, implode(",", $parts), $match)) {
+                return false;
+            }
         }
 
         $match['data'] = rawurldecode($match['data']);
@@ -319,7 +364,11 @@ class Helpers
         $score = [
             '%23'=>'#'
         ];
-        return strtr(rawurlencode(rawurldecode($uri)), array_merge($reserved, $unescaped, $score));
+        return preg_replace(
+            '/%25([a-fA-F0-9]{2,2})/',
+            '%$1',
+            strtr(rawurlencode($uri), array_merge($reserved, $unescaped, $score))
+        );
     }
 
     /**
@@ -466,7 +515,7 @@ class Helpers
 
         $arr = parse_url($url);
         if ( isset($arr["scheme"]) ) {
-            $arr["scheme"] = mb_strtolower($arr["scheme"]);
+            $arr["scheme"] = mb_strtolower($arr["scheme"], "UTF-8");
         }
 
         if (isset($arr["scheme"]) && $arr["scheme"] !== "file" && $arr["scheme"] !== "phar" && strlen($arr["scheme"]) > 1) {
@@ -492,7 +541,7 @@ class Helpers
 
             if (isset($arr["path"]) && $arr["path"] !== "") {
                 // Do we have a trailing slash?
-                if ($arr["path"][mb_strlen($arr["path"]) - 1] === "/") {
+                if ($arr["path"][mb_strlen($arr["path"], "8bit") - 1] === "/") {
                     $path = $arr["path"];
                     $file = "";
                 } else {
@@ -514,10 +563,10 @@ class Helpers
             $protocol = "";
             $host = ""; // localhost, really
 
-            $i = mb_stripos($url, "://");
+            $i = mb_stripos($url, "://", 0, "UTF-8");
             if ($i !== false) {
-                $protocol = mb_strtolower(mb_substr($url, 0, $i + 3));
-                $url = mb_substr($url, $i + 3);
+                $protocol = mb_strtolower(mb_substr($url, 0, $i + 3, "UTF-8"), "UTF-8");
+                $url = mb_substr($url, $i + 3, null, "UTF-8");
             } else {
                 $protocol = "file://";
             }
@@ -575,7 +624,7 @@ class Helpers
     public static function record_warnings($errno, $errstr, $errfile, $errline)
     {
         // Not a warning or notice
-        if (!($errno & (E_WARNING | E_NOTICE | E_USER_NOTICE | E_USER_WARNING | E_STRICT | E_DEPRECATED | E_USER_DEPRECATED))) {
+        if (!($errno & (E_WARNING | E_NOTICE | E_USER_NOTICE | E_USER_WARNING | E_DEPRECATED | E_USER_DEPRECATED))) {
             throw new Exception($errstr . " $errno");
         }
 
@@ -590,24 +639,115 @@ class Helpers
     }
 
     /**
-     * @param $c
-     * @return bool|string
+     * Get Unicode code point of character
+     *
+     * Shim for use on systems running PHP < 7.2
+     *
+     * @param string $c
+     * @param string|null $encoding
+     * @return int|false
      */
-    public static function unichr($c)
+    public static function uniord(string $c, ?string $encoding = null)
     {
+        if (function_exists("mb_ord")) {
+            if (PHP_VERSION_ID < 80000 && $encoding === null) {
+                // in PHP < 8 the encoding argument, if supplied, must be a valid encoding
+                $encoding = "UTF-8";
+            }
+            return mb_ord($c, $encoding);
+        }
+
+        if ($encoding != "UTF-8" && $encoding !== null) {
+            $c = mb_convert_encoding($c, "UTF-8", $encoding);
+        }
+
+        $length = mb_strlen(mb_substr($c, 0, 1, "UTF-8"), "8bit");
+        $ord = false;
+        $bytes = [];
+        $numbytes = 1;
+        for ($i = 0; $i < $length; $i++) {
+            $o = ord($c[$i]); // get one string character at time
+            if (count($bytes) === 0) { // get starting octect
+                if ($o <= 0x7F) {
+                    $ord = $o;
+                    $numbytes = 1;
+                } elseif (($o >> 0x05) === 0x06) { // 2 bytes character (0x06 = 110 BIN)
+                    $bytes[] = ($o - 0xC0) << 0x06;
+                    $numbytes = 2;
+                } elseif (($o >> 0x04) === 0x0E) { // 3 bytes character (0x0E = 1110 BIN)
+                    $bytes[] = ($o - 0xE0) << 0x0C;
+                    $numbytes = 3;
+                } elseif (($o >> 0x03) === 0x1E) { // 4 bytes character (0x1E = 11110 BIN)
+                    $bytes[] = ($o - 0xF0) << 0x12;
+                    $numbytes = 4;
+                } else {
+                    $ord = false;
+                    break;
+                }
+            } elseif (($o >> 0x06) === 0x02) { // bytes 2, 3 and 4 must start with 0x02 = 10 BIN
+                $bytes[] = $o - 0x80;
+                if (count($bytes) === $numbytes) {
+                    // compose UTF-8 bytes to a single unicode value
+                    $o = $bytes[0];
+                    for ($j = 1; $j < $numbytes; $j++) {
+                        $o += ($bytes[$j] << (($numbytes - $j - 1) * 0x06));
+                    }
+                    if ((($o >= 0xD800) and ($o <= 0xDFFF)) or ($o >= 0x10FFFF)) {
+                        // The definition of UTF-8 prohibits encoding character numbers between
+                        // U+D800 and U+DFFF, which are reserved for use with the UTF-16
+                        // encoding form (as surrogate pairs) and do not directly represent
+                        // characters.
+                        return false;
+                    } else {
+                        $ord = $o; // add char to array
+                    }
+                    // reset data for next char
+                    $bytes = [];
+                    $numbytes = 1;
+                }
+            } else {
+                $ord = false;
+                break;
+            }
+        }
+
+        return $ord;
+    }
+
+    /**
+     * Return character by Unicode code point value
+     *
+     * Shim for use on systems running PHP < 7.2
+     *
+     * @param int    $c
+     * @param string|null $encoding
+     * @return string|false
+     */
+    public static function unichr(int $c, ?string $encoding = null)
+    {
+        if (function_exists("mb_chr")) {
+            if (PHP_VERSION_ID < 80000 && $encoding === null) {
+                // in PHP < 8 the encoding argument, if supplied, must be a valid encoding
+                $encoding = "UTF-8";
+            }
+            return mb_chr($c, $encoding);
+        }
+
+        $chr = false;
         if ($c <= 0x7F) {
-            return chr($c);
+            $chr = chr($c);
         } elseif ($c <= 0x7FF) {
-            return chr(0xC0 | $c >> 6) . chr(0x80 | $c & 0x3F);
+            $chr = chr(0xC0 | $c >> 6) . chr(0x80 | $c & 0x3F);
         } elseif ($c <= 0xFFFF) {
-            return chr(0xE0 | $c >> 12) . chr(0x80 | $c >> 6 & 0x3F)
+            $chr = chr(0xE0 | $c >> 12) . chr(0x80 | $c >> 6 & 0x3F)
             . chr(0x80 | $c & 0x3F);
         } elseif ($c <= 0x10FFFF) {
-            return chr(0xF0 | $c >> 18) . chr(0x80 | $c >> 12 & 0x3F)
+            $chr = chr(0xF0 | $c >> 18) . chr(0x80 | $c >> 12 & 0x3F)
             . chr(0x80 | $c >> 6 & 0x3F)
             . chr(0x80 | $c & 0x3F);
         }
-        return false;
+
+        return $chr;
     }
 
     /**
@@ -663,22 +803,28 @@ class Helpers
     {
         static $cache = [];
 
-        if (isset($cache[$filename])) {
-            return $cache[$filename];
-        }
-
-        [$width, $height, $type] = getimagesize($filename);
-
         // Custom types
         $types = [
             IMAGETYPE_JPEG => "jpeg",
             IMAGETYPE_GIF  => "gif",
             IMAGETYPE_BMP  => "bmp",
             IMAGETYPE_PNG  => "png",
-            IMAGETYPE_WEBP => "webp",
+            IMAGETYPE_WEBP => "webp"
         ];
+        if (defined('IMAGETYPE_SVG')) {
+            $types[IMAGETYPE_SVG] = "svg";
+        }
 
-        $type = $types[$type] ?? null;
+        if (isset($cache[$filename])) {
+            return $cache[$filename];
+        }
+
+        $parse_result = @getimagesize($filename);
+        $width = $height = $type = null;
+        if ($parse_result !== false) {
+            [$width, $height, $type] = $parse_result;
+            $type = $types[$type] ?? null;
+        }
 
         if ($width == null || $height == null) {
             [$data] = Helpers::getFileContent($filename, $context);
@@ -691,6 +837,9 @@ class Helpers
                     $type = "bmp";
                 } elseif (strpos($data, "<svg") !== false) {
                     $doc = new \Svg\Document();
+                    if (property_exists($doc, 'allowExternalReferences')) {
+                        $doc->allowExternalReferences = true;
+                    }
                     $doc->loadFile($filename);
 
                     [$width, $height] = $doc->getDimensions();
@@ -709,11 +858,15 @@ class Helpers
      * http://www.programmierer-forum.de/function-imagecreatefrombmp-welche-variante-laeuft-t143137.htm
      * Modified by Fabien Menager to support RGB555 BMP format
      */
-    public static function imagecreatefrombmp($filename, $context = null)
+    public static function imagecreatefrombmp($filename)
     {
         if (!function_exists("imagecreatetruecolor")) {
             trigger_error("The PHP GD extension is required, but is not installed.", E_ERROR);
             return false;
+        }
+
+        if (function_exists("imagecreatefrombmp") && ($im = imagecreatefrombmp($filename)) !== false) {
+            return $im;
         }
 
         // version 1.00
@@ -900,12 +1053,16 @@ class Helpers
         $headers = null;
         [$protocol] = Helpers::explode_url($uri);
         $is_local_path = in_array(strtolower($protocol), ["", "file://", "phar://"], true);
-        $can_use_curl = in_array(strtolower($protocol), ["http://", "https://"], true);
+        $can_use_curl = in_array(strtolower($protocol), ["http://", "https://"], true) && function_exists('curl_exec');
 
         set_error_handler([self::class, 'record_warnings']);
 
         try {
-            if ($is_local_path || ini_get('allow_url_fopen') || !$can_use_curl) {
+            if ($is_local_path || ini_get('allow_url_fopen') && !$can_use_curl) {
+                $http_response_header = null;
+                if (version_compare(PHP_VERSION, "8.4.0", ">=")) {
+                    \http_clear_last_response_headers();
+                }
                 if ($is_local_path === false) {
                     $uri = Helpers::encodeURI($uri);
                 }
@@ -917,11 +1074,14 @@ class Helpers
                 if ($result !== false) {
                     $content = $result;
                 }
-                if (isset($http_response_header)) {
+                if (version_compare(PHP_VERSION, "8.4.0", ">=")) {
+                    $headers = \http_get_last_response_headers();
+                    \http_clear_last_response_headers();
+                } elseif (isset($http_response_header)) {
                     $headers = $http_response_header;
                 }
 
-            } elseif ($can_use_curl && function_exists('curl_exec')) {
+            } elseif ($can_use_curl) {
                 $curl = curl_init($uri);
 
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -987,7 +1147,10 @@ class Helpers
                             break;
                     }
                 }
-                curl_close($curl);
+
+                if (PHP_MAJOR_VERSION < 8) {
+                    curl_close($curl);
+                }
             }
         } finally {
             restore_error_handler();
@@ -1002,24 +1165,24 @@ class Helpers
      */
     public static function mb_ucwords(string $str): string
     {
-        $max_len = mb_strlen($str);
+        $max_len = mb_strlen($str, "UTF-8");
         if ($max_len === 1) {
-            return mb_strtoupper($str);
+            return mb_strtoupper($str, "UTF-8");
         }
 
-        $str = mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1);
+        $str = mb_strtoupper(mb_substr($str, 0, 1, "UTF-8"), "UTF-8") . mb_substr($str, 1, null, "UTF-8");
 
         foreach ([' ', '.', ',', '!', '?', '-', '+'] as $s) {
             $pos = 0;
-            while (($pos = mb_strpos($str, $s, $pos)) !== false) {
+            while (($pos = mb_strpos($str, $s, $pos, "UTF-8")) !== false) {
                 $pos++;
                 // Nothing to do if the separator is the last char of the string
                 if ($pos !== false && $pos < $max_len) {
                     // If the char we want to upper is the last char there is nothing to append behind
                     if ($pos + 1 < $max_len) {
-                        $str = mb_substr($str, 0, $pos) . mb_strtoupper(mb_substr($str, $pos, 1)) . mb_substr($str, $pos + 1);
+                        $str = mb_substr($str, 0, $pos, "UTF-8") . mb_strtoupper(mb_substr($str, $pos, 1, "UTF-8"), "UTF-8") . mb_substr($str, $pos + 1, null, "UTF-8");
                     } else {
-                        $str = mb_substr($str, 0, $pos) . mb_strtoupper(mb_substr($str, $pos, 1));
+                        $str = mb_substr($str, 0, $pos, "UTF-8") . mb_strtoupper(mb_substr($str, $pos, 1, "UTF-8"), "UTF-8");
                     }
                 }
             }

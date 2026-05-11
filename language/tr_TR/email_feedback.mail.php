@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email} geri bildirim
+subject: {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email} geri bildirim
 
 {alternative:plain}
 

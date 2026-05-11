@@ -43,9 +43,9 @@ $(function() {
         if(!id || isNaN(id)) return;
         event.stopPropagation();
         
-        console.log("BBB delete");
-        if($(this).closest('table').is('[data-mode="user"][data-status="available"]')) {
-        console.log("BBB delete2");
+        console.log("transfers table delete code...");
+        if($(this).closest('table').is('[data-mode="admin"][data-status="available"]')) {
+            console.log("admin logged in, so offering to delete here....");
             var d = filesender.ui.chooseAction(['delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
                 var done = function() {
                     $('[data-transfer][data-id="' + id + '"]').remove();
