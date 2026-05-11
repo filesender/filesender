@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Konuk fişi gönderildi
+subject: Konuk fişi gönderildi
 
 {alternative:plain}
 

@@ -24,7 +24,7 @@
     <li><i class="fa-li fa fa-caret-right"></i>Da biste omogućili ovu funkciju, jednostavno koristite ažurni preglednik koji podržava HTML5.</li>
     <li><i class="fa-li fa fa-caret-right"></i>Poznato je da najnovije verzije Firefoxa i Chromea u sustavu Windows, Mac OS X i Linux podržavaju HTML5.</li>
     <li><i class="fa-li fa fa-caret-right"></i>
-        Možete <strong> nastaviti </strong> prekinuti ili otkazani prijenos datoteka. Da biste nastavili prijenos, jednostavno <strong> ponovno pošaljite iste datoteke </strong>!
+        Možete <strong> nastaviti </strong> prekinuti ili otkazani prijenos datoteka. Da biste nastavili prijenos, jednostavno <strong> ponovno pošaljite iste datoteke!</strong>
        Provjerite imaju li datoteke <strong> ista imena i veličine </strong> kao i prije.
        Kad započne prijenos, trebali biste primijetiti skok trake napretka do mjesta zaustavljanja/prekida i nastavak odatle.
     </li>

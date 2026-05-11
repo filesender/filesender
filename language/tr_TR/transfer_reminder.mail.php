@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-konu: (hatırlatıcı) Dosyalar {if:transfer.files>1} {endif} indirmeye hazır
-konu: (hatırlatıcı) {transfer.subject}
+subject: (hatırlatıcı) Dosyalar {if:transfer.files>1} {endif} indirmeye hazır
+subject: (hatırlatıcı) {transfer.subject}
 
 {alternative:plain}
 

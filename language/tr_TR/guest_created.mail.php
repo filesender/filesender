@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-konu: Konuk fişi alındı                                                                                  
-konu: {guest.subject}
+subject: Konuk fişi alındı                                                                                  
+subject: {guest.subject}
 
 {alternative:plain}
 

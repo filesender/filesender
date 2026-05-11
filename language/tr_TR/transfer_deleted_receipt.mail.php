@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-konu: Dosya(lar) silindi
-konu: (files deleted) {transfer.subject}
+subject: Dosya(lar) silindi
+subject: (files deleted) {transfer.subject}
 
 {alternative:plain}
 

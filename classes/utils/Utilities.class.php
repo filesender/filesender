@@ -557,6 +557,8 @@ class Utilities
      * On the other hand if path is relative then it is converted to absolute
      * by this call.
      *
+     * The '?' will be added after path if needed.
+     *
      * CGI parameters are given in $q which can be an array like;
      * array( 'foo' => 'bar', 'baz' => 7 )
      *
@@ -575,14 +577,14 @@ class Utilities
                 $path = Config::get('site_url') . $path;
             }
         }
-        $ret = $path . '?';
-        $sep = ini_get('arg_separator.output');
-        if (phpversion() < 5.4) {
-            // CIFIXME remove this branch when CI php is upgraded.
-            $ret .= http_build_query($q, '', $sep);
-        } else {
-            $ret .= http_build_query($q, '', $sep, PHP_QUERY_RFC3986);
+        
+        $ret = $path;
+        if(!str_ends_with($ret,"?")) {
+            $ret .= "?";
         }
+
+        $sep = ini_get('arg_separator.output');
+        $ret .= http_build_query($q, '', $sep, PHP_QUERY_RFC3986);
         return $ret;
     }
     

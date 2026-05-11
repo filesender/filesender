@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Dosya artık indirilmek için mevcut değil
+subject: Dosya artık indirilmek için mevcut değil
 
 {alternative:plain}
 

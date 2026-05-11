@@ -1,3 +1,4 @@
+<?php include FILESENDER_BASE . '/templates/announce.php'; ?>
 <div class="core">
     {tr:site_splash}
     

@@ -610,22 +610,14 @@ class Lang
             $stack = self::getCodeStack();
             Logger::warn('No translation found for '.$id.' in '.$stack['main'].' language');
 
-            $fallbackid = 'unknown';
-            // fallback is an array of lang codes, so loop through those
-            foreach (self::$translations['fallback'] as $fallback_lang) {
-                if (array_key_exists($id, $fallback_lang)) {
-                    $tr = $fallback_lang[$id];
-                    $src = 'fallback';
-                    $fallbackid = $id;
-                    // we stop on first match
-                    continue;
-                }       
-            }           
-
-            if (empty($src) && !empty(self::$translations['fallback'])) {
-                Logger::warn('No fallback translation found for '.$id.' in '.$fallbackid.' languages');
-                return new Translation('{'.$id.'}', false); 
-            }       
+            // fallback is a flat dict keyed by translation id
+            if (array_key_exists($id, self::$translations['fallback'])) {
+                $tr = self::$translations['fallback'][$id];
+                $src = 'fallback';
+            } elseif (!empty(self::$translations['fallback'])) {
+                Logger::warn('No fallback translation found for '.$id.' in fallback languages');
+                return new Translation('{'.$id.'}', false);
+            }
         }
 
         if( !$tr ) {

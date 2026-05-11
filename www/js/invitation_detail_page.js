@@ -125,7 +125,7 @@ $(function() {
 
 
     // Delete button
-    $('.delete').on('click', function() {
+    $('.delete-invitation').on('click', function() {
         var id = $('.fs-invitation-detail').attr('data-id');
         if(!id || isNaN(id)) return;
 
