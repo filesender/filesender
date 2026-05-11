@@ -62,13 +62,14 @@ class Cache
      */
     static function resolve_url($url, $protocol, $host, $base_path, Options $options)
     {
+        $full_url = null;
         $tempfile = null;
         $resolved_url = null;
         $type = null;
         $message = null;
         
         try {
-            $full_url = Helpers::build_url($protocol, $host, $base_path, $url);
+            $full_url = Helpers::build_url($protocol, $host, $base_path, $url, $options->getChroot());
 
             if ($full_url === null) {
                 throw new ImageException("Unable to parse image URL $url.", E_WARNING);
@@ -77,17 +78,15 @@ class Cache
             $parsed_url = Helpers::explode_url($full_url);
             $protocol = strtolower($parsed_url["protocol"]);
             $is_data_uri = strpos($protocol, "data:") === 0;
-            
-            if (!$is_data_uri) {
-                $allowed_protocols = $options->getAllowedProtocols();
-                if (!array_key_exists($protocol, $allowed_protocols)) {
-                    throw new ImageException("Permission denied on $url. The communication protocol is not supported.", E_WARNING);
-                }
-                foreach ($allowed_protocols[$protocol]["rules"] as $rule) {
-                    [$result, $message] = $rule($full_url);
-                    if (!$result) {
-                        throw new ImageException("Error loading $url: $message", E_WARNING);
-                    }
+
+            $allowed_protocols = $options->getAllowedProtocols();
+            if (!array_key_exists($protocol, $allowed_protocols)) {
+                throw new ImageException("Permission denied on $url. The communication protocol is not supported.", E_WARNING);
+            }
+            foreach ($allowed_protocols[$protocol]["rules"] as $rule) {
+                [$result, $message] = $rule($full_url);
+                if (!$result) {
+                    throw new ImageException("Error loading $url: $message", E_WARNING);
                 }
             }
 
@@ -154,7 +153,7 @@ class Cache
                                     continue;
                                 }
 
-                                $inner_full_url = Helpers::build_url($parsed_url["protocol"], $parsed_url["host"], $parsed_url["path"], $url);
+                                $inner_full_url = Helpers::build_url($parsed_url["protocol"], $parsed_url["host"], $parsed_url["path"], $url, $options->getChroot());
                                 if (empty($inner_full_url)) {
                                     continue;
                                 }
@@ -168,7 +167,7 @@ class Cache
                             }
                         }
                     },
-                    false
+                    null
                 );
         
                 if (($fp = fopen($resolved_url, "r")) !== false) {
@@ -178,7 +177,9 @@ class Cache
                     fclose($fp);
                     xml_parse($parser, "", true);
                 }
-                xml_parser_free($parser);
+                if (PHP_MAJOR_VERSION < 8) {
+                    xml_parser_free($parser);
+                }
             }
         } catch (ImageException $e) {
             if ($tempfile) {
@@ -188,7 +189,9 @@ class Cache
             list($width, $height, $type) = Helpers::dompdf_getimagesize($resolved_url, $options->getHttpContext());
             $message = self::$error_message;
             Helpers::record_warnings($e->getCode(), $e->getMessage() . " \n $url", $e->getFile(), $e->getLine());
-            self::$_cache[$full_url] = $resolved_url;
+            if ($full_url !== null) {
+                self::$_cache[$full_url] = $resolved_url;
+            }
         }
 
         return [$resolved_url, $type, $message];
