@@ -82,6 +82,7 @@ $locales  =  array(
     'sl-si' => array('name' => 'Slovenian',    'path' => 'sl_SI'),
     'ta-tam' => array('name' => 'Tamil',       'path' => 'ta_TAM'),
     'tr'    => array('name' => 'Turkish',      'path' => 'tr_TR'),
+    'uk'    => array('name' => 'Ukranian',     'path' => 'uk_UK'),
     'ur'    => array('name' => 'Urdu',         'path' => 'ur_PK'),
     'ur-pk' => array('name' => 'Urdu',         'path' => 'ur_PK'),
     'vi-vn' => array('name' => 'Vietnamese',   'path' => 'vi_VN')
