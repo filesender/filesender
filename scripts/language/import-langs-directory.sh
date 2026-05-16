@@ -57,7 +57,7 @@ importfile th_TH   FileSender_3.0_Thai.php
 importfile vi_VN   FileSender_3.0_Vietnamese.php
 importfile ko_KR   FileSender_3.0_Korean.php
 importfile ta_TAM  FileSender_3.0_Tamil.php
-importfile uk_UK   FileSender_3.0_Ukranian.php
+importfile uk_UA   FileSender_3.0_Ukranian.php
 
 
 echo "Checking syntax of generated .php files, please wait..."
