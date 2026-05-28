@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'Tutti i miei trasferimenti';
 $lang['an_email'] = 'Una e-mail';
 $lang['an_email_tip'] = 'Inviamo il trasferimento direttamente ai vostri destinatari';
 $lang['an_initiative_by'] = 'Collaboratori di FileSender Silver e Gold:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonimo';
 $lang['anonymous_details'] = 'Link diretto fornito';
 $lang['api_secret'] = 'Segreto API';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Non utilizzare ques
 $lang['encountered_exception'] = 'L\'applicazione ha riscontrato un errore durante l\'elaborazione della richiesta';
 $lang['encrypt_files_with_password'] = 'Cifra i file con password';
 $lang['encrypted_archive_download_overall_progress'] = 'Download del file {currentfilenumber} di {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Crittografia';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Se la tua password contiene più di {cfg:encryption_password_text_only_min_password_length} caratteri senza ripetizioni significative, ci sono meno restrizioni sul contenuto della tua password.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -328,6 +330,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Decrittazione di file non supportata dal tuo browser. Si prega di riprovare con l\'ultimo Firefox, Internet Explorer, Safari o Chrome';
 $lang['file_encryption_enter_password'] = 'Inserisci una password';
 $lang['file_encryption_generate_password'] = 'Genera password';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'È necessario inserire una password per il download';
 $lang['file_encryption_password'] = 'Password';
 $lang['file_encryption_password_must_have_numbers'] = 'La password deve contenere almeno un numero (0,1,2...9)';

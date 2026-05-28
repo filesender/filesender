@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'ناشناس';
 $lang['anonymous_details'] = 'لینک مستقیم ارائه شده است';
 $lang['api_secret'] = 'API secret';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'این امکان �
 $lang['encountered_exception'] = 'هنگام پردازش درخواست شما، برنامه با خطا مواجهه شده است';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = 'Downloading file {currentfilenumber} of {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'کد گذاری';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'اگر رمز عبور شما بیش از {cfg:encryption_password_text_only_min_password_length} کاراکتر بدون تکرار قابل توجهی داشته باشد، محدودیت های کمتری در محتویات رمز عبور شما وجود دارد.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -326,6 +328,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; رمزگشایی پرونده توسط مرورگر شما پشتیبانی نمی شود. لطفا دوباره با آخرین فایرفاکس، اینترنت اکسپلورر، سافاری یا کروم امتحان کنید';
 $lang['file_encryption_enter_password'] = 'Enter a password';
 $lang['file_encryption_generate_password'] = 'تولید رمز عبور';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'You must enter a password to download';
 $lang['file_encryption_password'] = 'رمز عبور';
 $lang['file_encryption_password_must_have_numbers'] = 'رمز عبور باید شامل حداقل یک عدد باشد (0,1,3...9)';

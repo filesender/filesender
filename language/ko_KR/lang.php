@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = '모든 전송';
 $lang['an_email'] = '전자 우편';
 $lang['an_email_tip'] = '수신자에게 직접 전송합니다';
 $lang['an_initiative_by'] = 'FileSender Silver 및 Glod 기여자:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = '익명';
 $lang['anonymous_details'] = '링크 제공';
 $lang['api_secret'] = 'API secret';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = '메일링 리스트
 $lang['encountered_exception'] = '{cfg:site_name}에서 요청을 처리하는 동안 오류가 발생했습니다';
 $lang['encrypt_files_with_password'] = '비밀번호로 파일을 암호화';
 $lang['encrypted_archive_download_overall_progress'] = '{totalfilestodownload} 중 {currentfilenumber} 파일을 다운로드 중';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = '암호화';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = '비밀번호에 {cfg:encryption_password_text_only_min_password_length} 문자보다 큰 반복이없는 경우 비밀번호의 내용에 대한 제한이 적습니다.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -329,6 +331,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; 귀하의 브라우저가 파일 복호화를 지원하지 않습니다. 최신 FireFox, Internet Explorer, Safari  또는 Chrome을 이용하십시요';
 $lang['file_encryption_enter_password'] = '비밀번호 입력';
 $lang['file_encryption_generate_password'] = '비밀번호 생성';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = '비밀번호를 입력해야 다운로드 가능';
 $lang['file_encryption_password'] = '비밀번호';
 $lang['file_encryption_password_must_have_numbers'] = '비밀번호는 하나 이상의 숫자를 포함해야합니다 (0,1,2 ... 9)';

@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'නිර්නාමික';
 $lang['anonymous_details'] = 'සෘජු සබැඳිය සපයා ඇත';
 $lang['api_secret'] = 'API secret';
@@ -272,6 +273,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'ඊමේල් ල
 $lang['encountered_exception'] = '{cfg:site_name} ඔබගේ ඉල්ලීම සැකසීමේදී දෝෂයක් ඇති විය';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = '{totalfilestodownload} හි {currentfilenumber} ගොනුව බාගනිමින් ඇත';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'සංකේතනය';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'ඔබගේ මුරපදය සැලකිය යුතු පුනරාවර්තනයකින් තොරව අක්ෂර {cfg:encryption_password_text_only_min_password_length} ට වඩා වැඩි නම් ඔබගේ මුරපදයේ අන්තර්ගතයට සීමා කිරීම් අඩුය.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -329,6 +331,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;ගොනු විකේතනය ඔබගේ බ්‍රවුසරයෙන් සහාය නොදක්වයි. කරුණාකර නවතම Firefox, Internet Explorer, Safari හෝ Chrome සමඟ නැවත උත්සාහ කරන්න';
 $lang['file_encryption_enter_password'] = 'මුරපදයක් ඇතුලත් කරන්න';
 $lang['file_encryption_generate_password'] = 'මුරපදය ජනනය කරන්න';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'බාගත කිරීම සඳහා ඔබ මුරපදයක් ඇතුළත් කළ යුතුය';
 $lang['file_encryption_password'] = 'මුරපදය';
 $lang['file_encryption_password_must_have_numbers'] = 'මුරපදයේ අවම වශයෙන් එක් අංකයක්වත් අඩංගු විය යුතුය (0,1,2...9)';

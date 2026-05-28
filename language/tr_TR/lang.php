@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Adsız';
 $lang['anonymous_details'] = 'Doğrudan bağlantı sağlandı';
 $lang['api_secret'] = 'API secret';
@@ -273,6 +274,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Bir e-posta listesi
 $lang['encountered_exception'] = 'Uygulama isteğinizi işlerken bir hatayla karşılaştı';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = '{currentfilenumber} / {totalfilestodownload} dosyasını indiriyor';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Şifreleme';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'If your password has more than {cfg:encryption_password_text_only_min_password_length} characters without significant repetition then there are fewer restrictions on the contents of your password.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -332,6 +334,8 @@ $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorf
 ';
 $lang['file_encryption_enter_password'] = 'Bir parola girin';
 $lang['file_encryption_generate_password'] = 'Parola üret';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'İndirmek için bir parola girmelisiniz';
 $lang['file_encryption_password'] = 'Parola';
 $lang['file_encryption_password_must_have_numbers'] = 'Parola en az bir sayı (0, 1, 2 ...9) içermelidir';

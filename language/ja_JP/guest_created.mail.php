@@ -19,7 +19,11 @@ subject: {guest.subject}
 バウチャー発行者:{guest.user_email}
 バウチャーリンク:{guest.upload_link}
 
+{if:guest.does_not_expire}
+このバウチャーは無効化されません。
+{else}
 バウチャーは{date:guest.expires}に無効になり、この日以降に自動的に削除されます。
+{endif}
 
 {if:guest.message}{guest.user_email}からの個人的なメッセージ:{guest.message}{endif}
 
@@ -52,8 +56,13 @@ subject: {guest.subject}
             <td><a href="{guest.upload_link}">{guest.upload_link}</a></td>
         </tr>
         <tr>
+{if:guest.does_not_expire}
+            <td colspan="2">この招待は無効化されません</td>
+{else}
             <td>無効化日</td>
             <td>{date:guest.expires}</td>
+{endif}
+
         </tr>
     </tbody>
 </table>
@@ -68,6 +77,6 @@ subject: {guest.subject}
 {endif}
 
 <p>
-    以上、よろしくお願いいたします。<br/>
+    以上、よろしくお願いいたします。<br />
     {cfg:site_name}
 </p>
