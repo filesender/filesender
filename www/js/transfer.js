@@ -36,6 +36,13 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
+if (!('onPBKDF2AllEnded' in window.filesender)) {
+    window.filesender.onPBKDF2AllEnded = function() {
+        window.filesender.log("crypto_app onPBKDF2AllEnded()");
+    };
+}
+
+
 /**
  * Track progress of an active chunk upload. This collects
  * information as an xhr call is progressing to send a
@@ -57,6 +64,7 @@ window.filesender.progresstracker = function() {
     this.mem = [];
     this.memToKeep = 5;
     this.disabled = false;
+    this.encrypted_metadata = null;
 
     /**
      * Reset the tracker for a fresh chunk
@@ -1177,7 +1185,7 @@ window.filesender.transfer = function() {
     /**
      * Start upload
      */
-    this.start = function(errorhandler) {
+    this.start = async function(errorhandler) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
         
@@ -1241,8 +1249,73 @@ window.filesender.transfer = function() {
         if( this.encryption ) {
             this.encryption_client_entropy = window.filesender.crypto_app().generateClientEntropy();
         }
-        
         var transfer = this;
+
+        const md = new Map();        
+        if( this.encryption && 'encrypted_metadata' in transfer.options && transfer.options.encrypted_metadata) {
+            filesender.ui.log('Creating transfer have mde!');
+            var ca = window.filesender.crypto_app();
+            var cc = window.filesender.crypto_common();
+
+            var i = 0;
+            for (i = 0; i < transfer.files.length; i++) {
+
+                md.set(i,
+                       {
+                           name      : transfer.files[i].name,
+                           size      : transfer.files[i].size,
+                           mimetype  : transfer.files[i].mime_type,
+                       });
+                transfer.files[i].name = "protected-" + (i).toString();
+                transfer.files[i].mime_type = "application/octet-stream";
+            }
+
+            mdstr = JSON.stringify(Object.fromEntries(md));
+            filesender.ui.log(mdstr);
+
+            
+            var chunkid = 0;
+            file = { iv: crypter.generateCryptoFileIV() };
+            var iv = file.iv;
+            var encryption_details = transfer.getEncryptionMetadata( file );            
+            encryption_details.salt = ca.generateBase64EncodedEntropy(32);
+            encryption_details.crypted_chunk_size = ca.crypto_chunk_size;
+            encryption_details.chunk_size = ca.crypto_chunk_size;
+            encryption_details.key_version = ca.crypto_key_version_constants.v2018_importKey_deriveKey;
+
+            var key = await ca.getObtainKeyPromise( chunkid, encryption_details );
+            window.filesender.onPBKDF2AllEnded();
+            var iv = ca.generateIV( chunkid, encryption_details );
+            
+            var encryptParams = {
+                name: 'AES-CBC',
+                iv: iv
+            };
+
+            try {
+                var data_to_encrypt = mdstr;
+                var value = cc.convertStringToArrayBufferView(data_to_encrypt);
+                
+                encrypted_blob = await crypto.subtle.encrypt(encryptParams, key, value);
+                const encrypted_blob_uint8 = new Uint8Array(encrypted_blob);
+
+                // Wipe this out or we are not really doing anything here.
+                encryption_details.password = "";
+                enc_md = { iv:   ca.encodeToBase64(iv),
+                           ivsz: iv.length,
+                           ed:   ca.nToBase64(JSON.stringify(encryption_details)),
+                           e:    ca.encodeToBase64(encrypted_blob_uint8),
+                           esz:  encrypted_blob_uint8.length,
+                         };
+                enc_md_str = JSON.stringify(enc_md);
+                this.encrypted_metadata = ca.nToBase64(enc_md_str);
+                
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+            
+        }
+        
         filesender.client.postTransfer(this, function(path, data) {
             transfer.id = data.id;
             transfer.encryption_salt = data.salt;

@@ -253,6 +253,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
                                         data-fileiv="<?php                   echo Template::Q($file->iv); ?>"
                                         data-fileaead="<?php                 echo Template::Q($file->aead); ?>"
                                         data-transferid="<?php               echo Template::Q($transfer->id); ?>"
+                                        data-have-encrypted-metadata="<?php       echo Template::Q($transfer->have_encrypted_metadata); ?>"
                                     >
                                         <td class="fs-table__check-action">
                                             <?php if($canDownloadArchive) { ?>
@@ -479,6 +480,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
         </div>
         <div class="transfer" data-id="<?php echo Template::Q($transfer->id); ?>"></div>
         <div class="rid" data-id="<?php echo Template::Q($rid); ?>"></div>
+        <div class="encrypted_metadata" id="encrypted_metadata"><?php echo Template::Q($transfer->encrypted_metadata) ?></div>
     </div>
 </div>
 

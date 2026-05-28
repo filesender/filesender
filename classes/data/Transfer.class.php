@@ -220,6 +220,10 @@ class Transfer extends DBObject
             'size' => 'big',
             'null' => true
         ),
+        'encrypted_metadata' => array(
+            'type' => 'text',
+            'null' => true
+        ),
         
     );
 
@@ -393,7 +397,7 @@ class Transfer extends DBObject
     protected $idpid = null;
     protected $forward_server = null;
     protected $forward_id = null;
-
+    protected $encrypted_metadata = null;
     
     
     /**
@@ -1263,6 +1267,13 @@ class Transfer extends DBObject
         if ($property == 'guest') {
             return $this->guest_id ? Guest::fromId($this->guest_id) : null;
         }
+
+        if ($property == 'encrypted_metadata' ) {
+            return $this->encrypted_metadata;
+        }
+        if ($property == 'have_encrypted_metadata' ) {
+            return Utilities::isTrue($this->getOption(TransferOptions::ENCRYPTED_METADATA));
+        }
         
         if ($property == 'files') {
             if (is_null($this->filesCache)) {
@@ -1480,6 +1491,8 @@ class Transfer extends DBObject
             $this->download_count = $value;
         } elseif ($property == 'idpid') {
             $this->idpid = $value;
+        } elseif ($property == 'encrypted_metadata') {
+            $this->encrypted_metadata = $value;
         } elseif ($property == 'last_chunk_time') {
             $this->last_chunk_time = (int)$value;
         } elseif( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {

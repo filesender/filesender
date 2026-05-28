@@ -143,5 +143,12 @@ class Validate
             '/^[a-f0-9]{64}$/'  );
         return $ret;
     }
-    
+
+    public static function filter_var_base64( $msg, $value )
+    {
+        $ret = Validate::filter_var_regex_log(
+            $msg, $value,
+            "|^[-A-Za-z0-9+/]*={0,3}$|"  );
+        return $ret;
+    }
 }
