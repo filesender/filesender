@@ -437,47 +437,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
 </div>
 
 <div class="fs-download">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <table class="table borderless general" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
-                    <tbody>
-        <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
-            !$transfer->options['hide_sender_email']) { ?>
-                        <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?= $sender_email_clean ?></td></tr>
-        <?php } ?>
-                        <tr>
-                            <td align="right" class="created">{tr:created}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->created)) ?></td>
-                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->expires, true)) ?></td>
-                            <td align="right" class="size">{tr:size}</td><td><?php echo       Template::Q(Utilities::formatBytes($transfer->size)) ?></td>
-                        </tr>
-        <?php if($transfer->subject) { ?>
-                        <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Template::Q($transfer->subject) ?></td></tr>
-        <?php } ?>
-
-        <?php if($transfer->message) { ?>
-            <tr><td align="right" class="message">{tr:message}</td><td><p>
-                <?php
-                $isOpenPGPmsg = false;
-                if( Config::isTrue('openpgp_enabled')) {
-                    if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                        $isOpenPGPmsg = true;
-                    }
-                }
-                if( $isOpenPGPmsg ) {
-                    echo "<PRE>";
-                }
-                echo Template::replaceTainted($transfer->message);
-                if( $isOpenPGPmsg ) {
-                    echo "</PRE>";
-                }
-                
-                ?></p></td></tr>
-        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="container">        
         <div class="transfer" data-id="<?php echo Template::Q($transfer->id); ?>"></div>
         <div class="rid" data-id="<?php echo Template::Q($rid); ?>"></div>
         <div class="encrypted_metadata" id="encrypted_metadata"><?php echo Template::Q($transfer->encrypted_metadata) ?></div>
