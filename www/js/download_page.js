@@ -30,6 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 $(function() {
     var page = $('.download_page');
     if(!page.length) return;
@@ -55,9 +56,12 @@ $(function() {
     filesender.client.bindDownloadButton('.file .download');
     filesender.client.bindDownloadArchive();
     filesender.client.bindFileCheckButtons();
+    filesender.client.handlePossibleEncryptedMetadata();
 
     $('#check-all').click();
 
+    
+    
     page.find('.script-links').on('click', function() {
         var encrypted = page.find('.file').attr('data-encrypted') == "1";
 

@@ -507,5 +507,6 @@ if(empty($transfer->options['encryption'])) {
 <div class="transfer_is_encrypted not_displayed">
     <?php echo $isEncrypted ? 1 : 0;  ?>
 </div>
+<div class="encrypted_metadata" id="encrypted_metadata"><?php echo Template::Q($transfer->encrypted_metadata) ?></div>
 
 <script type="text/javascript" src="{path:js/transfer_detail_page.js}"></script>

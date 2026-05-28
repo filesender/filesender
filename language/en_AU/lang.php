@@ -908,3 +908,6 @@ $lang['you_have_a_openpgp_public_key_known_to_system'] = 'You have a OpenPGP pub
 $lang['your_download_link'] = 'Here\'s your download link';
 $lang['your_invitation_was_sent_to'] = 'Your invitation was sent to';
 $lang['your_transfer_was_sent'] = 'Your transfer was sent to the following email addresses';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
