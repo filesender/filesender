@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'Alle mine overførsler';
 $lang['an_email'] = 'En e-mail';
 $lang['an_email_tip'] = 'Vi kan sende overførslen direkte til dine modtagere';
 $lang['an_initiative_by'] = 'Silver- og Gold-bidragsydere til FileSender:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonym';
 $lang['anonymous_details'] = 'Direkte link';
 $lang['api_secret'] = 'API-hemmelighed';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Brug ikke den her i
 $lang['encountered_exception'] = 'Programmet stødte på en fejl under behandlingen af din forespørgsel';
 $lang['encrypt_files_with_password'] = 'Kryptér filer med adgangskode';
 $lang['encrypted_archive_download_overall_progress'] = 'Henter fil nr. {currentfilenumber} af {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Kryptering';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Hvis din adgangskode har flere end {cfg:encryption_password_text_only_min_password_length} tegn som ikke repeteres i væsentligt omfang, så er der færre krav til hvilke tegn koden skal indeholde.';
 $lang['encryption_split'] = 'Opsplittet kryptering';
@@ -328,6 +330,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Filkryptering understøttes ikke i den her browser. Prøv venligst igen med den seneste udgave af Firefox, Internet Explorer, Safari eller Chrome';
 $lang['file_encryption_enter_password'] = 'Angiv en adgangskode';
 $lang['file_encryption_generate_password'] = 'Generér adgangskode';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Du skal angive en adgangskode for at hente';
 $lang['file_encryption_password'] = 'Adgangskode';
 $lang['file_encryption_password_must_have_numbers'] = 'Adgangskoden skal indeholde mindst ét taltegn';

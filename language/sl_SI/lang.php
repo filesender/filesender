@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'Vsi moji prenosi';
 $lang['an_email'] = 'E-poštno sporočilo';
 $lang['an_email_tip'] = 'Povezavo prenosa pošljemo neposredno vašim prejemnikom';
 $lang['an_initiative_by'] = 'FileSender srebrni in zlati donatorji:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonimno';
 $lang['anonymous_details'] = 'Neposredna povezava podana';
 $lang['api_secret'] = 'API skrivnost';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Ne uporabljajte te 
 $lang['encountered_exception'] = 'Aplikacija je naletela na težavo med obdelovanjem Vašega zahtevka';
 $lang['encrypt_files_with_password'] = 'Datoteke šifriraj z geslom';
 $lang['encrypted_archive_download_overall_progress'] = 'Presno datoteke {currentfilenumber} od {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Šifriranje';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Če ima vaše geslo več kot {cfg:encryption_password_text_only_min_password_length} znakov brez večjih ponavljanj, so zahteve za vsebino gesla manj stroge.';
 $lang['encryption_split'] = 'Deljenje šifriranja';
@@ -326,6 +328,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Dešifriranje datotek ni podprto v Vašem brskalniku. Prosimo, poskusite ponovno z najnovejšim brskalnikom Firefox, Internet Explorer, Safari ali Chrome';
 $lang['file_encryption_enter_password'] = 'Vnesite geslo';
 $lang['file_encryption_generate_password'] = 'Ustvari geslo';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Za prenos morate vnesti geslo';
 $lang['file_encryption_password'] = 'Geslo';
 $lang['file_encryption_password_must_have_numbers'] = 'Geslo mora vsebovati vsaj eno številko (0,1,2...9)';

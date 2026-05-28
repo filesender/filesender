@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'Kaikki jakamani tiedostot';
 $lang['an_email'] = 'Sähköposti';
 $lang['an_email_tip'] = 'Lähetämme sähköpostin suoraan vastaanottajillesi';
 $lang['an_initiative_by'] = 'FileSender -palvelun hopea- ja kultatason sponsorit:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonyymi';
 $lang['anonymous_details'] = 'Suora linkki';
 $lang['api_secret'] = 'API-salaisuus';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Ethän käytä tät
 $lang['encountered_exception'] = 'Sovelluksessa tapahtui virhe';
 $lang['encrypt_files_with_password'] = 'Salaa tiedostot salasanalla';
 $lang['encrypted_archive_download_overall_progress'] = 'Ladataan tiedostoa {currentfilenumber} / {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Salaus';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Jos salasanassasi on enemmän kuin {cfg:encryption_password_text_only_min_password_length} merkkiä ilman merkittävää toistoa, salasanaasi kohdistuu vähemmän muita vaatimuksia.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -326,6 +328,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Salauksen purki ei ole tuettu selaimessasi. Ole hyvä ja kokeile uudelleen esimerkiksi Firefoxilla, Safarilla tai Chromella.';
 $lang['file_encryption_enter_password'] = 'Syötä salasana';
 $lang['file_encryption_generate_password'] = 'Generoi salasana';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Salasana on pakollinen';
 $lang['file_encryption_password'] = 'Salasana';
 $lang['file_encryption_password_must_have_numbers'] = 'Salasanassa täytyy olla vähintään yksi numero (0,1,2...9)';
