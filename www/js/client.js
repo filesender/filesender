@@ -1518,6 +1518,21 @@ window.filesender.client = {
             }, function() {
                 window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
             }, defaultPasswordValue );
+
+            // Add a field to the prompt
+            var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
+
+            window.filesender.crypto_last_password_succeeded = false;
+            prompt.append(toggleView);
+            $('#showdlpass').on(
+                "click",
+                function() {
+                    var v = $('#showdlpass').is(':checked');
+                    if( v ) { $('.bootbox-input').attr('type','text'); }
+                    else    { $('.bootbox-input').attr('type','password'); }
+                }
+            );
         
     },
     
