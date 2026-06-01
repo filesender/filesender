@@ -280,7 +280,7 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                                         <td>
                                             <div>
                                                 <span class="name"><?php echo Template::Q($file->path) ?></span>
-                                                <span class="size">x <?php echo $formatFileSizeForDisplayQ($file->size) ?></span>
+                                                <span class="size"><?php echo $formatFileSizeForDisplayQ($file->size) ?></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
                                                     <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
