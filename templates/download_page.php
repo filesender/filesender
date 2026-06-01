@@ -1,5 +1,6 @@
 <?php
 
+
 $canDownload = true;
 
 if (!function_exists('str_starts_with')) {
@@ -135,6 +136,18 @@ if(array_key_exists('hide_sender_email', $transfer->options) && $transfer->optio
 }
 $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
 
+$hasEncryptedMetadata = false;
+if($isEncrypted) {
+    $hasEncryptedMetadata = isset($transfer->options['encrypted_metadata']) && $transfer->options['encrypted_metadata'];
+}
+
+$formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
+{
+    if( $hasEncryptedMetadata ) {
+        return "{tr:encrypted_metadata_file_size_hidden}";
+    }
+    return Template::Q(Utilities::formatBytes($filesz));
+}
 
 ?>
 
@@ -267,7 +280,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
                                         <td>
                                             <div>
                                                 <span class="name"><?php echo Template::Q($file->path) ?></span>
-                                                <span class="size"><?php echo Template::Q(Utilities::formatBytes($file->size)) ?></span>
+                                                <span class="size">x <?php echo $formatFileSizeForDisplayQ($file->size) ?></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
                                                     <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
