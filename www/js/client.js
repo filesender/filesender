@@ -1439,6 +1439,8 @@ window.filesender.client = {
 
     handlePossibleEncryptedMetadata: async function ()
     {
+        var $this = this;
+       
         var page = $('.download_page');
         if(!page.length) page = $('.transfer_detail_page');
         if(!page.length) return;
@@ -1501,12 +1503,15 @@ window.filesender.client = {
 
                         pobj.attr("data-name",name);
                         pobj.attr("data-mime",v["mimetype"]);
+                        pobj.attr("data-size",v["size"]);
+                        pobj.find(".size").text($this.formatBytes(v["size"]));
                         pobj.find(".name").text(name);
                     }
 
                     window.filesender.md = md;
 
                 } catch (error) {
+                    console.log(error);
                     var msg = window.filesender.config.language.file_encryption_metadata_wrong_password;
                     filesender.ui.alert( "error", msg );                    
                 }
