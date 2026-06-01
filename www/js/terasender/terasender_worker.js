@@ -247,7 +247,7 @@ var terasender_worker = {
                     var arrayBuffer = new Uint8Array(oReq.response);
                     setTimeout(function(){
 
-                        var sliced = window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer);
+                        var sliced = window.filesender.crypto_blob_reader(encryption_details.chunk_size,encryption_details.crypted_chunk_size).sliceForDownloadBuffers(arrayBuffer);
                         var encryptedChunk = window.filesender.crypto_common().separateIvFromData(sliced[0]);
 
                         $this.job.encryptedChunk = encryptedChunk;
