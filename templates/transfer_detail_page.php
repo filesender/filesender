@@ -328,7 +328,7 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                     </div>
                     <div class="fs-transfer-detail__total-size fs-download__total-size">
                         <strong>{tr:total_transfer_size}:</strong>
-                        <span>
+                        <span class="fs-info-transfer-size">
                             <?php echo $formatFileSizeForDisplayQ($transfer->size) ?>
                         </span>
                     </div>

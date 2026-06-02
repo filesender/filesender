@@ -1530,6 +1530,14 @@ window.filesender.client = {
                     window.filesender.encmd_decrypted = true;
                     filesender.client.updateSelectedFileSize();
 
+                    let totalSize = 0;
+                    page.find('.file').each(function() {
+                        totalSize = totalSize + parseInt($(this).attr('data-size'), 10);
+                    });
+                    const formattedTotalSize = filesender.client.formatBytes(totalSize);
+                    $('.fs-info-transfer-size').text(formattedTotalSize);
+                    
+
                 } catch (error) {
                     console.log(error);
                     var msg = window.filesender.config.language.file_encryption_metadata_wrong_password;
