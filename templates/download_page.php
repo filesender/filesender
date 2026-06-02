@@ -153,7 +153,11 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
 
 
 
-<div class="fs-download">
+<div class="fs-download transfer_details"
+     data-transfer-encrypted="<?php                     echo Template::Q(isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'); ?>"
+     data-transfer-id="<?php                            echo Template::Q($transfer->id); ?>"
+     data-transfer-have-encrypted-metadata="<?php       echo Template::Q($transfer->have_encrypted_metadata); ?>"
+     >
     <div class="container">
         <div class="row">
             <div class="col">
@@ -214,7 +218,7 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_size}:</strong>
-                        <span><?php echo Template::Q(Utilities::formatBytes($transfer->size)) ?></span>
+                        <span><?php echo $formatFileSizeForDisplayQ($transfer->size) ?></span>
                     </div>
                     <div  class="fs-info">
                         <a href="https://docs.filesender.org/filesender/v3.0/user/download/" target="_blank">{tr:more_information_about_downloading_files}</a>
