@@ -114,6 +114,19 @@ if(empty($transfer->options['encryption'])) {
     $archiveParams = array();
 }
 
+$hasEncryptedMetadata = false;
+if($isEncrypted) {
+    $hasEncryptedMetadata = isset($transfer->options['encrypted_metadata']) && $transfer->options['encrypted_metadata'];
+}
+
+$formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
+{
+    if( $hasEncryptedMetadata ) {
+        return "{tr:encrypted_metadata_file_size_hidden}";
+    }
+    return Template::Q(Utilities::formatBytes($filesz));
+}
+
 ?>
 
 <div class="fs-transfer-detail transfer_details"
@@ -128,7 +141,11 @@ if(empty($transfer->options['encryption'])) {
      data-password-version="<?php echo $transfer->password_version; ?>"
      data-password-encoding="<?php echo $transfer->password_encoding_string; ?>"
      data-password-hash-iterations="<?php echo $transfer->password_hash_iterations; ?>"
-     data-client-entropy="<?php echo $transfer->client_entropy; ?>">
+     data-client-entropy="<?php echo $transfer->client_entropy; ?>"
+     data-transfer-encrypted="<?php                     echo Template::Q(isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'); ?>"
+     data-transfer-id="<?php                            echo Template::Q($transfer->id); ?>"
+     data-transfer-have-encrypted-metadata="<?php       echo Template::Q($transfer->have_encrypted_metadata); ?>"
+>
     <div class="container">
         <div class="row">
             <div class="col">
@@ -246,7 +263,7 @@ if(empty($transfer->options['encryption'])) {
                                         <td>
                                             <div>
                                                 <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
-                                                <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
+                                                <span class="size"><?php echo $formatFileSizeForDisplayQ($file->size) ?></span>
 
                                                 <?php if(!$transfer->is_expired) { ?>
 
@@ -309,10 +326,10 @@ if(empty($transfer->options['encryption'])) {
                     <div class="fieldcontainer" id="encryption_description_not_supported">
                         {tr:file_encryption_disabled}
                     </div>
-                    <div class="fs-transfer-detail__total-size">
+                    <div class="fs-transfer-detail__total-size fs-download__total-size">
                         <strong>{tr:total_transfer_size}:</strong>
                         <span>
-                            <?php echo Utilities::formatBytes($transfer->size) ?>
+                            <?php echo $formatFileSizeForDisplayQ($transfer->size) ?>
                         </span>
                     </div>
                     <?php if($canDownloadArchive) { ?>

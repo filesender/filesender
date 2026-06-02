@@ -1394,8 +1394,13 @@ window.filesender.client = {
             $('.fs-download__zip64-info').removeClass('fs-download__zip64-info--hide');
         }
     },
+
+    isTrue: function(v) {
+        return v == '1' || v == 'true';
+    },
     
     updateSelectedFileSize: function () {
+        var $this = this;
         var page = this.page;
 
         let totalSize = 0;
@@ -1403,10 +1408,21 @@ window.filesender.client = {
             totalSize = totalSize + parseInt($(this).attr('data-size'), 10);
         });
 
+        const isEncrypted = $this.isTrue(page.find('.transfer_details').attr('data-transfer-encrypted'));
+        const haveEncryptedMetadata = $this.isTrue(page.find('.transfer_details').attr('data-transfer-have-encrypted-metadata'));
+
         const formattedTotalSize = filesender.client.formatBytes(totalSize);
-
-        $('.fs-download__total-size span').text(formattedTotalSize);
-
+        
+        if( !window.filesender.encmd_decrypted
+            && isEncrypted
+            && haveEncryptedMetadata )
+        {
+                totalSize = 0;
+                $('.fs-download__total-size span').text("{tr:encrypted_metadata_file_size_hidden}");
+        } else {
+            $('.fs-download__total-size span').text(formattedTotalSize);
+        }
+        
         if (totalSize > 0) {
             $('.fs-download__total-size').addClass('fs-download__total-size--show');
         } else {
@@ -1440,7 +1456,9 @@ window.filesender.client = {
     handlePossibleEncryptedMetadata: async function ()
     {
         var $this = this;
-       
+
+        window.filesender.encmd_decrypted = false;
+        
         var page = $('.download_page');
         if(!page.length) page = $('.transfer_detail_page');
         if(!page.length) return;
@@ -1509,6 +1527,8 @@ window.filesender.client = {
                     }
 
                     window.filesender.md = md;
+                    window.filesender.encmd_decrypted = true;
+                    filesender.client.updateSelectedFileSize();
 
                 } catch (error) {
                     console.log(error);
