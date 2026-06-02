@@ -218,7 +218,7 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_size}:</strong>
-                        <span><?php echo $formatFileSizeForDisplayQ($transfer->size) ?></span>
+                        <span class="fs-info-transfer-size"><?php echo $formatFileSizeForDisplayQ($transfer->size) ?></span>
                     </div>
                     <div  class="fs-info">
                         <a href="https://docs.filesender.org/filesender/v3.0/user/download/" target="_blank">{tr:more_information_about_downloading_files}</a>
