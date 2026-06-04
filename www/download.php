@@ -337,9 +337,20 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             $length = min($chunk_size, $remaining);
             
             Logger::debug('Send chunk at offset ' . $offset . ' with length ' . $length);
-            
-            //echo $file->readChunk($offset, $length);
-            echo stream_get_contents($stream, $length, $offset);
+
+            // TODO Encryption seems to not like the streams at the moment, should fix this but have a workaround
+            $do_not_use_stream = false;
+            if( $transfer->options['encryption'] == 1 ) {
+                if( strtolower(Config::get('storage_type')) == 'filesystem' ) {
+                    $do_not_use_stream = true;
+                }
+            }
+
+            if( $do_not_use_stream ) {
+                echo $file->readChunk($offset, $length);
+            } else {
+                echo stream_get_contents($stream, $length, $offset);
+            }
             
             // TODO Log download progress ?
             
