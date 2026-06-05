@@ -1456,11 +1456,11 @@ class Transfer extends DBObject
                 $value = strtotime($value);
             }
             
-            if (!preg_match('`^[0-9]+$`', $value)) {
+            if (!preg_match('`^[.0-9]+$`', $value)) {
                 throw new BadExpireException($value);
             }
             
-            $value = (int)$value;
+            $value = (float)$value;
             if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
                 throw new BadExpireException($value);
             }
