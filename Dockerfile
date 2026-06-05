@@ -46,6 +46,10 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/config/ \
     && chmod -R 775 /var/www/html/data/ \
     && chmod -R 775 /var/www/html/tmp/
+    
+# Betulkan DocumentRoot ke folder www untuk FileSender
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/www|g' /etc/apache2/sites-available/000-default.conf && \
+    sed -i 's|<Directory /var/www/html>|<Directory /var/www/html/www>|g' /etc/apache2/sites-available/000-default.conf
 
 # Expose port 80
 EXPOSE 80
