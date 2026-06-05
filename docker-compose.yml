@@ -32,3 +32,9 @@ volumes:
   filesender-data:
   filesender-tmp:
   db-data:
+
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost/"]
+  interval: 30s
+  timeout: 10s
+  retries: 5
