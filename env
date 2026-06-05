@@ -1,0 +1,4 @@
+# .env
+MYSQL_ROOT_PASSWORD=GantiDenganKataLaluanRootYangKuat
+MYSQL_PASSWORD=GantiDenganKataLaluanPenggunaYangKuat
+FILESENDER_DB_PASS=GantiDenganKataLaluanPenggunaYangKuat
