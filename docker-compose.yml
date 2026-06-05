@@ -9,7 +9,7 @@ services:
     environment:
       - FILESENDER_DB_HOST=db
       - FILESENDER_DB_USER=filesender
-      - FILESENDER_DB_PASS=rahasia
+      - FILESENDER_DB_PASS=${FILESENDER_DB_PASS}  # <-- Guna variable dari .env
       - FILESENDER_DB_NAME=filesender
     volumes:
       - filesender-data:/var/www/html/data
@@ -21,10 +21,10 @@ services:
     image: mariadb:10.6
     container_name: filesender-db
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} # <-- Guna variable dari .env
       - MYSQL_DATABASE=filesender
       - MYSQL_USER=filesender
-      - MYSQL_PASSWORD=rahasia
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}           # <-- Guna variable dari .env
     volumes:
       - db-data:/var/lib/mysql
 
