@@ -33,6 +33,9 @@ WORKDIR /var/www/html
 # Salin keseluruhan source code FileSender
 COPY . .
 
+# Cipta direktori yang diperlukan (data dan tmp)
+RUN mkdir -p /var/www/html/data /var/www/html/tmp
+
 # Salin entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
