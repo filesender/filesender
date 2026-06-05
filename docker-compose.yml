@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  filesender:
+    build: .
+    container_name: filesender-app
+    ports:
+      - "8080:80"
+    environment:
+      - FILESENDER_DB_HOST=db
+      - FILESENDER_DB_USER=filesender
+      - FILESENDER_DB_PASS=rahasia
+      - FILESENDER_DB_NAME=filesender
+    volumes:
+      - filesender-data:/var/www/html/data
+      - filesender-tmp:/var/www/html/tmp
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.6
+    container_name: filesender-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=filesender
+      - MYSQL_USER=filesender
+      - MYSQL_PASSWORD=rahasia
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  filesender-data:
+  filesender-tmp:
+  db-data:
