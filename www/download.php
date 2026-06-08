@@ -38,7 +38,18 @@ require_once('../includes/init.php');
 
 
 try {
-    
+
+    // Read transaction_id early so we can restore the file selection from the session
+    $transaction_id = '';
+    if(array_key_exists('transaction_id', $_REQUEST))
+        $transaction_id = $_REQUEST['transaction_id'];
+
+    if($transaction_id && Utilities::isValidUID($transaction_id)
+        && !array_key_exists('files_ids', $_REQUEST)
+        && isset($_SESSION['download_fids_' . $transaction_id])) {
+        $_REQUEST['files_ids'] = $_SESSION['download_fids_' . $transaction_id]['fids'];
+    }
+
     // List of files to be downloaded
     if(!array_key_exists('files_ids', $_REQUEST))
         throw new DownloadMissingFilesIDsException();
@@ -128,22 +139,35 @@ try {
     if(count($not_from_transfer))
         throw new DownloadBadFilesIDsException($not_from_transfer);
     
-    // Needed to prevent the download from timing out.
-    set_time_limit(0);
-    
-    // Close session to avoid simultaneous requests from being locked
-    session_write_close();
-    
-    // Ensure transaction id
-    $transaction_id = '';
-    if(array_key_exists('transaction_id', $_REQUEST))
-        $transaction_id = $_REQUEST['transaction_id'];
-
+    // Ensure transaction_id before closing the session so the file selection can be
+    // stored in session. This keeps the redirect URL short regardless of file count.
     if(!$transaction_id || !Utilities::isValidUID($transaction_id)) {
         $transaction_id = Utilities::generateRandomUID();
-        header('Location: '.Utilities::http_build_query(array_merge($_REQUEST, ['transaction_id' => $transaction_id]), 'download.php?'));
+        // Sweep stale entries (> 1 hour old) to prevent session bloat.
+        foreach(array_keys($_SESSION) as $key) {
+            if(str_starts_with($key, 'download_fids_') && is_array($_SESSION[$key])
+               && time() - $_SESSION[$key]['ts'] > 3600) {
+                unset($_SESSION[$key]);
+            }
+        }
+        $_SESSION['download_fids_' . $transaction_id] = [
+            'fids' => implode(',', $files_ids),
+            'ts'   => time(),
+        ];
+        $redirect_params = ['transaction_id' => $transaction_id];
+        if(array_key_exists('token', $_REQUEST))
+            $redirect_params['token'] = $_REQUEST['token'];
+        if(array_key_exists('archive_format', $_REQUEST))
+            $redirect_params['archive_format'] = $_REQUEST['archive_format'];
+        header('Location: ' . Utilities::http_build_query($redirect_params, 'download.php?'));
         exit;
     }
+
+    // Needed to prevent the download from timing out.
+    set_time_limit(0);
+
+    // Close session to avoid simultaneous requests from being locked
+    session_write_close();
 
     $recently_downloaded = false;
     // Check if file set has already been downloaded over the last hour
@@ -173,7 +197,15 @@ try {
     
     if($ret['result'] && $recipient)
         manageOptions($ret, $transfer, $recipient, $recently_downloaded);
-    
+
+    // Clean up the session entry now that the download is complete.
+    // Abandoned or failed entries are swept on the next download attempt.
+    if($transaction_id) {
+        session_start();
+        unset($_SESSION['download_fids_' . $transaction_id]);
+        session_write_close();
+    }
+
 } catch (Exception $e) {
     if(!array_key_exists('exception', $_SESSION))
         $_SESSION['exception'] = [];
