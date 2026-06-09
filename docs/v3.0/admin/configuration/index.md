@@ -1989,6 +1989,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
         )
         ```
 	* __forward_server_name__: Set this to true when using the file forwarding feature.
+    *__encrypted\_metadata__: When encryption is on, use the same password to encrypt the file metadata (name,mimetype) and have the server use placeholders until the user provides the password to decrypt the metadata.
 
 * __*Configuration example:*__
 

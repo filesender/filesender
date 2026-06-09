@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'ไม่ระบุชื่อ';
 $lang['anonymous_details'] = 'มีลิงค์โดยตรงให้';
 $lang['api_secret'] = 'API secret';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'อย่าใช�
 $lang['encountered_exception'] = '{cfg:site_name} พบข้อผิดพลาดขณะดำเนินการตามคำขอของคุณ';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = 'กำลังดาวน์โหลดไฟล์ {currentfilenumber} จาก {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'การเข้ารหัส';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'หากรหัสผ่านของคุณมีอักขระมากกว่า {cfg:encryption_password_text_only_min_password_length} ตัวโดยไม่มีการซ้ำซ้อนอย่างมีนัยสำคัญ แสดงว่ามีข้อจำกัดน้อยลงในเนื้อหารหัสผ่านของคุณ';
 $lang['encryption_split'] = 'Encryption Split';
@@ -326,6 +328,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-อัศเจ
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;เบราว์เซอร์ของคุณไม่สนับสนุนการถอดรหัสไฟล์ โปรดลองอีกครั้งด้วย Firefox, Internet Explorer, Safari หรือ Chrome เวอร์ชันล่าสุด';
 $lang['file_encryption_enter_password'] = 'ส่งไฟล์ได้อย่างปลอดภัยยิ่งขึ้นด้วยการฝากไฟล์';
 $lang['file_encryption_generate_password'] = 'สร้างรหัสผ่าน';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'คุณต้องป้อนรหัสผ่านเพื่อดาวน์โหลด';
 $lang['file_encryption_password'] = 'รหัสผ่าน';
 $lang['file_encryption_password_must_have_numbers'] = 'รหัสผ่านต้องมีอย่างน้อยหนึ่งตัวเลข (0,1,2...9)';

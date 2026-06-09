@@ -28,6 +28,6 @@ if [ 'success' != "$(echo $data | jq -r .response.status)" ]; then
 fi
 
 earl="$(echo $data | jq -r .result.url)";
-curl  "$earl" --output "FileSender_2.0_$LANG.json"
-php "$SCRIPTDIR/convert-poeditor-json-to-php.php" "FileSender_2.0_$LANG.json" "FileSender_2.0_$PHPFILE.php"
+curl  "$earl" --output "FileSender_3.0_$LANG.json"
+php "$SCRIPTDIR/convert-poeditor-json-to-php.php" "FileSender_3.0_$LANG.json" "FileSender_3.0_$PHPFILE.php"
 

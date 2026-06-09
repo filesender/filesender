@@ -56,6 +56,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'Um email';
 $lang['an_email_tip'] = 'Nós enviamos diretamente para seus destinatários';
 $lang['an_initiative_by'] = 'Uma iniciativa por';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anônimo';
 $lang['anonymous_details'] = 'Link direto fornecido';
 $lang['api_secret'] = 'API secret';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Não use esta opç�
 $lang['encountered_exception'] = 'O aplicativo encontrou um erro ao processar sua solicitação';
 $lang['encrypt_files_with_password'] = 'Criptografar arquivos com senha';
 $lang['encrypted_archive_download_overall_progress'] = 'Baixando arquivo {currentfilenumber} de {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Encriptação';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Se sua senha tiver mais de {cfg: encryption_password_text_only_min_password_length} caracteres sem repetição  haverá menos restrições ao conteúdo de sua senha.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -328,6 +330,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Descriptografia de arquivo não suportada pelo seu navegador. Por favor, tente novamente com o mais recente Firefox, Internet Explorer, Safari ou Chrome';
 $lang['file_encryption_enter_password'] = 'Insira uma senha';
 $lang['file_encryption_generate_password'] = 'Gerar senha';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Você deve digitar uma senha para baixar';
 $lang['file_encryption_password'] = 'Senha';
 $lang['file_encryption_password_must_have_numbers'] = 'Senhas devem ter pelo menos um número (0,1,2...9)';

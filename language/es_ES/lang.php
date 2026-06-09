@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'Colaboradores Silver y Gold de FileSender:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'enlace';
 $lang['anonymous_details'] = 'Enlace directo proporcionado';
 $lang['api_secret'] = 'API secret';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'No utilice esta opc
 $lang['encountered_exception'] = 'La aplicación encontró un error mientras procesaba tu petición';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = 'Descargando el fichero {currentfilenumber} de {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Cifrado';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Si su clave de cifrado tiene más de {cfg:encryption_password_text_only_min_password_length} caracteres sin patrones evidentes entonces se le aplicará menos restricciones.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -328,6 +330,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00"  aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;El descifrado de archivos no es compatible con su navegador. Inténtalo de nuevo con los últimos Firefox, Internet Explorer, Safari o Chrome.';
 $lang['file_encryption_enter_password'] = 'Introduzca una clave';
 $lang['file_encryption_generate_password'] = 'Generar una clave de cifrado automáticamente';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Debe introducir una clave para descargar';
 $lang['file_encryption_password'] = 'clave de cifrado';
 $lang['file_encryption_password_must_have_numbers'] = 'La clave tiene que contener, al menos, un  dígito (0,1,2...9)';

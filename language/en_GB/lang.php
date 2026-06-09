@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonymous';
 $lang['anonymous_details'] = 'Direct link provided';
 $lang['api_secret'] = 'API secret';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Do not use this opt
 $lang['encountered_exception'] = '{cfg:site_name} encountered an error while processing your request';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = 'Downloading file {currentfilenumber} of {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Encryption';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'If your password has more than {cfg:encryption_password_text_only_min_password_length} characters without significant repetition then there are fewer restrictions on the contents of your password.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -328,6 +330,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;File decryption not supported by your browser. Please try again with the latest Firefox, Internet Explorer, Safari or Chrome';
 $lang['file_encryption_enter_password'] = 'Enter a password';
 $lang['file_encryption_generate_password'] = 'Generate password';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'You must enter a password to download';
 $lang['file_encryption_password'] = 'Password';
 $lang['file_encryption_password_must_have_numbers'] = 'Password must contain at least one number (0,1,2...9)';

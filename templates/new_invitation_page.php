@@ -294,7 +294,7 @@ use ( $new_guests_can_only_send_to_creator,
                                         </button>
                                         <div class="fs-collapse__content">
                                             <div class="fs-collapse__column">
-                                                <strong>{tr:guest_transfer_settings}</strong>
+                                                <strong>{tr:guest_email_settings}</strong>
 
                                                 <div class="guest_options">
                                                     <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
@@ -317,7 +317,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                 </div>
                                             </div>
                                             <div class="fs-collapse__column">
-                                                <strong>{tr:guest_email_settings}</strong>
+                                                <strong>{tr:guest_transfer_settings}</strong>
 
                                                 <div class="transfer_options">
                                                     <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {

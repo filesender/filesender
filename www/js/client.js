@@ -419,7 +419,8 @@ window.filesender.client = {
             lang: transfer.lang,
             expires: transfer.expires,
             aup_checked: transfer.aup_checked,
-            options: transfer.options
+            options: transfer.options,
+            encrypted_metadata: transfer.encrypted_metadata,
         }, callback, opts);
     },
     
@@ -1236,7 +1237,6 @@ window.filesender.client = {
                     if( fileaead.length ) {
                         fileaead = atob(fileaead);
                     }
-
                     window.filesender.crypto_encrypted_archive_download = false;
                     crypto_app.decryptDownload( filesender.config.base_path
                                                 + 'download.php?' + filesender.client.makeTokenString()
@@ -1394,8 +1394,13 @@ window.filesender.client = {
             $('.fs-download__zip64-info').removeClass('fs-download__zip64-info--hide');
         }
     },
+
+    isTrue: function(v) {
+        return v == '1' || v == 'true';
+    },
     
     updateSelectedFileSize: function () {
+        var $this = this;
         var page = this.page;
 
         let totalSize = 0;
@@ -1403,10 +1408,21 @@ window.filesender.client = {
             totalSize = totalSize + parseInt($(this).attr('data-size'), 10);
         });
 
+        const isEncrypted = $this.isTrue(page.find('.transfer_details').attr('data-transfer-encrypted'));
+        const haveEncryptedMetadata = $this.isTrue(page.find('.transfer_details').attr('data-transfer-have-encrypted-metadata'));
+
         const formattedTotalSize = filesender.client.formatBytes(totalSize);
-
-        $('.fs-download__total-size span').text(formattedTotalSize);
-
+        
+        if( !window.filesender.encmd_decrypted
+            && isEncrypted
+            && haveEncryptedMetadata )
+        {
+                totalSize = 0;
+                $('.fs-download__total-size span').text("{tr:encrypted_metadata_file_size_hidden}");
+        } else {
+            $('.fs-download__total-size span').text(formattedTotalSize);
+        }
+        
         if (totalSize > 0) {
             $('.fs-download__total-size').addClass('fs-download__total-size--show');
         } else {
@@ -1435,4 +1451,117 @@ window.filesender.client = {
         ret = ret.replace(/^\s+/, '').replace(/\s+$/, '');
         return ret;
     },
+
+
+    handlePossibleEncryptedMetadata: async function ()
+    {
+        var $this = this;
+
+        window.filesender.encmd_decrypted = false;
+        
+        var page = $('.download_page');
+        if(!page.length) page = $('.transfer_detail_page');
+        if(!page.length) return;
+
+        var ca = window.filesender.crypto_app();
+        var cc = window.filesender.crypto_common();
+        var defaultPasswordValue = '';
+
+        var encmd = page.find('.encrypted_metadata').text();
+        if( encmd == "" ) {
+            return;
+        }
+        
+        
+        var prompt = window.filesender.ui.promptPassword(
+            window.filesender.config.language.file_encryption_metadata_enter_password,
+            async function (pass) {
+                window.filesender.crypto_last_password = pass;
+                var PASSWORD = pass;
+                
+                var encmd = page.find('.encrypted_metadata').text();
+                enc_md_str = ca.nFromBase64(encmd);
+                enc_md = JSON.parse(enc_md_str);
+                
+                enc_md.iv = ca.decodeFromBase64( enc_md.iv, enc_md.ivsz );
+                enc_md.e  = ca.decodeFromBase64( enc_md.e,  enc_md.esz );
+                enc_md.ed = ca.nFromBase64( enc_md.ed );
+                enc_md.ed = JSON.parse(enc_md.ed);
+                
+                var chunkid = 0;
+                var encryptedChunk = enc_md.e;
+                var encryption_details = enc_md.ed;
+                encryption_details.password = PASSWORD;
+                var key = await ca.getObtainKeyPromise( chunkid, encryption_details );
+
+                ///////////////
+                var decryptParams = {
+                    // See the comment for encryptParams above for info.
+                    name: 'AES-CBC',
+                    iv: enc_md.iv,
+                };
+
+                try {
+                    var backagain = await crypto.subtle.decrypt(decryptParams, key, encryptedChunk);
+
+                    encmd = (new TextDecoder()).decode(backagain);
+
+                    window.filesender.crypto_last_password_succeeded = true;
+                    
+                    /////////////////////////////////////////////
+                    // replace the metadata with the real values
+                    //
+                    md = JSON.parse(encmd);
+                    md = new Map(Object.entries(md));
+                    
+                    for (const [k, v] of md) {
+                        
+                        var name = v["name"];
+                        var pobj = $('[data-name="protected-' + k + '"]');
+
+                        pobj.attr("data-name",name);
+                        pobj.attr("data-mime",v["mimetype"]);
+                        pobj.attr("data-size",v["size"]);
+                        pobj.find(".size").text($this.formatBytes(v["size"]));
+                        pobj.find(".name").text(name);
+                    }
+
+                    window.filesender.md = md;
+                    window.filesender.encmd_decrypted = true;
+                    filesender.client.updateSelectedFileSize();
+
+                    let totalSize = 0;
+                    page.find('.file').each(function() {
+                        totalSize = totalSize + parseInt($(this).attr('data-size'), 10);
+                    });
+                    const formattedTotalSize = filesender.client.formatBytes(totalSize);
+                    $('.fs-info-transfer-size').text(formattedTotalSize);
+                    
+
+                } catch (error) {
+                    console.log(error);
+                    var msg = window.filesender.config.language.file_encryption_metadata_wrong_password;
+                    filesender.ui.alert( "error", msg );                    
+                }
+            }, function() {
+                window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
+            }, defaultPasswordValue );
+
+            // Add a field to the prompt
+            var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
+
+            window.filesender.crypto_last_password_succeeded = false;
+            prompt.append(toggleView);
+            $('#showdlpass').on(
+                "click",
+                function() {
+                    var v = $('#showdlpass').is(':checked');
+                    if( v ) { $('.bootbox-input').attr('type','text'); }
+                    else    { $('.bootbox-input').attr('type','password'); }
+                }
+            );
+        
+    },
+    
 };

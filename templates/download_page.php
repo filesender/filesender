@@ -1,5 +1,6 @@
 <?php
 
+
 $canDownload = true;
 
 if (!function_exists('str_starts_with')) {
@@ -135,12 +136,28 @@ if(array_key_exists('hide_sender_email', $transfer->options) && $transfer->optio
 }
 $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
 
+$hasEncryptedMetadata = false;
+if($isEncrypted) {
+    $hasEncryptedMetadata = isset($transfer->options['encrypted_metadata']) && $transfer->options['encrypted_metadata'];
+}
+
+$formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
+{
+    if( $hasEncryptedMetadata ) {
+        return "{tr:encrypted_metadata_file_size_hidden}";
+    }
+    return Template::Q(Utilities::formatBytes($filesz));
+}
 
 ?>
 
 
 
-<div class="fs-download">
+<div class="fs-download transfer_details"
+     data-transfer-encrypted="<?php                     echo Template::Q(isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'); ?>"
+     data-transfer-id="<?php                            echo Template::Q($transfer->id); ?>"
+     data-transfer-have-encrypted-metadata="<?php       echo Template::Q($transfer->have_encrypted_metadata); ?>"
+     >
     <div class="container">
         <div class="row">
             <div class="col">
@@ -201,7 +218,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_size}:</strong>
-                        <span><?php echo Template::Q(Utilities::formatBytes($transfer->size)) ?></span>
+                        <span class="fs-info-transfer-size"><?php echo $formatFileSizeForDisplayQ($transfer->size) ?></span>
                     </div>
                     <div  class="fs-info">
                         <a href="https://docs.filesender.org/filesender/v3.0/user/download/" target="_blank">{tr:more_information_about_downloading_files}</a>
@@ -253,6 +270,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
                                         data-fileiv="<?php                   echo Template::Q($file->iv); ?>"
                                         data-fileaead="<?php                 echo Template::Q($file->aead); ?>"
                                         data-transferid="<?php               echo Template::Q($transfer->id); ?>"
+                                        data-have-encrypted-metadata="<?php       echo Template::Q($transfer->have_encrypted_metadata); ?>"
                                     >
                                         <td class="fs-table__check-action">
                                             <?php if($canDownloadArchive) { ?>
@@ -266,7 +284,7 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
                                         <td>
                                             <div>
                                                 <span class="name"><?php echo Template::Q($file->path) ?></span>
-                                                <span class="size"><?php echo Template::Q(Utilities::formatBytes($file->size)) ?></span>
+                                                <span class="size"><?php echo $formatFileSizeForDisplayQ($file->size) ?></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
                                                     <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
@@ -436,49 +454,10 @@ $sender_email_clean = Template::sanitizeOutputEmail($sender_email);
 </div>
 
 <div class="fs-download">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <table class="table borderless general" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
-                    <tbody>
-        <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
-            !$transfer->options['hide_sender_email']) { ?>
-                        <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?= $sender_email_clean ?></td></tr>
-        <?php } ?>
-                        <tr>
-                            <td align="right" class="created">{tr:created}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->created)) ?></td>
-                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->expires, true)) ?></td>
-                            <td align="right" class="size">{tr:size}</td><td><?php echo       Template::Q(Utilities::formatBytes($transfer->size)) ?></td>
-                        </tr>
-        <?php if($transfer->subject) { ?>
-                        <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Template::Q($transfer->subject) ?></td></tr>
-        <?php } ?>
-
-        <?php if($transfer->message) { ?>
-            <tr><td align="right" class="message">{tr:message}</td><td><p>
-                <?php
-                $isOpenPGPmsg = false;
-                if( Config::isTrue('openpgp_enabled')) {
-                    if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                        $isOpenPGPmsg = true;
-                    }
-                }
-                if( $isOpenPGPmsg ) {
-                    echo "<PRE>";
-                }
-                echo Template::replaceTainted($transfer->message);
-                if( $isOpenPGPmsg ) {
-                    echo "</PRE>";
-                }
-                
-                ?></p></td></tr>
-        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="container">        
         <div class="transfer" data-id="<?php echo Template::Q($transfer->id); ?>"></div>
         <div class="rid" data-id="<?php echo Template::Q($rid); ?>"></div>
+        <div class="encrypted_metadata" id="encrypted_metadata"><?php echo Template::Q($transfer->encrypted_metadata) ?></div>
     </div>
 </div>
 

@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'Mijn transfers';
 $lang['an_email'] = 'Een e-mail';
 $lang['an_email_tip'] = 'We sturen de downloadlink rechtstreeks naar je ontvangers';
 $lang['an_initiative_by'] = 'Een initiatief van';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anoniem';
 $lang['anonymous_details'] = 'Directe koppeling aangeleverd';
 $lang['api_secret'] = 'API sleutel';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Selecteer deze opti
 $lang['encountered_exception'] = '{cfg:site_name} is op een fout gestuit.';
 $lang['encrypt_files_with_password'] = 'Versleutel de bestanden met een wachtwoord';
 $lang['encrypted_archive_download_overall_progress'] = 'Downloaden bestand {currentfilenumber} van {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Versleuteling';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Als uw wachtwoord meer dan {cfg:encryption_password_text_only_min_password_length} tekens bevat zonder significante herhaling, dan zijn er minder beperkingen op de inhoud van uw wachtwoord.';
 $lang['encryption_split'] = 'Gesplitse versleuteling';
@@ -328,6 +330,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Bestanden decoderen wordt niet ondersteund door deze browser. Probeer het opnieuw met een recente versie van Firefox, Internet Explorer, Edge, Safari of Chrome';
 $lang['file_encryption_enter_password'] = 'Voer een wachtwoord in';
 $lang['file_encryption_generate_password'] = 'Genereer wachtwoord';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'U moet een wachtwoord ingeven om te downloaden';
 $lang['file_encryption_password'] = 'Wachtwoord';
 $lang['file_encryption_password_must_have_numbers'] = 'Wachtwoord moet ten minste één cijfer bevatten (0,1,2...9).';
