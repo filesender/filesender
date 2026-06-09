@@ -9,35 +9,35 @@
 ?>
 <?php
 /*
- * Sample announcement file for English (en_AU).
- * This file produces no output by default.
- *
- * To display an announcement, copy this file to config/language/en_AU/announce.html.php
- * and replace this comment block with your HTML content.
- * Files in config/language/ take precedence and are not overwritten by upstream updates.
- *
- * Example content:
- *
- *   General notice (blue):
- *
- *     <div class="site-announcement">
- *         <h2>Notice</h2>
- *         <p>This site is a test environment (filesender-test).</p>
- *     </div>
- *
- *   Scheduled maintenance (yellow):
- *
- *     <div class="site-announcement site-announcement--warning">
- *         <h2>Scheduled Maintenance Notice</h2>
- *         <p>System maintenance will be performed on YYYY-MM-DD from HH:MM to HH:MM (UTC+?).<br>
- *         The service will be unavailable during this period.</p>
- *     </div>
- *
- *   Urgent / outage (red):
- *
- *     <div class="site-announcement site-announcement--danger">
- *         <h2>Service Disruption</h2>
- *         <p>We are currently experiencing a service disruption. We apologize for the inconvenience.</p>
- *     </div>
- */
+* Przykładowy plik dla języka Polskiego (pl_PL).
+* Ten plik nie generuje domyślnie nic.
+*
+* Aby wyświetlić ogłoszenie, skopiuj ten plik do config/language/pl_PL/announce.html.php
+* I zmień ten blok komentarza na swój HTML.
+* Pliki w config/language/ mają priorytet i nie są nadpisywane przez aktualizacje nadrzędne.
+*
+* Przykładowa zawartość:
+*
+*   Informacja ogólna (blue):
+*
+*    <div class="site-announcement">
+*        <h2>Informacja</h2>
+*        <p>Ta strona to środowisko testowe (filesender-test).</p>
+*    </div>
+*
+* Planowana przerwa (yellow):
+*
+*    <div class="site-announcement site-announcement--warning">
+*        <h2>Informacja o planowanej przerwie</h2>
+*        <p>Przerwa modernizacyjna planowana dnia YYYY-MM-DD od HH:MM do HH:MM (UTC+?).<br>
+*        Serwis będzie w tym czasie niedostępny. </p>
+*    </div>
+*
+* Pilna przerwa (red):
+*
+*    <div class ="site-announcement site-announcement--danger">
+*         <h2>Problemy z serwisem</h2>
+*         <p>Doświadczamy problemów z serwisem. Przepraszamy za niedogodności. </p>
+*    </div>
+*/
 ?>

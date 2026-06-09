@@ -74,6 +74,7 @@ class RestEndpointTransfer extends RestEndpoint
             'options' => $options,
             'salt' => $transfer->salt,
             'roundtriptoken' => $creatingTransfer ? $transfer->roundtriptoken : '',
+            'encrypted_metadata' => $transfer->encrypted_metadata ? $transfer->encrypted_metadata : '',
             
             'files' => array_map(function ($file) use ($files_cids, $transfer) {
                 $file_uid = $file->uid;
@@ -560,6 +561,11 @@ class RestEndpointTransfer extends RestEndpoint
                     "transfer.encryption_client_entropy",
                     $data->encryption_client_entropy,
                     "|^[-A-Za-z0-9+/]*={0,3}$|"  );
+                $data->encrypted_metadata = Validate::filter_var_regex_log(
+                    "transfer.encrypted_metadata",
+                    $data->encrypted_metadata,
+                    "|^[-A-Za-z0-9+/]*={0,3}$|"  );
+                
                 foreach ($data->files as $d) {
                     $d->name = Validate::filter_var_regex_log(
                         "transfer.files.name",
@@ -606,7 +612,7 @@ class RestEndpointTransfer extends RestEndpoint
                     $data->lang );
                 $data->expires = Validate::filter_var_regex_log(
                     "transfer.expires", $data->expires,
-                    "|^[0-9]{1,32}$|"  );
+                    "|^[.0-9]{1,32}$|"  );
                 $data->aup_checked = Validate::filter_var_bool("aup_checked", $data->aup_checked);
             }
             
@@ -950,6 +956,15 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
 
+            // encrypt metadata too?
+            if( $data->encrypted_metadata ) {
+                $transfer->encrypted_metadata = null;
+                // only encrypt the metadata if the transfer is also encrypted.
+                if (Utilities::isTrue($data->encryption)) {
+                    $transfer->encrypted_metadata = $data->encrypted_metadata;
+                }
+            }
+            
             // Mandatory to add recipients and files
             $transfer->save(); 
 

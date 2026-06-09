@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'ẩn danh';
 $lang['anonymous_details'] = 'Liên kết trực tiếp được cung cấp';
 $lang['api_secret'] = 'API secret';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Không sử dụng 
 $lang['encountered_exception'] = '{cfg:site_name} đã gặp lỗi khi xử lý yêu cầu của bạn';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = 'Đang tải xuống tệp {currentfilenumber} của {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'mã hóa';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Nếu mật khẩu của bạn có nhiều hơn {cfg:encryption_password_text_only_min_password_length} ký tự mà không lặp lại đáng kể thì sẽ có ít hạn chế hơn đối với nội dung mật khẩu của bạn.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -326,6 +328,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Giải mã tệp không được trình duyệt của bạn hỗ trợ. Vui lòng thử lại với Firefox, Internet Explorer, Safari hoặc Chrome mới nhất';
 $lang['file_encryption_enter_password'] = 'gõ mật khẩu';
 $lang['file_encryption_generate_password'] = 'Tạo mật khẩu';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Bạn phải nhập mật khẩu để tải xuống';
 $lang['file_encryption_password'] = 'Mật khẩu';
 $lang['file_encryption_password_must_have_numbers'] = 'Mật khẩu phải chứa ít nhất một số (0,1,2...9)';

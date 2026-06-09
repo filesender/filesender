@@ -47,6 +47,7 @@ all_my_transfers
 an_email
 an_email_tip
 an_initiative_by
+announce
 anonymous
 anonymous_details
 api_secret
@@ -267,6 +268,8 @@ enable_recipient_email_download_complete_warning
 encountered_exception
 encrypt_files_with_password
 encrypted_archive_download_overall_progress
+encrypted_metadata
+encrypted_metadata_file_size_hidden
 encryption
 encryption_password_container_can_have_text_only_min_password_length_message
 encryption_split
@@ -324,6 +327,8 @@ file_encryption_description_disabled
 file_encryption_disabled
 file_encryption_enter_password
 file_encryption_generate_password
+file_encryption_metadata_enter_password
+file_encryption_metadata_wrong_password
 file_encryption_need_password
 file_encryption_password
 file_encryption_password_must_have_numbers

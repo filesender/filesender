@@ -57,6 +57,7 @@ $lang['all_my_transfers'] = '所有的传送';
 $lang['an_email'] = '电子邮箱';
 $lang['an_email_tip'] = '我们可以直接发送给你的接收者';
 $lang['an_initiative_by'] = 'FileSender 银牌和金牌贡献者:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = '匿名的';
 $lang['anonymous_details'] = '直接链接已提供';
 $lang['api_secret'] = 'API 密匙';
@@ -271,6 +272,7 @@ $lang['enable_recipient_email_download_complete_warning'] = '发送到电子邮�
 $lang['encountered_exception'] = '处理请求时{cfg:site_name}遇到错误';
 $lang['encrypt_files_with_password'] = '加密文件以及密码';
 $lang['encrypted_archive_download_overall_progress'] = '正在下载{totalfilestodownload}的文件{currentfilenumber}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = '加密';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = '如果您的密码长度超过{cfg:encryption_password_text_only_min_password_length}个字符且没有明显重复，则对密码内容的限制较少。';
 $lang['encryption_split'] = 'Encryption Split';
@@ -329,6 +331,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;您的浏览器不支持文件解密。请在最新的Firefox、Internet Explorer、Safari或Chrome上再试一次。';
 $lang['file_encryption_enter_password'] = '输入密码';
 $lang['file_encryption_generate_password'] = '生成密码';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = '必须输入密码才能下载';
 $lang['file_encryption_password'] = '密码';
 $lang['file_encryption_password_must_have_numbers'] = '密码必须至少包含一个数字（0,1,2…9）';

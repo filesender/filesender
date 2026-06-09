@@ -57,6 +57,7 @@ $lang['all_my_transfers'] = 'Všechny mé přenosy';
 $lang['an_email'] = 'E-mail';
 $lang['an_email_tip'] = 'Přenos posíláme přímo vašim příjemcům.';
 $lang['an_initiative_by'] = 'Stříbrní a zlatí přispěvatelé:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonymní';
 $lang['anonymous_details'] = 'Přímý odkaz';
 $lang['api_secret'] = 'API heslo';
@@ -274,6 +275,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Nepoužívejte toto
 $lang['encountered_exception'] = 'Při vykonávání vašeho požadavku nastala chyba';
 $lang['encrypt_files_with_password'] = 'Zašifruj soubory heslem';
 $lang['encrypted_archive_download_overall_progress'] = 'Stahování souboru {currentfilenumber} z {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Šifrování';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Pokud má vaše heslo více než {cfg:encryption_password_text_only_min_password_length} znaků bez výrazného opakování, jsou omezení obsahu hesla menší.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -331,6 +333,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Dešifrování souboru není podporováno vaším prohlížečem. Zkuste to prosím znovu s poslední verzi Firefoxu, Internet Exploreru, Safari nebo Chrome';
 $lang['file_encryption_enter_password'] = 'Vložte heslo';
 $lang['file_encryption_generate_password'] = 'Vygenerovat heslo';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Pro stažení musíte vložit heslo';
 $lang['file_encryption_password'] = 'Heslo';
 $lang['file_encryption_password_must_have_numbers'] = 'Heslo musí obsahovat alespoň jedno číslo (0,1,2...9).';

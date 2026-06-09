@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'អនាមិក';
 $lang['anonymous_details'] = 'តំណភ្ជាប់ដោយផ្ទាល់';
 $lang['api_secret'] = 'API secret';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'កុំប្រ�
 $lang['encountered_exception'] = '{cfg:site_name} បានជួបប្រទះបញ្ហាមួយខណៈពេលកំពុងដំណើរការសំណើរបស់អ្នក។';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = 'Downloading file {currentfilenumber} of {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'ការអ៊ិនគ្រីប';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'ប្រសិនបើលេខសម្ងាត់របស់អ្នកមានច្រើនជាង {cfg:encryption_password_text_only_min_password_length} តួអក្សរដោយគ្មានពាក្យដដែលៗនោះមានការរឹតត្បិតតិចជាងមុនលើមាតិកានៃពាក្យសម្ងាត់របស់អ្នក។.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -326,6 +328,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; ការអ៊ិនគ្រីបឯកសារមិនគាំទ្រនៅក្នុងកម្មវិធីរុករករបស់អ្នក។ សូមព្យាយាមម្តងទៀតជាមួយនឹង Firefox Internet Explorer, Safari ឬ Chrome ចុងក្រោយបំផុត';
 $lang['file_encryption_enter_password'] = 'Enter a password';
 $lang['file_encryption_generate_password'] = 'បង្កើតពាក្យសម្ងាត់';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'You must enter a password to download';
 $lang['file_encryption_password'] = 'ពាក្យសម្ងាត់';
 $lang['file_encryption_password_must_have_numbers'] = 'លេខសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់មួយលេខ (0,1,2 ... 9)';

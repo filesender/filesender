@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'All my transfers';
 $lang['an_email'] = 'An email';
 $lang['an_email_tip'] = 'We send the transfer directly to your recipients';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold contributors:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'बेनामी';
 $lang['anonymous_details'] = 'प्रत्यक्ष लिङ्क प्रदान गरियो';
 $lang['api_secret'] = 'API secret';
@@ -270,6 +271,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'पत्राच�
 $lang['encountered_exception'] = '{cfg:site_name} ले तपाईंको अनुरोध प्रशोधन गर्दा त्रुटिको सामना गर्यो';
 $lang['encrypt_files_with_password'] = 'Encrypt files with password';
 $lang['encrypted_archive_download_overall_progress'] = '{totalfilestodownload} को फाइल {currentfilenumber} डाउनलोड गर्दै';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'इन्क्रिप्सन';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'यदि तपाईंको पासवर्डमा अधिक्तम दोहोर्याइएको {cfg:encryption_password_text_only_min_password_length} वर्णहरू छन् भने तपाईंको पासवर्डको सामग्रीहरूमा कम प्रतिबन्धहरू छन्।';
 $lang['encryption_split'] = 'Encryption Split';
@@ -327,6 +329,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;फाइल डिक्रिप्शन तपाईंको ब्राउजरद्वारा समर्थित छैन। कृपया नवीनतम फायरफक्स, इन्टरनेट एक्सप्लोरर, सफारी वा क्रोमको साथ पुन: प्रयास गर्नुहोस्';
 $lang['file_encryption_enter_password'] = 'पासवर्ड प्रविष्ट गर्नुहोस्';
 $lang['file_encryption_generate_password'] = 'पासवर्ड उत्पन्न गर्नुहोस्';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'तपाईंले डाउनलोड गर्न पासवर्ड प्रविष्ट गर्नुपर्छ';
 $lang['file_encryption_password'] = 'पासवर्ड';
 $lang['file_encryption_password_must_have_numbers'] = 'पासवर्डमा कम्तिमा एउटा नम्बर (०,१,३...९) हुनुपर्छ।';

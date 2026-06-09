@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'Svi moji transferi';
 $lang['an_email'] = 'Email';
 $lang['an_email_tip'] = 'Mi šaljemo transfer direktno vašim primaocima';
 $lang['an_initiative_by'] = 'FileSender Srebrni i Zlatni saradnici:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonimno';
 $lang['anonymous_details'] = 'Dostupan direktni link';
 $lang['api_secret'] = 'API tajna';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Ne koristite ovu mo
 $lang['encountered_exception'] = 'Aplikacija je naišla na grešku prilikom obrade vašeg zahteva';
 $lang['encrypt_files_with_password'] = 'Šifriraj fajlove lozinkom';
 $lang['encrypted_archive_download_overall_progress'] = 'Preuzimanje fajla {currentfilenumber} od {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Šifrovanje';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Ako vaša lozinka ima više od {cfg:encryption_password_text_only_min_password_length} karaktera bez značajnog ponavljanja, onda postoji manje ograničenja u pogledu sadržaja vaše lozinke.';
 $lang['encryption_split'] = 'Podela enkripcije';
@@ -327,6 +329,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00"  aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Vaš pregledač ne podržava dešifrovanje fajlova. Molimo prokušajte ponovo koristeći najnovije verzije pregledača: Firefox, Internet Explorer, Safari ili Chrome';
 $lang['file_encryption_enter_password'] = 'Unesite lozinku';
 $lang['file_encryption_generate_password'] = 'Generišite lozinku';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Morate uneti lozinku za preuzimanje';
 $lang['file_encryption_password'] = 'Lozinka';
 $lang['file_encryption_password_must_have_numbers'] = 'Lozinka mora sadržati najmanje jedan broj (0,1,2...9)';

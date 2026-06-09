@@ -55,6 +55,7 @@ $lang['all_my_transfers'] = 'Alle meine Transfers';
 $lang['an_email'] = 'Eine E-Mail';
 $lang['an_email_tip'] = 'Wir senden die Überweisung direkt an deine Empfänger';
 $lang['an_initiative_by'] = 'FileSender Silver and Gold Unterstützer:';
+$lang['announce'] = ' ';
 $lang['anonymous'] = 'Anonym';
 $lang['anonymous_details'] = 'Direkt-Link zur Verfügung gestellt';
 $lang['api_secret'] = 'API-Geheimnis';
@@ -269,6 +270,7 @@ $lang['enable_recipient_email_download_complete_warning'] = 'Sie können diese O
 $lang['encountered_exception'] = 'Während der Bearbeitung Ihrer Anfrage ist ein Fehler aufgetreten';
 $lang['encrypt_files_with_password'] = 'Dateien mit Passwort verschlüsseln';
 $lang['encrypted_archive_download_overall_progress'] = 'Herunterladen der Datei {currentfilenumber} von {totalfilestodownload}';
+$lang['encrypted_metadata'] = 'Encrypt transfer metadata';
 $lang['encryption'] = 'Verschlüsselung';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Wenn Ihr Passwort mehr als {cfg:encryption_password_text_only_min_password_length} Zeichen ohne nennenswerte Wiederholung enthält, gibt es weniger Einschränkungen für den Inhalt Ihres Passworts.';
 $lang['encryption_split'] = 'Encryption Split';
@@ -326,6 +328,8 @@ $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-tri
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle colorffaa00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Dateiverschlüsselung wird von Ihrem Browser nicht unterstützt. Bitte versuchen Sie es erneut mit der letzten Version von Firefox, Internet Explorer, Safari oder Chrome.';
 $lang['file_encryption_enter_password'] = 'Passwort eingeben';
 $lang['file_encryption_generate_password'] = 'Passwort generieren';
+$lang['file_encryption_metadata_enter_password'] = 'Metadata is encrypted, please enter the password';
+$lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please reload this page to try again';
 $lang['file_encryption_need_password'] = 'Sie müssen für den Download das Passwort eingeben';
 $lang['file_encryption_password'] = 'Passwort';
 $lang['file_encryption_password_must_have_numbers'] = 'Das Passwort muss mind. eine Nummer (0, 1, 2...9) enthalten';

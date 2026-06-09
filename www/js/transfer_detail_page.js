@@ -363,6 +363,7 @@ $(function() {
     filesender.client.bindDownloadButton('.file .download');
     filesender.client.bindDownloadArchive();
     filesender.client.bindFileCheckButtons();
+    filesender.client.handlePossibleEncryptedMetadata();
 
     $('#check-all').click();
     

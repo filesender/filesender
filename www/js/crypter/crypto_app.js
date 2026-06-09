@@ -487,6 +487,20 @@ window.filesender.crypto_app = function () {
             }
         },
 
+        getObtainKeyPromise: function (chunkid, encryption_details) {
+            var $this = this;
+            return new Promise((resolve, reject) => {
+                $this.obtainKey(chunkid, encryption_details,
+                                  (key) => {
+                                      resolve(key);
+                                  },
+                                  (err) => {
+                                      if (err) return reject(err);
+                                  },
+                               );
+            });
+        },
+        
         /**
          * This puts a cache between the call to generateKey() only
          * doing the work if the key has not already been generated.
@@ -530,7 +544,7 @@ window.filesender.crypto_app = function () {
                                      
         },
 
-        
+
         encryptBlob: function (value, chunkid, encryption_details, callback, callbackError ) {
             var $this = this;
             var key_version = encryption_details.key_version;
@@ -703,6 +717,8 @@ window.filesender.crypto_app = function () {
             }
             
         },
+
+        
         decryptBlob: function (chunkid,encryptedChunk, encryption_details, key, blobSink, callbackNext, callbackDone, callbackError) {
             var $this = this;
             var key_version = encryption_details.key_version;
@@ -1746,6 +1762,10 @@ window.filesender.crypto_app = function () {
         encodeToBase64: function (bindata) {
             return btoa(String.fromCharCode.apply(null, bindata)); 
         },
+        decodeFromBase64: function (b64data,sz) {
+            var $this = this;
+            return $this.decodeBase64EncodedEntropy(b64data,sz);
+        },
         /**
          * encode the bindata using the named encoding or base64 by default.
          * @param bindata Uint8Array containing data binary data to convert. 
@@ -1778,6 +1798,17 @@ window.filesender.crypto_app = function () {
             }
             
             return true;
-        }
+        },
+
+        nToBase64: function( v ) {
+            const bytes = new TextEncoder().encode(v);
+            const encoded = bytes.toBase64();
+            return encoded;
+        },
+        nFromBase64: function( b64 ) {
+            const bytes = Uint8Array.fromBase64(b64);
+            const ret = new TextDecoder().decode(bytes);
+            return ret;
+        },
     };
 };
