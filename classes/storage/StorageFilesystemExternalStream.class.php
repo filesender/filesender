@@ -74,11 +74,6 @@ class StorageFilesystemExternalStream extends StorageFilesystemStreamBase
         return $data;
     }
 
-    public function stream_eof()
-    {
-        return $this->offset >= $this->file->size;
-    }
-
     public static function ensureRegistered()
     {
         // this happens when the file is parsed
