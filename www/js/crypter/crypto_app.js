@@ -53,6 +53,8 @@ window.filesender.crypto_last_password = '';
 
 window.filesender.crypted_chunk_size = 0;
 
+window.filesender.user_selected_terareceiver = 0;
+
 /*
  * Main entry points
  *   decryptDownload()

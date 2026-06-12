@@ -234,6 +234,12 @@ A note about colours;
 * [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stalling_detection)
 
+## TeraReceiver (download module)
+
+* [terareceiver_enabled](#terareceiver_enabled)
+* [terareceiver_allowed](#terareceiver_allowed)
+
+
 ## Download
 
 * [download_chunk_size](#download_chunk_size)
@@ -2594,6 +2600,33 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __default:__ false
 * __available:__ since version 2.0
 * __comment:__ Has effect on the JavaScript-variables given to the client-side of Terasender.
+
+
+---
+
+## TeraSender (high speed upload module)
+
+---
+
+### terareceiver_enabled
+
+* __description:__ if set to true, enables TeraReceiver download module. This is the first drop to mirror what terasender is doing by using client-side webworkers to parallelise download.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.31 (3.0.alpha3)
+
+
+### terareceiver_allowed
+
+* __description:__ If you would like to allow your users to select TeraReceiver enable this option. If this is true then a user can select to use terareceiver on the download page. It will be selected by default but allows the user to unselect it on a per transfer basis if they wish.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.11
+
+
+
 
 ---
 

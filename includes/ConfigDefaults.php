@@ -139,6 +139,7 @@ $default = array(
 
     'terasender_enabled' => true,
     'terareceiver_enabled' => false,
+    'terareceiver_allowed' => true,
     'terasender_advanced' => false,
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
