@@ -1123,6 +1123,10 @@ window.filesender.client = {
 
                 var crypto_app = window.filesender.crypto_app();
 
+                if( window.filesender.config.terareceiver_allowed ) {
+                    var terareceiverenabled = page.find('#terareceiverenabled').is(':checked');
+                    window.filesender.user_selected_terareceiver = terareceiverenabled;
+                }
                 if( window.filesender.config.use_streamsaver ) {
                     var streamsaverenabled = page.find('#streamsaverenabled').is(':checked');
                     crypto_app.disable_streamsaver = !streamsaverenabled;

@@ -362,6 +362,26 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
     </div>
 </div>
 
+<?php
+// If TeraReceiver is not enabled but is allowed then let the user select it.
+// By default it is selected if allowed.
+if( $isEncrypted
+ && Config::isFalse("terareceiver_enabled" )
+ && Config::isTrue("terareceiver_allowed" )) {
+?>
+<div class="fs-download form-check form-switch custom-control custom-switch" data-option="options">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+              <input id="terareceiverenabled" class="form-check-input" name="terareceiverenabled" type="checkbox" checked="checked" />
+              <label for="terareceiverenabled" class="form-check-label">{tr:use_terareceiver_for_download}</label>
+            </div>
+        </div>
+    </div>
+</div>
+<?php } ?>
+
+    
     <?php if( Browser::instance()->allowStreamSaver ) { ?>
 
 <div class="fs-download form-check form-switch custom-control custom-switch" data-option="options">

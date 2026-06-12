@@ -239,7 +239,17 @@ window.filesender.transfer = function() {
         return enable;
     };
     this.canUseTeraReceiver = function() {
-        var enable = filesender.config.terareceiver_enabled && filesender.supports.workers;
+
+        var terasender_globally_enabled = filesender.config.terareceiver_enabled;
+        var usetr = terasender_globally_enabled;
+        
+        if( filesender.config.terareceiver_allowed ) {
+            if( !usetr ) {
+                usetr = window.filesender.user_selected_terareceiver;
+            }
+        }
+        
+        var enable = usetr && filesender.supports.workers;
         enable &= !this.encryption || filesender.supports.workerCrypto;
         enable &= !this.disable_terasender;
         return enable;

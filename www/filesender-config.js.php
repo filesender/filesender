@@ -108,6 +108,7 @@ window.filesender.config = {
 
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terareceiver_enabled: <?php  echo value_to_TF(Config::get('terareceiver_enabled')) ?>,
+    terareceiver_allowed: <?php  echo value_to_TF(Config::get('terareceiver_allowed')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
     terasender_worker_max_count: <?php echo Config::get('terasender_worker_max_count') ?>,
