@@ -75,7 +75,7 @@ class Version
         }
         
         // Still here ?
-        throw Exception('Version not in '.$file);
+        throw new Exception('Version not in '.$file);
     }
     
     /**
