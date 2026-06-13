@@ -52,7 +52,7 @@ abstract class AVProgram
     public static function getActiveProgramList()
     {
         $desiredList = Config::getArray("avprogram_list");
-        print_r($desiredList);
+        Logger::debug('avprogram_list: '.print_r($desiredList, true));
         
         if( !self::$allPrograms ) {
             self::$allPrograms = array(
