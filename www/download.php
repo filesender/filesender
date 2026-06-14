@@ -455,7 +455,12 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             header('Content-Length: ' . $file->size);
         }
 
-        header('Accept-Ranges: bytes');
+        // Edge doesn't seems to like ranges on large files
+        if (preg_match('/Edg/', $ua) === 1) {
+            header('Accept-Ranges: none');
+        } else {
+            header('Accept-Ranges: bytes');
+        }        
 
         // Don't bother reading file chunks off disk if we are only doing a HEAD
         if ($_SERVER['REQUEST_METHOD']=='HEAD')

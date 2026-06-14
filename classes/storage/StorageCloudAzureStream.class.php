@@ -49,15 +49,6 @@ class StorageCloudAzureStream extends StorageFilesystemStreamBase
         return $rc;
     }
 
-    public function stream_seek($offset, $whence) {
-        $this->offset = $offset;
-        return true;
-    }
-
-    public function stream_tell() {
-        return $this->offset;
-    }
-
     public function stream_read($count)
     {
         $file   = $this->file;
@@ -75,11 +66,6 @@ class StorageCloudAzureStream extends StorageFilesystemStreamBase
 
         $this->offset += strlen($data);
         return $data;
-    }
-
-    public function stream_eof()
-    {
-        return $this->offset >= $this->file->size;
     }
 
     public static function ensureRegistered()
