@@ -1140,7 +1140,7 @@ EOF;
                                     {tr:your_download_link}
                                 </span>
                                 <div class="fs-copy">
-                                    <span></span>
+                                    <span class="download_link"></span>
 
                                     <button id="copy-to-clipboard" type="button" class="fs-button">
                                         <i class="fa fa-copy"></i>
