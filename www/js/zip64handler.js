@@ -255,12 +255,20 @@ window.filesender.zip64handler = function() {
             this.writeu16( 0          );  // no compression
             this.writeu32( dts );
             this.writeu32( 0          );  // no crc-32 yet
-            this.writeu32( 0xFFFFFFFF );  // no size yet
-            this.writeu32( 0xFFFFFFFF );  // ...
+            this.writeu32( 0xFFFFFFFF );  // no size yet (ZIP64: value in extra field)
+            this.writeu32( 0xFFFFFFFF );  // ...         (ZIP64: value in extra field)
             this.writeu16( filename_array.length );
-            this.writeu16( 0          );  // no extra data
+            this.writeu16( 20         );  // extra field length: ZIP64 (4 header + 16 data)
 
             $this.write( filename_array );
+
+            // ZIP64 extended information extra field (required when sizes are 0xFFFFFFFF)
+            // Actual sizes are deferred to the data descriptor (general purpose bit 3 set).
+            // Without this field, strict parsers (e.g. macOS Archive Utility) reject the archive.
+            this.writeu16( 0x0001 );  // ZIP64 extra field header ID
+            this.writeu16( 16     );  // data size: two 8-byte fields
+            this.writeu64( 0      );  // uncompressed size placeholder (see data descriptor)
+            this.writeu64( 0      );  // compressed size placeholder   (see data descriptor)
 
             $this.crc = 0;
             $this.filesize = 0;
