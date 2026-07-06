@@ -364,16 +364,16 @@ class Utilities
         
         if (count($parts) > 2) {
             switch (strtoupper($parts[2])) {
-            case 'P': $size *= 1024;
-            // no break
-            case 'T': $size *= 1024;
-            // no break
-            case 'G': $size *= 1024;
-            // no break
-            case 'M': $size *= 1024;
-            // no break
-            case 'K': $size *= 1024;
-        }
+                case 'P': $size *= 1024;
+                // no break
+                case 'T': $size *= 1024;
+                // no break
+                case 'G': $size *= 1024;
+                // no break
+                case 'M': $size *= 1024;
+                // no break
+                case 'K': $size *= 1024;
+            }
         }
         return $size;
     }
@@ -405,7 +405,7 @@ class Utilities
             self::$formatBytes_unit = $unit;
         }
         $unit = self::$formatBytes_unit;
-        $multipliers = array('', 'k', 'M', 'G', 'T');
+        $multipliers = array('', 'ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi');
         
         // Compute multiplier
         $bytes = max($bytes, 0);
