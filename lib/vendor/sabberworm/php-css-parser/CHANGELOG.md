@@ -20,11 +20,23 @@ Please also have a look at our
 
 ### Documentation
 
+## 9.4.0: Deprecations and bugfixes
+
+### Deprecated
+
+- Deprecate support for PHP 7.2 and 7.3 (#1565)
+
+### Fixed
+
+- Allow CSS containing only whitespace or comments (#1593)
+- Only allow strings as `LineName` components (#1590)
+
 ## 9.3.0: Support for modern CSS at-rules and autoloading bugfix
 
 ### Added
 
-- Add support for modern CSS at-rules: `@layer`, `@scope`, and `@starting-style` (#1549)
+- Add support for modern CSS at-rules: `@layer`, `@scope`, and
+  `@starting-style` (#1549)
 
 ### Fixed
 
