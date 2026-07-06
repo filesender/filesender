@@ -1,4 +1,12 @@
+## Warning 
+
+This docker setup is for SURF Research Cloud and does not use SAML authentication.
+
+
 ## Introduction
+
+SEE THE ABOVE WARNING ABOUT AUTHENTICATION. THIS IS NOT THE DOCKER YOU ARE LOOKING FOR IN GENERAL USE.
+
 [Docker](https://www.docker.com/what-docker) example image of [filesender](https://filesender.org) based on [php-fpm](https://php-fpm.org/).
 
 This docker image is meant to be a local demo installation, using docker compose. It can be configured to run different versions of Filesender: 

@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     '6e3fae29631ef280660b3cdad06f25a8' => $vendorDir . '/symfony/deprecation-contracts/function.php',
+    'a4a119a56e50fbb293281d9a48007e0e' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php',
     '72243e5536b63e298acb6476f01f1aff' => $vendorDir . '/thecodingmachine/safe/lib/special_cases.php',
     '3f648889e687f31c52f949ba8a9d0873' => $vendorDir . '/thecodingmachine/safe/generated/apache.php',
     'eeb4581d958421a4244aaa4167c6a575' => $vendorDir . '/thecodingmachine/safe/generated/apcu.php',

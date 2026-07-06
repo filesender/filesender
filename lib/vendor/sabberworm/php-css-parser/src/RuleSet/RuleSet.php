@@ -14,6 +14,7 @@ use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 use Sabberworm\CSS\Position\Position;
 use Sabberworm\CSS\Position\Positionable;
 use Sabberworm\CSS\Property\Declaration;
+use Sabberworm\CSS\ShortClassNameProvider;
 
 /**
  * This class is a container for individual `Declaration`s.
@@ -31,6 +32,7 @@ class RuleSet implements CSSElement, CSSListItem, Positionable, DeclarationList
     use CommentContainer;
     use LegacyDeclarationListMethods;
     use Position;
+    use ShortClassNameProvider;
 
     /**
      * the declarations in this rule set, using the property name as the key,
@@ -110,7 +112,6 @@ class RuleSet implements CSSElement, CSSListItem, Positionable, DeclarationList
         $position = \count($this->declarations[$propertyName]);
 
         if ($sibling !== null) {
-            $siblingIsInSet = false;
             $siblingPosition = \array_search($sibling, $this->declarations[$propertyName], true);
             if ($siblingPosition !== false) {
                 $siblingIsInSet = true;
@@ -135,8 +136,8 @@ class RuleSet implements CSSElement, CSSListItem, Positionable, DeclarationList
                 foreach ($this->declarations as $declarationsForAProperty) {
                     foreach ($declarationsForAProperty as $declaration) {
                         if (
-                            $declaration->getLineNumber() === $siblingLineNumber &&
-                            $declaration->getColumnNumber() >= $siblingColumnNumber
+                            $declaration->getLineNumber() === $siblingLineNumber
+                            && $declaration->getColumnNumber() >= $siblingColumnNumber
                         ) {
                             $declaration->setPosition($siblingLineNumber, $declaration->getColumnNumber() + 1);
                         }
@@ -345,7 +346,20 @@ class RuleSet implements CSSElement, CSSListItem, Positionable, DeclarationList
      */
     public function getArrayRepresentation(): array
     {
-        throw new \BadMethodCallException('`getArrayRepresentation` is not yet implemented for `' . self::class . '`');
+        $declarationsArrayRepresentation = [];
+        foreach ($this->declarations as $propertyName => $declarationsForOneProperty) {
+            $declarationsArrayRepresentation[$propertyName] = \array_map(
+                function (Declaration $declaration): array {
+                    return $declaration->getArrayRepresentation();
+                },
+                $declarationsForOneProperty
+            );
+        }
+
+        return [
+            'class' => $this->getShortClassName(),
+            'declarations' => $declarationsArrayRepresentation,
+        ];
     }
 
     /**

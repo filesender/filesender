@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'ZipStream\\' => array($vendorDir . '/maennchen/zipstream-php/src'),
+    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Svg\\' => array($vendorDir . '/dompdf/php-svg-lib/src/Svg'),
     'Sabberworm\\CSS\\' => array($vendorDir . '/sabberworm/php-css-parser/src'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
