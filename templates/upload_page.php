@@ -95,14 +95,44 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 
 }
 
+$show_email_choice = true;
+
 // If get a link is not available to the user then
 // there is no real point showing the big choice to the
 // user at the top of the page.
 foreach(Transfer::allOptions() as $name => $dfn)  {
     if($dfn['available']) continue;
     if($name == TransferOptions::GET_A_LINK) {
+        if($dfn['default']) {
+            if(!$dfn['available']) {
+                // not available, default=true => forced to be the only choice
+                // $config['transfer_options'] = array(
+                // ...
+                //   'get_a_link' => array(
+                //     'available' => false,
+                //     'advanced' => false,
+                //     'default' => true
+	        //   ),
+                // ...
+
+                $show_email_choice = false;
+                $show_get_a_link_or_email_choice = true;
+                continue;
+            }
+        }
+    }
+    if($name == TransferOptions::GET_A_LINK) {
         $show_get_a_link_or_email_choice = false;
     }
+}
+
+// If we are not showing the email selection choice
+// keep the get_a_link choice there but hide it as
+// the user can not do anything with it.
+// There is only gal mode in this case.
+$get_a_link_hidden_stanza = "";
+if(!$show_email_choice) {
+    $get_a_link_hidden_stanza = ' hidden="true" ';
 }
 
 if(Auth::isGuest()) {
@@ -316,6 +346,9 @@ if( array_key_exists( 'hide_sender_email', $ops )) {
 <?php
     return;
 }
+
+
+
 
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
@@ -543,7 +576,9 @@ EOF;
 
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
-                                            <div class="fs-radio-group">
+                                            <div class="fs-radio-group"
+                                                 <?php echo "$get_a_link_hidden_stanza" ?>
+                                            >
                                                 <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link" class="get_a_link_top_selector">
 
                                                 <label for="get_a_link" class="fs-radio">
@@ -560,6 +595,7 @@ EOF;
                                             </div>
                                         <?php } ?>
 
+                                        <?php if($show_email_choice) { ?>
                                         <div class="fs-radio-group">
                                             <input type="radio" id="transfer-email" name="transfer-type" value="transfer-email">
 
@@ -575,6 +611,7 @@ EOF;
                                                 </span>
                                             </label>
                                         </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
