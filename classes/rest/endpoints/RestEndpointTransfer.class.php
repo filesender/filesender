@@ -593,7 +593,7 @@ class RestEndpointTransfer extends RestEndpoint
                     $data->lang );
                 $data->expires = Validate::filter_var_regex_log(
                     "transfer.expires", $data->expires,
-                    "|^[0-9]{1,32}$|"  );
+                    "|^[.0-9]{1,32}$|"  );
                 $data->aup_checked = Validate::filter_var_bool("aup_checked", $data->aup_checked);
             }
             
