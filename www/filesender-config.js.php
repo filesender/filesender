@@ -126,6 +126,8 @@ window.filesender.config = {
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
 
+    theme_override: '<?php  echo Config::get('theme_override') ?>',
+
 <?php
 $vfregex = Config::get('valid_filename_regex');
 // convert from PHP to JavaScript for surrogate pairs
@@ -249,6 +251,3 @@ window.filesender.config.useFileSystemWritableFileStreamForDownload = function()
     return window.filesender.config.allow_filesystemwritablefilestream
         && window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload();
 }
-
-
-
