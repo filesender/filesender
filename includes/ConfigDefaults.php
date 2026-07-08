@@ -367,12 +367,14 @@ $default = array(
                                  GUIPages::HELP,
                                  GUIPages::ABOUT,
                                  GUIPages::TERMS,
-                                 GUIPages::PRIVACY ),
+                                 GUIPages::PRIVACY,
+    ),
 
     'allow_pages_add_for_guest' => array( GUIPages::HOME,
                                           GUIPages::UPLOAD,
                                           GUIPages::APISECRETAUP,
-                                          GUIPages::TRANSFERS_GUEST, ),
+                                          GUIPages::TRANSFERS_GUEST,
+    ),
 
     'allow_pages_add_for_user' => array( GUIPages::HOME,
                                          GUIPages::USER,
@@ -383,7 +385,10 @@ $default = array(
                                          GUIPages::NEW_INVITATION,
                                          GUIPages::INVITATION_DETAIL,
                                          GUIPages::DOWNLOAD,
-                                         GUIPages::APISECRETAUP),
+                                         GUIPages::APISECRETAUP,
+                                         GUIPages::TRANSFER_DETAIL,
+                                         GUIPages::INVITATION_DETAIL,
+    ),
 
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
 
