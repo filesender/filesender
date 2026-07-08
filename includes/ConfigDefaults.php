@@ -308,6 +308,7 @@ $default = array(
     'theme' => '',
     'theme_userpref_enabled' => false,
     'openpgp_enabled' => false,
+    'theme_override' => false,
 
     'user_can_only_view_guest_transfers_shared_with_them' => false,
 
