@@ -386,8 +386,7 @@ $default = array(
                                          GUIPages::INVITATION_DETAIL,
                                          GUIPages::DOWNLOAD,
                                          GUIPages::APISECRETAUP,
-                                         GUIPages::TRANSFER_DETAIL,
-                                         GUIPages::INVITATION_DETAIL,
+                                         GUIPages::TRANSFERS_GUEST,
     ),
 
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
