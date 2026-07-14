@@ -46,6 +46,9 @@ class GUIUnknownPageException extends DetailedException
      */
     public function __construct($page)
     {
+        if(Config::isTrue('allow_pages_log_invalid_page')) {
+            Logger::error("Attempt to access page $page is generating an unknown page error");
+        }
         parent::__construct(
             'unknown_page',
             array('page' => $page)
