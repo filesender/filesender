@@ -249,12 +249,16 @@ if( !Auth::isGuest()) {
             } else {
                 $userHasEmailPreference = true;
             }
-        } else {
-            $userHasEmailPreference = true;
         }
     }
     if( !$userHasEmailPreference && !$userHasGALPreference ) {
-        $userHasGALPreference = true;
+        $transferOptions = Config::get('transfer_options');
+        if( isset($transferOptions['get_a_link']['default'])
+            && $transferOptions['get_a_link']['default'] ) {
+            $userHasGALPreference = true;
+        } else {
+            $userHasEmailPreference = true;
+        }
     }
 }
 foreach(Transfer::allOptions() as $name => $dfn)  {
