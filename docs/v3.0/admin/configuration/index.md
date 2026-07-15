@@ -162,6 +162,7 @@ Specific debugging options inclide allow_pages_log_invalid_page
 * [allow_pages_add_for_user](#allow_pages_add_for_user)
 * [allow_pages_add_for_admin](#allow_pages_add_for_admin)
 * [allow_pages_log_invalid_page](#allow_pages_log_invalid_page)
+* [show_splash_after_login](#show_splash_after_login)
 * [can_view_statistics](#can_view_statistics)
 * [can_view_aggregate_statistics](#can_view_aggregate_statistics)
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
@@ -1715,6 +1716,14 @@ Inside of files_downloaded.mail.php for example
 * __default:__ false
 * __available:__ since version 3.11
 * __comment:__ See also allow_pages_core
+
+### show_splash_after_login
+* __description:__ Show the site_splash as well at the top of the upload page after a login
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.11
+* __comment:__
 
 
 ### can_view_statistics
