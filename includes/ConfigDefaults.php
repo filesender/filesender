@@ -391,7 +391,8 @@ $default = array(
 
     'allow_pages_add_for_admin' => array( GUIPages::ADMIN ),
     'allow_pages_log_invalid_page' => false,
-
+    'show_splash_after_login' => false,
+    
     'download_verification_code_enabled' => false,
     'download_verification_code_valid_duration' => 60*15,
     'download_verification_code_random_bytes_used' => 8,

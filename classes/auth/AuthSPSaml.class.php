@@ -297,7 +297,7 @@ class AuthSPSaml
             if (!$landing_page) {
                 $landing_page = 'upload';
             }
-            $target = Utilities::http_build_query(array('s' => $landing_page));
+            $target = Utilities::http_build_query(array('s' => $landing_page, 'showsplash' => '1' ));
         }
         
         $url = Utilities::http_build_query(array(

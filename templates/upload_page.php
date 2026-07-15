@@ -35,6 +35,11 @@ function render_forward_to_another_server($advanced=false) {
     }
 }
 
+$show_splash = 0;
+if( Config::isTrue('show_splash_after_login')) {
+    $show_splash = Utilities::arrayKeyOrDefault( $_GET, 'showsplash', 0, FILTER_VALIDATE_INT  );
+}
+
 $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
@@ -407,6 +412,12 @@ EOF;
             </h1>
 
             <div class="fs-transfer__step fs-transfer__step--active" data-step="1">
+        <?php if( Utilities::isTrue($show_splash) ) { ?>
+            <div class="box">
+                {tr:site_splash}
+            </div>
+        <?php } ?>
+                
                 <div class="row">
                     <div class="col-12">
                         <div class="fs-transfer__droparea">
