@@ -594,7 +594,7 @@ EOF;
                                             <div class="fs-radio-group"
                                                  <?php echo "$get_a_link_hidden_stanza" ?>
                                             >
-                                                <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link" class="get_a_link_top_selector">
+                                                <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link" class="get_a_link_top_selector get_a_link transfer-link">
 
                                                 <label for="get_a_link" class="fs-radio">
                                                     <div class="fs-radio__option">
@@ -612,7 +612,7 @@ EOF;
 
                                         <?php if($show_email_choice) { ?>
                                         <div class="fs-radio-group">
-                                            <input type="radio" id="transfer-email" name="transfer-type" value="transfer-email">
+                                            <input type="radio" id="transfer-email" name="transfer-type" value="transfer-email" class="transfer-email">
 
                                             <label for="transfer-email" class="fs-radio">
                                                 <div class="fs-radio__option">

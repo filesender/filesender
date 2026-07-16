@@ -2311,11 +2311,11 @@ $(function() {
         filesender.ui.setFileList(2, 3);
 
         if( form.attr('data-user-has-gal-preference') == '1' ) {
-            $('#transfer-link').prop("checked", true);
+            $('.transfer-link').prop("checked", true);
             filesender.ui.onChangeTransferType("transfer-link");
         }
         if( form.attr('data-user-has-email-preference') == '1' ) {
-            $('#transfer-email').prop("checked", true);
+            $('.transfer-email').prop("checked", true);
             filesender.ui.onChangeTransferType("transfer-email");
         }
 
