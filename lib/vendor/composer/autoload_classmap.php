@@ -6,9 +6,11 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Dompdf\\Cpdf' => $vendorDir . '/dompdf/dompdf/lib/Cpdf.php',
     'LoggerInterface' => $vendorDir . '/owasp/csrf-protector-php/libs/csrf/LoggerInterface.php',
+    'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
     'Safe\\DateTime' => $vendorDir . '/thecodingmachine/safe/lib/DateTime.php',
     'Safe\\DateTimeImmutable' => $vendorDir . '/thecodingmachine/safe/lib/DateTimeImmutable.php',
     'Safe\\Exceptions\\ApacheException' => $vendorDir . '/thecodingmachine/safe/generated/Exceptions/ApacheException.php',
@@ -93,6 +95,8 @@ return array(
     'Safe\\Exceptions\\ZipException' => $vendorDir . '/thecodingmachine/safe/generated/Exceptions/ZipException.php',
     'Safe\\Exceptions\\ZlibException' => $vendorDir . '/thecodingmachine/safe/generated/Exceptions/ZlibException.php',
     'Stringable' => $vendorDir . '/myclabs/php-enum/stubs/Stringable.php',
+    'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+    'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     'alreadyInitializedException' => $vendorDir . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
     'baseJSFileNotFoundExceptio' => $vendorDir . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
     'configFileNotFoundException' => $vendorDir . '/owasp/csrf-protector-php/libs/csrf/csrfprotector.php',
