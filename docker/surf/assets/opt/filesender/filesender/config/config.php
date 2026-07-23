@@ -50,6 +50,7 @@ $config['default_timezone'] = getenv('FILESENDER_DEFAULT_TIMEZONE');
 $config['maintenance'] = false;
 $config['auth_remote_user_enabled'] = false;
 $config['site_url'] = 'http://localhost';                // String, URL of the application
+$config['site_name'] = 'testfilesender';
 //$config['site_url'] = getenv('FILESENDER_SITE_URL');                // String, URL of the application
 $config['session_cookie_path'] = '/';
 
@@ -110,8 +111,16 @@ $config['auth_sp_saml_simplesamlphp_location'] = '/opt/filesender/simplesamlphp/
 // If you want to overide the SAML simplephp configuration defaults parameter,
 // uncoment and edit the following lines
 //
-// // Authentification type ('saml' or 'shibboleth')
-$config['auth_sp_type'] = 'saml';
+// // Authentification type ('saml' or 'shibboleth' or 'header')
+$config['auth_sp_type'] = 'header';
+$config['auth_remote_user_default_domain'] = 'localhost.localdomain';
+
+// $config['auth_sp_force_session_start_first'] = false;
+// $config['auth_sp_fake_authenticated'] = true;
+// $config['auth_sp_fake_uid'] = 'peter';
+// $config['auth_sp_fake_email'] = 'peter@codebridge.nl';
+// $config['auth_sp_fake_name'] = 'Peter';
+
 //
 // // Get email attribute from authentication service
 //$config['auth_sp_saml_email_attribute'] = 'mail';

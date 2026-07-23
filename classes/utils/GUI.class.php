@@ -334,6 +334,11 @@ class GUI
             if (array_key_exists('s', $_REQUEST)) {
                 $t = $_REQUEST['s'];
                 if( !in_array($t, self::allowedPages())) {
+
+                    if(Config::isTrue('allow_pages_log_invalid_page')) {
+                        Logger::error("Attempt to access page $t will fail because it is not in allowed pages");
+                    }
+                    
                     $page = 'home';
                 } else {
                     $page = $t;
@@ -444,7 +449,12 @@ class GUI
             throw new GUIUnknownPageException($page);
         }
 
-
+        if(Config::isTrue('allow_pages_log_invalid_page')) {
+            if(!in_array($page, self::allowedPages())) {
+                Logger::error("Attempt to access page $page will fail because it is not in allowed pages");
+            }
+        }
+        
         return in_array($page, self::allowedPages());
     }
 

@@ -1123,6 +1123,10 @@ window.filesender.client = {
 
                 var crypto_app = window.filesender.crypto_app();
 
+                if( window.filesender.config.terareceiver_allowed ) {
+                    var terareceiverenabled = page.find('#terareceiverenabled').is(':checked');
+                    window.filesender.user_selected_terareceiver = terareceiverenabled;
+                }
                 if( window.filesender.config.use_streamsaver ) {
                     var streamsaverenabled = page.find('#streamsaverenabled').is(':checked');
                     crypto_app.disable_streamsaver = !streamsaverenabled;
@@ -1435,7 +1439,7 @@ window.filesender.client = {
 
         const k = 1024
         const dm = decimals < 0 ? 0 : decimals
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+        const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 
         const i = Math.floor(Math.log(bytes) / Math.log(k))
 

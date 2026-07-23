@@ -43,7 +43,7 @@ class Version
     /**
      * Code version
      */
-    const CODE_VERSION = '3.10';
+    const CODE_VERSION = '3.11';
     
     /**
      * Version file path
@@ -75,7 +75,7 @@ class Version
         }
         
         // Still here ?
-        throw Exception('Version not in '.$file);
+        throw new Exception('Version not in '.$file);
     }
     
     /**

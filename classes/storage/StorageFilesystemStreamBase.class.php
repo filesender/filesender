@@ -92,5 +92,46 @@ class StorageFilesystemStreamBase
             'blocks'  => -1,
         ];
     }
+
+    public function stream_seek($offset, $whence) {
+        // Handle random access (SEEK_SET, SEEK_CUR, SEEK_END)
+        switch ($whence) {
+            case SEEK_SET:
+                $newPos = $offset;
+                break;
+            case SEEK_CUR:
+                $newPos = $this->offset + $offset;
+                break;
+            case SEEK_END:
+                $newPos = $this->file->size + $offset;
+                break;
+            default:
+                return false;
+        }
+
+        // Validate the new position
+        if ($newPos >= 0 && $newPos <= $this->file->size) {
+            $this->offset = $newPos;
+            return true;
+        }
+
+        return false;
+    }
+
+    public function stream_read($count) {
+        $data = Storage::readChunk($this->file, $this->offset, $count);
+        $this->offset += strlen($data);
+        return $data;
+    }
+
+    public function stream_tell() {
+        return $this->offset;
+    }
+
+    public function stream_eof()
+    {
+        return $this->offset >= $this->file->size;
+    }
+
 };
 

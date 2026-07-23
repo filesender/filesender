@@ -156,9 +156,7 @@ class Archiver
             $file = $data['data'];
             $fileopts = array();
             $transfer = $file->transfer;
-            if( (!isset($archivedName)) ) {
                 $archivedName = $this->getArchivedFileName( $file );
-            }
 
             $contentsz += $file->size;
 	    $archive->init_file_stream_transfer($archivedName, $file->size, $fileopts);

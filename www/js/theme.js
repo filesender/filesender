@@ -93,6 +93,10 @@ filesender.ui.getSystemTheme = function() {
 };
 
 filesender.ui.setTheme = function() {
+    if( window.filesender.config.theme_override ) {
+        filesender.ui.changeTheme( window.filesender.config.theme_override );
+        return;
+    }
     let selectedTheme = THEMES.LIGHT_THEME;
     const systemTheme = filesender.ui.getSystemTheme();
 

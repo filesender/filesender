@@ -192,7 +192,7 @@ class ShredFile extends DBObject
         $data = $s->fetch();
         
         if (!$data) {
-            throw FileNotFoundException('name = '.$name);
+            throw new FileNotFoundException('name = '.$name);
         }
         
         return self::fromData($data['id'], $data); // Don't query twice, use loaded data

@@ -18,7 +18,7 @@ firstrun: testenv stop-docker certificate docker
 	echo "First run of Filesender $${FILESENDER_VERSION} with SimpleSAMLphp $${SSP_VERSION}"; \
 	docker compose up -d
 	sleep 15
-	docker exec -ti filesender php /opt/filesender/filesender/scripts/upgrade/database.php
+	docker exec filesender php /opt/filesender/filesender/scripts/upgrade/database.php
 	docker compose down
 	docker compose up -d
 

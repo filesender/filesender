@@ -48,16 +48,6 @@ class StorageCloudS3Stream extends StorageFilesystemStreamBase
         $rc = parent::stream_open( $path, $mode, $options, $opened_path );
         return $rc;
     }
-    
-
-    public function stream_seek($offset, $whence) {
-        $this->offset = $offset;
-        return true;
-    }
-
-    public function stream_tell() {
-        return $this->offset;
-    }
 
     public function stream_read($count)
     {
@@ -81,11 +71,6 @@ class StorageCloudS3Stream extends StorageFilesystemStreamBase
 	}
 
         return $data;
-    }
-
-    public function stream_eof()
-    {
-        return $this->offset >= $this->file->size;
     }
 
     public static function ensureRegistered()

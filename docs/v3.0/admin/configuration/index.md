@@ -12,6 +12,10 @@ A note about colours;
 * mandatory configuration settings are <span style="background-color:red">marked in red</span>
 * sections <span style="background-color:orange">marked in orange</span> need to be double checked.
 
+
+Specific debugging options inclide allow_pages_log_invalid_page
+
+
 # Table of contents
 
 ---
@@ -157,6 +161,8 @@ A note about colours;
 * [allow_pages_add_for_guest](#allow_pages_add_for_guest)
 * [allow_pages_add_for_user](#allow_pages_add_for_user)
 * [allow_pages_add_for_admin](#allow_pages_add_for_admin)
+* [allow_pages_log_invalid_page](#allow_pages_log_invalid_page)
+* [show_splash_after_login](#show_splash_after_login)
 * [can_view_statistics](#can_view_statistics)
 * [can_view_aggregate_statistics](#can_view_aggregate_statistics)
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
@@ -233,6 +239,12 @@ A note about colours;
 * [terasender_start_mode](#terasender_start_mode)
 * [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stalling_detection)
+
+## TeraReceiver (download module)
+
+* [terareceiver_enabled](#terareceiver_enabled)
+* [terareceiver_allowed](#terareceiver_allowed)
+
 
 ## Download
 
@@ -1657,6 +1669,19 @@ Inside of files_downloaded.mail.php for example
 * __available:__ since version 2.33
 * __comment:__ See also allow_pages_add_for_guest and allow_pages_add_for_user
 
+    The possible values for the allow_pages array entries can be found
+    in the classes/constants/GUIPages.class.php file. The values there
+    relate to the template pages in the templates directory and will
+    have _page.php appended. For example, GUIPages::DOWNLOAD has the
+    value 'download' which will relate to the
+    templates/download_page.php file. In the FileSender app that page
+    is selected with the 's=' parameter. For example on the download
+    page you might see part of the URL like
+    `.../filesender/?s=download&token=5...` and the s= portion is the
+    page that will be tested against the allow_pages_* configuration
+    and also select the template download_page.php for page
+    generation.
+
 
 ### allow_pages_add_for_guest
 * __description:__ These values will be added to the allow_pages_core pages if the principal is a guest
@@ -1671,7 +1696,7 @@ Inside of files_downloaded.mail.php for example
                 you have set $config['user_page'] = null.
 * __mandatory:__ no
 * __type:__ array of values from GUIPages constants
-* __default:__ array( GUIPages::HOME, GUIPages::USER, GUIPages::UPLOAD, GUIPages::TRANSFERS, GUIPages::GUESTS, GUIPages::DOWNLOAD, GUIPages::APISECRETAUP )
+* __default:__ array( GUIPages::HOME, GUIPages::USER, GUIPages::UPLOAD, GUIPages::TRANSFERS, GUIPages::TRANSFER_DETAIL, GUIPages::GUESTS, GUIPages::NEW_INVITATION, GUIPages::INVITATION_DETAIL, GUIPages::DOWNLOAD, GUIPages::APISECRETAUP, GUIPages::TRANSFERS_GUEST )
 * __available:__ since version 2.33
 * __comment:__ See also allow_pages_core
 
@@ -1683,6 +1708,22 @@ Inside of files_downloaded.mail.php for example
 * __default:__ array( GUIPages::ADMIN )
 * __available:__ since version 2.33
 * __comment:__ See also allow_pages_core
+
+### allow_pages_log_invalid_page
+* __description:__ DEBUG Log error messages relating to pages not being avialable or permitted for display
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.11
+* __comment:__ See also allow_pages_core
+
+### show_splash_after_login
+* __description:__ Show the site_splash as well at the top of the upload page after a login
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.11
+* __comment:__
 
 
 ### can_view_statistics
@@ -2594,6 +2635,33 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __default:__ false
 * __available:__ since version 2.0
 * __comment:__ Has effect on the JavaScript-variables given to the client-side of Terasender.
+
+
+---
+
+## TeraSender (high speed upload module)
+
+---
+
+### terareceiver_enabled
+
+* __description:__ if set to true, enables TeraReceiver download module. This is the first drop to mirror what terasender is doing by using client-side webworkers to parallelise download.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.31 (3.0.alpha3)
+
+
+### terareceiver_allowed
+
+* __description:__ If you would like to allow your users to select TeraReceiver enable this option. If this is true then a user can select to use terareceiver on the download page. It will be selected by default but allows the user to unselect it on a per transfer basis if they wish.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.11
+
+
+
 
 ---
 

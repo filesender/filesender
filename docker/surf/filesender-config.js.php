@@ -88,6 +88,7 @@ window.filesender.config = {
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
 
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
+    encryption_mandatory: '<?php echo Config::get('encryption_mandatory') ?>',
     encryption_mandatory_with_generated_password: '<?php echo Config::get('encryption_mandatory_with_generated_password') ?>',
     encryption_min_password_length: '<?php echo Config::get('encryption_min_password_length') ?>',
     encryption_password_text_only_min_password_length: '<?php echo Config::get('encryption_password_text_only_min_password_length') ?>',
@@ -105,12 +106,11 @@ window.filesender.config = {
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
     crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
 
-    crypto_use_custom_password_code: '',
-
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terareceiver_enabled: <?php  echo value_to_TF(Config::get('terareceiver_enabled')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
+    terasender_worker_max_count: <?php echo Config::get('terasender_worker_max_count') ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'js/terasender/terasender_worker.js',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
@@ -120,12 +120,9 @@ window.filesender.config = {
 
     streamsaver_mitm_url: '<?php echo Config::get('site_url') ?>lib/streamsaver/mitm.html',
 
-
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
-    legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
-    legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
 
 <?php
 $vfregex = Config::get('valid_filename_regex');
@@ -134,6 +131,7 @@ $vfregex = Config::get('valid_filename_regex');
 $vfregex = str_replace("\u{10000}-\u{10FFFF}", '', $vfregex);
 $vfregex = str_replace('\\', '\\\\', $vfregex);
 ?>
+
     valid_filename_regex: '<?php echo $vfregex ?>',
     base_path: '<?php echo GUI::path() ?>',
     site_url: '<?php echo Config::get('site_url') ?>',
@@ -147,9 +145,6 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
 
-    logon_url: 'http://localhost/simplesaml/module.php/saml/sp/login/example-sp?ReturnTo=http%3A%2F%2Flocalhost%2F%3Fs%3Dupload?AuthId=example-sp&ReturnTo=http%3A%2F%2Flocalhost%2F%3Fs%3Dupload',
-    logoff_url: 'http://localhost/simplesaml/module.php/core/logout/example-sp?ReturnTo=http%3A%2F%2Flocalhost%2F%3Fs%3Dlogout?AuthId=example-sp&ReturnTo=http%3A%2F%2Flocalhost%2F%3Fs%3Dlogout',
-
     owasp_csrf_protector_enabled: '<?php echo Config::get('owasp_csrf_protector_enabled')  ?>',
 
     upload_display_per_file_stats: '<?php echo Config::get('upload_display_per_file_stats') ?>',
@@ -162,23 +157,6 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     crypto_pbkdf2_delay_to_show_dialog: '<?php echo Config::get('crypto_pbkdf2_delay_to_show_dialog') ?>',
     crypto_pbkdf2_dialog_custom_webasm_delay:'<?php echo Config::get('crypto_pbkdf2_dialog_custom_webasm_delay') ?>',
 
-	language: {
-		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
-		decrypting : "<?php echo Lang::tr('decrypting')->out(); ?>",
-		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
-		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
-		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>",
-		storage_filesystem_file_not_found : "<?php echo Lang::tr('storage_filesystem_file_not_found')->out(); ?>",
-		user_hit_guest_limit : "<?php echo Lang::tr('user_hit_guest_limit')->out(); ?>",
-		rest_roundtrip_token_invalid : "<?php echo Lang::tr('rest_roundtrip_token_invalid')->out(); ?>",
-                file_encryption_show_password : "<?php echo Lang::tr('file_encryption_show_password')->out(); ?>"
-                , guest_reminder_rate_limit_reached : "<?php echo Lang::tr('guest_reminder_rate_limit_reached')->out(); ?>"
-                , user_hit_guest_rate_limit : "<?php echo Lang::tr('user_hit_guest_rate_limit')->out(); ?>"
-                , download_complete:       "<?php echo Lang::tr('download_complete')->out(); ?>"
-/**/            , download_chunk_progress: "<?php echo Lang::tr('download_chunk_progress')->out(); ?>"
-                , file_not_found:          "<?php echo Lang::tr('file_not_found')->out(); ?>"
-                , session_expired_warning: "<?php echo Lang::tr('session_expired_warning')->out(); ?>"
-	},
 
     clientlogs: {
         stashsize: <?php echo ClientLog::stashSize() ?>
@@ -200,6 +178,8 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
     allow_filesystemwritablefilestream: <?php echo value_to_TF(Browser::instance()->allowFileSystemWritableFileStream) ?>,
 
 
+    test_for_unreadable_files: <?php echo value_to_TF(Config::get('test_for_unreadable_files')) ?>,
+
     upload_page_password_can_not_be_part_of_message_handling: "<?php echo Config::get('upload_page_password_can_not_be_part_of_message_handling') ?>",
 
     encryption_password_must_have_upper_and_lower_case: <?php echo value_to_TF(Config::get('encryption_password_must_have_upper_and_lower_case')) ?>,
@@ -208,7 +188,15 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 
     download_verification_code_enabled: <?php echo value_to_TF(Config::get('download_verification_code_enabled')) ?>,
 
+    make_download_links_clickable: <?php echo value_to_TF(Config::get('make_download_links_clickable')) ?>,
+    client_send_current_timezone_to_server: <?php echo value_to_TF(Config::get('client_send_current_timezone_to_server')) ?>,
+
+    ui_use_datepicker_for_transfer_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_transfer_expire_time_selection')) ?>,
+    ui_use_datepicker_for_guest_expire_time_selection: <?php echo value_to_TF(Config::get('ui_use_datepicker_for_guest_expire_time_selection')) ?>,
+
     auth_warn_session_expired: <?php echo value_to_TF(Config::get('auth_warn_session_expired')) ?>,
+
+    openpgp_enabled: <?php echo value_to_TF(Config::get('openpgp_enabled')) ?>,
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

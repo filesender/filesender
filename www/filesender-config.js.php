@@ -108,6 +108,7 @@ window.filesender.config = {
 
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terareceiver_enabled: <?php  echo value_to_TF(Config::get('terareceiver_enabled')) ?>,
+    terareceiver_allowed: <?php  echo value_to_TF(Config::get('terareceiver_allowed')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
     terasender_worker_max_count: <?php echo Config::get('terasender_worker_max_count') ?>,
@@ -124,6 +125,8 @@ window.filesender.config = {
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
+
+    theme_override: '<?php  echo Config::get('theme_override') ?>',
 
 <?php
 $vfregex = Config::get('valid_filename_regex');
@@ -248,6 +251,3 @@ window.filesender.config.useFileSystemWritableFileStreamForDownload = function()
     return window.filesender.config.allow_filesystemwritablefilestream
         && window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload();
 }
-
-
-
