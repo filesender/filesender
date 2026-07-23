@@ -510,7 +510,16 @@ class Lang
             // Main translation file
             if (file_exists($path.'/lang.php')) {
                 $lang = array();
-                include $path.'/lang.php';
+		include $path.'/lang.php';
+		if (file_exists($path.'/announce.html.php')) {
+                    ob_start();
+                    include $path.'/announce.html.php';
+                    $announce_html = ob_get_clean();
+
+                    if (trim($announce_html) !== '') {
+                        $lang['announce'] = $announce_html;
+                    }
+                }
                 foreach ($lang as $id => $s) {
                     $dictionary[self::cleanId($id)] = array('text' => $s);
                 }

@@ -771,6 +771,11 @@ class User extends DBObject
             $i = IdP::fromId($a->idpid);
             return $i->entityid;
         }
+
+        if ($property == 'idpid') {
+            $a = Authentication::fromId($this->authid);
+            return $a->idpid;
+        }
         
         if ($property == 'email') {
             return count($this->email_addresses) ? $this->email_addresses[0] : null;

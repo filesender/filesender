@@ -1460,10 +1460,11 @@ class Transfer extends DBObject
                 throw new BadExpireException($value);
             }
             
-            $value = (float)$value;
+            $value = floor((float)$value);
             if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
                 throw new BadExpireException($value);
             }
+
             $this->expires = (string)$value;
         } elseif ($property == 'options') {
             $this->options = self::validateOptions($value);

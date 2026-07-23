@@ -48,15 +48,6 @@ class StorageFilesystemChunkedStream extends StorageFilesystemStreamBase
         return $rc;
     }
 
-    public function stream_seek($offset, $whence) {
-        $this->offset = $offset;
-        return true;
-    }
-
-    public function stream_tell() {
-        return $this->offset;
-    }
-
     public function stream_read($count)
     {
         $file   = $this->file;
@@ -109,11 +100,6 @@ class StorageFilesystemChunkedStream extends StorageFilesystemStreamBase
             $offset += strlen($data);
         }
         return $totaldata;
-    }
-
-    public function stream_eof()
-    {
-        return $this->offset >= $this->file->size;
     }
 
     public static function ensureRegistered()
