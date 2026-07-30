@@ -587,11 +587,18 @@ EOF;
                             <div class="fs-transfer__send-options">
                                 <div class="row">
                                     <div class="col-12">
-                                        <?php if($show_get_a_link_or_email_choice_section_header) { ?>
                                         <h5>
-                                            {tr:choose_files}
+                                            <?php if($show_get_a_link_or_email_choice_section_header) { ?>
+                                                {tr:choose_files}
+                                            <?php
+                                            } else { 
+                                                if($show_email_choice) {
+                                                    echo "{tr:choose_files_forced_email}";
+                                                } else {
+                                                    echo "{tr:choose_files_forced_get_a_link}";
+                                                }
+                                            } ?>
                                         </h5>
-                                        <?php } ?>
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
                                             <div class="fs-radio-group"
