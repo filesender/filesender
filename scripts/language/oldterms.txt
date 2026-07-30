@@ -105,6 +105,8 @@ cannot_alter_closed_transfer
 cannot_open_input_file
 change_password
 choose_files
+choose_files_forced_email
+choose_files_forced_get_a_link
 clear_all
 clear_api_secret
 clear_client_logs
@@ -885,6 +887,7 @@ uploaded
 uploading_transfers
 uploading_your_transfer
 use_streamsaver_for_download
+use_terareceiver_for_download
 user_additional
 user_additional_body
 user_additionnal
