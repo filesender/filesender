@@ -874,6 +874,14 @@ try {
     );
     $statement->execute(array());
 
+    echo "Updating Japan local identifier from jp to ja in user table...\n";
+    $statement = DBI::prepare(
+        "UPDATE $tbl_user  "
+      . " SET lang = 'ja' "
+      . " WHERE lang = 'jp' "
+    );
+    $statement->execute(array());
+        
 
 } catch(Exception $e) {
     echo "Error, Rolling database changes back....\n";
