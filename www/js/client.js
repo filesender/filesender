@@ -1140,7 +1140,7 @@ window.filesender.client = {
                     //
                     var onFileOpen = function( blobSink, fileid )
                     {
-                        var progress = page.find("[data-id='" + fileid + "']").find('.downloadprogress');
+                        var progress = page.find(".file[data-id='" + fileid + "']").find('.downloadprogress');
                         progress.html("");
                         blobSink.progress = progress;
 
@@ -1157,7 +1157,7 @@ window.filesender.client = {
                     };
                     var onFileClose = function( blobSink, fileid )
                     {
-                        var progress = page.find("[data-id='" + fileid + "']").find('.downloadprogress');
+                        var progress = page.find(".file[data-id='" + fileid + "']").find('.downloadprogress');
                         progress.html(window.filesender.config.language.download_complete);
 
                     };
@@ -1172,8 +1172,8 @@ window.filesender.client = {
                     var i = 0;
                     for(; i < ids.length; i++ ) {
 
-                        var dataid  = "[data-id='" + ids[i] + "']";
-                        var dataid0 = "[data-id='" + ids[0] + "']";
+                        var dataid  = ".file[data-id='" + ids[i] + "']";
+                        var dataid0 = ".file[data-id='" + ids[0] + "']";
                         
                         var el                 = page.find(dataid);
                         var fileaead           = el.attr('data-fileaead');
@@ -1221,7 +1221,7 @@ window.filesender.client = {
                 else
                 {
                     // single file download
-                    var dataid = "[data-id='" + ids[0] + "']";
+                    var dataid = ".file[data-id='" + ids[0] + "']";
                     var el = page.find(dataid);
                     var transferid               = $('.transfer').attr('data-id');
                     var chunk_size               = el.attr('data-chunk-size');
