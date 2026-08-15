@@ -98,6 +98,8 @@ class AuthSPSaml
             
             $attributes = array();
 
+            // Expose the authenticating IdP as a standard authentication attribute.
+            $attributes['idp'] = $ssp->getAuthData('saml:sp:IdP');
             
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
