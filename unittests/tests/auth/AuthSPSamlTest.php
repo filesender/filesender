@@ -1,16 +1,8 @@
 <?php
 
-require_once dirname(__DIR__, 3).'/vendor/autoload.php';
+require_once dirname(__FILE__) . '/../common/CommonUnitTestCase.php';
 
-if (!defined('FILESENDER_BASE')) {
-    define('FILESENDER_BASE', dirname(__DIR__, 3));
-}
-
-require_once FILESENDER_BASE.'/classes/autoload.php';
-
-use PHPUnit\Framework\TestCase;
-
-class AuthSPSamlTest extends TestCase
+class AuthSPSamlTest extends CommonUnitTestCase
 {
     private $authAttributes;
     private $authUser;
@@ -29,6 +21,7 @@ class AuthSPSamlTest extends TestCase
             'simplesamlphp_location' => '',
             'simplesamlphp_url' => '',
             'authentication_source' => 'test',
+            'testsuite_run_locally' => true,
         ));
         $this->setStaticProperty('simplesamlphp_auth_simple', new AuthSPSamlTestSimple());
         $this->setStaticProperty('isAuthenticated', true);
@@ -81,14 +74,7 @@ class AuthSPSamlTest extends TestCase
 
     private function assertProfileIsSelectedForIdentityProvider($idp, $expectedSiteName): void
     {
-        $profile = FILESENDER_BASE.'/config/config-saml-idp-test.php';
-
         try {
-            file_put_contents(
-                $profile,
-                "<?php\n\$config['site_name'] = 'SAML IdP test';\n"
-            );
-
             $authAttributes = new ReflectionProperty('Auth', 'attributes');
             $authUser = new ReflectionProperty('Auth', 'user');
 
@@ -102,6 +88,7 @@ class AuthSPSamlTest extends TestCase
                     ),
                 ),
                 'site_name' => 'Default site',
+                'testsuite_run_locally' => true,
             ));
 
             $method = new ReflectionMethod('Config', 'handleConfigRegexFiles');
@@ -109,33 +96,9 @@ class AuthSPSamlTest extends TestCase
 
             $this->assertSame($expectedSiteName, Config::get('site_name'));
         } finally {
-            if (file_exists($profile)) {
-                unlink($profile);
-            }
         }
     }
 
-    private function setStaticProperty($name, $value): void
-    {
-        $this->setStaticPropertyValue('AuthSPSaml', $name, $value);
-    }
-
-    private function setConfigParameters($parameters): void
-    {
-        $this->setStaticPropertyValue('Config', 'parameters', $parameters);
-    }
-
-    private function getStaticProperty($class, $name)
-    {
-        $property = new ReflectionProperty($class, $name);
-        return $property->getValue();
-    }
-
-    private function setStaticPropertyValue($class, $name, $value): void
-    {
-        $property = new ReflectionProperty($class, $name);
-        $property->setValue(null, $value);
-    }
 }
 
 class AuthSPSamlTestSimple
