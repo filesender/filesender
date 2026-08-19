@@ -44,6 +44,7 @@
         <testsuite name="core" >
             <file>tests/dbs/DBsTest.php</file>              <!-- Success -->
             <file>tests/utilities/UtilitiesTest.php</file>  <!-- Success -->
+            <file>tests/auth/AuthSPSamlTest.php</file>
 <!--         <file>tests/auditlog/AuditlogTest.php</file>  -->  <!-- Failed -->
 <!--            <file>tests/dbobject/DBObjectTest.php</file>    <! - Failed -->
             <file>tests/file/FileTest.php</file>            <!-- Failed -->
