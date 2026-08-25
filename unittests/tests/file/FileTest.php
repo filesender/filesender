@@ -32,6 +32,8 @@
 
 require_once dirname(__FILE__) . '/../common/CommonDatabaseTestCase.php';
 
+use PHPUnit\Framework\Attributes\Depends;
+
 /**
  * File test class
  * 
@@ -46,7 +48,8 @@ class FileTest extends CommonDatabaseTestCase {
     private $transferMessage;    // Default message of transfer
     private $recipient1;         // Recipient 1 for the transfer
     private $recipient2;         // Recipient 2 for the transfer
-
+    private $fileid;
+    
     /**
      * Init variables, first function called
      */
@@ -80,7 +83,9 @@ class FileTest extends CommonDatabaseTestCase {
         $file->mime_type='application/binary';
 
         $file->save();
-
+        $this->fileid = $file->id;
+        echo "FILEID " . $this->fileid . "\n";
+        var_dump($this->fileid);
         $this->assertNotNull($file->id);
         $this->assertTrue($file->id > 0);
 
@@ -99,7 +104,13 @@ class FileTest extends CommonDatabaseTestCase {
      * @depends testCreate
      * @return int: $file->id if test succeed
      */
+    #[Depends('testCreate')]
     public function testRead($fileId) {
+        if( !$fileId ) {
+            $fileId = $this->fileid;
+        echo "FILEID " . $this->fileid . "\n";
+        var_dump($this->fileid);
+        }
         $this->assertTrue($fileId > 0);
 
         // Test from cache
@@ -132,7 +143,11 @@ class FileTest extends CommonDatabaseTestCase {
      * @depends testRead
      * @return int: $file->id if test succeed
      */
+    #[Depends('testCreate')]
     public function testUpdate($fileId) {
+        if( !$fileId ) {
+            $fileId = $this->fileid;
+        }
         $this->assertTrue($fileId > 0);
 
         $file = File::fromId($fileId);
@@ -165,7 +180,11 @@ class FileTest extends CommonDatabaseTestCase {
      * @depends testUpdate
      * @return int: $file->id if test succeed
      */    
+    #[Depends('testCreate')]
     public function testStorage($fileId) {
+        if( !$fileId ) {
+            $fileId = $this->fileid;
+        }
         $this->assertTrue($fileId > 0);
 
         $file = File::fromId($fileId);
@@ -186,7 +205,11 @@ class FileTest extends CommonDatabaseTestCase {
      * @depends testStorage
      * @return boolean: true if test succeed
      */
+    #[Depends('testCreate')]
     public function testDelete($fileId) {
+        if( !$fileId ) {
+            $fileId = $this->fileid;
+        }
         $this->assertTrue($fileId > 0);
 
         $file = File::fromId($fileId);

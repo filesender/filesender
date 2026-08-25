@@ -33,6 +33,8 @@
 require_once('CommonPHPUnitConfigs.php');
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Depends;
+
 
 /**
  * Common unit test case file
