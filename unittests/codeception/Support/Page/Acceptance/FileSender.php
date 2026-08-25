@@ -114,6 +114,7 @@ EOT );
         $I->amOnPage('/?s=transfers');
         $I->see('Currently available transfers');
         $I->click(".expand");
+        $I->wait(1);
         $I->click(".download_href");
     }
 
