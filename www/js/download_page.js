@@ -319,7 +319,7 @@ $(function() {
     if( transfer_is_encrypted && !filesender.supports.crypto ) 
         $('.crypto_not_supported_message').show();
 
-//    page.find('.toggle-select-all').trigger('click');
+    page.find('.toggle-select-all').trigger('click');
 
     button_zipdl = page.find('.archive_download_frame');
     button_tardl = page.find('.archive_tar_download_frame');
