@@ -857,6 +857,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'การเข้ารห�
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'การเข้ารหัสระหว่างการขนส่งและส่วนที่เหลือ';
 $lang['upload_page_graph_mb_per_second'] = 'MB/วินาที';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'ความเร็วในการอัปโหลดเฉลี่ยทั่วโลกของไฟล์ที่มากกว่า {size}';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'กำลังดำเนินการอัปโหลดอีกครั้ง';
 $lang['upload_stalled_and_resumed'] = 'การอัปโหลดหยุดชะงักและกลับมาทำงานต่อ...';
 $lang['upload_stalled_due_to_testing'] = 'การอัปโหลดหยุดชะงักโดยกรณีทดสอบ...';

@@ -11,6 +11,7 @@
     if(!isset($trsort)) $trsort = TransferQueryOrder::create();
 
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
+    $show_progress = isset($show_progress) ? (bool)$show_progress : false;
     $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
     $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
     $haveNext = 0;
@@ -103,7 +104,10 @@
     // part of the row.
     $maxColSpan = 8;
     if($show_guest) {
-        $maxColSpan = 9;
+        $maxColSpan++;
+    }
+    if($show_progress) {
+        $maxColSpan++;
     }
 
     if( count($transfers) > $limit ) {
@@ -163,6 +167,12 @@ EOF;
             <?php clickableHeader('{tr:expires}',TransferQueryOrder::COLUMN_EXPIRES,$trsort,$nosort); ?>
         </th>
 
+        <?php if($show_progress) { ?>
+        <th>
+            {tr:upload_progress}
+        </th>
+        <?php } ?>
+
        <th class="actions">
            {tr:actions}
        </th>
@@ -174,6 +184,7 @@ EOF;
             class="transfer objectholder fs-table__row fs-table__row--clickable"
             data-transfer
             data-id="<?php echo                 Template::Q($transfer->id) ?>"
+            data-transfer-status="<?php echo Template::Q($transfer->status); ?>"
             data-chunk-size="<?php         echo Template::Q($transfer->chunk_size); ?>"
             data-crypted-chunk-size="<?php echo Template::Q($transfer->crypted_chunk_size); ?>"
             data-recipients-enabled="<?php echo Template::Q($transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1') ?>"
@@ -244,7 +255,21 @@ EOF;
                 <?php echo Utilities::formatDate($transfer->expires, true) ?>
             </td>
 
-            
+            <?php if($show_progress) { ?>
+            <td data-label="{tr:upload_progress}">
+                <?php if ($transfer->isStatusUploading()) { ?>
+                    <div class="fs-progress-bar" data-transfer-progress="<?php echo Template::Q($transfer->id); ?>">
+                        <div class="fs-progress-bar__progress">
+                            <div class="fs-progress-bar__indicator"></div>
+                        </div>
+                        <span class="fs-progress-bar__value">0%</span>
+                    </div>
+                <?php } else { ?>
+                    <span class="fs-upload-done"><i class="fa fa-check-circle"></i></span>
+                <?php } ?>
+            </td>
+            <?php } ?>
+
             <td class="actions  fs-table__actions">
                 <?php
                 if( $status != 'available' ) {

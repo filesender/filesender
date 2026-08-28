@@ -863,6 +863,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'සංක්‍රමණය�
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'සංක්‍රමණ සහ විවේකයේ සංකේතනය';
 $lang['upload_page_graph_mb_per_second'] = 'තත්පරයට මෙගාබයිට්';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = 'ගෝලීය සාමාන්‍ය උඩුගත කිරීමේ වේගය {size} ට වැඩි ගොනු';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'උඩුගත කිරීමේ නැවත ප්‍රගතියක් ඇත';
 $lang['upload_stalled_and_resumed'] = 'උඩුගත කිරීම නතර කර නැවත ආරම්භ කරන ලදී...';
 $lang['upload_stalled_due_to_testing'] = 'පරීක්ෂණ ව්ෂ‍යක් නිසා උඩුගත කිරීම ඇනහිට ඇත...';

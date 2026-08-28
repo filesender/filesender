@@ -9,7 +9,7 @@
   width: var(--fs-spacing-7x);
 }
 
-.fs-progress-bar__value + .fs-progress-bar__indicator {
+.fs-progress-bar__value+.fs-progress-bar__indicator {
   margin-left: var(--fs-spacing-2x);
 }
 
@@ -31,6 +31,30 @@
   top: 0;
   background: var(--fs-success);
   border-radius: var(--fs-spacing-2x);
+  transition: width 0.7s ease;
+}
+
+td .fs-progress-bar {
+  margin-top: 0;
+}
+
+.fs-progress-bar__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fs-spacing-base);
+  margin-right: var(--fs-spacing-2x);
+  white-space: nowrap;
+}
+
+.fs-progress-bar__bytes {
+  margin-left: var(--fs-spacing-2x);
+  font-size: var(--fs-font-size-small);
+  color: var(--fs-text-color-secondary);
+  white-space: nowrap;
+}
+
+.fs-upload-done {
+  color: var(--fs-success);
 }
 
 .fs-progress-bar__indicator--thin {
@@ -40,4 +64,14 @@
 
 .fs-progress-bar__indicator--thin:before {
   border-radius: var(--fs-spacing-base);
+}
+
+.fs-transfer-detail__details .fs-progress-bar__label {
+  position: relative;
+  width: auto;
+}
+
+.fs-transfer-detail__details .fs-progress-bar__label i.fa {
+  position: absolute;
+  left: -1.8rem;
 }

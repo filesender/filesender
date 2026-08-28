@@ -858,6 +858,7 @@ $lang['upload_page_graph_encryption_in_transit'] = 'ट्रान्जिट�
 $lang['upload_page_graph_encryption_in_transit_and_rest'] = 'ट्रान्जिट र आराममा एन्क्रिप्शन';
 $lang['upload_page_graph_mb_per_second'] = 'एमबी/सेकेन्ड';
 $lang['upload_page_graph_title_upload_speed_of_files_over'] = '{size} भन्दा माथि फाइलहरूको विश्वव्यापी औसत अपलोड गति';
+$lang['upload_progress'] = 'Upload progress';
 $lang['upload_progressing_again'] = 'अपलोड फेरि प्रगति गर्दै';
 $lang['upload_stalled_and_resumed'] = 'अपलोड रोकियो र पुन: सुरु भयो...';
 $lang['upload_stalled_due_to_testing'] = 'एक परीक्षण केस द्वारा अपलोड रोकिएको...';
