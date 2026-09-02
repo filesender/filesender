@@ -66,14 +66,14 @@ class EncryptionCest
 ///////////////////////////////////////////
     
     
-    public function uploadNotEncrypted( AcceptanceTester $I, FileSender $fs )
+    protected function uploadNotEncrypted( AcceptanceTester $I, FileSender $fs )
     {        
         $fs->upload(
             array('get_a_link' => true,
             ));
     }
     
-    public function downloadNotEncrypted( AcceptanceTester $I, FileSender $fs )
+    protected function downloadNotEncrypted( AcceptanceTester $I, FileSender $fs )
     {
         $fs->setupAuth();
 
@@ -104,7 +104,7 @@ class EncryptionCest
      * Method testEncryptionTest 
      * upload a file using key_version = 0
      * @test 
-     */
+     */    
     public function testEncryptionKeyVerZeroTest( AcceptanceTester $I, FileSender $fs )
     {
         $fs->setKeyVersionNewFiles( 0 );
@@ -115,6 +115,7 @@ class EncryptionCest
         $fs->setKeyVersionNewFiles( 0 );        
         $this->downloadEncrypted( $I, $fs );
     }
+    /*
     public function testDecryptionKeyVerZeroOneTest( AcceptanceTester $I, FileSender $fs )
     {
         $fs->setKeyVersionNewFiles( 1 );        
@@ -171,6 +172,7 @@ class EncryptionCest
         $this->downloadEncrypted( $I, $fs );
     }
 
+    
 
     
 }

@@ -3,13 +3,13 @@
         "ramsey/uuid": "^4.7"
     },
     "require-dev": {
-        "phpunit/phpunit-selenium": "^9.0.1",
-        "squizlabs/php_codesniffer": "3.*",
-        "friendsofphp/php-cs-fixer": "^3.49.0",
-        "codeception/codeception": "^5.1",
+        "phpunit/phpunit": "^12.3 || ^13.0",
+        "squizlabs/php_codesniffer": "^4.0.4",
+        "friendsofphp/php-cs-fixer": "^3.95.22",
+        "codeception/codeception": "^5.3.5",
         "codeception/module-phpbrowser": "*",
         "codeception/module-asserts": "*",
-        "codeception/module-webdriver": "^3.2"
+        "codeception/module-webdriver": "^4.0.5"
     },
     "autoload-dev": {
         "classmap": ["unittests/codeception/_support/FileSenderTrait.php"]

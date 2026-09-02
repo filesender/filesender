@@ -71,10 +71,11 @@ class ConfigurationABCest
         // upload in configB, download in configA
         ////////////////////////////////
         ////////////////////////////////
-        ////////////////////////////////        
+        ////////////////////////////////
+        
         $this->switchToConfigurationA( $I, $fs );
         $fs->uploadNotEncrypted(array("file2.txt", "file10mb.txt"));
- 
+
         $this->switchToConfigurationB( $I, $fs );
         $fs->downloadNotEncrypted();
         $fs->downloadNotEncrypted("file10mb.txt");
@@ -96,6 +97,7 @@ class ConfigurationABCest
         
         $this->switchToConfigurationB( $I, $fs );
         $fs->downloadEncrypted();
+        
         $I->amOnPage('/');
         $fs->uploadEncrypted();
 
@@ -112,6 +114,7 @@ class ConfigurationABCest
  
         $this->switchToConfigurationB( $I, $fs );
         $fs->downloadEncryptedArchive( array("file10mb.txt", "file2.txt", "file20mb.txt" ));
+        
         $I->amOnPage('/');
         $fs->uploadEncrypted(array("file2.txt", "file10mb.txt"));
         
@@ -155,7 +158,7 @@ class ConfigurationABCest
                                'upload_crypted_chunk_size' => 32 + $v,
                                'download_chunk_size' => $v,
                            ));
- 
+
         
     }
     
