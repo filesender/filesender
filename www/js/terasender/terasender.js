@@ -349,7 +349,7 @@ window.filesender.terasender = {
             var t = this;
             var encryption_details = t.receiver.encryption_details;
             
-            this.log('evalProgress(recv) job chunkid ' + job.chunkid );
+            this.log('evalProgress(recv) AAAAAAA job chunkid ' + job.chunkid );
             this.log('evalProgress(recv) job cc      ' + encryption_details.chunkcount );
             this.log('evalProgress(recv) job   ec ' + job.encryptedChunk );
             if( job.encryptedChunk ) {
