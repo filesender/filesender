@@ -28,58 +28,35 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-
-
-<phpunit
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnFailure="false"
->
-    <testsuites>
-        <testsuite name="core" >
-            <file>tests/dbs/DBsTest.php</file>              <!-- Success -->
-            <file>tests/utilities/UtilitiesTest.php</file>  <!-- Success -->
-<!--         <file>tests/auditlog/AuditlogTest.php</file>  -->  <!-- Failed -->
-<!--            <file>tests/dbobject/DBObjectTest.php</file>    <! - Failed -->
-            <file>tests/file/FileTest.php</file>            <!-- Failed -->
-<!--            <file>tests/mail/MailTest.php</file>            <! - Failed -->
-<!--            <file>tests/report/ReportTest.php</file>        <! - Failed -->
-            <file>tests/transfer/TransferTest.php</file>    <!-- Failed -->
-            <file>tests/clientlog/ClientlogTest.php</file>    <!-- Success -->
-        </testsuite>
-
-        <testsuite name="t" >
-            <file>tests/file/FileTest.php</file>            
-        </testsuite>
-        
-        <testsuite name="selenium">
-
-          <file>./selenium/tests/UploadAutoResumeTest.php</file>
-          <file>./selenium/tests/EncryptionTest.php</file>
-          <file>./selenium/tests/ConfigurationOptionsTest.php</file>
-          <file>./selenium/tests/TransferExpiredTest.php</file>
-
-          <file>./selenium/tests/InvalidExtensionsTest.php</file>
-          <file>./selenium/tests/MaxFilesTest.php</file>
-          <file>./selenium/tests/MaxUploadSizeTest.php</file>
-          <file>./selenium/tests/TemplatingTest.php</file>
-          <file>./selenium/tests/HeaderMenuTest.php</file>
-          <file>./selenium/tests/LanguageSelectTest.php</file>
-
-        </testsuite>
-
-        <testsuite name="dataset" >
-          <file>tests/dataset/DatasetTest.php</file>
-        </testsuite>
-
-        <testsuite name="cron" >
-          <file>tests/cron/CronTest.php</file>
-        </testsuite>
-        
-    </testsuites>
+<phpunit backupGlobals="false" colors="true" processIsolation="false" stopOnFailure="false" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <testsuites>
+    <testsuite name="core">
+      <file>tests/dbs/DBsTest.php</file>
+      <file>tests/utilities/UtilitiesTest.php</file>
+      <file>tests/auth/AuthSPSamlTest.php</file>
+      <file>tests/file/FileTest.php</file>
+      <file>tests/transfer/TransferTest.php</file>
+      <file>tests/clientlog/ClientlogTest.php</file>
+      <!--         <file>tests/auditlog/AuditlogTest.php</file>  -->
+      <!-- Failed -->
+      <!--            <file>tests/dbobject/DBObjectTest.php</file>    <! - Failed -->
+      <!-- Failed -->
+      <!--            <file>tests/mail/MailTest.php</file>            <! - Failed -->
+      <!--            <file>tests/report/ReportTest.php</file>        <! - Failed -->
+      <!-- Failed -->
+      <!-- Success -->
+    </testsuite>
+    <testsuite name="t">
+      <file>tests/file/FileTest.php</file>
+    </testsuite>
+    <testsuite name="selenium">
+      <directory>./selenium/tests</directory>
+    </testsuite>
+    <testsuite name="dataset">
+      <file>tests/dataset/DatasetTest.php</file>
+    </testsuite>
+    <testsuite name="cron">
+      <file>tests/cron/CronTest.php</file>
+    </testsuite>
+  </testsuites>
 </phpunit>

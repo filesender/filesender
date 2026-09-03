@@ -1510,6 +1510,13 @@ filesender.ui.startUpload = function() {
             var expiresSelected = filesender.ui.nodes.expires.datepicker('getDate');
             var now = new Date();
             expiresSelected.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), 0);
+            // setting hours alone will jump this into that hour and may
+            // need to have a day rolled back if we are in a tz offset < UTC
+            // note that this offset method is positive in that case
+            // tested in Australia server tz, Pacific/Honolulu on the client
+            if( expiresSelected.getTimezoneOffset() > 0 ) {
+                expiresSelected.setDate( expiresSelected.getDate()-1);
+            }
             this.transfer.expires = expiresSelected.getTime() / 1000;
         } else {
             const expiresDays = $('#expires-select').find(":selected").val();

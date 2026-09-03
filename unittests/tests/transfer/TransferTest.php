@@ -32,6 +32,8 @@
 
 require_once dirname(__FILE__) . '/../common/CommonUnitTestCase.php';
 
+use PHPUnit\Framework\Attributes\Depends;
+
 /**
  * Transfer class test
  * 
@@ -104,6 +106,7 @@ class TransferTest extends CommonUnitTestCase {
      * 
      * @return int: transfer->id if test succeed
      */
+    #[Depends('testCreate')]
     public function testRead($transferId) {
 
         $transfer = Transfer::fromId($transferId);
@@ -121,6 +124,7 @@ class TransferTest extends CommonUnitTestCase {
      * @depends testRead
      * @return boolean: true if test succeed
      */
+    #[Depends('testRead')]
     public function testDelete($transferId) {
         $this->assertTrue($transferId > 0);
 
@@ -153,6 +157,7 @@ class TransferTest extends CommonUnitTestCase {
      * @depends testDelete
      * @return boolean: true if test succeed
      */
+    #[Depends('testDelete')]
     public function testDeleteFromCron() {
         $transferId = $this->create()->id;
 

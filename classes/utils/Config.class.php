@@ -92,7 +92,6 @@ class Config
         if( !isset($matchValue)) {
             return;
         }
-
         if (preg_match('`'.$regex.'`', $matchValue)) {
             $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
             if (file_exists($extra_config_file)) {
@@ -100,6 +99,19 @@ class Config
                 include_once($extra_config_file);
                 self::merge(self::$parameters, $config);
             }
+        }
+        // try subdir for testsuites
+        if (Utilities::isTrue(Config::get("testsuite_run_locally"))) {
+
+            if (preg_match('`'.$regex.'`', $matchValue)) {
+                $extra_config_file = FILESENDER_BASE.'/ci/config/config-' . $extra_config_name . '.php';
+                if (file_exists($extra_config_file)) {
+                    $config = array();
+                    include_once($extra_config_file);
+                    self::merge(self::$parameters, $config);
+                }
+            }
+            
         }
     }
     

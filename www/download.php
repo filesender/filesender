@@ -84,7 +84,11 @@ try {
         if( Config::get('log_authenticated_user_download_by_ensure_user_as_recipient')) {
             if( Auth::isRegularUser()) {
                 $user = Auth::user();
-                $email = $user->saml_user_identification_uid;
+                $email = $user->email;
+                if( !$email ) {
+                    $email = $user->saml_user_identification_uid;
+                }
+                
                 $found = false;
                 foreach($transfer->recipients as $r) {
                     if( $r->email == $email ) {

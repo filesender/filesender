@@ -915,3 +915,6 @@ $lang['your_transfer_was_sent'] = 'Your transfer was sent to the following email
 $lang['encrypted_metadata_file_size_hidden'] = 'Hidden';
 $lang['use_terareceiver_for_download'] = 'Use TeraReceiver code for this download. This new code allows better retry on network timeout and will in the future allow multiple active download streams for performance';
 
+
+$lang['choose_files_forced_get_a_link'] = 'You will get a link to the uploaded files.';
+$lang['choose_files_forced_email'] = 'Files will be emailed to your nominated destination.';
