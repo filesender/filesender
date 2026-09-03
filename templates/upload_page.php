@@ -43,6 +43,7 @@ if( Config::isTrue('show_splash_after_login')) {
 $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
+$show_get_a_link_or_email_choice_section_header = true;
 $show_get_a_link_or_email_choice = true;
 $openpgp_encrypt_passphrase = false;
 $openpgpkey = '';
@@ -122,6 +123,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 
                 $show_email_choice = false;
                 $show_get_a_link_or_email_choice = true;
+                $show_get_a_link_or_email_choice_section_header = false;
                 continue;
             }
         }
@@ -586,9 +588,17 @@ EOF;
                                 <div class="row">
                                     <div class="col-12">
                                         <h5>
-                                            {tr:choose_files}
+                                            <?php if($show_get_a_link_or_email_choice_section_header) { ?>
+                                                {tr:choose_files}
+                                            <?php
+                                            } else { 
+                                                if($show_email_choice) {
+                                                    echo "{tr:choose_files_forced_email}";
+                                                } else {
+                                                    echo "{tr:choose_files_forced_get_a_link}";
+                                                }
+                                            } ?>
                                         </h5>
-
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
                                             <div class="fs-radio-group"

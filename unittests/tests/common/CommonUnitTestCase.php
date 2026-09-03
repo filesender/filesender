@@ -33,6 +33,8 @@
 require_once('CommonPHPUnitConfigs.php');
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Depends;
+
 
 /**
  * Common unit test case file
@@ -70,6 +72,28 @@ abstract class CommonUnitTestCase extends TestCase {
       }
       print_r("\n---------------------------------------------------------------------------------------\n");
    }
-  
+
+    protected function setStaticProperty($name, $value): void
+    {
+        $this->setStaticPropertyValue('AuthSPSaml', $name, $value);
+    }
+
+    protected function setConfigParameters($parameters): void
+    {
+        $this->setStaticPropertyValue('Config', 'parameters', $parameters);
+    }
+
+    protected function getStaticProperty($class, $name)
+    {
+        $property = new ReflectionProperty($class, $name);
+        return $property->getValue();
+    }
+
+    protected function setStaticPropertyValue($class, $name, $value): void
+    {
+        $property = new ReflectionProperty($class, $name);
+        $property->setValue(null, $value);
+    }
+    
 }
     
