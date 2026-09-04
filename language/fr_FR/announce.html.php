@@ -9,35 +9,35 @@
 ?>
 <?php
 /*
- * Sample announcement file for English (en_AU).
- * This file produces no output by default.
+ * Exemple de fichier d'annonces pour le français (fr_FR).
+ * Par défaut, ce fichier ne génère aucune sortie.
  *
- * To display an announcement, copy this file to config/language/en_AU/announce.html.php
- * and replace this comment block with your HTML content.
- * Files in config/language/ take precedence and are not overwritten by upstream updates.
+ *  Pour afficher une annonce, copiez ce fichier dans le répertoire config/language/fr_FR/announce.html.php
+ * et remplacez ce bloc de commentaires par votre contenu HTML.
+ * Les fichiers situés dans le répertoire config/language/ ont la priorité et ne sont pas écrasés par les mises à jour en amont.
  *
- * Example content:
+ * Exemple de contenu:
  *
- *   General notice (blue):
+ *   Information générale (bleu):
  *
  *     <div class="site-announcement">
- *         <h2>Notice</h2>
- *         <p>This site is a test environment (filesender-test).</p>
+ *         <h2>À noter</h2>
+ *         <p>Ce site est un environnement de test (filesender-test).</p>
  *     </div>
  *
- *   Scheduled maintenance (yellow):
+ *   Maintenance planifiée (jaune):
  *
  *     <div class="site-announcement site-announcement--warning">
- *         <h2>Scheduled Maintenance Notice</h2>
- *         <p>System maintenance will be performed on YYYY-MM-DD from HH:MM to HH:MM (UTC+?).<br>
- *         The service will be unavailable during this period.</p>
+ *         <h2>Avis de Maintenance Prévue</h2>
+ *         <p>Une maintenance du système aura lieu le JJ-MM-AAAA de HH:MM à HH:MM (UTC+?).<br>
+ *         Le service ne sera pas disponible pendant cette période.</p>
  *     </div>
  *
- *   Urgent / outage (red):
+ *   Urgent / Panne (rouge):
  *
  *     <div class="site-announcement site-announcement--danger">
- *         <h2>Service Disruption</h2>
- *         <p>We are currently experiencing a service disruption. We apologize for the inconvenience.</p>
+ *         <h2>Interruption de service</h2>
+ *         <p>Nous rencontrons actuellement une interruption de service. Nous vous prions de nous excuser pour la gêne occasionnée.</p>
  *     </div>
  */
 ?>
