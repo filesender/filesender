@@ -111,6 +111,8 @@ $lang['cannot_alter_closed_transfer'] = 'Nie można zmodyfikować zakończonego 
 $lang['cannot_open_input_file'] = 'Nie można otworzyć pliku wejściowego';
 $lang['change_password'] = 'Zmień hasło';
 $lang['choose_files'] = 'Wybierz jak chcesz przesłać pliki';
+$lang['choose_files_forced_email'] = 'Files will be emailed to your nominated destination.';
+$lang['choose_files_forced_get_a_link'] = 'You will get a link to the uploaded files.';
 $lang['clear_all'] = 'Wyczyść wszystko';
 $lang['clear_api_secret'] = 'Wyczyść prywatny klucz API';
 $lang['clear_client_logs'] = 'Wyczyść dzienniki klienta';
@@ -216,13 +218,8 @@ $lang['download_disclamer'] = 'Wybierz plik(i) do pobrania.';
 $lang['download_disclamer_archive'] = 'Możesz pobrać wszystkie pliki jednocześnie jako pojedynczy skompresowany plik archiwum (.zip). Kliknij pobrany plik, aby go rozpakować i uzyskać dostęp do poszczególnych plików.';
 $lang['download_disclamer_crypto_message'] = 'Kliknij plik, aby pobrać dane i odszyfrować je na komputerze.';
 $lang['download_disclamer_nocrypto_message'] = 'Możesz kliknąć prawym przyciskiem myszy przycisk pobierania i \'Kopiuj adres  linku”, aby pobrać plik za pomocą innego narzędzia.';
-<<<<<<< HEAD
 $lang['download_error'] = 'Podczas przesyłania pliku wystąpił błąd.';
 $lang['download_error_abort'] = 'An ABORT error occurred while transferring the file.';
-=======
-$lang['download_error'] = 'Wystąpił błąd przy transferowaniu pliku.';
-$lang['download_error_abort'] = 'Pojawił się problem podczas przesyłania tego pliku.';
->>>>>>> development
 $lang['download_file'] = 'Pobierz plik';
 $lang['download_files'] = 'Pobierz pliki';
 $lang['download_invalid_range'] = 'Nie poprawny zakres pobrania';
@@ -252,12 +249,8 @@ $lang['dp_week_header'] = 'Tg';
 $lang['dp_year_suffix'] = ' ';
 $lang['drag_and_drop'] = '
 Przeciągnij i Upuść swoje pliki tutaj';
-<<<<<<< HEAD
 $lang['drag_drop_select'] = 'Przesuń i upuść lub kliknij tudaj aby wybrać';
 $lang['duplicate_file'] = 'Duplikat pliku';
-=======
-$lang['duplicate_file'] = 'Duplikat';
->>>>>>> development
 $lang['duplicate_recipient'] = 'Odbiorca już istnieje';
 $lang['email_address'] = 'Adres email';
 $lang['email_daily_statistics'] = 'Wyślij mi statystyki dzienne';
@@ -268,11 +261,7 @@ $lang['email_guest_created_receipt'] = 'Powiadom mnie o utworzeniu konta Gość'
 $lang['email_guest_expired'] = 'Powiadom Gościa o wygaśnięciu';
 $lang['email_me_copies'] = 'Wysyłaj mi kopie wszystkich powiadomień';
 $lang['email_me_on_expire'] = 'Powiadom mnie kiedy wygaśnie';
-<<<<<<< HEAD
 $lang['email_recipient_when_transfer_expires'] = 'Powiadom adresata kiedy transfer się przedawni';
-=======
-$lang['email_recipient_when_transfer_expires'] = 'Powiadom odbiorców mailowo kiedy transfer się przedawni';
->>>>>>> development
 $lang['email_report_on_closing'] = 'Wyślij mi raport po wygaśnięciu';
 $lang['email_sent'] = 'Wiadomość wysłana';
 $lang['email_separator_msg'] = 'Wiele adresów email rozdzielonych znakiem , lub ;';
@@ -283,19 +272,14 @@ $lang['empty_file'] = 'Pusty plik';
 $lang['enable_recipient_email_download_complete'] = 'Pozwól odbiorcom otrzymywać powiadomienia o zakończeniu pobrania poprzez email';
 $lang['enable_recipient_email_download_complete_warning'] = 'Nie używaj tej opcji jeśli odbiorcą jest lista dystrybucyjna, w przeciwnym wypadku każde pobranie doprowadzi do wysłania wiadomości na listę.';
 $lang['encountered_exception'] = 'Aplikacja napotkała na błąd w trakcie przetwarzania Twojego żądania';
-<<<<<<< HEAD
 $lang['encrypt_files_with_password'] = 'Zaszyfruj pliki hasłem';
 $lang['encrypted_archive_download_overall_progress'] = 'Pobieranie pliku {currentfilenumber} z {totalfilestodownload}';
 $lang['encrypted_metadata'] = 'Encrypt transfer metadata';
+$lang['encrypted_metadata_file_size_hidden'] = 'Hidden';
 $lang['encryption'] = 'Szyfrowanie';
 $lang['encryption_password_container_can_have_text_only_min_password_length_message'] = 'Jeśli twoje hasło ma wiecej niż {cfg:encryption_password_text_only_min_password_length} znaków bez znaczących powtórzeń, wymogi komplikacji hasła są mniejsze.';
 $lang['encryption_split'] = 'Encryption Split';
 $lang['endpoint'] = 'Końcówka';
-=======
-$lang['encrypted_archive_download_overall_progress'] = 'Pobieranie pliku {currentfilenumber} z {totalfilestodownload}';
-$lang['encryption'] = 'Szyfrowanie';
-$lang['endpoint'] = 'końcówka';
->>>>>>> development
 $lang['enter_to_email'] = 'Adres(y) email odbiorców';
 $lang['enter_to_subject'] = 'Wprowaź temat';
 $lang['enter_transfer_name'] = 'Wprowadź nazwę transferu (opcjonalnie)';
@@ -314,13 +298,8 @@ $lang['error_date'] = 'Błędna data';
 $lang['error_details'] = 'Szczegóły błędu technicznego';
 $lang['error_dialog'] = 'Błąd';
 $lang['error_type'] = 'Typ błędu';
-<<<<<<< HEAD
 $lang['estimated_completion'] = 'Szacowany czas ukończenia';
 $lang['event_count'] = 'Ilość zdarzeń';
-=======
-$lang['estimated_completion'] = 'Szacowane zakończenie';
-$lang['event_count'] = 'Licznik zdarzeń';
->>>>>>> development
 $lang['expand_all'] = 'Rozwiń wszystkie';
 $lang['expiration'] = 'Wygaśnięcie';
 $lang['expiration_date'] = 'Data wygaśnięcia';
@@ -329,7 +308,6 @@ $lang['expires'] = 'Wygasa';
 $lang['expires_after'] = 'Wygasa po';
 $lang['expires_in'] = 'Ten transfer wygasa za';
 $lang['expiry_date'] = 'Data wygaśnięcia';
-<<<<<<< HEAD
 $lang['expiry_extension_count_exceeded'] = 'Expiry date extension maximum reached';
 $lang['expiry_extension_not_allowed'] = 'Expiry date extension is not allowed';
 $lang['export_client_logs'] = 'Wyeksportuj logi klienta do pliku...';
@@ -342,15 +320,6 @@ $lang['extend_expiry_date'] = 'Przedłuż okres wygasania o {days} dni';
 $lang['extended'] = 'Expiry date extended until {expires}';
 $lang['extended_reminded'] = 'Expiry date extended until {expires}, a reminder was sent to recipients';
 $lang['failed'] = 'Failed';
-=======
-$lang['expiry_extension_count_exceeded'] = ',0000';
-$lang['export_client_logs'] = 'Eksportuj logi klienta do pliku ...';
-$lang['extend'] = 'Przedłuż';
-$lang['extend_and_remind'] = 'Przedłuż i wyślij przypomnienie';
-$lang['extend_expires'] = 'Data przedawnienia się transferu';
-$lang['extend_expiry_date'] = 'Przedłuż okres wygasania o {days} dni';
-$lang['failed'] = 'Nieudany';
->>>>>>> development
 $lang['failed_to_connect_to_database'] = 'Nie można połączyć się z bazą danych';
 $lang['failed_transfer_found'] = 'Wygląda że jeden z Twoich poprzednich transferów nie powiódł się, czy chcesz rozpocząć od miejsca gdzie się zakończył (będziesz musiał wskazać plik ponownie)?';
 $lang['failures'] = 'Niepowodzenie';
@@ -369,13 +338,8 @@ $lang['file_encryption_metadata_wrong_password'] = 'Incorrect Password. Please r
 $lang['file_encryption_need_password'] = 'Musisz podać hasło nim pobierzesz';
 $lang['file_encryption_password'] = 'Hasło';
 $lang['file_encryption_password_must_have_numbers'] = 'Hasło musi zawierać przynajmniej jedną cyfrę (0,1,2...9)';
-<<<<<<< HEAD
 $lang['file_encryption_password_must_have_special_characters'] = 'Hasło musi zawierać przynajmniej jeden znak specjalny na przyład !@#$%^&*()<>';
 $lang['file_encryption_password_must_have_upper_and_lower_case'] = 'Hasło misi zawierać WIELKIE i małe litery';
-=======
-$lang['file_encryption_password_must_have_special_characters'] = 'Hasło musi zawierać przynajmniej jeden znak specjany, na przykład !@#$%^&*()<>';
-$lang['file_encryption_password_must_have_upper_and_lower_case'] = 'Hasło musi zawierać WIELKIE i małe litery';
->>>>>>> development
 $lang['file_encryption_password_too_short'] = 'Hasło jest za krótkie';
 $lang['file_encryption_show_password'] = 'Pokaż/Ukryj Hasło';
 $lang['file_encryption_wrong_password'] = 'Niepoprawne Hasło';
@@ -400,14 +364,10 @@ $lang['forward_server_name'] = 'Serwer docelowy';
 $lang['forward_to_another_server'] = 'Prześlij do innego serwera';
 $lang['from'] = 'Od';
 $lang['gb_per_second'] = 'Gb/sek';
-<<<<<<< HEAD
 $lang['general'] = 'Ogólne';
 $lang['generate_a_different_password'] = 'Wygeneruj inne hasło';
 $lang['generate_new_api_secret'] = 'Wygeneruj nowy prywatny klucz API.';
 $lang['generate_password'] = 'Wygeneruj hasło';
-=======
-$lang['generate_a_different_password'] = 'Wygeneruj inne hasło';
->>>>>>> development
 $lang['get_a_link'] = 'Wygeneruj link zamiast wysyłać do odbiorcy';
 $lang['get_full_user_remote_config'] = 'Pobierz pełną zdalną konfigurację';
 $lang['global_statistics'] = 'Statystyki Globalne';
@@ -440,16 +400,10 @@ $lang['help_page'] = 'Pomoc';
 $lang['help_title'] = 'Pomoc';
 $lang['hide_advanced_settings'] = 'Schowaj ustawienia zaawansowane';
 $lang['hide_details'] = 'Ukryj szczegóły';
-<<<<<<< HEAD
 $lang['hide_sender_email'] = 'Hide sender email on the download page';
 $lang['hit_guest_creation_rate_limit'] = 'Osiągnięto całkowity limit tworzenia gości';
 $lang['hit_guest_creation_total_limit'] = 'Hit guest creation rate limit';
 $lang['hit_guest_remind_rate_limit'] = 'Hit guest remind rate limit';
-=======
-$lang['hit_guest_creation_rate_limit'] = 'Osiągnięcie limitu tworzenia dla gości';
-$lang['hit_guest_creation_total_limit'] = 'Osiągnięcie limitu tworzenia dla gości';
-$lang['hit_guest_remind_rate_limit'] = 'Osiągnieto limit przypomnień gościom';
->>>>>>> development
 $lang['host_quota'] = 'Ukryj quote';
 $lang['host_quota_usage'] = 'Wykorzystanie quota hosta';
 $lang['ignore'] = 'Ignoruj';
@@ -461,7 +415,6 @@ $lang['invalid_address_format'] = 'Adres email ma nieprawidłowy format';
 $lang['invalid_file'] = 'Niepoprawny plik';
 $lang['invalid_file_name'] = 'Niepoprawna nazwa plik';
 $lang['invalid_recipient'] = 'Niepoprawny odbiorca';
-<<<<<<< HEAD
 $lang['invitation_description'] = 'Możesz wysłać komuś zaproszenie aby dać im dostęp do {cfg:site_name}, i pozwolić im wysyłać pliki tobie i innym.';
 $lang['invitation_details'] = 'Szczegóły zaproszenia';
 $lang['invitation_expires_in'] = 'Zaproszenie wygasa w';
@@ -475,9 +428,6 @@ $lang['invitation_title'] = 'Zaproś kogoś do plików transferu';
 $lang['invitation_was_sent_on'] = 'Zaproszenie wysłano dnia';
 $lang['invitation_was_sent_to'] = 'Twoje zaproszenie zostało wysłane na podane adresy mailowe';
 $lang['invite_guest'] = 'Zaproś kogoś do wysłania pliku';
-=======
-$lang['invite_guest'] = 'Zaproś gościa do wysłania pliku';
->>>>>>> development
 $lang['ip'] = 'Adres IP';
 $lang['is_default'] = 'To jest wartośc domyślna';
 $lang['iterations'] = 'Iteracje';
@@ -505,10 +455,7 @@ $lang['me'] = 'Ja';
 $lang['message'] = 'Wiadomość';
 $lang['message_can_not_contain_urls'] = 'Wiadomość nie może zawierać elementów, które wyglądają jak adresy URL';
 $lang['method'] = 'metoda';
-<<<<<<< HEAD
 $lang['mime_types'] = 'Typy plików';
-=======
->>>>>>> development
 $lang['minimum'] = 'Minimum';
 $lang['minutes'] = 'Minut';
 $lang['missing_files_for_restart'] = 'Brakujący plik(i), nie można wykonać restartu bez nich';
@@ -526,13 +473,8 @@ $lang['next'] = 'Dalej';
 $lang['no'] = 'Nie';
 $lang['no_addresses_found'] = 'Nie znaleziono adresów email';
 $lang['no_auditlog'] = 'Nie znaleziono dzienników kontroli';
-<<<<<<< HEAD
 $lang['no_av_scans_performed'] = 'Nie przeprowadzono żadnych skanów';
 $lang['no_estimate'] = 'Nie można oszacować';
-=======
-$lang['no_av_scans_performed'] = 'Nie wykonano skanów';
-$lang['no_estimate'] = 'Brak szacunku';
->>>>>>> development
 $lang['no_guests'] = 'Brak Gości';
 $lang['no_results'] = 'Brak wyników';
 $lang['no_such_property'] = 'Nie znaleziono właściwości';
@@ -563,12 +505,8 @@ $lang['or'] = 'lub';
 $lang['pager_has_no_more'] = 'Nie ma więcej rekordów.';
 $lang['pager_more'] = 'Więcej...';
 $lang['password'] = 'Hasło';
-<<<<<<< HEAD
 $lang['password_can_not_be_part_of_message_error'] = 'Ponieważ email może nie być szyfrowany, nie możesz wysłać wiadomości zawierającej hasło szyfrowania. Proszę usunąć zmienić hasło lub usunąć je z wiadomości aby kontynuować.';
 $lang['password_can_not_be_part_of_message_warning'] = 'Proszę ';
-=======
-$lang['password_can_not_be_part_of_message_warning'] = 'Proszę nie wysyłać hasła szyfrowania w wiadomości. Mail może nie być szyfrowany i jeśli ktoś go przechwyci będzie mógł pobrać i odszyfrować twoje pliki';
->>>>>>> development
 $lang['password_hashing_performance'] = 'Wydajność hashowania hasła';
 $lang['password_share_tip'] = '! Upewnij się że wpisałeś poniżej hasło, przekaż je tylko osobom którym chcesz dać dostęp do plików.';
 $lang['pause'] = 'Wstrzymaj';
@@ -595,22 +533,14 @@ $lang['profile_page_text_linking_to_privacy_page'] = 'FileSender ceni Twoją pry
 $lang['python_cli_client_heading'] = 'Klient CLI Pythona';
 $lang['python_cli_client_setup_information'] = 'Aby użyć konfiguracji klienta CLI Python, utwórz katalog ~/.filesender i skopiuj plik konfiguracyjny filesender.py.ini do katalogu ~  filesender. Plik konfiguracyjny jest opcjonalny, ale jest zalecany, ponieważ pozwala nie podawać wszystkich parametrów w wierszu poleceń. Klienta CLI Pythona można pobrać do dowolnej lokalizacji i uruchomić za pomocą interpretera języka Python w wersji 3. <p> Po zainstalowaniu pliku konfiguracyjnego można przesłać plik przy użyciu <pre> python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt </pre>';
 $lang['quota_usage'] = 'wykorzystano {size:used} z {size:total} , pozostało {size:available}';
-<<<<<<< HEAD
 $lang['rate_limit_exceeded'] = 'You have attempted to perform this operation more frequently than is allowed in a 24 hour period.';
-=======
-$lang['rate_limit_exceeded'] = 'Próbowałeś podjąć próbę wykonania tej operacji częściej, niż jest to dozwolone w ciągu 24 godzin.';
 $lang['read_only_mode'] = 'FileSender jest w trybie tylko do odczytu. Możesz kontynuuować pobieranie istniejących plików, ale nie możesz dodać nowych plików ani gości.';
->>>>>>> development
 $lang['reader_not_supported'] = 'Używasz starszej przeglądarki bez wsparcia dla HTML5.<br /><br />Przeciągnij i Upuść dla plików nie jest dostępne<br /><br />Możesz wysyłać pliki o wielkości do {size}.';
 $lang['reason'] = 'Powód';
 $lang['recipient'] = 'Odbiorca';
 $lang['recipient_added'] = 'Odbiorca dodany';
-<<<<<<< HEAD
 $lang['recipient_count_estimate'] = 'Unikalni odbiorcy';
 $lang['recipient_deleted'] = 'Adresat został usunięty.';
-=======
-$lang['recipient_deleted'] = 'Odbiorca został usunięty.';
->>>>>>> development
 $lang['recipient_error_bounce'] = 'email nie został dostarczeny';
 $lang['recipient_errors'] = 'Błędy w odbiorcach';
 $lang['recipient_not_found'] = 'Nie znaleziono Odbiorcy';
@@ -620,11 +550,7 @@ $lang['recipients_notifications_language'] = 'Język odbiorcy';
 $lang['reconnect_and_continue'] = 'Połącz Ponownie i Kontynuuj';
 $lang['redirect_url_on_complete'] = 'Przekieruj po przesłaniu';
 $lang['remote_auth_sync_request'] = '<p> <strong> {remote} </strong> poprosił o podanie danych zdalnego uwierzytelnienia. </p> <p> Aby umożliwić dostęp, podaj następujący kod do <strong> {remote} </strong>: <strong> {code} </strong> (kod jest ważny tylko przez kolejne 2 minuty). </p> <p> Jeśli nie wiesz, o co chodzi, po prostu zignoruj tę wiadomość. </p>';
-<<<<<<< HEAD
 $lang['remove_option'] = 'Usuń opcje';
-=======
-$lang['remove_option'] = 'Usuń opcję';
->>>>>>> development
 $lang['report_cannot_write_file'] = 'Nie można zapisać pliku raportu';
 $lang['report_event_archive_download_ended'] = 'Odbiorca {author.identity} zakończył pobieranie archiwum transferu';
 $lang['report_event_archive_download_started'] = 'Odbiorca {author.identity} rozpoczął pobieranie archiwum transferu';
@@ -698,15 +624,9 @@ $lang['script_download_fscli'] = 'The FileSender CLI Client will download all fi
 $lang['script_download_links'] = 'Generate curl downlaod script';
 $lang['script_download_title'] = 'Curl download script';
 $lang['search'] = 'Szukaj';
-<<<<<<< HEAD
 $lang['search_transfer_by_sender_email_description'] = 'Wyszukaj transfer po adresie email nadawcy';
 $lang['search_transfer_id_inclusive_description'] = 'Szukaj transferów według adresu e-mail nadawcy';
 $lang['search_transfers'] = 'Szukaj transferów';
-=======
-$lang['search_transfer_by_sender_email_description'] = 'Wyszukaj transferu po emailu wysyłającego';
-$lang['search_transfer_id_inclusive_description'] = 'Wyszukaj transfery na podstawie id w podanym zakresie minimalnym i maksymalnym (włącznie).';
-$lang['search_transfers'] = 'Szukaj transferu';
->>>>>>> development
 $lang['search_user'] = 'Szukaj użytkownika (na podstawie ID)';
 $lang['searching'] = 'Wyszukuje ...';
 $lang['seconds_since_data_was_last_sent'] = '{seconds} sekund od ostatniego wysłania danych';
@@ -721,10 +641,7 @@ $lang['select_files_to_download'] = 'Wybierz pliki które chcesz pobrać jako .z
 $lang['select_for_archive_download'] = 'Wybierz pobranie jako archiwum';
 $lang['selected_files'] = 'Wybrane pliki';
 $lang['send'] = 'Wyślij';
-<<<<<<< HEAD
 $lang['send_a_reminder'] = 'Wyślij przypomnienie';
-=======
->>>>>>> development
 $lang['send_an_entire_directory'] = 'Wyślij cały folder';
 $lang['send_client_logs'] = 'Wyślij dziennik';
 $lang['send_invitation'] = 'Wyślij zaproszenie';
@@ -732,16 +649,10 @@ $lang['send_invitation_to'] = 'Wyślij zaproszenie do';
 $lang['send_logs_to_server'] = 'Wyślij logi swojej przeglądarki do serwera.';
 $lang['send_reminder'] = 'Wyślij przypomnienie';
 $lang['send_to_my_email'] = 'Wyślij na mój adres email';
-<<<<<<< HEAD
 $lang['send_transfer_to'] = 'Wyślij transfer do';
 $lang['send_verification_code_to_your_email_address'] = 'Wyślij kod weryfikacyjny na twój adress email';
 $lang['send_voucher'] = 'Wyślij Kupon';
 $lang['sender_email_search'] = 'E-mail nadawcy';
-=======
-$lang['send_verification_code_to_your_email_address'] = 'Wyślij kod weryfikacyjny na swój adres email';
-$lang['send_voucher'] = 'Wyślij Kupon';
-$lang['sender_email_search'] = 'Email nadawcy';
->>>>>>> development
 $lang['serverlog_auth_sp_attribute_not_found'] = 'Wystąpił problem ze znalezieniem atrybutu autoryzacji SP. Są to atrybuty dostępne w czasie uwierzytelniania. Sprawdź ponownie, czy pisownia nazwy atrybutu jest poprawna. Może konfiguracja szuka niewłaściwego atrybutu?';
 $lang['serverlog_config_directive'] = 'Powiązana dyrektywa konfiguracyjna \'{key}\'';
 $lang['serverlog_wanted_key_in_array'] = 'Wymagany atrybut z kluczem \'{key}\'';
@@ -759,10 +670,7 @@ $lang['set_user_guest_expiry_default_days'] = 'Liczba dni ważności gościa dla
 $lang['show_advanced_settings'] = 'Pokaż ustawienia zaawansowane';
 $lang['show_client_logs'] = 'Pokaż dziennik klienta';
 $lang['show_details'] = 'Pokaż szczegóły';
-<<<<<<< HEAD
 $lang['show_hide_terms'] = 'Pokaż/Ukryj warunki użycia';
-=======
->>>>>>> development
 $lang['show_transfers'] = 'Pokaż transfery';
 $lang['showhide'] = 'Pokaż/Ukryj';
 $lang['size'] = 'Rozmiar';
@@ -781,12 +689,8 @@ $lang['soon'] = 'Wkrótce';
 $lang['speed_unit_bits'] = 'b/s';
 $lang['speed_unit_bytes'] = 'B/s';
 $lang['stalled_transfer'] = 'Transfer utknął';
-<<<<<<< HEAD
 $lang['start_selection_files'] = 'Rozpocznij wybierając pliki';
 $lang['starting_at'] = 'Zaczynając od';
-=======
-$lang['starting_at'] = 'zaczynając od';
->>>>>>> development
 $lang['statevent_download_encrypted_started'] = 'pobieranie rozpoczęte (szyfrowanie)';
 $lang['statevent_download_nocrypt_started'] = 'pobieranie rozpoczęte (brak szyfrowania)';
 $lang['statevent_download_started'] = 'pobieranie rozpoczęte';
@@ -817,21 +721,13 @@ $lang['storage_total'] = 'Całkowita Przestrzeń';
 $lang['storage_usage'] = 'Wykorzystanie pamięci przestrzeni';
 $lang['storage_used'] = 'Wykorzystana przestrzeń';
 $lang['subject'] = 'Temat';
-<<<<<<< HEAD
 $lang['succeeded'] = 'zakończone sukcesem';
-=======
-$lang['succeeded'] = 'Sukces';
->>>>>>> development
 $lang['success_dialog'] = 'Powodzenie';
 $lang['system_active_setting'] = 'To ustawienie jest aktywne w twoim systemie';
 $lang['tb_per_second'] = 'Tb/sek';
 $lang['template_not_found'] = 'Nie odnaleziono szablonu';
 $lang['terasender_failed_after_many_retries'] = 'Przesłanie fragmentu pliku zakończyło się niepowodzeniem po kilku próbach. Czy nadal masz połączenie z Internetem?';
-<<<<<<< HEAD
 $lang['terasender_file_integrity_check_failed'] = 'Test integralności pliku nie powiódł się';
-=======
-$lang['terasender_file_integrity_check_failed'] = 'Sprawdzenie integralności pliku się nie powiodło';
->>>>>>> development
 $lang['terasender_no_workers_have_started'] = 'Przesłanie fragmentu pliku nie powiodło się, ponieważ nie można uruchomić agentów. Czy nadal masz połączenie z Internetem?';
 $lang['terasender_rest_sanity_check_failed'] = 'REST sanity check failed';
 $lang['terasender_settings'] = 'Ustawienia transferu';
@@ -846,15 +742,11 @@ $lang['test_my_openpgp_message'] = 'To jest zaszyfrowana wiadomośc wygenerowana
 $lang['test_openpgp_message'] = 'To jest zaszyfrowana wiadomośc wygenerowana o {time} dnia {date}. Miłego dnia!';
 $lang['test_pgp_message'] = ' test_pgp_message ';
 $lang['testterm'] = 'wartość testowa';
-<<<<<<< HEAD
 $lang['text_desc_of_file_count_and_size'] = 'Przesyłasz {filecount} plik(ów) o całkowitej wielkości {totalsize}';
 $lang['the_system_does_not_know_your_openpgp_key'] = 'Nie masz w systemie publicznego klucza OpenPGP';
 $lang['theme'] = 'Motyw';
 $lang['theme_info'] = 'The theme is only saved in the browser';
 $lang['then_enter_verification_code_below'] = 'Później wpisz poniżej kod weryfikacyjny aby kontynuuować. Będziesz miał {config:download_verification_code_vailid_duration_minutes} minut aby ukończyć ten proces.';
-=======
-$lang['text_desc_of_file_count_and_size'] = 'Przesyłasz {filecount} plik(ów) o łącznej wadze {totalsize}';
->>>>>>> development
 $lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s}';
 $lang['time_to_complete_ms'] = 'Czas do zakończenia (ms)';
 $lang['time_to_complete_s'] = 'Czas do zakończenia (sekundy)';
@@ -868,7 +760,6 @@ $lang['total_transfer_size'] = 'Całkowity rozmiar trasferu';
 $lang['tracking_event_not_found'] = 'Nie odnaleziono śledzonego zdarzenia';
 $lang['tracking_unknown_event'] = 'Nieznane zdarzenie śledzenia';
 $lang['transfer_closed'] = 'Transfer zamknięty';
-<<<<<<< HEAD
 $lang['transfer_completed'] = 'Transfer ukończony!';
 $lang['transfer_deleted'] = 'Transfer usunięty';
 $lang['transfer_details'] = 'Szczegóły transferu';
@@ -877,10 +768,6 @@ $lang['transfer_expires_in'] = 'Ten transfer wygasa za';
 $lang['transfer_expires_in_x_days'] = 'Ten transfer wygasa za {days_to_expire} dni';
 $lang['transfer_expires_in_x_days
 '] = 'Ten transfer wygasa za {days_to_expire} dni';
-=======
-$lang['transfer_deleted'] = 'Transfer usunięty';
-$lang['transfer_expired'] = 'Transfer się przedawnił';
->>>>>>> development
 $lang['transfer_expiry_extension_count_exceeded'] = 'Osiągnięto maksymalną datę wygasania transferu';
 $lang['transfer_expiry_extension_not_allowed'] = 'Przedłużenie wygasania transferu nie jest dozwolone';
 $lang['transfer_extended'] = 'Data wygaśnięcia transferu przedłużona do {expires}';
@@ -899,12 +786,8 @@ $lang['transfer_no_files'] = 'Transfer nie ma plików';
 $lang['transfer_no_recipients'] = 'Transfer nie ma odbiorców';
 $lang['transfer_not_availabe'] = 'Transfer nie dostępny';
 $lang['transfer_not_found'] = 'Transfer nie odnaleziony';
-<<<<<<< HEAD
 $lang['transfer_option_modified'] = 'Zmodyfikowano opcje transferu';
 $lang['transfer_page_subtitle'] = 'Przegląd wszystkich transferów które wysłałeś. Kliknij wybrany transfer aby zobaczyć jego szczegóły.';
-=======
-$lang['transfer_option_modified'] = 'Opcja transferu zmodyfikowana';
->>>>>>> development
 $lang['transfer_presumed_expired'] = 'Transfer wygasł a pliki zostały usunięte z {cfg:site_name}.';
 $lang['transfer_rejected'] = 'Utworzenie transferu odrzucone';
 $lang['transfer_reminded'] = 'Przypomniano o transferze odbiorcom';
@@ -917,7 +800,6 @@ $lang['transfer_too_many_files'] = 'Przekroczono maksymalna liczbę plików';
 $lang['transfer_too_many_recipients'] = 'Przekroczono maksymalna liczbę odbiorców';
 $lang['transfer_upload_stopped'] = 'Zatrzymano wysyłanie transferu';
 $lang['transfer_user_quota_exceeded'] = 'Przekroczona quota użytkownika';
-<<<<<<< HEAD
 $lang['transferred_files'] = 'Wysłane pliki';
 $lang['transferred_these_files'] = 'Wysłano te pliki';
 $lang['transfers_and_guests_per_day'] = 'Transfers and Vouchers per day';
@@ -931,16 +813,10 @@ $lang['transfers_speedsps'] = 'Prędkość transferów';
 $lang['transfers_total'] = 'Całkowicie przesłano';
 $lang['transfers_uid_page'] = 'Transfery użytkownika';
 $lang['translatable_email_not_found'] = 'Nie odnaleziono szukanej wiadomości email.';
-=======
-$lang['transfers_guest'] = 'Transfery od gości';
-$lang['transfers_page'] = 'Moje Transfery';
-$lang['transfers_uid_page'] = 'Transfery urzytkownika';
->>>>>>> development
 $lang['translate_to'] = 'Przetłumacz na:';
 $lang['turning_on_guests_get_a_link_disables_can_only_send_to_me'] = 'Zezwolenie gościom na otrzymanie linku oznacza, że ​​opcja można tylko do mnie wysłać, została wyłączona';
 $lang['turning_on_guests_openpgp_encryption_disables_can_only_send_to_me'] = 'Turning on OpenPGP encryption forces the guest to only be able to send to you.';
 $lang['twoeightdays'] = '28 dni';
-<<<<<<< HEAD
 $lang['ui2_accept_aup_1'] = 'Akceptuje warunki ';
 $lang['ui2_accept_aup_2'] = 'używając tej usługi';
 $lang['ui2_add_files'] = 'Dodaj plik';
@@ -952,54 +828,26 @@ $lang['ui2_get_a_link'] = 'Otrzymaj link prez email';
 $lang['ui2_invite_guest'] = 'Zaproś kogoś do przesłania pliku';
 $lang['ui2_mode_link'] = 'Stwórz link do pobrania';
 $lang['ui2_mode_mail'] = 'Wyślij przez email';
-=======
-$lang['ui2_accept_aup_1'] = 'Akceptuję warunki ';
-$lang['ui2_accept_aup_2'] = 'podczas korzystania z usługi';
-$lang['ui2_add_files'] = 'Dodaj pliki';
-$lang['ui2_all_files_deleted'] = 'Wszystkie pliki zostały usunięte, więc transfer został skasowany';
-$lang['ui2_all_recipients_deleted'] = 'Wszyscy adresaci zostali usunięci, wiec transfer również został skasowany';
-$lang['ui2_encryption_status'] = 'Szyfrowanie End-to-end jest';
-$lang['ui2_files_added'] = 'plik(i) dodane';
-$lang['ui2_get_a_link'] = 'Wyślij link na maila';
-$lang['ui2_invite_guest'] = 'Wyślij zaproszenie do załączenia pliku';
-$lang['ui2_mode_link'] = 'Utwórz link';
-$lang['ui2_mode_mail'] = 'Wyślij mailem';
->>>>>>> development
 $lang['ui2_my_transfers'] = 'Moje transfery';
 $lang['ui2_no_active_transfers'] = 'Brak aktywnych transferów';
 $lang['ui2_no_inactive_transfers'] = 'Brak nieaktywnych transferów';
 $lang['ui2_notifications'] = 'Powiadomienia';
-<<<<<<< HEAD
 $lang['ui2_or_get_a_link'] = 'utwórz link do pobrania';
 $lang['ui2_or_mode_mail'] = 'wyślij link na maila';
 $lang['ui2_select_files'] = 'Przeciągnij lub wybierz plik(i) do wysłania';
 $lang['ui2_send_secure'] = 'Wyślij pliki bezpiecznie (max 2GB)';
-=======
-$lang['ui2_or_get_a_link'] = 'lub utwórz link';
-$lang['ui2_or_mode_mail'] = 'lub wyślij link mailem';
-$lang['ui2_select_files'] = 'Przeciągnij lub wybierz plik(i) do wysłania';
-$lang['ui2_send_secure'] = 'Wyślij zaszyfrowane pliki (max 2GB)';
->>>>>>> development
 $lang['ui2_show_all'] = 'Pokaż wszystko';
 $lang['ui2_show_more'] = 'Pokaż więcej';
 $lang['ui2_total_size'] = 'Całkowity rozmiar';
 $lang['ui2_transfer_deleted'] = 'Transfer usunięty';
-<<<<<<< HEAD
 $lang['ui2_transfer_extend_error'] = 'Coś poszło nie tak, nie udało się przedłużyć transferu';
 $lang['ui2_transfer_extend_exhausted'] = 'Nie można już przedłużyć transferu';
-=======
-$lang['ui2_transfer_extend_error'] = 'Coś poszło nie tak, transfer nie został przedłużony';
-$lang['ui2_transfer_extend_exhausted'] = 'Transfer nie może już być przedłużony';
->>>>>>> development
 $lang['ui2_transfer_logs'] = 'Logi transferu';
 $lang['undergoing_maintenance'] = 'Aplikacja jest w trakcie prac serwisowych';
 $lang['unexpected_file'] = 'Ten plik nie jest częścią restartowanego transferu';
 $lang['unknown_page'] = 'Nieznana strona';
 $lang['unreadable_file'] = 'Nie można odczytać pliku';
-<<<<<<< HEAD
 $lang['upload_a_new_openpgp_public_key'] = 'Dodaj nowy publiczny klucz OpenPGP';
-=======
->>>>>>> development
 $lang['upload_all_terasender_workers_completed_pbkdf2'] = 'Wszyscy agenci przesyłania są teraz gotowi i powinni przesyłać zaszyfrowane dane';
 $lang['upload_completed'] = 'Przesyłanie zakończone';
 $lang['upload_log_header'] = 'Komunikaty transferu danych';
@@ -1015,31 +863,20 @@ $lang['upload_started'] = 'Przesyłanie rozpoczęte...';
 $lang['upload_will_use_openpgp_to_share_passphrase'] = '<i class="fa fa-lock"></i> This upload will be encrypted with a randonly generated passphrase. That passphrase will be encrypted with OpenPGP and emailed to the authorized recipient {email}';
 $lang['uploaded'] = 'Przesłano';
 $lang['uploading_transfers'] = 'Aktualnie trwające transfery';
-<<<<<<< HEAD
 $lang['uploading_your_transfer'] = 'Przesyłanie twojego transferu...';
 $lang['use_streamsaver_for_download'] = 'Prześlij odszyfrowane dane bezpośrednio do zapisanego pliku. Przesyłanie bezpośrednio do pliku wymaga mniej pamięci na twoim komputerze, pozwalając tobie pobierać większe pliki. Niestety nie każda przeglądarka wspiera tą funkcje. Przesyłanie bezpośrednie powinno byc wspierane na twojej przeglądarce dlatego jest domyślnie włączone. Jesli pobieranie się nie powiedzie proszę ją wyłączyć i spróbować ponownie.';
-=======
-$lang['use_streamsaver_for_download'] = 'Przesyłaj odszyfrowane dane bezpośrednio do pliku. Taka operacja wymaga mniej pamięci twojego komputera, co pozwala na pobieranie większych plików. Niestety, ta funkcja nie jest wspierana przez każdą przeglądarkę. Twoja przeglądarka powinna wspierać przesyłanie odszyfrowanych danych co  pozwoli na domyślne włączenie tej opcji. Jeżeli pobieranie zaszyfrowanych plików zakończy się niepowodzeniem odznacz tą opcję i spróbuj ponownie.';
->>>>>>> development
+$lang['use_terareceiver_for_download'] = 'Use TeraReceiver code for this download. This new code allows better retry on network timeout and will in the future allow multiple active download streams for performance';
 $lang['user_additional'] = 'Dodatkowe informacje';
 $lang['user_additional_body'] = 'To są informacje, które posiadamy o twoim koncie.';
 $lang['user_additionnal'] = 'Dodatkowe informacje';
 $lang['user_apikey_count_estimate'] = 'Klucze API użytkownika';
 $lang['user_aup_count_estimate'] = 'Users Accepted Terms & Conditions';
 $lang['user_auth_secret'] = 'Sekret';
-<<<<<<< HEAD
 $lang['user_count_estimate'] = 'Ilość użytkowników(szacunkowa)';
 $lang['user_created'] = 'Pierwsze logowanie';
 $lang['user_deleted'] = 'Zostałeś usunięty z serwera. Życzymy miłego dnia!';
 $lang['user_hit_guest_limit'] = 'Osiągnięto maksymalną liczbę gości jaką możesz zaprosić.';
 $lang['user_hit_guest_rate_limit'] = 'Przekroczono limit {cfg:guest_create_limit_per_day} gości dziennie. Proszę spróbować później.';
-=======
-$lang['user_count_estimate'] = 'Ilość użytkowików (szacowana)';
-$lang['user_created'] = 'Pierwsze logowanie';
-$lang['user_deleted'] = 'Zostałeś usunięty z serwera. Życzymy miłego dnia!';
-$lang['user_hit_guest_limit'] = 'Osiągnięto maksymalną liczbę gości jaką możesz zaprosić.';
-$lang['user_hit_guest_rate_limit'] = 'Możesz stworzyć maksymalnie  {cfg:guest_create_limit_per_day} gości każdego dnia. Proszę spróbować później.';
->>>>>>> development
 $lang['user_id'] = 'Identyfikator';
 $lang['user_lang'] = 'Język domyślny';
 $lang['user_missing_uid'] = 'UID użytkownika nie został znaleziony';
@@ -1056,9 +893,8 @@ $lang['users'] = 'Użytkownicy';
 $lang['users_with_api_keys'] = 'Użytkownicy z kluczami API';
 $lang['utilities_uid_generator_bad_unicity_checker'] = 'Nieprawidłowe sprawdzenie niepowtarzalności dla generatora UID';
 $lang['utilities_uid_generator_tried_too_much'] = 'Zbyt duże wykorzystanie generatora UID';
-$lang['valid_only_one_time'] = 'Ważny tylko dla jednego transferu';
+$lang['valid_only_one_time'] = 'Dotyczy tylko dla jednego pprzesłania';
 $lang['value'] = 'Wartość';
-<<<<<<< HEAD
 $lang['verification_code_did_not_match'] = 'The verification code you entered did not match the expected value. Please try again';
 $lang['verification_code_is_too_old'] = '{cfg:site_name} has rejected this verification code because it is too old. Please try again by first sending a new code.';
 $lang['verify'] = 'Zweryfikuj';
@@ -1070,17 +906,6 @@ $lang['waiting_for_upload_to_stabilize'] = 'Oczekiwanie na stabilizację wysyła
 $lang['web_notification_upload_complete'] = 'Przesyłanie zakończone!';
 $lang['web_notification_upload_complete_title'] = '{cfg:site_name}: Przesyłanie zakończone';
 $lang['web_notification_when_upload_is_complete'] = 'Web notification when upload is complete';
-=======
-$lang['verification_code_is_too_old'] = '{cfg:site_name} odrzucił ten kod weryfikacyjny z powodu jego wygaśnięcia. Proszę spróbuj ponownie.';
-$lang['verify'] = 'Zweryfikuj';
-$lang['verify_email_to_download'] = 'Zweryfikuj adres email żeby pobrać';
-$lang['verify_your_email_address_to_download'] = 'Zweryfikuj swój adres email żeby pobrać';
-$lang['view_full_log'] = 'Pokaż cały dziennik';
-$lang['waiting_for_upload_to_stabilize'] = 'Oczekiwanie na stabilizację wysyłania';
-$lang['web_notification_upload_complete'] = 'Wgrywanie zakończone!';
-$lang['web_notification_upload_complete_title'] = '{cfg:site_name}: Zakończono wgrywanie';
-$lang['web_notification_when_upload_is_complete'] = 'Powiadom o zakończeniu wgrywania';
->>>>>>> development
 $lang['what_to_do'] = 'Co zrobić?';
 $lang['with_identity'] = 'Email nadawcy';
 $lang['yes'] = 'Tak';
