@@ -188,7 +188,7 @@ class RestEndpointGuest extends RestEndpoint
                 '/^.*$/'  );
             $data->expires = Validate::filter_var_regex_log(
                 "transfer.expires", $data->expires,
-                "|^[0-9]{1,32}$|"  );
+                "|^[.0-9]{1,32}$|"  );
         }
 
 
