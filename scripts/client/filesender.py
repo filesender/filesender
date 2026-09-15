@@ -203,7 +203,11 @@ class FileSenderCLI:
         if hasattr(args, 'from_address'):
             self.from_address = args.from_address
 
-        if not all([self.apikey, self.base_url, (self.username or self.from_address),self.arg_files,self.recipients]) and not self.download_link:
+        required_present = [self.apikey, self.base_url, (self.username or self.from_address), self.recipients]
+        if not self.guest:
+            required_present.append(self.arg_files)
+
+        if not all(required_present) and not self.download_link:
             missing_fields:list[str] = []
             if not self.apikey:
                 missing_fields.append("-a, --api-key")
@@ -213,7 +217,7 @@ class FileSenderCLI:
                 missing_fields.append("-u, --username")
             if not self.recipients:
                 missing_fields.append("-r, --recipients")
-            if not self.arg_files:
+            if not self.guest and not self.arg_files:
                 missing_fields.append("[FILE]")
 
             print(f"Missing required parameter, please provide the following: \n {','.join(missing_fields)}\n or -d --download with a valid download link")
