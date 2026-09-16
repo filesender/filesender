@@ -541,7 +541,12 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
         }
     }
 
-    if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
+    // $recipient->email is empty for a link transfer, where the sender never
+    // entered addresses. The download page still offers the "notify me when
+    // the download completes" checkbox to such a downloader, so this branch is
+    // reached with nowhere to send to. The owner is covered separately by the
+    // files_downloaded mail below, so skipping here loses no notification.
+    if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE) && $recipient->email) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
 
             try {

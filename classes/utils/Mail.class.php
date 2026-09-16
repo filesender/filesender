@@ -561,6 +561,15 @@ class Mail
             // Logger::warn('testing mode so not really sending mail');
             return true;
         }
+        // Without an address mail() writes an empty To: header, sendmail finds
+        // no recipient and dumps the message in dead.letter, where it grows
+        // unnoticed. Nothing downstream can recover from that, so stop before
+        // claiming to send and say what happened instead.
+        if (!$source['to']) {
+            Logger::warn('Not sending mail: no recipient address');
+            return false;
+        }
+
         Logger::warn('Sending mail');
 
         $add_minus_r_to_mail = Utilities::isTrue(Config::get('email_send_with_minus_r_option'));
