@@ -153,9 +153,10 @@ class StorageCloudS3 extends StorageFilesystem
                 return null;
             }
             return $data;
-        } catch (ServiceException $e) {
+        } catch (Exception $e) {
             $msg = 'S3: readChunk() Can not read to object_name: ' . $object_name . ' offset ' . $offset;
-            Logger::info($msg);
+            Logger::info($msg . " BaseException: " . $e->getMessage());
+
             if (is_a($e, 'ConfigMissingParameterException')) {
                 Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
                 $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
@@ -206,7 +207,7 @@ class StorageCloudS3 extends StorageFilesystem
             );
         } catch (Exception $e) {
             $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
-            Logger::info($msg);
+            Logger::info($msg . " BaseException: " . $e->getMessage());
             if (is_a($e, 'ConfigMissingParameterException')) {
                 Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
                 $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
