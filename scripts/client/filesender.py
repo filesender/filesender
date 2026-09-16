@@ -130,10 +130,12 @@ class FileSenderCLI:
         parser.add_argument("-i", "--insecure", action="store_true")
         parser.add_argument("-p", "--progress", action="store_true")
         parser.add_argument("-s", "--subject")
+        parser.add_argument("-l", "--list_files", action="store_true")
         parser.add_argument("-m", "--message")
         parser.add_argument("-g", "--guest", action="store_true")
         parser.add_argument("-e", "--encrypted")
         parser.add_argument("-d", "--download" )
+        parser.add_argument("-n", "--named_file")
         parser.add_argument("-o","--output_dir" )
         parser.add_argument("--days", type=int)
         parser.add_argument("--threads")
@@ -176,6 +178,8 @@ class FileSenderCLI:
         self.encrypted = args.encrypted
         self.transfer_timeout = args.days
         self.download_link = args.download
+        self.namedfile = args.named_file
+        self.listfiles = args.list_files
         self.download_folder = args.output_dir
         self.recipients = args.recipients
         self.arg_files = args.files
@@ -203,7 +207,7 @@ class FileSenderCLI:
         if hasattr(args, 'from_address'):
             self.from_address = args.from_address
 
-        if not all([self.apikey, self.base_url, (self.username or self.from_address),self.arg_files,self.recipients]) and not self.download_link:
+        if not all([self.apikey, self.base_url, (self.username or self.from_address),self.arg_files,self.recipients]) and not self.download_link and not self.namedfile and not self.listfiles:
             missing_fields:list[str] = []
             if not self.apikey:
                 missing_fields.append("-a, --api-key")
@@ -216,7 +220,7 @@ class FileSenderCLI:
             if not self.arg_files:
                 missing_fields.append("[FILE]")
 
-            print(f"Missing required parameter, please provide the following: \n {','.join(missing_fields)}\n or -d --download with a valid download link")
+            print(f"Missing required parameter, please provide the following: \n {','.join(missing_fields)}\n or -d --download with a valid download link,\n or -n --named_file with a valid file name")
             sys.exit(1)
 
         #configs
@@ -526,6 +530,39 @@ class FileSenderCLI:
             {}
         )
 
+    def ListFiles(self):
+        """List files across all transfers """
+        result=self.call(
+            'get'
+            ,'/transfer/@me',{},
+            None,None
+            )
+        for transfer in result:
+            if self.debug:
+                print("\ntransfer: ")
+            print(transfer['recipients'][0]['download_url'])
+            if self.debug:
+                print("files:")
+            for file in transfer['files']:
+                print("  " + file['name'])
+
+    def getNamedFiles(self):
+      "Fetch files with name according to regex accross available transfers (eg: -n 'xyz.*\.zip' or -n 'readme.txt')"
+      result=self.call(
+        'get'
+        ,'/transfer/@me',{},
+        None,None
+      )
+      for transfer in result:
+            for file in transfer['files']:
+                if re.fullmatch(self.namedfile,file['name']):
+                    urlstring=transfer['recipients'][0]['download_url']
+                    if self.progress: 
+                        print(urlstring)
+                    self.download_transfer(urlstring)
+                    break
+
+
     def get_files_in_transfer(self,transfer_token) -> list[dict]:
         """api: Fetch the list of file information in a given transfer"""
         return self.call(
@@ -708,23 +745,35 @@ class FileSenderCLI:
             self.encryption_details = encryption_details
             download_key = self.generate_key()
         for file in file_list:
+            if self.namedfile:
+                '''Skip the file if the name is not according to named_file regex '''
+                if not re.fullmatch(self.namedfile,file['name']):
+                    continue
             if self.progress:
                 print(f"Downloading: {file['name']}")
             self.download_file(download_token,file, download_key)
             if self.progress:
                 downloaded_total += file['size']
                 print(f"Complete: {file['name']}")
-                print(f"Total transfer {round((downloaded_total/download_size)*100)}% complete")
+                if not self.namedfile:
+                    print(f"Total transfer {round((downloaded_total/download_size)*100)}% complete")
 
     ##########################################################################
 
     def process(self):
         """Process CLI command"""
+        if self.listfiles:
+            self.ListFiles()
+            exit(0)
         #post_transfer
         if self.download_link:
             self.download_transfer(self.download_link)
             sys.exit(0)
 
+        if self.namedfile:
+            self.getNamedFiles()
+            exit(0)
+            
         if self.debug:
             print('post_transfer')
 
