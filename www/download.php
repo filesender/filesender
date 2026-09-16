@@ -122,6 +122,13 @@ try {
     } else
         throw new TokenIsMissingException();
 
+    // Closing a transfer deletes its file data from storage, while the
+    // transfer and its recipient tokens stay behind for the audit logs. Without
+    // this check the download proceeds and fails in the storage layer instead of
+    // telling the downloader that the transfer is gone.
+    if($transfer->isExpired() || $transfer->status == TransferStatuses::CLOSED)
+        throw new TransferPresumedExpiredException();
+
     
     // Are all files from the transfer ?
     $not_from_transfer = array();
