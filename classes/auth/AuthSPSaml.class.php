@@ -300,12 +300,11 @@ class AuthSPSaml
             $target = Utilities::http_build_query(array('s' => $landing_page, 'showsplash' => '1' ));
         }
         
-        $url = Utilities::http_build_query(array(
-            'AuthId' => self::$config['authentication_source'],
-            'ReturnTo' => $target,
-        ), self::$simplesamlphp_auth_simple->getLoginURL($target));
-
-        return $url;
+        // Return SimpleSAMLphp's getLoginURL() unchanged. Upstream re-wraps
+        // it via Utilities::http_build_query(), which appends a second '?'
+        // and duplicates ReturnTo. The resulting URL is rejected as spam
+        // by strict MTAs (e.g. Scaleway TEM) in transfer-notification mail.
+        return self::$simplesamlphp_auth_simple->getLoginURL($target);
     }
     
     /**
