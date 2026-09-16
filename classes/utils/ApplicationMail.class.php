@@ -129,6 +129,11 @@ class ApplicationMail extends Mail
             }
             if ($to instanceof Recipient) {
                 $lang = $to->transfer->lang;
+                // Reduce to the address, as the User branch above does. Without
+                // this $to stays an object, addRcpt() takes anything, and the
+                // header ends up as "Recipient#12(a@b.c)" from __toString().
+                // ssmtp -t finds no address in that and drops the message.
+                $to = $to->email;
             }
         }
         
