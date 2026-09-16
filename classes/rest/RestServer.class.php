@@ -312,8 +312,16 @@ class RestServer
                 throw new RestInvalidSecurityTokenException('session token = '.Utilities::getSecurityToken().' and token = '.$security_token);
             }
 
+            // Release PHP session file lock before the (potentially slow) handler
+            // runs. Parallel chunk uploads (terasender) all share the same PHPSESSID
+            // and would otherwise serialize through session_start()'s exclusive lock,
+            // dilating p99 chunk latency from ~200ms to many seconds under load.
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                session_write_close();
+            }
+
             Logger::debug('Forwarding call to '.$class.'::'.$method.'() handler');
-            
+
             $data = call_user_func_array(array($handler, $method), $path);
             
             Logger::debug('Got data to send back');
