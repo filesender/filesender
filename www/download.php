@@ -73,6 +73,10 @@ try {
         // Getting associated transfer 
         $transfer = $recipient->transfer;
 
+        if ($transfer->isExpired() || $transfer->status == TransferStatuses::CLOSED) {
+            throw new TransferPresumedExpiredException();
+        }
+        
         // $recipient
         if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             $otp = DownloadOneTimePassword::mostRecentForDownload( $transfer, $recipient );
