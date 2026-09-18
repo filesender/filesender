@@ -100,6 +100,7 @@ Specific debugging options inclide allow_pages_log_invalid_page
 * [cloud_s3_bulk_delete](#cloud_s3_bulk_delete)
 * [cloud_s3_bulk_size](#cloud_s3_bulk_size)
 * [performance_allow_direct_copy_from_put_to_disk](#performance_allow_direct_copy_from_put_to_disk)
+* [performance_allow_early_session_release](#performance_allow_early_session_release)
 
 ## Shredding
 
@@ -1181,6 +1182,16 @@ Default value to maintain AWS S3 compatibility is 1000. Other storage platforms 
 * __available:__ since version 3.8
 * __comment:__ Supported only in storage_type filesystemChunked and filesystem as of 3.8. Users of the filesender.py client will be demoted to not using direct copy because of how authorization works for the client.
                When true this will delay reading bytes in a very specific cases which is uploading file data. By not reading the data until the destination we wish to write those bytes we can allow the opportunity to have the Linux kernel copy the bytes inside the kernel by letting PHP use copy_file_range(2) to avoid memory allocation and extraneous data copying. This significantly reduces CPU use and increases upload speed even on a local installation. See https://github.com/filesender/filesender/pull/2640
+
+### performance_allow_early_session_release
+
+* __description:__ Where possible release the php session early in the REST server
+* __mandatory:__ no.
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.13
+* __comment:__  If it is safe to release the php session early in the REST server do so. This can speed up uploads significantly in some environments. This is here mainly to allow the feature to be disabled if it is causing issues in some environments.
+
 
 
 

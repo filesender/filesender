@@ -73,6 +73,7 @@ class RestServer
     public static function process()
     {
         try {
+            $can_close_session = false;
             
             // Get authentication state (fills auth data in relevant classes)
             // Will also start a session using the authentication handler.
@@ -120,6 +121,14 @@ class RestServer
                                 Logger::debug("RestServer delaying reading any data for this specific request to later...");
                             }
                         }
+                    }
+                }
+            }
+
+            if(Config::isTrue('performance_allow_early_session_release')) {
+                if( $endpoint == "file"  ) {
+                    if( $method == "put" ) {
+                        $can_close_session = true;
                     }
                 }
             }
@@ -312,6 +321,16 @@ class RestServer
                 throw new RestInvalidSecurityTokenException('session token = '.Utilities::getSecurityToken().' and token = '.$security_token);
             }
 
+            // Release PHP session file lock before the (potentially slow) handler
+            // runs. Parallel chunk uploads (terasender) all share the same PHPSESSID
+            // and would otherwise serialize through session_start()'s exclusive lock,
+            // dilating p99 chunk latency from ~200ms to many seconds under load.
+            if( $can_close_session ) {
+                if (session_status() === PHP_SESSION_ACTIVE) {
+                    session_write_close();
+                }
+            }
+            
             Logger::debug('Forwarding call to '.$class.'::'.$method.'() handler');
             
             $data = call_user_func_array(array($handler, $method), $path);
