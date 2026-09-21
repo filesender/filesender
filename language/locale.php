@@ -37,6 +37,7 @@
 
 $locales  =  array(
     'hy-am' => array('name' => 'Armenian (Armenia)', 'path' => 'hy_AM'),
+    'de-at' => array('name' => 'Austria', 'path' => 'de_AT'),
     'zh-hans' => array('name' => 'Chinese (simplified)',      'path' => 'zh_HANS'),
     'zh-hant' => array('name' => 'Chinese (traditional)',     'path' => 'zh_HANT'),
     'hr'    => array('name' => 'Croatian',     'path' => 'hr_HR'),
@@ -53,6 +54,7 @@ $locales  =  array(
     'en'    => array('name' => 'English',      'path' => 'en_AU'),
     'fr'    => array('name' => 'Français',     'path' => 'fr_FR'),
     'fr-fr' => array('name' => 'Français',     'path' => 'fr_FR'),
+    'es-ga' => array('name' => 'Galician',     'path' => 'es_GA'),
     'de'    => array('name' => 'German',       'path' => 'de_DE'),
     'de-de' => array('name' => 'German',       'path' => 'de_DE'),
     'hu' => 'hu_HU',
@@ -65,6 +67,8 @@ $locales  =  array(
     'ko-kr' => array('name' => 'Korean',       'path' => 'ko_KR'),
     'km'    => array('name' => 'Khmer',        'path' => 'km_KH'),
     'km-kh' => array('name' => 'Khmer',        'path' => 'km_KH'),
+    'lv'    => array('name' => 'Latvian',      'path' => 'lv_LV'),
+    'lv-lv' => array('name' => 'Latvian',      'path' => 'lv_LV'),
     'ne-np' => array('name' => 'Nepali',       'path' => 'ne_NP'),
     'no-no' => 'no_NO',
     'no'    => 'no_NO',
@@ -72,6 +76,8 @@ $locales  =  array(
     'nb-no' => array('name' => 'Norwegian',    'path' => 'no_NO'),
     'pl'    => array('name' => 'Polski',       'path' => 'pl_PL'),
     'pt-br' => array('name' => 'Português Brasileiro', 'path' => 'pt_BR'),
+    'ro'    => array('name' => 'Romanian',     'path' => 'ro_RO'),
+    'ro-ro' => array('name' => 'Romanian',     'path' => 'ro_RO'),
     'ru'    => array('name' => 'Russian',      'path' => 'ru_RU'),
     'es'    => array('name' => 'Spanish',      'path' => 'es_ES'),
     'es-es' => array('name' => 'Spanish',      'path' => 'es_ES'),
@@ -86,5 +92,6 @@ $locales  =  array(
     'ur'    => array('name' => 'Urdu',         'path' => 'ur_PK'),
     'ur-pk' => array('name' => 'Urdu',         'path' => 'ur_PK'),
     'vi-vn' => array('name' => 'Vietnamese',   'path' => 'vi_VN')
+
     
 );

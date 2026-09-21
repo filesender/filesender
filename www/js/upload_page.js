@@ -1517,13 +1517,17 @@ filesender.ui.startUpload = function() {
             if( expiresSelected.getTimezoneOffset() > 0 ) {
                 expiresSelected.setDate( expiresSelected.getDate()-1);
             }
-            this.transfer.expires = expiresSelected.getTime() / 1000;
+            // Date.getTime() returns ms; / 1000 yields a float. RestEndpointGuest
+            // validates expires with |^[0-9]{1,32}$|, rejects the decimal and falls
+            // back to default_transfer_days_valid, so a voucher silently gets the
+            // default instead of the picked date. An epoch is an integer anyway.
+            this.transfer.expires = Math.floor(expiresSelected.getTime() / 1000);
         } else {
             const expiresDays = $('#expires-select').find(":selected").val();
             const now = new Date();
             const expiresDate = new Date(now);
             expiresDate.setDate(expiresDate.getDate() + parseInt(expiresDays, 10));
-            this.transfer.expires = expiresDate.getTime() / 1000;
+            this.transfer.expires = Math.floor(expiresDate.getTime() / 1000);
         }
 
         if(filesender.ui.nodes.from.length)
@@ -1680,7 +1684,11 @@ filesender.ui.startUpload = function() {
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         const dateDiff = expireDays.getTime() - now.getTime();
-        const daysToExpire = Math.ceil(dateDiff / (1000 * 3600 * 24));
+        // expireDays carries the current time-of-day (e.g. 21:00); now is forced
+        // to midnight, so the diff is always N full days plus a partial day. ceil
+        // rounds the partial up, displaying "31 dagen" when the user picked 30.
+        // floor drops it back to the picked value.
+        const daysToExpire = Math.floor(dateDiff / (1000 * 3600 * 24));
 
         $('#expires-days').text(daysToExpire);
 

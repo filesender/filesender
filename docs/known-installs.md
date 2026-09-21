@@ -63,7 +63,9 @@ If you want to add your FileSender installation to this list use one of the foll
 | Greece  | University of West Attica | [https://filesender.uniwa.gr/](https://filesender.uniwa.gr/) | Mar 2018| 30 Apr 2026 |
 | Hungary | National Széchényi Library | [https://filesender.oszk.hu/](https://filesender.oszk.hu/) | Feb 2026| 30 Apr 2026 |
 | Israel  | Hebrew University of Jerusalem (HUJI)  | [https://filesender.huji.ac.il](https://filesender.huji.ac.il)      | Mar 2012| 30 Apr 2026 |
+| Italy  | Consorzio RFX - fusion research | [https://www.igi.cnr.it/filesender/](https://www.igi.cnr.it/filesender/) | Aug 2026 | 12 Sept 2026 |
 | Italy  | Politecnico di Milano | [https://fs.polimi.it/](https://fs.polimi.it/) | Feb 2026 | 30 Apr 2026 |
+| Italy  | University of Naples Federico II | [https://gigamail.unina.it/filesender/](https://gigamail.unina.it/filesender/) | Aug 2026 | 12 Sept 2026 |
 | Montenegro  | University of Montenegro | [https://filesender.ucg.ac.me/](https://filesender.ucg.ac.me/) | Jun 2026 | 12 Jul 2026 |
 | Netherlands | Peregrion - early clinical drug development | [https://filesender.peregrion.com/](https://filesender.peregrion.com/) | Jun 2026 | 12 Jul 2026 |
 | Norway  | NORCE research institute | [https://filesender.norceresearch.no/](https://filesender.norceresearch.no/) | Dec 2025 | 30 Apr 2026 |
@@ -146,6 +148,7 @@ If you want to add your FileSender installation to this list use one of the foll
 | France | Decalog - library management software | [https://filesender.decalog.net/filesender/](https://filesender.decalog.net/filesender/) | Mar 2026 | 30 Apr 2026 |
 | France | French National Institute of Statutory Auditors (CNCC) | [https://filesender.cncc.fr/filesender/](https://filesender.cncc.fr/filesender/) | Mar 2026 | 30 Apr 2026 |
 | France | Grand Paris Seine & Oise urban community | [https://filesender.gpseo.fr/](https://filesender.gpseo.fr/) | May 2026 | 5 May 2026 |
+| France | Groupe SAPH - telecommunications | [https://filesender.groupesaph.com/](https://filesender.groupesaph.com/) | Aug 2026 | 12 Sep 2026 |
 | France | Ploud - cloud fediverse platform | [https://filesender.ploud.fr/](https://filesender.ploud.fr/) | May 2026 | 5 May 2026 |
 | France | SEM Plaine Commune Development | [https://filesender.semplaine.fr/](https://filesender.semplaine.fr/) | Jul 2025 | 30 Apr 2026 |
 | France | SICAE-OISE - electricity supplier and distributor | [https://filesender.sicae-oise.fr/](https://filesender.sicae-oise.fr/) | May 2026 | 5 May 2026 |
@@ -156,12 +159,15 @@ If you want to add your FileSender installation to this list use one of the foll
 | Italy | Religious community | [https://filesender.salesianinordest.it/](https://filesender.salesianinordest.it/) | Oct 2025 | 30 Apr 2026 |
 | Italy | Weedea - communication & coding lab | [https://filesender.weedea.com/](https://filesender.weedea.com/) | Jun 2026 | 12 Jul 2026 |
 | Latvia | Maritime Administration of Latvia | [https://filesender.lja.lv/](https://filesender.lja.lv/) | Mar 2026 | 30 Apr 2026 |
-| Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 30 Apr 2026 |
 | Netherlands  | BIT - internet service provider | [https://filesender.bit.nl/](https://filesender.bit.nl/) | Mar 2026 | 30 Apr 2026 |
+| Netherlands  | Hedge - media-technology software company | [https://filesender.hedge.co/](https://filesender.hedge.co/) | Aug 2026 | 12 Sep 2026 |
+| Netherlands  | Pleio - Dutch government | [https://bestandendelen.pleio.nl/filesender](https://bestandendelen.pleio.nl/filesender) | Oct 2013| 30 Apr 2026 |
+| Netherlands  | Timber and Building Supplies Holland - construction materials | [https://filesender.tabsholland.nl/](https://filesender.tabsholland.nl/) | Aug 2026 | 12 Sep 2026 |
 | Norway  | IKT Agder - intermunicipal ICT company | [https://filesender.ikt-agder.no/](https://filesender.ikt-agder.no/) | May 2026 | 5 May 2026 |
 | Norway | Municipality digital services in Sunnmøre | [https://filesender.esunnmore.no/filesender/](https://filesender.esunnmore.no/filesender/) | Oct 2025 | 30 Apr 2026 |
 | Norway | Norwegian Health Network | [https://filesender.tjenestedrift.nhn.no](https://filesender.tjenestedrift.nhn.no) | Jun 2026 | 12 Jul 2026 |
 | Portugal  | Portuguese Agency for Competitiveness and Innovation (IAPMEI) | [http://filesender.iapmei.pt/](http://filesender.iapmei.pt/) | May 2026 | 5 May 2026|
+| South Africa | Garden Route District Municipality | [https://filesender.gardenroute.gov.za/filesender/](https://filesender.gardenroute.gov.za/filesender/) | Aug 2026 | 12 Sept 2026 |
 | Switzerland | Gericke Group - equipment manufacturer | [https://filesender.gerickegroup.com/filesender/](https://filesender.gerickegroup.com/filesender/) | Feb 2026 | 30 Apr 2026 |
 | Switzerland | momou! - fediversified services | [https://filesender.momou.ch/](https://filesender.momou.ch/) | Mar 2026 | 30 Apr 2026 |
 | Vatican | Congregation for the Evangelization of Peoples | [https://filesender.evang.va/](https://filesender.evang.va/) | Oct 2025 | 30 Apr 2026 |
