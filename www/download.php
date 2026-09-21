@@ -179,16 +179,31 @@ try {
         manageOptions($ret, $transfer, $recipient, $recently_downloaded);
     
 } catch (Exception $e) {
-    if(!array_key_exists('exception', $_SESSION))
-        $_SESSION['exception'] = [];
+    // The exception page reads the exception back out of the session, but a
+    // download over a recipient token never authenticates, so no session was
+    // started and $_SESSION does not exist. Writing to it then throws a
+    // TypeError from inside the error handler itself, which is how an expired
+    // link turns into a blank page and how the original exception goes
+    // missing.
+    //
+    // Once the file body has started streaming the headers are gone and
+    // neither the session cookie nor the redirect can still be sent, so there
+    // is nothing useful left to do here. The exception is logged by
+    // LoggingException either way, so skipping this costs no diagnostics.
+    if (!headers_sent()) {
+        Auth::ensure_php_session();
 
-    $_SESSION['exception'] = array_slice($_SESSION['exception'], -4);
-    
-    $sid = uniqid();
-    $_SESSION['exception'][$sid] = $e;
-    
-    $path = GUI::path() . '?s=exception&sid=' . $sid;
-    header('Location: ' . $path);
+        if (!isset($_SESSION['exception']) || !is_array($_SESSION['exception']))
+            $_SESSION['exception'] = [];
+
+        $_SESSION['exception'] = array_slice($_SESSION['exception'], -4);
+
+        $sid = uniqid();
+        $_SESSION['exception'][$sid] = $e;
+
+        $path = GUI::path() . '?s=exception&sid=' . $sid;
+        header('Location: ' . $path);
+    }
 }
 
 
