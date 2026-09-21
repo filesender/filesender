@@ -77,7 +77,7 @@
 <h3>Uploads of <i>any size</i> with HTML5</h3>
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>You'll be able to use this method if the <img src="images/html5_installed.png" alt="HTML5 upload enabled" /> sign is displayed above</li>
-    <li><i class="fa-li fa fa-caret-right"></i>To enable this functionnality simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
+    <li><i class="fa-li fa fa-caret-right"></i>To enable this functionality simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
     <li><i class="fa-li fa fa-caret-right"></i>Up to date versions of Firefox and Chrome on Windows, Mac OS X and Linux are known to work.</li>
     <li><i class="fa-li fa fa-caret-right"></i>
         You can <strong>resume</strong> an interrupted or cancelled upload. To resume an upload, simply <strong>send the exact same files</strong> again !

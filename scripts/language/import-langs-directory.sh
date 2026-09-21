@@ -58,6 +58,10 @@ importfile vi_VN   FileSender_3.0_Vietnamese.php
 importfile ko_KR   FileSender_3.0_Korean.php
 importfile ta_TAM  FileSender_3.0_Tamil.php
 importfile uk_UA   FileSender_3.0_Ukranian.php
+importfile lv_LV   FileSender_3.0_Latvian.php
+importfile es_GA   FileSender_3.0_Galician.php
+importfile ro_RO   FileSender_3.0_Romanian.php
+importfile de_AT   FileSender_3.0_Austria.php
 
 
 echo "Checking syntax of generated .php files, please wait..."

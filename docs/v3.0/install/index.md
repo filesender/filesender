@@ -32,7 +32,7 @@ you can report issues with and update the documentation.
 * Apache (or nginx) and PHP version 8.4 or later.
 * A PostgreSQL (recent) or MariaDB database (10.7 or above).
 * A big filesystem (or cloud backed).
-* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.4 or newer.
+* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.4.9 or newer.
 
 Note that older versions of PHP may work, but they are not supported
 by the PHP project so it is recommended to avoid them in production. Likewise,
@@ -90,8 +90,8 @@ see something like the following:
 # ls -l /opt/filesender
 total 8
 drwxrwxr-x. 21 root root 4096 Jun  6 15:28 filesender
-lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.4.2
-drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.4.2
+lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.4.10
+drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.4.10
 
 # ls -l /opt/filesender/filesender/
 total 160
@@ -254,7 +254,7 @@ You might also like to consider taking a look at
 [sspsmall](https://github.com/monkeyiq/sspsmall) to install and SP and
 IdP with SimpleSAMLphp on your system.
 
-All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.2 of SimpleSAMLphp.
+All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.10 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
 [(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
 probably work. The continuous integration in FileSender has an
@@ -264,22 +264,22 @@ shows the version currently used there.
 
 * **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://github.com/simplesamlphp/simplesamlphp/releases), right?
 
-Extract SimpleSAMLphp in a suitable directory and create symlink:
+Extract SimpleSAMLphp in a suitable directory and create symlink. Make sure to update the example to your recent version:
 
 ```
 mkdir -p ~/src
 cd ~/src
 wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v2.4.2/simplesamlphp-2.4.2-full.tar.gz
 
-php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v1.19.7 >| checklist
-echo " simplesamlphp-2.4.2-full.tar.gz" >> checklist
+php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v2.4.10 >| checklist
+echo " simplesamlphp-2.4.10-full.tar.gz" >> checklist
 sha256sum --check checklist
- simplesamlphp-2.4.2-full.tar.gz: OK
+ simplesamlphp-2.4.10-full.tar.gz: OK
 
 mkdir -p /opt/filesender
 cd /opt/filesender
-tar xvzf ~/src/simplesamlphp-2.4.2-full.tar.gz
-ln -s simplesamlphp-2.4.2 simplesaml
+tar xvzf ~/src/simplesamlphp-2.4.10-full.tar.gz
+ln -s simplesamlphp-2.4.10 simplesaml
 ```
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web directory with a web server alias.

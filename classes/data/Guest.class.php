@@ -921,7 +921,7 @@ class Guest extends DBObject
                     $value = strtotime($value);
                 }
                 
-                if (!preg_match('`^[0-9]+$`', $value)) {
+                if (!preg_match('`^[.0-9]+$`', $value)) {
                     throw new BadExpireException($value);
                 }
                 $value = (int)$value;
