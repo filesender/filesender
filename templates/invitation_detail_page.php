@@ -132,15 +132,16 @@ if( $found ) {
                     <h2>{tr:invitation_guest_transfer_linked}</h2>
 
                     <?php
-                        $all_transfers = Transfer::fromGuest($guest);
+                        $all_transfers = Transfer::fromGuestIncludingUploading($guest);
                         $invite_offset = Utilities::arrayKeyOrDefault($_GET, 'offset', 0, FILTER_VALIDATE_INT);
                         $invite_limit  = 10;
                         $paged_transfers = array_slice($all_transfers, $invite_offset, $invite_limit + 1);
                         Template::display('transfers_table', array(
-                            'transfers'  => $paged_transfers,
-                            'show_guest' => true,
-                            'limit'      => $invite_limit,
-                            'offset'     => $invite_offset,
+                            'transfers'    => $paged_transfers,
+                            'show_guest'   => true,
+                            'show_progress' => true,
+                            'limit'        => $invite_limit,
+                            'offset'       => $invite_offset,
                         ));
                     ?>
                 </div>

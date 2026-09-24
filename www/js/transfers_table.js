@@ -384,4 +384,91 @@ $(function() {
     var anchor = window.location.hash.substr(1);
     var match = anchor.match(/^transfer_([0-9]+)$/);
     if(match) $('table.transfers .transfer[data-id="' + match[1] + '"] td.expand span.clickable').click();
+
+    // Upload progress polling — batch requests, fixed 2s interval, error-resilient
+    (function() {
+        var uploadingSelector = 'tr[data-transfer-status="created"], tr[data-transfer-status="started"], tr[data-transfer-status="uploading"]';
+        if (!$(uploadingSelector).length) return;
+
+        var POLL_INTERVAL = 2000;
+        var timerId = null;
+        var pendingRequest = false;
+        var consecutiveErrors = 0;
+        var MAX_CONSECUTIVE_ERRORS = 30; // stop after ~1 min of continuous failures
+
+        function scheduleNext() {
+            if (timerId) { clearTimeout(timerId); timerId = null; }
+            if (!$(uploadingSelector).length) return;
+            timerId = setTimeout(updateProgress, POLL_INTERVAL);
+        }
+
+        function onError() {
+            pendingRequest = false;
+            consecutiveErrors++;
+            if (consecutiveErrors < MAX_CONSECUTIVE_ERRORS) {
+                scheduleNext();
+            }
+        }
+
+        function updateProgress() {
+            timerId = null;
+            if (pendingRequest) { scheduleNext(); return; }
+
+            var rows = $(uploadingSelector);
+            if (!rows.length) return;
+
+            var ids = [];
+            rows.each(function() {
+                var transferId = $(this).attr('data-id');
+                if (transferId && !isNaN(transferId)) {
+                    var numId = parseInt(transferId, 10);
+                    if (ids.indexOf(numId) === -1) ids.push(numId);
+                }
+            });
+            if (!ids.length) return;
+
+            pendingRequest = true;
+
+            filesender.client.getBatchTransferProgress(ids, function(results) {
+                pendingRequest = false;
+                consecutiveErrors = 0;
+
+                for (var id in results) {
+                    if (!results.hasOwnProperty(id)) continue;
+                    var data = results[id];
+                    var row = $('tr[data-id="' + id + '"]');
+                    var bar = row.find('[data-transfer-progress="' + id + '"]');
+                    if (!bar.length) continue;
+
+                    if (data.progress < 0) {
+                        bar.find('.fs-progress-bar__value').text('N/A');
+                        continue;
+                    }
+
+                    var pct = Math.min(100, Math.max(0, data.progress));
+                    bar.find('.fs-progress-bar__indicator').css('width', pct + '%');
+                    bar.find('.fs-progress-bar__value').text(Math.round(pct) + '%');
+
+                    if (data.status === 'available') {
+                        row.attr('data-transfer-status', 'available');
+                        bar.find('.fs-progress-bar__indicator').css('width', '100%');
+                        bar.find('.fs-progress-bar__value').text('100%');
+                    }
+                }
+
+                scheduleNext();
+            }, onError);
+        }
+
+        updateProgress();
+
+        $(document).on('visibilitychange', function() {
+            if (document.hidden) {
+                if (timerId) { clearTimeout(timerId); timerId = null; }
+            } else {
+                consecutiveErrors = 0;
+                if (!timerId) updateProgress();
+            }
+        });
+    })();
 });
