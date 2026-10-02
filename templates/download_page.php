@@ -429,42 +429,19 @@ if( $isEncrypted
     <?php } ?>
 
 
-<div class="fs-download verify_email_to_download">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h4>{tr:verify_your_email_address_to_download}</h4>
-                <table columns="2" border="0">
-                    <col class="width25">
-                    <col class="width75">
-                    <tr>
-                        <td>
-                            <button href="#" class="verificationcodesendtoemail fs-button">
-                                <i class="fa fa-paper-plane fa-lg"></i>
-                                <span>{tr:send}</span>
-                            </button>
-                        </td>
-                        <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <p>{tr:then_enter_verification_code_below}</p>
-                        </td>
-                    </tr>
-                    <tr class="verificationcodesendpage">
-                        <td>
-                            <button href="#" class="verificationcodesend verificationcodesendelement fs-button">
-                                <i class="fa fa-unlock fa-lg"></i>
-                                <span>{tr:verify}</span>
-                            </button>
-                        </td>
-                        <td class="verify_labels2">
-                            <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+<div class="fs-download__verify verify_email_to_download">
+    <p>{tr:send_verification_code_to_your_email_address}</p>
+    <button type="button" class="verificationcodesendtoemail fs-button fs-button--inverted">
+        <i class="fa fa-paper-plane"></i>
+        <span>{tr:send}</span>
+    </button>
+    <label for="verificationcode">{tr:then_enter_verification_code_below}</label>
+    <div class="fs-download__verify-code">
+        <input id="verificationcode" class="verificationcode fs-modal__input" name="verificationcode" type="text" autocomplete="one-time-code"/>
+        <button type="button" class="verificationcodesend fs-button">
+            <i class="fa fa-unlock"></i>
+            <span>{tr:verify}</span>
+        </button>
     </div>
 </div>
 

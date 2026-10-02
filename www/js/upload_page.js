@@ -3178,7 +3178,7 @@ $(function() {
                 var prompt = filesender.ui.popup( lang.tr('restart_failed_transfer'),
                     {load:   {callback: load, className: 'fs-button fs-button--inverted'},
                         forget: {callback: forget, className: 'fs-button fs-button--inverted'},
-                        later:  {callback: later, className: 'fs-button fs-button--primary'}},
+                        later:  {callback: later, className: 'fs-button'}},
                     {onclose: later});
                 $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
                 var tctn = $('<div class="failed_transfer" />').appendTo(prompt);

@@ -135,25 +135,22 @@
     }
 }
 
-.verify_email_to_download {
+.fs-download__verify {
     display: none;
 }
 
-.verify_email_to_download td {
-    vertical-align: middle;
+.fs-download__verify label {
+    display: block;
+    margin-top: var(--fs-spacing-3x);
 }
 
-#downloadTabs {
-  padding: 0;
-  border: none;
-  margin: 0;
-  white-space: normal;
+.fs-download__verify-code {
+    display: flex;
+    gap: var(--fs-spacing-base);
+    margin-top: var(--fs-spacing-base);
 }
 
-.bootbox-body:has(> #downloadTabs) {
-  white-space: normal;
-}
-
-.modal-body:has(> .bootbox-body > #downloadTabs) {
-  padding:0;
+.fs-download__verify-code .fs-modal__input {
+    flex: 1;
+    min-width: 0;
 }

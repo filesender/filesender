@@ -63,6 +63,65 @@ window.filesender.ui = {
         dialog.closest('.bootbox').modal('hide');
     },
 
+    decorateModal: function(dialog) {
+        if(dialog.hasClass('fs-modal')) return;
+
+        dialog.addClass('fs-modal');
+        dialog.find('.modal-dialog').addClass('fs-modal__dialog');
+        dialog.find('.modal-content').addClass('fs-modal__content');
+        dialog.find('.modal-header').addClass('fs-modal__header');
+        dialog.find('.modal-title').addClass('fs-modal__title');
+        dialog.find('.modal-body').addClass('fs-modal__body');
+        dialog.find('.bootbox-body').addClass('fs-modal__message');
+        dialog.find('.modal-footer').addClass('fs-modal__footer');
+        dialog.find('.bootbox-input').addClass('fs-modal__input');
+
+        dialog.find('.bootbox-close-button, .modal-header .btn-close')
+            .removeClass('close btn-close')
+            .addClass('fs-modal__close')
+            .removeAttr('aria-hidden')
+            .attr({title: lang.tr('close').out(), 'aria-label': lang.tr('close').out()})
+            .html('<i class="fi fi-close"></i>');
+
+        dialog.find('.modal-footer .btn').each(function() {
+            var button = $(this).removeClass('btn btn-primary btn-secondary btn-default');
+            if(!button.hasClass('fs-button')) button.addClass('fs-button');
+        });
+    },
+
+    modalButtons: function(okLabel, cancelLabel) {
+        return {
+            confirm: {
+                label: lang.tr(okLabel || 'OK').out(),
+                className: 'fs-button'
+            },
+            cancel: {
+                label: lang.tr(cancelLabel || 'Cancel').out(),
+                className: 'fs-button fs-button--inverted'
+            }
+        };
+    },
+
+    modalTitle: function(title, type) {
+        var icons = {info: 'fi-info', success: 'fi-succes', warning: 'fi-warning', error: 'fi-error'};
+        if(!icons[type]) return title;
+
+        return '<i class="fi ' + icons[type] + ' fs-modal__icon"></i><span>' + title + '</span>';
+    },
+
+    contentPopup: function(content, title) {
+        var holder = content.parent();
+
+        return bootbox.dialog({
+            title: title,
+            message: content.show(),
+            centerVertical: true,
+            onHide: function() {
+                content.hide().appendTo(holder);
+            }
+        });
+    },
+
     /**
      * Deprecated Jan 2021. Holder for named nodes
      */
@@ -103,7 +162,7 @@ window.filesender.ui = {
         for(var lid in buttons) {
             btndef.push({
                 label: lang.tr(lid).out().replace(/<[^>]*>/g, ''),
-                className: buttons[lid].className ? buttons[lid].className : 'fs-button fs-button--primary',
+                className: buttons[lid].className ? buttons[lid].className : 'fs-button',
                 callback: buttons[lid].callback ? buttons[lid].callback : function() {}
             });
         }
@@ -119,7 +178,6 @@ window.filesender.ui = {
         options = {
             title: title,
             message: ' ',
-            className: 'prompt-dialog',
             centerVertical: true,
             buttons: btndef,
             onEscape: onclose,
@@ -148,10 +206,16 @@ window.filesender.ui = {
         }
 
         var options = {
-            title: lang.tr(type + '_dialog').toString(),
+            title: filesender.ui.modalTitle(lang.tr(type + '_dialog').toString(), type),
             message: message,
-            className: type + '-dialog',
+            className: 'fs-modal--' + type,
             centerVertical: true,
+            buttons: {
+                ok: {
+                    label: lang.tr('OK').out(),
+                    className: 'fs-button'
+                }
+            },
             callback: function () {
                 console.log('This was logged in the callback!');
                 if( onclose ) { onclose(); }
@@ -194,9 +258,14 @@ window.filesender.ui = {
         var options = {
             title: title,
             message: message,
-            className: 'confirm-dialog',
             centerVertical: true,
             closeButton: false,
+            buttons: {
+                ok: {
+                    label: lang.tr('OK').out(),
+                    className: 'fs-button'
+                }
+            },
             callback: function () {
                 console.log('This was logged in the callback!');
                 if( onclose ) { onclose(); }
@@ -234,18 +303,8 @@ window.filesender.ui = {
         bootbox.confirm({
             title: lang.tr('confirm_dialog').toString(),
             message: message,
-            className: 'confirm-dialog',
             centerVertical: true,
-            buttons: {
-                confirm: {
-                    label: yesno ? lang.tr('Yes').out() : lang.tr('OK').out(),
-                    className: 'fs-button fs-button--primary'
-                },
-                cancel: {
-                    label: yesno ? lang.tr('No').out() : lang.tr('Cancel').out(),
-                    className: 'fs-button fs-button--inverted'
-                }
-            },
+            buttons: yesno ? filesender.ui.modalButtons('Yes', 'No') : filesender.ui.modalButtons(),
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
                 if( result ) {
@@ -270,7 +329,7 @@ window.filesender.ui = {
                 buttons[lid].label = lang.tr(lid).out();
             }
             if( buttons[lid].callback && !buttons[lid].className ) {
-                buttons[lid].className = 'fs-button fs-button--primary';
+                buttons[lid].className = 'fs-button';
             }
             if( !buttons[lid].className ) {
                 buttons[lid].className = 'fs-button fs-button--inverted';
@@ -283,7 +342,7 @@ window.filesender.ui = {
         bootbox.dialog({
             title: lang.tr(title).toString(),
             message: message,
-            className: dialogtype + '-dialog',
+            className: 'fs-modal--' + dialogtype,
             centerVertical: true,
             buttons: buttons
         });
@@ -309,8 +368,8 @@ window.filesender.ui = {
         var r = bootbox.prompt({
             title: title,
             message: ' ',
-            className: 'prompt-dialog',
             centerVertical: true,
+            buttons: filesender.ui.modalButtons(),
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
                 if( result ) {
@@ -339,8 +398,8 @@ window.filesender.ui = {
             title: title,
             message: ' ',
             inputType: 'password',
-            className: 'prompt-dialog',
             centerVertical: true,
+            buttons: filesender.ui.modalButtons(),
             value: value,
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
@@ -368,23 +427,14 @@ window.filesender.ui = {
         var r = bootbox.prompt({
             title: title,
             message: ' ',
-            className: 'prompt-dialog',
             centerVertical: true,
             required: true,
-            buttons: {
-                confirm: {
-                    label: lang.tr('OK').out(),
-                    className: 'fs-button fs-button--success'
-                },
-                cancel: {
-                    label: lang.tr('Cancel').out(),
-                    className: 'fs-button fs-button--danger'
-                }
-            },
+            buttons: filesender.ui.modalButtons(),
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
                 if( result ) {
                     var r = onok(result);
+                    $(this).find('.fs-modal__input').toggleClass('fs-modal__input--invalid', !r);
                     if( !r )
                         return false;
                 } else {
@@ -410,23 +460,14 @@ window.filesender.ui = {
             title: title,
             message: ' ',
             inputType: 'email',
-            className: 'prompt-dialog',
             centerVertical: true,
             required: true,
-            buttons: {
-                confirm: {
-                    label: lang.tr('OK').out(),
-                    className: 'fs-button fs-button--success'
-                },
-                cancel: {
-                    label: lang.tr('Cancel').out(),
-                    className: 'fs-button fs-button--danger'
-                }
-            },
+            buttons: filesender.ui.modalButtons(),
             callback: function (result) {
                 console.log('This was logged in the callback!  result:' + result);
                 if( result ) {
                     var r = onok(result);
+                    $(this).find('.fs-modal__input').toggleClass('fs-modal__input--invalid', !r);
                     if( !r )
                         return false;
                 } else {
@@ -448,23 +489,22 @@ window.filesender.ui = {
      * @return node
      */
     chooseAction: function(actions, onaction, oncancel) {
+        var list = null;
         var d = this.popup(lang.tr('what_to_do'), {
+            cancel: { callback: oncancel, className: 'fs-button fs-button--inverted' },
             ok: { callback: function() {
-                console.log("ok cb");
-                return onaction($(this).find('.actions input[name="action"]:checked').val());
-            }},
-            cancel: { callback: oncancel, className: 'fs-button fs-button--inverted' }
+                return onaction(list.find('input[name="action"]:checked').val());
+            }}
         }, {onclose: oncancel});
 
-        var list = $('<div class="actions" />').appendTo(d);
+        list = $('<div class="fs-modal__options" />').appendTo(d);
         for(var i=0; i<actions.length; i++) {
-            var action = $('<div class="custom-control custom-radio action" />').appendTo(list);
-            var input = $('<input type="radio" class="custom-control-input" name="action" />').attr({value: actions[i]}).appendTo(action);
-            $('<label class="custom-action-label" for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
-            action.on('click', function() {
-                var input = $(this).find('input[name="action"]');
-                input.val([input.attr('value')]);
-            });
+            var id = 'fs-modal-action-' + actions[i];
+            var group = $('<div class="fs-radio-group" />').appendTo(list);
+            $('<input type="radio" name="action" />').attr({id: id, value: actions[i]}).appendTo(group);
+            var option = $('<div class="fs-radio__option" />').appendTo($('<label class="fs-radio" />').attr({for: id}).appendTo(group));
+            $('<span class="fs-radio__circle" />').appendTo(option);
+            $('<span class="fs-radio__text" />').text(lang.tr(actions[i]).out()).appendTo(option);
         }
         list.find('input[name="action"]').val([actions[0]]);
 
@@ -495,29 +535,22 @@ window.filesender.ui = {
         var r = bootbox.alert({
             title: title,
             message: message,
-            className: 'wideinfo',
+            className: 'fs-modal--wide',
             centerVertical: true,
             backdrop: true,
             size: 'xl',
+            buttons: {
+                ok: {
+                    label: lang.tr('OK').out(),
+                    className: 'fs-button'
+                }
+            },
             callback: function () {
                 console.log('wideInfoPopup... this was logged in the callback!');
                 if( onclose ) { onclose(); }
             }
         });
         return r.find('.bootbox-body');
-    },
-
-    /**
-     * Relocate a dialog
-     */
-    relocatePopup: function(popup, extra = {} ) {
-        params = {
-            position: {
-                my: 'center',
-                at: 'center'
-            },
-        };
-        popup.dialog({...params,...extra});
     },
 
     /**
@@ -696,7 +729,7 @@ window.filesender.ui = {
         msgtail += '</div>';
 
         msgtail += '<br /><br />' + lang.tr('you_can_send_client_logs') + ' ';
-        msgtail += '<button class="send_client_logs btn btn-secondary" id="send_client_logs">' + lang.tr('send_client_logs').out() + '</button>';
+        msgtail += '<button class="send_client_logs fs-button fs-button--inverted fs-button--small" id="send_client_logs">' + lang.tr('send_client_logs').out() + '</button>';
 
 
         var d = this.alert('error', msg + msgtail, callback);
@@ -1014,6 +1047,10 @@ function getCookie( name ) {
     ?.split("=")[1];
     return cookieValue;
 }
+
+$(document).on('show.bs.modal', '.modal', function() {
+    filesender.ui.decorateModal($(this));
+});
 
 $(function() {
     $('#topmenu_help[href="#"]').on('click', function() {

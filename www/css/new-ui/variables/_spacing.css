@@ -36,4 +36,7 @@
 
   --fs-container-max-width: 1600px;
   --fs-container-gutter: clamp(16px, 4vw, 48px);
+
+  --fs-modal-width: 600px;
+  --fs-modal-wide-width: 1140px;
 }

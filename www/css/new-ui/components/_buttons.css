@@ -1,6 +1,4 @@
-.fs-button,
-.bootbox-accept,
-.btn-secondary {
+.fs-button {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -24,16 +22,12 @@
   pointer-events: none;
 }
 
-.fs-button:hover,
-.bootbox-accept:hover,
-.btn-secondary:hover {
+.fs-button:hover {
   color: var(--fs-button-hover-color);
   background: var(--fs-button-hover-background);
 }
 
-.fs-button:active,
-.bootbox-accept:active,
-btn-secondary:active {
+.fs-button:active {
   color: var(--fs-button-active-color);
   background: var(--fs-button-active-background);
 }

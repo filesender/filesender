@@ -126,7 +126,7 @@ $(function() {
         });
 
         var prompt = filesender.ui.promptEmailMany(lang.tr('enter_to_email'), function(input) {
-            $('p.error', this).remove();
+            $('.fs-modal__error', this).remove();
 
             var raw_emails = input.split(/[,;]/);
 
@@ -165,7 +165,7 @@ $(function() {
             if(errors.length) {
                 console.log(errors);
                 for(var i=0; i<errors.length; i++)
-                    $('<p class="error message" />').text(errors[i].out()).appendTo(prompt);
+                    $('<p class="fs-modal__error" />').text(errors[i].out()).appendTo(prompt);
                 return false;
             }
 
@@ -184,7 +184,7 @@ $(function() {
 
         })
 
-        prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
+        prompt.append('<p class="fs-modal__note">' + lang.tr('email_separator_msg') + '</p>');
     });
 
     // Remind buttons
@@ -273,7 +273,6 @@ $(function() {
         filesender.client.getTransferAuditlog(transfer_id, function(log) {
 
             var popup = filesender.ui.wideInfoPopup(lang.tr('auditlog'));
-            popup.css('overflow','hidden');
 
             if(!log || !log.length) {
                 $('<p />').text(lang.tr('no_auditlog')).appendTo(popup);
@@ -295,12 +294,12 @@ $(function() {
             var filtered = false;
 
             if(filter) {
-                var flt = $('<div class="filtered" />').text(lang.tr('filtered_transfer_log')).prependTo(popup);
+                var flt = $('<p class="fs-modal__note" />').text(lang.tr('filtered_transfer_log') + ' ').prependTo(popup);
                 $('<a href="#" />').text(lang.tr('view_full_log')).appendTo(flt).on('click', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
-                    $(this).closest('.wide_info').find('table tr').show('fast');
-                    $(this).closest('.filtered').hide('fast');
+                    popup.find('table tr').show('fast');
+                    flt.hide('fast');
                     filtered = false;
                     filterid = null;
                     return false;
@@ -340,12 +339,10 @@ $(function() {
 
             }
 
-            var actions = $('<div class="actions" />').appendTo(popup);
+            var send_by_email = $('<button type="button" class="fs-button fs-button--inverted" />')
+                .html('<i class="fa fa-envelope"></i><span>' + lang.tr('send_to_my_email').out() + '</span>')
+                .prependTo(popup.closest('.fs-modal').find('.fs-modal__footer'));
 
-            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(lang.tr('send_to_my_email'));
-            $('<p>&nbsp;</p>').prependTo(send_by_email);
-            $('<span class="fa fa-lg fa-envelope" />').prependTo(send_by_email);
-            send_by_email.appendTo(actions)
             send_by_email.on('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();

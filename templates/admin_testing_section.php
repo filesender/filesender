@@ -140,28 +140,27 @@
         <button type="button" class="fs-button" data-action="show-bs-test-bootbox">show bootbox test dialog</button>
         <button type="button" class="fs-button" data-action="show-bs-test-alertbs">show ui.alertbs dialog</button>
         <button type="button" class="fs-button" data-action="show-bs-test-error">show ui.error dialog (x)</button>
-        <button type="button" class="fs-button" data-toggle="modal" data-target="#exampleModal">Launch demo modal</button>
+        <button type="button" class="fs-button" data-bs-toggle="modal" data-bs-target="#exampleModal">Launch demo modal</button>
         <button type="button" class="fs-button" data-action="show-bs-maint1">show maintenance dialog (state)</button>
         <button type="button" class="fs-button" data-action="show-bs-maint2">show maintenance dialog (null)</button>
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+<div class="modal fade fs-modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered fs-modal__dialog" role="document">
+    <div class="modal-content fs-modal__content">
+      <div class="modal-header fs-modal__header">
+        <h5 class="modal-title fs-modal__title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="fs-modal__close" data-bs-dismiss="modal" aria-label="{tr:close}" title="{tr:close}">
+          <i class="fi fi-close"></i>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body fs-modal__body">
         This is the contents of the modal.
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+      <div class="modal-footer fs-modal__footer">
+        <button type="button" class="fs-button fs-button--inverted" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="fs-button">Save changes</button>
       </div>
     </div>
   </div>

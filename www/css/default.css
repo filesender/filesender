@@ -3074,25 +3074,6 @@ table.paginator a {
   font-weight: bold;
 }
 
-/* dialogs  */
-.success-dialog .modal-content,
-.warning-dialog .modal-content,
-.error-dialog .modal-content {
-  overflow: hidden;
-}
-
-.success-dialog .modal-header {
-  background-color: #CFC;
-}
-
-.warning-dialog .modal-header {
-  background-color: #fcc;
-}
-
-.error-dialog .modal-header {
-  background-color: #faa;
-}
-
 .must_login_message {
   background-color: #fbc9c9;
   border: 1px solid;

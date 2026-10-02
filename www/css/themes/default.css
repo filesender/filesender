@@ -136,6 +136,19 @@
     --fs-tabs-link-active-color: var(--fs-header-link-active-color);
     --fs-tabs-link-active-border-color: var(--fs-accent);
 
+    --fs-modal-color: var(--fs-text-color);
+    --fs-modal-background: var(--fs-light);
+    --fs-modal-shadow: rgba(0, 0, 0, 0.16) 0px 4px 24px 0px;
+    --fs-modal-close-color: var(--fs-accent);
+    --fs-modal-close-hover-background: var(--fs-alternative-hover);
+    --fs-modal-focus-color: var(--fs-accent);
+    --fs-modal-note-color: var(--fs-dark-grey);
+    --fs-modal-code-background: var(--fs-background);
+    --fs-modal-info-color: var(--fs-info);
+    --fs-modal-success-color: var(--fs-success);
+    --fs-modal-warning-color: var(--fs-warning);
+    --fs-modal-error-color: var(--fs-error);
+
     /* Paginator */
     --fs-paginator-link-background: var(--fs-light);
     --fs-paginator-link-border-color: var(--fs-light);

@@ -216,9 +216,9 @@ $(function() {
 
     var rc = page.find('span[data-info="remote_config"]');
     console.log(rc);
-    if(rc.length) $('<button class="btn btn-secondary" />').text(lang.tr('get_full_user_remote_config')).button().on('click', function() {
+    if(rc.length) $('<button type="button" class="fs-button fs-button--inverted" />').text(lang.tr('get_full_user_remote_config')).on('click', function() {
         filesender.ui.wideInfoPopup('copy_text',
-                                    $('<textarea class="w-100 wide desctxt" />').val(rc.html()), function() {});
+                                    $('<textarea class="fs-modal__input fs-modal__input--textarea" rows="8" />').val(rc.html()), function() {});
     }).insertAfter(rc);
 
     var rasr = page.find('[data-remote-auth-sync-request]');
