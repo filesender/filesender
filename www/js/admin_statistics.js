@@ -75,9 +75,15 @@ function quotabars() {
     q.remove();
 }
 
+function statistics_loading() {
+    return $('<div class="fs-statistics__loading" role="status" />')
+        .append('<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>')
+        .append($('<span />').text(lang.tr('statistics_loading')));
+}
+
 function graph(g) {
     if (!$("#graph_"+g).length) return;
-    $("#graph_"+g).html('<tr><td class="text-center"><strong>Loading...</strong><br><div class="spinner-grow m-5" role="status"></div></td></tr>');
+    $("#graph_"+g).html(statistics_loading());
     $.ajax({
         url: "js/graph/statistics_"+g+"_graph.php"+$(location).attr('search')
     }).done(function(json) {
@@ -90,14 +96,7 @@ function table(t,start=0,sort='',sortdirection=0) {
     if (!$("#"+t).length) return;
     $("#nav_"+t).remove();
 
-    spinner_width = Math.max(100,$("#"+t)[0].clientWidth/3);
-    spinner_height = Math.max(spinner_width,$("#"+t)[0].clientHeight);
-    $("#"+t).html('<tr><td class="text-center"><strong>Loading...</strong><br><div id="spinner_'+t+'" class="spinner-grow" role="status"></div></td></tr>');
-    $("#spinner_"+t).width(spinner_width).height(spinner_width);
-    if (spinner_height>spinner_width) {
-        var m = Number((spinner_height-spinner_width)/2).toString()+"px";
-        $("#spinner_"+t).css("margin-top", m).css("margin-bottom", m);
-    }
+    $("#"+t).html($('<tr />').append($('<td />').append(statistics_loading())));
 
     $.ajax({
         url: "lib/tables/statistics_page.php"+$(location).attr('search')+"&t="+t+"&start="+start+"&sort="+sort+"&sortdirection="+sortdirection
@@ -112,9 +111,9 @@ function table(t,start=0,sort='',sortdirection=0) {
                 var text = $(this).text();
                 if (sort == key) {
                     if (sortdirection) {
-                        text='<u>'+text+'</u> <i class="fa fa-sort-desc" aria-hidden="true"></i>';
+                        text='<u>'+text+'</u> <i class="fi fi-chevron-down" aria-hidden="true"></i>';
                     } else {
-                        text='<u>'+text+'</u> <i class="fa fa-sort-asc" aria-hidden="true"></i>';
+                        text='<u>'+text+'</u> <i class="fi fi-chevron-up" aria-hidden="true"></i>';
                     }
                 }
                 var span = $("<span>", {
@@ -134,19 +133,29 @@ function table(t,start=0,sort='',sortdirection=0) {
             });
         }
 
-        $("#"+t).after('<div id="nav_'+t+'" class="table-nav"></div>');
         var trs=$("#"+t+" tr");
-        if (parseInt(trs[1].attributes['data-row'].value)>0) {
-            $("#nav_"+t).append('<span id="nav_'+t+'_back" class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span>');
-            $("#nav_"+t+"_back").click(function(){
+        var hasBack = parseInt(trs[1].attributes['data-row'].value)>0;
+        var hasForward = !trs[trs.length-1].attributes['data-row-blank'];
+        if (!hasBack && !hasForward) return;
+
+        var nav = $('<div id="nav_'+t+'" class="fs-paginator fs-paginator--center" />').insertAfter($("#"+t));
+        var back = $('<button type="button" class="fs-link fs-link--circle"><i class="fi fi-chevron-left"></i></button>').appendTo(nav);
+        var forward = $('<button type="button" class="fs-link fs-link--circle"><i class="fi fi-chevron-right"></i></button>').appendTo(nav);
+
+        if (hasBack) {
+            back.on('click', function(){
                 table(t,2*parseInt(trs[1].attributes['data-row'].value)-parseInt(trs[trs.length-1].attributes['data-row'].value)-1);
             });
+        } else {
+            back.addClass('fs-link--disabled').prop('disabled', true);
         }
-        if (!trs[trs.length-1].attributes['data-row-blank']) {
-            $("#nav_"+t).append('<span id="nav_'+t+'_forward" class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span>');
-            $("#nav_"+t+"_forward").click(function(){
+
+        if (hasForward) {
+            forward.on('click', function(){
                 table(t,parseInt(trs[trs.length-1].attributes['data-row'].value)+1);
             });
+        } else {
+            forward.addClass('fs-link--disabled').prop('disabled', true);
         }
     });
 }
@@ -163,7 +172,6 @@ $(function() {
     graph("transfers_speeds");
     graph("data_per_day");
     graph("encryption_split");
-    $(".graph").delay(800).animate({height:400}, 1000, "easeOutSine")
 
     table("top_users");
     table("transfer_per_user");

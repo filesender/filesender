@@ -38,3 +38,14 @@
 .fs-paginator .fs-link + .fs-link {
     margin-left: var(--fs-spacing-base);
 }
+
+.fs-paginator .fs-link--current,
+.fs-paginator .fs-link--current:hover {
+    color: var(--fs-text-color) !important;
+    background: var(--fs-paginator-link-active-background) !important;
+    border: 1px solid var(--fs-paginator-link-active-border-color) !important;
+}
+
+.fs-paginator__ellipsis {
+    margin: 0 var(--fs-spacing-base);
+}

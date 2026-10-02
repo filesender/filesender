@@ -129,6 +129,11 @@
     --fs-link-hover-color: var(--fs-text-color);
     --fs-link-hover-background: var(--fs-light-grey);
     --fs-link-icon-color: var(--fs-dark);
+    --fs-tabs-border-color: var(--fs-border-color);
+    --fs-tabs-link-color: var(--fs-link-color);
+    --fs-tabs-link-hover-background: var(--fs-link-hover-background);
+    --fs-tabs-link-active-color: var(--fs-header-link-active-color);
+    --fs-tabs-link-active-border-color: var(--fs-accent);
 
     /* Paginator */
     --fs-paginator-link-background: var(--fs-light);
@@ -204,6 +209,10 @@
 
     /* Settings */
     --fs-settings-background: var(--fs-base-page-background);
+    --fs-admin-background: var(--fs-base-page-background);
+    --fs-admin-border-color: var(--fs-border-color);
+    --fs-admin-muted-color: var(--fs-dark-grey);
+    --fs-statistics-background: var(--fs-base-page-background);
 
     /* Transfer */
     --fs-transfer-background: var(--fs-base-page-background);

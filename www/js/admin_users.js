@@ -201,23 +201,23 @@ $(function() {
     }
 
     
-    section.find('.search [class="ab_hit_create_total_limit"]').on('click', function() {
+    section.find('.search .ab_hit_create_total_limit').on('click', function() {
         search_potential_abuse('guest_created_lh','','User',$(this).attr('data-since'));
     });
     
-    section.find('.search [class="ab_hit_create_rate_limit"]').on('click', function() {
+    section.find('.search .ab_hit_create_rate_limit').on('click', function() {
         search_potential_abuse('guest_created_rate_lh','','User',$(this).attr('data-since'));
     });
-    section.find('.search [class="ab_hit_remind_rate_limit"]').on('click', function() {
+    section.find('.search .ab_hit_remind_rate_limit').on('click', function() {
         search_potential_abuse('guest_remind_rate_lh','','Guest',$(this).attr('data-since'));
     });
-    section.find('.search [class="ab_guests_no_file"]').on('click', function() {
+    section.find('.search .ab_guests_no_file').on('click', function() {
         search_potential_abuse('','guest_closed_unused','User',$(this).attr('data-since'));
     });
-    section.find('.search [class="ab_guests_del"]').on('click', function() {
+    section.find('.search .ab_guests_del').on('click', function() {
         search_potential_abuse('','guest_closed','User',$(this).attr('data-since'));
     });
-    section.find('.search [class="ab_decryptfailed"]').on('click', function() {
+    section.find('.search .ab_decryptfailed').on('click', function() {
         search_decryptfailed($(this).attr('data-since'));
     });
 
