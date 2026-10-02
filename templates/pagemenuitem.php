@@ -9,7 +9,7 @@ function pagelink($page) {
     echo '<div><a class="'.$class.'" href="?s='.$page.'">'.Lang::tr($page.'_page_link').'</a></div>';
 }
 
-function pagemenuitem($page) {
+function pagemenuitem($page, $itemClass = '') {
     global $vidattr;
 
     if(!GUI::isUserAllowedToAccessPage($page)) return;
@@ -66,8 +66,34 @@ function pagemenuitem($page) {
         $icon = '<i class="fa fa-bar-chart"></i> ';
     }
 
-    echo '<li>';
+    echo $itemClass ? '<li class="'.$itemClass.'">' : '<li>';
     echo '<a class="fs-link '.$class.'"  id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$icon.'<span>'.$label.'</span>'.'</a>';
+    echo '</li>';
+}
+
+function pagemenudropdown($id, $label, $icon, $pages) {
+    $pages = array_values(array_filter($pages, function($page) {
+        return GUI::isUserAllowedToAccessPage($page);
+    }));
+
+    if(!count($pages)) return;
+
+    if(count($pages) == 1) {
+        pagemenuitem($pages[0]);
+        return;
+    }
+
+    $class = in_array(GUI::currentPage(), $pages) ? ' fs-link--active ' : '';
+
+    echo '<li class="fs-dropdown">';
+    echo '<button type="button" class="fs-link fs-dropdown__toggle '.$class.'" id="topmenu_'.$id.'" aria-haspopup="true" aria-expanded="false" aria-controls="topmenu_'.$id.'_menu">';
+    echo $icon.'<span>'.$label.'</span><i class="fi fi-chevron-down fs-dropdown__chevron"></i>';
+    echo '</button>';
+    echo '<ul class="fs-dropdown__menu" id="topmenu_'.$id.'_menu">';
+    foreach($pages as $page) {
+        pagemenuitem($page, 'fs-dropdown__item');
+    }
+    echo '</ul>';
     echo '</li>';
 }
 

@@ -42,9 +42,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                                 pagemenuitem('user');
                             }
 
-                            pagemenuitem('statistics');
-
-                            pagemenuitem('admin');
+                            pagemenudropdown('advanced_menu', Lang::tr('advanced_menu'), '<i class="fa fa-sliders"></i> ', array('statistics', 'admin'));
 
                             if( $maybe_display_aggregate_statistics_menu ) {
                                 if (AggregateStatistic::enabled()) {

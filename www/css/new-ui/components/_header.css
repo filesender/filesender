@@ -138,3 +138,13 @@ body[data-theme='dark'] {
   }
 }
 
+@media (max-width: 575px) {
+
+  header nav ul li + li {
+    margin-left: 0;
+  }
+
+  header nav ul li .fs-link {
+    padding: var(--fs-spacing-half) var(--fs-spacing-base);
+  }
+}

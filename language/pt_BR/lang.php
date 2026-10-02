@@ -36,6 +36,7 @@ $lang['admin_transfers_page_description'] = 'Existe um número de seções nesta
 $lang['admin_transfers_section'] = 'Transferências';
 $lang['admin_users_section'] = 'Usuários';
 $lang['advanced_invitation_options'] = 'Opções avançadas de convite';
+$lang['advanced_menu'] = 'Avançado';
 $lang['advanced_settings'] = 'Configurações avançadas';
 $lang['advanced_transfer_options'] = 'Opções avançadas de transferência';
 $lang['advanced_upload_settings'] = 'Configurações avançadas de upload';

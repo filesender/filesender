@@ -1062,6 +1062,34 @@ $(function() {
         history.back();
     })
 
+    var closeDropdowns = function(except) {
+        $('.fs-dropdown--open').not(except || []).removeClass('fs-dropdown--open')
+            .find('.fs-dropdown__toggle').attr('aria-expanded', 'false');
+    };
+
+    $('.fs-dropdown__toggle').on('click', function(e) {
+        e.stopPropagation();
+        var dropdown = $(this).closest('.fs-dropdown');
+        var open = !dropdown.hasClass('fs-dropdown--open');
+        closeDropdowns(dropdown);
+        dropdown.toggleClass('fs-dropdown--open', open);
+        $(this).attr('aria-expanded', open ? 'true' : 'false');
+    });
+
+    $(document).on('click', function(e) {
+        if(!$(e.target).closest('.fs-dropdown').length) {
+            closeDropdowns();
+        }
+    });
+
+    $(document).on('keydown', function(e) {
+        if(e.key !== 'Escape') return;
+        var dropdown = $('.fs-dropdown--open');
+        if(!dropdown.length) return;
+        closeDropdowns();
+        dropdown.find('.fs-dropdown__toggle').trigger('focus');
+    });
+
     if( window.filesender.config.auth_warn_session_expired ) {
 
         var sessionExpires = getCookie('X-FileSender-Session-Expires');
