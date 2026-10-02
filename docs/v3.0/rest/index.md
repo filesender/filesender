@@ -2,6 +2,17 @@
 title: RESTful API
 ---
 
+# UID and PUID
+
+Note that in the 3.x series Files are associated with a puid (or
+public UUID) through the REST API. This allows the files internally to
+use temporal UUID for storage and lookup local to the server while
+maintaining the use of uuidv4 for the puid for public interaction.
+
+This split allows files to be stored using temporal UUID on the server
+while access is arranged using puid (v4) to maintain very high entropy
+in that UUID for security purposes.
+
 # Endpoints
 
 All data sent to the REST server (except if mentionned) must be valid JSON with a `Content-Type: application/json`.
@@ -63,7 +74,7 @@ Response example :
 			{
 				"id": 25,
 				"transfer_id": 42,
-				"uid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
+				"puid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
 				"name": "report.doc",
 				"size": "102598",
 				"sha1": null
@@ -71,7 +82,7 @@ Response example :
 			{
 				"id": 31,
 				"transfer_id": 42,
-				"uid": "179558c7-c5be-5428-0b2e-00007ce9c792",
+				"puid": "179558c7-c5be-5428-0b2e-00007ce9c792",
 				"name": "funny.ppt",
 				"size": "23589654",
 				"sha1": null
@@ -205,7 +216,7 @@ Response example :
 			{
 				"id": 25,
 				"transfer_id": 42,
-				"uid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
+				"puid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
 				"name": "report.doc",
 				"size": 102598,
 				"sha1": null
@@ -213,7 +224,7 @@ Response example :
 			{
 				"id": 31,
 				"transfer_id": 42,
-				"uid": "179558c7-c5be-5428-0b2e-00007ce9c792",
+				"puid": "179558c7-c5be-5428-0b2e-00007ce9c792",
 				"name": "funny.ppt",
 				"size": 23589654,
 				"sha1": null
@@ -304,7 +315,7 @@ Response example :
             {
                 "id": 25,
                 "transfer_id": 42,
-                "uid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
+                "puid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
                 "name": "report.doc",
                 "size": 102598,
                 "sha1": null
@@ -312,7 +323,7 @@ Response example :
             {
                 "id": 31,
                 "transfer_id": 42,
-                "uid": "179558c7-c5be-5428-0b2e-00007ce9c792",
+                "puid": "179558c7-c5be-5428-0b2e-00007ce9c792",
                 "name": "funny.ppt",
                 "size": 23589654,
                 "sha1": null
@@ -419,7 +430,7 @@ Response example :
 	{
 		"id": 27,
 		"transfer_id": 42,
-		"uid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
+		"puid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
 		"name": "big_file.tgz",
 		"size": 5987465211,
 		"sha1": null
@@ -864,7 +875,7 @@ Example :
 
 * `id` : (`integer`) file unique identifier
 * `transfer_id` : (`integer`) related [Transfer](#transfer) unique identifier
-* `uid` : (`string`) random unique identifier
+* `puid` : (`string`) random unique identifier
 * `name` : (`string`) file original name
 * `size` : (`integer`) file size in bytes
 * `sha1` : (`string`) file hash, unused, unset @TODO should we remove it until we have a viable technical solution ?
@@ -1042,9 +1053,9 @@ As when authenticated with a [Service Provider](#service-provider) the session c
 
 This mode is enabled by setting the `chunk_upload_security` configuration parameter to `key` @TODO { need default value }.
 
-In this mode you may send the chunk's related [File](#file)'s `uid` property along with the request as the `key` URL argument.
+In this mode you may send the chunk's related [File](#file)'s `puid` property along with the request as the `key` URL argument.
 
-In a [Transfer](#transfer) context any `uid` property from any [File](#file) related to the [Transfer](#transfer) will be accepted.
+In a [Transfer](#transfer) context any `puid` property from any [File](#file) related to the [Transfer](#transfer) will be accepted.
 
 Note that this mecanism is a fallback in the case your client lost all other kind of authentication, this is not necessary under [Remote Application](#remote-application) or [Remote User](#remote-user) as they are always valid as long as the [signature](#signed-request) is right.
 

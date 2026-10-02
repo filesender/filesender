@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -36,27 +36,11 @@ require_once(dirname(__FILE__).'/../../includes/init.php');
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('Cron started');
 
-//
-// False by default, if present it is set
-//
-function getBoolArg( $name )
-{
-    global $argv;
-    
-    $ret = (count($argv) > 1) ? $argv[1]==$name : false;
-    if( !$ret && count($argv) > 2 ) {
-        $ret = ($argv[2]==$name);
-        if( !$ret && count($argv) > 3 ) {
-            $ret = ($argv[3]==$name);
-        }
-    }
-    return $ret;
-}
 
 //
 // Print some messages to give a hint to the user on progress
 //
-$verbose = getBoolArg('--verbose');
+$verbose = Args::getBoolArg('--verbose');
 
 //
 // If one or more files in the transfer can not be deleted
@@ -66,12 +50,12 @@ $verbose = getBoolArg('--verbose');
 // deleted some files and the system is halting when it tries
 // to delete those same files.
 //
-$force = getBoolArg('--force');
+$force = Args::getBoolArg('--force');
 
 //
 // Mainly a developer feature. Do not send emails to allow rapid testing
 //
-$testingMode = getBoolArg('--testing-mode'); // (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
+$testingMode = Args::getBoolArg('--testing-mode'); // (count($argv) > 1) ? $argv[1]=='--testing-mode' : false;
 if( $testingMode ) {
     Mail::TESTING_SET_DO_NOT_SEND_EMAIL();
 }
@@ -80,6 +64,30 @@ if( $verbose ) {
     echo "cron.php starting up... --force:$force --testing-mode:$testingMode\n";
     echo "cron.php running as user: " . `id` . "\n";
 }
+
+
+if(!array_key_exists("HTTP_HOST",$_SERVER)) {
+    if( !Config::get("site_hostname")) {
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "\n";
+        echo "Some functionality that involves emails might use the SimpleSAMLphp library to construct part of the URL\n";
+        echo "in the message. The SimpleSAMLphp library is expecting to be run from a web request rather than from\n";
+        echo "a command line script.\n";
+        echo "\n";
+        echo "Please set site_hostname in your filesender config.php to allow a good hostname for your server to be known\n";
+        echo "and this cron.php script will ensure that information is used by SimpleSAMLphp to create correct links.\n";
+        echo "\n";
+        echo "Thank you\n";
+        echo "\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "*** WARNING ***\n";
+        echo "\n";
+    }
+}
+
 
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
@@ -94,7 +102,6 @@ if(!is_null($storage_usage)) {
 StatLog::createGlobal(LogEventTypes::GLOBAL_ACTIVE_USERS, count(User::getActive()));
 StatLog::createGlobal(LogEventTypes::GLOBAL_AVAILABLE_TRANSFERS, count(Transfer::all(Transfer::AVAILABLE)));
 
-
 // Close expired transfers
 if( $verbose ) echo "cron.php closing expired transfers...\n";
 foreach(Transfer::allExpired() as $transfer) {
@@ -102,7 +109,17 @@ foreach(Transfer::allExpired() as $transfer) {
         continue;
     }
     Logger::info($transfer.' expired, closing it');
-    $transfer->close(false, $force );
+    try {
+        $transfer->close(false, $force);
+    } catch (Exception $e) {
+        Logger::warn("Closing expired transfer failed. error:" . $e->getMessage());
+        Logger::warn("Forcing: closing expired transfer: $transfer");
+        try {
+            $transfer->close(false, true);
+        } catch (Exception $e) {
+            Logger::warn("Force closing expired transfer failed. error:" . $e->getMessage());
+        }
+    }
 }
 
 // Delete failed transfers

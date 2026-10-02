@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-asunto: Invitación para usar el servicio de {cfg:site_name}
+subject: Invitación para usar el servicio de {cfg:site_name}
 
 {alternative:plain}
 

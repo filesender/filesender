@@ -30,10 +30,10 @@ from the [github releases
 page](https://github.com/filesender/filesender/releases).
 
 There are two active release streams; a version 2.x stream and a 3.x
-stream. The 3.x beta release steam has a different UI and will become
-the stable release at some stage.
+stream. The 3.x release steam has a different UI and is not considered
+the stable release.
 
-Version 3 and Version 2 should have the same functionality but version
+Version 3 and Version 2 have the same functionality but version
 3 uses custom CSS to present a more modern UI. The uploaded files
 storage handling is the same in version 2 and version 3. The database
 schema is very similar between the two and should be identical at
@@ -43,13 +43,18 @@ that it is feature compatible with 2.30. So you should be able to
 direct 3.0alpha2 at the same uploaded files and database and have the
 system function.
 
-The release numbering for the 2.x series follows the pattern 2.1, 2.2,
-2.30 etc. Each of these releases builds on version 2.0 adding bugfixes
-and features. Each new release in the 2.x series will describe if
-database updates are needed (most often by running a script) and if
-web page templates have been updated in case you customize those on
-your site. If is intended that you can migrate an active site to new
-releases with very minimal downtime.
+The release numbering for the 3.x series follows the pattern 3.0, 3.1,
+etc. Each of these releases builds on version 3.0 adding bugfixes and
+features. Each new release in the 3.x series will describe if database
+updates are needed and if web page templates have been updated in case
+you customize those on your site. It is intended that you can migrate an
+active site to new releases with very minimal downtime.
+
+The 2.x series follows the same release pattern and practises, however
+after releasing the 3.x series, FileSender 2.x has entered maintenance mode.
+
+No new features are planned for FileSender 2.x and only security updates
+will be provided.
 
 The very old 1.6.x series should not be used.
 
@@ -57,9 +62,7 @@ The very old 1.6.x series should not be used.
 
 There are two distinct trees of documentation, one for [documentation
 for versions 2.x](v2.0/) and one for [documentation for versions
-3.x](v3.0/). These were identical as of June 2024 and will diverge as
-updates are made to better describe the changes in the 3.x series over
-time.
+3.x](v3.0/). Additions are made to the 3.x documentation only.
 
 ### License
 
@@ -80,8 +83,8 @@ page if you have a feature you would like to see added to FileSender.
 
 ### Features
 
-For a more detailed list of version 2.x features see the [v2.0
-features page](v2.0/features/).
+For a more detailed list of version 3.x features see the [v3.0
+features page](v3.0/features/).
 
 * light-weight server footprint, optimized for least possible dependencies
 * share arbitrarily large files from standard desktop environments, no client-side deployment required
@@ -108,7 +111,5 @@ features page](v2.0/features/).
 
 Some storage, either MariaDB or PostgreSQL for database, either Apache
 or nginx for web server, PHP and SimpleSamlPhp. Please see the
-[installation](v2.0/install/) page for minimum version requirements
+[installation](v3.0/install/) page for minimum version requirements
 and advice.
-
-

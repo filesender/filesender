@@ -39,6 +39,12 @@ $SCRIPTDIR/download-language-from-poeditor.sh "th"      "Thai"              $dir
 $SCRIPTDIR/download-language-from-poeditor.sh "vi"      "Vietnamese"        $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "ko"      "Korean"            $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "ta"      "Tamil"             $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "uk"      "Ukranian"          $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "lv"      "Latvian"           $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "gl"      "Galician"          $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "ro"      "Romanian"          $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "de-at"   "Austria"           $dirname
+
 
 
 

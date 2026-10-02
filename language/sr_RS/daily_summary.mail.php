@@ -13,17 +13,17 @@ subject: Dnevni pregled
 
 Poštovani,
 
-U nastavku pogledajte pregled preuzimanja za vaš transfer {transfer.id} (uploaded {date:transfer.created}) :
+U nastavku možete videti pregled vaših preuzimanja {transfer.id} (uploaded {date:transfer.created}) :
 
 {if:events}
 {each:events as event}
-  - Primalac {event.who} preuzeo {if:event.what == "archive"}arhivu{else}fajl {event.what_name}{endif} dana {datetime:event.when}
+  - Primalac {event.who} preuzeo {if:event.what == "archive"}arhivu{else}fajl {event.what_name}{endif} on {datetime:event.when}
 {endeach}
 {else}
 Nema preuzimanja
 {endif}
 
-Dodatne pojedinosti možete naći na  {transfer.link}
+Dodatne detalje možete naći na  {transfer.link}
 
 Lep pozdrav,
 {cfg:site_name}
@@ -35,13 +35,13 @@ Lep pozdrav,
 </p>
 
 <p>
-    U nastavku pogledajte pregled preuzimanja za vaš transfer {transfer.id} (uploaded {date:transfer.created}) :
+    U nastavku možete videti pregled vaših preuzimanja {transfer.id} (uploaded {date:transfer.created}) :
 </p>
 
 {if:events}
 <ul>
 {each:events as event}
-    <li>Primalac {event.who} preuzeo {if:event.what == "archive"}arhivu{else}fajl {event.what_name}{endif} dana {datetime:event.when}</li>
+    <li>Primalac {event.who} preuzeo {if:event.what == "archive"}arhivu{else}fajl {event.what_name}{endif} on {datetime:event.when}</li>
 {endeach}
 </ul>
 {else}
@@ -51,7 +51,7 @@ Lep pozdrav,
 {endif}
 
 <p>
-    Dodatne pojedinosti možete naći na <a href="{transfer.link}">{transfer.link}</a>
+    Dodatne detalje možete naći na <a href="{transfer.link}">{transfer.link}</a>
 </p>
 
 <p>

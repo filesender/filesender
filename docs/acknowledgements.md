@@ -10,7 +10,7 @@ organisations for their contributions to the FileSender 2.0 release.
 Sustained funding, staff and other resources for the FileSender
 project are provided by the National Research and Educational Networks
 (NRENs) AARNet (Australia), BELNET (Belgium), HEAnet (Ireland),
-SURFnet (The Netherlands) and UNINETT (Norway).
+SURF (The Netherlands) and UNINETT (Norway).
 
 ### Core development team (incomplete)
 
@@ -30,7 +30,7 @@ organisations for their contributions to the FileSender 1.6 release.
 Sustained funding, staff and other resources for the FileSender
 project are provided by the National Research and Educational Networks
 (NRENs) AARNet (Australia), BELNET (Belgium), HEAnet (Ireland),
-SURFnet (The Netherlands) and UNINETT (Norway).
+SURF (The Netherlands) and UNINETT (Norway).
 
 For the 1.6 release FileSender received targeted financial
 contributions from ARNES (Slovenia), CSC/FUNET (Finland).
@@ -40,7 +40,7 @@ contributions from ARNES (Slovenia), CSC/FUNET (Finland).
 * Chris Richter, Ricoshae: code lead, software architect
 * Guido Aben, AARNet: 2nd project lead, field testing, finances coordination
 * Jan Meijer, UNINETT: project lead, field testing, documentation
-* Xander Jansen, SURFnet: release manager, bug analysis, coding, field testing, release testing lead,  documentation
+* Xander Jansen, SURF: release manager, bug analysis, coding, field testing, release testing lead,  documentation
 * Wendy Mason, Monash e-Research Centre: workflow testing lead, client-side workflow test automation, client-side release testing, documentation  
 
 ### New TeraSender upload module
@@ -57,7 +57,7 @@ contributions from ARNES (Slovenia), CSC/FUNET (Finland).
 * David Jericho, AARnet, Australia for feedback, field testing and patches
 * Dick Visser, TERENA, the Netherlands, for his solid patches
 * Jean-Philippe Evrard, BELNET, Belgium for the customisable footer
-* Rogier Spoor, SURFnet, the Netherlands, for provisioning resources
+* Rogier Spoor, SURF, the Netherlands, for provisioning resources
 * Thijs Kinkhorst, Tilburg University, the Netherlands, for his solid patches
 * The User Experience group (in particular Dharani Perera-Schulz), eSolutions, Monash University, Australia, for conducting a Usability and interaction design review
 * UNINETT Feide RnD for supplying Feide Open IdP as a public service
@@ -105,7 +105,7 @@ organisations for their contributions to the FileSender 1.5 release.
 
 Sustained funding, staff and other resources for the FileSender
 project are provided by the National Research and Educational Networks
-(NRENs) AARNet (Australia), HEAnet (Ireland), SURFnet (The
+(NRENs) AARNet (Australia), HEAnet (Ireland), SURF (The
 Netherlands) and UNINETT (Norway).
 
 For the 1.5 release FileSender received targeted financial
@@ -118,7 +118,7 @@ contributions from ARNES (Slovenia), Belnet (Belgium), CSC/FUNET
 * Chris Richter, Ricoshae: code lead, software architect
 * Guido Aben, AARNet: 2nd project lead, field testing, finances coordination
 * Jan Meijer, UNINETT: project lead, field testing, documentation
-* Xander Jansen, SURFnet: release manager, bug analysis, coding, field testing, release testing lead,  documentation
+* Xander Jansen, SURF: release manager, bug analysis, coding, field testing, release testing lead,  documentation
 * Wendy Mason, Monash e-Research Centre: workflow testing lead, client-side workflow test automation, client-side release testing, documentation
 
 ### Significant contributions
@@ -129,7 +129,7 @@ contributions from ARNES (Slovenia), Belnet (Belgium), CSC/FUNET
 * Dick Visser, TERENA, the Netherlands, for his solid patches
 * Mario Vandaele, BELNET, Belgium for his feedback, field testing and patches
 * Maciej Kotowicz, Wroclaw Centre for Networking and Supercomputing, Poland, for conducting a security review of FileSender
-* Rogier Spoor, SURFnet, the Netherlands, for provisioning resources
+* Rogier Spoor, SURF, the Netherlands, for provisioning resources
 * Thijs Kinkhorst, Tilburg University, the Netherlands, for his solid patches
 * The User Experience group (in particular Dharani Perera-Schulz), eSolutions, Monash University, Australia, for conducting a Usability and interaction design review
 * UNINETT Feide RnD for supplying Feide Open IdP as a public service
@@ -170,7 +170,7 @@ organisations for their contributions to the FileSender 1.0 release.
 
 The FileSender project is funded by a consortium of NRENs. For the 1.0
 release funding and staff resources were made available by AARNet,
-HEAnet, SURFnet and UNINETT
+HEAnet, SURF and UNINETT
 
 ### Core development team
 
@@ -196,7 +196,7 @@ HEAnet, SURFnet and UNINETT
 * João Pagaime of FCCN in Portugal for his feedback and field testing.
 * Hanne Moa of UNINETT in Norway for feedback and field testing
 * David Jericho of AARnet in Australia for feedback, field testing and patches
-* Paul Dekkers of SURFnet, the Netherlands, for his work on SRS with Exim
+* Paul Dekkers of SURF, the Netherlands, for his work on SRS with Exim
 
 Despite our efforts to include all contributors we might have
 forgotten someone. Please let us know of any oversight.

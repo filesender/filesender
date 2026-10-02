@@ -1,10 +1,52 @@
 <?php
+
+function render_forward_to_another_server($advanced=false) {
+    if( array_key_exists( 'forward_to_another_server', Transfer::availableOptions($advanced) )  &&
+        !Auth::isGuest()) {
+        echo '<div class="row">'."\n";
+        if ($advanced) {
+            echo '    <div id="fs-forward_options" class="col-12 basic_options">'."\n";
+            echo '        <strong>{tr:forward_to_another_server}<strong>'."\n";
+        } else {
+            echo '    <div id="fs-forward_options" class="col-12">'."\n";
+        }
+        echo '        <div data-option="forward_to_another_server" class="fs-switch fs-switch--hide">'."\n";
+        echo '            <input id="forward_to_another_server" name="forward_to_another_server" type="checkbox">'."\n";
+        echo '            <label for="forward_to_another_server">{tr:forward_to_another_server}</label>'."\n";
+        echo '        </div>'."\n";
+        echo '        <div data-option="forward_server_name" class="fs-select fs-select--hide">'."\n";
+        echo '            <label for="forward_server_name">{tr:forward_server_name}</label>'."\n";
+        echo '            <select id="forward_server_name" name="forward_server_name">'."\n";
+        $forwardServers = ForwardAnotherServer::getServersList();
+        foreach ($forwardServers as $key => $value) {
+            if (rtrim($value['url'],'/')==rtrim(Config::get('site_url'),'/')) continue;
+            $server_label = ForwardAnotherServer::getServerLabel($key);
+            if (isset($value['need_encrypt']) && !empty($value['need_encrypt'])) {
+                $need_encrypt = 'class="need-encrypt"';
+            } else {
+                $need_encrypt = '';
+            }
+            echo '                <option value="'. $key . '" ' . $need_encrypt . ' >' . $server_label . '</option>'."\n";
+        }
+        echo '            </select>'."\n";
+        echo '        </div>'."\n";
+        echo '    </div>'."\n";
+        echo '</div>'."\n";
+    }
+}
+
+$show_splash = 0;
+if( Config::isTrue('show_splash_after_login')) {
+    $show_splash = Utilities::arrayKeyOrDefault( $_GET, 'showsplash', 0, FILTER_VALIDATE_INT  );
+}
+
 $upload_options_handled = array();
 
 $guest_can_only_send_to_creator = false;
+$show_get_a_link_or_email_choice_section_header = true;
 $show_get_a_link_or_email_choice = true;
-$pgp_encrypt_passphrase = false;
-$pgpkey = '';
+$openpgp_encrypt_passphrase = false;
+$openpgpkey = '';
 
 // CGI to used variables
 $aupChecked = '';
@@ -59,14 +101,45 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 
 }
 
+$show_email_choice = true;
+
 // If get a link is not available to the user then
 // there is no real point showing the big choice to the
 // user at the top of the page.
 foreach(Transfer::allOptions() as $name => $dfn)  {
     if($dfn['available']) continue;
     if($name == TransferOptions::GET_A_LINK) {
+        if($dfn['default']) {
+            if(!$dfn['available']) {
+                // not available, default=true => forced to be the only choice
+                // $config['transfer_options'] = array(
+                // ...
+                //   'get_a_link' => array(
+                //     'available' => false,
+                //     'advanced' => false,
+                //     'default' => true
+	        //   ),
+                // ...
+
+                $show_email_choice = false;
+                $show_get_a_link_or_email_choice = true;
+                $show_get_a_link_or_email_choice_section_header = false;
+                continue;
+            }
+        }
+    }
+    if($name == TransferOptions::GET_A_LINK) {
         $show_get_a_link_or_email_choice = false;
     }
+}
+
+// If we are not showing the email selection choice
+// keep the get_a_link choice there but hide it as
+// the user can not do anything with it.
+// There is only gal mode in this case.
+$get_a_link_hidden_stanza = "";
+if(!$show_email_choice) {
+    $get_a_link_hidden_stanza = ' hidden="true" ';
 }
 
 if(Auth::isGuest()) {
@@ -91,7 +164,7 @@ if( $encryption_mandatory ) {
  *                        show in the default panels on the left. This allows
  *                        some options to be displayed in other locations on the page.
  */
-$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email')) use ($guest_can_only_send_to_creator, $encryption_checkbox_checked) {
+$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email','forward_to_another_server', 'forward_server_name'), $idoverride = '' ) use ($guest_can_only_send_to_creator, $encryption_checkbox_checked, &$openpgp_encrypt_passphrase_add_class) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
 
     if( in_array($name, $optionsToFilter)) {
@@ -130,7 +203,7 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
     // User to User PGP is a future feature.
     //
     if( !Auth::isGuest() &&
-        $name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL)
+        $name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL)
     {
         return;
     }
@@ -149,11 +222,27 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
             $inputTex = 'encrypt_files_with_password';
         }
 
-        echo '<label class="fs-checkbox">';
-        echo '    <label for="'.$name.'">'.Lang::tr($inputTex).'</label>';
+        $idattr = '';
+        if( $idoverride != '' ) {
+            $idattr = ' id="'.$idoverride.'"';
+        }
+        $checkboxClass = 'fs-checkbox';
+        $labelIdAttr = '';
+        if ($name === TransferOptions::ENCRYPTION) {
+            // ids/classes usados pelo upload_page.js (encryption_mandatory*)
+            $checkboxClass .= ' encryption-toggle-group';
+            $labelIdAttr = ' id="enctest1"';
+        }
+        echo '<label'.$idattr.' class="'.$checkboxClass.'">';
+        echo '    <label for="'.$name.'"'.$labelIdAttr.'>'.Lang::tr($inputTex).'</label>';
         echo '    <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
         echo '    <span class="fs-checkbox__mark"></span>';
         echo '</label>';
+        if ($name === TransferOptions::ENCRYPTION) {
+            echo '<div class="encmand2" id="encmand2" data-related-to="encryption" hidden="true">';
+            echo '    <label id="enctest2">'.Lang::tr('encrypt_files_with_password').'</label>';
+            echo '</div>';
+        }
     }
 
     if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
@@ -163,14 +252,14 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
 
 
     if ($name === TransferOptions::ENCRYPTION) {
-        echo '<div id="encryption_options"  class="<?php echo $pgp_encrypt_passphrase_add_class ?>"> </div>';
-        echo '<div id="encgroup1pgp">';
+        echo '<div id="encryption_options"  class="'.$openpgp_encrypt_passphrase_add_class.'"> </div>';
+        echo '<div id="encgroup1openpgp">';
         echo '    <div id="encgroup1" class="fs-transfer__password">';
         echo '        <div class="fs-transfer__password-top" id="encryption_password_container">';
         echo '            <div class="fs-input-group">';
         echo '                <input type="text" id="encryption_password" name="encryption_password" placeholder="'.Lang::tr('enter_your_password').'">';
         echo '            </div>';
-        echo '            <div class="fs-transfer__generate-password">';
+        echo '            <div class="fs-transfer__generate-password password-gen-button">';
         echo '                <span>'.Lang::tr('or').'&nbsp;</span>';
         echo '                <button type="button" id="encryption_generate_password" class="fs-button">'.Lang::tr('generate_password').'</button>';
         echo '            </div>';
@@ -218,40 +307,109 @@ if(Auth::isGuest()) {
     }
 }
 
+$userHasEmailPreference = false;
 $userHasGALPreference = false;
 if( !Auth::isGuest()) {
     $user = Auth::User();
     if( $user->save_transfer_preferences ) {
         $ops = (array)$user->transfer_preferences;
         if( array_key_exists( 'get_a_link', $ops )) {
-            $userHasGALPreference = $ops["get_a_link"];
+            $gal = $ops["get_a_link"];
+            if( $gal ) {
+                $userHasGALPreference = true;
+            } else {
+                $userHasEmailPreference = true;
+            }
+        }
+    }
+    if( !$userHasEmailPreference && !$userHasGALPreference ) {
+        $transferOptions = Config::get('transfer_options');
+        if( isset($transferOptions['get_a_link']['default'])
+            && $transferOptions['get_a_link']['default'] ) {
+            $userHasGALPreference = true;
+        } else {
+            $userHasEmailPreference = true;
         }
     }
 }
 foreach(Transfer::allOptions() as $name => $dfn)  {
-    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
         if(Auth::isGuest()) {
-            $pgp_encrypt_passphrase = true;
+            $openpgp_encrypt_passphrase = true;
         }
     }
 }
 
 
-$possibleExpireDays = array( 7, 15, 30, 40 );
-$expireDays = array_filter(array( 7, 15, 30, 40 ), function($k) {
-    return $k < Config::get('max_transfer_days_valid');
+// Expiry days selection logic
+// If selectable_transfer_days_valid is empty (default), generate progressive options
+// If admin has configured specific values, use those instead
+$configuredDays = Config::get('selectable_transfer_days_valid');
+$maxDays = Config::get('max_transfer_days_valid');
+
+if (empty($configuredDays)) {
+    // Dynamic expiry days generation based on max_transfer_days_valid
+    // This provides granular options for short transfers and reasonable intervals for longer ones
+    $possibleExpireDays = array();
+    
+    // Days 1-7: show all individually for fine-grained control
+    for ($d = 1; $d <= min(7, $maxDays); $d++) {
+        $possibleExpireDays[] = $d;
+    }
+    // Days 8-30: show weekly intervals (14, 21, 28)
+    for ($d = 14; $d <= min(30, $maxDays); $d += 7) {
+        $possibleExpireDays[] = $d;
+    }
+    // Days 31+: show monthly intervals (30, 60, 90, 120...)
+    for ($d = 30; $d <= $maxDays; $d += 30) {
+        $possibleExpireDays[] = $d;
+    }
+    // Always include the max value if not already present
+    if (!in_array($maxDays, $possibleExpireDays)) {
+        $possibleExpireDays[] = $maxDays;
+    }
+} else {
+    // Use admin-configured list
+    $possibleExpireDays = $configuredDays;
+}
+
+// Include the default value and clean up
+array_push($possibleExpireDays, Config::get('default_transfer_days_valid'));
+asort($possibleExpireDays);
+$possibleExpireDays = array_unique($possibleExpireDays, SORT_NUMERIC);
+$expireDays = array_filter($possibleExpireDays, function($k) {
+    return $k <= Config::get('max_transfer_days_valid');
 });
 
-if( Auth::isGuest() && $pgp_encrypt_passphrase ) {
+$expireDaysSelected = Config::get('default_transfer_days_valid');
+if (!in_array($expireDaysSelected, $expireDays)) {
+    // If default is filtered out, use the last available option
+    $v = array_slice($expireDays, -1);
+    $expireDaysSelected = $v[0];
+}
+
+
+if( Auth::isGuest() && $openpgp_encrypt_passphrase ) {
     $guest = AuthGuest::getGuest();
-    $pgpkey = $guest->owner->pgp_key;
-    if( !$guest->owner->pgp_have_key ) {
-        $pgp_encrypt_passphrase = false;
+    $openpgpkey = $guest->owner->openpgp_key;
+    if( !$guest->owner->openpgp_have_key ) {
+        $openpgp_encrypt_passphrase = false;
     }
 }
-$pgp_encrypt_passphrase_add_class = "";
-if( $pgp_encrypt_passphrase ) {
-    $pgp_encrypt_passphrase_add_class = "hidden";
+$openpgp_encrypt_passphrase_add_class = "";
+if( $openpgp_encrypt_passphrase ) {
+    $openpgp_encrypt_passphrase_add_class = "hidden";
+}
+
+
+$canHideSenderEmail = false;
+$hideSenderEmailIsAdvanced = false;
+
+$ops = Transfer::availableOptions();
+if( array_key_exists( 'hide_sender_email', $ops )) {
+    $canHideSenderEmail = true;
+    
+    $hideSenderEmailIsAdvanced = Transfer::getOptionSubSetting( $ops, 'hide_sender_email', 'advanced' );
 }
 
 ?>
@@ -262,6 +420,47 @@ if( $pgp_encrypt_passphrase ) {
     </div>
     <?php
     return;
+}
+
+
+
+
+if(Auth::isGuest()) {
+    $guest = AuthGuest::getGuest();
+    $daysAgo = Config::get("guest_transfers_page_number_of_days_expired_guest_can_return");
+    // this default should not happen as the guest can only be
+    // flexible if the above config has been set. But expired
+    // is a good default here.
+    $expired = $guest->isExpired();
+    if( $daysAgo > 0 ) {
+        // do not worry about canStillSeePastUploads() here
+        // we are only hanlding this to present a nice expired
+        // page to the guest if they are not AVAIABLE any more.
+        if( !$expired ) {
+            $expired = ($guest->status != GuestStatuses::AVAILABLE);
+        }
+    }
+    if( $expired ) {
+        echo <<<EOF
+<div id="dialog-expired" title="Access expired" class="fs-base-page">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="fs-base-page__header">
+                    <h1>{tr:guest_token_expired_title}</h1>
+                </div>
+
+                <div class="fs-base-page__content">
+                    {tr:guest_token_expired_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+EOF;
+        return;
+        
+    }
 }
 ?>
 
@@ -274,6 +473,7 @@ if( $pgp_encrypt_passphrase ) {
           autocomplete="off"
           data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>"
           data-user-has-gal-preference="<?php echo $userHasGALPreference ? '1' : '0' ?>"
+          data-user-has-email-preference="<?php echo $userHasEmailPreference ? '1' : '0' ?>"
     >
 
         <div class="fs-transfer">
@@ -282,6 +482,12 @@ if( $pgp_encrypt_passphrase ) {
             </h1>
 
             <div class="fs-transfer__step fs-transfer__step--active" data-step="1">
+        <?php if( Utilities::isTrue($show_splash) ) { ?>
+            <div class="box">
+                {tr:site_splash}
+            </div>
+        <?php } ?>
+                
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-5 h-100">
                         <div class="fs-transfer__droparea">
@@ -388,13 +594,23 @@ if( $pgp_encrypt_passphrase ) {
                                 <div class="row">
                                     <div class="col-12">
                                         <h4>
-                                            {tr:choose_files}
+                                            <?php if($show_get_a_link_or_email_choice_section_header) { ?>
+                                                {tr:choose_files}
+                                            <?php
+                                            } else { 
+                                                if($show_email_choice) {
+                                                    echo "{tr:choose_files_forced_email}";
+                                                } else {
+                                                    echo "{tr:choose_files_forced_get_a_link}";
+                                                }
+                                            } ?>
                                         </h4>
-
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
-                                            <div class="fs-radio-group">
-                                                <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link" class="get_a_link_top_selector">
+                                            <div class="fs-radio-group"
+                                                 <?php echo "$get_a_link_hidden_stanza" ?>
+                                            >
+                                                <input type="radio" id="get_a_link" name="transfer-type" value="transfer-link" class="get_a_link_top_selector get_a_link transfer-link">
 
                                                 <label for="get_a_link" class="fs-radio">
                                                     <div class="fs-radio__option">
@@ -407,8 +623,9 @@ if( $pgp_encrypt_passphrase ) {
                                             </div>
                                         <?php } ?>
 
+                                        <?php if($show_email_choice) { ?>
                                         <div class="fs-radio-group">
-                                            <input type="radio" id="transfer-email" name="transfer-type" value="transfer-email">
+                                            <input type="radio" id="transfer-email" name="transfer-type" value="transfer-email" class="transfer-email">
 
                                             <label for="transfer-email" class="fs-radio">
                                                 <div class="fs-radio__option">
@@ -419,14 +636,31 @@ if( $pgp_encrypt_passphrase ) {
                                                 </div>
                                             </label>
                                         </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
 
+                            <?php if($canHideSenderEmail) { ?>
+                                <?php if( !$hideSenderEmailIsAdvanced ) {  ?>
+                                <hr data-related-to="topops" />
+                                <div class="row ">
+                                    <div class="col-12 hse">
+                                        <?php
+                                        $ops = Transfer::availableOptions();
+                                            if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                            <?php } ?>
+
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="<?php echo $pgp_encrypt_passphrase_add_class ?>" ></div>
+                                        <div class="<?php echo $openpgp_encrypt_passphrase_add_class ?>" ></div>
                                     </div>
                                 </div>
 
@@ -441,7 +675,7 @@ if( $pgp_encrypt_passphrase ) {
                                                                 {tr:email_to}
                                                             </label>
 
-                                                            <?php echo AuthGuest::getGuest()->user_email ?>
+                                                            <?php echo Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email) ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -506,8 +740,8 @@ if( $pgp_encrypt_passphrase ) {
                                                     {tr:password_can_not_be_part_of_message_error}
                                                 </label>
                                             </div>
-                                            <div class="pgpinfo" id="pgpinfo" >
-                                                <p>{tr:pgp_upload_page_description}</p>
+                                            <div class="openpgpinfo" id="openpgpinfo" >
+                                                <p>{tr:openpgp_upload_page_description}</p>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-5 col-lg-4 fs-transfer__actions">
@@ -537,9 +771,9 @@ if( $pgp_encrypt_passphrase ) {
                                                 }
                                             }
                                             foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                if( $name == "pgp_encrypt_passphrase_to_email" ) {
-                                                    if( $pgp_encrypt_passphrase ) {
-                                                        $cfg['default'] = $guest->transfer_options['pgp_encrypt_passphrase_to_email'];
+                                                if( $name == "openpgp_encrypt_passphrase_to_email" ) {
+                                                    if( $openpgp_encrypt_passphrase ) {
+                                                        $cfg['default'] = $guest->transfer_options['openpgp_encrypt_passphrase_to_email'];
                                                     }
                                                 }
                                                 if( !array_key_exists($name,$upload_options_handled)) {
@@ -553,6 +787,7 @@ if( $pgp_encrypt_passphrase ) {
                                 </div>
                             </div>
 
+                            
                             <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
                                 <div class="row">
                                     <div class="col-12">
@@ -562,6 +797,9 @@ if( $pgp_encrypt_passphrase ) {
                                                 <i class="fi fi-chevron-down"></i>
                                             </button>
                                             <div class="fs-collapse__content">
+                                                <?php render_forward_to_another_server(); ?>
+                                                <?php render_forward_to_another_server(true); ?>
+
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="fs-select expires-select-by-days">
@@ -569,8 +807,14 @@ if( $pgp_encrypt_passphrase ) {
                                                                 {tr:expires_after}
                                                             </label>
                                                             <select id="expires-select" name="expires-select">
-                                                                <?php foreach( $expireDays as $v ) { ?>
-                                                                    <option value="<?php echo $v ?>" selected><?php echo $v ?> {tr:days}</option>
+                                                                <?php foreach( $expireDays as $k => $v ) { ?>
+                                                                    <?php
+                                                                    $sel = "";
+                                                                    if( $expireDaysSelected == $v ) {
+                                                                        $sel = " selected ";
+                                                                    }
+                                                                    ?>
+                                                                    <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
@@ -611,6 +855,22 @@ if( $pgp_encrypt_passphrase ) {
                                                             {tr:advanced_upload_settings}
                                                         </strong>
 
+                                                        <?php if($canHideSenderEmail) { ?>
+                                                            <?php if( $hideSenderEmailIsAdvanced ) {  ?>
+                                                                <hr data-related-to="topops" />
+                                                                <div class="row ">
+                                                                    <div class="col-12 hse">
+                                                                        <?php
+                                                                        $ops = Transfer::availableOptions();
+                                                                        if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                                            $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
+                                                                        }
+                                                                        ?>
+                                                                    </div>
+                                                                </div>
+                                                            <?php } ?>
+                                                        <?php } ?>
+                                                        
                                                         <?php
                                                         foreach(Transfer::availableOptions(false) as $name => $cfg) {
                                                             if( !array_key_exists($name,$upload_options_handled)) {
@@ -624,6 +884,8 @@ if( $pgp_encrypt_passphrase ) {
                                                             }
                                                         }
                                                         ?>
+
+                                                        
                                                     </div>
                                                 </div>
                                                 <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
@@ -785,6 +1047,9 @@ if( $pgp_encrypt_passphrase ) {
                             <h4>
                                 {tr:transfer_completed}
                             </h4>
+                            <div class="fs-transfer__forward-not-finished">
+                                <span></span>
+                            </div>
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">100%</strong>
                                 <span class="fs-progress-bar__progress">
@@ -815,7 +1080,7 @@ if( $pgp_encrypt_passphrase ) {
                                     {tr:your_download_link}
                                 </span>
                                 <div class="fs-copy">
-                                    <span></span>
+                                    <span class="download_link"></span>
 
                                     <button id="copy-to-clipboard" type='button'>
                                         <i class='fi fi-copy'></i>
@@ -874,17 +1139,16 @@ if( $pgp_encrypt_passphrase ) {
             <?php } ?>
         </div>
 
-        <?php if( $pgp_encrypt_passphrase ) {  ?>
+        <?php if( $openpgp_encrypt_passphrase ) {  ?>
             <div>
-                <p><?php echo lang::tr('upload_will_use_pgp_to_share_passphrase')->r('email',AuthGuest::getGuest()->user_email)->out()?></p>
+                <p><?php echo lang::tr('upload_will_use_openpgp_to_share_passphrase')->r('email',AuthGuest::getGuest()->user_email)->out()?></p>
             </div>
         <?php } ?>
 
-
     </form>
 
-    <div id="pgp-possile" hidden="true"><?php echo Utilities::boolToString(!empty($pgpkey)) ?></div>
-    <div id="pgpkey" hidden="true"><?php echo Template::Q($pgpkey) ?></div>
+    <div id="openpgp-possile" hidden="true"><?php echo Utilities::boolToString(!empty($openpgpkey)) ?></div>
+    <div id="openpgpkey" hidden="true"><?php echo Template::Q($openpgpkey) ?></div>
 
     <?php if (!Config::get('disable_directory_upload')) { ?>
         <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>

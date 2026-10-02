@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -147,6 +147,17 @@ class RestEndpointRecipient extends RestEndpoint
         if ($data->remind) {
             TranslatableEmail::rateLimit( false, 'transfer_reminder', $recipient->transfer );
             $recipient->remind();
+
+        } elseif ($data->record_activity) {
+            if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+                !$recipient->transfer->forward_id) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $record_activity = $data->record_activity;
+            if (!LogEventTypes::isValidName($record_activity)) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $recipient->recordActivity();
         }
 
         return self::cast($recipient);
@@ -192,9 +203,11 @@ class RestEndpointRecipient extends RestEndpoint
         if (count($recipient->transfer->recipients) > 1) {
             // If transfer has several recipients remove the requested one
             $recipient->transfer->removeRecipient($recipient);
-            
-            if ($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
-                $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
+
+            if (!$recipient->transfer->hasBeenForwarded()) {
+                if ($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
+                    $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
+                }
             }
         } else {
             // Last/only recipient deletion => close transfer

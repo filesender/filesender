@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: translate email footer, shared by all languages
+subject: translate email footer, shared by all languages
 
 {alternative:plain}
 

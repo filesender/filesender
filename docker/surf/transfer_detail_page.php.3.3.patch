@@ -1,0 +1,10 @@
+--- tmp/filesender-3.3/templates/transfer_detail_page.php	2026-01-08 01:09:38.000000000 +0000
++++ transfer_detail_page.php	2026-01-28 20:40:07.067413393 +0000
+@@ -84,6 +84,7 @@
+ 
+ if(empty($transfer->options['encryption'])) {
+     $fileIds = array();
++    $token = null;
+     foreach($transfer->files as $file) {
+         $downloadLinks[$file->id] = Utilities::http_build_query(array(
+             'token' => $token,

@@ -4,7 +4,7 @@
  *
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -37,78 +37,69 @@ if (!defined('FILESENDER_BASE')) {
 
 /**
  * Allow reading a chunked file as a normal php stream
- * only in order start to finish reading is supported as yet.
  */
-class StorageFilesystemChunkedStream
+class StorageFilesystemChunkedStream extends StorageFilesystemStreamBase
 {
-    protected $offset = 0;
-    protected $uid    = null;
-    protected $file   = null;
-    protected $fh     = null;
-    protected $currentChunkFile = null;
-    protected $gameOver = false;
-    
+    public mixed $context;
+
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        $url = parse_url($path);
-        $this->offset = 0;
-        $this->uid = $url["host"];
-        $this->file = File::fromUid($this->uid);
-        return true;
+        $rc = parent::stream_open( $path, $mode, $options, $opened_path );
+        return $rc;
     }
-
 
     public function stream_read($count)
     {
         $file   = $this->file;
         $offset = $this->offset;
+        $totaldata = '';
+        $datalength = 0;
 
         if ($this->gameOver) {
             return false;
         }
-        
-        $file_path = StorageFilesystem::buildPath($file).$file->uid;
-        $chunkFile = StorageFilesystemChunked::getChunkFilename($file, $file_path, $offset);
 
+        while ($datalength < $count && $offset < $file->size) {
+            $file_path = StorageFilesystem::buildPath($file).$file->uid;
+            $chunkFile = StorageFilesystemChunked::getChunkFilename($file, $file_path, $offset);
 
-        if (strcmp($this->currentChunkFile, $chunkFile)) {
+            if (!$this->currentChunkFile || ($this->currentChunkFile && strcmp($this->currentChunkFile, $chunkFile))) {
 
-            // if we try to open the file after the last chunk then we return FALSE
-            $fh = fopen($chunkFile, 'r');
-            if ($fh == false) {
-                $this->gameOver = true;
-                return false;
+                // if we try to open the file after the last chunk then we return FALSE
+                $fh = fopen($chunkFile, 'r');
+                if ($fh == false) {
+                    $this->gameOver = true;
+                    return false;
+                }
+
+                $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($file, $offset));
+                if ($rc == -1) {
+                    $this->gameOver = true;
+                    if ($this->fh) {
+                        fclose($this->fh);
+                    }
+                    return false;
+                }
+
+                $this->fh = $fh;
+                $this->currentChunkFile = $chunkFile;
             }
-            
-            $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($file, $offset));
-            if ($rc == -1) {
+
+            $data = fread($this->fh, $count-$datalength);
+            if ($data == false) {
                 $this->gameOver = true;
                 if ($this->fh) {
                     fclose($this->fh);
                 }
                 return false;
             }
-            
-            $this->fh = $fh;
-            $this->currentChunkFile = $chunkFile;
-        }
 
-        $data = fread($this->fh, $count);
-        if ($data == false) {
-            $this->gameOver = true;
-            if ($this->fh) {
-                fclose($this->fh);
-            }
-            return false;
+            $totaldata.=$data;
+            $datalength = strlen($totaldata);
+            $this->offset += strlen($data);
+            $offset += strlen($data);
         }
-        
-        $this->offset += strlen($data);
-        return $data;
-    }
-
-    public function stream_eof()
-    {
-        return $this->offset >= $this->file->size;
+        return $totaldata;
     }
 
     public static function ensureRegistered()

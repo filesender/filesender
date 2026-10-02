@@ -1,3 +1,4 @@
+OpenPGP
 PGP
 a_transfer_link
 a_transfer_link_tip
@@ -46,6 +47,7 @@ all_my_transfers
 an_email
 an_email_tip
 an_initiative_by
+announce
 anonymous
 anonymous_details
 api_secret
@@ -103,6 +105,8 @@ cannot_alter_closed_transfer
 cannot_open_input_file
 change_password
 choose_files
+choose_files_forced_email
+choose_files_forced_get_a_link
 clear_all
 clear_api_secret
 clear_client_logs
@@ -150,7 +154,10 @@ confirm_remind_transfer
 confirm_remove_daily_stats_transfer
 confirm_stop_upload
 confirm_upload_add_to_recipients_with_no_explicit_address
+confirm_use_openpgp_to_send_passphrase
 continue
+copied_to_clipboard
+copied_to_clipboard_error
 copy
 copy_text
 core_class_not_found
@@ -183,7 +190,7 @@ delete
 delete_current_api_secret
 delete_invitation
 delete_my_account
-delete_my_pgp_keys
+delete_my_openpgp_keys
 delete_transfer
 delete_transfer_nicely
 delete_transfer_roughly
@@ -191,6 +198,7 @@ description
 details
 device
 dialog_autoclose
+directory_issue
 disable_terasender
 does_not_expire
 done
@@ -262,6 +270,8 @@ enable_recipient_email_download_complete_warning
 encountered_exception
 encrypt_files_with_password
 encrypted_archive_download_overall_progress
+encrypted_metadata
+encrypted_metadata_file_size_hidden
 encryption
 encryption_password_container_can_have_text_only_min_password_length_message
 encryption_split
@@ -319,6 +329,8 @@ file_encryption_description_disabled
 file_encryption_disabled
 file_encryption_enter_password
 file_encryption_generate_password
+file_encryption_metadata_enter_password
+file_encryption_metadata_wrong_password
 file_encryption_need_password
 file_encryption_password
 file_encryption_password_must_have_numbers
@@ -329,6 +341,7 @@ file_encryption_show_password
 file_encryption_wrong_password
 file_extension_not_allowed
 file_integrity_check_failed
+file_issue
 file_not_found
 file_size_does_not_match
 files
@@ -342,6 +355,10 @@ find_users_who_might_be_abusing_the_system
 forget
 forward
 forward_guest_voucher
+forward_in_progress
+forward_not_completed
+forward_server_name
+forward_to_another_server
 from
 gb_per_second
 general
@@ -368,6 +385,8 @@ guest_reminded
 guest_reminder
 guest_reminder_limit_reached
 guest_reminder_rate_limit_reached
+guest_token_expired_page
+guest_token_expired_title
 guest_too_many_recipients
 guest_transfer_options
 guest_transfer_settings
@@ -482,6 +501,13 @@ oneweek
 open_auditlog
 open_file_auditlog
 open_recipient_auditlog
+openpgp_adding_to_transfer_with_some_public_keys_missing
+openpgp_blurb_guests_page
+openpgp_encrypt_passphrase_to_email
+openpgp_functionality_limited_to_one_recipient
+openpgp_invalid_key_guest_upload
+openpgp_public_key_invalid
+openpgp_upload_page_description
 optional
 optional_message
 options
@@ -497,11 +523,6 @@ pause
 paused
 perform_these_actions_on_all_users
 performed
-pgp_blurb_guests_page
-pgp_encrypt_passphrase_to_email
-pgp_invalid_key_guest_upload
-pgp_public_key_invalid
-pgp_upload_page_description
 please_add_file_again
 preferences_updated
 previous
@@ -549,7 +570,11 @@ report_event_archive_download_started
 report_event_download_ended
 report_event_download_resumed
 report_event_download_started
+report_event_file_forwarded
 report_event_file_uploaded
+report_event_forward_ended
+report_event_forward_started
+report_event_transfer_added_recipient
 report_event_transfer_available
 report_event_transfer_closed
 report_event_transfer_decrypt_failed
@@ -610,6 +635,9 @@ save
 save_preferences
 save_recipients_emails
 saved_information
+script_download_fscli
+script_download_links
+script_download_title
 search
 search_transfer_by_sender_email_description
 search_transfer_id_inclusive_description
@@ -725,12 +753,13 @@ terasender_worker_count
 terasender_worker_failed_to_start
 terms_text
 terms_title
-test_my_pgp_key
-test_my_pgp_message
+test_my_openpgp_key
+test_my_openpgp_message
+test_openpgp_message
 test_pgp_message
 testterm
 text_desc_of_file_count_and_size
-the_system_does_not_know_your_pgp_key
+the_system_does_not_know_your_openpgp_key
 theme
 theme_info
 then_enter_verification_code_below
@@ -765,6 +794,7 @@ transfer_extended_reminded
 transfer_file_name_invalid
 transfer_files
 transfer_files_incomplete
+transfer_guest_page_subtitle
 transfer_host_quota_exceeded
 transfer_id
 transfer_id_short
@@ -806,7 +836,7 @@ translatable_email_not_found
 translate_email_footer
 translate_to
 turning_on_guests_get_a_link_disables_can_only_send_to_me
-turning_on_guests_pgp_encryption_disables_can_only_send_to_me
+turning_on_guests_openpgp_encryption_disables_can_only_send_to_me
 twoeightdays
 ui2_accept_aup_1
 ui2_accept_aup_2
@@ -838,7 +868,7 @@ undergoing_maintenance
 unexpected_file
 unknown_page
 unreadable_file
-upload_a_new_pgp_public_key
+upload_a_new_openpgp_public_key
 upload_all_terasender_workers_completed_pbkdf2
 upload_complete
 upload_completed
@@ -852,11 +882,12 @@ upload_progressing_again
 upload_stalled_and_resumed
 upload_stalled_due_to_testing
 upload_started
-upload_will_use_pgp_to_share_passphrase
+upload_will_use_openpgp_to_share_passphrase
 uploaded
 uploading_transfers
 uploading_your_transfer
 use_streamsaver_for_download
+use_terareceiver_for_download
 user_additional
 user_additional_body
 user_additionnal
@@ -905,7 +936,7 @@ you_can_report_exception
 you_can_report_exception_by_email
 you_can_send_client_logs
 you_generated_this_auth_secret_at
-you_have_a_pgp_public_key_known_to_system
+you_have_a_openpgp_public_key_known_to_system
 your_download_link
 your_invitation_was_sent_to
 your_transfer_was_sent

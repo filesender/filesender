@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -49,6 +49,7 @@ class LogEventTypes extends Enum
    /* FILE */
     const FILE_CREATED             = 'file_created';   // File has been updated
    const FILE_UPLOADED            = 'file_uploaded';  // File has been uploaded
+   const FILE_FORWARDED           = 'file_forwarded'; // File has been forwarded
    const FILE_UPDATED             = 'file_updated';   // File has been updated
    const FILE_MOVED               = 'file_moved';     // File has been moved
    const FILE_DELETED             = 'file_deleted';   // File has been deleted
@@ -69,18 +70,24 @@ class LogEventTypes extends Enum
 
    
    /* TRANSFER */
-    const TRANSFER_STARTED         = 'transfer_started';         // Transfer started
-   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer started
-   const TRANSFER_SENT            = 'transfer_sent';     // Transfer started
+    const TRANSFER_STARTED         = 'transfer_started';      // Transfer started
+   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer available
+   const TRANSFER_SENT            = 'transfer_sent';          // Transfer sent
    const TRANSFER_EXPIRED         = 'transfer_expired';       // Transfer expired
    const TRANSFER_CLOSED          = 'transfer_closed';        // Transfer closed
    const TRANSFER_DELETED         = 'transfer_deleted';       // Transfer deleted
    const TRANSFER_DECRYPT_FAILED  = 'transfer_decrypt_failed';// Transfer decrypt failed at client
+   const TRANSFER_ADDED_RECIPIENT = 'transfer_added_recipient';// Transfer added recipient
    
    /* UPLOAD */
     const UPLOAD_STARTED           = 'upload_started';   // Upload stated
    const UPLOAD_RESUMED           = 'upload_resumed';  // Upload resumed
    const UPLOAD_ENDED             = 'upload_ended';     // Upload ended
+   
+    /* FORWARD */
+    const FORWARD_STARTED           = 'forward_started';   // Forward stated
+    const FORWARD_RESUMED           = 'forward_resumed';  // Forward resumed
+    const FORWARD_ENDED             = 'forward_ended';     // Forward ended
    
    /* DOWNLOAD */
     const DOWNLOAD_STARTED         = 'download_started';     // Download started

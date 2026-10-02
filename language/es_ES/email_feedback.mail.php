@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Feedback del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif}#{target_id} {target.email}
+subject: Feedback del {if:target_type=="recipient"}destinatario{endif}{if:target_type=="guest"}invitado{endif}#{target_id} {target.email}
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu:  {cfg:site_name} kullanım davetiyesi
+subject:  {cfg:site_name} kullanım davetiyesi
 
 {alternative:plain}
 

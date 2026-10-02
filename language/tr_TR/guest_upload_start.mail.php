@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Konuk dosyaları yüklemeye başladı
+subject: Konuk dosyaları yüklemeye başladı
 
 {alternative:plain}
 

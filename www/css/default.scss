@@ -10,7 +10,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,7 +23,7 @@
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
  *
- * *   Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *   Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -516,6 +516,11 @@ td .desc {
 
 .custom-control-label {
     cursor: pointer;
+}
+
+.custom-action-label {
+  cursor: pointer;
+  padding-left: 0.5em;
 }
 
 
@@ -1352,6 +1357,37 @@ table.paginator a {
 
 .logoutbutton:hover {
     background-color: #fff3f3 !important;
+}
+
+/* Site announcement banner - displayed via templates/information.php */
+.site-announcement {
+    display: block;
+    margin: 0 0 var(--fs-spacing-3x, 1.5rem);
+    padding: var(--fs-spacing-2x, 1rem) var(--fs-spacing-3x, 1.5rem);
+    border-left: 4px solid var(--fs-info, #155BCB);
+    background-color: var(--fs-blue-100, #edf5ff);
+    border-radius: 0.25rem;
+}
+
+.site-announcement--warning {
+    border-left-color: var(--fs-warning-hover, #DFB41E);
+    background-color: #fffce6;
+}
+
+.site-announcement--danger {
+    border-left-color: var(--fs-danger, #EA4D3C);
+    background-color: #fff2f0;
+}
+
+.site-announcement h2,
+.site-announcement h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.site-announcement p:last-child {
+    margin-bottom: 0;
 }
 
 @import "local-variables.scss";

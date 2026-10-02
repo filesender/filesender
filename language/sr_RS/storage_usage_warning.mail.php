@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Upozorenje o upotrebi prostora na disku
+subject: Upozorenje o zauzetosti memorije
 
 {alternative:plain}
 
 Poštovani,
 
-Prostor na disku za {cfg:site_name}, upozorenje :
+Prostor u memoriji za {cfg:site_name}, upozorenje :
 
 {each:warnings as warning}
   - {warning.filesystem} ({size:warning.total_space}) ima {size:warning.free_space} slobodno ({warning.free_space_pct}%)
@@ -31,7 +31,7 @@ Lep pozdrav,
 </p>
 
 <p>
-    Prostor na disku za {cfg:site_name}, upozorenje :
+    Prostor u memoriji za {cfg:site_name}, upozorenje :
 </p>
 
 <ul>

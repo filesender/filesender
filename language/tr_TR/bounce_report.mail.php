@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: İleti teslim hatası
+subject: İleti teslim hatası
 
 {alternative:plain}
 

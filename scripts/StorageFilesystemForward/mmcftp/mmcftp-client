@@ -1,0 +1,7 @@
+#!/bin/sh
+
+lockfile="/var/local/mmcftp/mmcftp-client.lock"
+mmcftp="/usr/local/bin/mmcftpsg12"
+
+ulimit -n 65536 2>&1
+flock $lockfile $mmcftp "$@" 2>&1

@@ -102,7 +102,7 @@ sudo chown -R www-data:docker   ${FILESENDERROOT}/files
 sudo chown -R www-data:www-data ${FILESENDERROOT}/tmp
 # recommended by install script for php${php_version}-fpm
 sudo a2enmod proxy_fcgi setenvif
-sudo a2enconf php7.4-fpm
+sudo a2enconf php3.3-fpm
 
 echo "restarting apache2 and php-fpm..."
 sudo service php${php_version}-fpm start

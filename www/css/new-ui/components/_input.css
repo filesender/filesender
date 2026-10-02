@@ -113,3 +113,14 @@
 .fs-input-inline button {
   font-size: 0.9rem;
 }
+
+.xdisabled,
+.xdisabled label,
+.xdisabled input,
+.xdisabled .fs-switch {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  cursor: not-allowed !important;
+}

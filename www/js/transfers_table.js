@@ -2,8 +2,8 @@
 
 /*
  * FileSender www.filesender.org
- *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * 
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -43,9 +43,9 @@ $(function() {
         if(!id || isNaN(id)) return;
         event.stopPropagation();
         
-        console.log("BBB delete");
-        if($(this).closest('table').is('[data-mode="user"][data-status="available"]')) {
-        console.log("BBB delete2");
+        console.log("transfers table delete code...");
+        if($(this).closest('table').is('[data-mode="admin"][data-status="available"]')) {
+            console.log("admin logged in, so offering to delete here....");
             var d = filesender.ui.chooseAction(['delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
                 var done = function() {
                     $('[data-transfer][data-id="' + id + '"]').remove();
@@ -125,7 +125,7 @@ $(function() {
             recipients.push($(this).attr('data-email'));
         });
 
-        var prompt = filesender.ui.promptEmail(lang.tr('enter_to_email'), function(input) {
+        var prompt = filesender.ui.promptEmailMany(lang.tr('enter_to_email'), function(input) {
             $('p.error', this).remove();
 
             var raw_emails = input.split(/[,;]/);
@@ -342,8 +342,10 @@ $(function() {
 
             var actions = $('<div class="actions" />').appendTo(popup);
 
-            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(' ' + lang.tr('send_to_my_email')).appendTo(actions);
-            $('<span class="fa fa-lg fa-envelope-o" />').prependTo(send_by_email);
+            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(lang.tr('send_to_my_email'));
+            $('<p>&nbsp;</p>').prependTo(send_by_email);
+            $('<span class="fa fa-lg fa-envelope" />').prependTo(send_by_email);
+            send_by_email.appendTo(actions)
             send_by_email.on('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -354,9 +356,6 @@ $(function() {
 
                 return false;
             });
-
-            // Reset popup position as we may have added lengthy content
-            filesender.ui.relocatePopup(popup);
 
         });
     };

@@ -2,8 +2,8 @@
 
 /*
  * FileSender www.filesender.org
- *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * 
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -125,6 +125,47 @@ function getGuestOption( n )
 }
 
 
+function updateForOpenPGPTransferOfPassphrase()
+{
+        var crypto = window.filesender.crypto_app();
+        var encoded = crypto.generateRandomPassword();
+        var password = encoded.value;
+        filesender.ui.nodes.encryption.password.val(password);
+
+        filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
+        filesender.ui.transfer.encryption_password_version  = encoded.version;
+        
+        if(!filesender.ui.nodes.message.val().startsWith( "-----BEGIN PGP MESSAGE-----" )) {
+            ok = false;
+        }
+        if( !filesender.ui.evalUploadEnabledSkipPGP ) {
+            if( filesender.ui.transfer.recipients.length ) {
+                for(var i=0; i<filesender.ui.transfer.recipients.length; i++) {
+                    var openpgpkey = filesender.ui.transfer.recipients_publickeys.get(filesender.ui.transfer.recipients[i]);
+                    filesender.ui.recipients.updateOpenPGPInfo(filesender.ui.transfer.recipients[i],openpgpkey);
+                }
+            }
+            var recip = $('.recipients').text();
+            console.log("RECIP " + recip );
+            var openpgpkey = filesender.ui.transfer.recipients_publickeys.get(recip);
+            filesender.ui.recipients.updateOpenPGPInfo(recip,openpgpkey);
+            ok = true;
+        }
+        stage2ok = true;
+
+        document.getElementById("message").readOnly = true;
+        filesender.ui.nodes.message.attr('readonly', true);
+        filesender.ui.nodes.encryption.password.attr('readonly', true);
+        $('label[for="encryption"]').attr('readonly', true);
+        $('#encryption').attr('readonly', true);
+        $('#encgroup1').attr('readonly', true);
+
+        $('#encgroup1openpgp').hide();
+        $('#openpgpinfo').show();
+
+        filesender.ui.nodes.encryption.toggle.prop('checked',true);
+
+}
 
 
 
@@ -193,6 +234,47 @@ function resume( force, resetResumeCount )
     filesender.ui.uploading_again_started_at_time_touch();
 }
 
+function toggleEncryption(e) {
+    const isChecked = filesender.ui.nodes.encryption.toggle.is(':checked');
+
+    if (isChecked) {
+        $('#encgroup1').show();
+    } else {
+        $('#encgroup1').slideToggle();
+    }
+
+    // $('#encgroup1').slideToggle();
+    // $('#encgroup2').slideToggle();
+    // $('#encgroup3').slideToggle();
+
+    filesender.ui.transfer.encryption = isChecked;
+
+    filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
+
+    for(var i=0; i<filesender.ui.transfer.getFileCount(); i++) {
+        var file = filesender.ui.transfer.files[i];
+
+        var node = filesender.ui.nodes.files.list.find('.file[data-name="' + file.name + '"][data-size="' + file.size + '"]');
+        filesender.ui.transfer.checkFileAsStillValid(
+            file,
+            function(ok) {
+                node.removeClass('invalid');
+                node.find('.invalid').remove();
+                node.find('.invalid_reason').remove();
+                node.find('.error').text('');
+            },
+            function(error) {
+                var tt = 1;
+                if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
+                node.addClass('invalid');
+                node.find('.error').text(lang.tr(error.message));
+            });
+    }
+    filesender.ui.evalUploadEnabled();
+
+    return false;
+}
+
 /**
  * Because the checkEncryptionPassword() uses toggle and also wants to read
  * the state of the message to see if it should call toggle there is a potential
@@ -250,13 +332,13 @@ filesender.ui.elements.preventEmpty = function(el) {
 filesender.ui.files = {
     invalidFiles: [],
     duplicateFiles: [],
-    
+
     // Sort error cases to the top
     sortErrorLinesToTop: function() {
         var $selector = $("#fileslistdirectparent");
-        var $element = $selector.children(".file");
+        var elements = [...$selector.children(".file")];
 
-        $element.sort(function(a, b) {
+        elements.sort((a, b) => {
             var ainv = a.className.includes('invalid');
             var binv = b.className.includes('invalid');
 
@@ -269,7 +351,7 @@ filesender.ui.files = {
             return 0;
         });
 
-        $element.detach().appendTo($selector);
+        elements.forEach(el => $selector.append(el));
     },
 
     // File selection (browse / drop) handler
@@ -807,30 +889,41 @@ filesender.ui.files = {
     },
 };
 
-var have_shown_bad_pgp_key_dialog = false;
+var have_shown_bad_openpgp_key_dialog = false;
 
 // Manage recipients
 filesender.ui.recipients = {
 
-    updatePGPInfoError: function(trstr) {
+    updateOpenPGPInfoError: function(trstr) {
 
-        if( !have_shown_bad_pgp_key_dialog ) {
-            have_shown_bad_pgp_key_dialog = true;
+        if( !filesender.config.openpgp_enabled ) {
+            return;           
+        }
+        
+        if( !have_shown_bad_openpgp_key_dialog ) {
+            have_shown_bad_openpgp_key_dialog = true;
             filesender.ui.alert('error', lang.tr(trstr));
         }
     },
     
-    updatePGPInfo: function(email) {
+    updateOpenPGPInfo: function(email,openpgpkey = null) {
 
-        var pgpkey = $('#pgpkey').text();
+        if( !filesender.config.openpgp_enabled ) {
+            return;           
+        }
+        
+        if(!openpgpkey) {
+            openpgpkey = $('#openpgpkey').text();
+        }
 
-        if( pgpkey == null ) {
-            console.log("AAA no key for email " + email );
+        var self = this;
+        if( openpgpkey == null ) {
+            console.log("no openpgp key for email..." );
             filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').addClass('badrecipient');
-            this.updatePGPInfoError('pgp_invalid_key_guest_upload');
+            this.updateOpenPGPInfoError('openpgp_invalid_key_guest_upload');
         } else {
 
-	    kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	    kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
 	        if (!err) {
 		    console.log("Key loaded");
 		    var params = {
@@ -848,14 +941,14 @@ filesender.ui.recipients = {
                             filesender.ui.evalUploadEnabled();
                             filesender.ui.evalUploadEnabledSkipPGP = false;
                         } else {
-                            this.updatePGPInfoError('pgp_invalid_key_guest_upload');
+                            self.updateOpenPGPInfoError('openpgp_invalid_key_guest_upload');
                         }
                     });
                 } else {
 		    console.log("Key load FAILED");
                     console.log(err);
                     filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').addClass('badrecipient');
-                    this.updatePGPInfoError('pgp_invalid_key_guest_upload');
+                    self.updateOpenPGPInfoError('openpgp_invalid_key_guest_upload');
                 }
             });
 
@@ -863,12 +956,24 @@ filesender.ui.recipients = {
     },
     
     // Add recipient to list
-    add: function(email, errorhandler) {
+    addSingle: function(email, errorhandler) {
         if(!errorhandler) errorhandler = function(error) {
             filesender.ui.error(error);
         };
 
+        var self = this;
         var too_much = null;
+
+        if( filesender.ui.transfer.recipients_publickeys.size ) {
+            filesender.ui.confirm( lang.tr('openpgp_functionality_limited_to_one_recipient')
+                                   .r({email: email}).out(),
+                                   function() { // ok
+                                   },
+                                   function() { // cancel
+                                   });
+            return;
+        }
+        
         if(email.match(/[,;\s]/)) { // Multiple values
             email = email.split(/[,;\s]/);
             var invalid = [];
@@ -927,9 +1032,123 @@ filesender.ui.recipients = {
 
         filesender.ui.evalUploadEnabled();
 
+        if( filesender.config.openpgp_enabled ) {
+            filesender.client.getOpenPGPPublicKey( email, function(loc,data) {
+                var openpgpkey = data;
+                if( !openpgpkey ) {
+                    if( filesender.ui.transfer.recipients_publickeys.size ) {
+                        filesender.ui.confirm( lang.tr('openpgp_adding_to_transfer_with_some_public_keys_missing')
+                                               .r({email: email}).out(),
+                                               function() { // ok
+                                               },
+                                               function() { // cancel
+                                               });
+                    }
+                }
+                
+                if( openpgpkey ) {
+                    if( filesender.ui.transfer.recipients_publickeys.size != (filesender.ui.transfer.recipients.length-1) ) {
+                        // adding to a transfer with existing recipients
+                        // who do not have a public key.
+                        filesender.ui.confirm( lang.tr('openpgp_adding_to_transfer_with_some_public_keys_missing')
+                                               .r({email: email}).out(),
+                                               function() { // ok
+                                               },
+                                               function() { // cancel
+                                               });
+                        return '';
+                    }
+                    
+	            kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
+	                if (!err) {
+		            console.log("Key loaded... asking if the user wants to use it");
+
+                            filesender.ui.confirm(
+                                lang.tr('confirm_use_openpgp_to_send_passphrase'),
+                                function() { // ok
+                                    filesender.ui.transfer.recipients_publickeys.set(email, openpgpkey );
+                                    updateForOpenPGPTransferOfPassphrase();
+                                    self.updateOpenPGPInfo( email, openpgpkey );
+                                },
+                                function() { // cancel
+                                });
+                            
+                        } else {
+                            console.log("Key load FAILED...");
+                            window.filesender.notification.notify( lang.tr('openpgp_public_key_invalid'));
+                        }
+                    });
+                    
+                }
+                
+            });
+        }
+        
         return '';
     },
 
+    addCollection: function(col, errorhandler) {
+        var too_much = null;
+        var invalid = [];
+        col.forEach((e) => {
+            console.log("adding email address: " + e );
+            if(!too_much) {
+                if(this.addSingle(e, function(error) {
+                    if(error.message == 'transfer_too_many_recipients')
+                        too_much = error;
+                })) {
+                    invalid.push(s);
+                }
+                if(too_much) {
+                    filesender.ui.error(too_much);
+                    return '';
+                }
+            }}
+                   );
+
+        return invalid.join(', ');
+    },
+    
+    // Add recipient to list
+    // handle breaking up email string into many addresses if appropriate
+    add: function(email, errorhandler) {
+        if(!errorhandler) errorhandler = function(error) {
+            filesender.ui.error(error);
+        };
+        
+        if(m = email.match(/([^<]+ <[^>]+@[^>]+>)(([,;][\s]*)|$)/g)) {
+            var emailresult = [];
+            // trim off start < and end >;, etc
+            // to leave just the core email address
+            m.forEach((e) => emailresult.push(
+                e.replace(/[^<]+</,'')
+                    .replace(/>[,;\s]*/,'')));
+                           
+            console.log("multiple email address matches detected. Original matches are:" );
+            console.log(m);
+            console.log("multiple email address matches detected. Cleaned up matches are:");
+            console.log(emailresult);
+
+            return this.addCollection(emailresult,errorhandler);
+        }
+
+        
+        if(email.match(/[,;\s]/)) {
+            // Multiple values with no special <> handling
+            m = email.split(/[,;\s]/);
+            var emailresult = m;
+
+            console.log("multiple email address matches detected. <> are already attempted above. Original matches are:" );
+            console.log(m);
+
+            return this.addCollection(emailresult,errorhandler);
+        }
+        
+        // Only a single address detected.
+        console.log("single email address " + email );
+        return this.addSingle(email, errorhandler);
+    },
+    
     // Add recipients from input
     addFromInput: function(input) {
         input = $(input);
@@ -1054,6 +1273,17 @@ filesender.ui.doesUploadMessageContainPassword = function() {
     return false;
 }
 
+filesender.ui.guest_can_only_send_to_me = function() {
+    var can_only_send_to_me = false;
+    var auth = $('body').attr('data-auth-type');
+    if(auth == 'guest') {
+        var goelement = $('#guest_options')[0];
+        const go = JSON.parse( goelement.value );
+        can_only_send_to_me = go['can_only_send_to_me'];
+    }
+    return can_only_send_to_me;
+}
+
 filesender.ui.evalUploadEnabledSkipPGP = false;
 filesender.ui.evalUploadEnabled = function() {
     var ok = true;
@@ -1136,7 +1366,7 @@ filesender.ui.evalUploadEnabled = function() {
     // }
 
     if (filesender.ui.stage == 1) {
-        configStageOk = configStageOk || filesender.ui.nodes.guest_token.length;
+        configStageOk = configStageOk || (filesender.ui.nodes.guest_token.length && filesender.ui.guest_can_only_send_to_me());
         // filesender.ui.nodes.stages.confirm.prop('disabled', !configStageOk);
         if (configStageOk) {
             filesender.ui.nodes.recipients.input.removeClass('invalid');
@@ -1272,13 +1502,29 @@ filesender.ui.startUpload = function() {
     if(!filesender.ui.nodes.required_files) {
 
         if( filesender.config.ui_use_datepicker_for_transfer_expire_time_selection ) {
-            this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+            // Set expiry to the current time-of-day on the selected date, so "select March 17"
+            // means "expires March 17 at the same time you created the transfer".
+            var expiresSelected = filesender.ui.nodes.expires.datepicker('getDate');
+            var now = new Date();
+            expiresSelected.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), 0);
+            // setting hours alone will jump this into that hour and may
+            // need to have a day rolled back if we are in a tz offset < UTC
+            // note that this offset method is positive in that case
+            // tested in Australia server tz, Pacific/Honolulu on the client
+            if( expiresSelected.getTimezoneOffset() > 0 ) {
+                expiresSelected.setDate( expiresSelected.getDate()-1);
+            }
+            // Date.getTime() returns ms; / 1000 yields a float. RestEndpointGuest
+            // validates expires with |^[0-9]{1,32}$|, rejects the decimal and falls
+            // back to default_transfer_days_valid, so a voucher silently gets the
+            // default instead of the picked date. An epoch is an integer anyway.
+            this.transfer.expires = Math.floor(expiresSelected.getTime() / 1000);
         } else {
             const expiresDays = $('#expires-select').find(":selected").val();
             const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            const expiresDate = now.setDate(now.getDate() + parseInt(expiresDays, 10));
-            this.transfer.expires = expiresDate / 1000;
+            const expiresDate = new Date(now);
+            expiresDate.setDate(expiresDate.getDate() + parseInt(expiresDays, 10));
+            this.transfer.expires = Math.floor(expiresDate.getTime() / 1000);
         }
 
         if(filesender.ui.nodes.from.length)
@@ -1389,6 +1635,11 @@ filesender.ui.startUpload = function() {
         // show the completed stage.
         filesender.ui.stage = 4;
 
+        if(!filesender.ui.isUserGettingALink() &&
+           filesender.ui.transfer.options.forward_to_another_server) {
+            $('.fs-transfer__forward-not-finished > span').html(lang.tr('forward_not_completed').out());
+        }
+
         $('.fs-transfer__upload-link .fs-copy > span').html(filesender.ui.transfer.download_link);
         if( filesender.config.make_download_links_clickable ) {
             $('.fs-transfer__upload-link .fs-copy > span').on('click', function(e){
@@ -1430,7 +1681,11 @@ filesender.ui.startUpload = function() {
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         const dateDiff = expireDays.getTime() - now.getTime();
-        const daysToExpire = Math.ceil(dateDiff / (1000 * 3600 * 24));
+        // expireDays carries the current time-of-day (e.g. 21:00); now is forced
+        // to midnight, so the diff is always N full days plus a partial day. ceil
+        // rounds the partial up, displaying "31 dagen" when the user picked 30.
+        // floor drops it back to the picked value.
+        const daysToExpire = Math.floor(dateDiff / (1000 * 3600 * 24));
 
         $('#expires-days').text(daysToExpire);
 
@@ -1666,14 +1921,14 @@ filesender.ui.handle_get_a_link_change = function() {
     $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
     form.find(
-        ' .fieldcontainer[data-option="hide_sender_email"]'
+        ' .fieldcontainer[data-option="forward_to_another_server"],' +
+        ' .fieldcontainer[data-option="forward_server_name"]'
     ).toggle(!choice);
-    
+
     if( choice ) {
         form.find('#subject').val('');
         form.find('#message').val('');
-        }
-        
+    }
     filesender.ui.evalUploadEnabled();
 }
 
@@ -1808,11 +2063,19 @@ filesender.ui.onChangeTransferType = function (transferType) {
     if (transferType) {
         const emailField = $(`[data-transfer-type='${TRANSFER_TYPES.TRANSFER_EMAIL}']`);
         const addMeToRecipientsField = $(`#fs-transfer__add-me-to-recipients`);
+        const sendAnotherServerField = $(`[data-option='forward_to_another_server']`);
+        const sendServerNameField = $(`[data-option='forward_server_name']`);
+        const forwardOptions = $(`#fs-forward_options`);
 
         switch (transferType) {
             case TRANSFER_TYPES.TRANSFER_LINK:
                 emailField.addClass('fs-input-group--hide');
                 addMeToRecipientsField.addClass('fs-switch--hide');
+                sendAnotherServerField.hide();
+                sendServerNameField.hide();
+                forwardOptions.hide();
+                filesender.ui.nodes.options.forward_to_another_server.prop("checked", false);
+                filesender.ui.nodes.encryption.toggle.prop("disabled", false);
                 filesender.ui.getALink = true;
                 filesender.ui.nodes.gal.checkbox.prop('checked', true);
 
@@ -1825,6 +2088,8 @@ filesender.ui.onChangeTransferType = function (transferType) {
             case TRANSFER_TYPES.TRANSFER_EMAIL:
                 emailField.removeClass('fs-input-group--hide');
                 addMeToRecipientsField.removeClass('fs-switch--hide');
+                forwardOptions.show();
+                sendAnotherServerField.show();
                 $('[data-option="add_me_to_recipients"]').removeClass('fs-switch--hide');
                 filesender.ui.getALink = false;
                 filesender.ui.nodes.gal.checkbox.prop('checked', false);
@@ -1863,10 +2128,10 @@ filesender.ui.updateSizeInfo = function () {
 
 filesender.ui.copyToClipboard = function(value) {
     navigator.clipboard.writeText(value).then((x) => {
-        filesender.ui.notify('info', 'Copied to clipboard!');
+        filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
     }).catch((e) => {
         console.error(e);
-        filesender.ui.notify('error', 'Error copying to clipboard!');
+        filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
     });
 };
 
@@ -1963,7 +2228,9 @@ $(function() {
         options: {
             get_a_link: form.find('input[id="get_a_link"]'),
             hide_sender_email: form.find('input[name="hide_sender_email"]'),
-            pgp_encrypt_passphrase_to_email: form.find('input[name="pgp_encrypt_passphrase_to_email"]')
+            openpgp_encrypt_passphrase_to_email: form.find('input[name="openpgp_encrypt_passphrase_to_email"]'),
+            forward_to_another_server: form.find('input[name="forward_to_another_server"]'),
+            forward_server_name: form.find('select[name="forward_server_name"]'),
         },
         buttons: {
             start: form.find('.buttons .start'),
@@ -1988,6 +2255,8 @@ $(function() {
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };
+
+    $("#forward_server_name").select2({width:'100%'});
 
     filesender.ui.getALink = true;
     filesender.ui.nodes.gal.checkbox.prop('checked', true);
@@ -2038,6 +2307,22 @@ $(function() {
 
     // filesender.ui.nodes.stages.nextStep.prop('disabled', true);
     // filesender.ui.nodes.stages.confirm.prop('disabled', true);
+
+    // single-stage UI: apply the user's saved transfer type preference on load
+    if( form.attr('data-user-has-gal-preference') == '1' ) {
+        $('.transfer-link').prop("checked", true);
+        filesender.ui.onChangeTransferType("transfer-link");
+    }
+    if( form.attr('data-user-has-email-preference') == '1' ) {
+        $('.transfer-email').prop("checked", true);
+        filesender.ui.onChangeTransferType("transfer-email");
+    }
+
+    // If there is only one choice then we should already make it
+    if($('.get_a_link_top_selector').length==0) {
+        $('#transfer-email').prop("checked", true);
+        filesender.ui.onChangeTransferType("transfer-email");
+    }
 
     // handle browser back and forward buttons as best as we can
     window.onpopstate = function(event) {
@@ -2177,6 +2462,9 @@ $(function() {
     filesender.ui.nodes.encryption.password.on(
         'keyup',
         delayAndCallOnlyOnce(function(e) {
+            if( filesender.config.encryption_mandatory_with_generated_password ) {
+                return;
+            }
             // as soon as they edit anything it can no longer be considered "generated".
             filesender.ui.transfer.encryption_password_version = crypto.crypto_password_version_constants.v2018_text_password;
             filesender.ui.transfer.encryption_password_encoding = 'none';
@@ -2227,18 +2515,17 @@ $(function() {
         if(files && files.length) filesender.ui.files.addList(files);
     }
 
-    var pgpenc = false;
-    if( filesender.config.pgp_enabled ) {
-        pgpenc = ('pgp_encrypt_passphrase_to_email' in filesender.ui.nodes.options)
-            ? filesender.ui.nodes.options.pgp_encrypt_passphrase_to_email.is(':checked')
+    var openpgpenc = false;
+    if( filesender.config.openpgp_enabled ) {
+        openpgpenc = ('openpgp_encrypt_passphrase_to_email' in filesender.ui.nodes.options)
+            ? filesender.ui.nodes.options.openpgp_encrypt_passphrase_to_email.is(':checked')
             : false;
-        if( $("#pgp-possile").text() == "false" ) {
-            pgpenc = false;
+        if( $("#openpgp-possile").text() == "false" ) {
+            openpgpenc = false;
         }
     }
 
-    console.log("PGP pgpenc " + pgpenc );
-    if( !pgpenc ) {
+    if( !openpgpenc ) {
         // validate message as it is typed
         window.filesender.ui.handleFlagInvalidOnRegexMatch(
             filesender.ui.nodes.message,
@@ -2348,44 +2635,13 @@ $(function() {
 
 
     
-    if( pgpenc ) {
+    if( openpgpenc ) {
 
-        var crypto = window.filesender.crypto_app();
-        var encoded = crypto.generateRandomPassword();
-        var password = encoded.value;
-        filesender.ui.nodes.encryption.password.val(password);
+        var recip = $('.recipients').text();
+        openpgpkey = $('#openpgpkey').text();
+        filesender.ui.transfer.recipients_publickeys.set( recip, openpgpkey );
 
-        filesender.ui.transfer.encryption_password_encoding = encoded.encoding;
-        filesender.ui.transfer.encryption_password_version  = encoded.version;
-        
-        if(!filesender.ui.nodes.message.val().startsWith( "-----BEGIN PGP MESSAGE-----" )) {
-            ok = false;
-        }
-        if( !filesender.ui.evalUploadEnabledSkipPGP ) {
-            if( filesender.ui.transfer.recipients.length ) {
-                for(var i=0; i<filesender.ui.transfer.recipients.length; i++) {
-                    filesender.ui.recipients.updatePGPInfo(filesender.ui.transfer.recipients[i]);
-                }
-            }
-            var recip = $('.recipients').text();
-            console.log("RECIP " + recip );
-            filesender.ui.recipients.updatePGPInfo(recip);            
-            ok = true;
-        }
-        stage2ok = true;
-
-        document.getElementById("message").readOnly = true;
-        filesender.ui.nodes.message.attr('readonly', true);
-        filesender.ui.nodes.encryption.password.attr('readonly', true);
-        $('label[for="encryption"]').attr('readonly', true);
-        $('#encryption').attr('readonly', true);
-        $('#encgroup1').attr('readonly', true);
-
-        $('#encgroup1pgp').hide();
-        $('#pgpinfo').show();
-
-        filesender.ui.nodes.encryption.toggle.prop('checked',true);
-        
+        updateForOpenPGPTransferOfPassphrase();
     }
   
     // Custom collapse
@@ -2423,13 +2679,11 @@ $(function() {
 
         $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
-        form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(!choice);
 
         form.find(
-            ' .fieldcontainer[data-option="hide_sender_email"]'
-        ).toggle(choice);
+            ' .fieldcontainer[data-option="forward_to_another_server"],' +
+            ' .fieldcontainer[data-option="forward_server_name"]'
+        ).toggle(!choice);
 
         filesender.ui.evalUploadEnabled();
     });
@@ -2468,6 +2722,36 @@ $(function() {
         });
     }
 
+    filesender.ui.nodes.options.forward_to_another_server.on('change', function(e) {
+        const isChecked = filesender.ui.nodes.options.forward_to_another_server.is(':checked');
+        if (isChecked) {
+            $('div[data-option="forward_server_name"]').show();
+            const selected = $('div[data-option="forward_server_name"]').find(':selected');
+            if (selected.hasClass('need-encrypt')) {
+                filesender.ui.nodes.encryption.toggle.prop('checked', true);
+                filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+                toggleEncryption();
+            }
+            $('input[id="must_be_logged_in_to_download"]').prop("checked", false);
+            $('input[id="must_be_logged_in_to_download"]').prop("disabled", true);
+        } else {
+            $('div[data-option="forward_server_name"]').hide();
+            filesender.ui.nodes.encryption.toggle.prop("disabled", false);
+            $('input[id="must_be_logged_in_to_download"]').prop("disabled", false);
+        }
+    });
+
+    filesender.ui.nodes.options.forward_server_name.on('change', function(e) {
+        const selected = $('div[data-option="forward_server_name"]').find(':selected');
+        if (selected.hasClass('need-encrypt')) {
+            filesender.ui.nodes.encryption.toggle.prop('checked', true);
+            filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+            toggleEncryption();
+        } else {
+            filesender.ui.nodes.encryption.toggle.prop("disabled", false);
+        }
+    });
+
     if(filesender.ui.nodes.encryption.toggle.is(':checked')) {
         $('#encryption_password_container').show();
         $('#encryption_password_container_generate').show();
@@ -2484,46 +2768,7 @@ $(function() {
     }
 
     // Bind encryption
-    filesender.ui.nodes.encryption.toggle.on('change', function(e) {
-        const isChecked = filesender.ui.nodes.encryption.toggle.is(':checked');
-
-        if (isChecked) {
-            $('#encgroup1').show();
-        } else {
-            $('#encgroup1').slideToggle();
-        }
-
-        // $('#encgroup1').slideToggle();
-        // $('#encgroup2').slideToggle();
-        // $('#encgroup3').slideToggle();
-
-        filesender.ui.transfer.encryption = isChecked;
-
-        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password, true );
-
-        for(var i=0; i<filesender.ui.transfer.getFileCount(); i++) {
-            var file = filesender.ui.transfer.files[i];
-
-            var node = filesender.ui.nodes.files.list.find('.file[data-name="' + file.name + '"][data-size="' + file.size + '"]');
-            filesender.ui.transfer.checkFileAsStillValid(
-                file,
-                function(ok) {
-                    node.removeClass('invalid');
-                    node.find('.invalid').remove();
-                    node.find('.invalid_reason').remove();
-                    node.find('.error').text('');
-                },
-                function(error) {
-                    var tt = 1;
-                    if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
-                    node.addClass('invalid');
-                    node.find('.error').text(lang.tr(error.message));
-                });
-        }
-        filesender.ui.evalUploadEnabled();
-
-        return false;
-    });
+    filesender.ui.nodes.encryption.toggle.on('change', toggleEncryption);
 
     filesender.ui.nodes.encryption.use_generated.on('change', function() {
         var v = filesender.ui.nodes.encryption.use_generated.is(':checked');
@@ -2549,7 +2794,7 @@ $(function() {
 
     filesender.ui.nodes.encryption.generate.on('click', function() {
 
-        if( pgpenc ) {
+        if( openpgpenc ) {
             return;
         }        
         var crypto = window.filesender.crypto_app();
@@ -2571,15 +2816,34 @@ $(function() {
         filesender.ui.evalUploadEnabled();
     });
 
-    if( filesender.config.encryption_mandatory_with_generated_password ) {
+    if( filesender.config.encryption_mandatory ) {
         setTimeout( function() {
-            filesender.ui.nodes.encryption.use_generated.click();
-            filesender.ui.nodes.encryption.password.attr('type','text');
-            filesender.ui.nodes.encryption.use_generated.attr('disabled', 'disabled' )
+
+            filesender.ui.nodes.encryption.toggle.attr('readonly','true');
+            filesender.ui.nodes.encryption.toggle.prop('checked', true);
+            filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+            $('.encryption-toggle-group').hide();
+            document.getElementById('encmand2').hidden = false
         }, 0 );
     }
 
+    if( filesender.config.encryption_mandatory_with_generated_password ) {
+        setTimeout( function() {
 
+            // trying to disable that slider, pita
+            filesender.ui.nodes.encryption.generate.click();
+            filesender.ui.nodes.encryption.toggle.attr('readonly','true');
+            filesender.ui.nodes.encryption.show_hide.attr('readonly','true');
+            filesender.ui.nodes.encryption.password.attr('readonly','true');
+            $('#enctest1').attr('readonly','true');
+            filesender.ui.nodes.encryption.toggle.prop('checked', true);
+            filesender.ui.nodes.encryption.toggle.prop("disabled", true);
+
+            $('.encryption-toggle-group').hide();
+            $('.password-gen-button').hide();
+            document.getElementById('encmand2').hidden = false;
+        }, 0 );
+    }
 
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if (filesender.ui.nodes.encryption.show_hide.is(':checked')) {
@@ -2806,8 +3070,8 @@ $(function() {
     } else if(failed) {
         var id = failed.id;
         if(filesender.config.chunk_upload_security == 'key') {
-            id += '?key=' + failed.files[0].uid;
-
+            var puid = failed.files[0].puid;
+            id += '?puid=' + puid + '&key=' + puid;
         } else if(!auth || auth == 'guest') {
             id = null; // Cancel
         }
@@ -2887,7 +3151,12 @@ $(function() {
             };
 
             var forget = function() {
-                filesender.ui.transfer.removeFromRestartTracker(failed.id);
+                filesender.client.deleteTransfer(failed.id, function() {
+                    filesender.ui.transfer.removeFromRestartTracker(failed.id);
+                }, function(error) {
+                    // If delete fails (e.g. already cleaned up by cron), clear localStorage anyway
+                    filesender.ui.transfer.removeFromRestartTracker(failed.id);
+                });
             };
 
             var later = function() {};
@@ -2954,8 +3223,8 @@ $(function() {
         }, 500 );
 
 
-    if( pgpenc ) {
-        filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').on('change', function() {
+    if( openpgpenc ) {
+        filesender.ui.nodes.form.find('input[name="openpgp_encrypt_passphrase_to_email"]').on('change', function() {
             var choice = $(this).is(':checked');
             if( choice ) {
                 
@@ -2996,8 +3265,8 @@ $(function() {
 
 
 
-        if(filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').is(':checked')) {
-            filesender.ui.nodes.form.find('input[name="pgp_encrypt_passphrase_to_email"]').trigger('change');
+        if(filesender.ui.nodes.form.find('input[name="openpgp_encrypt_passphrase_to_email"]').is(':checked')) {
+            filesender.ui.nodes.form.find('input[name="openpgp_encrypt_passphrase_to_email"]').trigger('change');
         }
     }
     

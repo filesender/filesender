@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Fichero(s) caducado(s)
+subject: Fichero(s) caducado(s)
 
 {alternative:plain}
 

@@ -1,5 +1,5 @@
 ---
-title: Installation - Linux Source 3.x from Git
+title: Installation - FileSender 3.x on Linux
 ---
 
 ## About this documentation
@@ -7,14 +7,12 @@ title: Installation - Linux Source 3.x from Git
 This is the installation documentation for installing the FileSender
 3.x releases on Linux. See the
 [releases](https://github.com/filesender/filesender/releases) page for
-up to date information about recent releases. This guide is written
-for installation from source on the RedHat/CentOS or Debian platform
-but any Linux variant should work with some modifications (most
-notably about installing the required additional software packages).
+up to date information about recent releases. 
 
-Our hope is that FileSender installation should take less than an hour.
-There are docker images of FileSender available which you might like
-to use to quickly see if this is the software that you are looking for.
+This guide is written for installation from source on the
+RedHat/CentOS or Debian platform but any Linux variant should work
+with some modifications (most notably about installing the required
+additional software packages).
 
 While efforts have been made to make sure this documentation does not
 contain mistakes and is as clear as possible if you see an issue
@@ -25,16 +23,16 @@ you can report issues with and update the documentation.
 
 ### This documentation was tested with
 
-* RedHat/CentOS (7)
+* RedHat/CentOS
 * Debian (9, Stretch with [apache and postgresql] and [apache and mariadb])
-* Fedora (28 with apache and postgresql)
+* Fedora (42 with apache and mariadb or postgresql)
 
 ### Dependencies
 
-* Apache (or nginx) and PHP version 8.2 or later.
-* A PostgreSQL or MariaDB database (10.0 or above, 10.2 or later recommended).
+* Apache (or nginx) and PHP version 8.4 or later.
+* A PostgreSQL (recent) or MariaDB database (10.7 or above).
 * A big filesystem (or cloud backed).
-* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.2 or newer. 
+* [SimpleSamlPhp](https://simplesamlphp.org/download/) 2.4.9 or newer.
 
 Note that older versions of PHP may work, but they are not supported
 by the PHP project so it is recommended to avoid them in production. Likewise,
@@ -44,7 +42,7 @@ have been resolved. Version 10.2 or later of MariaDB is highly recommended.
 # Step 0 - Choose your options
 
 For the Web server you can use either Apache or NGINX. For a database
-you can use PostgreSQL or MySQL. There are multiple versions of the steps
+you can use PostgreSQL or MySQL/MariaDB. There are multiple versions of the steps
 for the Web server setup, one for each supported server.
 
 
@@ -66,8 +64,9 @@ apt-get install -y apache2 libapache2-mod-php php php-mbstring php-xml php-json 
 
 Its for Debian/Ubuntu use a modern Nginx (after v.0.8) and php-fpm (fpm-fcgi).
 
-	sudo apt-get install nginx php-fpm 
-
+```
+sudo apt-get install nginx php-fpm
+```
 
 
 # Step 2 - Install the FileSender package
@@ -91,8 +90,8 @@ see something like the following:
 # ls -l /opt/filesender
 total 8
 drwxrwxr-x. 21 root root 4096 Jun  6 15:28 filesender
-lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.2.3
-drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.2.3
+lrwxrwxrwx.  1 root root   20 Jun  6 15:41 simplesaml -> simplesamlphp-2.4.10
+drwxr-xr-x. 23 root root 4096 Mar  3 01:04 simplesamlphp-2.4.10
 
 # ls -l /opt/filesender/filesender/
 total 160
@@ -123,7 +122,7 @@ composer install --no-dev
 ```
 
 
-## Using FileSender using git
+## Installing FileSender using git
 
 Install the Git package with one of the following commands.
 
@@ -137,18 +136,20 @@ apt-get install -y git
 
 
 Install the FileSender 3.0 from the GIT repository use the following
-commands. The `master` branch will always contain the latest release.
+commands. Starting with the 3.0 series each major version will have
+it's own master and development branch. As these documents describe
+the 3.x series you will be interested in `master3` and `development3`.
+
+The `master3` branch will always contain the latest release.
 You can select explicit versions using the release tag of the version
 you wish to run from the
 [Releases](https://github.com/filesender/filesender/releases) page. If
 you wish to test a feature that is in development and has been merged
 but is not part of any release yet you might like to checkout the
-`development` branch which contains all merged updates.
+`development3` branch which contains all merged updates.
 
-The version 3.0 alpha series has an updated UI using Bootstrap.
-Similar to the master and development there are `master3` and
-`development3` which are the latest release and current development
-code respectively.
+The version 3.0 release candidate series has an updated UI using
+modern CSS and some bootstrap. 
 
 In the example code below I am going to use the latest release in the
 3.x series. You can see the tag (version string) that you need for git
@@ -162,38 +163,31 @@ ticket icon.
 su -l
 mkdir /opt/filesender
 cd    /opt/filesender
-git clone --depth 1 --branch master https://github.com/filesender/filesender.git filesender
+git clone --depth 1 --branch master3 https://github.com/filesender/filesender.git filesender
 
 cd /opt/filesender/filesender
-git checkout master
+git checkout master3
 
 composer install --no-dev
 ```
 
 You can bring down new releases to an existing git repository and then
-directly checkout new releases in the future.
+directly checkout new releases in the future. You can also select an
+older version by using the git tag for that release.
 
 
 
 # Step 3 - Setup the FileSender configuration
 
-We ship the FileSender tarball with `config_sample.php` file rather
-than directly providing a `config.php` to make life easier when
-packaging the software.
+The FileSender tarball contains a `config_sample.php` file to get you
+started with your own `config.php`. This is done to make life easier
+when packaging the software.
 
-Note that if you wish to support old browsers there are some options you
-might like to add to your configuration.
-
-* If you would like to support IE11 and use encryption then you will
-  need to enable a legacy encryption key version using the
-  [encryption_key_version_new_files](https://docs.filesender.org/v3.0/admin/configuration/#encryption_key_version_new_files)
-  directive.
-
-Initialise config file and set permissions right. Make the files, tmp
-and log directories writable by the web daemon user (`apache` on
-RedHat/CentOS, `www-data` on Debian), copy the config file in place
-from the template and allow the web daemon user to read the config.php
-configuration file:
+The below commands will initialise a config file and set permissions
+correctly. The commands make the files, tmp and log directories
+writable by the web daemon user (`apache` on RedHat/CentOS, `www-data`
+on Debian), copy the config file in place from the template and allow
+the web daemon user to read the config.php configuration file:
 
 On all distributions run:
 
@@ -223,8 +217,17 @@ chown www-data:www-data tmp files log
 chgrp www-data config/config.php
 ```
 
-* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, mount it with the following option: `context=system_u:object_r:httpd_sys_rw_content_t:s0`.
-* **DO NOT** enable `httpd_use_nfs`. If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
+If you are using NFS for your storage then please take note of the following. Otherwise skip
+to the next title section.
+
+* **NOTE**: If you use NFS storage for user files on RedHat/CentOS, 
+            mount it with the following option: 
+```
+context=system_u:object_r:httpd_sys_rw_content_t:s0
+```
+
+* **DO NOT** enable `httpd_use_nfs`. 
+           If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
 
 
 
@@ -235,43 +238,48 @@ wants to authenticate a user. SimpleSAMLphp provides many different
 mechanisms to authenticate users and can handle large amounts of
 users.
 
-Following these instructions will set you up with a SimpleSAMLphp
-installation that uses Feide RnD's OpenIdP to authenticate users.
-There is also [some
-information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing)
-if you would prefer to setup some username and passwords for local
-authentication for development and testing. When you move to a
-production service you probably want to change that to only support
-authentication sources of your choice.
+If you are setting up FileSender at an academic institute you likely
+have knowledge of SPs, IdPs, and SimpleSAMLphp. If you wish to use
+FileSender on a smaller local network there are a few options such as
+using a local user table or using sspsmall to install SimpleSAMLphp to
+authenticate against a local database.
 
-All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.2.3 of SimpleSAMLphp.
+If you would prefer to setup some username and passwords for local
+authentication for development and testing see [this
+information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing).
+When you move to a production service you probably want to change that
+to only support authentication sources of your choice.
+
+You might also like to consider taking a look at
+[sspsmall](https://github.com/monkeyiq/sspsmall) to install and SP and
+IdP with SimpleSAMLphp on your system.
+
+All versions of FileSender currently use the SimpleSAMLphp 2.x series. For example, version 2.4.10 of SimpleSAMLphp.
 [Download SimpleSAMLphp](https://simplesamlphp.org/download/). Other
 [(later or older) versions](https://github.com/simplesamlphp/simplesamlphp/releases) will
 probably work. The continuous integration in FileSender has an
 installation of SimpleSAMLphp the [setup
 script](https://github.com/filesender/filesender/blob/master/ci/scripts/simplesamlphp-setup.sh)
-shows the version currently used there. 
+shows the version currently used there.
 
 * **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://github.com/simplesamlphp/simplesamlphp/releases), right?
 
-Extract SimpleSAMLphp in a suitable directory and create symlink:
+Extract SimpleSAMLphp in a suitable directory and create symlink. Make sure to update the example to your recent version:
 
 ```
 mkdir -p ~/src
 cd ~/src
-wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v2.2.3/simplesamlphp-2.2.3-full.tar.gz
+wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v2.4.2/simplesamlphp-2.4.2-full.tar.gz
 
-php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v1.19.7 >| checklist
-echo " simplesamlphp-2.2.3-full.tar.gz" >> checklist
+php /opt/filesender/filesender/scripts/install/simplesamlphp-extract-sha256-from-release-notes.php https://github.com/simplesamlphp/simplesamlphp/releases/tag/v2.4.10 >| checklist
+echo " simplesamlphp-2.4.10-full.tar.gz" >> checklist
 sha256sum --check checklist
- simplesamlphp-2.2.3-full.tar.gz: OK
+ simplesamlphp-2.4.10-full.tar.gz: OK
 
 mkdir -p /opt/filesender
 cd /opt/filesender
-tar xvzf ~/src/simplesamlphp-2.2.3-full.tar.gz
-ln -s simplesamlphp-2.2.3 simplesaml
-
-
+tar xvzf ~/src/simplesamlphp-2.4.10-full.tar.gz
+ln -s simplesamlphp-2.4.10 simplesaml
 ```
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web directory with a web server alias.
@@ -307,8 +315,7 @@ edit config/config.php
   'session.cookie.secure' => true,        // https site only!
   'session.cookie.samesite' => 'Strict',  // cookie option SameSite=Strict
   'session.phpsession.httponly' => true,  // cookie option HttpOnly
-  
-  
+
    ...
   'admin.protectindexpage' => true,
   'admin.protectmetadata' => true,
@@ -335,7 +342,6 @@ sed -i -e "s@'secretsalt' => 'defaultsecretsalt'@'secretsalt' => '$SALT'@g" conf
 
 HASH=$(echo $PASSWORD | ../bin/pwgen.php | tail -2 | head -1 | cut -c3-200);
 sed -i -e "s@'auth.adminpassword' => '123'@'auth.adminpassword' => '$HASH'@g" config.php
-
 ```
 
 
@@ -347,7 +353,7 @@ attributes are sent by the identity provider. See the section on [IdP
 attributes](../admin/reference/#idp_attributes) in the Reference
 Manual for details.
 
-* **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/ldap:ldap), [LDAP](https://simplesamlphp.org/docs/stable/ldap:ldap), [Radius](https://simplesamlphp.org/docs/stable/radius:radius) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
+* **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/saml/sp.html), [LDAP](https://simplesamlphp.org/docs/contrib_modules/ldap/ldap.html), [RADIUS](https://simplesamlphp.org/docs/contrib_modules/radius/radius.html) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp).
 
 
 The default redirect for https://.../simplesaml/ will be to
@@ -359,9 +365,9 @@ and log the event for investigation.
 
 # Step 5 - Web Server Security
 
-It is highly recommended to only offer the FileSender service over
-HTTPS. This prevents information used in a secure session from
-accidentally being leaked by unintended unsure HTTP requests.
+You should only offer the FileSender service over HTTPS. This prevents
+information used in a secure session from accidentally being leaked by
+unintended unsure HTTP requests.
 
 By default the configuration and setup for Apache and NGINX both use
 X-Frame-Options sameorigin and the configuration for FileSender itself
@@ -392,9 +398,10 @@ not just php pages.
 
 # Step 5-apache - Configure Apache
 
-A default configuration file for apache is shipped with FileSender in the
-config-templates/apache directory. You might like to view
-the current version [online](https://github.com/filesender/filesender/tree/master/config-templates/apache).
+A default configuration file for apache is shipped with FileSender in
+the config-templates/apache directory. You might like to view the
+current version
+[online](https://github.com/filesender/filesender/tree/master/config-templates/apache).
 
 The apache config file is provided in config-templates/apache and
 should be copied to one of the following locations depending on your
@@ -457,7 +464,7 @@ server {
         server_name filesender.example.org;
         index index.php;
         error_page 500 502 503 504 /50x.html;
-        root /opt/filesender/www;
+        root /opt/filesender/filesender/www;
         location = /50x.html {
             root   /usr/share/nginx/html;
         }
@@ -473,7 +480,7 @@ server {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         }
         location ^~ /saml {
-            alias /opt/filesender/saml/www;
+            alias /opt/filesender/simplesaml/www;
             location ~ ^(?<prefix>/saml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
                 include fastcgi_params;
                 fastcgi_pass  localhost:9090;
@@ -482,7 +489,7 @@ server {
             }
         }
         location ~* \.(ico|docx|doc|xls|xlsx|rar|zip|jpg|jpeg|txt|xml|pdf|gif|png|css|js)$ {
-            root   /opt/filesender/www/;
+            root   /opt/filesender/filesender/www/;
         }
         location ~ /\. {
                 deny all;
@@ -490,7 +497,7 @@ server {
 }
 ```
 
-And sure that your fastcgi_params file ( /etc/nginx/fastcgi_params ) looks like the following:
+And sure that your fastcgi_params file (`/etc/nginx/fastcgi_params`) looks like the following:
 
 ```
 fastcgi_param   QUERY_STRING            $query_string;
@@ -518,7 +525,7 @@ fastcgi_param   REDIRECT_STATUS         200;
 ```
 
 
-And just set correct port ( for example port 9090 ) at file /etc/php5/fpm/pool.d/www.conf
+And just set correct port (for example port 9090) at file /etc/php5/fpm/pool.d/www.conf
 
 ```
 ...
@@ -590,7 +597,7 @@ $ createdb -E UTF8 -O filesender filesender
 ```
 
 
-## Option b - MySQL
+## Option b - MySQL/MariaDB
 
 On RedHat/CentOS, run:
 
@@ -598,13 +605,11 @@ On RedHat/CentOS, run:
 
 On Debian, run:
 
-	apt-get install -y mariadb-server php-mysql 
+	apt-get install -y mariadb-server php-mysql
 
 Create the filesender database. It is recommended to create two users for the database,
 one for normal web usage and another with higher abilities to allow the database setup
-and migration script to use. This setup requires the code in FileSender release 2.6 or above to work.
-If you are on a lower version of FileSender you will have to grant permission to the normal filesender
-user and perhaps grant and remove the DROP and REFERENCES from that user when running database.php.
+and migration script to use. 
 
 ```
 mysql -u root -p
@@ -649,10 +654,10 @@ FLUSH PRIVILEGES;
 ## Automatic
 
 A sample settings file is provided with FileSender in
-**config-templates/filesender-php.ini**. If you don't feel like
-manually editing your php.ini file, copy the filesender-php.ini file
-to your **/etc/php.d/** (RedHat/CentOS) or
-**/etc/php/7.0/apache2/conf.d/** (Debian) directory to activate those
+`config-templates/filesender-php.ini`. If you don't feel like
+manually editing your php.ini file, copy the `filesender-php.ini` file
+to your `/etc/php.d/` (RedHat/CentOS) or
+`/etc/php/7.0/apache2/conf.d/` (Debian) directory to activate those
 settings.
 
 On **RedHat/CentOS**, run:
@@ -687,34 +692,34 @@ On **Debian**, run:
 
 # Step 8 - Update your FileSender config.php
 
-Edit your /opt/filesender/filesender/config/config.php to reflect the
-your settings. Be sure to at least set `$config['site_url']`, contact
-details, database settings and authentication configuration. The
+Edit your `/opt/filesender/filesender/config/config.php` to reflect the
+your settings. Be sure to at least set `$config['site_url']`, `site_hostname`,
+contact details, database settings and authentication configuration. The
 configuration file is self-explanatory.
 
 The main settings you will want to inspect and update are shown below.
 You will want to change URLs shown below from 127.0.0.1 to your host name.
 Email addresses shown as `root@localhost.localdomain` should be updated.
-You will want to update all FIXME in password fields.
+You will want to update all **FIXME** in password fields.
 
 ```
 //
 // Email and URL settings to update
 //
 // String, URL of the application
-$config['site_url'] = 'https://127.0.0.1/filesender';                
+$config['site_url'] = 'https://127.0.0.1/filesender';
 
 // Url of simplesamlphp
 $config['auth_sp_saml_simplesamlphp_url'] ='https://127.0.0.1/simplesaml/';
 
 // String, UID's (from  $config['saml_uid_attribute'])
 // that have Administrator permissions
-$config['admin'] = 'root@localhost.localdomain'; 
-                                                       
+$config['admin'] = 'root@localhost.localdomain';
+
 // String, email  address(es, separated by ,)
 // to receive administrative messages (low disk  space warning)
-$config['admin_email'] ='root@localhost.localdomain'; 
-                                                             
+$config['admin_email'] ='root@localhost.localdomain';
+
 // String, default no-reply email  address
 $config['email_reply_to'] ='root@localhost.localdomain';
 
@@ -731,8 +736,6 @@ $config['db_password'] ='FIXME';
 // if the database update script needs more privileges (mysql) then set this as well
 $config['db_username_admin'] = 'filesenderadmin';
 $config['db_password_admin'] = 'FIXME';
-
-
 ```
 
 
@@ -745,12 +748,12 @@ Run:
 # Step 10 - Configure the FileSender clean-up cron job
 
 ```
-# cd /opt/filesender/filesender 
+# cd /opt/filesender/filesender
 # cp config-templates/cron/filesender /etc/cron.daily/filesender
 # chmod +x /etc/cron.daily/filesender
 ```
 
-# Step 10b - Install some python dependancies if you wish to use the filesender.py command line client
+# Step 10b - Install some python dependencies if you wish to use the filesender.py command line client
 
 The filesender.py script uses some extra libraries. These can be installed either
 through your distribution packages or directly with the pip command as shown below.
@@ -768,9 +771,6 @@ On a Debian based distribution you might install these with:
 ```
 apt-get install python3-requests python3-urllib3
 ```
-
-
-
 
 
 # Step 11 - Optional local about, help, and landing pages
@@ -832,29 +832,29 @@ Example `/etc/fstab` line:
 
 #### httpd_can_sendmail
 
-MUST be on for Apache to be able to send mail.
+MUST be `on` for Apache to be able to send mail.
 
 * `setsebool -P httpd_can_sendmail on`
 
 #### httpd_use_nfs
 
-MUST be off, use `context=system_u:object_r:httpd_sys_rw_content_t:s0` as a mount option instead if you use NFS.
+MUST be `off`, use `context=system_u:object_r:httpd_sys_rw_content_t:s0` as a mount option instead if you use NFS.
 
 * `setsebool -P httpd_use_nfs off`
 
 #### httpd_can_network_connect_db
 
-MAY be on, if you do not run the database on the local host.
+MAY be `on`, if you do not run the database on the local host.
 
 * `setsebool -P httpd_can_network_connect_db on` (database is on another host)
 * `setsebool -P httpd_can_network_connect_db off` (database is on localhost)
 
-## HTTPS Only
+## HTTPS only
 
 Its good practice to disallow plain HTTP traffic and allow HTTPS only. Make a file in one of the following locations:
 
-* **/etc/httpd/conf.d/000-forcehttps.conf** (RedHat/CentOS)
-* **/etc/apache2/sites-available/000-forcehttps.conf** (Debian)
+* `/etc/httpd/conf.d/000-forcehttps.conf` (RedHat/CentOS)
+* `/etc/apache2/sites-available/000-forcehttps.conf` (Debian)
 
 Add the following:
 
@@ -883,4 +883,3 @@ If you don't want your users to have to type `/filesender` after the hostname, y
 
 Please inspect and report bugs on the [GitHub Issue
 Tracker](https://github.com/filesender/filesender/issues)
-

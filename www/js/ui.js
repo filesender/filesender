@@ -2,8 +2,8 @@
 
 /*
  * FileSender www.filesender.org
- *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * 
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -355,6 +355,47 @@ window.filesender.ui = {
 
     },
 
+    promptEmailMany: function(title, onok, oncancel) {
+
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else if(!title.jquery) {
+                title = title.toString();
+            }
+        }
+
+        var r = bootbox.prompt({
+            title: title,
+            message: ' ',
+            className: 'prompt-dialog',
+            centerVertical: true,
+            required: true,
+            buttons: {
+                confirm: {
+                    label: lang.tr('OK').out(),
+                    className: 'fs-button fs-button--success'
+                },
+                cancel: {
+                    label: lang.tr('Cancel').out(),
+                    className: 'fs-button fs-button--danger'
+                }
+            },
+            callback: function (result) {
+                console.log('This was logged in the callback!  result:' + result);
+                if( result ) {
+                    var r = onok(result);
+                    if( !r )
+                        return false;
+                } else {
+                    if(oncancel) { oncancel(); }
+                }
+            }
+        });
+        return r.find('.bootbox-body');
+
+    },
+    
     promptEmail: function(title, onok, oncancel) {
 
         if(typeof title != 'string') {
@@ -419,7 +460,7 @@ window.filesender.ui = {
         for(var i=0; i<actions.length; i++) {
             var action = $('<div class="custom-control custom-radio action" />').appendTo(list);
             var input = $('<input type="radio" class="custom-control-input" name="action" />').attr({value: actions[i]}).appendTo(action);
-            $('<label class="custom-control-label" for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
+            $('<label class="custom-action-label" for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
             action.on('click', function() {
                 var input = $(this).find('input[name="action"]');
                 input.val([input.attr('value')]);
@@ -469,7 +510,14 @@ window.filesender.ui = {
     /**
      * Relocate a dialog
      */
-    relocatePopup: function(popup) {
+    relocatePopup: function(popup, extra = {} ) {
+        params = {
+            position: {
+                my: 'center',
+                at: 'center'
+            },
+        };
+        popup.dialog({...params,...extra});
     },
 
     /**
@@ -503,6 +551,30 @@ window.filesender.ui = {
         return n;
     },
 
+    notifyAndReload: function(type, message) {
+        if(typeof message != 'string') {
+            if(message.out) {
+                message = message.out();
+            }else if(!message.jquery) {
+                message = message.toString();
+            }
+        }
+
+        var ctn = $('#notifications');
+        if(!ctn.length) ctn = $('<div id="notifications" />').appendTo('body');
+
+        if( type == 'error' ) {
+            type = 'danger';
+        }
+        var n = $('<div class="alert alert-' + type + '" role="alert" />').html(message).appendTo(ctn);
+
+        window.setTimeout(function() {
+            filesender.ui.reload();
+        }, 1500);
+
+        return n;
+    },
+    
     /**
      * Display/remove maintenance popup
      *
@@ -690,7 +762,7 @@ window.filesender.ui = {
         if(!precision || isNaN(precision))
             precision = 1;
 
-        var multipliers = ['', 'k', 'M', 'G', 'T'];
+        var multipliers = ['', 'ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'];
 
         var bytes = Math.max(bytes, 0);
         var pow = Math.floor((bytes ? Math.log(bytes) : 0) / Math.log(1024));

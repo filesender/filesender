@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Stranica za transfer za gosta
+subject: Stranica za otpremanje sa pristupom za goste
 
 {alternative:plain}
 
 Poštovani,
 
-Gost {guest.email} je pristupio stranici za transfer pomoću Vašeg vaučera.
+Gost {guest.email} je pristupio stranici za otpremanje pomoću Vašeg vaučera.
 
 Lep pozdrav,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Lep pozdrav,
 </p>
 
 <p>
-    Gost <a href="mailto:{guest.email}">{guest.email}</a> je pristupio stranici za transfer pomoću Vašeg vaučera.
+    Gost <a href="mailto:{guest.email}">{guest.email}</a> je pristupio stranici za otpremanje pomoću Vašeg vaučera.
 </p>
 
 <p>

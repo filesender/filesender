@@ -44,9 +44,9 @@ are set properly after the update.
 
 Download the source archive into a directory, for example ~/src. Lets
 assume you have downloaded a release and have a file at
-~/src/filesender-2.41.tar.gz. This can be directly extracted into your
+~/src/filesender-3.0.tar.gz. This can be directly extracted into your
 /opt/filesender directory by being in the right directory and telling
-tar to strip the leading filesender-filesender-2.41.
+tar to strip the leading filesender-filesender-3.0.
 
 
 ```
@@ -62,11 +62,11 @@ tar --extract \
 
 #### Using FileSender using git
 
-For the 3.x series the master branch tracks the releases. This means
-that if 2.41 is the latest release the master should also be version
-2.41. Each release has a tag and git commit associated with it and you
+For the 3.x series the master3 branch tracks the releases. This means
+that if 3.0 is the latest release the master should also be version
+3.0. Each release has a tag and git commit associated with it and you
 can use that to checkout the source code for an exact version if you
-like. The two last git commands below checkout version 2.41 and the
+like. The two last git commands below checkout version 3.0 and the
 current 3.x series release respectively. You may receive an error message
 trying to switch to another version if you have modified the templates directory. 
 This is considered in the next section.
@@ -75,8 +75,8 @@ This is considered in the next section.
 cd  /opt/filesender
 git fetch origin
 
-git checkout filesender-2.41
-git checkout master
+git checkout 3.0
+git checkout master3
 ```
 
 ### The templates directory

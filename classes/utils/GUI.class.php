@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -63,9 +63,12 @@ class GUI
     public static function stylesheets()
     {
         return self::filterSources(array(
+            'lib/select2/select2.min.css',
             'lib/jquery-ui/jquery-ui.min.css',
-            'lib/font-awesome/css/font-awesome.min.css',
+            'lib/font-awesome/css/fontawesome.min.css',
+            'lib/font-awesome/css/solid.min.css',
             'lib/bootstrap/dist/css/bootstrap.min.css',
+            'lib/bootstrap-icons/font/bootstrap-icons.css',
             'lib/flag-icons/css/flag-icons.min.css',
             'css/default.css',
             'css/new-ui/styles.css',  // Adding the new-ui styles
@@ -124,7 +127,7 @@ class GUI
             );
         }
 
-        if( Utilities::isTrue(Config::get('pgp_enabled'))) {
+        if( Utilities::isTrue(Config::get('openpgp_enabled'))) {
             array_push( $sources,
                         'lib/kbpgp/kbpgp.js',
             );
@@ -133,6 +136,7 @@ class GUI
         array_push( $sources,
                     'lib/jquery/jquery.min.js',
                     'lib/jquery-ui/jquery-ui.min.js',
+                    'lib/select2/select2.min.js',
                     'lib/promise-polyfill/polyfill.min.js',
                     'lib/web-streams-polyfill/dist/ponyfill.js',
                     'lib/webcrypto-shim/webcrypto-shim.min.js',
@@ -330,6 +334,11 @@ class GUI
             if (array_key_exists('s', $_REQUEST)) {
                 $t = $_REQUEST['s'];
                 if( !in_array($t, self::allowedPages())) {
+
+                    if(Config::isTrue('allow_pages_log_invalid_page')) {
+                        Logger::error("Attempt to access page $t will fail because it is not in allowed pages");
+                    }
+                    
                     $page = 'home';
                 } else {
                     $page = $t;
@@ -440,7 +449,12 @@ class GUI
             throw new GUIUnknownPageException($page);
         }
 
-
+        if(Config::isTrue('allow_pages_log_invalid_page')) {
+            if(!in_array($page, self::allowedPages())) {
+                Logger::error("Attempt to access page $page will fail because it is not in allowed pages");
+            }
+        }
+        
         return in_array($page, self::allowedPages());
     }
 
@@ -464,4 +478,35 @@ class GUI
 
         return $embed;
     }
+
+
+    public static function getFileNamesForDisplay( $transfer, $accountForDL = true, $maxlen = 32, $maxfiles = 3 )
+    {
+        $items = array();
+        foreach(array_slice($transfer->files, 0, $maxfiles) as $file) {
+            $name = $file->path;
+            
+            $dlcount = $transfer->download_count;
+            if( !$accountForDL ) {
+                // do not leak this info on some pages                
+                $dlcount = 0;
+            }
+            $name_shorten_by = intval(ceil(intval (mb_strlen((string) $dlcount)+mb_strlen(Lang::tr('see_all'))+3)/2));
+            
+            if(mb_strlen($name) > 28-$name_shorten_by) {
+                if($dlcount) {
+                    $name = mb_substr($name, 0, 23-$name_shorten_by).'...';
+                } else {
+                    $name = mb_substr($name, 0, 23).'...';
+                }
+            }
+            $items[] = '<span title="'.Template::Q($file->path).'">'.Template::replaceTainted($name).'</span>';
+        }
+
+        if(count($transfer->files) > 3)
+            $items[] = '<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>';
+
+        return $items;
+    }
+    
 }

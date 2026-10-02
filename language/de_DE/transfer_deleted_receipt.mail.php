@@ -13,7 +13,7 @@ subject: Datei(en) gelöscht
 
 Sehr geehrte Damen und Herren,
 
-Ihre Dateiübertragung Nr. {transfer.id} wurde von {cfg:site_name} gelöscht und steht nicht mehr zum Download bereit ({transfer.link}).
+Ihr Dateitransfer Nr. {transfer.id} wurde von {cfg:site_name} gelöscht und steht nicht mehr zum Download bereit ({transfer.link}).
 
 Mit freundlichen Grüßen
 {cfg:site_name}
@@ -25,7 +25,7 @@ Mit freundlichen Grüßen
 </p>
 
 <p>
-    Ihre <a href="{transfer.link}">Dateiübertragung Nr. {transfer.id}</a> wurde von <a href="{cfg:site_url}">{cfg:site_name}</a> gelöscht und steht nicht mehr zum Download bereit.
+    Ihr <a href="{transfer.link}">Dateitransfer Nr. {transfer.id}</a> wurde von <a href="{cfg:site_url}">{cfg:site_name}</a> gelöscht und steht nicht mehr zum Download bereit.
 </p>
 
 <p>

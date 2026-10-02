@@ -4,7 +4,7 @@ The FileSender project uses [POEditor](https://www.poeditor.com) to manage the d
 languages FileSender supports. The translations on poeditor.com are
 considered the definite master copy. Please see the documentation on
 the Web for information about how to contribute to the translations
-for FileSender. https://docs.filesender.org/v2.0/i18n/
+for FileSender. https://docs.filesender.org/v3.0/i18n/
 
 ## Terms, translations and reference language
 

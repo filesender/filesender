@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Acceso a la página de carga de fichero
+subject: Acceso a la página de carga de fichero
 
 {alternative:plain}
 

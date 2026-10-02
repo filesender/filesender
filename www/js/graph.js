@@ -2,7 +2,7 @@ $.ajax({
 	url: "js/graph/uploadGraph.php"
 }).done(function(json) {
 	var ctx = $("#speedChart");
-	var speedChart = new Chart(ctx,$.parseJSON(json));
+	var speedChart = new Chart(ctx,JSON.parse(json));
 	var hoverInTimer;
 	var hoverOutTimer;
 	ctx.hover(function() {

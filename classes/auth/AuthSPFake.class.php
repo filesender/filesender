@@ -3,7 +3,7 @@
 /**
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -46,17 +46,17 @@ class AuthSPFake
      * Cache config
      */
     private static $config = null;
-    
+
     /**
      * Cache authentication status
      */
     private static $isAuthenticated = null;
-    
+
     /**
      * Cache attributes
      */
     private static $attributes = null;
-    
+
     /**
      * Authentication check.
      *
@@ -67,10 +67,10 @@ class AuthSPFake
         if (is_null(self::$isAuthenticated)) {
             self::$isAuthenticated = Config::get('auth_sp_fake_authenticated');
         }
-        
+
         return self::$isAuthenticated;
     }
-    
+
     /**
      * Retreive user attributes.
      *
@@ -82,15 +82,17 @@ class AuthSPFake
             if (!self::isAuthenticated()) {
                 throw new AuthSPAuthenticationNotFoundException();
             }
-            
+
             $attributes = array();
-            
+
             // Wanted attributes
             foreach (array('uid', 'name', 'email') as $attr) {
                 // Keys in raw_attributes (can be array of key)
                 $attributes[$attr] = Config::get('auth_sp_fake_'.$attr);
             }
-            
+
+            // $attributes['idp'] = 'fake';
+
             // Check attributes
             if (!$attributes['uid']) {
                 throw new AuthSPMissingAttributeException(
@@ -100,7 +102,7 @@ class AuthSPFake
                     'uid'
                 );
             }
-            
+
             if (!$attributes['email']) {
                 throw new AuthSPMissingAttributeException(
                      'email',
@@ -109,21 +111,21 @@ class AuthSPFake
                     'email'
                 );
             }
-            
+
             if (!is_array($attributes['email'])) {
                 $attributes['email'] = array($attributes['email']);
             }
-            
+
             foreach ($attributes['email'] as $email) {
                 if (!Utilities::validateEmail($email)) {
                     throw new AuthSPBadAttributeException('email');
                 }
             }
-            
+
             if (!$attributes['name']) {
                 $attributes['name'] = substr($attributes['email'], 0, strpos($attributes['email'], '@'));
             }
-            
+
             // Build additional attributes
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if ($additional_attributes) {
@@ -133,7 +135,7 @@ class AuthSPFake
                     if (is_numeric($key) && is_callable($from)) {
                         continue;
                     }
-                    
+
                     if (is_callable($from)) {
                         $value = $from();
                     } elseif (array_key_exists($from, $additional_attributes_values)) {
@@ -141,17 +143,17 @@ class AuthSPFake
                     } else {
                         $value = null;
                     }
-                    
+
                     $attributes['additional'][is_numeric($key) ? $from : $key] = $value;
                 }
             }
-            
+
             self::$attributes = $attributes;
         }
-        
+
         return self::$attributes;
     }
-    
+
     /**
      * Generate the logon URL.
      *
@@ -168,10 +170,10 @@ class AuthSPFake
             }
             $target = Utilities::http_build_query(array('s' => $landing_page));
         }
-        
+
         return Config::get('site_url').'#logon-'.urlencode($target);
     }
-    
+
     /**
      * Generate the logoff URL.
      *
@@ -184,7 +186,12 @@ class AuthSPFake
         if (!$target) {
             $target = Config::get('site_logouturl');
         }
-        
+
         return Config::get('site_url').'#logoff-'.urlencode($target);
     }
+
+    //public static function ensureLocalIdPMetadata( $entityId, $idp, $force = false )
+    //{
+    //    return;
+    //}
 }

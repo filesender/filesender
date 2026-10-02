@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Dosyalar {if:transfer.files>1} {endif} başarıyla yüklendi
+subject: Dosyalar {if:transfer.files>1} {endif} başarıyla yüklendi
 
 {alternative:plain}
 

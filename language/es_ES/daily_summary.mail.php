@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Resumen diario de transferencias
+subject: Resumen diario de transferencias
 
 {alternative:plain}
 

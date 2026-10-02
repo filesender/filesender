@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Permiso de descarga revocado
+subject: Permiso de descarga revocado
 
 {alternative:plain}
 

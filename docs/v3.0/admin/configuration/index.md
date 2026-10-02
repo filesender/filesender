@@ -12,6 +12,10 @@ A note about colours;
 * mandatory configuration settings are <span style="background-color:red">marked in red</span>
 * sections <span style="background-color:orange">marked in orange</span> need to be double checked.
 
+
+Specific debugging options inclide allow_pages_log_invalid_page
+
+
 # Table of contents
 
 ---
@@ -41,7 +45,7 @@ A note about colours;
 * [download_verification_code_random_bytes_used](#download_verification_code_random_bytes_used)
 * [download_show_download_links](#download_show_download_links)
 * [disclose](#disclose)
-* [pgp_enabled](#pgp_enabled)
+* [openpgp_enabled](#openpgp_enabled)
 
 
 ## Security settings
@@ -95,6 +99,8 @@ A note about colours;
 * [cloud_s3_bucket_prefix](#cloud_s3_bucket_prefix)
 * [cloud_s3_bulk_delete](#cloud_s3_bulk_delete)
 * [cloud_s3_bulk_size](#cloud_s3_bulk_size)
+* [performance_allow_direct_copy_from_put_to_disk](#performance_allow_direct_copy_from_put_to_disk)
+* [performance_allow_early_session_release](#performance_allow_early_session_release)
 
 ## Shredding
 
@@ -156,13 +162,17 @@ A note about colours;
 * [allow_pages_add_for_guest](#allow_pages_add_for_guest)
 * [allow_pages_add_for_user](#allow_pages_add_for_user)
 * [allow_pages_add_for_admin](#allow_pages_add_for_admin)
+* [allow_pages_log_invalid_page](#allow_pages_log_invalid_page)
+* [show_splash_after_login](#show_splash_after_login)
 * [can_view_statistics](#can_view_statistics)
 * [can_view_aggregate_statistics](#can_view_aggregate_statistics)
 * [auth_sp_saml_can_view_statistics_entitlement](#auth_sp_saml_can_view_statistics_entitlement)
 * [auth_sp_saml_can_view_aggregate_statistics_entitlement](#auth_sp_saml_can_view_aggregate_statistics_entitlement)
 * [read_only_mode](#read_only_mode)
 * [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
-
+* [ui3_allow_selecting_files_on_transfer_details_page](#ui3_allow_selecting_files_on_transfer_details_page)
+* [valid_timezone_regex](#valid_timezone_regex)
+* [client_send_current_timezone_to_server](#client_send_current_timezone_to_server)
 
 ## Transfers
 
@@ -172,6 +182,7 @@ A note about colours;
 * [ban_extension](#ban_extension)
 * [chunk_upload_security](#chunk_upload_security)
 * [default_transfer_days_valid](#default_transfer_days_valid)
+* [selectable_transfer_days_valid](#selectable_transfer_days_valid)
 * [max_transfer_days_valid](#max_transfer_days_valid)
 * [allow_transfer_expiry_date_extension](#allow_transfer_expiry_date_extension)
 * [allow_transfer_expiry_date_extension_admin](#allow_transfer_expiry_date_extension_admin)
@@ -214,6 +225,7 @@ A note about colours;
 * [recipient_reminder_limit](#recipient_reminder_limit)
 * [log_authenticated_user_download_by_ensure_user_as_recipient](#log_authenticated_user_download_by_ensure_user_as_recipient)
 * [transfer_automatic_reminder](#transfer_automatic_reminder)
+* [owner_automatic_reminder](#owner_automatic_reminder)
 * [transfers_table_show_admin_full_path_to_each_file](#transfers_table_show_admin_full_path_to_each_file)
 
 ## Graphs
@@ -231,6 +243,12 @@ A note about colours;
 * [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stalling_detection)
 
+## TeraReceiver (download module)
+
+* [terareceiver_enabled](#terareceiver_enabled)
+* [terareceiver_allowed](#terareceiver_allowed)
+
+
 ## Download
 
 * [download_chunk_size](#download_chunk_size)
@@ -240,8 +258,12 @@ A note about colours;
 ## Guest use
 
 * [guest_support_enabled](#guest_support_enabled)
+* [guest_transfers_page_support_enabled](#guest_transfers_page_support_enabled)
+* [guest_transfers_page_number_of_days_expired_guest_can_return](#guest_transfers_page_number_of_days_expired_guest_can_return)
 * [guest_options](#guest_options)
+* [guest_options_to_force_to_top_array](#guest_options_to_force_to_top_array)
 * [default_guest_days_valid](#default_guest_days_valid)
+* [selectable_guest_days_valid](#selectable_guest_days_valid)
 * [min_guest_days_valid](#min_guest_days_valid)
 * [max_guest_days_valid](#max_guest_days_valid)
 * [max_guest_recipients](#max_guest_recipients)
@@ -271,7 +293,18 @@ A note about colours;
 	* [auth_sp_saml_admin_entitlement](#auth_sp_saml_admin_entitlement)
 	* [using_local_saml_dbauth](#using_local_saml_dbauth)
 	* [auth_warn_session_expired](#auth_warn_session_expired)
-	* [auth_sp_idp_filters](#auth_sp_idp_filters)
+	* [auth_sp_idp_metadata_to_capture](#auth_sp_idp_metadata_to_capture)
+* __OpenIDConnectClient__
+	* [auth_sp_oidc_issuer](#auth_sp_oidc_issuer)
+	* [auth_sp_oidc_client_id](#auth_sp_oidc_client_id)
+	* [auth_sp_oidc_client_secret](#auth_sp_oidc_client_secret)
+    * [auth_sp_oidc_idp_attribute](#auth_sp_oidc_idp_attribute)
+  * [auth_sp_oidc_scopes](#auth_sp_oidc_scopes)
+  * [auth_sp_oidc_uid_attribute](#auth_sp_oidc_uid_attribute)
+	* [auth_sp_oidc_email_attribute](#auth_sp_oidc_email_attribute)
+	* [auth_sp_oidc_name_attribute](#auth_sp_oidc_name_attribute)
+  * [auth_sp_oidc_groups_claim](#auth_sp_oidc_groups_claim)
+  * [auth_sp_oidc_required_groups](#auth_sp_oidc_required_groups)
 * __Shibboleth__
 	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
 	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
@@ -322,11 +355,21 @@ A note about colours;
 * [aggregate_statlog_send_report_email_address](#aggregate_statlog_send_report_email_address)
 
 
+## File forwarding
+
+* [file_forwarding_enabled](#file_forwarding_enabled)
+* [forward_server_list](#forward_server_list)
+* [forward_capabilities](#forward_capabilities)
+* [storage_filesystem_forward_mmcftp_command](#storage_filesystem_forward_mmcftp_command)
+* [storage_filesystem_forward_scp_command](#storage_filesystem_forward_scp_command)
+
+
 ## Other
 
 * [host_quota](#host_quota)
 * [config_overrides](#config_overrides) (experimental feature, not tested)
 * [auth_config_regex_files](#auth_config_regex_files)
+* [auth_config_value_regex_files](#auth_config_value_regex_files)
 * [show_storage_statistics_in_admin](#show_storage_statistics_in_admin)
 * [statistics_table_rows_per_page](#statistics_table_rows_per_page)
 * [tenant_admin](#tenant_admin)
@@ -741,13 +784,12 @@ This way the encryption_key_version_new_files can be updated and existing upload
 * __comment:__ This enables strong encryption of passwords. This setting is deprecated and will be removed in a future version.
 
 ### upload_crypted_chunk_size
-* __description:__ Internal only setting. This is the entire size of an encrypted chunk, including any padding for per chunk IV
+* __description:__ Internal only setting. Any setting you have in config.php will be overridden by FileSender
 * __mandatory:__ no
 * __type:__ int
-* __default:__ 5 * 1024 * 1024 + 16 + 16
-* __available:__ since before version 2.30
-* __comment:__ It is highly recommended that you leave this setting as the default value. This is the size, including any IV and padding
-           needed for an encrypted chunk that is uploaded.
+* __default:__ Calculated from other values
+* __available:__ Deprecated and overridden in 3.0rc12
+* __comment:__ This setting is calculated and set by FileSender. Please remove it from your config.php if it is there.
 
 ### upload_crypted_chunk_padding_size
 * __description:__ Internal only setting. This is the size of padding and IV for an encrypted chunk
@@ -1130,6 +1172,27 @@ deleting up to [cloud_s3_bulk_size](#cloud_s3_bulk_size) chunks per request.
 * __available:__ since version 2.45
 * __comment:__ When [cloud_s3_bulk_delete](#cloud_s3_bulk_delete) is true, this is the maximum size of the delete request.
 Default value to maintain AWS S3 compatibility is 1000. Other storage platforms may use different defaults. OpenStack Swift defaults to 10000, for instance
+
+### performance_allow_direct_copy_from_put_to_disk
+
+* __description:__ Where possible delay reading file PUT data and attempt direct in kernel copy
+* __mandatory:__ no.
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.8
+* __comment:__ Supported only in storage_type filesystemChunked and filesystem as of 3.8. Users of the filesender.py client will be demoted to not using direct copy because of how authorization works for the client.
+               When true this will delay reading bytes in a very specific cases which is uploading file data. By not reading the data until the destination we wish to write those bytes we can allow the opportunity to have the Linux kernel copy the bytes inside the kernel by letting PHP use copy_file_range(2) to avoid memory allocation and extraneous data copying. This significantly reduces CPU use and increases upload speed even on a local installation. See https://github.com/filesender/filesender/pull/2640
+
+### performance_allow_early_session_release
+
+* __description:__ Where possible release the php session early in the REST server
+* __mandatory:__ no.
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.13
+* __comment:__  If it is safe to release the php session early in the REST server do so. This can speed up uploads significantly in some environments. This is here mainly to allow the feature to be disabled if it is causing issues in some environments.
+
+
 
 
 ---
@@ -1619,6 +1682,19 @@ Inside of files_downloaded.mail.php for example
 * __available:__ since version 2.33
 * __comment:__ See also allow_pages_add_for_guest and allow_pages_add_for_user
 
+    The possible values for the allow_pages array entries can be found
+    in the classes/constants/GUIPages.class.php file. The values there
+    relate to the template pages in the templates directory and will
+    have _page.php appended. For example, GUIPages::DOWNLOAD has the
+    value 'download' which will relate to the
+    templates/download_page.php file. In the FileSender app that page
+    is selected with the 's=' parameter. For example on the download
+    page you might see part of the URL like
+    `.../filesender/?s=download&token=5...` and the s= portion is the
+    page that will be tested against the allow_pages_* configuration
+    and also select the template download_page.php for page
+    generation.
+
 
 ### allow_pages_add_for_guest
 * __description:__ These values will be added to the allow_pages_core pages if the principal is a guest
@@ -1633,7 +1709,7 @@ Inside of files_downloaded.mail.php for example
                 you have set $config['user_page'] = null.
 * __mandatory:__ no
 * __type:__ array of values from GUIPages constants
-* __default:__ array( GUIPages::HOME, GUIPages::USER, GUIPages::UPLOAD, GUIPages::TRANSFERS, GUIPages::GUESTS, GUIPages::DOWNLOAD, GUIPages::APISECRETAUP )
+* __default:__ array( GUIPages::HOME, GUIPages::USER, GUIPages::UPLOAD, GUIPages::TRANSFERS, GUIPages::TRANSFER_DETAIL, GUIPages::GUESTS, GUIPages::NEW_INVITATION, GUIPages::INVITATION_DETAIL, GUIPages::DOWNLOAD, GUIPages::APISECRETAUP, GUIPages::TRANSFERS_GUEST )
 * __available:__ since version 2.33
 * __comment:__ See also allow_pages_core
 
@@ -1645,6 +1721,22 @@ Inside of files_downloaded.mail.php for example
 * __default:__ array( GUIPages::ADMIN )
 * __available:__ since version 2.33
 * __comment:__ See also allow_pages_core
+
+### allow_pages_log_invalid_page
+* __description:__ DEBUG Log error messages relating to pages not being avialable or permitted for display
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.11
+* __comment:__ See also allow_pages_core
+
+### show_splash_after_login
+* __description:__ Show the site_splash as well at the top of the upload page after a login
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ false
+* __available:__ since version 3.11
+* __comment:__
 
 
 ### can_view_statistics
@@ -1719,7 +1811,33 @@ Inside of files_downloaded.mail.php for example
      list and they can be added to the default.
 
 
-* [template_config_values_that_can_be_read_in_templates](#template_config_values_that_can_be_read_in_templates)
+
+### ui3_allow_selecting_files_on_transfer_details_page
+* __description:__  Allow the user to select which files to download in an archive on the transfers details page.
+* __mandatory:__ no
+* __type:__ bool
+* __default:__ true
+* __available:__ since version 3.0 rc12
+* __comment:__ 
+
+
+### valid_timezone_regex
+* __description:__  A full php regex expression including the leading and trailing //i type characters to match a valid timezone string sent from the browser
+* __mandatory:__ no
+* __type:__ string (php regex including the leading and trailing //i characters)
+* __default:__ '@^[_/a-z]+$@i'
+* __available:__ since version 3.0beta7
+* __comment:__ This regex is used to match timezone data passed from the browser. If the regex does not match the timezone is considered invalid and ignored. Set this to '' to explicitly disable this feature.
+
+
+### client_send_current_timezone_to_server
+* __description:__  If enabled the client will send the current timezone to the server. This could be a privacy issue so it is off by default.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.0beta7
+* __comment:__ If enabled the client will share the current timezone setting to the server so it can format dates as the client expects.
+
 
 
 ---
@@ -1793,6 +1911,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 1.0
 * __1.x name:__ default_daysvalid
 * __comment:__ Be aware of the changed semantic from 1.6 to 2.0.
+
+### selectable_transfer_days_valid
+
+* __description:__ specifies the list of selectable expiry date options in the "Expiry date" date picker in the Upload form. Users can choose from these options to set the expiry date for the transfer.
+* __mandatory:__ no
+* __type:__ an array of integers
+* __default:__ array( 7, 15, 30, 40 )
+* __available:__ since version 3.4
+* __1.x name:__
+* __comment:__
 
 ### max_transfer_days_valid
 
@@ -1915,11 +2043,26 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __enable\_recipient\_email\_download\_complete:__ this gives the downloader a tick box in the download window which in turn lets the downloader indicate they would like to receive an email once the download is finished.  If you want this option available for all downloaders and do not want to bother the uploader with it, simply configure it with 'default' => false as the only parameter. __Warning:__ if the recipient of a file is a mailinglist and someone ticks the "send me a message on download complete" box, then all members of that mailinglist will receive that message.  That might be a reason why you don't want to make this option available to your users.        
 	* __add\_me\_to\_recipients:__ include the sender as one of the recipients.
 	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can see the download count, but not who downloaded it (obviously, as there are no recipients defined).
-	* __hide\_sender\_email:__ If checked it will hide the sender's email address on the download page. The option is only displayed if the __get\_a\_link__ option is checked. This is useful when sending download links to mailing lists, etc., and you do not want your personal email account to be displayed on the download page.
+	* __hide\_sender\_email:__ If checked it will hide the sender's email address on the download page. As of release 3.4 this option should be effective for both get a link and email transfers. Though it will only hide the sender email on the download page. Before that the option is only displayed if the __get\_a\_link__ option is checked. This is useful when sending download links to mailing lists, etc., and you do not want your personal email account to be displayed on the download page.
 	* __redirect_url_on_complete:__ When the transfer upload completes, instead of showing a success message, redirect the user to a URL. This interferes with __get\_a\_link__ in that the uploader will not see the link after the upload completes. Additionally, if the uploader is a guest, there is no way straightforward way for the uploader to learn the download link, although this must not be used as a security feature.
  	* __popup_on_complete:__ When the transfer upload completes, prompts the user with an additional confirmation modal. This should not be configured as available, as no translation exist.
 	* __must_be_logged_in_to_download__ (boolean): To download the files the user must log in to the FileSender server. This allows people to send files to other people they know also use the same FileSender server.
 	* __web_notification_when_upload_is_complete__: Added in release 2.32. Options include available, advanced, and default. If you wish to use this feature you should set available=true to allow the user to see the option. Some browsers such as Firefox require the user to explicitly click a link to start the acceptance dialog so being able to see the option (available=true) on the web page is very useful. Using notifications will require the user to accept them for the site. Currently as of release 2.32 a notification can be sent when the upload is complete.
+	* __forward_to_another_server__: Set this to true when using the file forwarding feature. Configuration example for the sender:
+        ```
+        'forward_to_another_server' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+        'forward_server_name' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => ''
+        )
+        ```
+	* __forward_server_name__: Set this to true when using the file forwarding feature.
+    *__encrypted\_metadata__: When encryption is on, use the same password to encrypt the file metadata (name,mimetype) and have the server use placeholders until the user provides the password to decrypt the metadata.
 
 * __*Configuration example:*__
 
@@ -2075,14 +2218,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 
 ### encryption_key_version_new_files
-* __description:__ Select which user password hashing is performed and which AES mode is used for encryption.
-    Some mores have versions with and without key hashing because some browsers do not support the key hashing.
-    The choices in order of newest to oldest are: 3 is v2019_gcm_importKey_deriveKey
-     which is AES-GCM mode for encryption and using PBKDF2 to derive a key from user supplied passwords.
-     A PBKDF2 related configuration setting is crypto_pbkdf2_expected_secure_to_year.
-     The setting 3 is the recommended setting unless you have to support older browsers which can not
-     work with this level of security.
-
+* __description:__ The setting 3 is the recommended setting unless you have to support much 
+       older browsers which can not work with this level of security. In 2025 all contemporary 
+       browsers should work with setting 3. Select which user password hashing is 
+       performed and which AES mode is used for encryption. Some mores have versions 
+       with and without key hashing because some browsers do not support the key hashing. 
+       The choices in order of newest to oldest are: 3 is v2019_gcm_importKey_deriveKey 
+       which is AES-GCM mode for encryption and using PBKDF2 to derive a key from user 
+       supplied passwords. A PBKDF2 related configuration setting 
+       is crypto_pbkdf2_expected_secure_to_year.
+     
      The setting 2 is v2019_gcm_digest_importKey which uses AES-GCM for encryption but almost directly imports the user password without any key hashing.
      The setting 1 is v2018_importKey_deriveKey which uses AES-CBC mode for encryption and PBKDF2 for hashing the password.
      The setting 0 is v2017_digest_importKey which uses AES-CBC mode for encryption and directly imports the password without hashing.
@@ -2097,7 +2242,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __recommend_leaving_at_default:__ true
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ 1
+* __default:__ 3
 * __available:__ since version 2.6
 * __comment:__
 
@@ -2366,8 +2511,6 @@ This is only for old, existing transfers which have no roundtriptoken set.
      log in and thus the exact user is not known for the download log.
      
 
-
-
 ### transfer_automatic_reminder
 
 * __description:__ The number of reminders that a user can send to a recipient
@@ -2389,6 +2532,16 @@ This is only for old, existing transfers which have no roundtriptoken set.
    $config['transfer_automatic_reminder'] = 7;
    $config['transfer_automatic_reminder'] = array(7,10);
 
+
+### owner_automatic_reminder
+
+* __description:__ When sending a transfer reminder, also send one to the transfer owner
+* __mandatory:__ no
+* __type:__ bool
+* __default__: true
+* __available__: 3.0rc9
+* __comment__: When the transfer_automatic_reminder is true, this controls if an additional reminder is sent to 
+  the owner of the transfer.
 
 
 ### transfers_table_show_admin_full_path_to_each_file
@@ -2515,6 +2668,33 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __available:__ since version 2.0
 * __comment:__ Has effect on the JavaScript-variables given to the client-side of Terasender.
 
+
+---
+
+## TeraSender (high speed upload module)
+
+---
+
+### terareceiver_enabled
+
+* __description:__ if set to true, enables TeraReceiver download module. This is the first drop to mirror what terasender is doing by using client-side webworkers to parallelise download.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.31 (3.0.alpha3)
+
+
+### terareceiver_allowed
+
+* __description:__ If you would like to allow your users to select TeraReceiver enable this option. If this is true then a user can select to use terareceiver on the download page. It will be selected by default but allows the user to unselect it on a per transfer basis if they wish.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.11
+
+
+
+
 ---
 
 ## Download
@@ -2568,6 +2748,27 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __1.x name:__
 * __comment:__ Setting this to false will disable the guest system and fail on attempts to create a guest if they are directly attempted.
 
+### guest_transfers_page_support_enabled
+
+* __description:__ Allow a guest to see a list of their uploads
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ The list of uploads is somewhat limited, for example it does not allow downloading those files
+
+### guest_transfers_page_number_of_days_expired_guest_can_return
+
+* __description:__ Allow a guest to see a list of their uploads this many days after they have expired.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ The defaut value disables this feature. It is a number of days, for example, 10 for 10 days after the guest has expired.
+
+
 
 
 ### guest_options
@@ -2610,6 +2811,33 @@ This is only for old, existing transfers which have no roundtriptoken set.
 			)
 		);
 
+### guest_options_to_force_to_top_array
+
+* __description:__ An array of options that are picked out and placed out of the advanced section on the UI3 new guest page
+* __mandatory:__ no
+* __type:__ array of string
+* __default:__ array( 'can_only_send_to_me', 'valid_only_one_time' ),
+* __available:__ since version 3.0rc12
+* __1.x name:__
+* __comment:__ Some items were hard code lifted to the top in the UI3. You can use this option in 
+               combination with the existing  guest_options / 'valid_only_one_time' / 'advanced' => true,
+               to allow an option to be presented as advanced when it would have previously been force lifted.
+
+* __*Configuration example:*__
+        $config['guest_options_to_force_to_top_array'] = [  'can_only_send_to_me' ];
+		$config['guest_options'] = array(
+           ...               
+               
+           'valid_only_one_time' => array(
+              'available' => true,
+              'advanced' => true,
+              'default' => false
+           ),
+           ...
+
+This conflicts with the code in 'advanced' => false but is a hard coded option that is lifted out here to allow it to be modified by sites who want to use guest_options.advanced.
+
+
 ### default_guest_days_valid
 
 * __description:__ specifies the default expiry date value in the "Expiry date" date picker in the Guest form.  If a user doesn't do anything this becomes the expiry date for the guest invitation.  If this value is not configured, it is set to default_transfer_days_valid
@@ -2617,6 +2845,16 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __type:__ int
 * __default:__ same as default_transfer_days_valid
 * __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+### selectable_guest_days_valid
+
+* __description:__ specifies the list of selectable expiry date options in the "Expiry date" date picker in the Guest form. Users can choose from these options to set the expiry date for the guest invitation.
+* __mandatory:__ no
+* __type:__ an array of integers
+* __default:__ array( 7, 15, 30, 40 )
+* __available:__ since version 3.4
 * __1.x name:__
 * __comment:__
 
@@ -2910,14 +3148,131 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __comment:__ Note: enabling this setting will use a cookie X-FileSender-Session-Expires to support the functionality. 
                The warning does not happen during an upload because the session may expire there and the upload can still complete.
 
-### auth_sp_idp_filters
+### auth_sp_idp_metadata_to_capture
 
-* __description:__ Replacement filters to run on IDP entityIDs to make them read nicer
+* __description:__ A list of metadata attributes to capture from the IDP into the IdP table for SAML authentications.
 * __mandatory:__ no
 * __type:__ array
+* __default:__ [ 'description','OrganizationName' => 'organization_name','name','OrganizationDisplayName'=>'organization_display_name','url','OrganizationURL'=>'organization_url'  ]
+* __available:__ since version 3.0rc9
+* __comment:__ Note: This is an array of the metadata names from the SSP metadata config file for the IdP that you would like
+                     replicated into the local IdP table. The format allows renaming, the key is the SSP metadata name and the value is what column to use
+                     in the IdP table in FileSender. This way columns can remain with the lower_case and underscore naming convention in FileSender.
+                     Note that if you add to these items you will need to modify your
+                     local IdP class to include the additional columns in the table to store the matching metadata. Perhaps a future extension will allow storing more custom IdP
+                     metadata in a JSON field in the table.
+
+### auth_sp_idp_metadata_to_capture_frequency
+* __description:__ How often an update using auth_sp_idp_metadata_to_capture can happen. Set to 0 to disable live updates entirely. If disabled you should use scripts/task/cron-update-idp-metadata.php to update associated metadata as desired.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0, // disabled.
+* __available:__ since version 3.0rc9
+* __comment:__ This is to allow automatic refresh of metadata but also not bog the system down by looking at it too frequently. You can also use the cron-update-idp-metadata.php script to reimport the metadata explicitly for existing tuples in the idp table.
+
+
+## Authentication: OpenIDConnectClient
+
+---
+
+Note that using OIDC also has an impact on the samesite cookie parameter, forcing it to Lax.
+
+**Optional Dependencies Setup**
+
+To install the optional dependencies for OpenID Connect support:
+
+```
+cd optional-dependencies/oidc
+.. download composer.phar and check it    ...
+.. see https://getcomposer.org/download/  ...
+php composer.phar install
+```
+
+**OpenID Connect Provider Configuration**
+
+Configure the redirect URIs with the following pattern: `https://filesender.example.org/oidc.php`
+
+This should be configured at your OpenID Connect provider's client configuration for the filesender service.
+
+### auth_sp_oidc_issuer
+* __description:__ The URL of the OpenID Connect Issuer. This is the authority that authenticates the user.
+* __mandatory:__ yes
+* __type:__ string
 * __default:__ 
-* __available:__ since version 3.1
-* __comment:__ Note: setting this will overwrite the default values. If you want them include them in your custom config.
+* __available:__ since version 2.57
+* __comment:__  Example: `https://login.example.com/realms/yourrealm`
+
+### auth_sp_oidc_client_id
+* __description:__ The Client ID registered with the OpenID Connect Issuer.  This identifies your FileSender application to the identity provider.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_client_secret
+* __description:__ The Client Secret associated with the Client ID.  Keep this value confidential.
+* __mandatory:__ yes
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.57
+* __comment:__ Value is expected in `config_private.php`.
+
+### auth_sp_oidc_idp_attribute
+* __description:__ IdP identification for audit/statistics.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ null
+* __available:__ since version 3.7
+* __comment:__  If the OIDC broker exposes the upstream IdP via a custom claim (e.g. Keycloak's "identity_provider"), read it from that claim. Otherwise fall back to the issuer URL, which is always set (required by oidc.php).
+
+### auth_sp_oidc_scopes
+* __description:__ The OIDC scopes to request during authentication. This allows customization of the information requested from the identity provider.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ ['openid', 'profile', 'email']
+* __available:__ since version 2.57
+* __comment:__ Example: ['openid', 'profile', 'email', 'groups']
+
+### auth_sp_oidc_uid_attribute
+* __description:__ The name of the claim that contains the user's unique identifier.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ sub
+* __available:__ since version 2.57
+* __comment:__  `sub` is a standard claim for the subject identifier.
+
+### auth_sp_oidc_email_attribute
+* __description:__ The name of the claim that contains the user's email address.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ email
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_name_attribute
+* __description:__ The name of the claim that contains the user's full name.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ name
+* __available:__ since version 2.57
+* __comment:__
+
+### auth_sp_oidc_groups_claim
+* __description:__ The name of the claim that contains the user's groups.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ groups
+* __available:__ since version 2.57
+* __comment:__ This claim should contain an array of group names the user belongs to.
+
+### auth_sp_oidc_required_groups
+ * __description:__ Array of group names that users must belong to in order to access FileSender.
+ * __mandatory:__ no
+ __type:__ array
+ __default:__ 
+ * __available:__ since version 2.57
+ * __comment:__ If set, users must belong to at least one of these groups to authenticate.
 
 
 ## Authentication: Shibboleth
@@ -3050,7 +3405,7 @@ This is only for old, existing transfers which have no roundtriptoken set.
 * __*Standard parameters for all options:*__
 	* __'level'__ (optional): restricts loglevel of current facility.  Permissible values: debug, warning, info, error
 	* __'output'__ (optional): sets the output mode of log messages.  Permissible values: text, json 
-	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.
+	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: cli, gui, rest, web, cron, feedback, misc, install, upgrade (lowercase).  Comma-separated list.
 * __*Available targets:*__
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly.
 	* __'type' => 'syslog'__ logs to syslog.
@@ -3083,7 +3438,7 @@ array (
   'output' => 'text',   // possible = text, json
   'path' => '&lt;something>/logs/',
   'rotate' => hourly,   // possible = hourly, daily, weekly, monthly, yearly
-  'process' => REST,    // possible = MISC, WEB, CLI, GUI, REST, CRON, FEEDBACK, INSTALL, UPGRADE
+  'process' => 'rest',  // possible = misc, web, cli, gui, rest, cron, feedback, install, upgrade (lowercase strings)
 </code></pre>
 
 The type setting lets you choose where the log will be sent. The error
@@ -3183,7 +3538,10 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
-* __example:__ <span style="background-color:orange">need an example here!</span>
+* __example:__ 
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+	</code></pre>
 
 ### auth_sp_save_user_additional_attributes
 
@@ -3390,20 +3748,20 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __example:__ <span style="background-color:orange">$config['disclose'] = array( 'version' );</span>
 
 
-### pgp_enabled
+### openpgp_enabled
 
-* __description:__ If set to true then some PGP functionaily to help send the encryption passphrase is enabled.
+* __description:__ If set to true then some OpenPGP functionaily to help send the encryption passphrase is enabled.
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ - false
 * __available:__ since 3.0rc8
 * __1.x name:__
-* __comment:__ If a user elects to upload their PGP public key then they might be
+* __comment:__ If a user elects to upload their OpenPGP public key then they might be
 able to receive files with FileSender with the pass phrase used for
-encryption being sent to them as a PGP encrypted message. The first
+encryption being sent to them as a OpenPGP encrypted message. The first
 iteration of this feature is focused on allowing guests to upload
 files to the user who invited them and not have to worry about
-transmitting the passphrase. NOTE: Using the pgp_enabled feature will implicitly
+transmitting the passphrase. NOTE: Using the openpgp_enabled feature will implicitly
 allow users of the system to lookup the uploaded public key for another user by 
 their email address.
 
@@ -3414,7 +3772,7 @@ is if there is a public key then guest uploads will always use it regardless of 
 ```
 $config['transfer_options'] = array(
 ...
-        'pgp_encrypt_passphrase_to_email' => array(
+        'openpgp_encrypt_passphrase_to_email' => array(
             'available' => true,
             'advanced' => false,
             'default' => false
@@ -3498,6 +3856,163 @@ $config['rest_allow_jsonp'] = array(
 
 ---
 
+## File forwarding
+
+### file_forwarding_enabled
+
+* __description:__ If this option is true, the file forwarding feature will be enabled. The file forwarding feature is a function that asynchronously and quickly forwards uploaded files to another FileSender site. The user can instruct forward to another server using the Transfer setting(`forward_to_another_server` and `forward_server_name`). The receiver will receive a download notification mail from the server at the destination. The file transfer tool used is MMCFTP, developed by NII, but other methods (SCP, REST API) can also be used. Currently, the `storage_type` supported by these transfer tools is only `filesystem`.
+* __mandatory:__ no.  
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 3.x
+* __comment:__ If you enable this feature as sender, you have to define `forward_to_another_server` and `forward_server_name` in `transfer_options`, too.
+
+### forward_server_list
+
+* __description:__ List of servers to forward to.
+* __mandatory:__ no.  
+* __type:__ array
+* __default:__ -
+* __available:__ since version 3.x
+* __comment:__ The array above contains the server name and all the information for that is in an array under the key. 
+    - __label__ (array): Labels in the corresponding locale is displayed as options for the destination server.
+    - __description__(string): description (The system doesn't use it)
+    - __protocol_version__ (string): 1
+    - __hostname__ (string): the hostname for MMCFTP and SCP
+    - __url__ (string): the URL for REST API
+    - __appname__ (string): the name of `auth_remote_applications`
+    - __need_encrypt__ (string): 0 or 1
+
+Example:
+```
+$config['auth_remote_application_enabled'] = true;
+$config['file_forwarding_enabled'] = true;
+$config['auth_remote_applications'] = array (
+    'gfs:server-A_to_server-B' => array(
+        'description' => 'Global FileSender with server-B / sender',
+        'secret' => 'secretkey-A_to_B',
+        'isAdmin' => true,
+        'acl' => array(
+            'info' => array( 'get' => true ),
+            'transfer' => array( 'put' => true ),
+            'file' => array( 'put' => true ),
+            'recipient' => array( 'put' => true ),
+        )
+    ),
+    'gfs:server-B_to_server-A' => array(
+        'description' => 'Global FileSender with server-B / reciever',
+        'secret' => 'secretkey-B_to_A',
+        'isAdmin' => false,
+        'acl' => array(
+            'info' => array( 'get' => true ),
+            'transfer' => array( '*' => true ),
+            'file' => array( '*' => true ),
+            'recipient' => array( '*' => true ),
+        )
+    ),
+    'gfs:server-A_to_server-C' => array(
+        'description' => 'Global FileSender with server-C / sender',
+        'secret' => 'secretkey-A_to_C',
+        'isAdmin' => true,
+        'acl' => array(
+            'info' => array( 'get' => true ),
+            'transfer' => array( 'put' => true, 'post' => true, 'delete' => true ),
+            'file' => array( 'put' => true ),
+            'recipient' => array( 'put' => true ),
+        )
+    ),
+);
+
+$config['forward_server_list'] = array(
+    'server-B' => array(
+        'label' => array(
+            'en' => 'NII Amsterdam',
+            'ja' => 'NII アムステルダム',
+        ),
+        'description' => 'NII: Amsterdam-NL',
+        'protocol_version' => 1,
+        'hostname' => 'server-b',
+        'url' => 'https://server-b.filesender.nii.ac.jp',
+        'appname' => 'gfs:server-A_to_server-B',
+        'need_encrypt' => 1,
+    ),
+    'server-C' => array(
+        'label' => array(
+            'en' => 'NII New York',
+            'ja' => 'NII ニューヨーク',
+        ),
+        'description' => 'NII: NewYork-US',
+        'protocol_version' => 0,
+        'hostname' => 'server-c',
+        'url' => 'https://server-c.filesender.nii.ac.jp',
+        'appname' => 'gfs:server-A_to_server-C',
+        'need_encrypt' => 0,
+    ),
+);
+```
+### forward_capabilities
+
+* __description:__ List of methods that can be used for forwarding.
+* __mandatory:__ no.
+* __type:__ array
+* __default:__ `array( 0 => array( 'method' => 'REST' ), )`
+* __available:__ since version 3.x
+* __comment:__ An array of methods, each element key is used to rank preference, 0 being least prefered.
+    - __method__ (string): `MMCFTP`, `SCP`, `pREST` or `REST`
+    - __method_params__ (array): The parameters for method(command).
+    - __method_options__ (array): The options for method(command). MMCFTP supports `retry_wait_time` and `retry_num_max`. pREST supports `workers`
+
+Example:
+```
+$config['forward_capabilities'] = array(
+    0 => array(
+        'method' => 'REST',
+    ),
+    1 => array(
+        'method' => 'pREST',
+        'method_options' => array(
+            'workers' => 12,
+        ),
+    ),
+    2 => array(
+        'method' => 'MMCFTP',
+        'method_params' => array(
+            '20',     // timer_p
+            '100',    // chunks
+            '/W4',    // thread num
+            '/G2',    // async IO num
+        ),
+        'method_options' => array(
+            'retry_wait_time' => 30,
+            'retry_num_max' => 10,
+        ),
+    ),
+);
+```
+
+
+### storage_filesystem_forward_mmcftp_command
+
+* __description:__ The path of MMCFTP command when enabling forward_to_another_server.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.x
+* __comment:__ 
+
+### storage_filesystem_forward_scp_command
+
+* __description:__ The path of SCP command when enabling forward_to_another_server.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ -
+* __available:__ since version 3.x
+* __comment:__ 
+
+
+
+---
+
 ## Other
 
 ---
@@ -3552,6 +4067,40 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 	In this examples, if the uid ends with "@mydomain.com", the config file config-mydomainfile.php in the config subdir will be loaded.
 	If the uid ends with "@myotherdomain.com" or "@yetanotherdomain.com", the config file config-myotherdomainfile.php in the config subdir will be loaded.
         If the idp is 'idp.customer2.com', the config file config-customer2.php in the config subdir will be loaded.
+
+### auth_config_additional_regex_files
+* __description:__ This is like auth_config_regex_files but it works on the value(s) in attributes['addtional']. Such attributes can be gathered by setting auth_sp_additional_attributes. Note that you have to explicitly gather these attributes using the auth_sp_additional_attributes config key in order to match against them. 
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: no overrides loaded.
+* __available:__ since version 2.58
+* __1.x name:__
+* __comment:__ example:
+ 	<pre><code>
+    $config['auth_sp_additional_attributes'] = ['quota','eduPersonAffiliation'];
+
+	$config['auth_config_additional_regex_files'] = [
+		'quota' => [
+			'500mb$' => 'quotafor500mbfile',
+			'10gb$'  => 'quotafor10gbfile',
+		],
+		'eduPersonAffiliation' => [
+			'student$' => 'quotaforstdentfile',
+			'employee$ => 'quotaforemployeefile',
+		],
+    ];
+	</code></pre>
+
+    If the selected key is an array then each value in that array will
+    be attempted to match in turn. The items are considered in the
+    order presented by the authentication system. So in the below you
+    can match various items in an array 'eduPersonAffiliation' to
+    config files. If a user has a list eduPersonAffiliation =
+    array('student','employee') then both keys will match and employee
+    will be last.
+
+
+
 	
 ### show_storage_statistics_in_admin
 * __description:__ Lists used and free diskspace in admin section

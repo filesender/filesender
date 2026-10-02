@@ -4,6 +4,8 @@
         <div class="container">
             <div class="row">
                 <div class="col">
+                    <?php include FILESENDER_BASE . '/templates/announce.php'; ?>
+
                     {tr:site_splash}
 
                     <div class="logon mt-5">

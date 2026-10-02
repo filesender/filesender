@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -34,8 +34,6 @@
 if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
-
-require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 
 
 /**
@@ -60,6 +58,24 @@ class Crypto
         $v = random_bytes($len);
         $v = base64_encode($v);
         return substr($v, 0, $len);
+    }
+
+    /**
+     * Validate a base64 encoded salt.
+     */
+    public static function validateSaltString( $v, $len = 32)
+    {
+        if( !strlen($v)) {
+            return false;
+        }
+        $t = base64_decode( $v, true );
+        if( !$t ) {
+            return false;
+        }
+        if( strlen($v) !== $len ) {
+            return false;
+        }
+        return base64_encode($t) === rtrim($v, '=');
     }
 
     /**

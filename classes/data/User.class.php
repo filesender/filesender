@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -158,9 +158,10 @@ class User extends DBObject
                                 . '  from ' . self::getDBTable();
             $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
                                        .self::getDBTable().' up LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON up.authid = a.id';
-            $idpview[$dbtype] = 'select u.*, a.saml_user_identification_idp as saml_user_identification_idp, a.saml_user_identification_idp as idp from '
+            $idpview[$dbtype] = 'select u.*, av.idpid as idpid, i.entityid as idp, i.name as idp_name from '
                                . self::getDBTable().' u '
-                               . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+                               . ' LEFT JOIN authidpview av ON u.authid=av.id '
+                               . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' i ON av.idpid=i.id';
         }
         
         return array( strtolower(self::getDBTable()) . 'view' => $a,
@@ -192,11 +193,13 @@ class User extends DBObject
     protected $save_frequent_email_address = true;
     protected $save_transfer_preferences = true;
 
-    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
+
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
     const AUP             = " service_aup_accepted_version >= :aup ";
-    const FROM_IDP_AUP    = " saml_user_identification_idp = :idp and service_aup_accepted_version >= :aup ";
+    const FROM_IDP_AUP    = " idpid = :idp and service_aup_accepted_version >= :aup ";
     const APIKEY          = " auth_secret IS NOT NULL  ";
-    const FROM_IDP_APIKEY = " saml_user_identification_idp = :idp and auth_secret IS NOT NULL  ";
+    const FROM_IDP_APIKEY = " idpid = :idp and auth_secret IS NOT NULL  ";
+    
 
     
     /** 
@@ -255,7 +258,7 @@ class User extends DBObject
     }
 
     public function authSecretCreate() {
-        $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
+        $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateRandomUID());
         $this->auth_secret_created = time();
         $this->save();
     }
@@ -286,7 +289,7 @@ class User extends DBObject
         if (!array_key_exists('idp', $attributes) || !$attributes['idp']) {
             $attributes['idp'] = null;
         }
-        
+       
         // Get matching user
         $authid = Authentication::ensureAuthIDFromSAMLUID($attributes['uid'],$attributes['idp']);
         $user = self::fromAuthId($authid);
@@ -339,10 +342,10 @@ class User extends DBObject
     
     public static function findPGPKey($email, $def = null)
     {
-        $u = self::findAuthEmail($email);
+        $u = self::fromAuthEmail($email);
         $key = $def;
         if( $u ) {
-            $key = $u->pgp_key;
+            $key = $u->openpgp_key;
         }
         return $key;
     }
@@ -583,7 +586,9 @@ class User extends DBObject
                 in_array($name, array(
                         TransferOptions::EMAIL_ME_COPIES,
                         TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
-                        TransferOptions::ADD_ME_TO_RECIPIENTS
+                        TransferOptions::ADD_ME_TO_RECIPIENTS,
+                        TransferOptions::FORWARD_TO_ANOTHER_SERVER,
+                        TransferOptions::FORWARD_SERVER_NAME
                 ))
             ) {
                 continue;
@@ -714,31 +719,42 @@ class User extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'id','additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
+            'id','additional_attributes', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'auth_secret_created',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
           , 'guest_expiry_default_days', 'service_aup_accepted_version', 'service_aup_accepted_time'
           , 'save_frequent_email_address', 'save_transfer_preferences'
-            
         ))) {
             return $this->$property;
         }
-        if( $property == 'pgp_key' ) {
+        if( $property == 'openpgp_key' ) {
             $k = PublicKey::getDefaultForUser($this->id);
             if( !$k ) return null;
             return $k->key;
         }
-        if( $property == 'pgp_key_created' ) {
+        if( $property == 'openpgp_key_created' ) {
             $k = PublicKey::getDefaultForUser($this->id);
             if( !$k ) return null;
             return $k->created;
         }
         if (in_array($property, array(
-            'pgp_have_key'
+            'openpgp_have_key'
         ))) {
-            $k = PublicKey::getDefaultForUser($this->id);
-            return $k->have_key;
+            if( Config::isTrue('openpgp_enabled')) {
+                $k = PublicKey::getDefaultForUser($this->id);
+                return $k->have_key;
+            }
+            return false;
+        }
+        
+        if( $property == 'lang' ) {
+
+            if( !$this->lang ) {
+                return Lang::getCodeNoUserPref();
+            }
+            
+            return $this->lang;
         }
         
         if( $property == 'auth_secret_created_formatted' ) {
@@ -750,9 +766,15 @@ class User extends DBObject
             return $a->saml_user_identification_uid;
         }
 
-        if ($property == 'saml_user_identification_idp') {
+        if ($property == 'idp_entityid') {
             $a = Authentication::fromId($this->authid);
-            return $a->saml_user_identification_idp;
+            $i = IdP::fromId($a->idpid);
+            return $i->entityid;
+        }
+
+        if ($property == 'idpid') {
+            $a = Authentication::fromId($this->authid);
+            return $a->idpid;
         }
         
         if ($property == 'email') {
@@ -760,7 +782,7 @@ class User extends DBObject
         }
         
         if ($property == 'remote_config') {
-            return $this->auth_secret ? Config::get('site_url').'|'.$this->id.'|'.$this->auth_secret : '';
+            return $this->auth_secret ? Config::get('site_url').'|'.$this->saml_user_identification_uid.'|'.$this->auth_secret : '';
         }
         
         if ($property == 'identity') {

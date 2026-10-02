@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -85,6 +85,75 @@ class Config
             }
         }
     }
+
+    
+    private static function handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name )
+    {
+        if( !isset($matchValue)) {
+            return;
+        }
+        if (preg_match('`'.$regex.'`', $matchValue)) {
+            $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
+            if (file_exists($extra_config_file)) {
+                $config = array();
+                include_once($extra_config_file);
+                self::merge(self::$parameters, $config);
+            }
+        }
+        // try subdir for testsuites
+        if (Utilities::isTrue(Config::get("testsuite_run_locally"))) {
+
+            if (preg_match('`'.$regex.'`', $matchValue)) {
+                $extra_config_file = FILESENDER_BASE.'/ci/config/config-' . $extra_config_name . '.php';
+                if (file_exists($extra_config_file)) {
+                    $config = array();
+                    include_once($extra_config_file);
+                    self::merge(self::$parameters, $config);
+                }
+            }
+            
+        }
+    }
+    
+    private static function handleConfigRegexFiles( $configKey, $matchAdditionalAttributes = false )
+    {
+        $configRegexList = self::get($configKey);
+        
+        if( !empty($configRegexList) && is_array($configRegexList) && Auth::isAuthenticated(false)) {
+            $auth_attrs = Auth::attributes();
+            foreach ($configRegexList as $attr=>$regex_and_configs) {
+                if (!is_array($regex_and_configs)) {
+                    continue;
+                }
+                foreach ($regex_and_configs as $regex => $extra_config_name) {
+
+                    if( $matchAdditionalAttributes ) {
+
+                        if (array_search($attr, Config::get('auth_sp_additional_attributes')) === false) {
+                            Logger::error("CONFIG ERROR: Please add attriubte $attr to auth_sp_additional_attributes or remove it from your auth_config*regex_files config");
+                        }
+
+                        if( array_key_exists( $attr, $auth_attrs['additional'] )) {
+                            // additional attributes handles an array of values
+                            $a = $auth_attrs['additional'][$attr];
+                            if ($a) {
+                                foreach( $a as $matchValue ) {
+                                    self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
+                                }
+                            }
+                        }
+                    } else {
+                        if( array_key_exists( $attr, $auth_attrs )) {
+                            // work on single main value.
+                            $matchValue = $auth_attrs[$attr];
+                            self::handleConfigRegexFilesForValue( $configKey, $matchValue, $regex, $extra_config_name );
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     
     /**
      * Main loader, loads defaults, main config and virtualhost config if it exists
@@ -166,26 +235,9 @@ class Config
 
         // Load config regex overrides if used and present
         // if not authenticated then do not throw, just do not load these files
-        $auth_config_regex_files = self::get('auth_config_regex_files');
-        if( !empty($auth_config_regex_files) && is_array($auth_config_regex_files) && Auth::isAuthenticated(false)) {
-                $auth_attrs = Auth::attributes();
-                foreach ($auth_config_regex_files as $attr=>$regex_and_configs) {
-                        if (!is_array($regex_and_configs)) {
-                                continue;
-                        }
-                        foreach ($regex_and_configs as $regex => $extra_config_name) {
-                                if (preg_match('`'.$regex.'`', $auth_attrs[$attr])) {
-                                        $extra_config_file = FILESENDER_BASE.'/config/config-' . $extra_config_name . '.php';
-                                        if (file_exists($extra_config_file)) {
-                                                $config = array();
-                                                include_once($extra_config_file);
-                                                self::merge(self::$parameters, $config);
-                                        }
-                                }
-                        }
-                }
-        }
-
+        self::handleConfigRegexFiles( 'auth_config_additional_regex_files', true );
+        self::handleConfigRegexFiles( 'auth_config_regex_files', false );
+        
         // ensure mandatory config settings file exists
         $mandatory_config_file = FILESENDER_BASE.'/includes/ConfigMandatorySettings.php';
         if (!file_exists($mandatory_config_file)) {
@@ -321,10 +373,27 @@ class Config
                 break;
         }
 
+        
         $crypt_padding_size = self::get('upload_crypted_chunk_padding_size');
-        if ((self::get('upload_chunk_size')+$crypt_padding_size) != self::get('upload_crypted_chunk_size')) {
-            throw new ConfigBadParameterException('You must set upload_crypted_chunk_size to upload_chunk_size + '.$crypt_padding_size.'.');
+        // force to right value.
+        if( self::get('upload_crypted_chunk_size')) {
+            Logger::error("The value of upload_crypted_chunk_size is set by FileSender in 3.x."
+                        . " Any value you have set in your config.php will be overridden");
         }
+        self::$parameters['upload_crypted_chunk_size'] =  self::get('upload_chunk_size')
+                                                        + self::get('upload_crypted_chunk_padding_size');
+        
+
+        if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            if(Config::isTrue('encryption_encode_encrypted_chunks_in_base64_during_upload')) {
+                throw new ConfigBadParameterException(
+                    "You can not use this older compatability option "
+                  . " (encryption_encode_encrypted_chunks_in_base64_during_upload)"
+                  . " with (performance_allow_direct_copy_from_put_to_disk). "
+                  . " You might like to investigate not using encrypted_chunks_in_base64 as it is very old and inefficient.");
+            }
+        }
+        
 
         $themeName = self::get('theme');
         if( strlen($themeName) && preg_match('@[./]@',$themeName)) {
@@ -405,6 +474,27 @@ class Config
                 self::$parameters['auditlog_lifetime'] = $minv;
             }
         }
+
+        self::$parameters['client_calculate_sha256'] = false;
+        if (Config::isTrue('storage_filesystem_hash_check')) {
+            if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+                self::$parameters['client_calculate_sha256'] = true;
+            }
+        }
+
+        if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            $st = self::$parameters['storage_type'];
+            if( !in_array( $st, ['filesystemChunked', 'filesystem', 'CloudS3'] )) {
+                self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
+            }
+        }
+        if (Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+            // python client
+            if (array_key_exists('signature', $_GET)) {
+                self::$parameters['performance_allow_direct_copy_from_put_to_disk'] = false;
+            }
+        }
+        
         
         // verify classes are happy
         Guest::validateConfig();
@@ -603,6 +693,10 @@ class Config
     public static function isTrue($key)
     {
         return(Utilities::isTrue(Config::get($key)));
+    }
+    public static function isFalse($key)
+    {
+        return !self::isTrue($key);
     }
 
     

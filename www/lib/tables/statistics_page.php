@@ -6,17 +6,17 @@ if (!Auth::isAdmin() && !Auth::isTenantAdmin()) {
     exit(0);
 }
 
-
 $idp = Auth::getTenantAdminIDP();
 $pagelimit=Config::get('statistics_table_rows_per_page');
-
 
 $topic = Utilities::arrayKeyOrDefaultString( $_GET, 't' );
 $topic = Utilities::filter_regex( $topic, Utilities::FILTER_REGEX_PLAIN_STRING_UNDERSCORE );
 if( !$topic || $topic == '' ) {
     Logger::haltWithErorr('nefarious activity suspected: attempt made on statistics_page without valid topic!');
 }
-$start = Utilities::arrayKeyOrDefault( $_GET, 'start', 0, FILTER_VALIDATE_INT  );
+$start = Utilities::arrayKeyOrDefault( $_GET, 'start', 0, FILTER_VALIDATE_INT );
+$sort = Utilities::arrayKeyOrDefault( $_GET, 'sort', '' );
+$sortdirection = Utilities::arrayKeyOrDefault( $_GET, 'sortdirection', FILTER_VALIDATE_INT ) ? 'DESC' : 'ASC';
 
 function os_name_to_html( $v ) {
     if( $v == 'iPad'   )  return '<i class="fa fa-apple"></i> iPad';
@@ -53,33 +53,32 @@ function is_encrypted_to_html( $v ) {
 
 switch ($topic) {
     case 'top_users':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,['user','transfers','size','downloads']))
+            $sort='User';
+        echo '<tr sort="'.$sort.'"><th sort="user">'.Lang::translate('admin_users_section').'</th><th sort="transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="size">'.Lang::translate('size').'</th><th sort="downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  t.user_email as "User", '
-           .'  COUNT(DISTINCT t.id) AS "Transfers", '
-          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
-           .'  SUM(t.download_count) as "Downloads" '
+           .'  t.user_email as user, '
+           .'  COUNT(t.id) AS transfers, '
+           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as size, '
+           .'  SUM(t.download_count) as downloads '
            .'FROM '
-           .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
-           .((!$idp) ?
-             ''
-             :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
-           )
+           .'  '.call_user_func('Transfer::getDBTable').' t '
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             'a.saml_user_identification_idp = :idp AND '
+             't.idpid = :idp AND '
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-                                                        ."    AND t.status = 'available' "
-            .' GROUP BY t.user_email      '
+           ."    AND t.status = 'available' "
+           .' GROUP BY t.user_email '
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
+        
         if ($idp)
             $placeholders[':idp'] = $idp;
 
@@ -90,7 +89,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.number_format($row['Transfers']).'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.number_format($row['Downloads']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['user'].'</td><td>'.number_format($row['transfers']).'</td><td>'.Utilities::formatBytes($row['size']).'</td><td>'.number_format($row['downloads']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -99,29 +98,27 @@ switch ($topic) {
         break;
 
     case 'transfer_per_user':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('admin_transfers_section').'</th><th>'.Lang::translate('size').'</th><th>'.Lang::translate('downloads').'</th></tr>'."\n";
+        if (!in_array($sort,['user','transfers','size','downloads']))
+            $sort='User';
+        echo '<tr sort="'.$sort.'"><th sort="user">'.Lang::translate('admin_users_section').'</th><th sort="transfers">'.Lang::translate('admin_transfers_section').'</th><th sort="size">'.Lang::translate('size').'</th><th sort="downloads">'.Lang::translate('downloads').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  t.user_email as "User", '
-           .'  COUNT(DISTINCT t.id) AS "Transfers", '
-          . ' SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','f.encrypted_size','f.size') . ') as "Size", '
-           .'  SUM(t.download_count) as "Downloads" '
+           .'  t.user_email as user, '
+           .'  COUNT(t.id) AS transfers, '
+           .'  SUM('.DBLayer::IF('(t.options LIKE \'%\\"encryption\\":true%\')','(SELECT SUM(f.encrypted_size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)','(SELECT SUM(f.size) FROM '.call_user_func('File::getDBTable').' f WHERE f.transfer_id=t.id)') . ') as size, '
+           .'  SUM(t.download_count) as downloads '
            .'FROM '
-           .'  '.call_user_func('Transfer::getDBTable').' t JOIN '.call_user_func('File::getDBTable').' f ON f.transfer_id=t.id '
-           .((!$idp) ?
-             ''
-             :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
-           )
+           .'  '.call_user_func('Transfer::getDBTable').' t '
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             'a.saml_user_identification_idp = :idp AND '
+             't.idpid = :idp AND '
            )
            .'    ((DATE(t.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(t.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(t.expires) <= NOW())) '
-            .' GROUP BY t.user_email         '
+           .' GROUP BY t.user_email '
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -135,7 +132,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.number_format($row['Transfers']).'</td><td>'.Utilities::formatBytes($row['Size']).'</td><td>'.number_format($row['Downloads']).'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['user'].'</td><td>'.number_format($row['transfers']).'</td><td>'.Utilities::formatBytes($row['size']).'</td><td>'.number_format($row['downloads']).'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -144,27 +141,24 @@ switch ($topic) {
         break;
 
     case 'mime_types':
-        echo '<tr><th>'.Lang::translate('mime_types').'</th><th></th></tr>'."\n";
+        if (!in_array($sort,['mime_type','total']))
+            $sort='total';
+        echo '<tr sort="'.$sort.'"><th sort="mime_type">'.Lang::translate('mime_types').'</th><th sort="total">'.Lang::translate('count').'</th></tr>'."\n";
         $sql=
             'SELECT '
            .'  f.mime_type as mime_type, count(f.mime_type) as total '
            .'FROM '
            .'  filesbywhoview f '
-           .((!$idp) ?
-             ''
-             :
-             'LEFT JOIN '.call_user_func('User::getDBTable').' u ON f.userid=u.id LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
-           )
            .'WHERE '
            .((!$idp) ?
              ''
              :
-             'a.saml_user_identification_idp = :idp AND '
+             'f.idpid = :idp AND '
            )
            .'    ((DATE(f.created) >= NOW() - '.DBLayer::toIntervalDays(30).') OR '
            .'     (DATE(f.expires) >= NOW() - '.DBLayer::toIntervalDays(30).' AND DATE(f.expires) <= NOW())) '
            .'GROUP BY mime_type '
-           .'ORDER BY Total DESC '
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
         $placeholders=array();
@@ -187,24 +181,25 @@ switch ($topic) {
         break;
 
     case 'users_with_api_keys':
-        echo '<tr><th>'.Lang::translate('admin_users_section').'</th><th>'.Lang::translate('date').'</th></tr>'."\n";
+        if (!in_array($sort,['user','date']))
+            $sort='Date';
+        echo '<tr sort="'.$sort.'"><th sort="user">'.Lang::translate('admin_users_section').'</th><th sort="date">'.Lang::translate('date').'</th></tr>'."\n";
         $sql=
             'SELECT '
-           .'  a.saml_user_identification_uid as "User", '
-           .'  DATE(u.auth_secret_created) as "Date" '
+           .'  a.saml_user_identification_uid as user, '
+           .'  DATE(u.auth_secret_created) as date '
            .'FROM '
-           .'  '.call_user_func('Authentication::getDBTable').' a LEFT JOIN '.call_user_func('User::getDBTable').' u on a.id=u.authid '
+           .'  authidpview a LEFT JOIN '.call_user_func('User::getDBTable').' u on a.id=u.authid '
            .'WHERE '
            .'  u.auth_secret IS NOT NULL '
            .((!$idp) ?
              ''
              :
-             'AND a.saml_user_identification_idp = :idp '
+             'AND a.idpid = :idp '
            )
-           .'ORDER BY "Date" DESC '
+           .' ORDER BY ' . $sort . ' ' . $sortdirection
            .' LIMIT  '.$pagelimit
-           .' OFFSET '.$start
-        ;
+           .' OFFSET '.$start;
         $placeholders=array();
         if ($idp)
             $placeholders[':idp'] = $idp;
@@ -216,7 +211,7 @@ switch ($topic) {
         $result = $statement->fetchAll();
         $i=$start;
         foreach($result as $row) {
-            echo '<tr data-row="'.$i.'"><td>'.$row['User'].'</td><td>'.$row['Date'].'</td></tr>'."\n";
+            echo '<tr data-row="'.$i.'"><td>'.$row['user'].'</td><td>'.$row['date'].'</td></tr>'."\n";
             $i++;
         }
         for($i-=$start;$i<$pagelimit;$i++) {
@@ -232,7 +227,6 @@ switch ($topic) {
            .'  (CASE WHEN '.$createdDD.' > 0 THEN count/'.$createdDD.' ELSE NULL END) as countperday '
            .'FROM '
            .'  browserstatsview '
-           //.'ORDER BY count DESC, maxsize DESC '
            .' LIMIT  '.$pagelimit
            .' OFFSET '.$start;
 

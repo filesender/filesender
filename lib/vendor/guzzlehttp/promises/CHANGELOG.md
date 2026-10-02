@@ -1,6 +1,77 @@
 # CHANGELOG
 
 
+## 2.5.2 - 2026-08-05
+
+### Fixed
+
+- Fixed `EachPromise` abandoning its aggregate when the pending window drains unsettled
+- Fixed `EachPromise` admitting new work after its aggregate has settled
+
+
+## 2.5.1 - 2026-07-08
+
+### Fixed
+
+- Fixed recursive `Utils::all()` rejecting generator inputs
+
+
+## 2.5.0 - 2026-06-02
+
+### Deprecated
+
+- Deprecated passing non-iterable inputs to promise collection helpers and `EachPromise`
+
+
+## 2.4.1 - 2026-05-20
+
+### Fixed
+
+- Fixed cancelling settled coroutines when no current promise remains
+
+
+## 2.4.0 - 2026-05-20
+
+### Changed
+
+- Empty `EachPromise` instances now resolve when the task queue runs without `wait()`
+
+
+## 2.3.1 - 2026-05-19
+
+### Fixed
+
+- Fixed `Utils::inspect()` returning the internal reason array instead of the `AggregateException`
+
+
+## 2.3.0 - 2025-08-22
+
+### Added
+
+- PHP 8.5 support
+
+
+## 2.2.0 - 2025-03-27
+
+### Fixed
+
+- Revert "Allow an empty EachPromise to be resolved by running the queue"
+
+
+## 2.1.0 - 2025-03-27
+
+### Added
+
+- Allow an empty EachPromise to be resolved by running the queue
+
+
+## 2.0.4 - 2024-10-17
+
+### Fixed
+
+- Once settled, don't allow further rejection of additional promises
+
+
 ## 2.0.3 - 2024-07-18
 
 ### Changed

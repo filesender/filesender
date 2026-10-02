@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -37,6 +37,7 @@
 
 $locales  =  array(
     'hy-am' => array('name' => 'Armenian (Armenia)', 'path' => 'hy_AM'),
+    'de-at' => array('name' => 'Austria', 'path' => 'de_AT'),
     'zh-hans' => array('name' => 'Chinese (simplified)',      'path' => 'zh_HANS'),
     'zh-hant' => array('name' => 'Chinese (traditional)',     'path' => 'zh_HANT'),
     'hr'    => array('name' => 'Croatian',     'path' => 'hr_HR'),
@@ -53,6 +54,7 @@ $locales  =  array(
     'en'    => array('name' => 'English',      'path' => 'en_AU'),
     'fr'    => array('name' => 'Français',     'path' => 'fr_FR'),
     'fr-fr' => array('name' => 'Français',     'path' => 'fr_FR'),
+    'es-ga' => array('name' => 'Galician',     'path' => 'es_GA'),
     'de'    => array('name' => 'German',       'path' => 'de_DE'),
     'de-de' => array('name' => 'German',       'path' => 'de_DE'),
     'hu' => 'hu_HU',
@@ -60,10 +62,13 @@ $locales  =  array(
     'it'    => array('name' => 'Italian',      'path' => 'it_IT'),
     'it-it' => array('name' => 'Italian',      'path' => 'it_IT'),
     'it-ch' => array('name' => 'Italian',      'path' => 'it_IT'),
-    'jp'    => array('name' => 'Japanese',     'path' => 'ja_JP'),
+    'ja'    => array('name' => '日本語',        'path' => 'ja_JP'),
+    'ja-jp' => array('name' => '日本語 (Japan)', 'path' => 'ja_JP'),
     'ko-kr' => array('name' => 'Korean',       'path' => 'ko_KR'),
     'km'    => array('name' => 'Khmer',        'path' => 'km_KH'),
     'km-kh' => array('name' => 'Khmer',        'path' => 'km_KH'),
+    'lv'    => array('name' => 'Latvian',      'path' => 'lv_LV'),
+    'lv-lv' => array('name' => 'Latvian',      'path' => 'lv_LV'),
     'ne-np' => array('name' => 'Nepali',       'path' => 'ne_NP'),
     'no-no' => 'no_NO',
     'no'    => 'no_NO',
@@ -71,6 +76,8 @@ $locales  =  array(
     'nb-no' => array('name' => 'Norwegian',    'path' => 'no_NO'),
     'pl'    => array('name' => 'Polski',       'path' => 'pl_PL'),
     'pt-br' => array('name' => 'Português Brasileiro', 'path' => 'pt_BR'),
+    'ro'    => array('name' => 'Romanian',     'path' => 'ro_RO'),
+    'ro-ro' => array('name' => 'Romanian',     'path' => 'ro_RO'),
     'ru'    => array('name' => 'Russian',      'path' => 'ru_RU'),
     'es'    => array('name' => 'Spanish',      'path' => 'es_ES'),
     'es-es' => array('name' => 'Spanish',      'path' => 'es_ES'),
@@ -81,8 +88,10 @@ $locales  =  array(
     'sl-si' => array('name' => 'Slovenian',    'path' => 'sl_SI'),
     'ta-tam' => array('name' => 'Tamil',       'path' => 'ta_TAM'),
     'tr'    => array('name' => 'Turkish',      'path' => 'tr_TR'),
+    'uk'    => array('name' => 'Ukranian',     'path' => 'uk_UA'),
     'ur'    => array('name' => 'Urdu',         'path' => 'ur_PK'),
     'ur-pk' => array('name' => 'Urdu',         'path' => 'ur_PK'),
     'vi-vn' => array('name' => 'Vietnamese',   'path' => 'vi_VN')
+
     
 );

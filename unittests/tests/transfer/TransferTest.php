@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -31,6 +31,8 @@
  */
 
 require_once dirname(__FILE__) . '/../common/CommonUnitTestCase.php';
+
+use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * Transfer class test
@@ -104,6 +106,7 @@ class TransferTest extends CommonUnitTestCase {
      * 
      * @return int: transfer->id if test succeed
      */
+    #[Depends('testCreate')]
     public function testRead($transferId) {
 
         $transfer = Transfer::fromId($transferId);
@@ -121,6 +124,7 @@ class TransferTest extends CommonUnitTestCase {
      * @depends testRead
      * @return boolean: true if test succeed
      */
+    #[Depends('testRead')]
     public function testDelete($transferId) {
         $this->assertTrue($transferId > 0);
 
@@ -153,6 +157,7 @@ class TransferTest extends CommonUnitTestCase {
      * @depends testDelete
      * @return boolean: true if test succeed
      */
+    #[Depends('testDelete')]
     public function testDeleteFromCron() {
         $transferId = $this->create()->id;
 

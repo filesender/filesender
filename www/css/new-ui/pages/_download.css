@@ -139,3 +139,21 @@
     display: none;
 }
 
+.verify_email_to_download td {
+    vertical-align: middle;
+}
+
+#downloadTabs {
+  padding: 0;
+  border: none;
+  margin: 0;
+  white-space: normal;
+}
+
+.bootbox-body:has(> #downloadTabs) {
+  white-space: normal;
+}
+
+.modal-body:has(> .bootbox-body > #downloadTabs) {
+  padding:0;
+}

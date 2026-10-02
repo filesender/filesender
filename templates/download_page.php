@@ -1,5 +1,6 @@
 <?php
 
+
 $canDownload = true;
 
 if (!function_exists('str_starts_with')) {
@@ -34,8 +35,6 @@ function presentAVName( $v )
     }
     return Template::Q($ret);
 }
-
-
 
 $rid = 0;
 if(Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
@@ -131,21 +130,48 @@ $days_to_expire = $transfer->days_to_expire;
 
 $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links'));
 
+$sender_email = $transfer->user_email;
+if(array_key_exists('hide_sender_email', $transfer->options) && $transfer->options['hide_sender_email']) {
+    $sender_email = "";
+}
+$sender_email_clean = Template::sanitizeOutputEmail($sender_email);
+
+$hasEncryptedMetadata = false;
+if($isEncrypted) {
+    $hasEncryptedMetadata = isset($transfer->options['encrypted_metadata']) && $transfer->options['encrypted_metadata'];
+}
+
+$formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
+{
+    if( $hasEncryptedMetadata ) {
+        return "{tr:encrypted_metadata_file_size_hidden}";
+    }
+    return Template::Q(Utilities::formatBytes($filesz));
+}
+
 ?>
 
-<div class="fs-download">
+
+
+<div class="fs-download transfer_details"
+     data-transfer-encrypted="<?php                     echo Template::Q(isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'); ?>"
+     data-transfer-id="<?php                            echo Template::Q($transfer->id); ?>"
+     data-transfer-have-encrypted-metadata="<?php       echo Template::Q($transfer->have_encrypted_metadata); ?>"
+     >
     <div class="container">
         <div class="row">
             <div class="col">
                 <div class="fs-download__title">
-                    <h1><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?> {tr:transferred_these_files}</h1>
+                    <?php if(strlen($sender_email)) { ?>
+                        <h1><?= $sender_email_clean ?> {tr:transferred_these_files}</h1>
+                    <?php } ?>
                     <p><?php  echo Lang::tr('transfer_expires_in_x_days')->r(array('days_to_expire' => Template::Q($days_to_expire), 'days' => Template::Q($days_to_expire))) ?></p>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col col-sm-12 col-md-5 col-lg-4">
+            <div class="col col-sm-12 col-md-5 col-lg-6">
                 <div class="fs-download__details mt-5">
                     <h4>{tr:transfer_details}</h4>
                     <div class="fs-info fs-info--aligned mt-5">
@@ -154,12 +180,14 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     </div>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}</strong>
-                        <span><?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></span>
+                        <span><?php echo Template::Q(Utilities::formatDate($transfer->expires, true)) ?></span>
                     </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:from}</strong>
-                        <span><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></span>
-                    </div>
+                    <?php if(strlen($sender_email)) { ?>
+                        <div class="fs-info fs-info--aligned">
+                            <strong>{tr:from}</strong>
+                            <span><?= $sender_email_clean ?></span>
+                        </div>
+                    <?php } ?>
                     <?php if($transfer->subject) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:subject}</strong>
@@ -170,32 +198,32 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:message}</strong>
                             <span><?php
-                                $isPGPmsg = false;
-                                if( Config::isTrue('pgp_enabled')) {
-                                    if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                                        $isPGPmsg = true;
-                                    }
-                                }
-
-                                if( $isPGPmsg ) {
-                                    // hide it from here is it is clutter.
-                                } else {
-                                    echo Template::replaceTainted($transfer->message);
-                                }
-                                ?>
+                                  $isOpenPGPmsg = false;
+                                  if( Config::isTrue('openpgp_enabled')) {
+                                      if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
+                                          $isOpenPGPmsg = true;
+                                      }
+                                  }
+                                  
+                                  if( $isOpenPGPmsg ) {
+                                      // hide it from here is it is clutter.
+                                  } else {
+                                      echo Template::replaceTainted($transfer->message);
+                                  }
+                                  ?>
                             </span>
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:transfer_size}</strong>
-                        <span><?php echo Template::Q(Utilities::formatBytes($transfer->size)) ?></span>
+                        <span class="fs-info-transfer-size"><?php echo $formatFileSizeForDisplayQ($transfer->size) ?></span>
                     </div>
                     <div  class="fs-info">
                         <a href="https://docs.filesender.org/filesender/v3.0/user/download/" target="_blank">{tr:more_information_about_downloading_files}</a>
                     </div>
                 </div>
             </div>
-            <div class="col col-sm-12 col-md-7 col-lg-8">
+            <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-download__files">
                     <?php if($canDownloadArchive) { ?>
                         <div class="fs-download__check-all select_all">
@@ -237,6 +265,7 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                                         data-fileiv="<?php                   echo Template::Q($file->iv); ?>"
                                         data-fileaead="<?php                 echo Template::Q($file->aead); ?>"
                                         data-transferid="<?php               echo Template::Q($transfer->id); ?>"
+                                        data-have-encrypted-metadata="<?php       echo Template::Q($transfer->have_encrypted_metadata); ?>"
                                     >
                                         <td class="fs-table__check-action">
                                             <?php if($canDownloadArchive) { ?>
@@ -250,12 +279,11 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                                         <td>
                                             <div>
                                                 <span class="name"><?php echo Template::Q($file->path) ?></span>
-                                                <span class="size"><?php echo Template::Q(Utilities::formatBytes($file->size)) ?></span>
+                                                <span class="size"><?php echo $formatFileSizeForDisplayQ($file->size) ?></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
                                                     <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text download" title="{tr:download_file}">
                                                         <i class="fi fi-download"></i>
-=======
                                                     </a>
                                                 </span>
                                             </div>
@@ -307,6 +335,15 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                         </div>
                     <?php } ?>
 
+                    <?php if($showdownloadlinks) { ?>
+                        <div class="fs-download__actions">
+                            <button type="button" class="fs-button script-links" title="{tr:script_download_links}">
+                              <i class="fa fa-code"></i>
+                              <span>{tr:script_download_links}</span>
+                            </button>
+                        </div>
+                    <?php } ?>
+
                     <div class="fs-download__zip64-info archive_message mac_archive_message">
                         <p>
                             {tr:mac_archive_message}
@@ -318,6 +355,26 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
     </div>
 </div>
 
+<?php
+// If TeraReceiver is not enabled but is allowed then let the user select it.
+// By default it is selected if allowed.
+if( $isEncrypted
+ && Config::isFalse("terareceiver_enabled" )
+ && Config::isTrue("terareceiver_allowed" )) {
+?>
+<div class="fs-download form-check form-switch custom-control custom-switch" data-option="options">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+              <input id="terareceiverenabled" class="form-check-input" name="terareceiverenabled" type="checkbox" checked="checked" />
+              <label for="terareceiverenabled" class="form-check-label">{tr:use_terareceiver_for_download}</label>
+            </div>
+        </div>
+    </div>
+</div>
+<?php } ?>
+
+    
     <?php if( Browser::instance()->allowStreamSaver ) { ?>
 
 <div class="fs-download form-check form-switch custom-control custom-switch" data-option="options">
@@ -375,14 +432,15 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
         <div class="row">
             <div class="col">
                 <h4>{tr:verify_your_email_address_to_download}</h4>
-                <table columns="2" border="1">
+                <table columns="2" border="0">
                     <col class="width25">
                     <col class="width75">
                     <tr>
                         <td>
-                            <a href="#" class="verificationcodesendtoemail">
-                                <span class="fa fa-paper-plane fa-lg"></span>&nbsp;{tr:send}
-                            </a>
+                            <button href="#" class="verificationcodesendtoemail fs-button">
+                                <i class="fa fa-paper-plane fa-lg"></i>
+                                <span>{tr:send}</span>
+                            </button>
                         </td>
                         <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
                     </tr>
@@ -393,9 +451,10 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
                     </tr>
                     <tr class="verificationcodesendpage">
                         <td>
-                            <a class="verificationcodesend verificationcodesendelement" href="#">
-                                <span class="fa fa-unlock fa-lg"></span>&nbsp;{tr:verify}
-                            </a>
+                            <button href="#" class="verificationcodesend verificationcodesendelement fs-button">
+                                <i class="fa fa-unlock fa-lg"></i>
+                                <span>{tr:verify}</span>
+                            </button>
                         </td>
                         <td class="verify_labels2">
                             <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
@@ -408,49 +467,13 @@ $showdownloadlinks = Utilities::isTrue(Config::get('download_show_download_links
 </div>
 
 <div class="fs-download">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <table class="table borderless general" data-transfer-size="<?php echo Template::Q($transfer->size) ?>">
-                    <tbody>
-        <?php if(!array_key_exists('hide_sender_email', $transfer->options) ||
-            !$transfer->options['hide_sender_email']) { ?>
-                        <tr><td align="right" class="from">{tr:from}</td><td colspan="5"><?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></td></tr>
-        <?php } ?>
-                        <tr>
-                            <td align="right" class="created">{tr:created}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->created)) ?></td>
-                            <td align="right" class="expires">{tr:expires}</td><td><?php echo Template::Q(Utilities::formatDate($transfer->expires)) ?></td>
-                            <td align="right" class="size">{tr:size}</td><td><?php echo       Template::Q(Utilities::formatBytes($transfer->size)) ?></td>
-                        </tr>
-        <?php if($transfer->subject) { ?>
-                        <tr><td align="right" class="subject">{tr:subject}</td><td><?php echo Template::Q($transfer->subject) ?></td></tr>
-        <?php } ?>
-
-        <?php if($transfer->message) { ?>
-            <tr><td align="right" class="message">{tr:message}</td><td><p>
-                <?php
-                $isPGPmsg = false;
-                if( Config::isTrue('pgp_enabled')) {
-                    if( str_starts_with($transfer->message,"-----BEGIN PGP MESSAGE-----")) {
-                        $isPGPmsg = true;
-                    }
-                }
-                if( $isPGPmsg ) {
-                    echo "<PRE>";
-                }
-                echo Template::replaceTainted($transfer->message);
-                if( $isPGPmsg ) {
-                    echo "</PRE>";
-                }
-                
-                ?></p></td></tr>
-        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="container">        
+        <div class="transfer" data-id="<?php echo Template::Q($transfer->id); ?>"></div>
+        <div class="rid" data-id="<?php echo Template::Q($rid); ?>"></div>
+        <div class="encrypted_metadata" id="encrypted_metadata"><?php echo Template::Q($transfer->encrypted_metadata) ?></div>
     </div>
 </div>
+
 
 <div class="transfer_is_encrypted not_displayed">
     <?php echo $isEncrypted ? 1 : 0;  ?>

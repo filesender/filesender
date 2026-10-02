@@ -8,7 +8,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -19,7 +19,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -41,27 +41,11 @@ require_once(dirname(__FILE__).'/../../includes/init.php');
 Logger::setProcess(ProcessTypes::CRON);
 Logger::info('S3 Bucket Maintenance script started');
 
-//
-// False by default, if present it is set
-//
-function getBoolArg( $name )
-{
-    global $argv;
-    
-    $ret = (count($argv) > 1) ? $argv[1]==$name : false;
-    if( !$ret && count($argv) > 2 ) {
-        $ret = ($argv[2]==$name);
-        if( !$ret && count($argv) > 3 ) {
-            $ret = ($argv[3]==$name);
-        }
-    }
-    return $ret;
-}
 
 //
 // Print some messages to give a hint to the user on progress
 //
-$verbose = getBoolArg('--verbose');
+$verbose = Args::getBoolArg('--verbose');
 
 if( $verbose ) {
     echo "S3bucketmaintenance.php starting up...\n";

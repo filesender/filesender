@@ -15,6 +15,8 @@ subject: ファイルが正常にアップロードされました
 
 次のファイルは{cfg:site_name}に正常にアップロードされました。
 
+これらのファイルは次のリンクからダウンロードできます: {transfer.download_link}
+
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
@@ -36,6 +38,10 @@ subject: ファイルが正常にアップロードされました
    次のファイルは<a href="{cfg:site_url}">{cfg:site_name}</a>に正常にアップロードされました。
 </p>
 
+<p>
+これらのファイルは次のリンクからダウンロードできます <a href="{transfer.download_link}">{transfer.download_link}</a>
+</p>
+
 <table rules="rows">
     <thead>
         <tr>
@@ -44,7 +50,7 @@ subject: ファイルが正常にアップロードされました
     </thead>
     <tbody>
         <tr>
-            <td>ファイル</td>
+            <td>ファイル{if:transfer.files>1}s{endif}</td>
             <td>
                {if:transfer.files>1}
                 <ul>
@@ -62,7 +68,7 @@ subject: ファイルが正常にアップロードされました
             <td>{size:transfer.size}</td>
         </tr>
         <tr>
-            <td>詳細情報</ td>
+            <td>詳細情報</td>
             <td><a href="{transfer.link}">{transfer.link}</a></td>
         </tr>
     </tbody>

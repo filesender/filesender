@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -71,6 +71,8 @@ window.filesender.zip64handler = function() {
     return {
         filename: '',
         writer: null,
+        storageMode: 'none',
+        memoryChunks: [],
         bytesProcessed: 0,
         VERSION: 45,
         crc: 0,
@@ -87,28 +89,59 @@ window.filesender.zip64handler = function() {
             console.log("zip64 init (top)");
             
             var $this = this;
+            var fswfError = null;
             this.filename = filename;
             this.coffset = 0;
+            this.storageMode = 'none';
+            this.memoryChunks = [];
+
+            var canFallbackFromFSWF = function(error) {
+                if( !error ) return false;
+                var fallbackNames = ['NotAllowedError','SecurityError'];
+                if( error.name && fallbackNames.indexOf(error.name) >= 0 ) {
+                    return true;
+                }
+                if( error.name === 'TypeError' ) {
+                    return true;
+                }
+                if( error.message && error.message.indexOf('showSaveFilePicker') >= 0 ) {
+                    return true;
+                }
+                return false;
+            };
 
             window.filesender.log('zip64 handler newer streaming API information.'
                                   + ' Use streamsaver: ' + window.filesender.config.use_streamsaver
                                   + ' use FileSystemWritableFileStream (FSWF) ' + window.filesender.config.useFileSystemWritableFileStreamForDownload());
             if( window.filesender.config.useFileSystemWritableFileStreamForDownload()) {
                 
-                if( !$this.fileStream ) {
-                    console.log("FileSystemWritableFileStream zinit (p1)");
-                    $this.fileStream = await window.showSaveFilePicker({
-                        suggestedName: this.filename,
-                        startIn: 'downloads',
-                    });
-                    console.log("FileSystemWritableFileStream zinit (p2)");
+                try {
+                    if( !$this.fileStream ) {
+                        console.log("FileSystemWritableFileStream zinit (p1)");
+                        $this.fileStream = await window.showSaveFilePicker({
+                            suggestedName: this.filename,
+                            startIn: 'downloads',
+                        });
+                        console.log("FileSystemWritableFileStream zinit (p2)");
+                    }
+                    if( !$this.writer ) {
+                        $this.writer = await $this.fileStream.createWritable();
+                    }
+                    $this.storageMode = 'fswf';
+                    console.log("FileSystemWritableFileStream zip64 zinit (end)");
+                } catch(error) {
+                    if( canFallbackFromFSWF(error) ) {
+                        window.filesender.log('zip64 FSWF unavailable, attempting fallback. ' + error);
+                        fswfError = error;
+                        $this.fileStream = null;
+                        $this.writer = null;
+                    } else {
+                        throw error;
+                    }
                 }
-                if( !$this.writer ) {
-                    $this.writer = await $this.fileStream.createWritable();
-                }
-                console.log("FileSystemWritableFileStream zip64 zinit (end)");
-                
-            } else if( window.filesender.config.use_streamsaver ) {
+            }
+
+            if( $this.storageMode !== 'fswf' && window.filesender.config.use_streamsaver && typeof streamSaver !== 'undefined' ) {
                 const ponyfill = window.WebStreamsPolyfill || {};
                 streamSaver.WritableStream = ponyfill.WritableStream;
                 streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
@@ -117,8 +150,38 @@ window.filesender.zip64handler = function() {
                 streamSaver.mitm = window.filesender.config.streamsaver_mitm_url;
                 var fileStream = streamSaver.createWriteStream( filename );
                 $this.writer = fileStream.getWriter();
+                $this.storageMode = 'streamsaver';
+                if( fswfError && window.filesender.ui && window.filesender.ui.notify ) {
+                    var streamsaverMsg = window.filesender.config.language.download_fallback_streamsaver || 'Falling back to StreamSaver-based download.';
+                    window.filesender.ui.notify('info', streamsaverMsg);
+                }
             }            
 
+            if( $this.storageMode !== 'fswf' && $this.storageMode !== 'streamsaver' ) {
+                window.filesender.log('zip64 falling back to in-memory writer');
+                $this.storageMode = 'memory';
+                $this.memoryChunks = [];
+                $this.writer = {
+                    write: async function(data) {
+                        if( data instanceof Uint8Array ) {
+                            $this.memoryChunks.push(new Uint8Array(data));
+                        } else {
+                            $this.memoryChunks.push(new Uint8Array(data));
+                        }
+                    },
+                    close: async function() {
+                        var blob = new Blob($this.memoryChunks, { type: 'application/zip' });
+                        saveAs(blob, $this.filename);
+                    },
+                    abort: function() {
+                        $this.memoryChunks = [];
+                    }
+                };
+                if( window.filesender.ui && window.filesender.ui.notify ) {
+                    var legacyMsg = window.filesender.config.language.download_fallback_legacy || 'Falling back to browser-based download. Large archives may require extra memory.';
+                    window.filesender.ui.notify('info', legacyMsg);
+                }
+            }
 
             $this.files = [];
         },
@@ -192,12 +255,20 @@ window.filesender.zip64handler = function() {
             this.writeu16( 0          );  // no compression
             this.writeu32( dts );
             this.writeu32( 0          );  // no crc-32 yet
-            this.writeu32( 0xFFFFFFFF );  // no size yet
-            this.writeu32( 0xFFFFFFFF );  // ...
+            this.writeu32( 0xFFFFFFFF );  // no size yet (ZIP64: value in extra field)
+            this.writeu32( 0xFFFFFFFF );  // ...         (ZIP64: value in extra field)
             this.writeu16( filename_array.length );
-            this.writeu16( 0          );  // no extra data
+            this.writeu16( 20         );  // extra field length: ZIP64 (4 header + 16 data)
 
             $this.write( filename_array );
+
+            // ZIP64 extended information extra field (required when sizes are 0xFFFFFFFF)
+            // Actual sizes are deferred to the data descriptor (general purpose bit 3 set).
+            // Without this field, strict parsers (e.g. macOS Archive Utility) reject the archive.
+            this.writeu16( 0x0001 );  // ZIP64 extra field header ID
+            this.writeu16( 16     );  // data size: two 8-byte fields
+            this.writeu64( 0      );  // uncompressed size placeholder (see data descriptor)
+            this.writeu64( 0      );  // compressed size placeholder   (see data descriptor)
 
             $this.crc = 0;
             $this.filesize = 0;
@@ -320,12 +391,16 @@ window.filesender.zip64handler = function() {
 	    $this.add_cdr_eof_locator_zip64();
             $this.write_end_cdr_record();
             console.log("ziphandler complete() closing writer");
-            await $this.writer.close();
+            if( $this.writer && $this.writer.close ) {
+                await $this.writer.close();
+            }
             console.log("ziphandler complete() closed writer");
         },
         abort: function() {
             var $this = this;
-            $this.writer.abort();
+            if( $this.writer && $this.writer.abort ) {
+                $this.writer.abort();
+            }
         },
         lastfunc: function() {
             var $this = this;

@@ -2,10 +2,11 @@
 
 $packages = array(
     'bootstrap'            => array(),
+    'bootstrap-icons'      => array(),
     'bootbox'              => array(),
     'chart.js'             => array(),
     'flag-icons'           => array(),
-    'font-awesome'         => array(),
+    '@fortawesome/fontawesome-free' => array(),
     'jquery'               => array(),
     'jquery-ui-dist'       => array(),
     'kbpgp'                => array(),

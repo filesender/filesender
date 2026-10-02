@@ -7,14 +7,14 @@
 // 
 // 
 ?>
-subject: Prevedi email footer, koji dele svi jezici
+subject: Prevedi email footer, zajedničko za sve jezike
 
 {alternative:plain}
 
-Prevedi ovaj email: {raw:translatableemail.link}
+Pogledajte ovaj email na drugim jezicima: {raw:translatableemail.link}
 
 {alternative:html}
 
 <p>
-    Prevedi ovaj email: <a href="{translatableemail.link}">{translatableemail.link}</a>
+    Pogledajte ovaj email na drugim jezicima: <a href="{translatableemail.link}">{translatableemail.link}</a>
 </p>

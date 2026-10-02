@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -35,7 +35,6 @@ if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
 }
 
-require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 require_once(FILESENDER_BASE.'/lib/vendor/autoload.php');
 
 /**
@@ -52,7 +51,6 @@ class Utilities
     
     /**
      * Generate a unique ID to be used as token.
-     * All generated UUID are version 4.
      *
      * @param bool $timestamped in the future requests a timestamped (uuidv7) or non-timestamped (uuidv4) uid
      * @param callable $unicity_checker callback used to check for uid unicity (takes uid as sole argument, returns bool telling if uid is unique), null if check not needed
@@ -63,7 +61,7 @@ class Utilities
      * @throws UtilitiesUidGeneratorBadUnicityCheckerException
      * @throws UtilitiesUidGeneratorTriedTooMuchException
      */
-    public static function generateUID($timestamped = false, $unicity_checker = null, $max_tries = 1000)
+    private static function generateUID( $timestamped = false, $unicity_checker = null, $max_tries = 1000 )
     {
         // Do we need to generate a unicity-checked random UID ?
         if ($unicity_checker) {
@@ -75,7 +73,7 @@ class Utilities
             // Try to generate until uniquely-checked or max tries reached
             $tries = 0;
             do {
-                $uid = self::generateUID();
+                $uid = self::generateUID($timestamped);
                 $tries++;
             } while (!call_user_func($unicity_checker, $uid, $tries) && ($tries <= $max_tries));
             
@@ -87,8 +85,24 @@ class Utilities
             return $uid;
         }
 
-        $uuid = Ramsey\Uuid\Uuid::uuid4();
+        if( $timestamped ) {
+            $uuid = Ramsey\Uuid\Uuid::uuid7();
+        } else {
+            $uuid = Ramsey\Uuid\Uuid::uuid4();
+        }
         return $uuid->toString();
+    }
+    
+    // uuidv4
+    public static function generateRandomUID( $unicity_checker = null, $max_tries = 1000 )
+    {
+        return self::generateUID( false, $unicity_checker, $max_tries );
+    }
+    
+    // uuidv7 not user facing
+    public static function generateTemporalUID( $unicity_checker = null, $max_tries = 1000 )
+    {
+        return self::generateUID( true, $unicity_checker, $max_tries );
     }
 
     /**
@@ -110,12 +124,12 @@ class Utilities
     /**
      * Validates a personal message
      *
-     * This can now throw on a bad input for PGP messages. 
+     * This can now throw on a bad input for OpenPGP messages. 
      */
     public static function isValidMessage($msg)
     {
-        if( Config::isTrue('pgp_enabled')) {
-            if( self::isValidPGPMessage($msg)) {
+        if( Config::isTrue('openpgp_enabled')) {
+            if( self::isValidOpenPGPMessage($msg)) {
                 return true;
             }
         }
@@ -126,7 +140,7 @@ class Utilities
         return true;
     }
 
-    public static function isValidPGPMessage($msg)
+    public static function isValidOpenPGPMessage($msg)
     {
         $originalmsg = $msg;
         
@@ -139,7 +153,7 @@ class Utilities
 
         if( !$msg ) {
             if( str_starts_with( $originalmsg, "-----BEGIN PGP MESSAGE-----")) {
-                throw new PKIPGPBadMesageException('');
+                throw new PKIOpenPGPBadMesageException('');
             }
         }
 
@@ -186,7 +200,22 @@ class Utilities
         return preg_match('/' .  Config::get('valid_filename_regex') . '$/u', $filename);
     }
 
-    
+    /**
+     * Get timezone offset
+     *
+     * @param string $custom_timezone_string the timezone you want to convert from
+     *
+     * @return int offset in seconds
+     */
+    public static function getTimezoneOffset($custom_timezone_string) {
+        $server_tz = new DateTimeZone(Config::get('default_timezone'));
+        $custom_tz = new DateTimeZone($custom_timezone_string);
+        $datetime = new DateTime("now", $server_tz);
+        $server_offset = $server_tz->getOffset($datetime);
+        $custom_offset = $custom_tz->getOffset($datetime);
+        $offset_difference = $custom_offset - $server_offset;
+        return $offset_difference;
+    }
     
     /**
      * Format a date according to configuration
@@ -335,16 +364,16 @@ class Utilities
         
         if (count($parts) > 2) {
             switch (strtoupper($parts[2])) {
-            case 'P': $size *= 1024;
-            // no break
-            case 'T': $size *= 1024;
-            // no break
-            case 'G': $size *= 1024;
-            // no break
-            case 'M': $size *= 1024;
-            // no break
-            case 'K': $size *= 1024;
-        }
+                case 'P': $size *= 1024;
+                // no break
+                case 'T': $size *= 1024;
+                // no break
+                case 'G': $size *= 1024;
+                // no break
+                case 'M': $size *= 1024;
+                // no break
+                case 'K': $size *= 1024;
+            }
         }
         return $size;
     }
@@ -356,6 +385,8 @@ class Utilities
      *
      * @return string
      */
+    private static $formatBytes_unit = null;
+    
     public static function formatBytes($bytes, $precision = 1)
     {
         // Default
@@ -364,14 +395,17 @@ class Utilities
         }
         // allow sloppy $bytes
         $bytes = floor($bytes);
-        
-        // Variants
-        $unit = Lang::tr('size_unit')->out();
-        if ($unit == '{size_unit}') {
-            $unit = 'b';
+
+        if( !self::$formatBytes_unit ) {
+            // Variants
+            $unit = Lang::tr('size_unit')->out();
+            if ($unit == '{size_unit}') {
+                $unit = 'b';
+            }
+            self::$formatBytes_unit = $unit;
         }
-        
-        $multipliers = array('', 'k', 'M', 'G', 'T');
+        $unit = self::$formatBytes_unit;
+        $multipliers = array('', 'ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi');
         
         // Compute multiplier
         $bytes = max($bytes, 0);
@@ -482,6 +516,9 @@ class Utilities
      */
     public static function sanitizeOutput($output)
     {
+        if( !$output ) {
+            $output = '';
+        }
         return htmlentities($output, ENT_QUOTES, 'UTF-8');
     }
 
@@ -520,6 +557,8 @@ class Utilities
      * On the other hand if path is relative then it is converted to absolute
      * by this call.
      *
+     * The '?' will be added after path if needed.
+     *
      * CGI parameters are given in $q which can be an array like;
      * array( 'foo' => 'bar', 'baz' => 7 )
      *
@@ -532,20 +571,20 @@ class Utilities
     public static function http_build_query($q, $path = null)
     {
         if ($path == null) {
-            $path = Config::get('site_url') . '?';
+            $path = Config::get('site_url');
         } else {
             if (!Utilities::startsWith($path, 'http')) {
                 $path = Config::get('site_url') . $path;
             }
         }
+        
         $ret = $path;
-        $sep = ini_get('arg_separator.output');
-        if (phpversion() < 5.4) {
-            // CIFIXME remove this branch when CI php is upgraded.
-            $ret .= http_build_query($q, '', $sep);
-        } else {
-            $ret .= http_build_query($q, '', $sep, PHP_QUERY_RFC3986);
+        if(!str_ends_with($ret,"?")) {
+            $ret .= "?";
         }
+
+        $sep = ini_get('arg_separator.output');
+        $ret .= http_build_query($q, '', $sep, PHP_QUERY_RFC3986);
         return $ret;
     }
     
@@ -580,7 +619,7 @@ class Utilities
         
         if (!$token) { // First access
             $token = array(
-                'value' => Utilities::generateUID(),
+                'value' => Utilities::generateRandomUID(),
                 'valid_until' => time() + self::SECURITY_TOKEN_LIFETIME,
                 'old' => null
             );
@@ -593,7 +632,7 @@ class Utilities
                 'valid_until' => time() + self::OLD_SECURITY_TOKEN_LIFETIME
             );
             
-            $token['value'] = Utilities::generateUID();
+            $token['value'] = Utilities::generateRandomUID();
             $token['valid_until'] = time() + self::SECURITY_TOKEN_LIFETIME;
             
             Logger::debug('Generated new security token, value is '.$token['value'].', valid until '.date('Y-m-d H:i:s', $token['valid_until']));

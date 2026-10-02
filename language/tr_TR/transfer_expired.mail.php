@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-konu: Dosya(lar) artık indirilemez
-konu: (dosyalar artık kullanılamaz) {transfer.subject}
+subject: Dosya(lar) artık indirilemez
+subject: (dosyalar artık kullanılamaz) {transfer.subject}
 
 {alternative:plain}
 

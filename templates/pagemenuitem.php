@@ -27,6 +27,10 @@ function pagemenuitem($page) {
             }
         }
     }
+    if( $page == 'transfers_guest' ) {
+        $label = Lang::tr('transfers_page');
+    }
+
     $icon = '';
     $faicon = '';
 
@@ -46,7 +50,7 @@ function pagemenuitem($page) {
     if($page == 'upload') {
         $icon = '<i class="fi fi-add"></i> ';
     }
-    if($page == 'transfers') {
+    if($page == 'transfers' || $page == 'transfers_guest') {
         $icon = '<i class="fi fi-box"></i> ';
     }
     if($page == 'guests') {

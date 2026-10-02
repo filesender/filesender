@@ -7,4 +7,4 @@
 // 
 // 
 ?>
- 
+Har du spørgsmål? Kontakt din institutions helpdesk. 

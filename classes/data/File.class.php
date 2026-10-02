@@ -2,7 +2,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -57,7 +57,14 @@ class File extends DBObject
         ),
         'uid' => array(
             'type' => 'string',
-            'size' => 60
+            'size' => 60,
+            'unique' => true            
+        ),
+        'puid' => array(
+            'type' => 'string',
+            'size' => 60,
+            'unique' => true,
+            'null' => true,   // needed for migration            
         ),
         'name' => array(
             'type' => 'string',
@@ -132,13 +139,26 @@ class File extends DBObject
             'size' => 170,
             'null' => true
         ),
+
+        'forward_id' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
+        ),
+
+        'download_count' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'default' => 0,
+            'null'    => false,
+        ),
         
     );
 
     protected static $secondaryIndexMap = array(
         'transfer_id' => array(
             'transfer_id' => array()
-        )
+        ),
     );
 
 
@@ -176,6 +196,7 @@ class File extends DBObject
     protected $id = null;
     protected $transfer_id = null;
     protected $uid = null;
+    protected $puid = null;
     protected $name = null;
     protected $mime_type = null;
     protected $size = 0;
@@ -188,6 +209,8 @@ class File extends DBObject
     protected $have_avresults = false;
     protected $storage_class_name = ''; // set in constructor
     protected $storage_path = null;
+    protected $forward_id = null;
+    protected $download_count = 0;
    
     /**
      * Related objects cache
@@ -276,31 +299,7 @@ class File extends DBObject
      */
     private function calculateEncryptedFileSize()
     {
-        $upload_chunk_size = Config::get('upload_chunk_size');
-
-        
-        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
-        $chunksMinusOne = ceil($this->size / $upload_chunk_size)-1;
-        $lastChunkSize = $this->size - ($chunksMinusOne * $upload_chunk_size);
-
-        // padding on the last chunk of the file
-        // may not be a full chunk so need to calculate
-        $lastChunkPadding = 16 - $lastChunkSize % 16;
-        if ($lastChunkPadding == 0) {
-            $lastChunkPadding = 16;
-        }
-
-        switch( $this->transfer->key_version ) {
-            case CryptoAppConstants::v2018_importKey_deriveKey:
-            case CryptoAppConstants::v2017_digest_importKey:
-                return $this->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
-            case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
-            case CryptoAppConstants::v2019_gcm_digest_importKey:
-                return $this->size + (($chunksMinusOne+1) * $echunkdiff);
-            default:
-        }
-        // fall through is an error
-        throw new BadCryptoKeyVersionException( $this->transfer->key_version );
+        return self::calculateEncryptedFileSizeStatic( $this->size, $this->transfer->key_version );
     }
 
     /**
@@ -314,6 +313,7 @@ class File extends DBObject
     public function __construct($id = null, $data = null)
     {
         $this->storage_class_name = Storage::getDefaultStorageClass();
+        $this->download_count = 0;
         
         if (!is_null($id)) {
             // Load from database if id given
@@ -350,16 +350,11 @@ class File extends DBObject
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
 
+        // puid should always be uuidv4
+        $file->puid = Utilities::generateRandomUID();
+        
         // Generate timestamped uid until it is indeed unique
-        $file->uid = Utilities::generateUID(true, function ($uid, $tries) {
-            $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
-            $data = $statement->fetch();
-            if (!$data) {
-                Logger::info('File uid generation took '.$tries.' tries');
-            }
-            return !$data;
-        });
+        $file->uid = Utilities::generateTemporalUID('File::unicityUid');
         
         $file->storage_class_name = Storage::getDefaultStorageClass();
 
@@ -372,12 +367,35 @@ class File extends DBObject
         
         return $file;
     }
+
+    /**
+     * uid unicity
+     *
+     * @param string $uid
+     * @param int $tries
+     */
+    public static function unicityUid($uid, $tries)
+    {
+        $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
+        $statement->execute(array(':uid' => $uid));
+        $data = $statement->fetch();
+        if (!$data) {
+            Logger::info('File uid generation took '.$tries.' tries');
+        }
+        return !$data;
+    }
     
     /**
      * Delete the file
      */
     public function beforeDelete()
     {
+        if ($this->needForward()) {
+            ForwardAnotherServer::deleteFile($this);
+            $this->forward_id = null;
+            $this->save();
+        }
+
         Storage::deleteFile($this);
         FileCollection::removeFile( $this );
         Logger::info($this.' deleted');
@@ -397,7 +415,20 @@ class File extends DBObject
         $data = $s->fetch();
         
         if (!$data) {
-            throw FileNotFoundException('uid = '.$uid);
+            throw new FileNotFoundException('uid = '.$uid);
+        }
+        
+        return self::fromData($data['id'], $data); // Don't query twice, use loaded data
+    }
+
+    public static function fromPuid($puid)
+    {
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE puid = :puid');
+        $s->execute(array(':puid' => $puid));
+        $data = $s->fetch();
+        
+        if (!$data) {
+            throw new FileNotFoundException('puid = '.$puid);
         }
         
         return self::fromData($data['id'], $data); // Don't query twice, use loaded data
@@ -405,6 +436,7 @@ class File extends DBObject
     
     /**
      * Get files from Transfer
+     * Note that the default ordering is a human sorting so file-2 will appear before file-100.
      *
      * @param Transfer $transfer the relater transfer
      *
@@ -412,7 +444,22 @@ class File extends DBObject
      */
     public static function fromTransfer(Transfer $transfer)
     {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id order by name desc');
+        $dbtype = Config::get('db_type');
+
+        $sql = 'SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id order by ';
+
+        // add natural, human sorting, in both databases
+        if ($dbtype == 'pgsql') {
+            $sql .= " SUBSTRING(name FROM '^[A-Za-z]+') , CAST(SUBSTRING(name FROM '\d+') AS numeric) ";
+        }
+        if ($dbtype == 'mysql') {
+            if(Config::get('db_mysql_limit_features')) {
+                $sql .= " name desc ";
+            } else {
+                $sql .= " NATURAL_SORT_KEY(name) ";
+            }
+        }
+        $s = DBI::prepare($sql);
         $s->execute(array(':transfer_id' => $transfer->id));
         $tree_files = array();
         $files = array();
@@ -459,13 +506,53 @@ class File extends DBObject
             $this->upload_start = time();
             $this->save();
         }
-        
+
         $res = Storage::writeChunk($this, $chunk, $offset);
-        
+
+        // Update transfer's last chunk time so the cleanup cron can detect abandoned
+        // uploads vs active ones. Throttled to once per minute to avoid an extra
+        // UPDATE on every single chunk (default 5 MB chunks → thousands per large file).
+        // Since cleanup is measured in days, minute-level precision is more than enough.
+        if (!$this->transfer->last_chunk_time || (time() - $this->transfer->last_chunk_time) >= 60) {
+            $this->transfer->last_chunk_time = time();
+            $this->transfer->save();
+        }
+
         Logger::info($this.' chunk['.((int)$offset).'..'.((int)$offset + strlen($chunk)).'] written'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
+
+        return $res;
+    }
+    
+    /**
+     * Store a chunk from PUT input to an offset in the file
+     *
+     * @param int chunkSize the chunk data size
+     * @param int $offset the chunk offset in the file, if null appends at end of file
+     */
+    public function writeChunkDelayed($chunkSize, $offset = null)
+    {
+        if (!$this->upload_start) {
+            $this->upload_start = time();
+            $this->save();
+        }
+        
+        $res = Storage::writeChunkDelayed($this, $chunkSize, $offset);
+
+        // Update transfer's last chunk time so the cleanup cron can detect abandoned
+        // uploads vs active ones. Throttled to once per minute to avoid an extra
+        // UPDATE on every single chunk (default 5 MB chunks → thousands per large file).
+        // Since cleanup is measured in days, minute-level precision is more than enough.
+        if (!$this->transfer->last_chunk_time || (time() - $this->transfer->last_chunk_time) >= 60) {
+            $this->transfer->last_chunk_time = time();
+            $this->transfer->save();
+        }
+        
+        Logger::info($this.' chunk['.((int)$offset).'..'.((int)$offset + $chunkSize).'] written'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
         
         return $res;
     }
+
+    
     
     /**
      * End file upload
@@ -487,6 +574,32 @@ class File extends DBObject
         return $r;
     }
     
+    /**
+     * End file forward
+     */
+    public function forwarded()
+    {
+        $r = ForwardAnotherServer::completeFile($this);
+        Logger::logActivity(LogEventTypes::FILE_FORWARDED, $this);
+        return $r;
+    }
+    
+    /**
+     * Record activity
+     */
+    public function recordActivity($event, $created = null, $ip = null, $author = null )
+    {
+        Logger::logActivity($event, $this, $author, $created, $ip);
+    }
+    
+    /**
+     * need forward?
+     */
+    public function needForward($tofrom = 'to')
+    {
+        return $this->transfer->needForward($tofrom);
+    }
+
     /**
      * Read a chunk at offset
      *
@@ -512,8 +625,10 @@ class File extends DBObject
     public function __get($property)
     {
         if (in_array($property, array(
-            'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
+            'transfer_id', 'uid', 'puid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
           , 'storage_class_name', 'iv', 'aead', 'have_avresults', 'storage_path'
+          , 'forward_id'
+          , 'download_count'
         ))) {
             return $this->$property;
         }
@@ -608,6 +723,8 @@ class File extends DBObject
     {
         if ($property == 'name') {
             $this->setName((string)$value);
+        } elseif ($property == 'download_count') {
+            $this->download_count = $value;
         } elseif ($property == 'auditlogs') {
             $this->logsCache = (array)$value;
         } elseif ($property == 'mime_type') {
@@ -631,7 +748,26 @@ class File extends DBObject
             $this->have_avresults = $value;
         } elseif ($property == 'storage_path') {
             $this->storage_path = $value;
+        } elseif (Utilities::isTrue(Config::get('file_forwarding_enabled'))) {
+            if ($property == 'uid') {
+                $this->uid = $value;
+            } elseif ($property == 'forward_id') {
+                if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadForwardIDException($value);
+                }
+                $value = (int)$value;
+                $this->forward_id = (string)$value;
+            }
         } else {
+            if(!Utilities::isTrue(Config::get('file_forwarding_enabled'))) {
+                // you don't get to set these if forwarding feature is set
+                // allow and ignore attempts
+                if ($property == 'uid') {
+                    return;
+                } elseif ($property == 'forward_id') {
+                    return;
+                }
+            }
             throw new PropertyAccessException($this, $property);
         }
     }
@@ -658,4 +794,40 @@ class File extends DBObject
         ));
         
     }
+
+
+    /**
+     * Calculate the encrypted file size
+     *
+     * @return int What $file->encrypted_size should be for this file.
+     */
+    public static function calculateEncryptedFileSizeStatic( $size, $kv )
+    {
+        $upload_chunk_size = Config::get('upload_chunk_size');
+
+        
+        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
+        $chunksMinusOne = ceil($size / $upload_chunk_size)-1;
+        $lastChunkSize = $size - ($chunksMinusOne * $upload_chunk_size);
+
+        // padding on the last chunk of the file
+        // may not be a full chunk so need to calculate
+        $lastChunkPadding = 16 - $lastChunkSize % 16;
+        if ($lastChunkPadding == 0) {
+            $lastChunkPadding = 16;
+        }
+
+        switch( $kv ) {
+            case CryptoAppConstants::v2018_importKey_deriveKey:
+            case CryptoAppConstants::v2017_digest_importKey:
+                return $size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+            case CryptoAppConstants::v2019_gcm_importKey_deriveKey:
+            case CryptoAppConstants::v2019_gcm_digest_importKey:
+                return $size + (($chunksMinusOne+1) * $echunkdiff);
+            default:
+        }
+        // fall through is an error
+        throw new BadCryptoKeyVersionException( $kv );
+    }
+    
 }

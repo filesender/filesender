@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: {target.type} #{target.id} hakkında rapor
+subject: {target.type} #{target.id} hakkında rapor
 
 {alternative:plain}
 

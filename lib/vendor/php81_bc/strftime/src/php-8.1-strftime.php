@@ -27,6 +27,7 @@
    * @param  integer|string|DateTime $timestamp Timestamp
    * @param  string|null $locale locale
    * @return string
+   * @throws InvalidArgumentException
    * @author BohwaZ <https://bohwaz.net/>
    */
   function strftime (string $format, $timestamp = null, ?string $locale = null) : string {

@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -152,6 +152,25 @@ class BadOptionNameException extends DetailedException
 }
 
 /**
+ * Bad option name value
+ */
+class BadOptionValueException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $name
+     */
+    public function __construct($name, $notetoadmin = '')
+    {
+        parent::__construct(
+            'bad_option_value', // Message to give to the user
+            array('name' => $name,'noteToAdmin' => $notetoadmin) // Details to log
+        );
+    }
+}
+
+/**
  * Bad URL exception
  */
 class BadURLException extends DetailedException
@@ -179,13 +198,51 @@ class BadAuthIDException extends DetailedException
     /**
      * Constructor
      *
-     * @param string $url
+     * @param string $aid
      */
     public function __construct($aid)
     {
         parent::__construct(
             'bad_url_code', // Message to give to the user
             array('aid' => $aid) // Details to log
+        );
+    }
+}
+
+/**
+ * Bad forward_id exception
+ */
+class BadForwardIDException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $forward_id
+     */
+    public function __construct($forward_id)
+    {
+        parent::__construct(
+            'bad_forward_id', // Message to give to the user
+            array('forward_id' => $forward_id) // Details to log
+        );
+    }
+}
+
+/**
+ * Bad salt
+ */
+class BadSaltException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param string $url
+     */
+    public function __construct($v)
+    {
+        parent::__construct(
+            'bad_salt', // Message to give to the user
+            array('salt' => $v)         // Details to log
         );
     }
 }

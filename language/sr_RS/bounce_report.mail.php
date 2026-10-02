@@ -7,23 +7,23 @@
 // 
 // 
 ?>
-subject: Neuspeh u isporuci poruke
+subject: Greška u isporuci poruke
 
 {alternative:plain}
 
 Poštovani,
 
-Jedan ili više vaših primalaca nije uspeo primiti vašu poruku :
+Jedan ili više vaših primalaca nije uspeo da primi vašu poruku :
 
 {each:bounces as bounce}
 {if:bounce.target_type=="Recipient"}
-  - Transfer #{bounce.target.transfer.id} primalac {bounce.target.email} dana {datetime:bounce.date} ({bounce.target.transfer.link})
+  - Transfer #{bounce.target.transfer.id} primalac {bounce.target.email} on {datetime:bounce.date} ({bounce.target.transfer.link})
 {endif}{if:bounce.target_type=="Guest"}
-  - Gost {bounce.target.email} dana {datetime:bounce.date}
+  - Gost {bounce.target.email} on {datetime:bounce.date}
 {endif}
 {endeach}
 
-Dodatne pojedinosti možete naći na {cfg:site_url}
+Dodatne detalje možete naći na {cfg:site_url}
 
 Lep pozdrav,
 {cfg:site_name}
@@ -35,23 +35,23 @@ Lep pozdrav,
 </p>
 
 <p>
-    Jedan ili više vaših primalaca nije uspeo primiti vašu poruku :
+    Jedan ili više vaših primalaca nije uspeo da primi vašu poruku :
 </p>
 
 <ul>
 {each:bounces as bounce}
     <li>
     {if:bounce.target_type=="Recipient"}
-        <a href="{bounce.target.transfer.link}">Transfer #{bounce.target.transfer.id}</a> primalac {bounce.target.email} dana {datetime:bounce.date}
+        <a href="{bounce.target.transfer.link}">Transfer #{bounce.target.transfer.id}</a> primalac {bounce.target.email} on {datetime:bounce.date}
     {endif}{if:bounce.target_type=="Guest"}
-        Gost {bounce.target.email} dana {datetime:bounce.date}
+        Gost {bounce.target.email} on {datetime:bounce.date}
     {endif}
     </li>
 {endeach}
 </ul>
 
 <p>
-    Dodatne pojedinosti možete naći na <a href="{cfg:site_url}">{cfg:site_url}</a>
+    Dodatne detalje možete naći na <a href="{cfg:site_url}">{cfg:site_url}</a>
 </p>
 
 <p>

@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -73,6 +73,7 @@ class RestServer
     public static function process()
     {
         try {
+            $can_close_session = false;
             
             // Get authentication state (fills auth data in relevant classes)
             // Will also start a session using the authentication handler.
@@ -108,7 +109,30 @@ class RestServer
             
             // Request data accessor
             $request = new RestRequest();
-            
+
+            if(Config::isTrue('performance_allow_direct_copy_from_put_to_disk')) {
+                // do not try to read the input for a PUT to file chunks
+                // it will handle that itself.
+                if( $endpoint == "file"  ) {
+                    if( $method == "put" ) {
+                        if (array_key_exists('PATH_INFO', $_SERVER)) {
+                            if( strstr($_SERVER['PATH_INFO'], '/chunk/')) {
+                                Request::$delay_all_reading = true;
+                                Logger::debug("RestServer delaying reading any data for this specific request to later...");
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(Config::isTrue('performance_allow_early_session_release')) {
+                if( $endpoint == "file"  ) {
+                    if( $method == "put" ) {
+                        $can_close_session = true;
+                    }
+                }
+            }
+
             // Because php://input can only be read once for PUT requests we rely on a shared getter
             $input = Request::body();
             
@@ -297,6 +321,16 @@ class RestServer
                 throw new RestInvalidSecurityTokenException('session token = '.Utilities::getSecurityToken().' and token = '.$security_token);
             }
 
+            // Release PHP session file lock before the (potentially slow) handler
+            // runs. Parallel chunk uploads (terasender) all share the same PHPSESSID
+            // and would otherwise serialize through session_start()'s exclusive lock,
+            // dilating p99 chunk latency from ~200ms to many seconds under load.
+            if( $can_close_session ) {
+                if (session_status() === PHP_SESSION_ACTIVE) {
+                    session_write_close();
+                }
+            }
+            
             Logger::debug('Forwarding call to '.$class.'::'.$method.'() handler');
             
             $data = call_user_func_array(array($handler, $method), $path);

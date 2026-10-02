@@ -89,7 +89,7 @@ if( $found ) {
                             </li>
                             <li>
                                 <button type="button" class="fs-button forward">
-                                    <i class="fa fa-envelope-o"></i>
+                                    <i class="fa fa-envelope-open"></i>
                                     <span>{tr:resend_invitation}</span>
                                 </button>
                             </li>
@@ -106,7 +106,7 @@ if( $found ) {
                     <div class="fs-info fs-info--aligned">
                         <strong>{tr:expiration_date}</strong>
                         <span>
-                            <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?>
+                            <?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires, true) ?>
                         </span>
                     </div>
                     <div class="fs-info fs-info--aligned">
@@ -140,8 +140,16 @@ if( $found ) {
                     <h4>{tr:invitation_guest_transfer_linked}</h4>
 
                     <?php
-                        $transfers = Transfer::fromGuest($guest);
-                        Template::display('transfers_table', array('transfers' => $transfers, 'show_guest' => true));
+                        $all_transfers = Transfer::fromGuest($guest);
+                        $invite_offset = Utilities::arrayKeyOrDefault($_GET, 'offset', 0, FILTER_VALIDATE_INT);
+                        $invite_limit  = 10;
+                        $paged_transfers = array_slice($all_transfers, $invite_offset, $invite_limit + 1);
+                        Template::display('transfers_table', array(
+                            'transfers'  => $paged_transfers,
+                            'show_guest' => true,
+                            'limit'      => $invite_limit,
+                            'offset'     => $invite_offset,
+                        ));
                     ?>
                 </div>
             </div>
@@ -214,7 +222,7 @@ if( $found ) {
             <div class="row">
                 <div class="col-12">
                     <div class="fs-invitation-detail__actions">
-                        <button type="button" class="fs-button fs-button--inverted delete">
+                        <button type="button" class="fs-button fs-button--inverted delete-invitation">
                             <i class="fi fi-trash"></i>
                             <span>{tr:delete_invitation}</span>
                         </button>

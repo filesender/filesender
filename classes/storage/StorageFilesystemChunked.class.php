@@ -4,7 +4,7 @@
  *
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  *     Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- *     Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ *     Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -59,7 +59,6 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function getOffsetWithinChunkedFile($file, $offset)
     {
-        $file_chunk_size = Config::get('upload_chunk_size');
         $file_chunk_size = $file->chunk_size;
         return ($offset % $file_chunk_size);
     }
@@ -73,7 +72,6 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function getChunkFilename($file, $filePath, $offset)
     {
-        $file_chunk_size = Config::get('upload_chunk_size');
         $file_chunk_size = $file->chunk_size;
         $offset = $offset - ($offset % $file_chunk_size);
         return $filePath.'/'.str_pad($offset, 24, '0', STR_PAD_LEFT);
@@ -100,7 +98,7 @@ class StorageFilesystemChunked extends StorageFilesystem
             $offset=$offset / $chunk_size * $crypted_chunk_size;
         }
 
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
         $chunkFile = self::getChunkFilename( $file, $filePath, $offset);
 
         if (!file_exists($chunkFile)) {
@@ -123,7 +121,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function buildPath(File $file, $fullPath = true )
     {
-        return parent::buildPath($file).$file->uid;
+        return parent::buildPath($file);
     }
 
     /**
@@ -142,7 +140,7 @@ class StorageFilesystemChunked extends StorageFilesystem
     {
         
         $chunkSize = \strlen($data);
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
 
         // If the user is doing something with FUSE
         // then they might not want to check disk space.
@@ -232,6 +230,86 @@ class StorageFilesystemChunked extends StorageFilesystem
         );
     }
 
+
+    /**
+     * Write a chunk of data to file at offset
+     *
+     * @param File $file
+     * @param uint $chunkSize is the number of bytes to expect on the PUT input
+     * @param uint $offset offset in bytes
+     *
+     * @return array with offset and written amount of bytes
+     *
+     * @throws StorageFilesystemOutOfSpaceException
+     * @throws StorageFilesystemCannotWriteException
+     */
+    public static function writeChunkDelayed(File $file, $chunkSize, $offset = null)
+    {
+        $filePath = self::buildPath($file).$file->uid;
+
+        // If the user is doing something with FUSE
+        // then they might not want to check disk space.
+        if (!Config::get('storage_filesystem_ignore_disk_full_check')) {
+	        // Check that there is enough free space on the storage
+	        $freeSpace = disk_free_space(self::$path);
+	        if ($freeSpace <= $chunkSize) {
+	            throw new StorageNotEnoughSpaceLeftException($chunkSize);
+	        }
+        }
+
+        if (self::file_exists($filePath) === false) {
+            mkdir($filePath, 0770, true);
+        }
+
+        $chunkFile = self::getChunkFilename($file, $filePath, $offset);
+        $validUpload = false;
+
+
+        $data = '';
+        
+        $fromss = \fopen("php://input", 'r');
+        $toss   = \fopen($chunkFile, 'wb' );
+        $rc = \stream_copy_to_stream( $fromss, $toss, $chunkSize );
+        $written = $rc;
+        Logger::debug("AAA writeChunkDelayed to file $chunkFile chunkSize $chunkSize rc $rc ");
+
+        // Check that the right amount of data was written and move to next iteration if it fails
+        if ($chunkSize != $written) {
+            throw new ChunkWriteException('chunk_size != bytes written');
+        }
+
+        // Clear cached values and check the chunk file now exists, otherwise we retry from the beginning
+        if (!self::file_exists($chunkFile)) {
+            throw new ChunkWriteException('file does not exist after write');
+        }
+
+        // Check file size
+        if ($chunkSize != self::filesize($chunkFile)) {
+            throw new ChunkWriteException('chunk_size != filesize()');
+        }
+
+        if (Config::isTrue('storage_filesystem_hash_check')) {
+            $clientHash = Validate::filter_var_sha256("client hash sha256",$_SERVER['HTTP_X_FILESENDER_DIGEST_SHA256']);
+            $fileHash = self::hash_file('sha256', $chunkFile);
+            if ($fileHash !== $clientHash) {
+                throw new ChunkWriteException('checksum validation failed');
+            }
+        }
+        
+        $validUpload = true;
+
+        // Don't reach the end if the chunk is invalid.
+        if( !$validUpload ) {
+            Logger::error("writeChunk() failed: {$chunkFile} was an invalid upload");
+            throw new StorageFilesystemCannotWriteException($filePath, $file, $data, $offset, $written);
+        }
+        
+        return array(
+            'offset' => $offset,
+            'written' => $written
+        );
+    }
+    
     /**
      * Helper method for file_get_contents()
      * @param resource $handle
@@ -315,7 +393,7 @@ class StorageFilesystemChunked extends StorageFilesystem
     public static function completeFile(File $file)
     {
         self::setup();
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
         $onDiskSize = self::calculateOnDiskFileSize($file);
         $expectedSize = $file->size;
         if ($file->transfer->is_encrypted) {
@@ -337,7 +415,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function calculateOnDiskFileSize(File $file)
     {
-        $path = self::buildPath($file);
+        $path = self::buildPath($file).$file->uid;
         $totalSize = 0;
         foreach (new DirectoryIterator($path) as $fileChunk) {
             if ($fileChunk->isFile()) {
@@ -356,7 +434,7 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function deleteFile(File $file)
     {
-        $filePath = self::buildPath($file);
+        $filePath = self::buildPath($file).$file->uid;
         Filesystem::deleteTreeRecursive($filePath, $file);
     }
 
@@ -383,10 +461,11 @@ class StorageFilesystemChunked extends StorageFilesystem
      */
     public static function getStream(File $file)
     {
+        $file_chunk_size = $file->chunk_size;
         StorageFilesystemChunkedStream::ensureRegistered();
-        $path = "StorageFilesystemChunkedStream://" . $file->uid;
+        $path = self::makeCustomStreamPath( $file, "StorageFilesystemChunkedStream" );
         $fp = \fopen($path, "r+");
-        stream_set_chunk_size($fp, Config::get('upload_chunk_size'));
+        stream_set_chunk_size( $fp, $file_chunk_size );
         return $fp;
     }
 }

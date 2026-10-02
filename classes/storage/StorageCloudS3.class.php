@@ -4,7 +4,7 @@
  *
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -109,6 +109,12 @@ class StorageCloudS3 extends StorageFilesystem
         return $file->uid;
     }
 
+
+    public static function canStore(Transfer $transfer)
+    {
+        // FIXME: we should really check if the Cloud backend has enough space
+        return true;
+    }
     
     /**
      *  Reads chunk at offset
@@ -147,9 +153,10 @@ class StorageCloudS3 extends StorageFilesystem
                 return null;
             }
             return $data;
-        } catch (ServiceException $e) {
+        } catch (Exception $e) {
             $msg = 'S3: readChunk() Can not read to object_name: ' . $object_name . ' offset ' . $offset;
-            Logger::info($msg);
+            Logger::info($msg . " BaseException: " . $e->getMessage());
+
             if (is_a($e, 'ConfigMissingParameterException')) {
                 Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
                 $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
@@ -200,7 +207,7 @@ class StorageCloudS3 extends StorageFilesystem
             );
         } catch (Exception $e) {
             $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
-            Logger::info($msg);
+            Logger::info($msg . " BaseException: " . $e->getMessage());
             if (is_a($e, 'ConfigMissingParameterException')) {
                 Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
                 $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
@@ -209,6 +216,46 @@ class StorageCloudS3 extends StorageFilesystem
         }
     }
 
+
+    public static function writeChunkDelayed(File $file, $chunkSize, $offset = null)
+    {
+        $chunk_size     = $chunkSize;
+
+        $bucket_name = self::getBucketName( $file );
+        $object_name = self::getObjectName( $file, $offset );
+        
+        try {
+            $client = self::getClient();
+
+            if( !self::usingCustomBucketName( $file )) {
+                $client->createBucket(array(
+                    'Bucket' => $bucket_name,
+                ));
+            }
+
+            $fromss = \fopen("php://input", 'r');
+            
+            $result = $client->putObject(array(
+                'Bucket' => $bucket_name,
+                'Key'    => $object_name,
+                'Body'   => $fromss,
+            ));
+            
+            return array(
+                'offset' => $offset,
+                'written' => $chunk_size
+            );
+        } catch (Exception $e) {
+            $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
+            Logger::info($msg);
+            if (is_a($e, 'ConfigMissingParameterException')) {
+                Logger::error("NOTE: MISSING PARAMETER IN CONFIG FILE");
+                $msg .= "  NOTE: MISSING PARAMETER IN CONFIG FILE";
+            }
+            throw new StorageFilesystemCannotWriteException($msg);
+        }
+    }
+    
     /**
      * Handles file completion checks
      *
@@ -329,7 +376,7 @@ class StorageCloudS3 extends StorageFilesystem
     public static function getStream(File $file)
     {
         StorageCloudS3Stream::ensureRegistered();
-        $path = "StorageCloudS3Stream://" . $file->uid;
+        $path = self::makeCustomStreamPath( $file, "StorageCloudS3Stream" );
         $fp = fopen($path, "r+");
         stream_set_chunk_size($fp, Config::get('upload_chunk_size'));
         return $fp;

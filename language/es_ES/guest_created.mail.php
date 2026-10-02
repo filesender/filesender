@@ -7,8 +7,7 @@
 // 
 // 
 ?>
-Asunto: Invitación recibida
-Asunto: {guest.subject}
+subject: Invitación recibida {guest.subject}
 
 {alternative:plain}
 

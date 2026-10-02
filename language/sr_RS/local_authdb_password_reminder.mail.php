@@ -7,34 +7,34 @@
 // 
 // 
 ?>
-предмет: Позив за употребу ФилеСендер-а
+subject: Poziv za upotrebu FileSender-а
 
-{алтернатива: обичан}
+{alternative:plain}
 
-Здраво,
+Zdravo,
 
-Позвани сте да користите инстанцу ФилеСендер {цфг: сите_наме} на {цфг: сите_урл}.
-Ваша лозинка за пријаву је {пассворд}
+Pozvani ste da koristite FileSender {cfg:site_name} na {cfg:site_url}.
+Vaša lozinka za prijavu je {password}
 
-Препоручујемо вам да посетите страницу Мој профил и промените лозинку када почнете да користите страницу.
+Preporučujemo vam da posetite stranicu Moj profil i promenite lozinku kada počnete da koristite stranicu.
 
-Срдачан поздрав,
-{цфг: сите_наме}
+Lep pozdrav,
+{cfg:site_name}
 
-{алтернатива: хтмл}
+{alternative:html}
 
-<п>
-    Здраво,
-</п>
+<p>
+    Zdravo,
+</p>
 
-<п>
-Позвани сте да користите инстанцу ФилеСендер {цфг: сите_наме} на {цфг: сите_урл}.
-Ваша лозинка за пријаву је {лозинка} </п>
-<п>
-Препоручујемо вам да посетите страницу Мој профил и промените лозинку када почнете да користите страницу.
-</п>
+<p>
+Pozvani ste da koristite FileSender {cfg:site_name} na {cfg:site_url}.
+Vaša lozinka za prijavu je {password} </p>
+<p>
+Preporučujemo vam da posetite stranicu Moj profil i promenite lozinku kada počnete da koristite stranicu.
+</p>
 
-<п>
-    Срдачан поздрав, <бр />
-    {цфг: сите_наме}
-</п>
+<p>
+    Lep pozdrav, <br />
+    {cfg:site_name}
+</p>

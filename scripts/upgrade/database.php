@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -442,6 +442,18 @@ function ensureFK()
                     'downloadonetimepasswords.rid refers to recipients.id',
 	            call_user_func('DownloadOneTimePassword::getDBTable'), 'DownloadOneTimePassword_rid', 'rid',
 	            call_user_func('Recipient::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'transfers.idpid refers to idps.id',
+	            call_user_func('Transfer::getDBTable'), 'Transfers_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
+
+    array_push( $fks,
+                new DatabaseForeignKey(
+                    'authentications.idpid refers to idps.id',
+	            call_user_func('Authentication::getDBTable'), 'Authentications_idpid', 'idpid',
+	            call_user_func('IdP::getDBTable'), 'id' ));
     
     
     foreach ( $fks as $fk ) {
@@ -545,6 +557,7 @@ try {
     if( Database::tableExists($tbl_user)) {
         
         // Perform larger migrations
+        // see classes/constants/DatabaseSchemaVersions.class.php
         if( $currentSchemaVersion != DatabaseSchemaVersions::VERSION_CURRENT ) {
             $schemaVersion = $currentSchemaVersion;
             $dbtype = Config::get('db_type');
@@ -554,7 +567,88 @@ try {
             
             for( ; $schemaVersion <= DatabaseSchemaVersions::VERSION_CURRENT; $schemaVersion++ ) {
 
-                echo "checking for $schemaVersion \n";
+                echo "checking with schemaversion $schemaVersion \n";
+
+                // migtrating from the schema in [2.2,...,2.57] inclusive
+                if( $schemaVersion == DatabaseSchemaVersions::VERSION_22 )
+                {
+                    echo "Migrating database schema to version 2.58\n";
+                    echo "this will take some time to perform...\n";
+
+                    $tbl_files      = call_user_func('File::getDBTable');
+                    $tbl_auditlogs  = call_user_func('AuditLog::getDBTable');
+
+                    $class = 'File';
+                    // add new authentication table
+                    echo "Adding columns to Files table table...\n";
+                    updateTable( call_user_func($class.'::getDBTable'),
+                                 call_user_func($class.'::getDataMap'));
+                    
+                    $class = 'AuditLog';
+                    // add new authentication table
+                    echo "Adding columns to Files table table...\n";
+                    updateTable( call_user_func($class.'::getDBTable'),
+                                 call_user_func($class.'::getDataMap'));
+                    
+                    $sql = " update $tbl_files \n"
+                         . " set download_count = ( \n"
+                         . "                    select count(*) from $tbl_auditlogs \n"
+                         . "                         where target_type = 'File' \n"
+                         . "                           and target_id = " . DBView::cast_as_string($tbl_files.'.id') . "  \n"
+                         . "                           and event = 'download_ended' \n"
+                         . "                      ); \n";
+
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+
+                    // uid was a v4 uuid in this version
+                    // puid was moved to uuid v4
+                    // uid  was moved to a temporal v7 uuid
+                    $sql = " update $tbl_files \n"
+                         . "    set puid = uid; \n";
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+
+
+
+                    // populate the new trasfer_id and file_id columns from the data in
+                    // the table and bring in the trid when the target_type is a file.
+                    $sql = " update $tbl_auditlogs \n"
+                         . "    set transfer_id = " . DBLayer::fromVarCharToBigIntCast("target_id")
+                         . "  where target_type = 'Transfer' ";
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+
+
+                    if( $dbtype == 'pgsql' ) {
+                        $sql = " update $tbl_auditlogs a \n"
+                             . "    set (transfer_id,file_id) =  \n"
+                             . " (select transfer_id,id as file_id FROM $tbl_files f where f.id = cast( a.target_id as bigint )) \n"
+                             . " where a.target_type = 'File'  \n";
+                        
+                    } else {
+                        $sql = " update $tbl_auditlogs a \n"
+                             . " join $tbl_files f on f.id = cast( target_id as UNSIGNED INTEGER )  \n"
+                             . "    set a.transfer_id = f.transfer_id, a.file_id = f.id \n"
+                             . " where target_type = 'File'  \n";                       
+                    }
+                    
+                    echo "SQL: $sql \n";
+                    $s = DBI::prepare($sql);
+                    $s->execute(array());
+                    
+
+                    
+                    
+                }
+                // migtrating from the schema in [2.58,...,X] inclusive
+                if( $schemaVersion == DatabaseSchemaVersions::VERSION_258 )
+                {
+                }
+                    
                 //
                 // Version 22
                 // ----------
@@ -569,7 +663,7 @@ try {
                 // The saml information is then associated with a specific user using UserPreferences.authid.
                 // These id columns are bigint (8 byte numbers) and should index a lot better than email addresses.
                 //
-                if( $schemaVersion == DatabaseSchemaVersions::VERSION_22 )
+                if( $schemaVersion < DatabaseSchemaVersions::VERSION_22 )
                 {
                     echo "Migrating database schema to version 22.\n";
                     echo "this will take some time to perform...\n";
@@ -725,6 +819,10 @@ try {
     // Remake all the views. This is done last because the view might reference other
     // tables and might rely on the other tables schema having been updated already
     //
+    //
+    // ordering here is important as other table views depend on authentication table views.
+    //
+    array_unshift($classes, 'Authentication');
     foreach($classes as $class) {
         echo 'Checking class '.$class."\n";
         
@@ -757,8 +855,34 @@ try {
     $placeholders =  array(':chunk_size' => $chunk_size,
                            ':crypted_chunk_size' => $crypted_chunk_size);
     $statement->execute($placeholders);
-    
-    
+
+    // Backfill last_chunk_time for transfers that existed before this column was added.
+    // Active uploads (created/started/uploading) get NOW() so they are not immediately
+    // cleaned up by the cron — they get a fresh window of failed_transfer_cleanup_days.
+    // Completed transfers (available/closed) get their creation date (irrelevant for
+    // cleanup since the FAILED query only targets incomplete statuses).
+    echo "Backfilling last_chunk_time for existing transfers...\n";
+    $statement = DBI::prepare(
+        "UPDATE $tbl_transfers SET last_chunk_time = NOW() "
+        . "WHERE last_chunk_time IS NULL AND status IN ('created', 'started', 'uploading')"
+    );
+    $statement->execute(array());
+
+    $statement = DBI::prepare(
+        "UPDATE $tbl_transfers SET last_chunk_time = created "
+        . "WHERE last_chunk_time IS NULL"
+    );
+    $statement->execute(array());
+
+    echo "Updating Japan local identifier from jp to ja in user table...\n";
+    $statement = DBI::prepare(
+        "UPDATE $tbl_user  "
+      . " SET lang = 'ja' "
+      . " WHERE lang = 'jp' "
+    );
+    $statement->execute(array());
+        
+
 } catch(Exception $e) {
     echo "Error, Rolling database changes back....\n";
     $dbtype = Config::get('db_type');
@@ -769,6 +893,15 @@ try {
         echo "\n";
         echo "as this script performs mostly DDL statements transactions are not used for mariadb\n";
         echo "you should either get a full run of this script or compare the output to a backup\n";
+        echo "\n";
+        echo "If the last thing you saw was an attempt to remove a view you might\n";
+        echo "like to ensure that the user you are connecting as can DROP items\n";
+        echo "in the database. DROP is only needed on views but there is no\n";
+        echo "ability to allow just 'DROP VIEW' in MariaDB\n";
+        echo "See the install docs for info about using a separate user\n";
+        echo " for running the database script with these additional privileges\n";
+        echo "\n";
+        echo "***ERROR***\n\n";
     } else {
         echo " This should leave the database state as it was before you started the script\n";
         DBI::rollBack();

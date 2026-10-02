@@ -16,6 +16,7 @@ chmod 400 ~/.pgpass
 echo "password is "
 cat ~/.pgpass
 
+#$PSQL -V
 echo "database listing is..."
 $PSQL -l
 

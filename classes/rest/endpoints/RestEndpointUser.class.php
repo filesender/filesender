@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -252,7 +252,7 @@ END;
             // Compute size used by user's transfers
             $used = array_sum(array_map(function ($t) {
                 return $t->size;
-            }, Transfer::fromUser(Auth::user())));
+            }, Transfer::fromUser($user)));
             
             return array(
                 'total' => $user_quota,
@@ -336,7 +336,14 @@ END;
 
             $user->save();
         }
+
         if ($data->lang) {
+            if( Utilities::isTrue(Config::get('advanced_validation_user'))) {
+                $data->lang = Validate::filter_var_lang(
+                    "user.lang",
+                    $data->lang );
+            }
+            
             // Lang property update, fail if not allowed
             
             if (!Config::get('lang_userpref_enabled')) {
@@ -383,14 +390,14 @@ END;
             $user->transfer_preferences = null;
             $user->save();
         }
-        if( Config::isTrue('pgp_enabled')) {        
-            if( $data->pgp_key ) {
-                $k = PublicKey::ensure( $user->id, $data->pgp_key,
-                                        DBConstantPublicKeyType::lookup(DBConstantPublicKeyType::PGP),
+        if( Config::isTrue('openpgp_enabled')) {        
+            if( $data->openpgp_key ) {
+                $k = PublicKey::ensure( $user->id, $data->openpgp_key,
+                                        DBConstantPublicKeyType::lookup(DBConstantPublicKeyType::OpenPGP),
                                         time());
                 $k->save();
             }
-            if( $data->pgp_key_delete ) {
+            if( $data->openpgp_key_delete ) {
                 
                 $keys = PublicKey::allForUser( $user->id );
                 foreach( $keys as $k ) {
@@ -402,6 +409,12 @@ END;
             if (!Auth::isAdmin()) {
                 throw new RestAdminRequiredException();
             }
+            if( Utilities::isTrue(Config::get('advanced_validation_user'))) {
+                $data->guest_expiry_default_days = Validate::filter_var_number(
+                    "user.lang",
+                    $data->guest_expiry_default_days );
+            }
+            
             $user->guest_expiry_default_days = $data->guest_expiry_default_days;
             $user->save();
             
@@ -486,8 +499,8 @@ END;
             
         }
 
-        if( Config::isTrue('pgp_enabled')) {
-            if ($data->property == 'pgp_key') {
+        if( Config::isTrue('openpgp_enabled')) {
+            if ($data->property == 'openpgp_key') {
                 $key = $user->findPGPKey( $data->email, '{tr:not_found}' );
                 return array(
                     'path' => '/user/'.$user->id,
@@ -495,9 +508,9 @@ END;
                     'found' => ($key != null) ? true : false
                 );
             }
-            if( $data->property == 'test_pgp_key' ) {
+            if( $data->property == 'test_openpgp_key' ) {
                 $msg = $data->message;
-                TranslatableEmail::quickSend('test_pgp_message', $user, array('message' => $msg));
+                TranslatableEmail::quickSend('test_openpgp_message', $user, array('message' => $msg));
                 return array(
                     'path' => '/user/'.$user->id,
                     'data' => 'ok'

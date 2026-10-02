@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Konu: Konuk fişi zaman aşımına uğradı
+subject: Konuk fişi zaman aşımına uğradı
 
 {alternative:plain}
 

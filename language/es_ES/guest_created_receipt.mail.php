@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Invitación enviada 
+subject: Invitación enviada 
 
 {alternative:plain}
 

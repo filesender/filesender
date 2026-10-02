@@ -7,6 +7,9 @@
 // 
 // 
 ?>
-Vaučer omogućava nekome da vam pošalje fajl.<br />
-Za kreiranje vaučera unesite adresu e-pošte, a zatim izaberite Pošalji vaučer.<br />
-Primaocu će biti poslata e-mail poruka sa linkom za korišćenje vaučera.
+<h2>Pozivanje gostujućeg korisnika</h2>
+<p>Možete slati fajlove korisniku bez naloga, uz pozivnicu:
+<li>Unesite adresu e-pošte gostujućeg korisnika.</li> 
+<li>Unesite naslov i poruku ako je potrebno.</li> 
+<li>Kliknite na „Pošalji pozivnicu“.</li></p>
+<p>Gostujući korisnik dobija e-poštu koja sadrži link za pozivnicu.</p>

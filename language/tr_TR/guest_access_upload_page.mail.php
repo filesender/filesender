@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Konuğun yükleme sayfasına erişimi
+subject: Konuğun yükleme sayfasına erişimi
 
 {alternative:plain}
 

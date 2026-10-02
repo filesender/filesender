@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -561,6 +561,15 @@ class Mail
             // Logger::warn('testing mode so not really sending mail');
             return true;
         }
+        // Without an address mail() writes an empty To: header, sendmail finds
+        // no recipient and dumps the message in dead.letter, where it grows
+        // unnoticed. Nothing downstream can recover from that, so stop before
+        // claiming to send and say what happened instead.
+        if (!$source['to']) {
+            Logger::warn('Not sending mail: no recipient address');
+            return false;
+        }
+
         Logger::warn('Sending mail');
 
         $add_minus_r_to_mail = Utilities::isTrue(Config::get('email_send_with_minus_r_option'));

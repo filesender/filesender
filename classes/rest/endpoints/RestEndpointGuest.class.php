@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -174,6 +174,24 @@ class RestEndpointGuest extends RestEndpoint
         // Raw guest data
         $data = $this->request->input;
 
+        if( Utilities::isTrue(Config::get('advanced_validation_create_guest')))
+        {
+            $data->from = Validate::filter_var_email(
+                "guest.from",
+                $data->from );
+            $data->recipient = Validate::filter_var_email(
+                "guest.recipient",
+                $data->recipient );
+            $data->subject = Validate::filter_var_regex_log(
+                "transfer.subject",
+                $data->subject,
+                '/^.*$/'  );
+            $data->expires = Validate::filter_var_regex_log(
+                "transfer.expires", $data->expires,
+                "|^[.0-9]{1,32}$|"  );
+        }
+
+
         // Check Guest creation limits
         $existingGuests = Guest::fromUserAvailable($user);
         if (count($existingGuests) >= Config::get('guest_limit_per_user')) {
@@ -259,6 +277,10 @@ class RestEndpointGuest extends RestEndpoint
                 $transfer_options[TransferOptions::ADD_ME_TO_RECIPIENTS] = false;
             }
         }
+
+        unset($transfer_options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+        unset($transfer_options[TransferOptions::FORWARD_SERVER_NAME]);
+
         $guest->transfer_options = $transfer_options;
         
         // Set expiry date
@@ -335,6 +357,9 @@ class RestEndpointGuest extends RestEndpoint
                 if( Config::get("allow_guest_expiry_date_extension") == 0 ) {
                     throw new RestAdminRequiredException();
                 }
+            }
+            if($guest->does_not_expire) {
+                 throw new RestBadParameterException('extend_expiry_date');
             }
             $guest->extendObjectExpiryDate();
             return self::cast($guest);

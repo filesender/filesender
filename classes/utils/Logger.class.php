@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -436,6 +436,68 @@ class Logger
             call_user_func($method, $facility, $level, $message);
         }
     }
+
+    public static function backtrace()
+    {
+        $message = "";
+                   
+        // Fecth call stack
+        $stack = debug_backtrace();
+        
+        // Remove Logger internals
+        while ($stack && array_key_exists('class', $stack[0]) && ($stack[0]['class'] == 'Logger')) {
+            array_shift($stack);
+        }
+        
+        // If call context is known        
+        //        if ($stack && array_key_exists('function', $stack[0]) && $stack[0]['function']) {
+        if($stack)
+            foreach( $stack as $caller ) {
+            $caller = $stack[0];
+            
+            // Gather code location data
+            $s = $caller['file'].':'.$caller['line'].' ';
+            if (array_key_exists('class', $caller)) {
+                if (!array_key_exists('type', $caller)) {
+                    $caller['type'] = ' ';
+                }
+                if ($caller['type'] == '::') {
+                    $s .= $caller['class'].'::';
+                } else {
+                    $s .= '('.$caller['class'].')'.$caller['type'];
+                }
+            }
+            
+            // Resolve magics so that log is easier to read
+            if (in_array($caller['function'], array('__call', '__callStatic'))) {
+                $caller['function'] = $caller['args'][0];
+                $caller['args'] = $caller['args'][1];
+            }
+            
+            // Add arguments (objects are mentionned as just "object" without details)
+            $args = array();
+            foreach ($caller['args'] as $arg) {
+                $a = '';
+                if (is_bool($arg)) {
+                    $a = $arg ? '(true)' : '(false)';
+                } elseif (is_scalar($arg)) {
+                    $a = '('.$arg.')';
+                } elseif (is_array($arg)) {
+                    $a = array();
+                    foreach ($arg as $k => $v) {
+                        $a[] = (is_numeric($k) ? '' : $k.' => ').gettype($v).(is_scalar($v) ? (is_bool($v) ? ($v ? '(true)' : '(false)') : '('.$v.')') : '');
+                    }
+                    $a = '('.implode(', ', $a).')';
+                }
+                $args[] = gettype($arg).$a;
+            }
+            
+            $s .= $caller['function'].'('.implode(', ', $args).')';
+            
+            $message = $s."\n".$message;
+        }
+        return $message;
+    }
     
     /**
      * Log message to error_log (stderr)
@@ -531,12 +593,13 @@ class Logger
      * @param string $logEvent
      * @param object $target
      * @param object $author
+     * @param object $created
      */
-    public static function logActivity($logEvent, $target, $author = null)
+    public static function logActivity($logEvent, $target, $author = null, $created = null, $ip = null)
     {
-        AuditLog::create($logEvent, $target, $author);
-        StatLog::create($logEvent, $target);
-        AggregateStatistic::create($logEvent, $target,$author);
+        $auditlog = AuditLog::create($logEvent, $target, $author, $created, $ip);
+        StatLog::create($logEvent, $target, $created);
+        AggregateStatistic::create($logEvent, $target, $author);
 
         if( $logEvent == LogEventTypes::DOWNLOAD_ENDED || $logEvent == LogEventTypes::ARCHIVE_DOWNLOAD_ENDED ) {
             if ($target instanceof File) {
@@ -545,8 +608,16 @@ class Logger
                 $transfer->save();
             }
         }
+        if( $logEvent == LogEventTypes::DOWNLOAD_ENDED ) {
+            if ($target instanceof File) {
+                $obj = $target;
+                $obj->download_count++;
+                $obj->save();
+            }
+        }
         
         self::info('Event#'.$logEvent.' on '.(string)$target.($author ? ' by '.(string)$author : ''));
+        return $auditlog;
     }
 
     /**

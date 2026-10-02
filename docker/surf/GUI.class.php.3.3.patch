@@ -1,0 +1,11 @@
+--- tmp/filesender-3.3/classes/utils/GUI.class.php	2026-01-08 01:09:38.000000000 +0000
++++ GUI.class.php	2026-01-28 20:13:37.815405089 +0000
+@@ -476,7 +476,7 @@
+         foreach(array_slice($transfer->files, 0, $maxfiles) as $file) {
+             $name = $file->path;
+             
+-            $dlcount = $transfer->downloads;
++            $dlcount = count($transfer->downloads);
+             if( !$accountForDL ) {
+                 // do not leak this info on some pages                
+                 $dlcount = 0;

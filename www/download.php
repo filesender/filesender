@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -84,7 +84,11 @@ try {
         if( Config::get('log_authenticated_user_download_by_ensure_user_as_recipient')) {
             if( Auth::isRegularUser()) {
                 $user = Auth::user();
-                $email = $user->saml_user_identification_uid;
+                $email = $user->email;
+                if( !$email ) {
+                    $email = $user->saml_user_identification_uid;
+                }
+                
                 $found = false;
                 foreach($transfer->recipients as $r) {
                     if( $r->email == $email ) {
@@ -140,7 +144,7 @@ try {
         $transaction_id = $_REQUEST['transaction_id'];
 
     if(!$transaction_id || !Utilities::isValidUID($transaction_id)) {
-        $transaction_id = Utilities::generateUID();
+        $transaction_id = Utilities::generateRandomUID();
         header('Location: '.Utilities::http_build_query(array_merge($_REQUEST, ['transaction_id' => $transaction_id]), 'download.php?'));
         exit;
     }
@@ -175,8 +179,14 @@ try {
         manageOptions($ret, $transfer, $recipient, $recently_downloaded);
     
 } catch (Exception $e) {
+    if(!array_key_exists('exception', $_SESSION))
+        $_SESSION['exception'] = [];
+
+    $_SESSION['exception'] = array_slice($_SESSION['exception'], -4);
+    
     $sid = uniqid();
-    $_SESSION['exception_'.$sid] = $e;
+    $_SESSION['exception'][$sid] = $e;
+    
     $path = GUI::path() . '?s=exception&sid=' . $sid;
     header('Location: ' . $path);
 }
@@ -211,13 +221,19 @@ function downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded
     Logger::info('User started archive download ('.count($files).' files, '.$size.' bytes)');
     
     // Send the ZIP
+    $auditlog = null;
     if(!$recently_downloaded)
-        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+        $auditlog = Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+    if($transfer->needForward('from'))
+        ForwardAnotherServer::recordActivityTransfer(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $auditlog, $recipient);
     
     $result = $zipper->streamArchive($recipient);
     
+    $auditlog = null;
     if(!$recently_downloaded)
-        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+        $auditlog = Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+    if($transfer->needForward('from'))
+        ForwardAnotherServer::recordActivityTransfer(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $auditlog, $recipient);
     
     Logger::info('User download archive ('.count($files).' files, '.$size.' bytes, '.(time() - $time).' seconds)');
     
@@ -301,38 +317,56 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
 
         $abort_handler();
 
+        $stream = Storage::getStream($file);
+        if (!$stream) {
+            $path = Storage::buildPath($file) . $file->uid;
+            throw new ForwardException('Cannot read storage: '.$path);
+        }
+
         $offset = $range ? $range['start'] : 0;
-
         $chunk_size = $file->chunk_size;
-        if (!$chunk_size)
-            $chunk_size = 1024 * 1024;
+        $end = $file->size;
 
-        if($transfer->options['encryption'] == 1){
+        if ($transfer->options['encryption'] == 1) {
             $end = $file->encrypted_size;
             $chunk_size = $file->crypted_chunk_size;
-        }else{
-            $end = $file->size;
+            stream_set_chunk_size($stream, $chunk_size);
         }
-        if ($range)
+        if ($range) {
             $end = $range['end'];
+        }
         
         for (; $offset < $end; $offset += $chunk_size) {
             $remaining = $end - $offset + 1;
             $length = min($chunk_size, $remaining);
             
             Logger::debug('Send chunk at offset ' . $offset . ' with length ' . $length);
-            
-            echo $file->readChunk($offset, $length);
+
+            // TODO Encryption seems to not like the streams at the moment, should fix this but have a workaround
+            $do_not_use_stream = false;
+            if( $transfer->options['encryption'] == 1 ) {
+                if( strtolower(Config::get('storage_type')) == 'filesystem' ) {
+                    $do_not_use_stream = true;
+                }
+            }
+
+            if( $do_not_use_stream ) {
+                echo $file->readChunk($offset, $length);
+            } else {
+                echo stream_get_contents($stream, $length, $offset);
+            }
             
             // TODO Log download progress ?
             
             $abort_handler();
         }
-        
+        fclose($stream);
         return ($offset >= $file->size);
     };
 
-    if($recipient) $recipient->recordActivity();
+    if($recipient) {
+        $recipient->recordActivity();
+    }
     
     $done = false;
     
@@ -359,16 +393,19 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     
     if ($ranges) {
         Logger::info('User restarted download of '.$file.' from offset '.$ranges[0]['start']);
-        
+
+        $auditlog = null;
         if(!$recently_downloaded)
-            Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
+            $auditlog  = Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
+        if($transfer->needForward('from'))
+            ForwardAnotherServer::recordActivityFile(LogEventTypes::DOWNLOAD_RESUMED, $file, $auditlog);
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
 
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
-            header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);
+            header('Content-Range: bytes ' . $range['start'] . '-' . ($range['end'] - 1) . '/' . $file->size);
             
             // Read range data
             $done = $read_range($range);
@@ -422,13 +459,25 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             header('Content-Length: ' . $file->size);
         }
 
-        header('Accept-Ranges: bytes');
+        // Edge doesn't seems to like ranges on large files
+        if (preg_match('/Edg/', $ua) === 1) {
+            header('Accept-Ranges: none');
+        } else {
+            header('Accept-Ranges: bytes');
+        }        
+
+        // Don't bother reading file chunks off disk if we are only doing a HEAD
+        if ($_SERVER['REQUEST_METHOD']=='HEAD')
+            return array('result' => true, 'files' => array($file));
 
         // Read data (no range means all file)
         Logger::info('User started to download '.$file);
-        
+
+        $auditlog = null;
         if(!$recently_downloaded)
-            Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+            $auditlog = Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+        if($transfer->needForward('from'))
+            ForwardAnotherServer::recordActivityFile(LogEventTypes::DOWNLOAD_STARTED, $file, $auditlog, $recipient);
         
         $read_range();
         $done = true;
@@ -437,10 +486,14 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     
     if($done) {
         Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
-        
+
+        $auditlog = null;
         if(!$recently_downloaded) {
-            Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+            $auditlog = Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
         }
+        if($transfer->needForward('from'))
+            ForwardAnotherServer::recordActivityFile(LogEventTypes::DOWNLOAD_ENDED, $file, $auditlog, $recipient);
+
     }
     
     return array('result' => $done, 'files' => array($file));
@@ -489,19 +542,26 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
     }
 
     if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
-        if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
+        if (array_key_exists('notify_upon_completion', $_REQUEST)
+            && (bool) $_REQUEST['notify_upon_completion']) {
 
-            try {
-                // do not email too often
-                TranslatableEmail::rateLimit( true, 'download_complete', $recipient, $transfer );
+            // $recipient->email is empty for a link transfer, where the sender never
+            // entered addresses. The download page still offers the "notify me when
+            // the download completes" checkbox to such a downloader, so this branch is
+            // reached with nowhere to send to. The owner is covered separately by the
+            // files_downloaded mail below, so skipping here loses no notification.
+            if($recipient->email) {
+                try {
+                    // do not email too often
+                    TranslatableEmail::rateLimit( true, 'download_complete', $recipient, $transfer );
 
-                // Notify file download
-                ApplicationMail::quickSend('download_complete', $recipient, $ret);
+                    // Notify file download
+                    ApplicationMail::quickSend('download_complete', $recipient, $ret);
+                }
+                catch ( RateLimitException $e ) {
+                    // we hit a rate limit so do not email this time
+                }
             }
-            catch ( RateLimitException $e ) {
-                // we hit a rate limit so do not email this time
-            }
-            
         }
     }
     
@@ -517,4 +577,6 @@ function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false
             // we hit a rate limit so do not email this time
         }
     }
+    if($transfer->needForward('from'))
+        ForwardAnotherServer::recordActivityTransfer(LogEventTypes::DOWNLOAD_ENDED, $transfer, null, $recipient, $ret['files']);
 }

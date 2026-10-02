@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -33,6 +33,8 @@
 require_once('CommonPHPUnitConfigs.php');
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Depends;
+
 
 /**
  * Common unit test case file
@@ -70,6 +72,28 @@ abstract class CommonUnitTestCase extends TestCase {
       }
       print_r("\n---------------------------------------------------------------------------------------\n");
    }
-  
+
+    protected function setStaticProperty($name, $value): void
+    {
+        $this->setStaticPropertyValue('AuthSPSaml', $name, $value);
+    }
+
+    protected function setConfigParameters($parameters): void
+    {
+        $this->setStaticPropertyValue('Config', 'parameters', $parameters);
+    }
+
+    protected function getStaticProperty($class, $name)
+    {
+        $property = new ReflectionProperty($class, $name);
+        return $property->getValue();
+    }
+
+    protected function setStaticPropertyValue($class, $name, $value): void
+    {
+        $property = new ReflectionProperty($class, $name);
+        $property->setValue(null, $value);
+    }
+    
 }
     

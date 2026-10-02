@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -35,6 +35,13 @@
  */
 
 if(!('filesender' in window)) window.filesender = {};
+
+if (!('onPBKDF2AllEnded' in window.filesender)) {
+    window.filesender.onPBKDF2AllEnded = function() {
+        window.filesender.log("crypto_app onPBKDF2AllEnded()");
+    };
+}
+
 
 /**
  * Track progress of an active chunk upload. This collects
@@ -57,6 +64,7 @@ window.filesender.progresstracker = function() {
     this.mem = [];
     this.memToKeep = 5;
     this.disabled = false;
+    this.encrypted_metadata = null;
 
     /**
      * Reset the tracker for a fresh chunk
@@ -156,6 +164,7 @@ window.filesender.transfer = function() {
     this.size = 0;
     this.files = [];
     this.recipients = [];
+    this.recipients_publickeys = new Map();
     this.from = null;
     this.subject = null;
     this.message = null;
@@ -230,7 +239,17 @@ window.filesender.transfer = function() {
         return enable;
     };
     this.canUseTeraReceiver = function() {
-        var enable = filesender.config.terareceiver_enabled && filesender.supports.workers;
+
+        var terasender_globally_enabled = filesender.config.terareceiver_enabled;
+        var usetr = terasender_globally_enabled;
+        
+        if( filesender.config.terareceiver_allowed ) {
+            if( !usetr ) {
+                usetr = window.filesender.user_selected_terareceiver;
+            }
+        }
+        
+        var enable = usetr && filesender.supports.workers;
         enable &= !this.encryption || filesender.supports.workerCrypto;
         enable &= !this.disable_terasender;
         return enable;
@@ -421,6 +440,12 @@ window.filesender.transfer = function() {
         if (typeof filesender.config.valid_filename_regex == 'string') {
             var regexstr = filesender.config.valid_filename_regex;
             var r = XRegExp(regexstr,'g');
+            
+	    // fix NFD unicode characters problem on OS X, convert to NFC
+            if (file.name) {
+                file.name = file.name.normalize('NFC');
+            }
+
             var testResult = r.test(file.name);
             var lastIndex = r.lastIndex;
             if (lastIndex != file.name.length) {
@@ -647,7 +672,7 @@ window.filesender.transfer = function() {
         for(var i=0; i<this.files.length; i++) {
             stored.files.push({
                 id: this.files[i].id,
-                uid: this.files[i].uid,
+                puid: this.files[i].puid,
                 cid: this.files[i].cid,
                 size: this.files[i].size,
                 uploaded: 0,
@@ -1052,11 +1077,13 @@ window.filesender.transfer = function() {
      */
     this.authenticatedEndpoint = function(resource, file) {
         var args = {};
-        if(filesender.config.chunk_upload_security == 'key' && (file || (this.files.length && this.files[0].uid))) {
+        if(filesender.config.chunk_upload_security == 'key' && (file || (this.files.length && this.files[0].puid))) {
             if(file) {
-                args.key = file.uid;
-            } else if(this.files.length && this.files[0].uid) {
-                args.key = this.files[0].uid;
+                args.puid = file.puid;
+                args.key = args.puid;
+            } else if(this.files.length && this.files[0].puid) {
+                args.puid = this.files[0].puid;
+                args.key = args.puid;
             }
         }
         
@@ -1070,7 +1097,6 @@ window.filesender.transfer = function() {
         for(var k in args) q.push(k + '=' + args[k]);
         
         if(q.length) resource += (resource.match(/\?/) ? '&' : '?') + q.join('&');
-        
         return resource;
     };
     
@@ -1169,7 +1195,7 @@ window.filesender.transfer = function() {
     /**
      * Start upload
      */
-    this.start = function(errorhandler) {
+    this.start = async function(errorhandler) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
         
@@ -1220,7 +1246,7 @@ window.filesender.transfer = function() {
         var today = Math.floor((new Date()).getTime() / (24 * 3600 * 1000));
         var minexpires = today - 1;
         var maxexpires = today + filesender.config.max_transfer_days_valid + 1;
-        var exp = this.expires / (24 * 3600);
+        var exp = Math.floor(this.expires / (24 * 3600));
         
         if (exp < minexpires || exp > maxexpires) {
             return errorhandler({message: 'bad_expire'});
@@ -1233,8 +1259,73 @@ window.filesender.transfer = function() {
         if( this.encryption ) {
             this.encryption_client_entropy = window.filesender.crypto_app().generateClientEntropy();
         }
-        
         var transfer = this;
+
+        const md = new Map();        
+        if( this.encryption && 'encrypted_metadata' in transfer.options && transfer.options.encrypted_metadata) {
+            filesender.ui.log('Creating transfer have mde!');
+            var ca = window.filesender.crypto_app();
+            var cc = window.filesender.crypto_common();
+
+            var i = 0;
+            for (i = 0; i < transfer.files.length; i++) {
+
+                md.set(i,
+                       {
+                           name      : transfer.files[i].name,
+                           size      : transfer.files[i].size,
+                           mimetype  : transfer.files[i].mime_type,
+                       });
+                transfer.files[i].name = "protected-" + (i).toString();
+                transfer.files[i].mime_type = "application/octet-stream";
+            }
+
+            mdstr = JSON.stringify(Object.fromEntries(md));
+            filesender.ui.log(mdstr);
+
+            
+            var chunkid = 0;
+            file = { iv: crypter.generateCryptoFileIV() };
+            var iv = file.iv;
+            var encryption_details = transfer.getEncryptionMetadata( file );            
+            encryption_details.salt = ca.generateBase64EncodedEntropy(32);
+            encryption_details.crypted_chunk_size = ca.crypto_chunk_size;
+            encryption_details.chunk_size = ca.crypto_chunk_size;
+            encryption_details.key_version = ca.crypto_key_version_constants.v2018_importKey_deriveKey;
+
+            var key = await ca.getObtainKeyPromise( chunkid, encryption_details );
+            window.filesender.onPBKDF2AllEnded();
+            var iv = ca.generateIV( chunkid, encryption_details );
+            
+            var encryptParams = {
+                name: 'AES-CBC',
+                iv: iv
+            };
+
+            try {
+                var data_to_encrypt = mdstr;
+                var value = cc.convertStringToArrayBufferView(data_to_encrypt);
+                
+                encrypted_blob = await crypto.subtle.encrypt(encryptParams, key, value);
+                const encrypted_blob_uint8 = new Uint8Array(encrypted_blob);
+
+                // Wipe this out or we are not really doing anything here.
+                encryption_details.password = "";
+                enc_md = { iv:   ca.encodeToBase64(iv),
+                           ivsz: iv.length,
+                           ed:   ca.nToBase64(JSON.stringify(encryption_details)),
+                           e:    ca.encodeToBase64(encrypted_blob_uint8),
+                           esz:  encrypted_blob_uint8.length,
+                         };
+                enc_md_str = JSON.stringify(enc_md);
+                this.encrypted_metadata = ca.nToBase64(enc_md_str);
+                
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+            
+        }
+        
         filesender.client.postTransfer(this, function(path, data) {
             transfer.id = data.id;
             transfer.encryption_salt = data.salt;
@@ -1253,7 +1344,7 @@ window.filesender.transfer = function() {
                         )
                     ) {
                         transfer.files[i].id = data.files[j].id;
-                        transfer.files[i].uid = data.files[j].uid;
+                        transfer.files[i].puid = data.files[j].puid;
                     }
                 }
                 

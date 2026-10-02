@@ -2,8 +2,8 @@
 
 /*
  * FileSender www.filesender.org
- *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * 
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -36,10 +36,10 @@ $(function() {
 
     const copyToClipboard = (value) => {
         navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', 'Copied to clipboard!');
+            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
         }).catch((e) => {
             console.error(e);
-            filesender.ui.notify('error', 'Error copying to clipboard!');
+            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
         });
     }
 
@@ -85,8 +85,7 @@ $(function() {
         p['clear_frequent_recipients'] = '1';
 
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('database_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('database_updated'));
         });
 
         return false;
@@ -100,8 +99,7 @@ $(function() {
         p['clear_user_transfer_preferences'] = '1';
 
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('database_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('database_updated'));
         });
 
         return false;
@@ -132,8 +130,7 @@ $(function() {
         p['apisecretdelete'] = '1';
 
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('preferences_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
         });
 
         return false;
@@ -148,8 +145,7 @@ $(function() {
             p['apisecretcreate'] = '1';
 
             filesender.client.updateUserPreferences(p, function() {
-                filesender.ui.notify('success', lang.tr('preferences_updated'));
-                filesender.ui.reload();
+                filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
             });
         };
 
@@ -200,8 +196,7 @@ $(function() {
 
 
         if (!hasError) {
-            filesender.ui.notify('success', lang.tr('preferences_updated'));
-            location.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
         } else {
             filesender.ui.notify('error', lang.tr('Could not save user preferences.'));
         }
@@ -255,28 +250,27 @@ $(function() {
     ////////////////////
     
 
-    $('.delete_my_pgp_key').on('click', function(e) {
+    $('.delete_my_openpgp_key').on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
 
         var p = {};
-        p['pgp_key_delete'] = '1';        
+        p['openpgp_key_delete'] = '1';        
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.notify('success', lang.tr('preferences_updated'));
-            filesender.ui.reload();
+            filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
             });
     });
-    $('.test_my_pgp_key').on('click', function(e) {
+    $('.test_my_openpgp_key').on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
 
-        var pgpkey = $('#pgpkey').text();
+        var openpgpkey = $('#openpgpkey').text();
         
-	kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
+	kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
 	    if (!err) {
                 var dd = new Date(0);
                 dd.setUTCSeconds(key.primary.lifespan.generated);
-                var msg = lang.tr('test_my_pgp_message').r({
+                var msg = lang.tr('test_my_openpgp_message').r({
                     time: dd.toLocaleTimeString(),
                     date: dd.toLocaleDateString()
                 }).toString();
@@ -287,8 +281,8 @@ $(function() {
 		};
                 
 		kbpgp.box (params, function(err, result_string, result_buffer) {
-                    pgpmsg = result_string;
-                    filesender.client.testPGPPublicKey(pgpmsg, function() {
+                    openpgpmsg = result_string;
+                    filesender.client.testOpenPGPPublicKey(openpgpmsg, function() {
                         filesender.ui.notify('success', lang.tr('email_sent'));
                     });
                 });
@@ -300,7 +294,7 @@ $(function() {
         });
         
     });
-    $('#pgp_public_key_file').on('change', function(e) {
+    $('#openpgp_public_key_file').on('change', function(e) {
         const fileList = event.target.files;
         if( fileList.length == 1 ) {
             const f = fileList[0];
@@ -315,12 +309,11 @@ $(function() {
 	                if (!err) {
                             
                             var p = {};
-                            p['pgp_key'] = d;
+                            p['openpgp_key'] = d;
                             
                             filesender.client.updateUserPreferences(p, function() {
 
-                                filesender.ui.notify('success', lang.tr('preferences_updated'));
-                                filesender.ui.reload();
+                                filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
                             });
                             
                         } else {
@@ -356,19 +349,22 @@ $(function() {
         }
     });
 
-    var pgpkey = $('#pgpkey').text();
-    kbpgp.KeyManager.import_from_armored_pgp({ armored: pgpkey }, function(err, key) {
-	if (!err) {
-            var s = '';
-
-            var userid = key.userids[0];
-            $('#pgpkeyinfoemail').text(userid.components.email);
-            var dd = new Date(0);
-            dd.setUTCSeconds(key.primary.lifespan.generated);
-            s = dd.toLocaleDateString() + " " + dd.toLocaleTimeString();
-            $('#pgpkeyinfocreated').text(s);
-        }
-    });
+    if( filesender.config.openpgp_enabled ) {
     
+        var openpgpkey = $('#openpgpkey').text();
+        kbpgp.KeyManager.import_from_armored_pgp({ armored: openpgpkey }, function(err, key) {
+	    if (!err) {
+                var s = '';
+                
+                var userid = key.userids[0];
+                $('#openpgpkeyinfoemail').text(userid.components.email);
+                var dd = new Date(0);
+                dd.setUTCSeconds(key.primary.lifespan.generated);
+                s = dd.toLocaleDateString() + " " + dd.toLocaleTimeString();
+                $('#openpgpkeyinfocreated').text(s);
+            }
+        });
+        
+    }
     
 });

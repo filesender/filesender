@@ -19,6 +19,9 @@ U nastavku se nalazi vaučer koji Vam omogućuje pristup na {cfg:site_name}. Pom
 Izdavalac: {guest.user_email}
 Link vaučera: {guest.upload_link}
 
+{if:guest.does_not_expire}
+Ovaj vaučer ne ističe.
+{else}
 Vaučer je dostupan do {date:guest.expires} i nakon toga će automatski biti obrisan.
 
 {if:guest.message}Lična poruka od {guest.user_email}: {guest.message}{endif}
@@ -52,8 +55,12 @@ Lep pozdrav,
             <td><a href="{guest.upload_link}">{guest.upload_link}</a></td>
         </tr>
         <tr>
+   {if:guest.does_not_expire}
+            <td colspan="2">Ova pozivnica ne ističe</td>
+    {else}
             <td>Važi do</td>
             <td>{date:guest.expires}</td>
+     {endif}
         </tr>
     </tbody>
 </table>

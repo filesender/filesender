@@ -4,6 +4,9 @@ $cgiuid = "";
 $section = 'invite';
 $sections = array('invite','current','transfers');
 
+$guest_options_to_force_to_top_array = Config::get('guest_options_to_force_to_top_array');
+
+
 if(array_key_exists('as', $_REQUEST))
     $section = $_REQUEST['as'];
 if(!strlen($section)) {
@@ -13,23 +16,23 @@ if(!in_array($section, $sections)) {
     throw new GUIUnknownAdminSectionException($section);
 }
 
-$pgpkey = null;
-if( Config::isTrue('pgp_enabled')) {
+$openpgpkey = null;
+if( Config::isTrue('openpgp_enabled')) {
     $user = Auth::user();
-    $pgpkey = $user->pgp_key;
+    $openpgpkey = $user->openpgp_key;
 }
-$show_pgp_user_profile_message = false;
-if( Config::isTrue('pgp_enabled')) {
+$show_openpgp_user_profile_message = false;
+if( Config::isTrue('openpgp_enabled')) {
     foreach(Transfer::availableOptions(false) as $name => $cfg) {
         Logger::error("AAA1 name $name ");
-        if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
-            if( !$pgpkey ) {
-                $show_pgp_user_profile_message = true;
+        if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL) {
+            if( !$openpgpkey ) {
+                $show_openpgp_user_profile_message = true;
             }
         }
     }
 }
-Logger::error("AAA show " . $show_pgp_user_profile_message);
+Logger::error("AAA show " . $show_openpgp_user_profile_message);
 
 // allow a part of the page to handle a guest option
 // and avoid it being handled a second time by other code
@@ -52,13 +55,70 @@ foreach (Guest::allOptions() as $name => $dfn) {
 }
 
 
+// Expiry days selection logic
+// If selectable_guest_days_valid is empty (default), generate progressive options
+// If admin has configured specific values, use those instead
+$configuredDays = Config::get('selectable_guest_days_valid');
+$maxDays = Config::get('max_guest_days_valid');
+$minDays = Config::get('min_guest_days_valid');
+
+if (empty($configuredDays)) {
+    // Dynamic expiry days generation based on max_guest_days_valid
+    // This provides granular options for short invitations and reasonable intervals for longer ones
+    $possibleExpireDays = array();
+    
+    // Days 1-7: show all individually for fine-grained control
+    for ($d = 1; $d <= min(7, $maxDays); $d++) {
+        if ($d >= $minDays) {
+            $possibleExpireDays[] = $d;
+        }
+    }
+    // Days 8-30: show weekly intervals (14, 21, 28)
+    for ($d = 14; $d <= min(30, $maxDays); $d += 7) {
+        if ($d >= $minDays) {
+            $possibleExpireDays[] = $d;
+        }
+    }
+    // Days 31+: show monthly intervals (30, 60, 90, 120...)
+    for ($d = 30; $d <= $maxDays; $d += 30) {
+        if ($d >= $minDays) {
+            $possibleExpireDays[] = $d;
+        }
+    }
+    // Always include the max value if not already present
+    if (!in_array($maxDays, $possibleExpireDays) && $maxDays >= $minDays) {
+        $possibleExpireDays[] = $maxDays;
+    }
+} else {
+    // Use admin-configured list
+    $possibleExpireDays = $configuredDays;
+}
+
+// Include the default value and clean up
+array_push($possibleExpireDays, Config::get('default_guest_days_valid'));
+asort($possibleExpireDays);
+$possibleExpireDays = array_unique($possibleExpireDays, SORT_NUMERIC);
+$expireDays = array_filter($possibleExpireDays, function($k) {
+    return $k <= Config::get('max_guest_days_valid')
+        && $k >= Config::get('min_guest_days_valid');
+});
+
+$expireDaysSelected = Config::get('default_guest_days_valid');
+if (!in_array($expireDaysSelected, $expireDays)) {
+    // If default is filtered out, use the last available option
+    $v = array_slice($expireDays, -1);
+    $expireDaysSelected = $v[0];
+}
+
+
+
 //
 // Note that this needs to be called inside a div with guest_options or transfer_options
 //
 $displayoption = function($name, $cfg, $transfer = false)
 use ( $new_guests_can_only_send_to_creator,
       $new_guests_can_only_send_to_creator_default,
-      $pgpkey )      
+      $openpgpkey )      
 {
     // don't show the option for get_a_link if they can't use it.
     if($name == 'get_a_link' && $new_guests_can_only_send_to_creator ) {
@@ -73,10 +133,16 @@ use ( $new_guests_can_only_send_to_creator,
     // If the user does not have a pgp public key then we shouldn't offer
     // for them to force the guest to use PGP encryption
     //
-    if($name == TransferOptions::PGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$pgpkey ) {
+    if($name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL && !$openpgpkey ) {
         return;
     }    
-    
+
+    // don't allow guests to choose the transfer forward to another server
+    if( in_array($name, array(TransferOptions::FORWARD_TO_ANOTHER_SERVER,
+                              TransferOptions::FORWARD_SERVER_NAME))) {
+        return;
+    }
+
     $default = $cfg['default'];
     if(Auth::isSP()) {
         if($transfer) {
@@ -100,7 +166,7 @@ use ( $new_guests_can_only_send_to_creator,
     } else {
         $lockClassLabel = '';
         $lockClass = '';
-        if($name == 'get_a_link' || $name == 'can_only_send_to_me'  || $name == 'pgp_encrypt_passphrase_to_email') {
+        if($name == 'get_a_link' || $name == 'can_only_send_to_me'  || $name == 'openpgp_encrypt_passphrase_to_email') {
             $lockClass = 'get_a_link_lock';
         }
 
@@ -195,7 +261,7 @@ use ( $new_guests_can_only_send_to_creator,
                                     <div class="guest_options options_box">
                                         <?php
                                         foreach(Guest::availableOptions() as $name => $cfg) {
-                                            if( $name == 'can_only_send_to_me' || $name == 'valid_only_one_time') {
+                                            if( in_array( $name, $guest_options_to_force_to_top_array )) {
                                                 $displayoption($name, $cfg, false);
                                             }
                                         }
@@ -214,11 +280,11 @@ use ( $new_guests_can_only_send_to_creator,
                                         <div class="fs-collapse__content">
                                             <div class="row">
                                                 <div class="col-12 col-sm-12 col-md-7">
-                                                    <strong>{tr:guest_email_settings}</strong>
+                                                    <strong>{tr:guest_transfer_settings}</strong>
 
                                                     <div class="transfer_options">
                                                         <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                            if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                            if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                                 $displayoption($name, $cfg, true);
                                                             }
                                                         } ?>
@@ -227,7 +293,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                     <div class="transfer_options">
                                                         <?php if(count(Transfer::availableOptions(true))) {
                                                             foreach(Transfer::availableOptions(true) as $name => $cfg) {
-                                                                if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                                if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                                     $displayoption($name, $cfg, true);
                                                                 }
                                                             }
@@ -241,10 +307,15 @@ use ( $new_guests_can_only_send_to_creator,
                                                             {tr:invitation_expires_after}
                                                         </label>
                                                         <select id="expires-select" name="expires-select">
-                                                            <option value="7" selected>7 {tr:days}</option>
-                                                            <option value="15">15 {tr:days}</option>
-                                                            <option value="30">30 {tr:days}</option>
-                                                            <option value="40">40 {tr:days}</option>
+                                                            <?php foreach( $expireDays as $k => $v ) { ?>
+                                                                <?php
+                                                                $sel = "";
+                                                                if( $expireDaysSelected == $v ) {
+                                                                    $sel = " selected ";
+                                                                }
+                                                                ?>
+                                                                <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
+                                                            <?php } ?>
                                                         </select>
                                                     </div>
 
@@ -259,11 +330,11 @@ use ( $new_guests_can_only_send_to_creator,
                                                         </div>
                                                     </div>
 
-                                                    <strong>{tr:guest_transfer_settings}</strong>
+                                                    <strong>{tr:guest_email_settings}</strong>
 
                                                     <div class="guest_options">
                                                         <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
-                                                            if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                            if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                                 $displayoption($name, $cfg, false);
                                                             }
                                                         } ?>
@@ -273,7 +344,7 @@ use ( $new_guests_can_only_send_to_creator,
                                                         <?php if(count(Guest::availableOptions(true))) {
                                                             foreach(Guest::availableOptions(true) as $name => $cfg) {
                                                                 if( !array_key_exists($name, $guest_options_handled)) {
-                                                                    if( $name != 'can_only_send_to_me' && $name != 'valid_only_one_time') {
+                                                                    if( !in_array( $name, $guest_options_to_force_to_top_array )) {
                                                                         $displayoption($name, $cfg, false);
                                                                     }
                                                                 }
@@ -318,8 +389,11 @@ use ( $new_guests_can_only_send_to_creator,
                             </div>
                         </div>
                         <br />
-                        <p>
+                        <p id="expires-info">
                             {tr:invitation_expires_in} <span id="expires-days">7</span> {tr:days}.
+                        </p>
+                        <p id="no-expiry-info" style="display:none;">
+                            {tr:does_not_expire}.
                         </p>
                         <br />
                         <ul class="fs-list fs-list--inline">
@@ -334,12 +408,12 @@ use ( $new_guests_can_only_send_to_creator,
             </div>
         </div>
 
-        <?php if($show_pgp_user_profile_message) { // so many div shells to get layout. ?>
+        <?php if($show_openpgp_user_profile_message) { // so many div shells to get layout. ?>
             <div class="fs-new-invitation__form">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
                         <div class="fs-new-invitation__data">
-                            <div><i class="fa fa-info-circle"></i>{tr:pgp_blurb_guests_page}</div>
+                            <div><i class="fa fa-info-circle"></i>{tr:openpgp_blurb_guests_page}</div>
                         </div>
                     </div>
                 </div>

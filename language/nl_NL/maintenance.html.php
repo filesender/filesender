@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-<h1>Deze dienst is op dit moment in onderhoud</h1>
+<h1>{cfg:site_name} is op dit moment in onderhoud</h1>
 <p>
-   Probeert u het later alstublieft nogmaals.
+   Probeer het later nogmaals.
 </p>

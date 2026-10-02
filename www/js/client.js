@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -224,7 +224,7 @@ window.filesender.client = {
         
         // Needs to be done after "var settings" because handler needs that settings variable exists
         settings.error = function(xhr, status, error) {
-            var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
+            var msg = window.filesender.client.xhrResponse( xhr );
             
             if( // Ignore 40x, 50x and timeouts if undergoing maintenance
                 (xhr.status >= 400 || status == 'timeout') &&
@@ -419,7 +419,8 @@ window.filesender.client = {
             lang: transfer.lang,
             expires: transfer.expires,
             aup_checked: transfer.aup_checked,
-            options: transfer.options
+            options: transfer.options,
+            encrypted_metadata: transfer.encrypted_metadata,
         }, callback, opts);
     },
     
@@ -470,7 +471,7 @@ window.filesender.client = {
      * @param callable done
      * @param callable error
      */
-    putChunk: function(file, blob, offset, progress, done, error, encrypted, encryption_details ) {
+    putChunk: async function(file, blob, offset, progress, done, error, encrypted, encryption_details ) {
         var sz = blob.size;
         if( typeof blob == "string" ) {
             sz = blob.length;
@@ -516,7 +517,19 @@ window.filesender.client = {
                         arrayBuffer,
                         chunkid,
                         encryption_details,
-                        function(encrypted_blob) {
+                        async function(encrypted_blob) {
+
+                            var contentHash = '';
+                            var hashArray = '';
+                            var hashHex = '';
+                            if(window.filesender.config.client_calculate_sha256) {
+                                contentHash = await crypto.subtle.digest('SHA-256', encrypted_blob );
+                                hashArray = Array.from(new Uint8Array(contentHash));
+                                hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                            }
+                            opts.headers['X-Filesender-Digest-SHA256'] = hashHex;
+                            
+                            opts.headers['X-Filesender-Chunk-Size-Encrypted'] = encrypted_blob.length;
                             var result = $this.put(
                                 file.transfer.authenticatedEndpoint(
                                     '/file/' + file.id + '/chunk/' + offset,
@@ -526,7 +539,21 @@ window.filesender.client = {
                 }
             );
         }else{
-            var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
+            
+            var contentHash = '';
+            var hashArray = '';
+            var hashHex = '';
+            if(window.filesender.config.client_calculate_sha256) {
+                var ab = await blob.arrayBuffer();
+                contentHash = await crypto.subtle.digest('SHA-256', ab);
+                hashArray = Array.from(new Uint8Array(contentHash));
+                hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                blob = ab;
+            }
+            opts.headers['X-Filesender-Digest-SHA256'] = hashHex;
+            
+            var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file),
+                                   blob, done, opts);
         }
         
         if(error) opts.error = error;
@@ -801,19 +828,19 @@ window.filesender.client = {
                          callback );
     },
 
-    getPGPPublicKey: function(emailaddr, callback) {
+    getOpenPGPPublicKey: function(emailaddr, callback) {
         return this.post('/user/@me',
                          {
-                             property: 'pgp_key',
+                             property: 'openpgp_key',
                              email: emailaddr
                          },
                          callback );
     },
 
-    testPGPPublicKey: function(message,callback) {
+    testOpenPGPPublicKey: function(message,callback) {
         return this.post('/user/@me',
                          {
-                             property: 'test_pgp_key',
+                             property: 'test_openpgp_key',
                              message: message
                          },
                          callback );
@@ -942,6 +969,603 @@ window.filesender.client = {
         return this.put('/transfer/' + id + '/checkVerificationCodeWithServer',
                         {checkVerificationCodeWithServer: pass, token: token},
                         callback, ecb );
+    },
+
+    token: null,
+    page: null,
+
+    verificationCodePassed: true,
+    verificationCodeObjectThatTiggeredEvent: null,
+    verificationCodePassedPopup: null,
+    
+    
+
+    getTokenFromLocation: function() {
+        // Get recipient token
+        var m = window.location.search.match(/token=([0-9a-f-]+)/);
+        this.token = m[1];
+    },
+
+    setToken: function( t ) {
+        this.token = t;
+    },
+    
+    setPage: function( v ) {
+        this.page = v;
+        var page = this.page;
+
+        this.verificationCodePassed = true;
+        this.verificationCodeObjectThatTiggeredEvent = null;
+        this.verificationCodePassedPopup = null;
+        if( window.filesender.config.download_verification_code_enabled ) {
+            this.verificationCodePassed = false;
+        }
+
+        window.filesender.pbkdf2dialog.setup( true );
+
+
+        if( window.filesender.config.download_verification_code_enabled ) {
+            var transferid = $('.transfer').attr('data-id');
+            var rid = $('.rid').attr('data-id');
+
+            page.find('.verificationcodesendtoemail').button().on('click', function () {
+                filesender.client.sendVerificationCodeToYourEmailAddress(
+                    transferid,
+                    function () {
+                        window.filesender.ui.notify("info", lang.tr("email_sent"));
+                    });
+                return true;
+            });
+            page.find('.verificationcodesend').button().on('click', function () {
+                var pass = $('#verificationcode').val();
+                if (!pass.length) {
+                    // nothing, could have just returned true here.
+                } else {
+                    try {
+                        var options = {
+                            error: function (e) {
+                                if (e.message == 'rest_data_stale') {
+                                    window.filesender.ui.alert("error", lang.tr("verification_code_is_too_old"));
+                                    return;
+                                }
+                                filesender.ui.error(e);
+                            }
+                        };
+
+
+                        filesender.client.checkVerificationCodeWithServer(
+                            transferid, pass,
+                            function (args) {
+                                if (args.ok === true) {
+                                    filesender.client.verificationCodePassed = true;
+                                    $(".verify_email_to_download").dialog("close");
+
+                                    var encrypted = filesender.client.verificationCodeObjectThatTiggeredEvent.closest('.file').attr('data-encrypted');
+                                    var msg = "downloading";
+                                    if (!encrypted) {
+                                        window.filesender.ui.notify("info", lang.tr(msg));
+                                    }
+                                    filesender.client.verificationCodeObjectThatTiggeredEvent.click();
+                                } else {
+                                    window.filesender.ui.alert("error", lang.tr("verification_code_did_not_match"));
+                                }
+                            }
+                            , options
+                        );
+                    } catch (exception) {
+                    }
+                }
+                return true;
+            });
+        }
+
+
+        var macos = navigator.platform.match(/Mac/);
+        var linuxos = navigator.platform.match(/Linux/);
+        if( !macos )
+            $('.mac_archive_message').hide();
+
+        // only worry the user with this banner if any files are encrypted
+        // and they will not be able to download them.
+        var transfer_is_encrypted = $('.transfer_is_encrypted').text()==1;
+        if( transfer_is_encrypted && !filesender.supports.crypto )
+            $('#encryption_description_not_supported').show();
+
+
+        var button_zipdl = page.find('.archive_download_frame');
+        var button_tardl = page.find('.archive_tar_download_frame');
+        if( macos || linuxos ) {
+            button_tardl.addClass('fs-button fs-button--success');
+        } else {
+            button_zipdl.addClass('fs-button fs-button--success');
+        }
+        
+    },
+
+    makeTokenString: function() {
+        if( filesender.client.token ) {
+            return 'token=' + filesender.client.token;
+        }
+        return "";
+    },
+    dl: function(ids, confirm, encrypted, progress, archive_format ) {
+        if(typeof ids == 'string') ids = [ids];
+
+        var page = this.page;
+
+        // the dlcb handles starting the download for
+        // all non encrypted downloads
+        var dlcb = function(notify) {
+            notify = notify ? '&notify_upon_completion=1' : '';
+            return function() {
+                if( archive_format ) {
+                    console.log("Starting download using POST method...");
+                    $('#dlarchivepostformat').attr( 'value', archive_format );
+                    filesender.client.updateSelectedFilesForArchiveDownload();
+                    $('#dlarchivepost').submit();
+                } else {
+                    filesender.ui.redirect(
+                        filesender.config.base_path
+                            + 'download.php?' + filesender.client.makeTokenString()
+                            + '&archive_format=' + archive_format
+                            + '&files_ids=' + ids.join(',') + notify);
+                }
+            };
+        };
+        if (!encrypted && confirm){
+            filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
+        }else{
+            if(encrypted){
+                if(!filesender.supports.crypto ) {
+                    filesender.ui.alert('error', lang.tr('file_encryption_description_disabled'));
+                    return;
+                }
+
+                var crypto_app = window.filesender.crypto_app();
+
+                if( window.filesender.config.terareceiver_allowed ) {
+                    var terareceiverenabled = page.find('#terareceiverenabled').is(':checked');
+                    window.filesender.user_selected_terareceiver = terareceiverenabled;
+                }
+                if( window.filesender.config.use_streamsaver ) {
+                    var streamsaverenabled = page.find('#streamsaverenabled').is(':checked');
+                    crypto_app.disable_streamsaver = !streamsaverenabled;
+                }
+                console.log("download page has worked out if streamsaver should be disabled: " , crypto_app.disable_streamsaver );
+
+                if( archive_format || ids.length > 1 ) {
+                    //
+                    // Stream encrypted files to browser and add the decrypted content
+                    // into a zip64 file in the browser.
+                    //
+                    var onFileOpen = function( blobSink, fileid )
+                    {
+                        var progress = page.find(".file[data-id='" + fileid + "']").find('.downloadprogress');
+                        progress.html("");
+                        blobSink.progress = progress;
+
+                        var overall = page.find(".archive_message");
+
+
+                        var msg = lang.tr('encrypted_archive_download_overall_progress').r(
+                            {
+                                id: 0
+                                , currentfilenumber:    blobSink.currentFileNumber+1
+                                , totalfilestodownload: blobSink.totalFilesToDownload
+                            }).out();
+                        overall.html(msg);
+                    };
+                    var onFileClose = function( blobSink, fileid )
+                    {
+                        var progress = page.find(".file[data-id='" + fileid + "']").find('.downloadprogress');
+                        progress.html(window.filesender.config.language.download_complete);
+
+                    };
+                    var onComplete = function( blobSink )
+                    {
+                        var overall = page.find(".archive_message");
+                        overall.html(window.filesender.config.language.download_complete);
+                    };
+
+                    // generate zip in browser from decrypted files.
+                    var selectedFiles = [];
+                    var i = 0;
+                    for(; i < ids.length; i++ ) {
+
+                        var dataid  = ".file[data-id='" + ids[i] + "']";
+                        var dataid0 = ".file[data-id='" + ids[0] + "']";
+                        
+                        var el                 = page.find(dataid);
+                        var fileaead           = el.attr('data-fileaead');
+                        var key_version        = el.attr('data-key-version');
+                        var fileivcoded        = el.attr('data-fileiv');
+                        var transferid         = $('.transfer').attr('data-id');
+                        var chunk_size         = el.attr('data-chunk-size');
+                        var crypted_chunk_size = el.attr('data-crypted-chunk-size');
+                        
+                        selectedFiles.push({
+                            fileid:ids[i]
+                            , filename           : el.attr('data-name')
+                            , filesize           : el.attr('data-size')
+                            , encrypted_filesize : el.attr('data-encrypted-size')
+                            , mime               : el.attr('data-mime')
+                            , key_version        : el.attr('data-key-version')
+                            , salt               : el.attr('data-key-salt')
+                            , password_version   : el.attr('data-password-version')
+                            , password_encoding  : el.attr('data-password-encoding')
+                            , password_hash_iterations : el.attr('data-password-hash-iterations')
+                            , client_entropy     : el.attr('data-client-entropy')
+                            , fileiv             : window.filesender.crypto_app().decodeCryptoFileIV(fileivcoded,key_version)
+                            , fileaead           : fileaead.length?atob(fileaead):null
+                            , transferid         : transferid
+                        });
+
+                        // clear any previous progress message
+                        var progress = el.find('.downloadprogress');
+                        progress.html("");
+                    }
+                    window.filesender.crypto_encrypted_archive_download = true;
+                    crypto_app.decryptDownloadToZip( filesender.config.base_path
+                                                     + 'download.php?' + filesender.client.makeTokenString()
+                                                     + '&files_ids='
+                                                     , transferid
+                                                     , chunk_size
+                                                     , crypted_chunk_size
+                                                     , selectedFiles
+                                                     , progress
+                                                     , onFileOpen, onFileClose, onComplete
+                                                   );
+
+
+                }
+                else
+                {
+                    // single file download
+                    var dataid = ".file[data-id='" + ids[0] + "']";
+                    var el = page.find(dataid);
+                    var transferid               = $('.transfer').attr('data-id');
+                    var chunk_size               = el.attr('data-chunk-size');
+                    var crypted_chunk_size       = el.attr('data-crypted-chunk-size');
+                    var filename                 = el.attr('data-name');
+                    var filesize                 = el.attr('data-size');
+                    var encrypted_filesize       = el.attr('data-encrypted-size');
+                    var mime                     = el.attr('data-mime');
+                    var key_version              = el.attr('data-key-version');
+                    var salt                     = el.attr('data-key-salt');
+                    var password_version         = el.attr('data-password-version');
+                    var password_encoding        = el.attr('data-password-encoding');
+                    var password_hash_iterations = el.attr('data-password-hash-iterations');
+                    var client_entropy           = el.attr('data-client-entropy');
+                    var fileiv                   = el.attr('data-fileiv');
+                    var fileaead                 = el.attr('data-fileaead');
+                    if( fileaead.length ) {
+                        fileaead = atob(fileaead);
+                    }
+                    window.filesender.crypto_encrypted_archive_download = false;
+                    crypto_app.decryptDownload( filesender.config.base_path
+                                                + 'download.php?' + filesender.client.makeTokenString()
+                                                + '&files_ids=' + ids.join(','),
+                                                transferid, chunk_size, crypted_chunk_size,
+                                                mime, filename, filesize, encrypted_filesize,
+                                                key_version, salt,
+                                                password_version, password_encoding,
+                                                password_hash_iterations,
+                                                client_entropy,
+                                                window.filesender.crypto_app().decodeCryptoFileIV(fileiv,key_version),
+                                                fileaead,
+                                                progress );
+                }
+            }
+            else
+            {
+                var notify = false;
+                dlcb( notify ).call();
+            }
+        }
+    },
+
+    // Bind download buttons
+    bindDownloadButton: function( n ) {
+        var page = this.page;
+
+        page.find( n ).button().on('click', function() {
+            var id = $(this).closest('.file').attr('data-id');
+            var encrypted = $(this).closest('.file').attr('data-encrypted');
+            var progress = $(this).closest('.file').find('.downloadprogress');
+
+            var transferid = $('.transfer').attr('data-id');
+
+            filesender.client.verificationCodeObjectThatTiggeredEvent = $(this);
+            if( !filesender.client.verificationCodePassed ) {
+                filesender.client.verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"), { width: '30%' } );
+            } else {
+                filesender.client.getTransferOption(
+                    transferid,
+                    'enable_recipient_email_download_complete',
+                    filesender.client.token,
+                    function(dl_complete_enabled)
+                    {
+                        filesender.client.dl(id, dl_complete_enabled, encrypted, progress );
+                    });
+            }
+            return false;
+        });
+    },
+
+    bindDownloadArchive: function() {
+        var page = this.page;
+        var dlArchive = function( archive_format, button ) {
+            var ids = [];
+            page.find('.file[data-selected="1"]').each(function() {
+                ids.push($(this).attr('data-id'));
+            });
+
+            if(!ids.length) { // No files selected, supose we want all of them
+                page.find('.file').each(function() {
+                    ids.push($(this).attr('data-id'));
+                });
+            }
+
+
+            var transferid = $('.transfer').attr('data-id');
+            var encrypted = $('.transfer_is_encrypted').text()==1;
+
+            filesender.client.verificationCodeObjectThatTiggeredEvent = button;
+            if( !filesender.client.verificationCodePassed ) {
+                filesender.client.verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"), { width: '30%' } );
+            } else {
+                filesender.client.getTransferOption(transferid,
+                                                    'enable_recipient_email_download_complete',
+                                                    filesender.client.token,
+                                                    function(dl_complete_enabled){
+                    filesender.client.dl(ids, dl_complete_enabled, encrypted, null, archive_format );
+                });
+            }
+            return false;
+        };
+
+        // Bind archive download button
+        page.find('.archive .archive_download').on('click', function() {
+            return dlArchive( 'zip', $(this) );
+        });
+        page.find('.archive .archive_tar_download').on('click', function() {
+            return dlArchive( 'tar', $(this) );
+        });
+    },
+
+    updateSelectedFilesForArchiveDownload: function()  {
+        var page = this.page;
+        var ids = [];
+        page.find('.file[data-selected="1"]').each(function() {
+            ids.push($(this).attr('data-id'));
+        });
+        var idlist = ids.join(',');
+        $('.archivefileids').attr('value', idlist );
+    },
+    
+
+    bindFileCheckButtons: function() {
+
+        var page = this.page;
+
+        // Bind file selectors
+        page.find('.file input[type=checkbox]').on('change', function(e) {
+            const el = $(this);
+            const isChecked = e.target.checked;
+            const f = el.closest('.file');
+            f.attr('data-selected', isChecked ? '1' : '0');
+
+            if (!isChecked) {
+                const checkAll = $('#check-all');
+                checkAll.prop("checked", false);
+            }
+
+            filesender.client.checkHideDownloadButtons();
+            filesender.client.updateSelectedFileSize();
+
+            e.stopPropagation();
+        });
+
+        // Bind global selector
+        page.find('#check-all').on('change', function(e) {
+            const isChecked = $('#check-all').is(":checked");
+            const files = page.find('.file');
+            files.attr('data-selected', isChecked ? '1' : '0');
+
+            const checkBoxes = $('.file input[type=checkbox]');
+            checkBoxes.prop("checked", isChecked);
+
+            filesender.client.checkHideDownloadButtons();
+            filesender.client.updateSelectedFileSize();
+
+            e.stopPropagation();
+        });
+    },
+    
+    checkHideDownloadButtons: function() {
+        var page = this.page;
+        
+        const ids = [];
+        page.find('.file[data-selected="1"]').each(function() {
+            ids.push($(this).attr('data-id'));
+        });
+
+        if(!ids.length) {
+            $('.fs-download__actions').addClass('fs-download__actions--hide');
+            $('.fs-download__zip64-info').addClass('fs-download__zip64-info--hide');
+        } else {
+            $('.fs-download__actions').removeClass('fs-download__actions--hide');
+            $('.fs-download__zip64-info').removeClass('fs-download__zip64-info--hide');
+        }
+    },
+
+    isTrue: function(v) {
+        return v == '1' || v == 'true';
+    },
+    
+    updateSelectedFileSize: function () {
+        var $this = this;
+        var page = this.page;
+
+        let totalSize = 0;
+        page.find('.file[data-selected="1"]').each(function() {
+            totalSize = totalSize + parseInt($(this).attr('data-size'), 10);
+        });
+
+        const isEncrypted = $this.isTrue(page.find('.transfer_details').attr('data-transfer-encrypted'));
+        const haveEncryptedMetadata = $this.isTrue(page.find('.transfer_details').attr('data-transfer-have-encrypted-metadata'));
+
+        const formattedTotalSize = filesender.client.formatBytes(totalSize);
+        
+        if( !window.filesender.encmd_decrypted
+            && isEncrypted
+            && haveEncryptedMetadata )
+        {
+                totalSize = 0;
+                $('.fs-download__total-size span').text("{tr:encrypted_metadata_file_size_hidden}");
+        } else {
+            $('.fs-download__total-size span').text(formattedTotalSize);
+        }
+        
+        if (totalSize > 0) {
+            $('.fs-download__total-size').addClass('fs-download__total-size--show');
+        } else {
+            $('.fs-download__total-size').removeClass('fs-download__total-size--show');
+        }
+    },
+
+    formatBytes: function (bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes'
+
+        const k = 1024
+        const dm = decimals < 0 ? 0 : decimals
+        const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+    },
+
+    /**
+     * Get the responseText from an XHR or an empty string
+     * leading and trailing whitespace in the return has always been removed
+     */
+    xhrResponse: function( xhr ) {
+        var ret = (xhr.responseText || '');
+        ret = ret.replace(/^\s+/, '').replace(/\s+$/, '');
+        return ret;
+    },
+
+
+    handlePossibleEncryptedMetadata: async function ()
+    {
+        var $this = this;
+
+        window.filesender.encmd_decrypted = false;
+        
+        var page = $('.download_page');
+        if(!page.length) page = $('.transfer_detail_page');
+        if(!page.length) return;
+
+        var ca = window.filesender.crypto_app();
+        var cc = window.filesender.crypto_common();
+        var defaultPasswordValue = '';
+
+        var encmd = page.find('.encrypted_metadata').text();
+        if( encmd == "" ) {
+            return;
+        }
+        
+        
+        var prompt = window.filesender.ui.promptPassword(
+            window.filesender.config.language.file_encryption_metadata_enter_password,
+            async function (pass) {
+                window.filesender.crypto_last_password = pass;
+                var PASSWORD = pass;
+                
+                var encmd = page.find('.encrypted_metadata').text();
+                enc_md_str = ca.nFromBase64(encmd);
+                enc_md = JSON.parse(enc_md_str);
+                
+                enc_md.iv = ca.decodeFromBase64( enc_md.iv, enc_md.ivsz );
+                enc_md.e  = ca.decodeFromBase64( enc_md.e,  enc_md.esz );
+                enc_md.ed = ca.nFromBase64( enc_md.ed );
+                enc_md.ed = JSON.parse(enc_md.ed);
+                
+                var chunkid = 0;
+                var encryptedChunk = enc_md.e;
+                var encryption_details = enc_md.ed;
+                encryption_details.password = PASSWORD;
+                var key = await ca.getObtainKeyPromise( chunkid, encryption_details );
+
+                ///////////////
+                var decryptParams = {
+                    // See the comment for encryptParams above for info.
+                    name: 'AES-CBC',
+                    iv: enc_md.iv,
+                };
+
+                try {
+                    var backagain = await crypto.subtle.decrypt(decryptParams, key, encryptedChunk);
+
+                    encmd = (new TextDecoder()).decode(backagain);
+
+                    window.filesender.crypto_last_password_succeeded = true;
+                    
+                    /////////////////////////////////////////////
+                    // replace the metadata with the real values
+                    //
+                    md = JSON.parse(encmd);
+                    md = new Map(Object.entries(md));
+                    
+                    for (const [k, v] of md) {
+                        
+                        var name = v["name"];
+                        var pobj = $('[data-name="protected-' + k + '"]');
+
+                        pobj.attr("data-name",name);
+                        pobj.attr("data-mime",v["mimetype"]);
+                        pobj.attr("data-size",v["size"]);
+                        pobj.find(".size").text($this.formatBytes(v["size"]));
+                        pobj.find(".name").text(name);
+                    }
+
+                    window.filesender.md = md;
+                    window.filesender.encmd_decrypted = true;
+                    filesender.client.updateSelectedFileSize();
+
+                    let totalSize = 0;
+                    page.find('.file').each(function() {
+                        totalSize = totalSize + parseInt($(this).attr('data-size'), 10);
+                    });
+                    const formattedTotalSize = filesender.client.formatBytes(totalSize);
+                    $('.fs-info-transfer-size').text(formattedTotalSize);
+                    
+
+                } catch (error) {
+                    console.log(error);
+                    var msg = window.filesender.config.language.file_encryption_metadata_wrong_password;
+                    filesender.ui.alert( "error", msg );                    
+                }
+            }, function() {
+                window.filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
+            }, defaultPasswordValue );
+
+            // Add a field to the prompt
+            var trshowhide = window.filesender.config.language.file_encryption_show_password;
+            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
+
+            window.filesender.crypto_last_password_succeeded = false;
+            prompt.append(toggleView);
+            $('#showdlpass').on(
+                "click",
+                function() {
+                    var v = $('#showdlpass').is(':checked');
+                    if( v ) { $('.bootbox-input').attr('type','text'); }
+                    else    { $('.bootbox-input').attr('type','password'); }
+                }
+            );
+        
     },
     
 };

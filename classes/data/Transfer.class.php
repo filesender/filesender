@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -85,6 +85,10 @@ class Transfer extends DBObject
             'type' => 'datetime'
         ),
         'made_available' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
+        'last_chunk_time' => array(
             'type' => 'datetime',
             'null' => true
         ),
@@ -198,6 +202,29 @@ class Transfer extends DBObject
             'default' => 0
         ),
 
+        'idpid' => array(
+            'type'    => 'uint',
+            'size'    => 'big',
+            'null'    => true
+        ),
+
+        'forward_server' => array(
+            'type' => 'text',
+            'transform' => 'json',
+            //'type' => 'string',
+            //'size' => 250,
+            'null' => true
+        ),
+        'forward_id' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
+        ),
+        'encrypted_metadata' => array(
+            'type' => 'text',
+            'null' => true
+        ),
+        
     );
 
     /**
@@ -236,63 +263,43 @@ class Transfer extends DBObject
                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
                                         . '  group by t.id,f.size ';
 
-            $sizeidpviewdev[$dbtype] = 'select t.*,sum(f.size) as size,a.saml_user_identification_idp from '
+            $sizeidpviewdev[$dbtype] = 'SELECT t.id, t.idpid, sum(f.size) as size, t.created, t.expires, DATE(t.created) as date_created, DATE(t.expires) as date_expires, t.made_available, t.status, t.options '
+                                     . 'FROM '
                                      . self::getDBTable().' t '
                                            . ' LEFT JOIN '.call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id '
-                                           . '  group by t.id, a.saml_user_identification_idp';
+                                           . ' GROUP BY t.id';
             
             $recipientviewdev[$dbtype] = 'select t.*,r.email as recipientemail,r.id as recipientid from '
                                        . self::getDBTable().' t LEFT JOIN '
                                              . call_user_func('Recipient::getDBTable').' r ON t.id=r.transfer_id';
-
-            $filesview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize from '
+            $filesview[$dbtype] = 'SELECT t.*, f.name as filename, f.size as filesize, DATE(t.created) as date_created, DATE(t.expires) as date_expires FROM '
                                 . self::getDBTable().' t LEFT JOIN '
                                       . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id';
 
-            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, a.saml_user_identification_idp from '
+            $filesidpview[$dbtype] = 'select t.*,f.name as filename,f.size as filesize, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
+                                   . ' from '
                                    . self::getDBTable().' t LEFT JOIN '
-                                      . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
-                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
-
-            $auditlogsview[$dbtype] = 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                    . ' from '
-                                    . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a '
-                                          . " where "
-                                          . " a.target_id=" . DBLayer::toViewVarCharCast("t.id",255)
-                                          . " and target_type = 'Transfer'  "
-                                     . " UNION "
-                                          . 'select t.*,0 as fileid,a.created as acreated,a.author_type,a.author_id,a.target_type,a.target_id,a.event,a.id as aid '
-                                          . ' from '
-                                          . self::getDBTable().' t, '
-                                          . call_user_func('AuditLog::getDBTable').' a, '
-                                          . call_user_func('File::getDBTable').' f '
-                                          . " where  f.transfer_id=t.id  "
-                                          . "   and a.target_id=" .  DBLayer::toViewVarCharCast("f.id",255)
-                                                                            . "   and target_type = 'File'  ";
+                                         . call_user_func('File::getDBTable').' f ON t.id=f.transfer_id'
+                                         . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                         . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id ';
             
-            $auditlogsviewdlcss[$dbtype] = 'select id,count(*) as count from transfersauditlogsview where  '
-                                             . " ( event = 'download_ended' or event = 'archive_download_ended' ) group by id ";
-                
-            $auditlogsviewdlc[$dbtype] = 'select t.*,count from '
-                                       . self::getDBTable() . ' t '
-                                             . " left outer join transfersauditlogsdlsubselectcountview zz "
-                                             . " on t.id = zz.id  " ;
-            
-            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, a.saml_user_identification_idp '
+            $idpviewsizesumperidp[$dbtype] = 'SELECT SUM(size) AS sizesum, max(t.idpid) as idpid, idp.entityid as idp_entityid, idp.name as idp_name, idp.organization_name as idp_organization_name '
                                            . ' FROM '.File::getDBTable().' f '
                                            . ' INNER JOIN '.self::getDBTable().' t ON t.id = f.transfer_id '
-                                           . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                           . ' LEFT JOIN '.Authentication::getDBTable().' a ON u.authid=a.id '
-                                           . ' GROUP BY a.saml_user_identification_idp ';
+                                           . ' INNER JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid '
+                                           . ' GROUP BY idp.id,t.idpid ';
 
-            $idpview[$dbtype] = 'select t.*,a.saml_user_identification_idp as idp, saml_user_identification_idp as saml_user_identification_idp from '
+            
+            $idpview[$dbtype] = 'select t.*, idp.entityid as idp_entityid, idp.name as idp_name,idp.organization_name as idp_organization_name '
+                              . ' from '
                               . self::getDBTable() . ' t '
-                                    . ' LEFT JOIN '.call_user_func('User::getDBTable').' u ON t.userid=u.id '
-                                    . ' LEFT JOIN '.call_user_func('Authentication::getDBTable').' a ON u.authid=a.id ';
+                                    . ' LEFT JOIN '.call_user_func('IdP::getDBTable').' idp ON idp.id=t.idpid ';
+
+            $auditlogsview[$dbtype] = 'select 1';
+            $auditlogsviewdlcss[$dbtype] = 'select 1';
+            $auditlogsviewdlc[$dbtype] = 'select 1';
+            
+            
         }
         return array( strtolower(self::getDBTable()) . 'view' => $a
                     , 'transfersauthview' => $authviewdef
@@ -301,11 +308,11 @@ class Transfer extends DBObject
                     , 'transfersrecipientview' => $recipientviewdev
                     , 'transfersfilesview' => $filesview
                     , 'transfersfilesidpview' => $filesidpview
+                    , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
+                    , 'transferidpview' => $idpview
                     , 'transfersauditlogsview' => $auditlogsview
                     , 'transfersauditlogsdlsubselectcountview' => $auditlogsviewdlcss
                     , 'transfersauditlogsdlcountview' => $auditlogsviewdlc
-                    , 'transferidpviewsizesumperidp' => $idpviewsizesumperidp
-                    , 'transferidpview' => $idpview
         );
     }
     
@@ -319,7 +326,7 @@ class Transfer extends DBObject
         'expires' => array(
             'expires' => array()
         ),
-        'downlaods' => array(
+        'downloads' => array(
             'download_count' => array()
         )
     );
@@ -335,9 +342,9 @@ class Transfer extends DBObject
     const UPLOADING = "status = 'uploading' ORDER BY created DESC";
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const CLOSED = "status = 'closed' ORDER BY created DESC";
-    const EXPIRED = "expires <= :date ORDER BY expires ASC";
-    const FAILED = "created < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
-    const AUDITLOG_EXPIRED = "expires < :date ORDER BY expires ASC";
+    const EXPIRED = "expires < :datetime ORDER BY expires ASC";
+    const FAILED = "last_chunk_time < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
+    const AUDITLOG_EXPIRED = "expires < :datetime ORDER BY expires ASC";
     const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
@@ -347,10 +354,10 @@ class Transfer extends DBObject
     const CLOSED_NO_ORDER = "status = 'closed' ";
     const FROM_USER_NO_ORDER        = "userid = :userid AND status='available' and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
     const FROM_USER_CLOSED_NO_ORDER = "userid = :userid AND status='closed'    and ( guest_id is null or guest_transfer_shown_to_user_who_invited_guest ) ";
-    const FROM_IDP_NO_ORDER   = "saml_user_identification_idp = :idp ";
-    const FROM_IDP_UPLOADING = "status = 'uploading' and saml_user_identification_idp = :idp ORDER BY created DESC";
-    const FROM_IDP_AVAILABLE = "status = 'available' and saml_user_identification_idp = :idp ORDER BY created DESC";
-    const FROM_IDP_EXPIRED   = "expires <= :date  and saml_user_identification_idp = :idp ORDER BY expires ASC";
+    const FROM_IDP_NO_ORDER   = "idpid = :idp ";
+    const FROM_IDP_UPLOADING = "status = 'uploading' and idpid = :idp ORDER BY created DESC";
+    const FROM_IDP_AVAILABLE = "status = 'available' and idpid = :idp ORDER BY created DESC";
+    const FROM_IDP_EXPIRED   = "expires < :datetime and idpid = :idp ORDER BY expires ASC";
 
     const ROUNDTRIPTOKEN_ENTROPY_BYTE_COUNT = 16;
     
@@ -368,6 +375,7 @@ class Transfer extends DBObject
     protected $message = null;
     protected $created = 0;
     protected $made_available = null;
+    protected $last_chunk_time = null;
     protected $expires = 0;
     protected $expiry_extensions = 0;
     protected $options = array();
@@ -386,7 +394,10 @@ class Transfer extends DBObject
     protected $download_count = 0;
     protected $chunk_size = 0;
     protected $crypted_chunk_size = 0;
-
+    protected $idpid = null;
+    protected $forward_server = null;
+    protected $forward_id = null;
+    protected $encrypted_metadata = null;
     
     
     /**
@@ -460,6 +471,10 @@ class Transfer extends DBObject
         
         if (is_object($this->options)) {
             $this->options = (array)$this->options;
+        }
+
+        if (is_object($this->forward_server)) {
+            $this->forward_server = (array)$this->forward_server;
         }
 
         $this->password_encoding_string = DBConstantPasswordEncoding::reverseLookup($this->password_encoding);
@@ -636,13 +651,31 @@ class Transfer extends DBObject
                 throw new BadEmailException($user_email);
             }
         }
+
+        
+        
         
         $transfer->__set('user_email', $user_email);
         $transfer->__set('expires', $expires);
         $transfer->created = time();
+        $transfer->last_chunk_time = time(); // Initialize to creation time so cleanup can find it even if no chunks were ever uploaded
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
 
+        if(Auth::isSP()) {
+            if(Auth::isRegularUser() || Auth::isAdmin()) {
+                $attrs = Auth::attributes();
+                $entityId = $attrs['idp'] ?? null;
+                if( $entityId ) {
+                    $idp = IdP::ensure($entityId);
+                    $transfer->idpid = $idp->id;
+
+                    AuthSP::ensureLocalIdPMetadata($entityId,$idp);
+                    $transfer->save();
+                }
+            }
+        }
+        
         return $transfer;
     }
     
@@ -678,7 +711,10 @@ class Transfer extends DBObject
         if (!$days) {
             $days = Config::get('default_daysvalid');
         } // @deprecated legacy
-        
+
+        if (!empty($_COOKIE['x-filesender-timezone'])) {
+            return strtotime('+'.$days.' day') + Utilities::getTimezoneOffset($_COOKIE['x-filesender-timezone']);
+        }
         return strtotime('+'.$days.' day');
     }
     
@@ -709,7 +745,7 @@ class Transfer extends DBObject
                 ),
                 array(':idp' => $idp)
             );
-            $idpused = $d['sizesum'];
+            $idpused = $d['sizesum'] ?? 0;
         }
         
         return array(
@@ -767,7 +803,7 @@ class Transfer extends DBObject
     public static function allExpired( $idp = null )
     {
         if (!$idp) {
-            return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+            return self::all(self::EXPIRED, array(':datetime' => date('Y-m-d H:i:s')));
         }
 
         return self::all(array(
@@ -775,7 +811,7 @@ class Transfer extends DBObject
                              'where' => self::FROM_IDP_EXPIRED
                          ),
                          array(':idp' => $idp,
-                               ':date' => date('Y-m-d')
+                               ':datetime' => date('Y-m-d H:i:s')
                          )
         );
     }
@@ -791,7 +827,7 @@ class Transfer extends DBObject
         if (!$days) {
             return array();
         }
-        return self::all(self::FAILED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
+        return self::all(self::FAILED, array(':date' => date('Y-m-d H:i:s', time() - ($days * 24 * 3600))));
     }
     
     /**
@@ -805,7 +841,7 @@ class Transfer extends DBObject
         if (is_null($days)) {
             $days = 0;
         }
-        return self::all(self::EXPIRED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
+        return self::all(self::EXPIRED, array(':datetime' => date('Y-m-d H:i:s', time() - ($days * 24 * 3600))));
     }    
 
     /**
@@ -814,7 +850,19 @@ class Transfer extends DBObject
     public function beforeDelete()
     {
         AuditLog::clean($this);
-        
+
+        if ($this->needForward()) {
+            ForwardAnotherServer::deleteTransfer($this);
+            foreach ($this->files as $file) {
+                $file->forward_id = null;
+            }
+            foreach ($this->recipients as $recipient) {
+                $recipient->forward_id = null;
+            }
+            $this->forward_id = null;
+            $this->forward_server = null;
+        }
+
         if (!is_null($this->collections)) {
             foreach ($this->collections as $collection_type_id => $collectionList) {
                 foreach ($collectionList as $collection) {
@@ -844,6 +892,8 @@ class Transfer extends DBObject
         }
         
         Logger::info($this.' deleted');
+        Logger::logActivity(LogEventTypes::TRANSFER_DELETED, $this);
+        
     }
 
     public function userCanSeeTransfer()
@@ -867,6 +917,7 @@ class Transfer extends DBObject
             case TransferStatuses::CREATED:
             case TransferStatuses::STARTED:
             case TransferStatuses::UPLOADING:
+            case TransferStatuses::FORWARDING:
                 // Transfer still not available, delete it
                 $this->delete();
                 return;
@@ -885,24 +936,29 @@ class Transfer extends DBObject
         if ($manualy) {
             $this->expires = time();
         } // Set expiration date so that auditlogs are cleaned the right way
+        if ($this->needForward()) {
+            ForwardAnotherServer::closeTransfer($this);
+        }
         $this->save();
         
         // Log action
         Logger::logActivity($manualy ? LogEventTypes::TRANSFER_CLOSED : LogEventTypes::TRANSFER_EXPIRED, $this);
 
         if (!$this->getOption(TransferOptions::GET_A_LINK)) {
+            if (!$this->hasBeenForwarded()) {
 
-            $email_message_type = 'transfer_expired';
-            if( $manualy ) {
-                $email_message_type = 'transfer_deleted';
-            }
-            
-            // always email deleted transfers
-            //     or optionally notify when a transfer has expired.
-            if( $manualy || $this->getOption(TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES)) {
-                // Send notification to all recipients
-                foreach ($this->recipients as $recipient) {
-                    $this->sendToRecipient( $email_message_type, $recipient );
+                $email_message_type = 'transfer_expired';
+                if( $manualy ) {
+                    $email_message_type = 'transfer_deleted';
+                }
+
+                // always email deleted transfers
+                //     or optionally notify when a transfer has expired.
+                if( $manualy || $this->getOption(TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES)) {
+                    // Send notification to all recipients
+                    foreach ($this->recipients as $recipient) {
+                        $this->sendToRecipient( $email_message_type, $recipient );
+                    }
                 }
             }
         }
@@ -991,7 +1047,16 @@ class Transfer extends DBObject
         }
         
         if (!$this->isOwner($user)) {
-            if( !Auth::isAdmin()) {
+            if( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
+                if( AuthRemote::isAuthenticated() && $this->needForward('to') ) {
+                    $server = ForwardAnotherServer::getServerByTransfer($this);
+                    if ($server['appname'] != $user->saml_user_identification_uid) {
+                        return FALSE;
+                    }
+                } else if( !Auth::isAdmin()) {
+                    return FALSE;
+                }
+            } else if( !Auth::isAdmin()) {
                 return FALSE;
             }
         }
@@ -1154,6 +1219,10 @@ class Transfer extends DBObject
                 }
             } elseif ($name == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
                 // no validation as this is only set server side.
+            } elseif ($name == TransferOptions::FORWARD_SERVER_NAME) {
+                if (!ForwardAnotherServer::getServer($value)) {
+                    throw new RestBadParameterException('forward_server_name');
+                }
             } else {
                 $value = (bool)$value;
             }
@@ -1182,7 +1251,9 @@ class Transfer extends DBObject
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
             , 'storage_filesystem_per_day_buckets', 'storage_filesystem_per_hour_buckets', 'storage_filesystem_per_idp'
-            , 'download_count', 'chunk_size', 'crypted_chunk_size'            
+            , 'download_count', 'chunk_size', 'crypted_chunk_size', 'idpid'
+            , 'forward_server', 'forward_id'
+            , 'last_chunk_time'
         ))) {
             return $this->$property;
         }
@@ -1195,6 +1266,13 @@ class Transfer extends DBObject
         
         if ($property == 'guest') {
             return $this->guest_id ? Guest::fromId($this->guest_id) : null;
+        }
+
+        if ($property == 'encrypted_metadata' ) {
+            return $this->encrypted_metadata;
+        }
+        if ($property == 'have_encrypted_metadata' ) {
+            return Utilities::isTrue($this->getOption(TransferOptions::ENCRYPTED_METADATA));
         }
         
         if ($property == 'files') {
@@ -1328,6 +1406,10 @@ class Transfer extends DBObject
             $this->save();
             return $this->salt;
         }
+        if ($property == 'idp_entityid') {
+            $d = $this->fetchFromViewForId('transferidpview','idp_entityid');
+            return $d['idp_entityid'];
+        }
         throw new PropertyAccessException($this, $property);
     }
     
@@ -1374,14 +1456,15 @@ class Transfer extends DBObject
                 $value = strtotime($value);
             }
             
-            if (!preg_match('`^[0-9]+$`', $value)) {
+            if (!preg_match('`^[.0-9]+$`', $value)) {
                 throw new BadExpireException($value);
             }
             
-            $value = (int)$value;
+            $value = floor((float)$value);
             if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
                 throw new BadExpireException($value);
             }
+
             $this->expires = (string)$value;
         } elseif ($property == 'options') {
             $this->options = self::validateOptions($value);
@@ -1407,6 +1490,27 @@ class Transfer extends DBObject
             $this->storage_filesystem_per_idp = $value;
         } elseif ($property == 'download_count') {
             $this->download_count = $value;
+        } elseif ($property == 'idpid') {
+            $this->idpid = $value;
+        } elseif ($property == 'encrypted_metadata') {
+            $this->encrypted_metadata = $value;
+        } elseif ($property == 'last_chunk_time') {
+            $this->last_chunk_time = (int)$value;
+        } elseif( Utilities::isTrue( Config::get('file_forwarding_enabled'))) {
+            if ($property == 'salt') {
+                if (!Crypto::validateSaltString($value, 32)) {
+                    throw new BadSaltException($value);
+                }
+                $this->salt = $value;
+            } elseif ($property == 'forward_server') {
+                $this->forward_server = $value;
+            } elseif ($property == 'forward_id') {
+                if ($value && !preg_match('`^[0-9]+$`', $value)) {
+                    throw new BadForwardIDException($value);
+                }
+                $value = (int)$value;
+                $this->forward_id = (string)$value;
+            }
         } else {
             throw new PropertyAccessException($this, $property);
         }
@@ -1419,10 +1523,11 @@ class Transfer extends DBObject
      * @param string $size the file size
      * @param string $mime_type the optional file mime_type
      * @param string $iv base64 encoded IV used to encrypt file 
+     * @param string $forward_id the forwarded id
      *
      * @return File
      */
-    public function addFile($path, $size, $mime_type = null, $iv = null, $aead = null )
+    public function addFile($path, $size, $mime_type = null, $iv = null, $aead = null, $forward_id = null )
     {
         if (is_null($this->filesCache)) {
             $this->filesCache = File::fromTransfer($this);
@@ -1445,6 +1550,7 @@ class Transfer extends DBObject
         $file = File::create($this, $path, $size, $mime_type);
         $file->iv = $iv;
         $file->aead = $aead;
+        $file->forward_id = $forward_id;
         $file->save();
  
         // Update local cache
@@ -1631,6 +1737,69 @@ class Transfer extends DBObject
     }
     
     /**
+     * This function does stuffs when a transfer complete
+     */
+    public function uploadCompleted()
+    {
+        if ($this->getOption(TransferOptions::FORWARD_TO_ANOTHER_SERVER)) {
+            $this->forwardAnotherServer();
+        } else {
+            $this->makeAvailable();
+        }
+    }
+
+    /**
+     * Forward files to another server
+     */
+    public function forwardAnotherServer()
+    {
+        if ($this->status == TransferStatuses::FORWARDING ||
+            $this->status == TransferStatuses::AVAILABLE) {
+            return;
+        } // Already available
+        
+        // Log to audit/stats that upload ended
+        Logger::logActivity(LogEventTypes::UPLOAD_ENDED, $this);
+        
+        // Fail if no files
+        if (!count($this->files)) {
+            throw new TransferNoFilesException();
+        }
+        
+        // Fail if any file not complete
+        foreach ($this->files as $file) {
+            if (!$file->upload_end) {
+                throw new TransferFilesIncompleteException($this);
+            }
+        }
+        
+        // Fail if no recipients
+        if (!count($this->recipients)) {
+            throw new TransferNoRecipientsException();
+        }
+
+        // Update status and log to audit/stat
+        $this->status = TransferStatuses::FORWARDING;
+
+        $server_id = $this->getOption(TransferOptions::FORWARD_SERVER_NAME);
+        $server = ForwardAnotherServer::getServer($server_id);;
+        if (!$server || !$server['appname'] || !$server['url']) {
+            throw new RestBadParameterException('server_id');
+        }
+        $this->forward_server = array(
+            'appname' => $server['appname'],
+            'to' => $server['url'],
+        );
+        $method=ForwardAnotherServer::findBestForwardMethod($this);
+        $this->forward_server['method'] = $method;
+
+        $forwarded_transfer = ForwardAnotherServer::forwardTransfer($this);
+        $this->forward_id = $forwarded_transfer->forward_id;
+
+        $this->save();
+    }
+
+    /**
      * This function does stuffs when a transfer become available
      */
     public function makeAvailable()
@@ -1662,6 +1831,10 @@ class Transfer extends DBObject
         $this->storage_filesystem_per_day_buckets = Config::get('storage_filesystem_per_day_buckets');
         $this->storage_filesystem_per_hour_buckets = Config::get('storage_filesystem_per_hour_buckets');
         $this->storage_filesystem_per_idp = Config::get('storage_filesystem_per_idp');
+        
+        if ($this->needForward()) {
+            ForwardAnotherServer::completeTransfer($this);
+        }
         
         // Update status and log to audit/stat
         $this->status = TransferStatuses::AVAILABLE;
@@ -1724,10 +1897,12 @@ class Transfer extends DBObject
                     $this->addRecipient($rcpt);
                 }
             }
-            
-            // Send notification of availability to recipients
-            foreach ($this->recipients as $recipient) {
-                $this->sendToRecipient('transfer_available', $recipient);
+
+            if (!$this->hasBeenForwarded()) {
+                // Send notification of availability to recipients
+                foreach ($this->recipients as $recipient) {
+                    $this->sendToRecipient('transfer_available', $recipient);
+                }
             }
             
             // Log to audit/stat
@@ -1783,7 +1958,7 @@ class Transfer extends DBObject
         if (!count($rms)) {
             return;
         }
-        
+
         foreach (self::all(self::AVAILABLE) as $transfer) {
             $recipients_downloaded_ids = array_map(function ($l) {
                 return $l->author_id;
@@ -1817,7 +1992,7 @@ class Transfer extends DBObject
                 $recipient->remind();
             }
 
-            $send_owner_autoreminder = true;
+            $send_owner_autoreminder = Config::get('owner_automatic_reminder');
 
             // no not leak this transfer in a reminder if the system wants
             // private guests
@@ -1933,4 +2108,124 @@ class Transfer extends DBObject
                $this->status == TransferStatuses::UPLOADING;
     }
 
+    /**
+     * need forward?
+     *
+     * If file_forwarding_enabled is false then this always return false.
+     */
+    public function needForward($tofrom = 'to')
+    {
+        if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+            return false;
+        }
+
+        $forward = $this->forward_server;
+        if (is_array($forward) && isset($forward[$tofrom])) {
+            $forward = $forward[$tofrom];
+        } else if (isset($forward->$tofrom)) {
+            $forward = $forward->$tofrom;
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * has been forward?
+     *
+     * If file_forwarding_enabled is false then this always return false.
+     */
+    public function hasBeenForwarded()
+    {
+        if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+            return false;
+        }
+
+        $forward = $this->forward_server;
+        if (isset($forward['from'])) {
+            $forward = $forward['from'];
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * get Forward or Forwarded Server
+     */
+    public function getForwardedServer()
+    {
+        $forward = $this->forward_server;
+        if (isset($forward['to'])) {
+            $forward = $forward['to'];
+        } else if (isset($forward['from'])) {
+            $forward = $forward['from'];
+        } else {
+            return null;
+        }
+        return $forward;
+    }
+
+    /**
+     * Extend expiry date
+     *
+     * @param string expires
+     */
+    public function extendTransferExpiryDate($expires = 0)
+    {
+        if ((int)$expires <= 1) {
+            $this->extendObjectExpiryDate();
+            $expires = $this->expires;
+        } else {
+            $this->__set('expires', $expires);
+            $this->expiry_extensions++;
+            $this->save();
+        }
+        if ($this->needForward()) {
+            ForwardAnotherServer::extendTransferExpiryDate($this, $expires);
+        }
+    }
+
+    /**
+     * record Activity
+     *
+     */
+    public function recordActivity($event, $created = null, $ip = null, $author = null, $files = null)
+    {
+        if ($event == LogEventTypes::DOWNLOAD_ENDED) {
+            if ($this->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
+                try {
+                    // do not email too often
+                    TranslatableEmail::rateLimit( true, 'files_downloaded', $this->owner, $this);
+                    ApplicationMail::quickSend('files_downloaded', $this->owner, array('files'=> $files, 'recipient' => $author));
+                }
+                catch ( RateLimitException $e ) {
+                    // we hit a rate limit so do not email this time
+                }
+            }
+
+        } else {
+            Logger::logActivity($event, $this, $author, $created, $ip);
+        }
+    }
+
+    public static function getOptionSubSetting( $options, $k, $setting )
+    {
+        if( array_key_exists($k, $options)) {
+            if( array_key_exists( $setting, $options[$k])) {
+                $v = $options[$k][$setting];
+                return Utilities::isTrue($v);
+            }
+        }
+        $hideSenderEmailIsAdvanced = array_key_exists( $setting,$ops['hide_sender_email']);
+
+        $options = static::allOptions();
+        if (array_key_exists($k, $options)) {
+            if (array_key_exists('default', $options[$k])) {
+                return $options[$k]['default'];
+            }
+        }
+        
+        return false;
+    }
 }

@@ -133,3 +133,7 @@ a {
     padding: var(--fs-spacing-15x) 0 0 0;
   }
 }
+
+.encrypted_metadata {
+  display: none;
+}

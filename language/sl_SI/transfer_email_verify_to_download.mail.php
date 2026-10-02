@@ -16,15 +16,15 @@
 // 
 // 
 ?>
-subject: {cfg:site_name}: One time verification code for download
+subject: {cfg:site_name}: Enkratna potrditvena koda za prenos
 
 {alternative:plain}
 
-Hello,
+Pozdravljeni,
 
-Somebody (probably you) has requested a one time verification code in order to
-download a file which was made available to you through the {cfg:site_name} service.
-This is your email verification code to download this transfer:
+Nekdo (verjetni vi sami) je zahteval enkratno potrditveno kodo za prenos datoteke, 
+katera je bila deljena z vami preko storitve {cfg:site_name}.
+Tu je zahtevana potrditvena za prenos:
 
 {verificationCode}
 
@@ -32,19 +32,19 @@ This is your email verification code to download this transfer:
 {alternative:html}
 
 <p>
-    Hello,
+    Pozdravljeni,
 </p>
 
 <p>
-Somebody (probably you) has requested a one time verification code in order to
-download a file which was made available to you through the {cfg:site_name} service.
-This is your email verification code to download this transfer:
+Nekdo (verjetni vi sami) je zahteval enkratno potrditveno kodo za prenos datoteke, 
+katera je bila deljena z vami preko storitve {cfg:site_name}.
+Tu je zahtevana potrditvena za prenos:
 </p>
 <p>
 {verificationCode}
 </p>
 
 <p>
-    Best regards,<br />
+    Lep pozdrav,<br />
     {cfg:site_name}
 </p>

@@ -13,7 +13,7 @@ subject: Download-Berechtigung entfernt
 
 Sehr geehrte Damen und Herren,
 
-Ihre Erlaubnis, Dateien der Dateiübertragung Nr. {transfer.id} zu downloaden wurde entfernt.
+Ihre Erlaubnis, Dateien des Dateitransfers Nr. {transfer.id} zu downloaden wurde entfernt.
 
 Mit freundlichen Grüßen
 {cfg:site_name}
@@ -25,7 +25,7 @@ Mit freundlichen Grüßen
 </p>
 
 <p>
-    Ihre Erlaubnis, Dateien der Dateiübertragung Nr. {transfer.id} zu downloaden wurde entfernt.
+    Ihre Erlaubnis, Dateien des Dateitransfers Nr. {transfer.id} zu downloaden wurde entfernt.
 </p>
 
 <p>

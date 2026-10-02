@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -31,59 +31,8 @@
  */
 
 $(function() {
-
-    // File download buttons when the files are encrypted
-    $('.transfer_detail_page .file [data-action="download"]').on('click', function() {
-        var file = $(this).closest('.file');
-        var id = file.attr('data-id');
-        var transfer_details = file.closest('.transfer_details');
-        if(!id || isNaN(id)) return;
-
-        console.log("BBB download");
-
-        if(!filesender.supports.crypto){
-            return;
-        }
-        event.stopPropagation();
-
-        var transferid = $(this).attr('data-transferid');
-        var id = $(this).attr('data-id');
-        var encrypted = $(this).attr('data-encrypted');
-        var filename = $(this).attr('data-name');
-        var filesize = $(this).attr('data-size');
-        var encrypted_filesize = $(this).attr('data-encrypted-size');
-        var mime = $(this).attr('data-mime');
-        var key_version = $(this).attr('data-key-version');
-        var salt = $(this).attr('data-key-salt');
-        var password_version  = $(this).attr('data-password-version');
-        var password_encoding = $(this).attr('data-password-encoding');
-        var password_hash_iterations = $(this).attr('data-password-hash-iterations');
-        var client_entropy = $(this).attr('data-client-entropy');
-        var fileiv = $(this).attr('data-fileiv');
-        var fileaead = $(this).attr('data-fileaead');
-        if( fileaead.length ) {
-            fileaead = atob(fileaead);
-        }
-
-        if (typeof id == 'string'){
-            id = [id];
-        }
-
-        window.filesender.crypto_app().decryptDownload(
-            filesender.config.base_path + 'download.php?files_ids=' + id.join(','),
-            transferid,
-            mime, filename,
-            filesize, encrypted_filesize,
-            key_version, salt,
-            password_version, password_encoding,
-            password_hash_iterations,
-            client_entropy,
-            window.filesender.crypto_app().decodeCryptoFileIV(fileiv,key_version),
-            fileaead
-        );
-
-        return false;
-    });
+    var page = $('.transfer_detail_page');
+    if(!page.length) return;
 
     
     // Transfer delete buttons
@@ -226,8 +175,10 @@ $(function() {
 
             var actions = $('<div class="actions" />').appendTo(popup);
 
-            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(' ' + lang.tr('send_to_my_email')).appendTo(actions);
-            $('<span class="fa fa-lg fa-envelope-o" />').prependTo(send_by_email);
+            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(lang.tr('send_to_my_email')).appendTo(actions);
+            $('<p>&nbsp;</p>').prependTo(send_by_email);
+            $('<span class="fa fa-lg fa-envelope" />').prependTo(send_by_email);
+            
             send_by_email.on('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -239,8 +190,6 @@ $(function() {
                 return false;
             });
 
-            // Reset popup position as we may have added lengthy content
-            filesender.ui.relocatePopup(popup);
         });
     };
 
@@ -270,7 +219,7 @@ $(function() {
             recipients.push($(this).attr('data-email'));
         });
 
-        var prompt = filesender.ui.promptEmail(lang.tr('enter_to_email'), function(input) {
+        var prompt = filesender.ui.promptEmailMany(lang.tr('enter_to_email'), function(input) {
             $('p.error', this).remove();
             var raw_emails = input.split(/[,;]/);
 
@@ -386,10 +335,10 @@ $(function() {
     // Copy download link
     const copyToClipboard = (value) => {
         navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', 'Copied to clipboard!');
+            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
         }).catch((e) => {
             console.error(e);
-            filesender.ui.notify('error', 'Error copying to clipboard!');
+            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
         });
     }
 
@@ -406,5 +355,17 @@ $(function() {
             filesender.ui.redirect($(this).text());
         });
     }
+
+
+    filesender.client.setPage( $(this) );
+    // no token needed, we are authenticated.
+    filesender.client.setToken( "" );
+    filesender.client.bindDownloadButton('.file .download');
+    filesender.client.bindDownloadArchive();
+    filesender.client.bindFileCheckButtons();
+    filesender.client.handlePossibleEncryptedMetadata();
+
+    $('#check-all').click();
+    
     
 });

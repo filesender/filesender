@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Gost je završio transfer fajlova
+subject: Gost je završio otpremanje fajlova
 
 {alternative:plain}
 
 Poštovani,
 
-Sledeći gost je završio transfer fajlova pomoću vaučera :
+Sledeći gost je završio otpremanje fajlova pomoću vaučera :
 
 Gost: {guest.email}
 Link vaučera: {cfg:site_url}?s=upload&vid={guest.token}
@@ -30,7 +30,7 @@ Lep pozdrav,
 </p>
 
 <p>
-Sledeći gost je završio transfer fajlova pomoću vaučera :
+Sledeći gost je završio otpremanje fajlova pomoću vaučera :
 </p>
 
 <table rules="rows">

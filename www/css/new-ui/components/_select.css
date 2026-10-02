@@ -10,6 +10,10 @@
   font-size: 1.4rem;
 }
 
+.fs-select--hide {
+    display: none;
+}
+
 .fs-select--small label, .fs-select--small select {
   font-size: 1.2rem !important;
 }

@@ -3,7 +3,7 @@
 /**
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  *
@@ -87,9 +87,26 @@ class AuthGuest
                 }
                 
                 $guest = Guest::fromToken($vid);
-                    
+
+                $allowExpiredGuestToSeeLimitedPages = false;
+                $daysAgo = Config::get("guest_transfers_page_number_of_days_expired_guest_can_return");
+
+                if( $daysAgo != 0 ) {
+                    if (array_key_exists('s', $_REQUEST)) {
+                        $s = $_REQUEST['s'];
+                        if( $s == "transfers_guest" || $s == "upload" ) {
+                            if( $guest->status == GuestStatuses::AVAILABLE || $guest->status == GuestStatuses::CLOSED ) {
+                                if( $guest->canStillSeePastUploads()) {
+                                    $allowExpiredGuestToSeeLimitedPages = true;
+                                }
+                            }
+                        }
+                    }
+                }
                 if ($guest->status != GuestStatuses::AVAILABLE || $guest->isExpired()) {
-                    throw new GuestExpiredException($guest);
+                    if( !$allowExpiredGuestToSeeLimitedPages ) {
+                        throw new GuestExpiredException($guest);
+                    }
                 }
                     
                 self::$isAuthenticated = true;

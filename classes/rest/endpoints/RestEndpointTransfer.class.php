@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -74,11 +74,16 @@ class RestEndpointTransfer extends RestEndpoint
             'options' => $options,
             'salt' => $transfer->salt,
             'roundtriptoken' => $creatingTransfer ? $transfer->roundtriptoken : '',
+            'encrypted_metadata' => $transfer->encrypted_metadata ? $transfer->encrypted_metadata : '',
             
-            'files' => array_map(function ($file) use ($files_cids) {
+            'files' => array_map(function ($file) use ($files_cids, $transfer) {
+                $file_uid = $file->uid;
                 $file = RestEndpointFile::cast($file);
                 if ($files_cids && array_key_exists($file['id'], $files_cids)) {
                     $file['cid'] = $files_cids[$file['id']];
+                }
+                if ($transfer->hasBeenForwarded()) {
+                    $file['uid'] = $file_uid;
                 }
                 return $file;
             }, array_values($transfer->files)),
@@ -151,8 +156,22 @@ class RestEndpointTransfer extends RestEndpoint
         // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer
         if ($property == 'options' && 'enable_recipient_email_download_complete' == $property_id) {
 
+            // Check that we have a valid transfer id
+            if (!is_numeric($id)) {
+                throw new RestBadParameterException('transfer_id');
+            }
+            
             // Check that we have a valid token in the url
             if (!array_key_exists('token', $_GET)) {
+                if (Auth::isAuthenticated()) {
+                    $transfer = Transfer::fromId($id);
+
+                    // Transfer detail page downloads by the owner or an admin do not
+                    // act on behalf of a recipient, so no recipient notification is needed.
+                    if ($transfer->havePermission()) {
+                        return false;
+                    }
+                }
                 throw new RestBadParameterException('token');
             }
             $token = $_GET['token'];
@@ -160,10 +179,6 @@ class RestEndpointTransfer extends RestEndpoint
                 throw new RestBadParameterException('token');
             }
             
-            // Check that we have a valid transfer id
-            if (!is_numeric($id)) {
-                throw new RestBadParameterException('transfer_id');
-            }
             
             // Get transfer and recipient from above data
             $transfer = Transfer::fromId($id);
@@ -245,12 +260,15 @@ class RestEndpointTransfer extends RestEndpoint
             }
         }
         
-        
+        $puid = null;
+        if( array_key_exists('puid', $_GET) && $_GET['puid'] ) {
+            $puid = $_GET['puid'];
+        }
         // If key was provided we validate it and return the transfer (guest restart)
-        if (is_numeric($id) && array_key_exists('key', $_GET) && $_GET['key']) {
+        if (is_numeric($id) && $puid ) {
             $transfer = Transfer::fromId($id);
             try {
-                if (!File::fromUid($_GET['key'])->transfer->is($transfer)) {
+                if (!File::fromPuid($puid)->transfer->is($transfer)) {
                     throw new Exception();
                 }
                 if (!$transfer->isStatusUploading()) {
@@ -419,6 +437,7 @@ class RestEndpointTransfer extends RestEndpoint
         
         return $out;
     }
+
     
     /**
      * Create new transfer or add recipient to an existing transfer
@@ -499,9 +518,12 @@ class RestEndpointTransfer extends RestEndpoint
                 // Add recipient
                 $recipient = $transfer->addRecipient($data->recipient);
                 
-                // Send email if transfer is live already
-                if ($transfer->status == TransferStatuses::AVAILABLE) {
-                    TranslatableEmail::quickSend('transfer_available', $recipient, $transfer);
+                if (! $transfer->hasBeenForwarded()) {
+                    // Send email if transfer is live already
+                    if ($transfer->status == TransferStatuses::AVAILABLE) {
+                        TranslatableEmail::quickSend('transfer_available', $recipient, $transfer);
+                        Logger::logActivity(LogEventTypes::TRANSFER_ADDED_RECIPIENT, $transfer, $recipient);
+                    }
                 }
                 
                 return array(
@@ -514,6 +536,86 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Raw data
             $data = $this->request->input;
+
+            
+            if( Utilities::isTrue(Config::get('advanced_validation_create_transfer'))) {
+                
+                $data->encryption = Validate::filter_var_bool("encryption", $data->encryption);
+                $data->encryption_key_version = Validate::filter_var_regex_log(
+                    "transfer.encryption_key_version",
+                    $data->encryption_key_version,
+                    "|^[0-9]+$|" );
+                $data->encryption_password_encoding = Validate::filter_var_regex_log(
+                    "transfer.encryption_password_encoding",
+                    $data->encryption_password_encoding,
+                    '/^(none|base64|ascii85)$/' );
+                $data->encryption_password_version = Validate::filter_var_regex_log(
+                    "transfer.encryption_password_version",
+                    $data->encryption_password_version,
+                    "|^[0-9]+$|"  );
+                $data->encryption_password_hash_iterations = Validate::filter_var_regex_log(
+                    "transfer.encryption_password_hash_iterations",
+                    $data->encryption_password_hash_iterations,
+                    "|^[0-9]{1,15}$|"  );
+                $data->encryption_client_entropy = Validate::filter_var_regex_log(
+                    "transfer.encryption_client_entropy",
+                    $data->encryption_client_entropy,
+                    "|^[-A-Za-z0-9+/]*={0,3}$|"  );
+                $data->encrypted_metadata = Validate::filter_var_regex_log(
+                    "transfer.encrypted_metadata",
+                    $data->encrypted_metadata,
+                    "|^[-A-Za-z0-9+/]*={0,3}$|"  );
+                
+                foreach ($data->files as $d) {
+                    $d->name = Validate::filter_var_regex_log(
+                        "transfer.files.name",
+                        $d->name,
+                        '/^.*$/'  );
+                    $d->size = Validate::filter_var_regex_log(
+                        "transfer.files.size",
+                        $d->size,
+                        "|^[0-9]+$|"  );
+                    $d->mime_type = Validate::filter_var_mimetype(
+                        "transfer.files.mime_type",
+                        $d->mime_type );
+                    $d->cid = Validate::filter_var_regex_log(
+                        "transfer.files.cid",
+                        $d->cid,
+                        '/^file_[0-9]+_[0-9]+_[0-9]+_[0-9]*$/'  ); 
+                    $d->iv = Validate::filter_var_regex_log(
+                        "transfer.files.iv",
+                        $d->iv,
+                        '|^[-A-Za-z0-9+/]*={0,3}$|'  ); 
+                    $d->aead = Validate::filter_var_regex_log(
+                        "transfer.files.aead",
+                        $d->aead,
+                        '|^[-A-Za-z0-9+/]*={0,3}$|'  );
+                    
+                }            
+                
+                $r = Utilities::ensureArray($data->recipients);
+                foreach ($r as $email) {
+                    $value = Validate::filter_var_email( "recipients.email", $email );
+                    if($value == "" ) {
+                        Validate::filter_var_log("transfer.recipients email");
+                        $data->recipients = array();
+                        break;
+                    }
+                }
+                
+                $data->subject = Validate::filter_var_regex_log(
+                    "transfer.subject",
+                    $data->subject,
+                    '/^.*$/'  );
+                $data->lang = Validate::filter_var_lang(
+                    "transfer.lang",
+                    $data->lang );
+                $data->expires = Validate::filter_var_regex_log(
+                    "transfer.expires", $data->expires,
+                    "|^[.0-9]{1,32}$|"  );
+                $data->aup_checked = Validate::filter_var_bool("aup_checked", $data->aup_checked);
+            }
+            
             
             // Is it created by a guest ?
             $guest = null;
@@ -552,22 +654,45 @@ class RestEndpointTransfer extends RestEndpoint
                 TransferOptions::GET_A_LINK => $allOptions[TransferOptions::GET_A_LINK]['default'],
                 TransferOptions::ADD_ME_TO_RECIPIENTS => $allOptions[TransferOptions::ADD_ME_TO_RECIPIENTS]['default'],
                 TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES => $allOptions[TransferOptions::EMAIL_RECIPIENT_WHEN_TRANSFER_EXPIRES]['default'],
+                TransferOptions::FORWARD_TO_ANOTHER_SERVER => $allOptions[TransferOptions::FORWARD_TO_ANOTHER_SERVER]['default'],
+                TransferOptions::FORWARD_SERVER_NAME => $allOptions[TransferOptions::FORWARD_SERVER_NAME]['default'],
                 TransferOptions::HIDE_SENDER_EMAIL => $allOptions[TransferOptions::HIDE_SENDER_EMAIL]['default'],
             );
-            
+
             foreach ($allOptions as $name => $dfn) {
-                if (in_array($name, $allowed_options)) {
-                    // check if options is object
-                    if (is_object( $data->options) ) {
-                        if (method_exists($data->options, 'exists')) {
-                            if ($data->options->exists($name)) {
-                                $options[$name] = $data->options->$name;
-                            }
+                $shouldBeAvailable = Utilities::isTrue( $dfn['available'] );
+                $clientProvidedAValue = false;
+
+                // check if options is object
+                $v = '';
+                if (is_object( $data->options) ) {
+                    if (method_exists($data->options, 'exists')) {
+                        if ($data->options->exists($name)) {
+                            $clientProvidedAValue = 1;
+                            $v = $data->options->$name;
                         }
-                    } else {
-                        if (array_search($name, $data->options) !== false) {
-                            $options[$name] = 1;
-                        }
+                    }
+                } else {
+                    if (array_search($name, $data->options) !== false) {
+                        $clientProvidedAValue = 1;
+                        $v = 1;
+                    }
+                }
+
+                if( $name == 'redirect_url_on_complete' ) {
+                        $clientProvidedAValue = 0;                  
+                }
+                if( $clientProvidedAValue ) {
+                  if( in_array($name, $allowed_options)) {
+                      $options[$name] = $v;
+                  }
+                }
+                                
+                if( Utilities::isTrue(Config::get('advanced_validation_transfer_options_not_available_but_selected'))) {
+                    if( !$shouldBeAvailable && $clientProvidedAValue ) {
+                        throw new BadOptionValueException(
+                            $name,
+                            "The option $name is not available to the user but they provided a value for it.");                    
                     }
                 }
             }
@@ -596,6 +721,38 @@ class RestEndpointTransfer extends RestEndpoint
                 unset($options[TransferOptions::EMAIL_ME_COPIES]);
                 unset($options[TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE]);
                 unset($options[TransferOptions::ADD_ME_TO_RECIPIENTS]);
+                unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+            }
+
+            if (Auth::isGuest()) {
+                unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+            }
+
+            if( Utilities::isFalse( Config::get('file_forwarding_enabled'))) {
+                unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+            } else {
+                if (isset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]) &&
+                    !empty($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER])) {
+                    if (isset($options[TransferOptions::FORWARD_SERVER_NAME]) &&
+                        !empty($options[TransferOptions::FORWARD_SERVER_NAME])) {
+                        $server = ForwardAnotherServer::getServer($options[TransferOptions::FORWARD_SERVER_NAME]);
+                        if (!empty($server) &&
+                            isset($server['need_encrypt']) &&
+                            !empty($server['need_encrypt']) &&
+                            empty($data->encryption)) {
+                            throw new RestBadParameterException('forward_server_encrypt');
+                        }
+                        unset($options[TransferOptions::MUST_BE_LOGGED_IN_TO_DOWNLOAD]);
+                    } else {
+                        unset($options[TransferOptions::FORWARD_TO_ANOTHER_SERVER]);
+                        unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+                    }
+                } else {
+                    unset($options[TransferOptions::FORWARD_SERVER_NAME]);
+                }
             }
             
             // No recipients, not get_a_link and no way to get a recipient from options ? Fail if so
@@ -735,6 +892,35 @@ class RestEndpointTransfer extends RestEndpoint
             if (Config::get('transfer_recipients_lang_selector_enabled') && $data->lang) {
                 $transfer->lang = $data->lang;
             }
+
+            // forward to another server
+            if (Utilities::isTrue( Config::get('file_forwarding_enabled'))
+                && Auth::isRemoteApplication()
+                && $data->forward_server)
+            {
+                Logger::debug($data->forward_server);
+                $applications = Config::get('auth_remote_applications');
+                if (isset($data->forward_server->appname) &&
+                    isset($data->forward_server->method) &&
+                    isset($data->forward_server->from) &&
+                    isset($data->forward_id) &&
+                    isset($applications[$data->forward_server->appname])) {
+                    $transfer->forward_server = array(
+                        'appname' => $data->forward_server->appname,
+                        'method' => $data->forward_server->method,
+                        'from' => $data->forward_server->from,
+                    );
+                    $transfer->forward_id = $data->forward_id;
+                } else {
+                    throw new RestBadParameterException('forward_server');
+                }
+                if ($data->encryption_salt) {
+                    if (!Crypto::validateSaltString($data->encryption_salt, 32)) {
+                        throw new RestBadParameterException('base64_data_badly_encoded');
+                    }
+                    $transfer->salt = $data->encryption_salt;
+                }
+            }
             
             // Guest owner decides about guest options
             if ($guest) {
@@ -770,6 +956,15 @@ class RestEndpointTransfer extends RestEndpoint
                 }
             }
 
+            // encrypt metadata too?
+            if( $data->encrypted_metadata ) {
+                $transfer->encrypted_metadata = null;
+                // only encrypt the metadata if the transfer is also encrypted.
+                if (Utilities::isTrue($data->encryption)) {
+                    $transfer->encrypted_metadata = $data->encrypted_metadata;
+                }
+            }
+            
             // Mandatory to add recipients and files
             $transfer->save(); 
 
@@ -789,6 +984,26 @@ class RestEndpointTransfer extends RestEndpoint
             }
             $extension_whitelist_regex = Config::get('extension_whitelist_regex');
             
+            $tuple_count = count($data->files);
+            $dbb = null;
+            $usebulk = false;
+            
+            $bulk_threshold = Config::get('create_transfer_uses_bulk_insert_threshold');
+            if( $bulk_threshold != 0 && $tuple_count >= $bulk_threshold ) {
+                $usebulk = true;
+            }           
+            if( $usebulk ) {
+                Logger::debug("Using bulk load for new transfer with $tuple_count files. thresh:$bulk_threshold ");                
+                $dbb = new DatabaseBulk( File::getDBTable(),
+                                         [ 'transfer_id', 'uid', 'puid', 'name',
+                                           'size', 'encrypted_size',
+                                           'mime_type', 'iv', 'aead',
+                                           'storage_class_name' ],
+                                         $tuple_count );
+                $dbb->begin();
+            }
+            
+            
             // Add files after checking that they do not have a banned extension, fail otherwise
             $files_cids = array();
             foreach ($data->files as $filedata) {
@@ -804,6 +1019,9 @@ class RestEndpointTransfer extends RestEndpoint
                 }
 
                 // trim off optional rfc2045 *(";" parameter) blocks
+                if(!$filedata->mime_type) {
+                    $filedata->mime_type = '';
+                }
                 $filedata->mime_type = preg_replace('/^([^;]*).*/','$1',$filedata->mime_type);
 
                 $filedata->mime_type = Utilities::valuePassesConfigRegexOrDefault( $filedata->mime_type,
@@ -814,9 +1032,33 @@ class RestEndpointTransfer extends RestEndpoint
                                             FILTER_VALIDATE_REGEXP,
                                             ["options" => ["regexp" => "|^[-A-Za-z0-9+/]*={0,3}$|" ]] );                
 
-                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type,
-                                           $filedata->iv, $filedata->aead );
-                $files_cids[$file->id] = $filedata->cid;
+
+                $file = null;
+
+                if( $usebulk ) {
+
+                    $puid = Utilities::generateRandomUID();
+                    $uid = Utilities::generateTemporalUID();
+                    $r = [ $transfer->id,
+                           $uid, $puid,
+                           $filedata->name, $filedata->size,
+                           File::calculateEncryptedFileSizeStatic( $filedata->size, $transfer->key_version ),
+                           $filedata->mime_type,
+                           $flat_data[] = $filedata->iv,
+                           $flat_data[] = $filedata->aead,
+                           $flat_data[] = Storage::getDefaultStorageClass()
+                    ];                   
+                    $dbb->add( $r );
+                }
+                else
+                {
+                    $file = $transfer->addFile( $filedata->name, $filedata->size, $filedata->mime_type,
+                                                $filedata->iv, $filedata->aead, $filedata->forward_id );
+                }
+
+                if($file) {
+                    $files_cids[$file->id] = $filedata->cid;
+                }
             }
 
             // recheck that get_a_link is not being attempted
@@ -845,6 +1087,10 @@ class RestEndpointTransfer extends RestEndpoint
                 if ($transfer->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$transfer->isRecipient($email)) {
                     $transfer->addRecipient($email);
                 }
+            }
+
+            if( $usebulk ) {
+                $dbb->commit();
             }
             
             // Here we have everything (uids ...) to check if the transfer fits in storage
@@ -923,7 +1169,7 @@ class RestEndpointTransfer extends RestEndpoint
             Logger::logActivity(LogEventTypes::TRANSFER_DECRYPT_FAILED, $transfer, Auth::actor());
             return array();
         }
-        
+
         // Get transfer to update and current user
         $transfer = Transfer::fromId($id);
         $user = Auth::user();
@@ -935,11 +1181,14 @@ class RestEndpointTransfer extends RestEndpoint
         if ($security == 'key') {
             try {
 
-                $key = null;
+                $puid = null;
                 
                 if ($data->sendVerificationCodeToYourEmailAddress || $data->checkVerificationCodeWithServer) {
+                    if( Utilities::isTrue(Config::get('advanced_validation_token'))) {
+                        $data->token = Validate::filter_var_token( "token", $data->token );
+                    }
                     $token = $data->token;
-                    
+                        
                     if(!Utilities::isValidUID($token)) {
                         throw new Exception();
                     }
@@ -953,15 +1202,15 @@ class RestEndpointTransfer extends RestEndpoint
                     
                 } else {
                 
-                    if (!array_key_exists('key', $_GET)) {
+                    if (!array_key_exists('puid', $_GET)) {
                         throw new Exception();
                     }
-                    if (!$_GET['key']) {
+                    if (!$_GET['puid']) {
                         throw new Exception();
                     }
                     
-                    $key = $_GET['key'];
-                    if (!File::fromUid($key)->transfer->is($transfer)) {
+                    $puid = $_GET['puid'];
+                    if (!File::fromPuid($puid)->transfer->is($transfer)) {
                         throw new Exception();
                     }
                 }
@@ -1001,7 +1250,7 @@ class RestEndpointTransfer extends RestEndpoint
             
             // Need to extend expiry date
             if ($data->extend_expiry_date) {
-                $transfer->extendObjectExpiryDate();
+                $transfer->extendTransferExpiryDate($data->extend_expiry_date);
             }
             
             // Need to remind the transfer's availability to its recipients ?
@@ -1055,6 +1304,7 @@ class RestEndpointTransfer extends RestEndpoint
                 );
         }
         
+        
         if ($data->sendVerificationCodeToYourEmailAddress) {
 
             $bytes = random_bytes(Config::get('download_verification_code_random_bytes_used'));
@@ -1062,6 +1312,9 @@ class RestEndpointTransfer extends RestEndpoint
             $pass = bin2hex($bytes);
             
             $rid = 0;
+            if( Utilities::isTrue(Config::get('advanced_validation_token'))) {
+                $data->token = Validate::filter_var_token( "token", $data->token );
+            }
             $token = $data->token;
                 
             if(Utilities::isValidUID($token)) {
@@ -1102,10 +1355,61 @@ class RestEndpointTransfer extends RestEndpoint
                 );
             
         }
-        
+
         // Need to make the transfer available (sends email to recipients) ?
         if ($data->complete) {
-            $transfer->makeAvailable();
+            $transfer->uploadCompleted();
+        }
+
+        // record download start and end for Auditlog (file_forwarding_enabled only)
+        if ($data->record_activity) {
+            if (!Utilities::isTrue( Config::get('file_forwarding_enabled')) ||
+                !$transfer->forward_id) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $record_activity = $data->record_activity;
+            if (!LogEventTypes::isValidName($record_activity)) {
+                throw new RestBadParameterException('record_activity = '.$data->record_activity);
+            }
+            $created = $data->created;
+            if ($created &&
+                (!is_numeric($created) || (int)$created != $created ||
+                 $transfer->created > $created || $created > time())) {
+                throw new RestBadParameterException('created = '.$data->created);
+            }
+            $ip = $data->ip;
+            if ($ip &&
+                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
+                !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                throw new RestBadParameterException('ip = '.$data->ip);
+            }
+            $author = $data->author;
+            if ($author) {
+                if (is_string($author)) {
+                    $email = $author;
+                } else if (isset($author->email)) {
+                    $email = $author->email;
+                } else {
+                    $email = '';
+                }
+                $author = null;
+                foreach ($transfer->recipients as $r) {
+                    if ($r->email == $email) {
+                        $author = $r;
+                    }
+                }
+            }
+            $files = array();
+            if (is_array($data->fileids)) {
+                foreach ($data->fileids as $id) {
+                    foreach ($transfer->files as $f) {
+                        if ($f->forward_id == $id) {
+                            $files[] = $f;
+                        }
+                    }
+                }
+            }
+            $transfer->recordActivity($record_activity, $created, $ip, $author, $files);
         }
 
 

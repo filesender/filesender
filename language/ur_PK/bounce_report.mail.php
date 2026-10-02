@@ -23,7 +23,7 @@ One or more of your recipients failed to receive your message(s) :
 {endif}
 {endeach}
 
-You may find additionnal details at {cfg:site_url}
+You may find additional details at {cfg:site_url}
 
 Best regards,
 {cfg:site_name}
@@ -51,7 +51,7 @@ Best regards,
 </ul>
 
 <p>
-    You may find additionnal details at <a href="{cfg:site_url}">{cfg:site_url}</a>
+    You may find additional details at <a href="{cfg:site_url}">{cfg:site_url}</a>
 </p>
 
 <p>

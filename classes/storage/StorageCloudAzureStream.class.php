@@ -4,7 +4,7 @@
  *
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -39,22 +39,15 @@ if (!defined('FILESENDER_BASE')) {
  * Allow reading a chunked file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
-class StorageCloudAzureStream
+class StorageCloudAzureStream extends StorageFilesystemStreamBase
 {
-    protected $offset = 0;
-    protected $uid    = null;
-    protected $gameOver = false;
-    protected $file   = null;
-    
+    public mixed $context;
+
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        $url = parse_url($path);
-        $this->offset = 0;
-        $this->uid = $url["host"];
-        $this->file = File::fromUid($this->uid);
-        return true;
+        $rc = parent::stream_open( $path, $mode, $options, $opened_path );
+        return $rc;
     }
-
 
     public function stream_read($count)
     {
@@ -73,11 +66,6 @@ class StorageCloudAzureStream
 
         $this->offset += strlen($data);
         return $data;
-    }
-
-    public function stream_eof()
-    {
-        return $this->offset >= $this->file->size;
     }
 
     public static function ensureRegistered()

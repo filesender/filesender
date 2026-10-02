@@ -114,6 +114,7 @@ EOT );
         $I->amOnPage('/?s=transfers');
         $I->see('Currently available transfers');
         $I->click(".expand");
+        $I->wait(1);
         $I->click(".download_href");
     }
 
@@ -148,7 +149,6 @@ EOT );
                 $I->attachFile('.file_selector input[name="files"]', $f );
             }
         }
-        
         if( $startUpload ) {
             $I->click('.start.ui-button');
         
@@ -457,9 +457,9 @@ EOT );
         $I->wait(1);
         $I->fillField('.ui-dialog-content.ui-widget-content .wide', '123123');
         $I->click(".ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button");
-
         // run the auto streamsaver dialog handler.
-        exec(dirname(__FILE__) . "/../../../" . "/accept-dialog.sh");
+// not needed in later chrome.        
+//        exec(dirname(__FILE__) . "/../../../" . "/accept-dialog.sh");
         
         $I->wait(5);
         $I->retrySee("Download complete", ".archive_message");
@@ -472,6 +472,7 @@ EOT );
         
         $tmpdir = "/tmp/selenium-downloads/";
         $fn = trim(file_get_contents($tmpdir . "/active.txt"));
+        $tmpdir = "/tmp/selenium-download/";
         $I->assertNotSame("",$fn);
         
         foreach( $expectedItems as $delfn ) {
@@ -482,10 +483,10 @@ EOT );
             }
         }
         
-        copy($this->downloadDir . $fn . ".zip", $tmpdir . "/$fn.zip" );
+#        copy($this->downloadDir . $fn . ".zip", $tmpdir . "/$fn.zip" );
         $oldpwd = getcwd();
         chdir($tmpdir);
-        exec("unzip -o  $fn.zip");
+        exec("unzip -o  $fn");
         chdir($oldpwd);
 
         foreach( $expectedItems as $fn ) {

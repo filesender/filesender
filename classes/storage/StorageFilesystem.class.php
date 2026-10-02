@@ -2,7 +2,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  *
@@ -296,11 +296,11 @@ class StorageFilesystem
                 $p .= $sub;
                 
                 if (!is_dir($p) && !mkdir($p)) {
-                    throw new StorageFilesystemCannotCreatePathException($p, $file);
+                    throw new StorageFilesystemCannotCreatePathException($p);
                 }
                 
                 if (!is_writable($p)) {
-                    throw new StorageFilesystemCannotWriteException($p, $file);
+                    throw new StorageFilesystemCannotWriteException($p);
                 }
                 
                 $p .= '/';
@@ -341,9 +341,13 @@ class StorageFilesystem
         // Is idp in storage path enabled
         if ($file->transfer->storage_filesystem_per_idp) {
             $subpath = '';
-            $idp = $file->transfer->owner->saml_user_identification_idp;
+            $idp = $file->transfer->idp_entityid;
             //sanatise idp to safe path
-            $subpath = trim(preg_replace('/[^a-z0-9]+/', '_', strtolower($idp)));
+            $subpath = preg_replace('/[^a-z0-9]+/', '_', 
+                                   str_replace(['http://','https://'], '',
+                                              strtolower(rtrim(trim($idp), '/'))
+                                              )
+                                   );
             $path = self::ensurePath( $path, $subpath );
         }
         
@@ -551,6 +555,67 @@ class StorageFilesystem
             throw new StorageFilesystemCannotWriteException($file_path, $file);
         }
     }
+
+
+    /**
+     * Write a chunk of data to file at offset
+     *
+     * @param File $file
+     * @param uint $chunkSize is the number of bytes to expect on the PUT input
+     * @param uint $offset offset in bytes
+     *
+     * @return array with offset and written amount of bytes
+     *
+     * @throws StorageFilesystemOutOfSpaceException
+     * @throws StorageFilesystemCannotWriteException
+     */
+    public static function writeChunkDelayed(File $file, $chunkSize, $offset = null)
+    {
+        Logger::debug("StorageFilesystem::writeChunkDelayed");
+        
+        $path = static::buildPath($file);
+
+        // If the user is doing something with FUSE
+        // then they might not want to check disk space.
+        if (!Config::get('storage_filesystem_ignore_disk_full_check')) {
+	        // Check that there is enough free space on the storage
+	        $freeSpace = disk_free_space($path);
+	        if ($freeSpace <= $chunkSize) {
+	            throw new StorageNotEnoughSpaceLeftException($chunkSize);
+	        }
+        }
+
+        $file_path = $path.static::buildFilename($file);
+        
+        $mode = file_exists($file_path) ? 'rb+' : 'wb+'; // Create file if it does not exist
+        $fromss = \fopen("php://input", 'r');
+        if ($toss = fopen($file_path, $mode)) {
+
+            if( $offset == null ) {
+                $offset = 0;
+            }
+            // best to seek to the offset ourself and have copy_to_stream() use existing offsets
+            $rc = fseek( $toss, $offset, $whence = SEEK_SET);
+            if( $rc != 0 ) {
+                throw new ChunkWriteException('seek failed on destination file $offset');
+            }
+            $rc = \stream_copy_to_stream( $fromss, $toss, $chunkSize, 0 );
+            $written = $rc;
+
+            // Check that the right amount of data was written and move to next iteration if it fails
+            if ($chunkSize != $written) {
+                throw new ChunkWriteException('chunk_size != bytes written');
+            }
+            
+            return array(
+                'offset' => $offset,
+                'written' => $written
+            );
+        } else {
+            throw new StorageFilesystemCannotWriteException($file_path, $file);
+        }
+    }
+    
     
     /**
      * Handles file completion checks
@@ -784,4 +849,11 @@ class StorageFilesystem
         $stream = fopen($file_path, 'r');
         return $stream;
     }
+
+    protected static function makeCustomStreamPath( $file, $c )
+    {
+        $path = $c . "://" . $file->uid . "#" . $file->id;
+        return $path;
+    }
+    
 }

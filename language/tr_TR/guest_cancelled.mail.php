@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-konu: Konuk fişi iptal edildi
+subject: Konuk fişi iptal edildi
 
 {alternative:plain}
 

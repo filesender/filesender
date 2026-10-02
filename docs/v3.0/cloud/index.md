@@ -139,6 +139,23 @@ $config['storage_type'] = 'CloudAzure';
 
 ## Amazon S3
 
+### Notes
+
+1. There is a report of instability with backing the S3 storage with IBM
+Cloud Object Storage (On-premises) in 2025 (issue 2235). If you are
+intending to use this configuration please test large encrypted
+transfers with many files to a zip are working as you wish before
+deploying. If you find that configuration to be stable please also
+report that to the mailing list or github so this paragraph can be
+amended. Thank you.
+
+2. The current implementation uses the [Amazon SDK for PHP](https://docs.aws.amazon.com/sdk-for-php/), which in turn uses [Guzzle](https://docs.guzzlephp.org/en/stable/index.html).
+Documented behaviour of Guzzle is that [request bodies that exceed 2MB are stored on disk.](https://docs.guzzlephp.org/en/stable/psr7.html#body)
+This means that chunks, while in flight, are stored in your PHP [temp dir](https://www.php.net/manual/en/function.sys-get-temp-dir.php).
+Your PHP temp-dir has to have enough capacity to hold these files, both capacity and performance-wise.
+
+If you are having issues please search the github issues and also see
+the last section of this document for known issues.
 
 ### Setup
 
@@ -211,3 +228,30 @@ storing the file content in the cloud.
 ```
 $config['storage_type'] = 'CloudS3';
 ```
+### Known issues with the S3 backend.
+
+## 2026 September: All chunk uploads fail
+
+An issue that will affect any FileSender deployment using cloud_s3
+storage backed by Ceph RADOS Gateway — self-hosted or via a provider.
+
+*Symptoms*
+
+  * All chunk uploads suddenly fail; users get errors and the web pods
+    log HTTP 500 on |PUT /rest.php/file/<id>/chunk/<offset>|.
+  * filesender.log shows: |StorageFilesystemCannotWriteException — S3:
+    writeChunk() Can not write to object_name:
+    <uuid>/000000000000000000000000 offset 0|
+  * The underlying AWS SDK error is |PutObject ... 403 Forbidden,
+    AccessDenied| with an *empty message* (not SignatureDoesNotMatch).
+  * Misleadingly: reads, lists, and deletes keep working, and the same
+    credentials work fine from s3cmd — so it looks exactly like a
+    permissions or credentials problem. It isn't.
+
+*Solution*
+
+  Update to a FileSender release after 03 Sept 2026. This will be
+  version 3.12 and 2.70 and above in each series.
+  
+  The S3 library has a fix in it and needs to be updated to version
+  ^3.385.3 in optional-dependencies/s3.

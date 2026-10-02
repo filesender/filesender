@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -88,6 +88,7 @@ window.filesender.config = {
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
     
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
+    encryption_mandatory: '<?php echo Config::get('encryption_mandatory') ?>',
     encryption_mandatory_with_generated_password: '<?php echo Config::get('encryption_mandatory_with_generated_password') ?>',
     encryption_min_password_length: '<?php echo Config::get('encryption_min_password_length') ?>',
     encryption_password_text_only_min_password_length: '<?php echo Config::get('encryption_password_text_only_min_password_length') ?>',
@@ -107,6 +108,7 @@ window.filesender.config = {
 
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terareceiver_enabled: <?php  echo value_to_TF(Config::get('terareceiver_enabled')) ?>,
+    terareceiver_allowed: <?php  echo value_to_TF(Config::get('terareceiver_allowed')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
     terasender_worker_max_count: <?php echo Config::get('terasender_worker_max_count') ?>,
@@ -123,6 +125,8 @@ window.filesender.config = {
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
+
+    theme_override: '<?php  echo Config::get('theme_override') ?>',
 
 <?php
 $vfregex = Config::get('valid_filename_regex');
@@ -163,8 +167,11 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
 		decrypting : "<?php echo Lang::tr('decrypting')->out(); ?>",
 		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
+		file_encryption_metadata_wrong_password : "<?php echo Lang::tr('file_encryption_metadata_wrong_password')->out(); ?>",
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
-		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>",
+		file_encryption_metadata_enter_password : "<?php echo Lang::tr('file_encryption_metadata_enter_password')->out(); ?>",
+                file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>",
+                encrypted_metadata_file_size_hidden : "<?php echo Lang::tr('encrypted_metadata_file_size_hidden')->out(); ?>",
 		storage_filesystem_file_not_found : "<?php echo Lang::tr('storage_filesystem_file_not_found')->out(); ?>",
 		user_hit_guest_limit : "<?php echo Lang::tr('user_hit_guest_limit')->out(); ?>",
 		rest_roundtrip_token_invalid : "<?php echo Lang::tr('rest_roundtrip_token_invalid')->out(); ?>",
@@ -216,7 +223,10 @@ $vfregex = str_replace('\\', '\\\\', $vfregex);
 
     auth_warn_session_expired: <?php echo value_to_TF(Config::get('auth_warn_session_expired')) ?>,
 
-    pgp_enabled: <?php echo value_to_TF(Config::get('pgp_enabled')) ?>,
+    openpgp_enabled: <?php echo value_to_TF(Config::get('openpgp_enabled')) ?>,
+
+    client_calculate_sha256: <?php echo value_to_TF(Config::get('client_calculate_sha256'))  ?>,
+
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>
@@ -241,6 +251,3 @@ window.filesender.config.useFileSystemWritableFileStreamForDownload = function()
     return window.filesender.config.allow_filesystemwritablefilestream
         && window.filesender.config.isFileSystemWritableFileStreamAvailableForDownload();
 }
-
-
-

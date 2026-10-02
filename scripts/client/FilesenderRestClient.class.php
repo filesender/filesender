@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURF, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *    Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * *    Neither the name of AARNet, Belnet, HEAnet, SURF and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
  * 
@@ -55,6 +55,11 @@ class FilesenderRestClient {
     private $secret = null;
     
     /**
+     * User-agent
+     */
+    private $user_agent = null;
+
+    /**
      * Upload chunk size
      */
     public $chunk_size = null;
@@ -71,14 +76,16 @@ class FilesenderRestClient {
      * @param string $mode authentication mode, "application" or "user"
      * @param string $application_or_uid the application name or user uid
      * @param string $secret signing secret
+     * @param string $user_agent CURLOPT_USERAGENT, defaults to FileSenderRestClient
      */
-    public function __construct($base_url, $mode, $application_or_uid, $secret) {
+    public function __construct($base_url, $mode, $application_or_uid, $secret, $user_agent='FileSenderRestClient') {
         if(!$base_url || !$mode || !in_array($mode, array('application', 'user')) || !$application_or_uid) throw new Exception('Missing application id');
         
         $this->base_url = $base_url;
         $this->mode = $mode;
         $this->application_or_uid = $application_or_uid;
         $this->secret = $secret;
+        $this->user_agent = $user_agent;
     }
     
     /**
@@ -178,8 +185,9 @@ class FilesenderRestClient {
             'Content-Type: '.$content_type
         ));
         curl_setopt($h, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($h, CURLOPT_SSL_VERIFYHOST, true);
+        curl_setopt($h, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($h, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($h, CURLOPT_USERAGENT, $this->user_agent);
         
         switch($method) {
             case 'get' : break;
@@ -201,7 +209,6 @@ class FilesenderRestClient {
         $response = curl_exec($h);
         $error = curl_error($h);
         $code = (int)curl_getinfo($h, CURLINFO_HTTP_CODE);
-        curl_close($h);
         
         if($error) throw new Exception('Client error : '.$error);
         

@@ -7,8 +7,7 @@
 // 
 // 
 ?>
-Asunto: (recordatorio) Fichero/s disponible/s para descargar
-Asunto: (recordatorio) {transfer.subject}
+subject: (recordatorio) Fichero/s disponible/s para descargar {transfer.subject}
 
 {alternative:plain}
 

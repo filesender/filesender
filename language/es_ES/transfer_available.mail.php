@@ -7,8 +7,7 @@
 // 
 // 
 ?>
-Asunto: Fichero/s disponible/s para descargar 
-Asunto: {transfer.subject}
+subject: Fichero/s disponible/s para descargar {transfer.subject}
 
 {alternative:plain}
 

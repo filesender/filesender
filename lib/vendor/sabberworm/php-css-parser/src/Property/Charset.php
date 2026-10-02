@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sabberworm\CSS\Property;
 
-use Sabberworm\CSS\Comment\Comment;
+use Sabberworm\CSS\Comment\CommentContainer;
 use Sabberworm\CSS\OutputFormat;
+use Sabberworm\CSS\Position\Position;
+use Sabberworm\CSS\Position\Positionable;
+use Sabberworm\CSS\ShortClassNameProvider;
 use Sabberworm\CSS\Value\CSSString;
 
 /**
@@ -14,118 +19,71 @@ use Sabberworm\CSS\Value\CSSString;
  * - May only appear at the very top of a Document’s contents.
  * - Must not appear more than once.
  */
-class Charset implements AtRule
+class Charset implements AtRule, Positionable
 {
+    use CommentContainer;
+    use Position;
+    use ShortClassNameProvider;
+
     /**
      * @var CSSString
      */
-    private $oCharset;
+    private $charset;
 
     /**
-     * @var int
+     * @param int<1, max>|null $lineNumber
      */
-    protected $iLineNo;
-
-    /**
-     * @var array<array-key, Comment>
-     */
-    protected $aComments;
-
-    /**
-     * @param CSSString $oCharset
-     * @param int $iLineNo
-     */
-    public function __construct(CSSString $oCharset, $iLineNo = 0)
+    public function __construct(CSSString $charset, ?int $lineNumber = null)
     {
-        $this->oCharset = $oCharset;
-        $this->iLineNo = $iLineNo;
-        $this->aComments = [];
+        $this->charset = $charset;
+        $this->setPosition($lineNumber);
     }
 
     /**
-     * @return int
+     * @param string|CSSString $charset
      */
-    public function getLineNo()
+    public function setCharset($charset): void
     {
-        return $this->iLineNo;
+        $charset = $charset instanceof CSSString ? $charset : new CSSString($charset);
+        $this->charset = $charset;
+    }
+
+    public function getCharset(): string
+    {
+        return $this->charset->getString();
     }
 
     /**
-     * @param string|CSSString $oCharset
-     *
-     * @return void
+     * @return non-empty-string
      */
-    public function setCharset($sCharset)
+    public function render(OutputFormat $outputFormat): string
     {
-        $sCharset = $sCharset instanceof CSSString ? $sCharset : new CSSString($sCharset);
-        $this->oCharset = $sCharset;
+        return "{$outputFormat->getFormatter()->comments($this)}@charset {$this->charset->render($outputFormat)};";
     }
 
     /**
-     * @return string
+     * @return non-empty-string
      */
-    public function getCharset()
-    {
-        return $this->oCharset->getString();
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render(new OutputFormat());
-    }
-
-    /**
-     * @return string
-     */
-    public function render(OutputFormat $oOutputFormat)
-    {
-        return "{$oOutputFormat->comments($this)}@charset {$this->oCharset->render($oOutputFormat)};";
-    }
-
-    /**
-     * @return string
-     */
-    public function atRuleName()
+    public function atRuleName(): string
     {
         return 'charset';
     }
 
-    /**
-     * @return string
-     */
-    public function atRuleArgs()
+    public function atRuleArgs(): CSSString
     {
-        return $this->oCharset;
+        return $this->charset;
     }
 
     /**
-     * @param array<array-key, Comment> $aComments
+     * @return array<string, bool|int|float|string|array<mixed>|null>
      *
-     * @return void
+     * @internal
      */
-    public function addComments(array $aComments)
+    public function getArrayRepresentation(): array
     {
-        $this->aComments = array_merge($this->aComments, $aComments);
-    }
-
-    /**
-     * @return array<array-key, Comment>
-     */
-    public function getComments()
-    {
-        return $this->aComments;
-    }
-
-    /**
-     * @param array<array-key, Comment> $aComments
-     *
-     * @return void
-     */
-    public function setComments(array $aComments)
-    {
-        $this->aComments = $aComments;
+        return [
+            'class' => $this->getShortClassName(),
+            'charset' => $this->charset->getArrayRepresentation(),
+        ];
     }
 }

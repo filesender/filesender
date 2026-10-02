@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Asunto: Un invitado comienza a subir archivos
+subject: Un invitado comienza a subir archivos
 
 {alternative:plain}
 
