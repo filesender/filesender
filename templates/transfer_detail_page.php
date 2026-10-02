@@ -167,7 +167,26 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
         <div class="row">
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__details">
-                    <!-- <h4>{tr:transfer_name}</h4> -->
+                    <div class="fs-transfer-detail__name" data-name="<?php echo Template::Q($transfer->transfer_name) ?>">
+                        <div class="fs-transfer-detail__name-view">
+                            <h4 class="fs-transfer-detail__name-title"><?php echo $transfer->transfer_name ? Template::replaceTainted($transfer->transfer_name) : '{tr:transfer_name}' ?></h4>
+                            <button type="button" class="fs-button fs-button--transparent fs-button--primary fs-button--circle fs-transfer-detail__name-edit" title="{tr:edit_transfer_name}" aria-label="{tr:edit_transfer_name}">
+                                <i class="fi fi-pencil"></i>
+                            </button>
+                        </div>
+                        <form class="fs-transfer-detail__name-form">
+                            <label for="transfer-name" class="visually-hidden">{tr:transfer_name}</label>
+                            <div class="fs-input-inline">
+                                <input type="text" id="transfer-name" name="transfer-name" maxlength="250" placeholder="{tr:enter_transfer_name}">
+                                <button type="submit" class="fs-button fs-button--primary">
+                                    {tr:save}
+                                </button>
+                                <button type="button" class="fs-button fs-button--transparent fs-button--primary fs-button--circle fs-transfer-detail__name-cancel" title="{tr:cancel}" aria-label="{tr:cancel}">
+                                    <i class="fi fi-close"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     <?php if($transfer->status == TransferStatuses::FORWARDING) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:forward_in_progress}</strong>

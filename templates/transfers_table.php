@@ -200,11 +200,7 @@ EOF;
             <?php if(!$show_guest) { ?>
                 <td class="fs-table__name">
                     <?php
-                        if (property_exists($transfer, 'name')) {
-                            echo $transfer->name;
-                        } else {
-                            echo '-';
-                        }
+                        echo $transfer->transfer_name ? Template::replaceTainted($transfer->transfer_name) : '-';
                         if( $transfer->is_encrypted ) {
                             echo '<span class="fa fa-lock fs-table__icon" title="{tr:file_encryption}"></span>';
                         }

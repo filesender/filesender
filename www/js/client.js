@@ -602,6 +602,10 @@ window.filesender.client = {
     remindTransfer: function(id, callback) {
         return this.put('/transfer/' + id, {remind: true}, callback);
     },
+
+    renameTransfer: function(id, name, callback) {
+        return this.put('/transfer/' + id, {transfer_name: name}, callback);
+    },
     
     /**
      * Remind a recipient

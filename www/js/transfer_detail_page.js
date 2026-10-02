@@ -278,6 +278,40 @@ $(function() {
         prompt.append('<p class="fs-modal__note">' + lang.tr('email_separator_msg') + '</p>');
     });
 
+    var nameBlock = page.find('.fs-transfer-detail__name');
+    var nameInput = nameBlock.find('input[name="transfer-name"]');
+
+    var closeNameForm = function() {
+        nameBlock.removeClass('fs-transfer-detail__name--editing');
+        nameBlock.find('.fs-transfer-detail__name-edit').trigger('focus');
+    };
+
+    nameBlock.find('.fs-transfer-detail__name-edit').on('click', function() {
+        nameInput.val(nameBlock.attr('data-name') || '');
+        nameBlock.addClass('fs-transfer-detail__name--editing');
+        nameInput.trigger('focus');
+    });
+
+    nameBlock.find('.fs-transfer-detail__name-cancel').on('click', closeNameForm);
+
+    nameInput.on('keydown', function(e) {
+        if(e.key === 'Escape') closeNameForm();
+    });
+
+    nameBlock.find('.fs-transfer-detail__name-form').on('submit', function(e) {
+        e.preventDefault();
+        var id = $(this).closest('.fs-transfer-detail').attr('data-id');
+        if(!id || isNaN(id)) return;
+
+        var name = nameInput.val().trim();
+        filesender.client.renameTransfer(id, name, function() {
+            nameBlock.attr('data-name', name);
+            nameBlock.find('.fs-transfer-detail__name-title').text(name || lang.tr('transfer_name').out());
+            closeNameForm();
+            filesender.ui.notify('success', lang.tr('transfer_name_saved'));
+        });
+    });
+
     // Remind buttons
     $('[data-recipients-enabled=""] button[data-action="remind"]').addClass('disabled');
 

@@ -26,6 +26,55 @@
     margin-top: var(--fs-spacing-3x);
 }
 
+.fs-transfer-detail__name {
+    margin-bottom: var(--fs-spacing-3x);
+}
+
+.fs-transfer-detail__name-view {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--fs-spacing-base);
+}
+
+.fs-transfer-detail__name-title {
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.fs-transfer-detail__name-form {
+    display: none;
+}
+
+.fs-transfer-detail__name-form .fs-input-inline {
+    margin-top: 0;
+    padding-right: var(--fs-spacing-base);
+    gap: var(--fs-spacing-base);
+}
+
+.fs-transfer-detail__name-form input {
+    min-width: 0;
+}
+
+.fs-transfer-detail__name-form .fs-button {
+    flex-shrink: 0;
+    height: var(--fs-spacing-5x);
+    font-size: inherit;
+}
+
+.fs-transfer-detail__name-form .fs-button--circle {
+    width: var(--fs-spacing-5x);
+}
+
+.fs-transfer-detail__name--editing .fs-transfer-detail__name-view {
+    display: none;
+}
+
+.fs-transfer-detail__name--editing .fs-transfer-detail__name-form {
+    display: block;
+}
+
 .fs-transfer-detail p {
     margin-left: 0;
     margin-right: 0;
