@@ -23,7 +23,7 @@ $user = Auth::user();
             echo "<div class='row'>
                     <div class='col-12 col-sm-12 col-md-12 col-lg-6'>
                         <div class='fs-settings__admin'>
-                            <h4>".Lang::tr('admin_page')."</h2>
+                            <h4>".Lang::tr('admin_page')."</h4>
                             <p>".Lang::tr('profile_page_text_linking_to_admin_page')."</p>
                         </div>
                     </div>
@@ -367,7 +367,11 @@ $user = Auth::user();
 
                                     <ul class="fs-list fs-list--inline">
                                         <li>
-                                            <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py" class="fs-button fs-button--inverted">
+                                            <?php if (Config::get('cli_client_from_github')) { ?>
+                                                <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py" class="fs-button fs-button--inverted">
+                                            <?php } else { ?>
+                                                <a href="{config:site_url}rest.php/user/@me/filesender-python-client" download="filesender.py" class="fs-button fs-button--inverted">
+                                            <?php } ?>
                                                 {tr:download_python_cli}
                                             </a>
                                         </li>
@@ -476,142 +480,6 @@ EOF;
 
         <?php
         } // if(openpgp_enabled)
-        ?>
-            
-        <?php
-        if (Config::get('auth_remote_user_enabled')) {
-
-        ?>
-        <div class="row">
-            <div class="col-12">
-                <div class="fs-settings__remote-authentication">
-                    <h2>{tr:user_remote_authentication}</h2>
-
-                    <?php
-                        $tt = 0;
-                        $id = 'auth_secret';
-
-                        if($page[$id]) {
-                            $value = Auth::user()->$id;
-
-                            $v = Auth::user()->auth_secret_created_formatted;
-                            if( $v == '' ) {
-                            } else {
-                                $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
-                            }
-                            $info['key'] = 'auth_secret';
-                            //                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
-                        }
-
-                    ?>
-                    <p>
-                        {tr:user_remote_authentication_body}
-                    </p>
-
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                            <div class="fs-settings__api-secret">
-                                <h3>{tr:api_secret}</h3>
-
-                                <?php if($tt) { echo "<p>$tt</p>"; } ?>
-
-                                <?php
-                                if ($value) {
-                                    echo <<<EOT
-                                    <div class='fs-copy'>
-                                        <span>$value</span>
-                                        <button id='copy-api-secret' type='button' class='fs-button'>
-                                            <i class='fa fa-copy'></i>
-                                            {tr:copy}
-                                        </button>
-                                    </div>
-                                    EOT;
-
-                                }
-                                ?>
-
-                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
-                                    <li>
-                                        <button type="button" id="api_secret_create" class="fs-button">
-                                            <i class="fa fa-plus"></i>
-                                            <span>{tr:new_api_secret}</span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            {tr:generate_new_api_secret}
-                                        </span>
-                                    </li>
-                                </div>
-
-                                <div class="fs-list fs-list--inline fs-list--mobile-reverse">
-                                    <li>
-                                        <button type="button" id="api_secret_delete" class="fs-button fs-button--danger">
-                                            <i class="fa fa-close"></i>
-                                            <span>{tr:clear_api_secret}</span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            {tr:delete_current_api_secret}
-                                        </span>
-                                    </li>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                            <div class="fs-settings__cli">
-                                <h3><?php echo Lang::tr('python_cli_client_heading'); ?></h3>
-
-                                {tr:python_cli_client_setup_information}
-
-                                <div class="fs-copy">
-                                    <span>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</span>
-
-                                    <button id="copy-python-command" type="button" class="fs-button">
-                                        <i class="fa fa-copy"></i>
-                                        {tr:copy}
-                                    </button>
-                                </div>
-
-                                <ul class="fs-list fs-list--inline">
-                                    <li>
-                                    <?php
-                                    if (Config::get('cli_client_from_github')) {
-                                    ?>
-                                        <a href="https://raw.githubusercontent.com/filesender/filesender/master3/scripts/client/filesender.py">
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client" download="filesender.py" >
-                                    <?php
-                                    }
-                                    ?>
-                                            <button type="button" id="api_secret_delete" class="fs-button">
-                                                <i class="fa fa-download"></i>
-                                                {tr:download_python_cli}
-                                            </button>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{config:site_url}rest.php/user/@me/filesender-python-client-configuration-file" download="filesender.py.ini" >
-                                            <button type="button" id="api_secret_delete" class="fs-button">
-                                                <i class="fa fa-download"></i>
-                                                {tr:download_python_cli_configuration}
-                                            </button>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <?php
-        }
         ?>
     </div>
 </div>

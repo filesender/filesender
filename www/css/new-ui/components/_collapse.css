@@ -39,10 +39,6 @@
   background: var(--fs-collapse-button-active-background);
 }
 
-.fs-collapse__close {
-  display: none;
-}
-
 .fs-collapse__content {
   display: none;
   flex-direction: column;

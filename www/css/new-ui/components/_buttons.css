@@ -94,3 +94,8 @@ a.fs-button {
   background: transparent;
   border: 2px solid var(--fs-button-inverted-border-color);
 }
+
+.fs-button--danger {
+  color: var(--fs-button-danger-color);
+  background: var(--fs-button-danger-background);
+}

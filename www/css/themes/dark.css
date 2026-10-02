@@ -73,6 +73,8 @@
     --fs-button-primary-color: var(--fs-accent);
     --fs-button-inverted-color: var(--fs-accent);
     --fs-button-inverted-border-color: var(--fs-accent);
+    --fs-button-danger-color: var(--fs-light);
+    --fs-button-danger-background: var(--fs-error);
 
     /* Checkbox */
     --fs-checkbox-background: var(--fs-dark);

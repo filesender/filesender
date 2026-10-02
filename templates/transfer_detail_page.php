@@ -211,15 +211,11 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
 
                 <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
                     <div class="fs-transfer-detail__recipients">
-                        <h4>Recipients</h4>
+                        <h4>{tr:recipients}</h4>
 
                         <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
-                            <span>
-                                Your transfer has been sent to the following email addresses
-                            </span>
-                            <div class="fs-badge-buttons-listv recipients">
-                                <br/>
-
+                            <span>{tr:your_transfer_was_sent}</span>
+                            <div class="fs-transfer-detail__recipient-list recipients">
                                 <?php foreach($transfer->recipients as $recipient) { ?>
                                     <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
                                         <?php
@@ -237,7 +233,6 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                                         </span>
 
                                     </div>
-                                    <br/>
                                 <?php } ?>
 
                                 <button type="button" class="fs-button fs-button--inverted mt-3" data-action="add_recipient" title="{tr:add_recipient}">
@@ -251,7 +246,6 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                                         <span>{tr:send_reminder}</span>
                                     </button>
                                 <?php } ?>
-                                <br/>
                             </div>
                         </div>
                     </div>
@@ -426,69 +420,6 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                 </div>
             </div>
         </div>
-
-        <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
-            <div class="row">
-                <div class="col">
-                    <div class="fs-transfer-detail__recipients">
-                        <h2>{tr:recipients}</h2>
-
-                        <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
-                            <span>
-                                <?php echo Lang::tr('your_transfer_was_sent') ?>
-                            </span>
-                            <div class="fs-badge-buttons-listv recipients">
-                                <br/>
-                                
-                                <?php foreach($transfer->recipients as $recipient) { ?>
-                                    <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
-                                        <?php
-                                        if(in_array($recipient->email, Auth::user()->email_addresses)) {
-                                            echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
-                                        } else {
-                                            echo '<span>'.Template::sanitizeOutput($recipient->identity).'</span>';
-                                        }
-                                        ?>
-
-                                        <span class="fs-badge-buttons-shell" >
-                                            <span data-action="remind" class="fa    fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                                            <span data-action="delete" class="fa    fa-lg fa-trash" title="{tr:delete}"></span>
-                                            <span data-action="auditlog" class="fa  fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
-                                        </span>
-                                        
-                                    </div>
-                                    <br/>
-                                <?php } ?>
-
-                                <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
-                                    <i class="fa fa-lg fa-envelope-open"></i>
-                                    <span><?php echo Lang::tr('add_recipient') ?></span>
-                                </button>
-                                <br/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
-
-        <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
-            <div class="row">
-                <div class="col col-sm-12 col-md-8">
-                    <div class="fs-transfer-detail__link">
-                        <h2>{tr:download_link}</h2>
-                        <div class="fs-copy">
-                            <span class="download_link"><?php echo $transfer->first_recipient->download_link ?></span>
-
-                            <button id="copy-to-clipboard" type="button" class="fs-button">
-                                <i class="fa fa-copy"></i>
-                                {tr:copy}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
 
         <?php if ($transfer->options) { ?>
             <div class="row">

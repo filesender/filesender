@@ -437,11 +437,7 @@ $(function() {
     });
 
     // Custom collapse
-    $('.fs-collapse__open').on('click', function() {
-        $(this.parentElement).addClass('fs-collapse--open');
-    });
-
-    $('.fs-collapse__close').on('click', function() {
-        $(this.parentElement).removeClass('fs-collapse--open');
+    $('.fs-collapse__toggle').on('click', function() {
+        $(this.parentElement).toggleClass('fs-collapse--open');
     });
 });

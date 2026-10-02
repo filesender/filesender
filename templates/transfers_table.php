@@ -191,15 +191,6 @@ EOF;
             data-client-entropy="<?php echo     Template::Q($transfer->client_entropy); ?>"
         >
 
-            <td data-label="{tr:transfer_id_short}">
-                <?php
-                echo Template::Q($transfer->id);
-                if( $transfer->is_encrypted ) {
-                    echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
-                }
-                ?>
-            </td>
-
             <?php if($show_guest) { ?>
                 <td data-label="{tr:guest}">
                     <?php if($transfer->guest) echo '<abbr title="'.Template::replaceTainted($transfer->guest->identity).'">'.Template::replaceTainted($transfer->guest->name).'</abbr>' ?>
@@ -213,6 +204,9 @@ EOF;
                             echo $transfer->name;
                         } else {
                             echo '-';
+                        }
+                        if( $transfer->is_encrypted ) {
+                            echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
                         }
                     ?>
                 </td>

@@ -269,13 +269,9 @@ use ( $new_guests_can_only_send_to_creator,
                                     </div>
 
                                     <div class="fs-collapse">
-                                        <button type="button" class="fs-button fs-collapse__open">
+                                        <button type="button" class="fs-button fs-collapse__toggle">
                                             <span>{tr:advanced_settings}</span>
                                             <i class="fi fi-chevron-down"></i>
-                                        </button>
-                                        <button type="button" class="fs-button fs-collapse__close">
-                                            <span>{tr:advanced_settings}</span>
-                                            <i class="fi fi-chevron-up"></i>
                                         </button>
                                         <div class="fs-collapse__content">
                                             <div class="row">

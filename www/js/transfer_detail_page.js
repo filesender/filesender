@@ -282,9 +282,9 @@ $(function() {
     });
 
     // Remind buttons
-    $('[data-recipients-enabled=""] .fs-transfer-detail__actions [data-action="remind"]').addClass('disabled');
+    $('[data-recipients-enabled=""] button[data-action="remind"]').addClass('disabled');
 
-    $('[data-recipients-enabled="1"] .fs-transfer-detail__actions [data-action="remind"]').on('click', function() {
+    $('[data-recipients-enabled="1"] button[data-action="remind"]').on('click', function() {
         var id = $(this).closest('.fs-transfer-detail').attr('data-id');
         if(!id || isNaN(id)) return;
 

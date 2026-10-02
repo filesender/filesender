@@ -114,6 +114,13 @@
     margin-top: var(--fs-spacing-5x);
 }
 
+.fs-transfer-detail__recipient-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: var(--fs-spacing-2x);
+}
+
 .fs-transfer-detail .fs-transfer-detail__total-size {
     display: block;
     text-align: left;
