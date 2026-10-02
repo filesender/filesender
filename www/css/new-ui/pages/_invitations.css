@@ -39,6 +39,10 @@
     color: var(--fs-exclamation-circle-color);
 }
 
+.fs-invitations__warning {
+    color: var(--fs-invitations-warning-color);
+}
+
 .fs-invitations .actions {
     text-align: right;
 }

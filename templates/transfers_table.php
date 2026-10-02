@@ -148,7 +148,7 @@ EOF;
         <?php } ?>
 
         <th>
-            Date
+            {tr:date}
         </th>
 
         <th>
@@ -212,7 +212,7 @@ EOF;
                 </td>
             <?php } ?>
 
-            <td>
+            <td data-label="{tr:date}">
                 <?php echo Utilities::formatDate($transfer->created) ?>
             </td>
 
@@ -292,7 +292,7 @@ EOF;
         if( $havePrev ) {
             $prevPage = Template::Q(max(0,$offset-$limit));
             echo "<a class='fs-link fs-link--circle' href='$base&$cgioffset=0&$cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as'><i class='fa fa-angle-double-left'></i></a>";
-            echo "<a class='fs-link fs-link--circle' href='$base&$cgioffset=$prevPage&$cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as'><i class='fa fa-angle-left'></i></a>";
+            echo "<a class='fs-link fs-link--circle' href='$base&$cgioffset=$prevPage&$cgilimit=$cgilimitvalue&transfersort=$transfersort&as=$as'><i class='fi fi-chevron-left'></i></a>";
         } else {
             echo "<a class='fs-link fs-link--circle fs-link--disabled' href='javascript:void(0)'><i class='fa fa-angle-double-left'></i></a>";
             echo "<a class='fs-link fs-link--circle fs-link--disabled' href='javascript:void(0)'><i class='fi fi-chevron-left'></i></a>";

@@ -8,7 +8,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    height: var(--fs-spacing-3x);
+    min-height: var(--fs-spacing-3x);
     min-width: var(--fs-spacing-3x);
     margin-bottom: var(--fs-spacing-2x);
 }

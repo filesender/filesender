@@ -56,6 +56,10 @@
     color: var(--fs-success);
 }
 
+.fs-transfer-detail__check--inactive .fi-close {
+    color: var(--fs-transfer-detail-check-inactive-color);
+}
+
 .fs-transfer-detail__total-size {
     display: none;
     text-align: right;

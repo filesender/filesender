@@ -60,6 +60,11 @@
                         <li>
                             0
                         </li>
+                        <?php if($mode == 'user' && $guest->status == 'available') { ?>
+                            <li>
+                                <i class="fi fi-warning fs-invitations__warning" title="{tr:no_transfers}"></i>
+                            </li>
+                        <?php } ?>
                     </ul>
                 <?php } else {
                     $dc = count($guestTransfers);
@@ -73,10 +78,6 @@
                         <button type="button" class="fs-button remind" title="{tr:send_a_reminder}">
                             <i class="fi fi-reminder"></i>
                             <span>{tr:send_reminder}</span>
-                        </button>
-                        <button type="button" class="fs-button forward" title="{tr:resend_invitation}">
-                            <i class="fi fi-resend"></i>
-                            <span>{tr:resend_invitation}</span>
                         </button>
                     <?php } ?>
                     <?php if ($guest->status == 'available') { ?>

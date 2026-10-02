@@ -159,6 +159,10 @@ if( $encryption_mandatory ) {
     $encryption_checkbox_classes = '';
 }
 
+$isNotificationOption = function( $name ) {
+    return strpos($name, 'email_') !== false || strpos($name, 'notification') !== false;
+};
+
 /**
  * @param optionsToFilter is an array of options which we do not want to
  *                        show in the default panels on the left. This allows
@@ -229,7 +233,6 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
         $checkboxClass = 'fs-checkbox';
         $labelIdAttr = '';
         if ($name === TransferOptions::ENCRYPTION) {
-            // ids/classes usados pelo upload_page.js (encryption_mandatory*)
             $checkboxClass .= ' encryption-toggle-group';
             $labelIdAttr = ' id="enctest1"';
         }
@@ -801,114 +804,117 @@ EOF;
                                                 <?php render_forward_to_another_server(true); ?>
 
                                                 <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="fs-select expires-select-by-days">
-                                                            <label for="expires-select">
-                                                                {tr:expires_after}
-                                                            </label>
-                                                            <select id="expires-select" name="expires-select">
-                                                                <?php foreach( $expireDays as $k => $v ) { ?>
-                                                                    <?php
-                                                                    $sel = "";
-                                                                    if( $expireDaysSelected == $v ) {
-                                                                        $sel = " selected ";
-                                                                    }
-                                                                    ?>
-                                                                    <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="fs-input-group expires-select-by-picker">
-                                                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
-
-                                                            <div>
-                                                                <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
-                                                                       title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
-                                                                       data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <?php
-                                                if(Config::get('transfer_recipients_lang_selector_enabled')) {
-                                                    $opts = array();
-                                                    $code = Lang::getBaseCode();
-                                                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                                                        $selected = ($id == $code) ? 'selected="selected"' : '';
-                                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
-                                                    }
-
-                                                    echo '<div class="fs-select">';
-                                                    echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
-                                                    echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
-                                                    echo '</div>';
-                                                }
-                                                ?>
-
-                                                <div class="row">
-                                                    <div class="col-12 basic_options">
+                                                    <div class="col-12 col-lg-6 basic_options">
                                                         <strong>
-                                                            {tr:advanced_upload_settings}
+                                                            {tr:general_settings}
                                                         </strong>
 
                                                         <?php if($canHideSenderEmail) { ?>
                                                             <?php if( $hideSenderEmailIsAdvanced ) {  ?>
-                                                                <hr data-related-to="topops" />
-                                                                <div class="row ">
-                                                                    <div class="col-12 hse">
-                                                                        <?php
-                                                                        $ops = Transfer::availableOptions();
-                                                                        if( array_key_exists( 'hide_sender_email', $ops )) {
-                                                                            $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
-                                                                        }
-                                                                        ?>
-                                                                    </div>
+                                                                <div class="hse">
+                                                                    <?php
+                                                                    $ops = Transfer::availableOptions();
+                                                                    if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                                        $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
+                                                                    }
+                                                                    ?>
                                                                 </div>
                                                             <?php } ?>
                                                         <?php } ?>
-                                                        
-                                                        <?php
-                                                        foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                            if( !array_key_exists($name,$upload_options_handled)) {
-                                                                $displayoption($name, $cfg, Auth::isGuest());
-                                                            }
-                                                        }
 
-                                                        foreach(Transfer::availableOptions(true) as $name => $cfg)  {
-                                                            if( !array_key_exists($name,$upload_options_handled)) {
-                                                                $displayoption($name, $cfg, Auth::isGuest());
+                                                        <?php
+                                                        foreach(array(false, true) as $advanced) {
+                                                            foreach(Transfer::availableOptions($advanced) as $name => $cfg) {
+                                                                if( !array_key_exists($name,$upload_options_handled) && !$isNotificationOption($name)) {
+                                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                                }
                                                             }
                                                         }
                                                         ?>
 
-                                                        
+                                                        <?php if(Config::get('terasender_enabled') && (Config::get('terasender_advanced') || Config::get('terasender_disableable'))) { ?>
+                                                            <div class="advanced_options">
+                                                                <?php if (Config::get('terasender_advanced')) { ?>
+                                                                    <strong>
+                                                                        {tr:terasender_settings}
+                                                                    </strong>
+                                                                    <div class="fs-input-group fs-input-group--vertical">
+                                                                        <label for="terasender_worker_count">
+                                                                            {tr:terasender_worker_count}
+                                                                        </label>
+
+                                                                        <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
+                                                                    </div>
+                                                                <?php } ?>
+                                                                <?php if (Config::get('terasender_disableable')) {
+                                                                    $displayoption('disable_terasender', array('default'=>false), false);
+                                                                }?>
+                                                            </div>
+                                                        <?php } ?>
+                                                    </div>
+
+                                                    <div class="col-12 col-lg-6 basic_options">
+                                                        <div class="fs-transfer__settings-selects">
+                                                            <div class="fs-select expires-select-by-days">
+                                                                <label for="expires-select">
+                                                                    {tr:expires_after}
+                                                                </label>
+                                                                <select id="expires-select" name="expires-select">
+                                                                    <?php foreach( $expireDays as $k => $v ) { ?>
+                                                                        <?php
+                                                                        $sel = "";
+                                                                        if( $expireDaysSelected == $v ) {
+                                                                            $sel = " selected ";
+                                                                        }
+                                                                        ?>
+                                                                        <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="fs-input-group expires-select-by-picker">
+                                                                <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+
+                                                                <div>
+                                                                    <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
+                                                                           title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
+                                                                           data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                            <?php
+                                                            if(Config::get('transfer_recipients_lang_selector_enabled')) {
+                                                                $opts = array();
+                                                                $code = Lang::getBaseCode();
+                                                                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                                                    $selected = ($id == $code) ? 'selected="selected"' : '';
+                                                                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                                                }
+
+                                                                echo '<div class="fs-select">';
+                                                                echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
+                                                                echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
+                                                                echo '</div>';
+                                                            }
+                                                            ?>
+                                                        </div>
+
+                                                        <strong>
+                                                            {tr:notification_settings}
+                                                        </strong>
+
+                                                        <?php
+                                                        foreach(array(false, true) as $advanced) {
+                                                            foreach(Transfer::availableOptions($advanced) as $name => $cfg) {
+                                                                if( !array_key_exists($name,$upload_options_handled) && $isNotificationOption($name)) {
+                                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                                }
+                                                            }
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
-                                                <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
-                                                    <div class="row">
-                                                        <div class="col-12 advanced_options">
-                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
-                                                                <strong>
-                                                                    {tr:terasender_settings}
-                                                                </strong>
-                                                                <div class="fs-input-group fs-input-group--vertical">
-                                                                    <label for="terasender_worker_count">
-                                                                        {tr:terasender_worker_count}
-                                                                    </label>
-
-                                                                    <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
-                                                                </div>
-                                                            <?php } ?>
-                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
-                                                                $displayoption('disable_terasender', array('default'=>false), false);
-                                                            }?>
-                                                        </div>
-                                                    </div>
-                                                <?php } /* End of advanced settings div. */ ?>
                                             </div>
                                         </div>
                                     </div>

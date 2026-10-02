@@ -19,6 +19,7 @@
 .fs-settings__actions,
 .fs-settings__about,
 .fs-settings__privacy,
+.fs-settings__openpgp,
 .fs-settings__remote-authentication  {
     margin-top: var(--fs-spacing-8x);
 }

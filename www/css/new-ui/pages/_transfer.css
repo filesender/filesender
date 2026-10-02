@@ -422,12 +422,26 @@
   display: block;
 }
 
+.fs-transfer__settings-selects {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--fs-spacing-2x);
+}
+
+.fs-transfer__settings-selects > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .fs-transfer .file.uploading.done .fs-progress-circle {
   display: none;
 }
 
 /* XS */
 @media (max-width: 575px) {
+  .fs-transfer__settings-selects {
+    flex-direction: column;
+  }
   .fs-transfer {
     font-size: 0.8rem;
   }

@@ -421,49 +421,54 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
             </div>
         </div>
 
-        <?php if ($transfer->options) { ?>
-            <div class="row">
-                <div class="col">
-                    <div class="fs-transfer-detail__options">
-                        <h4>{tr:transfer_selected_options}</h4>
-                        <div class="row">
-                            <div class="col col-sm-12 mt-4">
-                                <strong>{tr:advanced_transfer_options}</strong>
-
-                                <?php
-                                    $optionshtml = "";
-                                    if(count(array_filter($transfer->options))) {
-                                        foreach (array_keys(array_filter($transfer->options)) as $o) {
-                                            if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
-                                                // this option will never be shown to the user
-                                            } else if ( $o == TransferOptions::FORWARD_SERVER_NAME ) {
-                                                // no show
-                                            } else {
-                                                $optionshtml .= "<div class='fs-transfer-detail__check'>";
-                                                $optionshtml .= "<i class='fi fi-valid'></i>";
-                                                if( $o == TransferOptions::FORWARD_TO_ANOTHER_SERVER ) {
-                                                    $server_label = ForwardAnotherServer::getServerLabel($transfer->options[TransferOptions::FORWARD_SERVER_NAME]);
-                                                    $optionshtml .= "<span>".Lang::tr($o)." : ".$server_label."</span>";
-                                                } else {
-                                                    $optionshtml .= "<span>".Lang::tr($o)."</span>";
-                                                }
-                                                $optionshtml .= "</div>";
-                                            }
-                                        }
-                                    }
-
-                                    if($optionshtml != '') {
-                                        echo $optionshtml;
-                                    } else {
-                                        echo Lang::tr('none') ;
-                                    }
-                                ?>
-                            </div>
+        <?php
+            $hiddenOptions = array(
+                TransferOptions::GET_A_LINK,
+                TransferOptions::STORAGE_CLOUD_S3_BUCKET,
+                TransferOptions::FORWARD_SERVER_NAME,
+            );
+            $transferOptions = (array)$transfer->options;
+            $optionNames = array_unique(array_merge(
+                array_keys(Transfer::availableOptions()),
+                array_keys(array_filter($transferOptions))
+            ));
+            $optionsHtml = array('general' => '', 'notification' => '');
+            foreach ($optionNames as $o) {
+                if (in_array($o, $hiddenOptions)) {
+                    continue;
+                }
+                $active = !empty($transferOptions[$o]);
+                $label = Lang::tr($o);
+                if ($active && $o == TransferOptions::FORWARD_TO_ANOTHER_SERVER) {
+                    $label .= ' : '.ForwardAnotherServer::getServerLabel($transferOptions[TransferOptions::FORWARD_SERVER_NAME]);
+                }
+                if ($active && $o == TransferOptions::REDIRECT_URL_ON_COMPLETE) {
+                    $label .= ' : '.Template::sanitizeOutput($transferOptions[$o]);
+                }
+                $group = (strpos($o, 'email_') !== false || strpos($o, 'notification') !== false) ? 'notification' : 'general';
+                $optionsHtml[$group] .= '<div class="fs-transfer-detail__check'.($active ? '' : ' fs-transfer-detail__check--inactive').'">';
+                $optionsHtml[$group] .= '<i class="fi '.($active ? 'fi-valid' : 'fi-close').'"></i>';
+                $optionsHtml[$group] .= '<span>'.$label.'</span>';
+                $optionsHtml[$group] .= '</div>';
+            }
+        ?>
+        <div class="row">
+            <div class="col">
+                <div class="fs-transfer-detail__options">
+                    <h4>{tr:transfer_selected_options}</h4>
+                    <div class="row">
+                        <div class="col-12 col-lg-6 mt-4">
+                            <strong>{tr:general_settings}</strong>
+                            <?php echo $optionsHtml['general'] ? $optionsHtml['general'] : Lang::tr('none'); ?>
+                        </div>
+                        <div class="col-12 col-lg-6 mt-4">
+                            <strong>{tr:notification_settings}</strong>
+                            <?php echo $optionsHtml['notification'] ? $optionsHtml['notification'] : Lang::tr('none'); ?>
                         </div>
                     </div>
                 </div>
             </div>
-        <?php } ?>
+        </div>
 
         <div class="row">
             <div class="col">

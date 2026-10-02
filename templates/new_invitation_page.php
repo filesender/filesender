@@ -275,29 +275,31 @@ use ( $new_guests_can_only_send_to_creator,
                                         </button>
                                         <div class="fs-collapse__content">
                                             <div class="row">
-                                                <div class="col-12 col-sm-12 col-md-7">
-                                                    <strong>{tr:guest_transfer_settings}</strong>
+                                                <div class="col-12 col-lg-6">
+                                                    <strong>{tr:guest_email_settings}</strong>
 
-                                                    <div class="transfer_options">
-                                                        <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {
+                                                    <div class="guest_options">
+                                                        <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
                                                             if( !in_array( $name, $guest_options_to_force_to_top_array )) {
-                                                                $displayoption($name, $cfg, true);
+                                                                $displayoption($name, $cfg, false);
                                                             }
                                                         } ?>
                                                     </div>
 
-                                                    <div class="transfer_options">
-                                                        <?php if(count(Transfer::availableOptions(true))) {
-                                                            foreach(Transfer::availableOptions(true) as $name => $cfg) {
-                                                                if( !in_array( $name, $guest_options_to_force_to_top_array )) {
-                                                                    $displayoption($name, $cfg, true);
+                                                    <div class="guest_options">
+                                                        <?php if(count(Guest::availableOptions(true))) {
+                                                            foreach(Guest::availableOptions(true) as $name => $cfg) {
+                                                                if( !array_key_exists($name, $guest_options_handled)) {
+                                                                    if( !in_array( $name, $guest_options_to_force_to_top_array )) {
+                                                                        $displayoption($name, $cfg, false);
+                                                                    }
                                                                 }
                                                             }
                                                         } ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-12 col-sm-12 col-md-5">
+                                                <div class="col-12 col-lg-6">
                                                     <div class="fs-select guest-expires-select-by-days">
                                                         <label for="expires-select">
                                                             {tr:invitation_expires_after}
@@ -326,23 +328,21 @@ use ( $new_guests_can_only_send_to_creator,
                                                         </div>
                                                     </div>
 
-                                                    <strong>{tr:guest_email_settings}</strong>
+                                                    <strong>{tr:guest_transfer_settings}</strong>
 
-                                                    <div class="guest_options">
-                                                        <?php foreach(Guest::availableOptions(false) as $name => $cfg) {
+                                                    <div class="transfer_options">
+                                                        <?php foreach(Transfer::availableOptions(false) as $name => $cfg) {
                                                             if( !in_array( $name, $guest_options_to_force_to_top_array )) {
-                                                                $displayoption($name, $cfg, false);
+                                                                $displayoption($name, $cfg, true);
                                                             }
                                                         } ?>
                                                     </div>
 
-                                                    <div class="guest_options">
-                                                        <?php if(count(Guest::availableOptions(true))) {
-                                                            foreach(Guest::availableOptions(true) as $name => $cfg) {
-                                                                if( !array_key_exists($name, $guest_options_handled)) {
-                                                                    if( !in_array( $name, $guest_options_to_force_to_top_array )) {
-                                                                        $displayoption($name, $cfg, false);
-                                                                    }
+                                                    <div class="transfer_options">
+                                                        <?php if(count(Transfer::availableOptions(true))) {
+                                                            foreach(Transfer::availableOptions(true) as $name => $cfg) {
+                                                                if( !in_array( $name, $guest_options_to_force_to_top_array )) {
+                                                                    $displayoption($name, $cfg, true);
                                                                 }
                                                             }
                                                         } ?>

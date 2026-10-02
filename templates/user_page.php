@@ -423,9 +423,9 @@ $user = Auth::user();
 
         <div class="row">
             <div class="col-12">
-                <div class="fs-settings__about">
+                <div class="fs-settings__openpgp">
         <?php
-    echo "<h2>".Lang::tr('OpenPGP')."</h2>\n";
+    echo "<h4>".Lang::tr('OpenPGP')."</h4>\n";
     echo "<div>";
     $user = Auth::user();
     $v = $user->openpgp_key;
@@ -467,7 +467,7 @@ EOF;
     if( !$v ) {
     echo <<<EOF
             <div class="form-group upload_new_openpgp_public_key">
-                <label for="openpgp_public_key_file" class="mandatory btn btn-secondary">{tr:upload_a_new_openpgp_public_key}</label><br>
+                <label for="openpgp_public_key_file" class="mandatory fs-button">{tr:upload_a_new_openpgp_public_key}</label><br>
                 <input id="openpgp_public_key_file" name="openpgp_public_key_file" type="file" class="form-control-file" hidden="true" />
             </div>
 EOF;

@@ -49,6 +49,7 @@
     --fs-remove-color: var(--fs-error);
 
     --fs-exclamation-circle-color: var(--fs-accent);
+    --fs-invitations-warning-color: var(--fs-warning);
 
     --fs-files-background: var(--fs-light);
 
@@ -205,4 +206,5 @@
 
     /* Transfer-detail */
     --fs-transfer-detail-background: var(--fs-base-page-background);
+    --fs-transfer-detail-check-inactive-color: var(--fs-dark-grey);
 }
