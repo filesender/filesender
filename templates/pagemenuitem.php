@@ -67,7 +67,7 @@ function pagemenuitem($page, $itemClass = '') {
     }
 
     echo $itemClass ? '<li class="'.$itemClass.'">' : '<li>';
-    echo '<a class="fs-link '.$class.'"  id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'">'.$icon.'<span>'.$label.'</span>'.'</a>';
+    echo '<a class="fs-link '.$class.'"  id="topmenu_'.$page.'" href="?s='.$page.$vidattr.'" title="'.Utilities::sanitizeOutput($label).'">'.$icon.'<span>'.$label.'</span>'.'</a>';
     echo '</li>';
 }
 
@@ -86,7 +86,7 @@ function pagemenudropdown($id, $label, $icon, $pages) {
     $class = in_array(GUI::currentPage(), $pages) ? ' fs-link--active ' : '';
 
     echo '<li class="fs-dropdown">';
-    echo '<button type="button" class="fs-link fs-dropdown__toggle '.$class.'" id="topmenu_'.$id.'" aria-haspopup="true" aria-expanded="false" aria-controls="topmenu_'.$id.'_menu">';
+    echo '<button type="button" class="fs-link fs-dropdown__toggle '.$class.'" id="topmenu_'.$id.'" aria-haspopup="true" aria-expanded="false" aria-controls="topmenu_'.$id.'_menu" title="'.Utilities::sanitizeOutput($label).'">';
     echo $icon.'<span>'.$label.'</span><i class="fi fi-chevron-down fs-dropdown__chevron"></i>';
     echo '</button>';
     echo '<ul class="fs-dropdown__menu" id="topmenu_'.$id.'_menu">';

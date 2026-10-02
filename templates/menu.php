@@ -13,7 +13,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
 ?>
 
 <!-- New UI header - BEGIN -->
-<header>
+<header class="fs-header">
     <div class="container">
         <nav>
                 <a class="fs-link fs-link--no-hover" href="<?php echo GUI::path() ?>">
@@ -67,7 +67,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                             if(Config::get('auth_sp_embedded')) {
                                 pagemenuitem('logon');
                             }else{
-                                echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.$icon.'<span>'.Lang::tr('logon').'</span>'.'</a></li>';
+                                echo '<li><a class="fs-link" href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon" title="'.Utilities::sanitizeOutput(Lang::tr('logon')).'">'.$icon.'<span>'.Lang::tr('logon').'</span>'.'</a></li>';
                             }
                         }
 
@@ -78,7 +78,7 @@ if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages())
                             $url = AuthSP::logoffURL();
                             if($url) {
                                 echo '<li>';
-                                echo '<a class="fs-link"  href="'.Utilities::sanitizeOutput($url).'">'.$icon.'<span>'.Lang::tr('logout-link').'</span>'.'</a>';
+                                echo '<a class="fs-link"  href="'.Utilities::sanitizeOutput($url).'" title="'.Utilities::sanitizeOutput(Lang::tr('logout-link')).'">'.$icon.'<span>'.Lang::tr('logout-link').'</span>'.'</a>';
                                 echo '</li>';
                             }
                         }

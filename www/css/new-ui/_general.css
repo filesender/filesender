@@ -24,6 +24,15 @@ main {
   padding: var(--fs-spacing-12x) 0 0 0;
 }
 
+.container {
+  width: 100%;
+  max-width: var(--fs-container-max-width);
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: var(--fs-container-gutter);
+  padding-left: var(--fs-container-gutter);
+}
+
 main .core, main .box {
   padding: 0 !important;
   background: transparent !important;

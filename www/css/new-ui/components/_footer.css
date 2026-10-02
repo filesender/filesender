@@ -1,5 +1,4 @@
 footer {
-  padding: 0 var(--fs-spacing-8x);
   background: var(--fs-footer-background);
   color: var(--fs-footer-color);
 }

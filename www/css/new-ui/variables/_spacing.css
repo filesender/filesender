@@ -33,4 +33,7 @@
   --fs-spacing-28x: calc(var(--fs-spacing-base) * 28);
   --fs-spacing-29x: calc(var(--fs-spacing-base) * 29);
   --fs-spacing-30x: calc(var(--fs-spacing-base) * 30);
+
+  --fs-container-max-width: 1600px;
+  --fs-container-gutter: clamp(16px, 4vw, 48px);
 }
