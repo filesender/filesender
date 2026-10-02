@@ -1,12 +1,8 @@
 ::selection{
-  background: var(--fs-blue-200);
+  background: var(--fs-form-selection-background);
 }
 
 :focus, :focus-visible {
-  border: 1px solid var(--fs-accent);
+  border: 1px solid var(--fs-form-focus-border-color);
   outline: none;
-}
-
-.fs-form {
-
 }

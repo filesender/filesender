@@ -1,0 +1,32 @@
+.fs-progress-circle {
+    display: none;
+    position: relative;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    background: var(--fs-progress-circle-background);
+    align-items: center;
+    justify-content: center;
+}
+
+.fs-progress-circle--active {
+    display: flex;
+}
+
+.fs-progress-circle::before {
+    content: "";
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: var(--fs-progress-circle-indicator-background);
+}
+
+.fs-progress-circle__value {
+    position: relative;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--fs-progress-circle-value-color);
+    margin: 0 !important;
+    text-align: center;
+}

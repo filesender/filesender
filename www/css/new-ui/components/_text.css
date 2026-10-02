@@ -1,23 +1,40 @@
 h1 {
-    font-size: 2rem !important;
-    font-weight: 300 !important;
-    text-align: center !important;
-    margin-top: 0 !important;
-    padding: 0 !important;
+    font-size: 4.0rem !important;
+    line-height: 48px !important;
 }
 
 h2 {
-    font-size: 1.4rem !important;
-    font-weight: 700 !important;
+    font-size: 3.2rem !important;
+    line-height: 36px !important;
 }
 
 h3 {
-    font-size: 1rem !important;
+    font-size: 2.8rem !important;
+    line-height: 32px !important;
+}
+
+h4 {
+    font-size: 2rem !important;
+    line-height: 24px !important;
+}
+
+h5 {
+    font-size: 1.8rem !important;
+    line-height: 24px !important;
+}
+
+h6 {
+    font-size: 1.6rem !important;
+    line-height: 24px !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
     font-weight: 700 !important;
 }
 
 h1, h2, h3,
 h4, h5, h6 {
+    margin-top: 0 !important;
     padding: 0 !important;
 }
 
@@ -26,6 +43,15 @@ p {
     margin-right: 0;
     margin-bottom: 0;
 }
+
+small {
+    font-size: 1.4rem;
+    line-height: 20px;
+}
+
+/***********/
+/* OLD CSS */
+/***********/
 
 @media (max-width: 575px) {
     h1 {

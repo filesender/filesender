@@ -1,23 +1,35 @@
-<?php include FILESENDER_BASE . '/templates/announce.php'; ?>
-<div class="core">
-    {tr:site_splash}
-    
-    <div class="logon">
-        <?php
-        $page = null;
-        if (array_key_exists('s', $_REQUEST)) {
-            $args = array('s' => $_REQUEST['s']);
-            if( $_REQUEST['s'] == 'transfer_detail' ) {
-                $args = array_merge( $args, array('transfer_id' => $_REQUEST['transfer_id']));
-            }
-            if( $_REQUEST['s'] == 'invitation_detail' ) {
-                $args = array_merge( $args, array('guest_id' => $_REQUEST['guest_id']));
-            }
-            $page = Utilities::http_build_query( $args );
-        }
-        echo GUI::getLoginButton($page);
-        ?>
+<div id="page" class="logon_page">
+
+    <div class="fs-base-page fs-logon">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <?php include FILESENDER_BASE . '/templates/announce.php'; ?>
+
+                    {tr:site_splash}
+
+                    <div class="logon fs-base-page__actions">
+                        <?php
+                        $page = null;
+                        if (array_key_exists('s', $_REQUEST)) {
+                            $args = array('s' => $_REQUEST['s']);
+                            if( $_REQUEST['s'] == 'transfer_detail' ) {
+                                $args = array_merge( $args, array('transfer_id' => $_REQUEST['transfer_id']));
+                            }
+                            if( $_REQUEST['s'] == 'invitation_detail' ) {
+                                $args = array_merge( $args, array('guest_id' => $_REQUEST['guest_id']));
+                            }
+                            $page = Utilities::http_build_query( $args );
+                        }
+                        echo GUI::getLoginButton($page);
+                        ?>
+                    </div>
+
+                    <script type="text/javascript" src="{path:js/logon_page.js}"></script>
+                </div>
+            </div>
+        </div>
     </div>
-    <script type="text/javascript" src="{path:js/logon_page.js}"></script>
-    
+
+
 </div>

@@ -82,28 +82,23 @@ jQuery.fn.extend({
     }
 });
 
-function setFileProgress( bar, v, complete ) {
+function setFileProgress( progress, v, complete ) {
     var origv = v;
     var upload_progress = Math.floor(1000 * v);
 
     v = Math.floor( 100*v );
 
     if (upload_progress < 1000 || complete === true) {
+        progress[1].style.background = `conic-gradient(var(--fs-success) ${v * 3.6}deg, var(--fs-border-color) 0deg)`;
 
-        bar.removeClass('progress-bar-animated');
-        bar.css('width', v+'%').attr('aria-valuenow', v);
         if( v >= 100 ) {
-            bar.closest('.file').addClass('done');
+            progress.closest('.file').addClass('done');
         }
     }
-    else
-    {
-        // Go stripey for validation
-        bar.addClass('progress-bar-animated');
-    }
 
-    var lv = Math.floor( 1000*origv );
-    bar.text((lv/10).toFixed(1) + '%');
+    const lv = Math.floor(1000 * origv);
+    const progressValue = progress[1].querySelector(".fs-progress-circle__value");
+    progressValue.textContent = Math.trunc(lv/10);
 }
 
 function useWebNotifications()
@@ -420,7 +415,7 @@ filesender.ui.files = {
     },
 
     addFile: function(filepath, fileblob, isSingleOperation, source_node) {
-        filesender.ui.goToStage(2);
+        filesender.ui.hideDragAndDropUpload();
 
         var filesize = fileblob.size;
 
@@ -722,8 +717,8 @@ filesender.ui.files = {
         if(this.status != 'paused')
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
 
-        var bar = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .progress-bar');
-        setFileProgress( bar, (file.fine_progress ? file.fine_progress : file.uploaded) / file.size, complete );
+        const progress = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .fs-progress-circle');
+        setFileProgress( progress, (file.fine_progress ? file.fine_progress : file.uploaded) / file.size, complete );
     },
 
     // Clear the file box
@@ -734,7 +729,6 @@ filesender.ui.files = {
         filesender.ui.nodes.files.input.val('');
 
         filesender.ui.nodes.files.list.find('.file').remove();
-
 
         filesender.ui.nodes.files.clear.button('disable');
 
@@ -1020,9 +1014,9 @@ filesender.ui.recipients = {
 
         if(filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').length) return ''; // Ignore duplicates
 
-        var node = $('<div class="recipient" />').attr('email', email).appendTo(filesender.ui.nodes.recipients.list);
+        var node = $('<div class="fs-badge recipient" />').attr('email', email).appendTo(filesender.ui.nodes.recipients.list);
         $('<span />').attr('title', email).text(email).appendTo(node);
-        $('<span class="remove fa fa-close" />').attr({
+        $('<span class="remove fi fi-close" />').attr({
             title: lang.tr('click_to_delete_recipient')
         }).on('click', function() {
             var email = $(this).parent().attr('email');
@@ -1161,7 +1155,7 @@ filesender.ui.recipients = {
 
         var marker = input.data('error_marker');
         if(!marker) {
-            marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+            marker = $('<span class="invalid fa fa-exclamation-circle" />').attr({
                 title: lang.tr('invalid_recipient')
             }).hide().insertBefore(input);
             input.data('error_marker', marker);
@@ -1301,10 +1295,13 @@ filesender.ui.evalUploadEnabled = function() {
     // Check if there is no files with banned extension
     if (filesender.ui.files.invalidFiles.length > 0) {
         ok  = false;
+        configStageOk = false;
         uploadFileStageOk = false;
     }
+
     if(!filesender.ui.transfer.getFileCount()) {
         ok = false;
+        configStageOk = false;
         uploadFileStageOk = false;
     }
 
@@ -1364,13 +1361,13 @@ filesender.ui.evalUploadEnabled = function() {
     }
 
 
-    if (filesender.ui.stage == 2) {
-        filesender.ui.nodes.stages.nextStep.prop('disabled', !uploadFileStageOk);
-    }
+    // if (filesender.ui.stage == 2) {
+    //     filesender.ui.nodes.stages.nextStep.prop('disabled', !uploadFileStageOk);
+    // }
 
-    if (filesender.ui.stage == 3) {
+    if (filesender.ui.stage == 1) {
         configStageOk = configStageOk || (filesender.ui.nodes.guest_token.length && filesender.ui.guest_can_only_send_to_me());
-        filesender.ui.nodes.stages.confirm.prop('disabled', !configStageOk);
+        // filesender.ui.nodes.stages.confirm.prop('disabled', !configStageOk);
         if (configStageOk) {
             filesender.ui.nodes.recipients.input.removeClass('invalid');
         } else {
@@ -1651,7 +1648,7 @@ filesender.ui.startUpload = function() {
         }
         
         $('#copy-to-clipboard').on('click', function(e){
-            filesender.ui.copyToClipboard(filesender.ui.transfer.download_link);
+            filesender.ui.copyToClipboard(filesender.ui.transfer.download_link, this);
         });
 
         var link = filesender.ui.createPageLink(
@@ -1661,8 +1658,8 @@ filesender.ui.startUpload = function() {
         );
         filesender.ui.nodes.form.find('.mytransferslink').attr('href',link);
 
-        filesender.ui.goToStage(5);
-        filesender.ui.setFileList(4, 5);
+        filesender.ui.goToStage(3);
+        filesender.ui.setFileList(2, 3);
 
         filesender.ui.updateSizeInfo();
 
@@ -1923,13 +1920,6 @@ filesender.ui.handle_get_a_link_change = function() {
 
     $('hr[data-related-to="emailfrom"]').toggle(!choice);
 
-    
-
-    
-    form.find(
-        ' .emailonly'
-    ).toggle(!choice);
-    
     form.find(
         ' .fieldcontainer[data-option="forward_to_another_server"],' +
         ' .fieldcontainer[data-option="forward_server_name"]'
@@ -1966,13 +1956,11 @@ filesender.ui.goToStage = function (stage) {
     const stageElement = $(`[data-step="${stage}"`);
     stageElement.addClass(filesender.ui.stageActiveClass);
     filesender.ui.stage = stage;
-    if( stage == 3 || stage == 4 ) {
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: "auto",
-        });
-    }
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto",
+    });
 }
 
 filesender.ui.removeFile = function (e) {
@@ -2013,6 +2001,7 @@ filesender.ui.removeFile = function (e) {
         // The last file was removed,
         // this may hide some UI elements like clear all
         filesender.ui.files.clear();
+        filesender.ui.showDragAndDropUpload();
     }
 
     iidx = filesender.ui.files.invalidFiles.indexOf(name);
@@ -2072,9 +2061,6 @@ filesender.ui.onChangeTransferType = function (transferType) {
         TRANSFER_EMAIL: 'transfer-email'
     }
     if (transferType) {
-        $('.fs-transfer__transfer-fields').addClass('fs-transfer__transfer-fields--show');
-        $('.fs-transfer__transfer-settings').addClass('fs-transfer__transfer-settings--show');
-
         const emailField = $(`[data-transfer-type='${TRANSFER_TYPES.TRANSFER_EMAIL}']`);
         const addMeToRecipientsField = $(`#fs-transfer__add-me-to-recipients`);
         const sendAnotherServerField = $(`[data-option='forward_to_another_server']`);
@@ -2140,13 +2126,14 @@ filesender.ui.updateSizeInfo = function () {
 
 };
 
-filesender.ui.copyToClipboard = function(value) {
-    navigator.clipboard.writeText(value).then((x) => {
-        filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
-    }).catch((e) => {
-        console.error(e);
-        filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
-    });
+filesender.ui.hideDragAndDropUpload = function () {
+    filesender.ui.nodes.files.dragdrop.hide();
+    filesender.ui.nodes.files.list.show();
+};
+
+filesender.ui.showDragAndDropUpload = function () {
+    filesender.ui.nodes.files.dragdrop.show();
+    filesender.ui.nodes.files.list.hide();
 };
 
 $(function() {
@@ -2188,10 +2175,9 @@ $(function() {
         stage1: form.find('[data-step="1"'),
         stage2: form.find('[data-step="2"'),
         stage3: form.find('[data-step="3"'),
-        stage4: form.find('[data-step="4"'),
         stages: {
-            nextStep: form.find('#fs-transfer__next-step'),
-            previousStep: form.find('#fs-transfer__previous-step'),
+            // nextStep: form.find('#fs-transfer__next-step'),
+            // previousStep: form.find('#fs-transfer__previous-step'),
             confirm: form.find('#fs-transfer__confirm'),
             cancel: form.find('#fs-transfer__cancel'),
         },
@@ -2263,8 +2249,11 @@ $(function() {
 
     $("#forward_server_name").select2({width:'100%'});
 
-    filesender.ui.getALink = false;
-    filesender.ui.nodes.gal.checkbox.prop('checked', false);
+    filesender.ui.getALink = true;
+    filesender.ui.nodes.gal.checkbox.prop('checked', true);
+
+    $('.fs-transfer__transfer-fields').addClass('fs-transfer__transfer-fields--show');
+    $('.fs-transfer__transfer-settings').addClass('fs-transfer__transfer-settings--show');
 
     form.find('.basic_options [data-option] input, .advanced_options [data-option] input').each(function() {
         var i = $(this);
@@ -2307,73 +2296,35 @@ $(function() {
     filesender.ui.nodes.gal.checkboxcontainer.hide(); //check no remove
     form.find('.terms').hide();
 
-    filesender.ui.nodes.stages.nextStep.prop('disabled', true);
-    filesender.ui.nodes.stages.confirm.prop('disabled', true);
+    // filesender.ui.nodes.stages.nextStep.prop('disabled', true);
+    // filesender.ui.nodes.stages.confirm.prop('disabled', true);
 
-    // move to stage2
-    filesender.ui.nodes.stages.nextStep.on('click',function() {
+    // single-stage UI: apply the user's saved transfer type preference on load
+    if( form.attr('data-user-has-gal-preference') == '1' ) {
+        $('.transfer-link').prop("checked", true);
+        filesender.ui.onChangeTransferType("transfer-link");
+    }
+    if( form.attr('data-user-has-email-preference') == '1' ) {
+        $('.transfer-email').prop("checked", true);
+        filesender.ui.onChangeTransferType("transfer-email");
+    }
 
-        // The user can not change options for the transfer when they are
-        // sending the remains of the files to complete the upload.
-        if( filesender.ui.reuploading ) {
-            filesender.ui.nodes.stages.confirm.click();
-            filesender.ui.setFileList(2, 4);
-            return;
-        }
-
-        filesender.ui.goToStage(3);
-
-        filesender.ui.setFileList(2, 3);
-
-        if( form.attr('data-user-has-gal-preference') == '1' ) {
-            $('.transfer-link').prop("checked", true);
-            filesender.ui.onChangeTransferType("transfer-link");
-        }
-        if( form.attr('data-user-has-email-preference') == '1' ) {
-            $('.transfer-email').prop("checked", true);
-            filesender.ui.onChangeTransferType("transfer-email");
-        }
-
-        // If there is only one choice then we should already make it
-        if($('.get_a_link_top_selector').length==0) {
-            $('#transfer-email').prop("checked", true);
-            filesender.ui.onChangeTransferType("transfer-email");
-        }
-
-        var get_a_link_checked = filesender.ui.isUserGettingALink();
-        filesender.ui.handle_get_a_link_change();
-        if( get_a_link_checked ) {
-            form.find('.galmodelink').show();
-            form.find('.galmodeemail').hide();
-        } else {
-            form.find('.galmodelink').hide();
-            form.find('.galmodeemail').show();
-        }
-        window.location.hash = "#stage3";
-
-        return false;
-    });
-
-    // move to stage1
-    filesender.ui.nodes.stages.previousStep.on('click',function() {
-        window.location.hash = "";
-        filesender.ui.goToStage(2);
-
-        //force graph to redraw
-        $("#speedChart").resize();
-        return false;
-    });
+    // If there is only one choice then we should already make it
+    if($('.get_a_link_top_selector').length==0) {
+        $('#transfer-email').prop("checked", true);
+        filesender.ui.onChangeTransferType("transfer-email");
+    }
 
     // handle browser back and forward buttons as best as we can
     window.onpopstate = function(event) {
         if( filesender.ui.lasthash == "" || filesender.ui.lasthash == "#stage1" ) {
             if( document.location.hash == "#stage2" ) {
-                filesender.ui.nodes.stages.nextStep.click();
+                // filesender.ui.nodes.stages.nextStep.click();
             }
         }
         if( filesender.ui.lasthash == "#stage2" ) {
             if( !document.location.hash.length || document.location.hash == "#stage1" ) {
-                filesender.ui.nodes.stages.previousStep.click();
+                // filesender.ui.nodes.stages.previousStep.click();
             }
         }
         if( filesender.ui.lasthash == "#uploading" && window.location.hash == "#uploading" ) {
@@ -2389,26 +2340,30 @@ $(function() {
         filesender.ui.lasthash = document.location.hash;
     }
 
-    // move to stage3
+    // move to stage2
     filesender.ui.nodes.stages.confirm.on('click',function() {
-        filesender.ui.goToStage(4);
+        if (filesender.ui.evalUploadEnabled()) {
+            filesender.ui.goToStage(2);
 
-        filesender.ui.setFileList(3, 4);
-        filesender.ui.deleteRemoveButton();
+            filesender.ui.setFileList(1, 2);
+            filesender.ui.deleteRemoveButton();
 
-        // best to use a selector because there are dynamic items in list
-        form.find('.progressbar').show();
+            // best to use a selector because there are dynamic items in list
+            form.find('.progressbar').show();
 
-        filesender.ui.switchToUloadingPageConfiguration();
-        filesender.ui.startUpload();
-        filesender.ui.nodes.buttons.start.addClass('not_displayed');
-        if(filesender.supports.reader) {
-            filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
-            filesender.ui.nodes.buttons.reconnect_and_continue.removeClass('not_displayed');
+            filesender.ui.switchToUloadingPageConfiguration();
+            filesender.ui.startUpload();
+            filesender.ui.nodes.buttons.start.addClass('not_displayed');
+            if(filesender.supports.reader) {
+                filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                filesender.ui.nodes.buttons.reconnect_and_continue.removeClass('not_displayed');
+            }
+            filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
+
+            window.location.hash = "#uploading";
+        } else {
+            filesender.ui.alert('error', lang.tr('unexpected_file'));
         }
-        filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
-
-        window.location.hash = "#uploading";
 
         return false;
     });
@@ -2681,12 +2636,8 @@ $(function() {
     }
   
     // Custom collapse
-    $('.fs-collapse__open').on('click', function() {
-        $(this.parentElement).addClass('fs-collapse--open');
-    });
-
-    $('.fs-collapse__close').on('click', function() {
-        $(this.parentElement).removeClass('fs-collapse--open');
+    $('.fs-collapse__toggle').on('click', function() {
+        $(this.parentElement).toggleClass('fs-collapse--open');
     });
 
     form.find('.rlangdropitem').on('click', function() {
@@ -3151,7 +3102,7 @@ $(function() {
                 // Following field settings are just cosmetic
                 filesender.ui.nodes.recipients.list.show();
                 for(var i=0; i<failed.recipients.length; i++) {
-                    var node = $('<div class="recipient" />').attr('email', failed.recipients[i]).appendTo(filesender.ui.nodes.recipients.list);
+                    var node = $('<div class="fs-badge recipient" />').attr('email', failed.recipients[i]).appendTo(filesender.ui.nodes.recipients.list);
                     $('<span />').attr('title', failed.recipients[i]).text(failed.recipients[i]).appendTo(node);
                 }
 
@@ -3181,10 +3132,11 @@ $(function() {
 
                 // We do not show the stage2 page in this case as the options can
                 // not be changed for the transfer once it is created.
-                filesender.ui.nodes.stages.nextStep.html( filesender.ui.nodes.stages.confirm.html() );
+                // filesender.ui.nodes.stages.nextStep.html( filesender.ui.nodes.stages.confirm.html() );
                 filesender.ui.reuploading = true;
 
-                filesender.ui.goToStage(2);
+                filesender.ui.hideDragAndDropUpload();
+                filesender.ui.goToStage(1);
 
                 window.location.hash = "#uploading";
             };
@@ -3215,9 +3167,9 @@ $(function() {
             } else {
 
                 var prompt = filesender.ui.popup( lang.tr('restart_failed_transfer'),
-                    {load:   {callback: load, className: 'fs-button fs-button--info'},
-                        forget: {callback: forget, className: 'fs-button fs-button--danger'},
-                        later:  {callback: later, className: 'fs-button fs-button--info'}},
+                    {load:   {callback: load, className: 'fs-button fs-button--inverted'},
+                        forget: {callback: forget, className: 'fs-button fs-button--inverted'},
+                        later:  {callback: later, className: 'fs-button'}},
                     {onclose: later});
                 $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
                 var tctn = $('<div class="failed_transfer" />').appendTo(prompt);

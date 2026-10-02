@@ -65,6 +65,7 @@ filesender.ui.changeTheme = function(theme) {
         }
     }
 
+    $('body').attr('data-theme', `${theme}`);
     $('body').append(themeStyle);
 };
 
@@ -112,11 +113,8 @@ filesender.ui.setTheme = function() {
         filesender.ui.setUserTheme(selectedTheme);
         filesender.ui.nodes.themeSelector.val(selectedTheme);
     } else {
-        filesender.ui.clearUserTheme();
-
-        if (systemTheme && systemTheme === THEMES.DARK_THEME) {
-            selectedTheme = THEMES.DARK_THEME;
-        }
+        filesender.ui.clearUserTheme(); 
+        selectedTheme = THEMES.LIGHT_THEME;
     }
 
     filesender.ui.changeTheme(selectedTheme);

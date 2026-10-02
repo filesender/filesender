@@ -602,6 +602,10 @@ window.filesender.client = {
     remindTransfer: function(id, callback) {
         return this.put('/transfer/' + id, {remind: true}, callback);
     },
+
+    renameTransfer: function(id, name, callback) {
+        return this.put('/transfer/' + id, {transfer_name: name}, callback);
+    },
     
     /**
      * Remind a recipient
@@ -1008,7 +1012,7 @@ window.filesender.client = {
             var transferid = $('.transfer').attr('data-id');
             var rid = $('.rid').attr('data-id');
 
-            page.find('.verificationcodesendtoemail').button().on('click', function () {
+            page.find('.verificationcodesendtoemail').on('click', function () {
                 filesender.client.sendVerificationCodeToYourEmailAddress(
                     transferid,
                     function () {
@@ -1016,7 +1020,7 @@ window.filesender.client = {
                     });
                 return true;
             });
-            page.find('.verificationcodesend').button().on('click', function () {
+            page.find('.verificationcodesend').on('click', function () {
                 var pass = $('#verificationcode').val();
                 if (!pass.length) {
                     // nothing, could have just returned true here.
@@ -1038,7 +1042,7 @@ window.filesender.client = {
                             function (args) {
                                 if (args.ok === true) {
                                     filesender.client.verificationCodePassed = true;
-                                    $(".verify_email_to_download").dialog("close");
+                                    filesender.ui.closeDialog(filesender.client.verificationCodePassedPopup);
 
                                     var encrypted = filesender.client.verificationCodeObjectThatTiggeredEvent.closest('.file').attr('data-encrypted');
                                     var msg = "downloading";
@@ -1277,7 +1281,7 @@ window.filesender.client = {
 
             filesender.client.verificationCodeObjectThatTiggeredEvent = $(this);
             if( !filesender.client.verificationCodePassed ) {
-                filesender.client.verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"), { width: '30%' } );
+                filesender.client.verificationCodePassedPopup = filesender.ui.contentPopup($(".verify_email_to_download"), lang.tr('verify_your_email_address_to_download').out());
             } else {
                 filesender.client.getTransferOption(
                     transferid,
@@ -1312,7 +1316,7 @@ window.filesender.client = {
 
             filesender.client.verificationCodeObjectThatTiggeredEvent = button;
             if( !filesender.client.verificationCodePassed ) {
-                filesender.client.verificationCodePassedPopup = filesender.ui.relocatePopup($(".verify_email_to_download"), { width: '30%' } );
+                filesender.client.verificationCodePassedPopup = filesender.ui.contentPopup($(".verify_email_to_download"), lang.tr('verify_your_email_address_to_download').out());
             } else {
                 filesender.client.getTransferOption(transferid,
                                                     'enable_recipient_email_download_complete',
@@ -1553,7 +1557,7 @@ window.filesender.client = {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
-            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
+            var toggleView = $('<div class="fs-switch fs-modal__switch"><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label></div>');
 
             window.filesender.crypto_last_password_succeeded = false;
             prompt.append(toggleView);
@@ -1561,8 +1565,8 @@ window.filesender.client = {
                 "click",
                 function() {
                     var v = $('#showdlpass').is(':checked');
-                    if( v ) { $('.bootbox-input').attr('type','text'); }
-                    else    { $('.bootbox-input').attr('type','password'); }
+                    if( v ) { $('.fs-modal__input').attr('type','text'); }
+                    else    { $('.fs-modal__input').attr('type','password'); }
                 }
             );
         

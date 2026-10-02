@@ -1,8 +1,8 @@
 .fs-switch {
   display: flex;
   flex-direction: row;
-  margin-top: var(--fs-spacing-3x);
-  margin-bottom: var(--fs-spacing-3x);
+  margin-top: var(--fs-spacing-base);
+  margin-bottom: var(--fs-spacing-2x);
 }
 
 .fs-switch--hide {
@@ -16,10 +16,9 @@
 
 .fs-switch label {
   align-items: center;
-  color: var(--fs-text-color);
+  color: var(--fs-switch-label-color);
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.9rem;
   margin-bottom: 0;
   position: relative;
   padding-left: var(--fs-spacing-11x);
@@ -27,18 +26,19 @@
 
 .fs-switch label:before {
   background: #fff;
-  border: 1px solid var(--fs-bg-color-quarternary);
+  border: 1px solid var(--fs-switch-border-color);
   border-radius: 100em;
   content: "";
   height: 34px;
   position: absolute;
-  width: 64px;
+  width: 56px;
   left: 0;
 }
 
 .fs-switch label:after {
-  background-color: var(--fs-bg-color-quarternary);
+  background-color: var(--fs-light);
   border-radius: 50%;
+  border: 1px solid var(--fs-switch-border-color);
   content: "";
   height: 28px;
   position: absolute;
@@ -63,30 +63,32 @@
 }
 
 .fs-switch input:checked + label:before {
-  background: var(--fs-hover);
-  border: 1px solid var(--fs-accent);
+  background: var(--fs-switch-checked-background);
 }
 
 .fs-switch input:checked + label:after {
-  background-color: var(--fs-accent);
-  left: 32px;
+  left: 24px;
 }
 
 .fs-switch input:focus-visible + label:before {
-  border-color: #c2860b !important;
-  box-shadow: 0 0 0 2px #c2850c;
+  border-color: var(--fs-switch-focus-border-color);
+  box-shadow: 0 0 0 2px var(--fs-switch-focus-border-color);
   outline: none;
 }
 
 .fs-switch input:hover:not([disabled]):checked + label:before {
-  background-color: var(--fs-gray-100);
+  background-color: var(--fs-switch-hover-checked-background);
 }
 
 .fs-switch input:hover:not([disabled]):not(checked) + label:before {
-  background-color: var(--fs-gray-100);
+  background-color: var(--fs-switch-hover-background);
 }
 
 .fs-switch input:disabled,
 .fs-switch input:disabled + label {
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.fs-switch input:disabled {
+
 }
