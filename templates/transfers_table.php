@@ -267,7 +267,7 @@ EOF;
     <?php } ?>
 
     <?php if(!count($transfers)) { ?>
-        <tr>
+        <tr class="fs-table__empty">
             <td colspan="<?php echo $maxColSpan ?>">{tr:no_transfers}</td>
         </tr>
     <?php } ?>

@@ -97,6 +97,10 @@
     margin-bottom: var(--fs-spacing-2x);
 }
 
+.fs-admin__table .fs-table:has(.benchmark) .fs-table__empty {
+    display: none;
+}
+
 .fs-admin__actions {
     display: flex;
     flex-direction: row;
@@ -157,16 +161,23 @@
     margin-top: var(--fs-spacing-4x);
 }
 
-.fs-admin tr.searching,
-.fs-admin tr.no_results,
+.fs-admin .fs-table tr.searching,
+.fs-admin .fs-table tr.no_results,
 .fs-admin .client-logs {
     display: none;
 }
 
-.fs-admin .searching tr.searching,
-.fs-admin .no_results tr.no_results {
+.fs-admin .fs-table.searching tr.searching,
+.fs-admin .fs-table.no_results tr.no_results {
     display: table-row;
-    text-align: center;
+}
+
+@media (max-width: 1199px) {
+
+    .fs-admin .fs-table.searching tr.searching,
+    .fs-admin .fs-table.no_results tr.no_results {
+        display: block;
+    }
 }
 
 @media (max-width: 575px) {

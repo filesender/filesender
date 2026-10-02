@@ -90,7 +90,7 @@
     padding: var(--fs-spacing-2x);
 }
 
-.fs-statistics .blank_row {
+.fs-statistics .fs-table tr.blank_row {
     display: none;
 }
 
@@ -100,7 +100,4 @@
         padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
     }
 
-    .fs-statistics__summary th {
-        width: 50%;
-    }
 }

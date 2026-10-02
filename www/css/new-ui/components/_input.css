@@ -61,6 +61,7 @@
   flex: 1;
   border: 1px solid var(--fs-input-border-color);
   min-height: var(--fs-spacing-6x);
+  color: var(--fs-input-color);
   background: var(--fs-input-background);
   border-radius: var(--fs-spacing-half);
 }

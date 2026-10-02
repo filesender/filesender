@@ -118,6 +118,7 @@
 
     /* Input */
     --fs-input-background: var(--fs-light);
+    --fs-input-color: var(--fs-text-color);
     --fs-input-border-color: var(--fs-border-color);
     --fs-input-invalid-border-color: var(--fs-error);
     --fs-input-focus-border-color: var(--fs-accent);
@@ -185,6 +186,7 @@
     --fs-table-button-hover-color: var(--fs-accent);
     --fs-table-responsive-tr-background: var(--fs-light);
     --fs-table-responsive-td-border-color: var(--fs-background);
+    --fs-table-empty-color: var(--fs-dark-grey);
 
     /* PAGES */
 

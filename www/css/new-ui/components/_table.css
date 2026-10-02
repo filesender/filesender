@@ -58,11 +58,7 @@
 }
 
 .fs-table__name {
-  min-width: 300px;
-}
-
-.fs-table__actions {
-  min-width: 358px;
+  min-width: var(--fs-spacing-20x);
 }
 
 .fs-table__actions .fs-button {
@@ -88,13 +84,18 @@
 }
 
 
+.fs-table__empty td {
+  text-align: center;
+  color: var(--fs-table-empty-color);
+}
+
 table.files .downloadprogress {
     margin-left: 1em;
 }
 
 
-/* XS,SM,MD */
-@media (max-width: 991px) {
+/* XS,SM,MD,LG */
+@media (max-width: 1199px) {
   .fs-table {
 
   }
@@ -114,7 +115,9 @@ table.files .downloadprogress {
 
   .fs-table.fs-table--responsive td {
     display: block;
+    min-width: 0;
     text-align: right;
+    overflow-wrap: anywhere;
     border-bottom: 1px dotted var(--fs-table-responsive-td-border-color);
   }
 
@@ -122,9 +125,35 @@ table.files .downloadprogress {
     border-bottom: 0;
   }
 
+  .fs-table.fs-table--responsive .actionsblock {
+    white-space: normal;
+  }
+
+  .fs-table.fs-table--responsive td .fs-button {
+    margin: var(--fs-spacing-half) 0 var(--fs-spacing-half) var(--fs-spacing-base);
+  }
+
+  .fs-table.fs-table--responsive tr.tpl {
+    display: none;
+  }
+
+  .fs-table.fs-table--responsive tbody th,
+  .fs-table.fs-table--responsive > tr th {
+    float: left;
+    width: auto;
+    margin-right: var(--fs-spacing-2x);
+    text-align: left;
+    background: transparent;
+  }
+
+  .fs-table.fs-table--responsive .fs-table__empty td {
+    text-align: center;
+  }
+
   .fs-table.fs-table--responsive td:before {
     content: attr(data-label);
     float: left;
+    margin-right: var(--fs-spacing-2x);
     font-weight: bold;
   }
 }

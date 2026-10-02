@@ -180,7 +180,7 @@ $user = Auth::user();
                             <div class="fs-settings__saved-info">
                                 <strong>{tr:saved_information}</strong>
 
-                                <ul class="fs-listx">
+                                <ul class="fs-action-list">
                                     <li>
                                         <button type="button" id="clear_user_transfer_preferences" class="fs-button">
                                             <i class="fi fi-trash"></i>
@@ -194,7 +194,7 @@ $user = Auth::user();
                                     </li>
                                 </ul>
 
-                                <ul class="fs-listx">
+                                <ul class="fs-action-list">
                                     <li>
                                         <button type="button" id="clear_frequent_recipients" class="fs-button">
                                             <i class="fi fi-trash"></i>
@@ -436,16 +436,16 @@ $user = Auth::user();
         <div class="openpgpkey" id="openpgpkey" hidden="true">$v
         </div>
         <div class="openpgpkeyinfo" id="openpgpkeyinfo">
-          <table>
-          <tr><td>{tr:email_address}</td><td id="openpgpkeyinfoemail"></td></tr>
-          <tr><td>{tr:created}</td><td id="openpgpkeyinfocreated"></td></tr>
+          <table class="fs-table fs-table--responsive fs-table--striped">
+          <tr><th>{tr:email_address}</th><td id="openpgpkeyinfoemail"></td></tr>
+          <tr><th>{tr:created}</th><td id="openpgpkeyinfocreated"></td></tr>
           </table>
         </div>
 EOF;
         
         echo <<<EOF
        <br>
-       <ul class="fs-listx">
+       <ul class="fs-action-list">
        <li>
            <button type="button" class="fs-button test_my_openpgp_key">
              <i class="fa fa-lg fa-times"></i>

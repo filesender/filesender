@@ -66,31 +66,33 @@
     </div>
 
     <div class="fs-admin__table">
-        <table class="fs-table fs-table--striped fs-table--text-middle results">
-            <tr>
-                <th>ID</th>
-                <th>{tr:user_id}</th>
-                <th>{tr:last_activity}</th>
-                <th>{tr:event_count}</th>
-                <th>{tr:ip}</th>
-                <th>&nbsp;</th>
-            </tr>
+        <table class="fs-table fs-table--responsive fs-table--striped fs-table--text-middle results no_results">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>{tr:user_id}</th>
+                    <th>{tr:last_activity}</th>
+                    <th>{tr:event_count}</th>
+                    <th>{tr:ip}</th>
+                    <th>{tr:actions}</th>
+                </tr>
+            </thead>
 
-            <tr class="searching">
+            <tr class="searching fs-table__empty">
                 <td colspan="6">{tr:searching}</td>
             </tr>
-            <tr class="no_results">
+            <tr class="no_results fs-table__empty">
                 <td colspan="6">{tr:no_results}</td>
             </tr>
 
             <tr class="tpl">
-                <td class="id"></td>
-                <td class="saml_id"></td>
-                <td class="last_activity"></td>
-                <td class="event_count"></td>
-                <td class="ip"></td>
+                <td class="id" data-label="ID"></td>
+                <td class="saml_id" data-label="{tr:user_id}"></td>
+                <td class="last_activity" data-label="{tr:last_activity}"></td>
+                <td class="event_count" data-label="{tr:event_count}"></td>
+                <td class="ip" data-label="{tr:ip}"></td>
 
-                <td class="fs-admin__actions">
+                <td class="fs-admin__actions" data-label="{tr:actions}">
                     <?php if( Config::get('admin_can_view_user_transfers_page')) : ?>
                         <button type="button" class="fs-button fs-button--inverted" data-action="show-transfers">{tr:show_transfers}</button>
                     <?php endif; ?>
@@ -106,22 +108,24 @@
     </div>
 
     <div class="fs-admin__table">
-        <table class="fs-table fs-table--striped client-logs">
-            <tr>
-                <th>{tr:date}</th>
-                <th>{tr:message}</th>
-            </tr>
+        <table class="fs-table fs-table--responsive fs-table--striped client-logs">
+            <thead>
+                <tr>
+                    <th>{tr:date}</th>
+                    <th>{tr:message}</th>
+                </tr>
+            </thead>
 
-            <tr class="searching">
+            <tr class="searching fs-table__empty">
                 <td colspan="2">{tr:searching}</td>
             </tr>
-            <tr class="no_results">
+            <tr class="no_results fs-table__empty">
                 <td colspan="2">{tr:no_results}</td>
             </tr>
 
             <tr class="tpl">
-                <td class="date"></td>
-                <td class="message"></td>
+                <td class="date" data-label="{tr:date}"></td>
+                <td class="message" data-label="{tr:message}"></td>
             </tr>
         </table>
     </div>

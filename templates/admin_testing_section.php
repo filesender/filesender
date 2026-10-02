@@ -14,17 +14,23 @@
     </div>
 
     <div class="fs-admin__table">
-        <table class="fs-table fs-table--striped password-hashing-performance">
-            <tr>
-                <th>{tr:iterations}</th>
-                <th>{tr:time_to_complete_ms}</th>
-                <th>{tr:system_active_setting}</th>
+        <table class="fs-table fs-table--responsive fs-table--striped password-hashing-performance">
+            <thead>
+                <tr>
+                    <th>{tr:iterations}</th>
+                    <th>{tr:time_to_complete_ms}</th>
+                    <th>{tr:system_active_setting}</th>
+                </tr>
+            </thead>
+
+            <tr class="fs-table__empty">
+                <td colspan="3">{tr:no_results}</td>
             </tr>
 
             <tr class="tpl">
-                <td class="rounds number"></td>
-                <td class="milliseconds number"></td>
-                <td class="active number"></td>
+                <td class="rounds number" data-label="{tr:iterations}"></td>
+                <td class="milliseconds number" data-label="{tr:time_to_complete_ms}"></td>
+                <td class="active number" data-label="{tr:system_active_setting}"></td>
             </tr>
         </table>
     </div>
@@ -43,15 +49,21 @@
     </div>
 
     <div class="fs-admin__table">
-        <table class="fs-table fs-table--striped crypto-performance">
-            <tr>
-                <th>{tr:action}</th>
-                <th>{tr:time_to_complete_ms}</th>
+        <table class="fs-table fs-table--responsive fs-table--striped crypto-performance">
+            <thead>
+                <tr>
+                    <th>{tr:action}</th>
+                    <th>{tr:time_to_complete_ms}</th>
+                </tr>
+            </thead>
+
+            <tr class="fs-table__empty">
+                <td colspan="2">{tr:no_results}</td>
             </tr>
 
             <tr class="tpl">
-                <td class="action"></td>
-                <td class="milliseconds number"></td>
+                <td class="action" data-label="{tr:action}"></td>
+                <td class="milliseconds number" data-label="{tr:time_to_complete_ms}"></td>
             </tr>
         </table>
     </div>
@@ -71,17 +83,23 @@
     </div>
 
     <div class="fs-admin__table">
-        <table class="fs-table fs-table--striped pbkdf2-performance">
-            <tr>
-                <th>{tr:epoch_year}</th>
-                <th>{tr:iterations}</th>
-                <th>{tr:time_to_complete_s}</th>
+        <table class="fs-table fs-table--responsive fs-table--striped pbkdf2-performance">
+            <thead>
+                <tr>
+                    <th>{tr:epoch_year}</th>
+                    <th>{tr:iterations}</th>
+                    <th>{tr:time_to_complete_s}</th>
+                </tr>
+            </thead>
+
+            <tr class="fs-table__empty">
+                <td colspan="3">{tr:no_results}</td>
             </tr>
 
             <tr class="tpl">
-                <td class="year"></td>
-                <td class="iterations number"></td>
-                <td class="seconds number"></td>
+                <td class="year" data-label="{tr:epoch_year}"></td>
+                <td class="iterations number" data-label="{tr:iterations}"></td>
+                <td class="seconds number" data-label="{tr:time_to_complete_s}"></td>
             </tr>
         </table>
     </div>

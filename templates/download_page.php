@@ -402,17 +402,19 @@ if( $isEncrypted
                     <?php if(!$file->have_avresults) { ?>
                         <span class="desc">{tr:no_av_scans_performed}</span>
                     <?php } else { ?>
-                        <table>
+                        <table class="fs-table fs-table--responsive fs-table--striped">
+                            <thead>
                             <tr class="avresultheader">
                                 <th>{tr:performed}</th>
                                 <th>{tr:result}</th>
                                 <th>{tr:avname}</th>
                             </tr>
+                            </thead>
                         <?php foreach($file->scan_results as $res) { $resultdesc = passErrToDesc($res->passes,$res->error); ?>
                             <tr class="avresult">
-                                <td class="created"><?php echo Template::Q(Utilities::formatDate($res->created)) ?></td>
-                                <td class="result avresult<?php echo Template::Q($resultdesc) ?>"><?php echo Lang::tr($resultdesc) ?></td>
-                                <td class="app_name"><?php echo presentAVName($res->name) ?></td>
+                                <td class="created" data-label="{tr:performed}"><?php echo Template::Q(Utilities::formatDate($res->created)) ?></td>
+                                <td data-label="{tr:result}" class="result avresult<?php echo Template::Q($resultdesc) ?>"><?php echo Lang::tr($resultdesc) ?></td>
+                                <td class="app_name" data-label="{tr:avname}"><?php echo presentAVName($res->name) ?></td>
                             </tr>
                         <?php } ?>
                         </table>

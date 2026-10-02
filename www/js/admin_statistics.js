@@ -103,6 +103,21 @@ function table(t,start=0,sort='',sortdirection=0) {
     }).done(function(rows) {
         $("#"+t).html(rows);
 
+        var tbl = $("#"+t);
+        var head = tbl.find('tr:first');
+        if (!head.parent().is('thead')) {
+            $('<thead />').prependTo(tbl).append(head);
+        }
+        var labels = head.find('th').map(function() {
+            return $(this).text().trim();
+        }).get();
+        var rows = tbl.find('tr').not(head);
+        rows.each(function() {
+            $(this).children('td').each(function(i) {
+                $(this).attr('data-label', labels[i] || '');
+            });
+        });
+
         var attr = $("#"+t+" tr:first").attr('sort');
         if (typeof attr !== 'undefined' && attr !== false) {
             var sort=$("#"+t+" tr:first")[0].attributes['sort'].value;
@@ -136,6 +151,12 @@ function table(t,start=0,sort='',sortdirection=0) {
         var trs=$("#"+t+" tr");
         var hasBack = parseInt(trs[1].attributes['data-row'].value)>0;
         var hasForward = !trs[trs.length-1].attributes['data-row-blank'];
+
+        if (!rows.filter('[data-row]:not([data-row-blank])').length) {
+            $('<tr class="fs-table__empty" />')
+                .append($('<td />').attr('colspan', labels.length).text(lang.tr('no_results')))
+                .insertAfter(rows.last());
+        }
         if (!hasBack && !hasForward) return;
 
         var nav = $('<div id="nav_'+t+'" class="fs-paginator fs-paginator--center" />').insertAfter($("#"+t));

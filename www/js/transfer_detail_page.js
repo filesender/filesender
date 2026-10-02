@@ -113,7 +113,7 @@ $(function() {
                 return;
             }
 
-            var tbl = $('<table class="list" />').appendTo(popup);
+            var tbl = $('<table class="fs-table fs-table--responsive fs-table--striped list" />').appendTo(popup);
             var th = $('<tr />').appendTo($('<thead />').appendTo(tbl));
             $('<th class="date" />').text(lang.tr('date')).appendTo(th);
             $('<th />').text(lang.tr('action')).appendTo(th);
@@ -156,7 +156,7 @@ $(function() {
                 }
                 if(filtered) tr.hide();
 
-                $('<td class="date" />').text(log[i].date.formatted).appendTo(tr);
+                $('<td class="date" />').attr('data-label', lang.tr('date')).text(log[i].date.formatted).appendTo(tr);
 
                 var lid = 'report_event_' + log[i].event;
 
@@ -167,9 +167,9 @@ $(function() {
                     rpl[ttlc]['path'] = rpl[ttlc]['name'];
                 }
 
-                $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
+                $('<td />').attr('data-label', lang.tr('action')).html(lang.tr(lid).r(rpl).out()).appendTo(tr);
 
-                $('<td />').text(log[i].author.ip).appendTo(tr);
+                $('<td />').attr('data-label', lang.tr('ip')).text(log[i].author.ip).appendTo(tr);
 
             }
 

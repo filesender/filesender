@@ -92,8 +92,8 @@
     <?php } ?>
 
     <?php if(!count($guests)) { ?>
-        <tr>
-            <td colspan="7" data-label="Results">{tr:no_guests}</td>
+        <tr class="fs-table__empty">
+            <td colspan="5">{tr:no_guests}</td>
         </tr>
     <?php } ?>
     </tbody>
