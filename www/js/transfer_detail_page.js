@@ -329,21 +329,10 @@ $(function() {
     });
     
     
-    // Copy download link
-    const copyToClipboard = (value) => {
-        navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
-        }).catch((e) => {
-            console.error(e);
-            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
-        });
-    }
-
     $('#copy-to-clipboard').on('click', function(e) {
         const element = this.parentElement.querySelector('span');
         if (element) {
-            const value = element.textContent;
-            copyToClipboard(value);
+            filesender.ui.copyToClipboard(element.textContent, this);
         }
     });
 

@@ -1,32 +1,16 @@
-<?php
-include_once "pagemenuitem.php"
-?>
-
-<div id="dialog-about" title="About" class="fs-base-page">
+<div class="fs-base-page">
     <div class="container">
         <div class="row">
             <div class="col">
-                <?php
-                    if (Auth::isAuthenticated()) {
-                ?>
-                    <div class="row">
-                        <div class="col">
-                            <a id='fs-back-link' class='fs-link fs-link--primary fs-link--no-hover fs-back-link'>
-                                <i class='fi fi-chevron-left'></i>
-                                <span>{tr:back_to_settings}</span>
-                            </a>
-                        </div>
-                    </div>
-                <?php
-                    }
-                ?>
+                <?php if (Auth::isAuthenticated()) { ?>
+                    <a id="fs-back-link" class="fs-link fs-link--primary fs-link--no-hover fs-back-link fs-base-page__back">
+                        <i class="fi fi-chevron-left"></i>
+                        <span>{tr:back_to_settings}</span>
+                    </a>
+                <?php } ?>
 
-                <div class="row">
-                    <div class="col">
-                        <div class="fs-base-page__header mt-5">
-                            <h1>{tr:terms_title}</h1>
-                        </div>
-                    </div>
+                <div class="fs-base-page__header">
+                    <h1>{tr:terms_title}</h1>
                 </div>
 
                 <div class="fs-base-page__content">
@@ -36,4 +20,3 @@ include_once "pagemenuitem.php"
         </div>
     </div>
 </div>
-

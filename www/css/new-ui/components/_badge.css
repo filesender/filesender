@@ -64,7 +64,15 @@
 }
 
 .fs-badge-buttons-shell {
-  padding: 0 var(--fs-spacing-2x);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fs-spacing-base);
+  padding: 0 0 0 var(--fs-spacing-2x);
+}
+
+.fs-badge-buttons-shell [data-action] {
+  font-size: var(--fs-icon-size);
+  cursor: pointer;
 }
 
 .fs-badge-buttons a {

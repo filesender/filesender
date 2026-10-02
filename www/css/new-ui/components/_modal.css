@@ -61,7 +61,7 @@
 }
 
 .fs-modal__icon {
-  font-size: 2.4rem;
+  font-size: var(--fs-icon-size-lg);
   color: var(--fs-modal-accent-color);
 }
 
@@ -74,7 +74,7 @@
   height: var(--fs-spacing-5x);
   margin: calc(var(--fs-spacing-base) * -1) calc(var(--fs-spacing-base) * -1) calc(var(--fs-spacing-base) * -1) auto;
   padding: 0;
-  font-size: 2rem;
+  font-size: var(--fs-icon-size);
   color: var(--fs-modal-close-color);
   background: transparent;
   border: none;

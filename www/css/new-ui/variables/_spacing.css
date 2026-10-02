@@ -37,6 +37,15 @@
   --fs-container-max-width: 1600px;
   --fs-container-gutter: clamp(16px, 4vw, 48px);
 
+  --fs-icon-size-sm: 1.6rem;
+  --fs-icon-size: 2rem;
+  --fs-icon-size-lg: 2.4rem;
+  --fs-icon-fa-scale: 0.8em;
+  --fs-icon-reminder-scale: 1.2em;
+
+  --fs-base-page-padding-top: var(--fs-spacing-11x);
+  --fs-base-page-title-gap: var(--fs-spacing-3x);
+
   --fs-modal-width: 600px;
   --fs-modal-wide-width: 1140px;
 }

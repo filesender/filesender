@@ -415,7 +415,7 @@
 .fs-transfer__file-uploaded {
   display: none;
   color: var(--fs-success);
-  font-size: 2.4rem;
+  font-size: var(--fs-icon-size-lg);
 }
 
 .fs-transfer .file.uploading.done .fs-transfer__file-uploaded {

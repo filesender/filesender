@@ -74,7 +74,7 @@
 .fs-checkbox .fs-checkbox__mark:after {
     content: "\e914";
     font-family: 'FileSender-Icons' !important;
-    font-size: 2.4rem;
+    font-size: var(--fs-icon-size-lg);
     position: absolute;
     display: none;
     color: var(--fs-checkbox-check-color);

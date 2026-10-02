@@ -33,6 +33,14 @@ main {
   padding-left: var(--fs-container-gutter);
 }
 
+.fa::before {
+  font-size: var(--fs-icon-fa-scale);
+}
+
+.fi-reminder::before {
+  font-size: var(--fs-icon-reminder-scale);
+}
+
 main .core, main .box {
   padding: 0 !important;
   background: transparent !important;

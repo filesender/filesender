@@ -1,6 +1,6 @@
 <div id="page" class="logon_page">
 
-    <div class="fs-base-page">
+    <div class="fs-base-page fs-logon">
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -8,7 +8,7 @@
 
                     {tr:site_splash}
 
-                    <div class="logon mt-5">
+                    <div class="logon fs-base-page__actions">
                         <?php
                         $page = null;
                         if (array_key_exists('s', $_REQUEST)) {

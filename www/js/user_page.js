@@ -34,15 +34,6 @@ $(function() {
     var page = $('.user_page');
     if(!page.length) return;
 
-    const copyToClipboard = (value) => {
-        navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
-        }).catch((e) => {
-            console.error(e);
-            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
-        });
-    }
-
     $('#send_client_logs').on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -234,8 +225,7 @@ $(function() {
     $('#copy-api-secret, #copy-python-command').on('click', function(e) {
         const element = this.parentElement.querySelector('span');
         if (element) {
-            const value = element.textContent;
-            copyToClipboard(value);
+            filesender.ui.copyToClipboard(element.textContent, this);
         }
     });
 

@@ -973,6 +973,25 @@ window.filesender.ui = {
         return slicer;
     },
 
+    copyToClipboard: function(value, button) {
+        navigator.clipboard.writeText(value).then(function() {
+            filesender.ui.notify('success', lang.tr('copied_to_clipboard'));
+            if(!button) return;
+            var icon = $(button).find('i').first();
+            if(!icon.length || icon.hasClass('fi-valid')) return;
+            var original = icon.attr('class');
+            icon.attr('class', 'fi fi-valid');
+            $(button).addClass('fs-copy__button--copied');
+            window.setTimeout(function() {
+                icon.attr('class', original);
+                $(button).removeClass('fs-copy__button--copied');
+            }, 2000);
+        }).catch(function(e) {
+            console.error(e);
+            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
+        });
+    },
+
     extendExpires: function(self,className)
     {
         if(self.hasClass('disabled')) return;

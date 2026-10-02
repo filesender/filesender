@@ -206,7 +206,7 @@ EOF;
                             echo '-';
                         }
                         if( $transfer->is_encrypted ) {
-                            echo '&nbsp;<span class="fa fa-lock" title="{tr:file_encryption}"></span>';
+                            echo '<span class="fa fa-lock fs-table__icon" title="{tr:file_encryption}"></span>';
                         }
                     ?>
                 </td>

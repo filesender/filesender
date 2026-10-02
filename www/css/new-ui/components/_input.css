@@ -51,6 +51,7 @@
 }
 
 .fs-input-group span.invalid {
+  font-size: var(--fs-icon-size);
   position: absolute;
   right: 0;
   top: 0;

@@ -105,7 +105,7 @@ filesender.ui.recipients = {
 
         var marker = input.data('error_marker');
         if(!marker) {
-            marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+            marker = $('<span class="invalid fa fa-exclamation-circle" />').attr({
                 title: lang.tr('invalid_recipient')
             }).hide().insertBefore(input);
             input.data('error_marker', marker);

@@ -94,6 +94,8 @@
     /* Copy */
     --fs-copy-background: var(--fs-info-bg);
     --fs-copy-button-color: var(--fs-accent);
+    --fs-copy-button-hover-background: var(--fs-light);
+    --fs-copy-button-copied-color: var(--fs-success);
 
     /* Footer */
 
@@ -112,7 +114,9 @@
     --fs-header-link-active-background: var(--fs-light);
     --fs-header-hover-color: var(--fs-text-color);
     --fs-header-hover-background: var(--fs-light-grey);
-    --fs-dropdown-toggle-background: var(--fs-header-link-background);
+    --fs-header-hover-icon-color: var(--fs-link-icon-color);
+    --fs-header-focus-outline-color: var(--fs-accent);
+    --fs-dropdown-toggle-background: transparent;
     --fs-dropdown-menu-background: var(--fs-header-link-background);
     --fs-dropdown-menu-shadow: rgba(0, 0, 0, 0.16) 0px 1px 6px 0px;
 
@@ -205,6 +209,7 @@
 
     /* Base-page */
     --fs-base-page-background: var(--fs-background);
+    --fs-logout-text-color: var(--fs-text-color);
 
     /* Download */
     --fs-download-background: var(--fs-base-page-background);

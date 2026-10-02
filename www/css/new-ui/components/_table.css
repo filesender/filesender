@@ -61,19 +61,42 @@
   min-width: var(--fs-spacing-20x);
 }
 
+.fs-table__actions {
+  white-space: nowrap;
+}
+
+.fs-table__actions .actionsblock {
+  display: inline-flex;
+  gap: var(--fs-spacing-2x);
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
 .fs-table__actions .fs-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--fs-spacing-half);
   font-size: 1.6rem;
   height: var(--fs-spacing-4x);
-  /*width: var(--fs-spacing-4x);*/
   padding: 0;
   background: transparent !important;
   color: var(--fs-table-actions-color) !important;
   cursor: pointer !important;
   font-weight: bold;
-  margin-right: var(--fs-spacing-2x);
+  white-space: nowrap;
+}
+
+.fs-table__actions .fs-button + .fs-button {
+  margin-left: var(--fs-spacing-2x);
+}
+
+.fs-table__actions .actionsblock .fs-button + .fs-button {
+  margin-left: 0;
+}
+
+.fs-table__actions .fs-button i {
+  font-size: var(--fs-icon-size);
 }
 
 .fs-table__actions .fs-button,
@@ -83,6 +106,12 @@
   color: var(--fs-table-button-hover-color) !important;
 }
 
+
+.fs-table__icon {
+  margin-left: var(--fs-spacing-half);
+  font-size: var(--fs-icon-size);
+  vertical-align: middle;
+}
 
 .fs-table__empty td {
   text-align: center;
@@ -125,12 +154,20 @@ table.files .downloadprogress {
     border-bottom: 0;
   }
 
-  .fs-table.fs-table--responsive .actionsblock {
-    white-space: normal;
-  }
-
   .fs-table.fs-table--responsive td .fs-button {
     margin: var(--fs-spacing-half) 0 var(--fs-spacing-half) var(--fs-spacing-base);
+  }
+
+  .fs-table.fs-table--responsive .fs-table__actions .fs-button {
+    margin: var(--fs-spacing-half) 0;
+  }
+
+  .fs-table.fs-table--responsive .fs-table__actions .fs-button + .fs-button {
+    margin-left: var(--fs-spacing-2x);
+  }
+
+  .fs-table.fs-table--responsive .fs-table__actions .actionsblock .fs-button + .fs-button {
+    margin-left: 0;
   }
 
   .fs-table.fs-table--responsive tr.tpl {
@@ -155,5 +192,19 @@ table.files .downloadprogress {
     float: left;
     margin-right: var(--fs-spacing-2x);
     font-weight: bold;
+  }
+}
+
+@media (max-width: 575px) {
+
+  .fs-table.fs-table--responsive .fs-table__actions .fs-button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
   }
 }

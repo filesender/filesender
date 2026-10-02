@@ -62,7 +62,7 @@
                         </li>
                         <?php if($mode == 'user' && $guest->status == 'available') { ?>
                             <li>
-                                <i class="fi fi-warning fs-invitations__warning" title="{tr:no_transfers}"></i>
+                                <i class="fi fi-warning fs-table__icon fs-invitations__warning" title="{tr:no_transfers}"></i>
                             </li>
                         <?php } ?>
                     </ul>

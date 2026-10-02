@@ -49,7 +49,7 @@
 }
 
 .fs-transfer-detail__check i {
-    font-size: 2rem;
+    font-size: var(--fs-icon-size);
 }
 
 .fs-transfer-detail__check .fi-valid {

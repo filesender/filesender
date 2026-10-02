@@ -312,8 +312,8 @@ $user = Auth::user();
                                     if ($value) {
                                         echo <<<EOT
                                         <div class='fs-copy'>
-                                            <span>$value</span>
-                                            <button id='copy-api-secret' type='button'>
+                                            <span class='fs-copy__value'>$value</span>
+                                            <button id='copy-api-secret' class='fs-copy__button' type='button' title='{tr:copy}' aria-label='{tr:copy}'>
                                                 <i class='fi fi-copy'></i>
                                             </button>
                                         </div>
@@ -357,10 +357,10 @@ $user = Auth::user();
 
                                     {tr:python_cli_client_setup_information}
 
-                                    <div class="fs-copy">
-                                        <span>python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</span>
+                                    <div class="fs-copy fs-copy--command">
+                                        <span class="fs-copy__value">python3 filesender.py -r person-to-send-to@emailserver.edu research-data-file.txt</span>
 
-                                        <button id="copy-python-command" type="button">
+                                        <button id="copy-python-command" class="fs-copy__button" type="button" title="{tr:copy}" aria-label="{tr:copy}">
                                             <i class="fi fi-copy"></i>
                                         </button>
                                     </div>
@@ -448,12 +448,12 @@ EOF;
        <ul class="fs-action-list">
        <li>
            <button type="button" class="fs-button test_my_openpgp_key">
-             <i class="fa fa-lg fa-times"></i>
+             <i class="fa fa-times"></i>
              <span>{tr:test_my_openpgp_key}</span>
            </button>
        </li><li>
            <button type="button" class="fs-button fs-button--danger delete_my_openpgp_key">
-             <i class="fa fa-lg fa-times"></i>
+             <i class="fa fa-times"></i>
              <span>{tr:delete_my_openpgp_keys}</span>
            </button>
        </li></ul>

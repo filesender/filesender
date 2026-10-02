@@ -43,7 +43,7 @@ a-visible {
 
 .fs-link i {
     color: var(--fs-link-icon-color);
-    font-size: 2.4rem;
+    font-size: var(--fs-icon-size-lg);
     text-align: center;
 }
 

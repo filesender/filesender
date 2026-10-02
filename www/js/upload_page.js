@@ -1155,7 +1155,7 @@ filesender.ui.recipients = {
 
         var marker = input.data('error_marker');
         if(!marker) {
-            marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+            marker = $('<span class="invalid fa fa-exclamation-circle" />').attr({
                 title: lang.tr('invalid_recipient')
             }).hide().insertBefore(input);
             input.data('error_marker', marker);
@@ -1648,7 +1648,7 @@ filesender.ui.startUpload = function() {
         }
         
         $('#copy-to-clipboard').on('click', function(e){
-            filesender.ui.copyToClipboard(filesender.ui.transfer.download_link);
+            filesender.ui.copyToClipboard(filesender.ui.transfer.download_link, this);
         });
 
         var link = filesender.ui.createPageLink(
@@ -2124,15 +2124,6 @@ filesender.ui.updateSizeInfo = function () {
 
     filesender.ui.nodes.text_desc_of_file_count_and_size.find('.value').text(lang.tr('text_desc_of_file_count_and_size').r({filecount: filecount, totalsize: sizetxt }).out());
 
-};
-
-filesender.ui.copyToClipboard = function(value) {
-    navigator.clipboard.writeText(value).then((x) => {
-        filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
-    }).catch((e) => {
-        console.error(e);
-        filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
-    });
 };
 
 filesender.ui.hideDragAndDropUpload = function () {

@@ -77,12 +77,13 @@ $(function() {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 var does_not_expire = $(this).closest('.objectholder').attr('data-does-not-expire');
                 if( days > 0 && does_not_expire != '1') {
-                    var extend = $('<span data-action="extendguestexpires" class="extend fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock" />');
-                    extend.appendTo(td).attr({
-                        title: lang.tr('extend_expiry_date').r({
-                            days: $(this).closest('.objectholder').attr('data-expiry-extension')
-                        })
-
+                    var extendTitle = lang.tr('extend_expiry_date').r({
+                        days: $(this).closest('.objectholder').attr('data-expiry-extension')
+                    }).out();
+                    var extend = $('<button type="button" data-action="extendguestexpires" class="fs-button extend"><i class="fi fi-edit-date"></i></button>');
+                    extend.appendTo(ab.length ? ab : td).attr({
+                        title: extendTitle,
+                        'aria-label': extendTitle
                     }).on('click', function() {
                         filesender.ui.extendExpires( extend, 'guest' );
                     });
@@ -93,12 +94,13 @@ $(function() {
                 var days = $(this).closest('.objectholder').attr('data-expiry-extension');
                 var does_not_expire = $(this).closest('.objectholder').attr('data-does-not-expire');
                 if( days > 0 && does_not_expire != '1') {
-                    var extend = $('<span data-action="extendexpires" class="extend adminaction fs-button fs-button--circle fs-button--no-text clickable fa fa-lg fa-clock" />');
-                    extend.appendTo(td).attr({
-                        title: lang.tr('extend_expiry_date').r({
-                            days: $(this).closest('.objectholder').attr('data-expiry-extension')
-                        })
-
+                    var extendTitle = lang.tr('extend_expiry_date').r({
+                        days: $(this).closest('.objectholder').attr('data-expiry-extension')
+                    }).out();
+                    var extend = $('<button type="button" data-action="extendexpires" class="fs-button extend adminaction"><i class="fi fi-edit-date"></i></button>');
+                    extend.appendTo(ab.length ? ab : td).attr({
+                        title: extendTitle,
+                        'aria-label': extendTitle
                     }).on('click', function() {
                         filesender.ui.extendExpires( extend, 'guest' );
                     });

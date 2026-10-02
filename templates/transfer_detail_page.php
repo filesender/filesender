@@ -227,9 +227,9 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                                         ?>
 
                                         <span class="fs-badge-buttons-shell" >
-                                            <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                                            <span data-action="delete" class="fi fi-trash fa-lg" title="{tr:delete}"></span>
-                                            <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
+                                            <span data-action="remind" class="fa fa-repeat" title="{tr:send_reminder}"></span>
+                                            <span data-action="delete" class="fi fi-trash" title="{tr:delete}"></span>
+                                            <span data-action="auditlog" class="fa fa-history" title="{tr:open_recipient_auditlog}"></span>
                                         </span>
 
                                     </div>
@@ -255,11 +255,11 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                     <div class="fs-transfer-detail__link">
                         <h4>{tr:download_link}</h4>
                         <div class="fs-copy">
-                            <span class="download_link"><?php echo $transfer->first_recipient->download_link ?></span>
+                            <span class="fs-copy__value download_link"><?php echo $transfer->first_recipient->download_link ?></span>
 
-                            <button id="copy-to-clipboard" type='button'>
-                              <i class='fi fi-copy'></i>
-                          </button>
+                            <button id="copy-to-clipboard" class="fs-copy__button" type="button" title="{tr:copy}" aria-label="{tr:copy}">
+                                <i class="fi fi-copy"></i>
+                            </button>
                         </div>
                     </div>
                 <?php } ?>

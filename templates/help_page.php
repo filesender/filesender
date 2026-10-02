@@ -1,4 +1,4 @@
-<div  id="dialog-help" title="Help" class="fs-base-page">
+<div id="dialog-help" class="fs-base-page">
     <div class="container">
         <div class="row">
             <div class="col">

@@ -27,8 +27,9 @@
   min-width: 100%;
   flex-direction: column;
   align-items: stretch;
+  gap: var(--fs-spacing-quarter);
   margin: 0;
-  padding: var(--fs-spacing-base) 0;
+  padding: var(--fs-spacing-base);
   list-style: none;
   background: var(--fs-dropdown-menu-background);
   border-radius: var(--fs-spacing-half);

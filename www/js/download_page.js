@@ -35,15 +35,6 @@ $(function() {
     var page = $('.download_page');
     if(!page.length) return;
 
-    const copyToClipboard = (value) => {
-        navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
-        }).catch((e) => {
-            console.error(e);
-            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
-        });
-    }
-
     // Get recipient token
     var m = window.location.search.match(/token=([0-9a-f-]+)/);
     var token = m[1];
@@ -71,10 +62,10 @@ $(function() {
             if(tab.intro) $('<p />').html(tab.intro).appendTo(panel);
             $('<pre class="fs-modal__code" />').text(tab.text).appendTo(panel);
             $('<button type="button" class="fs-button fs-button--inverted" />')
-                .html('<i class="fa fa-copy"></i><span>' + lang.tr('copy').out() + '</span>')
+                .html('<i class="fi fi-copy"></i><span>' + lang.tr('copy').out() + '</span>')
                 .appendTo(panel)
                 .on('click', function() {
-                    copyToClipboard(tab.text);
+                    filesender.ui.copyToClipboard(tab.text, this);
                 });
 
             $('<a href="#" class="fs-tabs__link" role="tab" />')

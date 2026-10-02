@@ -1086,9 +1086,9 @@ EOF;
                                     {tr:your_download_link}
                                 </span>
                                 <div class="fs-copy">
-                                    <span class="download_link"></span>
+                                    <span class="fs-copy__value download_link"></span>
 
-                                    <button id="copy-to-clipboard" type='button'>
+                                    <button id="copy-to-clipboard" class="fs-copy__button" type="button" title="{tr:copy}" aria-label="{tr:copy}">
                                         <i class='fi fi-copy'></i>
                                     </button>
                                 </div>

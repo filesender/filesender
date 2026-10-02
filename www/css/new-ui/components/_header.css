@@ -32,6 +32,23 @@ header nav ul {
 
 header nav ul li .fs-link {
   white-space: nowrap;
+  border-radius: var(--fs-spacing-4x);
+}
+
+header nav ul li .fs-link:hover,
+header nav ul li .fs-link:focus-visible {
+  color: var(--fs-header-hover-color) !important;
+  background: var(--fs-header-hover-background) !important;
+}
+
+header nav ul li .fs-link:hover i,
+header nav ul li .fs-link:focus-visible i {
+  color: var(--fs-header-hover-icon-color) !important;
+}
+
+header nav ul li .fs-link:focus-visible {
+  outline: 2px solid var(--fs-header-focus-outline-color);
+  outline-offset: 2px;
 }
 
 .fs-header--compact nav > ul > li > .fs-link span {

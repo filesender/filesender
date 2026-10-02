@@ -49,3 +49,7 @@
 .fs-paginator__ellipsis {
     margin: 0 var(--fs-spacing-base);
 }
+
+.fs-paginator .fs-link i {
+    font-size: var(--fs-icon-size);
+}

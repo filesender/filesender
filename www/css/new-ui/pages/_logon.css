@@ -1,0 +1,15 @@
+.fs-logon {
+    text-align: center;
+}
+
+.fs-logon .fs-base-page__header {
+    justify-content: center;
+}
+
+.fs-logon .fs-base-page__header h1 {
+    text-align: center !important;
+}
+
+.fs-logon .fs-base-page__actions {
+    justify-content: center;
+}
