@@ -106,9 +106,13 @@ class Auth
      * Ensure session_start is called if there is no session already.
      * Note that self::$type must be guest or sp for this call to do anything.
      *
+     * Public because www/download.php needs a session in its error handler on
+     * a request that never authenticated, and the cookie_domain handling
+     * belongs in one place.
+     *
      * @return void
      */
-    private static function ensure_php_session()
+    public static function ensure_php_session()
     {
         if ( self::isSessionStarted() === false ) {
             $opts = array();
