@@ -34,15 +34,6 @@ $(function() {
     var page = $('.user_page');
     if(!page.length) return;
 
-    const copyToClipboard = (value) => {
-        navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
-        }).catch((e) => {
-            console.error(e);
-            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
-        });
-    }
-
     $('#send_client_logs').on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -165,7 +156,7 @@ $(function() {
         filesender.client.changeLocalAuthDBPassword( saml_id );
     });
 
-    $('#save-preferences').on('click', function(e) {
+    var savePreferences = () => {
         let hasError = false;
 
         const inputs = $(':input');
@@ -194,13 +185,13 @@ $(function() {
             hasError = true;
         });
 
-        
+
         if (!hasError) {
             filesender.ui.notifyAndReload('success', lang.tr('preferences_updated'));
         } else {
             filesender.ui.notify('error', lang.tr('Could not save user preferences.'));
         }
-    });
+    };
 
     var user_lang = page.find('select[name="user_lang"]');
     if( user_lang.length ) {
@@ -210,14 +201,15 @@ $(function() {
             if( menu_language_selector ) {
                 menu_language_selector.val( i.val() );
             }
+            savePreferences();
         });
     }
 
     var rc = page.find('span[data-info="remote_config"]');
     console.log(rc);
-    if(rc.length) $('<button class="btn btn-secondary" />').text(lang.tr('get_full_user_remote_config')).button().on('click', function() {
+    if(rc.length) $('<button type="button" class="fs-button fs-button--inverted" />').text(lang.tr('get_full_user_remote_config')).on('click', function() {
         filesender.ui.wideInfoPopup('copy_text',
-                                    $('<textarea class="w-100 wide desctxt" />').val(rc.html()), function() {});
+                                    $('<textarea class="fs-modal__input fs-modal__input--textarea" rows="8" />').val(rc.html()), function() {});
     }).insertAfter(rc);
 
     var rasr = page.find('[data-remote-auth-sync-request]');
@@ -233,9 +225,12 @@ $(function() {
     $('#copy-api-secret, #copy-python-command').on('click', function(e) {
         const element = this.parentElement.querySelector('span');
         if (element) {
-            const value = element.textContent;
-            copyToClipboard(value);
+            filesender.ui.copyToClipboard(element.textContent, this);
         }
+    });
+
+    $('#user_theme, #previous-settings, #save-recipients-emails').on('change', function(e) {
+        savePreferences();
     });
 
     window.filesender.log("window.filesender.log() from user page ");

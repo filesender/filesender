@@ -1,0 +1,118 @@
+@font-face {
+    font-family: 'FileSender-Icons';
+    src:  url('../../../fonts/FileSender-Icons/FileSender-Icons.eot?j016oz');
+    src:  url('../../../fonts/FileSender-Icons/FileSender-Icons.eot?j016oz#iefix') format('embedded-opentype'),
+    url('../../../fonts/FileSender-Icons/FileSender-Icons.ttf?j016oz') format('truetype'),
+    url('../../../fonts/FileSender-Icons/FileSender-Icons.woff?j016oz') format('woff'),
+    url('../../../fonts/FileSender-Icons/FileSender-Icons.svg?j016oz#FileSender-Icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+.fi {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'FileSender-Icons' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.fi-chevron-up:before {
+    content: "\e900";
+}
+
+.fi-chevron-right:before {
+    content: "\e901";
+}
+
+.fi-search:before {
+    content: "\e902";
+}
+
+.fi-box:before {
+    content: "\e903";
+}
+
+.fi-list:before {
+    content: "\e904";
+}
+
+.fi-chevron-down:before {
+    content: "\e905";
+}
+
+.fi-chevron-left:before {
+    content: "\e906";
+}
+
+.fi-info:before {
+    content: "\e907";
+}
+
+.fi-pencil:before {
+    content: "\e908";
+}
+
+.fi-settings:before {
+    content: "\e909";
+}
+
+.fi-add:before {
+    content: "\e90a";
+}
+
+.fi-edit-date:before {
+    content: "\e90b";
+}
+
+.fi-copy:before {
+    content: "\e90c";
+}
+
+.fi-error:before {
+    content: "\e90d";
+}
+
+.fi-close:before {
+    content: "\e90e";
+}
+
+.fi-warning:before {
+    content: "\e90f";
+}
+
+.fi-logout:before {
+    content: "\e910";
+}
+
+.fi-succes:before {
+    content: "\e911";
+}
+
+.fi-download:before {
+    content: "\e912";
+}
+
+.fi-resend:before {
+    content: "\e913";
+}
+
+.fi-valid:before {
+    content: "\e914";
+}
+
+.fi-reminder:before {
+    content: "\e915";
+}
+
+.fi-trash:before {
+    content: "\e916";
+}

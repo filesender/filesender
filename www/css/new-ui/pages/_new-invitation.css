@@ -1,7 +1,7 @@
 .fs-new-invitation {
     flex: 1;
-    background: var(--fs-bg-color);
-    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+    background: var(--fs-new-invitation-background);
+    padding: var(--fs-spacing-7x) var(--fs-spacing-2x);
 }
 
 .fs-new-invitation__header .fs-link {
@@ -24,7 +24,8 @@
 .fs-new-invitation__data {
     display: flex;
     flex-direction: column;
-    margin-top: var(--fs-spacing-8x);
+    margin-top: 5px;
+    padding-left: var(--fs-spacing-10x);
 }
 
 .fs-new-invitation__data .fs-collapse {
@@ -35,7 +36,14 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
+    height: 100%;
+    width: 100%;
+    padding: var(--fs-spacing-3x) 0;
+}
+
+.fs-new-invitation__actions button {
+    width: 100%;
 }
 
 .fs-new-invitation__form {
@@ -58,23 +66,16 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    margin-top: var(--fs-spacing-8x);
-    text-align: center;
+    padding-left: var(--fs-spacing-10x);
 }
 
 .fs-new-invitation .fs-select:first-child label {
     width: var(--fs-spacing-19x);
 }
 
-.fs-new-invitation__recipients {
-    padding-left: var(--fs-spacing-22x);
-}
-
 .fs-new-invitation .remove {
-    color: var(--fs-danger);
+    color: var(--fs-remove-color);
 }
-
 
 .guest-expires-select-by-picker {
     display: none;

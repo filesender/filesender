@@ -1450,7 +1450,7 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
-            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input"  type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
+            var toggleView = $('<div class="fs-switch fs-modal__switch"><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label></div>');
 
             if( window.filesender.crypto_last_password_succeeded ) {
                 $('<p>' + lang.tr('previous_password_shown_for_next_action').out() + '</p>').appendTo(prompt);
@@ -1462,8 +1462,8 @@ window.filesender.crypto_app = function () {
                 "click",
                 function() {
                     var v = $('#showdlpass').is(':checked');
-                    if( v ) { $('.bootbox-input').attr('type','text'); }
-                    else    { $('.bootbox-input').attr('type','password'); }
+                    if( v ) { $('.fs-modal__input').attr('type','text'); }
+                    else    { $('.fs-modal__input').attr('type','password'); }
                 }
             );
                 
@@ -1552,7 +1552,7 @@ window.filesender.crypto_app = function () {
 
             // Add a field to the prompt
             var trshowhide = window.filesender.config.language.file_encryption_show_password;
-            var toggleView = $('<br/><div class="custom-control custom-switch " ><input class="custom-control-input" type="checkbox" id="showdlpass" name="showdlpass" value="false"><label class="custom-control-label" for="showdlpass">' + trshowhide + '</label></div>');
+            var toggleView = $('<div class="fs-switch fs-modal__switch"><input type="checkbox" id="showdlpass" name="showdlpass" value="false"><label for="showdlpass">' + trshowhide + '</label></div>');
 
             if( window.filesender.crypto_last_password_succeeded ) {
                 $('<p>' + lang.tr('previous_password_shown_for_next_action').out() + '</p>').appendTo(prompt);
@@ -1564,8 +1564,8 @@ window.filesender.crypto_app = function () {
                 "click",
                 function() {
                     var v = $('#showdlpass').is(':checked');
-                    if( v ) { $('.bootbox-input').attr('type','text'); }
-                    else    { $('.bootbox-input').attr('type','password'); }
+                    if( v ) { $('.fs-modal__input').attr('type','text'); }
+                    else    { $('.fs-modal__input').attr('type','password'); }
                 }
             );
                 

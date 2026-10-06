@@ -129,6 +129,12 @@ $transfers = Transfer::fromGuest($guest);
                                     
                                 </tr>
                                 <?php } ?>
+
+                            <?php if(!count($transfers)) { ?>
+                                <tr class="fs-table__empty">
+                                    <td colspan="3">{tr:no_transfers}</td>
+                                </tr>
+                            <?php } ?>
                         </tbody>
                     </table>
                 </div>

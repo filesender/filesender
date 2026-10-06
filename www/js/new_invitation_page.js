@@ -105,7 +105,7 @@ filesender.ui.recipients = {
 
         var marker = input.data('error_marker');
         if(!marker) {
-            marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+            marker = $('<span class="invalid fa fa-exclamation-circle" />').attr({
                 title: lang.tr('invalid_recipient')
             }).hide().insertBefore(input);
             input.data('error_marker', marker);
@@ -437,11 +437,7 @@ $(function() {
     });
 
     // Custom collapse
-    $('.fs-collapse__open').on('click', function() {
-        $(this.parentElement).addClass('fs-collapse--open');
-    });
-
-    $('.fs-collapse__close').on('click', function() {
-        $(this.parentElement).removeClass('fs-collapse--open');
+    $('.fs-collapse__toggle').on('click', function() {
+        $(this.parentElement).toggleClass('fs-collapse--open');
     });
 });

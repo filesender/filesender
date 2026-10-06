@@ -89,7 +89,7 @@ $transfers_page = function($status) {
         'offset' => $offset
     ), $placeholders);
     
-    $navigation = '<div class="transfers_list_page_navigation">'."\n";
+    $navigation = '<div class="fs-paginator fs-paginator--center">'."\n";
     $transfersort = Utilities::getGETparam('transfersort','');
 
     $cgiminmax = "";
@@ -103,8 +103,8 @@ $transfers_page = function($status) {
 
     if($offset) {
         $po = max(0, $offset - $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo=0&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($po).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo=0&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers" class="fs-link fs-link--circle"><i class="fa fa-angle-double-left"></i></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($po).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers" class="fs-link fs-link--circle"><i class="fi fi-chevron-left"></i></a>'."\n";
     }
     
     $start_index = $offset - $page_size * $display_page_num;
@@ -116,15 +116,15 @@ $transfers_page = function($status) {
     for($o=$start_index; $o < $end_index; $o += $page_size)
     {
         if($o >= $offset && $o < $offset + $page_size) {
-            $navigation .= '<span>'.$p.'</span>'."\n";
+            $navigation .= '<span class="fs-link fs-link--circle fs-link--current" aria-current="page">'.$p.'</span>'."\n";
         } elseif($o < $offset - $page_size * $display_page_num ||
                  $o >= $offset + $page_size * ($display_page_num + 1)) {
             // nothing
         } elseif( $o < $offset - $page_size * ($display_page_num - 1) ||
                   $o >= $offset + $page_size * $display_page_num ) {
-            $navigation .= '<span>'.'...'.'</span>'."\n";
+            $navigation .= '<span class="fs-paginator__ellipsis">...</span>'."\n";
         } else {
-            $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($o).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers">'.$p.'</a>'."\n";
+            $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($o).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers" class="fs-link fs-link--circle">'.$p.'</a>'."\n";
         }
         
         $p++;
@@ -133,8 +133,8 @@ $transfers_page = function($status) {
     if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
         $lo = max(0, $total_count - ($total_count % $page_size ?: $page_size));
-        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($no).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($lo).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($no).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers" class="fs-link fs-link--circle"><i class="fi fi-chevron-right"></i></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.Template::Q($status).'_tpo='.Template::Q($lo).'&transfersort='.Template::Q($transfersort).Template::Q($cgiminmax).'#'.Template::Q($status).'_transfers" class="fs-link fs-link--circle"><i class="fa fa-angle-double-right"></i></a>'."\n";
     }
     
     $navigation .= '</div>'."\n";
@@ -154,81 +154,105 @@ $transfers_page = function($status) {
         echo $navigation;
 };
 
-echo "<h2>{tr:admin_transfers_section}</h2>\n";
-echo "<p>{tr:admin_transfers_page_description}</p>\n";
+?>
+<div class="fs-admin__block">
+    <h4>{tr:admin_transfers_section}</h4>
+    <p>{tr:admin_transfers_page_sections}</p>
+    <ul class="fs-badge-list fs-admin__sections">
+        <li class="fs-badge"><a href="#search_transfers">{tr:search_transfers}</a></li>
+        <li class="fs-badge"><a href="#available_transfers">{tr:available_transfers}</a></li>
+        <li class="fs-badge"><a href="#uploading_transfers">{tr:uploading_transfers}</a></li>
+        <?php if($auditlogs) { ?>
+            <li class="fs-badge"><a href="#closed_transfers">{tr:closed_transfers}</a></li>
+        <?php } ?>
+    </ul>
+</div>
 
-// search
-echo '<span id="search_transfers"></span>'."\n";
-if($auditlogs)
-    echo "<h3>{tr:search_transfers}</h3>\n";
-echo "<p>{tr:search_transfer_id_inclusive_description}</p>\n";
-
+<?php
 $idmin = Utilities::arrayKeyOrDefault( $_GET, 'idmin', 0, FILTER_VALIDATE_INT  );
 $idmax = Utilities::arrayKeyOrDefault( $_GET, 'idmax', -1, FILTER_VALIDATE_INT  );
 if( $idmax == -1 ) {
     $idmax = '';
 }
 
-?>
-<fieldset class="search">
-    <label for="idmin" class="mandatory">{tr:minimum}</label>
-    <input type="text" name="idmin" value="<?php echo $idmin ?>" />
-    <label for="idmax" class="mandatory">{tr:maximum}</label>
-    <input type="text" name="idmax" value="<?php echo $idmax ?>" />
-    <input type="button" name="idbutton" value="{tr:search}" />
-</fieldset>
-
-
-<?php
 $senderemail_full_match = Utilities::arrayKeyOrDefault( $_POST, 'senderemail_full_match', '', FILTER_VALIDATE_BOOLEAN );
 $senderemail = Utilities::arrayKeyOrDefault( $_POST, 'senderemail', '' ); // we don't want to FILTER_SANITIZE_EMAIL here
 $senderemail_full_match_extra = '';
 if( $senderemail_full_match ) {
     $senderemail_full_match_extra = ' checked ';
 }
-echo "<p>{tr:search_transfer_by_sender_email_description}</p>\n";
 ?>
+<div class="fs-admin__block" id="search_transfers">
+    <?php if($auditlogs) { ?>
+        <h4>{tr:search_transfers}</h4>
+    <?php } ?>
 
-<form action="{path:?s=admin&as=transfers}" method="post">
-    <input type="hidden" name="s" value="admin" />
-    <fieldset class="search">
-        <fieldset class="search">
-            <input id="senderemail_full_match" name="senderemail_full_match" type="checkbox" <?php echo $senderemail_full_match_extra ?>>  
-            <label id="senderemail_full_match_label" for="senderemail_full_match" >{tr:email_full_match_search}</label>
-        </fieldset>
-        <fieldset class="search">
-            <label for="senderemail" class="mandatory">{tr:sender_email_search}</label>
-            <input type="text" name="senderemail" size="60" value="<?php echo Template::sanitizeOutputEmail($senderemail) ?>" />
-            <input type="submit" value="{tr:search}">
-        </fieldset>
-</form>
+    <p>{tr:search_transfer_id_inclusive_description}</p>
+    <div class="fs-admin__fields search">
+        <div class="fs-input-group">
+            <label for="idmin" class="mandatory">{tr:minimum}</label>
+            <input type="text" id="idmin" name="idmin" value="<?php echo $idmin ?>" />
+        </div>
+        <div class="fs-input-group">
+            <label for="idmax" class="mandatory">{tr:maximum}</label>
+            <input type="text" id="idmax" name="idmax" value="<?php echo $idmax ?>" />
+        </div>
+        <button type="button" class="fs-button" name="idbutton">
+            <i class="fi fi-search"></i>
+            <span>{tr:search}</span>
+        </button>
+    </div>
 
-        
-<?php 
-$transfers_page('search');
+    <p>{tr:search_transfer_by_sender_email_description}</p>
+    <form action="{path:?s=admin&as=transfers}" method="post" class="search">
+        <input type="hidden" name="s" value="admin" />
+        <label class="fs-checkbox">
+            <label id="senderemail_full_match_label" for="senderemail_full_match">{tr:email_full_match_search}</label>
+            <input id="senderemail_full_match" name="senderemail_full_match" type="checkbox" <?php echo $senderemail_full_match_extra ?>>
+            <span class="fs-checkbox__mark"></span>
+        </label>
+        <div class="fs-admin__fields">
+            <div class="fs-input-group">
+                <label for="senderemail" class="mandatory">{tr:sender_email_search}</label>
+                <input type="text" id="senderemail" name="senderemail" value="<?php echo Template::sanitizeOutputEmail($senderemail) ?>" />
+            </div>
+            <button type="submit" class="fs-button">
+                <i class="fi fi-search"></i>
+                <span>{tr:search}</span>
+            </button>
+        </div>
+    </form>
 
-// available
-echo '<span id="available_transfers"></span>'."\n";
-if($auditlogs)
-    echo '<h3>{tr:available_transfers}</h3>'."\n";
+    <div class="fs-admin__table">
+        <?php $transfers_page('search') ?>
+    </div>
+</div>
 
-$transfers_page('available');
+<div class="fs-admin__block" id="available_transfers">
+    <?php if($auditlogs) { ?>
+        <h4>{tr:available_transfers}</h4>
+    <?php } ?>
+    <div class="fs-admin__table">
+        <?php $transfers_page('available') ?>
+    </div>
+</div>
 
+<div class="fs-admin__block" id="uploading_transfers">
+    <?php if($auditlogs) { ?>
+        <h4>{tr:uploading_transfers}</h4>
+    <?php } ?>
+    <div class="fs-admin__table">
+        <?php $transfers_page('uploading') ?>
+    </div>
+</div>
 
-// uploading
-echo '<span id="uploading_transfers"></span>'."\n";
-if($auditlogs)
-    echo '<h3>{tr:uploading_transfers}</h3>'."\n";
+<?php if($auditlogs) { ?>
+    <div class="fs-admin__block" id="closed_transfers">
+        <h4>{tr:closed_transfers}</h4>
+        <div class="fs-admin__table">
+            <?php $transfers_page('closed') ?>
+        </div>
+    </div>
+<?php } ?>
 
-$transfers_page('uploading');
-
-// closed
-if($auditlogs) {
-    echo '<span id="closed_transfers"></span>'."\n";
-    echo '<h3>{tr:closed_transfers}</h3>'."\n";
-    
-    $transfers_page('closed');
-}
-
-?>
 <script type="text/javascript" src="{path:js/admin_transfers.js}"></script>

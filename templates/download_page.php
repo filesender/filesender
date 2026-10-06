@@ -170,35 +170,33 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
             </div>
         </div>
 
-        <hr />
-
         <div class="row">
             <div class="col col-sm-12 col-md-5 col-lg-6">
-                <div class="fs-download__details">
-                    <h2>{tr:transfer_details}</h2>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:transfer_sent_on}:</strong>
+                <div class="fs-download__details mt-5">
+                    <h4>{tr:transfer_details}</h4>
+                    <div class="fs-info fs-info--aligned mt-5">
+                        <strong>{tr:transfer_sent_on}</strong>
                         <span><?php echo Template::Q(Utilities::formatDate($transfer->created,true)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:expiration_date}:</strong>
+                        <strong>{tr:expiration_date}</strong>
                         <span><?php echo Template::Q(Utilities::formatDate($transfer->expires, true)) ?></span>
                     </div>
                     <?php if(strlen($sender_email)) { ?>
                         <div class="fs-info fs-info--aligned">
-                            <strong>{tr:from}:</strong>
+                            <strong>{tr:from}</strong>
                             <span><?= $sender_email_clean ?></span>
                         </div>
                     <?php } ?>
                     <?php if($transfer->subject) { ?>
                         <div class="fs-info fs-info--aligned">
-                            <strong>{tr:subject}:</strong>
+                            <strong>{tr:subject}</strong>
                             <span><?php echo Template::replaceTainted($transfer->subject) ?></span>
                         </div>
                     <?php } ?>
                     <?php if($transfer->message) { ?>
-                        <div class="fs-info fs-info--aligned top-transfer-message">
-                            <strong>{tr:message}:</strong>
+                        <div class="fs-info fs-info--aligned">
+                            <strong>{tr:message}</strong>
                             <span><?php
                                   $isOpenPGPmsg = false;
                                   if( Config::isTrue('openpgp_enabled')) {
@@ -217,7 +215,7 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:transfer_size}:</strong>
+                        <strong>{tr:transfer_size}</strong>
                         <span class="fs-info-transfer-size"><?php echo $formatFileSizeForDisplayQ($transfer->size) ?></span>
                     </div>
                     <div  class="fs-info">
@@ -227,14 +225,11 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
             </div>
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-download__files">
-                    <h2>{tr:download_files}</h2>
-                    <p>{tr:select_files_to_download}</p>
-
                     <?php if($canDownloadArchive) { ?>
                         <div class="fs-download__check-all select_all">
                             <label class="fs-checkbox">
                                 <label for="check-all" class="select_all_text">
-                                    {tr:click_to_check_all}
+                                    {tr:select_all_files}
                                 </label>
                                 <input id="check-all" type="checkbox">
                                 <span class="fs-checkbox__mark toggle-select-all"></span>
@@ -287,8 +282,8 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                                                 <span class="size"><?php echo $formatFileSizeForDisplayQ($file->size) ?></span>
                                                 <span class="downloadprogress"></span>
                                                 <span class="remove stage1">
-                                                    <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download_file}">
-                                                        <i class="fa fa-download"></i>
+                                                    <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Template::Q($downloadLinks[$file->id]) ?>" class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text download" title="{tr:download_file}">
+                                                        <i class="fi fi-download"></i>
                                                     </a>
                                                 </span>
                                             </div>
@@ -317,12 +312,10 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                     <?php if($canDownloadArchive) { ?>
                         <div class="fs-download__actions archive">
                             <button type="button" class="fs-button archive_download_frame archive_download" title="{tr:archive_download}">
-                                <i class="fa fa-download"></i>
                                 <span>{tr:archive_download}</span>
                             </button>
                             <?php if($canDownloadAsTar) { ?>
                                 <button type="button" class="fs-button archive_tar_download_frame archive_tar_download" title="{tr:archive_tar_download}">
-                                    <i class="fa fa-download"></i>
                                     <span>{tr:archive_tar_download}</span>
                                 </button>
 
@@ -409,17 +402,19 @@ if( $isEncrypted
                     <?php if(!$file->have_avresults) { ?>
                         <span class="desc">{tr:no_av_scans_performed}</span>
                     <?php } else { ?>
-                        <table>
+                        <table class="fs-table fs-table--responsive fs-table--striped">
+                            <thead>
                             <tr class="avresultheader">
                                 <th>{tr:performed}</th>
                                 <th>{tr:result}</th>
                                 <th>{tr:avname}</th>
                             </tr>
+                            </thead>
                         <?php foreach($file->scan_results as $res) { $resultdesc = passErrToDesc($res->passes,$res->error); ?>
                             <tr class="avresult">
-                                <td class="created"><?php echo Template::Q(Utilities::formatDate($res->created)) ?></td>
-                                <td class="result avresult<?php echo Template::Q($resultdesc) ?>"><?php echo Lang::tr($resultdesc) ?></td>
-                                <td class="app_name"><?php echo presentAVName($res->name) ?></td>
+                                <td class="created" data-label="{tr:performed}"><?php echo Template::Q(Utilities::formatDate($res->created)) ?></td>
+                                <td data-label="{tr:result}" class="result avresult<?php echo Template::Q($resultdesc) ?>"><?php echo Lang::tr($resultdesc) ?></td>
+                                <td class="app_name" data-label="{tr:avname}"><?php echo presentAVName($res->name) ?></td>
                             </tr>
                         <?php } ?>
                         </table>
@@ -434,42 +429,19 @@ if( $isEncrypted
     <?php } ?>
 
 
-<div class="fs-download verify_email_to_download">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h2>{tr:verify_your_email_address_to_download}</h2>
-                <table columns="2" border="0">
-                    <col class="width25">
-                    <col class="width75">
-                    <tr>
-                        <td>
-                            <button href="#" class="verificationcodesendtoemail fs-button">
-                                <i class="fa fa-paper-plane fa-lg"></i>
-                                <span>{tr:send}</span>
-                            </button>
-                        </td>
-                        <td class="verify_labels2">{tr:send_verification_code_to_your_email_address}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <p>{tr:then_enter_verification_code_below}</p>
-                        </td>
-                    </tr>
-                    <tr class="verificationcodesendpage">
-                        <td>
-                            <button href="#" class="verificationcodesend verificationcodesendelement fs-button">
-                                <i class="fa fa-unlock fa-lg"></i>
-                                <span>{tr:verify}</span>
-                            </button>
-                        </td>
-                        <td class="verify_labels2">
-                            <input id="verificationcode" class="verificationcode verify_labels verificationcodesendelement" name="verificationcode" type="text"/>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+<div class="fs-download__verify verify_email_to_download">
+    <p>{tr:send_verification_code_to_your_email_address}</p>
+    <button type="button" class="verificationcodesendtoemail fs-button fs-button--inverted">
+        <i class="fa fa-paper-plane"></i>
+        <span>{tr:send}</span>
+    </button>
+    <label for="verificationcode">{tr:then_enter_verification_code_below}</label>
+    <div class="fs-download__verify-code">
+        <input id="verificationcode" class="verificationcode fs-modal__input" name="verificationcode" type="text" autocomplete="one-time-code"/>
+        <button type="button" class="verificationcodesend fs-button">
+            <i class="fa fa-unlock"></i>
+            <span>{tr:verify}</span>
+        </button>
     </div>
 </div>
 
