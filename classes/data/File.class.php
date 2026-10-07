@@ -502,6 +502,16 @@ class File extends DBObject
      */
     public function writeChunk($chunk, $offset = null)
     {
+        // Drop stale retry chunks that arrive after the file was already
+        // marked complete. Terasender retries in-flight chunks on XHR
+        // timeout; if both attempts succeed, the late one would otherwise
+        // fall through to the transfer->save() below and overwrite an
+        // already-available transfer with stale in-memory state.
+        if ($this->upload_end) {
+            Logger::warn($this.' late chunk offset='.((int)$offset).' ignored; file already complete');
+            return array('offset' => $offset, 'written' => strlen($chunk));
+        }
+
         if (!$this->upload_start) {
             $this->upload_start = time();
             $this->save();
@@ -513,9 +523,22 @@ class File extends DBObject
         // uploads vs active ones. Throttled to once per minute to avoid an extra
         // UPDATE on every single chunk (default 5 MB chunks → thousands per large file).
         // Since cleanup is measured in days, minute-level precision is more than enough.
+        //
+        // Uses a targeted UPDATE (not $transfer->save()) so this can never
+        // overwrite status / made_available with the stale in-memory copy.
+        // The WHERE guard ensures we only touch transfers still in an
+        // uploading state — makeAvailable() wins any race.
         if (!$this->transfer->last_chunk_time || (time() - $this->transfer->last_chunk_time) >= 60) {
-            $this->transfer->last_chunk_time = time();
-            $this->transfer->save();
+            $now = time();
+            $s = DBI::prepare(
+                'UPDATE '.Transfer::getDBTable().' SET last_chunk_time = :t '
+                .'WHERE id = :id AND status IN (\'created\', \'started\', \'uploading\')'
+            );
+            $s->execute(array(
+                ':t' => date('Y-m-d H:i:s', $now),
+                ':id' => $this->transfer->id,
+            ));
+            $this->transfer->last_chunk_time = $now;
         }
 
         Logger::info($this.' chunk['.((int)$offset).'..'.((int)$offset + strlen($chunk)).'] written'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
@@ -531,24 +554,40 @@ class File extends DBObject
      */
     public function writeChunkDelayed($chunkSize, $offset = null)
     {
+        // See writeChunk() above for why this guard exists.
+        if ($this->upload_end) {
+            Logger::warn($this.' late chunk offset='.((int)$offset).' ignored; file already complete');
+            return array('offset' => $offset, 'written' => $chunkSize);
+        }
+
         if (!$this->upload_start) {
             $this->upload_start = time();
             $this->save();
         }
-        
+
         $res = Storage::writeChunkDelayed($this, $chunkSize, $offset);
 
         // Update transfer's last chunk time so the cleanup cron can detect abandoned
         // uploads vs active ones. Throttled to once per minute to avoid an extra
         // UPDATE on every single chunk (default 5 MB chunks → thousands per large file).
         // Since cleanup is measured in days, minute-level precision is more than enough.
+        //
+        // Uses a targeted UPDATE (not $transfer->save()) — see writeChunk() for why.
         if (!$this->transfer->last_chunk_time || (time() - $this->transfer->last_chunk_time) >= 60) {
-            $this->transfer->last_chunk_time = time();
-            $this->transfer->save();
+            $now = time();
+            $s = DBI::prepare(
+                'UPDATE '.Transfer::getDBTable().' SET last_chunk_time = :t '
+                .'WHERE id = :id AND status IN (\'created\', \'started\', \'uploading\')'
+            );
+            $s->execute(array(
+                ':t' => date('Y-m-d H:i:s', $now),
+                ':id' => $this->transfer->id,
+            ));
+            $this->transfer->last_chunk_time = $now;
         }
-        
+
         Logger::info($this.' chunk['.((int)$offset).'..'.((int)$offset + $chunkSize).'] written'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
-        
+
         return $res;
     }
 
