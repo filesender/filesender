@@ -252,7 +252,6 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         throw new FileNotFoundException(array('transfer_id : ' . $transfer->id, 'file_id : ' . $file_id));
 
     $ranges = null;
-    $is_range_request = false;
     if (array_key_exists('HTTP_RANGE', $_SERVER) && $_SERVER['HTTP_RANGE']) {
         try {
             Logger::info('User restarted download of '.$file.' with explicit range '.$_SERVER['HTTP_RANGE']);
@@ -294,9 +293,6 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             header('Content-Range: bytes */' . $file->size); // Required in 416.
             exit;
         }
-    }
-    if ($ranges !== null) {
-        $is_range_request = true;
     }
 
     ob_implicit_flush();
@@ -451,15 +447,9 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     
     if($done) {
         Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
-
-        // Do not fire DOWNLOAD_ENDED for HTTP Range requests (e.g. media players such as
-        // iOS AVPlayer that stream content via multiple partial range requests). Range-based
-        // access is already recorded as DOWNLOAD_RESUMED. Only a complete, non-range
-        // download unambiguously signals the recipient received the full file.
-        if (!$is_range_request) {
-            if(!$recently_downloaded) {
-                Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
-            }
+        
+        if(!$recently_downloaded) {
+            Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
         }
     }
     
