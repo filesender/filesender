@@ -360,16 +360,10 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     if ($ranges)
         header('HTTP/1.1 206 Partial Content'); // Must send HTTP header before anything else
 
-    $etagranges = '';
-    if ($ranges) {
-        foreach ($ranges as $range) {
-            $etagranges .= '__rs_' . $range['start'] . '_e_' . $range['end'];
-        }
-    }
     
     header('Content-Transfer-Encoding: binary');
-    header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $transfer->created));
-    header('ETag: "t' . $transfer->id . '_f' . $file->id . '_s' . $file->size . '_ranges_' . $etagranges . '"' );
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $transfer->created) . ' GMT');
+    header('ETag: "t' . $transfer->id . '_f' . $file->id . '_s' . $file->size . '"' );
     header('Connection: close');
     header('Cache-control: no-store, max-age=0');
     header('Pragma: private');
