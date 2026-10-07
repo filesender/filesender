@@ -267,8 +267,9 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
                         $start = is_numeric($m[1]) ? (int) $m[1] : null;
                         $end = ((count($m) > 2) && is_numeric($m[2])) ? (int) $m[2] : null;
 
-                        if (is_null($end))
-                            $end = $file->size;
+                        // RFC 9110 14.1.2: missing or too large last-pos means the last byte
+                        if (is_null($end) || $end >= $total_size)
+                            $end = $total_size - 1;
 
                         if (is_null($start)) {
                             if ($end > 0) {
