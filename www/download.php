@@ -252,6 +252,8 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         throw new FileNotFoundException(array('transfer_id : ' . $transfer->id, 'file_id : ' . $file_id));
 
     $ranges = null;
+    // Size of the stored body (ciphertext size for encrypted transfers)
+    $total_size = ($transfer->options['encryption'] == 1) ? $file->encrypted_size : $file->size;
     if (array_key_exists('HTTP_RANGE', $_SERVER) && $_SERVER['HTTP_RANGE']) {
         try {
             Logger::info('User restarted download of '.$file.' with explicit range '.$_SERVER['HTTP_RANGE']);
@@ -307,7 +309,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     };
     register_shutdown_function($abort_handler);
 
-    $read_range = function($range = null) use($file, $recipient, $abort_handler, $transfer) {
+    $read_range = function($range = null) use($file, $recipient, $abort_handler, $transfer, $total_size) {
 
         $abort_handler();
 
@@ -339,7 +341,12 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             $abort_handler();
         }
         
-        return ($offset >= $file->size);
+        // $offset advances in chunk_size steps and overshoots the end of the range,
+        // so it cannot tell whether the range reached the end of the file.
+        // Only a range that covers the last byte completes the download.
+        if (!$range)
+            return true;
+        return ($range['end'] >= $total_size - 1);
     };
 
     if($recipient) $recipient->recordActivity();
