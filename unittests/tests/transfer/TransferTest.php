@@ -185,4 +185,58 @@ class TransferTest extends CommonUnitTestCase {
         return $isDeleted;
     }
 
+    /**
+     * An expiry date a little past the maximum, as a browser with a fast
+     * clock or another time zone sends it, is set to the maximum
+     */
+    public function testExpiresPastMaximumWithinMarginIsSetToMaximum() {
+        $maxBefore = Transfer::getMaxExpire();
+        $transfer = Transfer::create($maxBefore + 3600);
+        $maxAfter = Transfer::getMaxExpire();
+
+        $this->assertGreaterThanOrEqual($maxBefore, (int)$transfer->expires);
+        $this->assertLessThanOrEqual($maxAfter, (int)$transfer->expires);
+
+        $this->displayInfo(get_class($this), __FUNCTION__, '');
+    }
+
+    /**
+     * Extending the expiry date to a little past the maximum sets it to the maximum
+     */
+    public function testExtendExpiryPastMaximumWithinMarginIsSetToMaximum() {
+        $transfer = $this->create();
+
+        $maxBefore = Transfer::getMaxExpire();
+        $transfer->extendTransferExpiryDate($maxBefore + 3600);
+        $maxAfter = Transfer::getMaxExpire();
+
+        $this->assertGreaterThanOrEqual($maxBefore, (int)$transfer->expires);
+        $this->assertLessThanOrEqual($maxAfter, (int)$transfer->expires);
+
+        $transfer->close(true);
+
+        $this->displayInfo(get_class($this), __FUNCTION__, '');
+    }
+
+    /**
+     * An expiry date before the maximum is stored as it was given
+     */
+    public function testExpiresBeforeMaximumIsKept() {
+        $expires = Transfer::getMaxExpire() - 3600;
+        $transfer = Transfer::create($expires);
+
+        $this->assertEquals($expires, (int)$transfer->expires);
+
+        $this->displayInfo(get_class($this), __FUNCTION__, '');
+    }
+
+    /**
+     * An expiry date two days past the maximum is still rejected
+     */
+    public function testExpiresTwoDaysPastMaximumIsRejected() {
+        $this->expectException(BadExpireException::class);
+
+        Transfer::create(Transfer::getMaxExpire() + 2 * 24 * 3600);
+    }
+
 }
