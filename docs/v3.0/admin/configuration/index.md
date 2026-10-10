@@ -89,6 +89,7 @@ A note about colours;
 * [cloud_s3_bucket_prefix](#cloud_s3_bucket_prefix)
 * [cloud_s3_bulk_delete](#cloud_s3_bulk_delete)
 * [cloud_s3_bulk_size](#cloud_s3_bulk_size)
+* [allow_unaligned_readchunk_range_requests](#allow_unaligned_readchunk_range_requests)
 
 ## Shredding
 
@@ -1078,6 +1079,14 @@ deleting up to [cloud_s3_bulk_size](#cloud_s3_bulk_size) chunks per request.
 * __comment:__ When [cloud_s3_bulk_delete](#cloud_s3_bulk_delete) is true, this is the maximum size of the delete request.
 Default value to maintain AWS S3 compatibility is 1000. Other storage platforms may use different defaults. OpenStack Swift defaults to 10000, for instance
 
+### allow_unaligned_readchunk_range_requests
+
+* __description:__ Allow range requests for ranges that do not start on a chunk boundary if implementend for the storage.
+* __mandatory:__ no.
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.14
+* __comment:__ Allow download.php to use start ranges that are not aligned to chunk_size offsets. This is currently only implemented in the S3 storage backend. This option is to allow installations to turn off the feature if it is causing any issues, other than that it should be able to be left in the default sewtting.
 
 ---
 
