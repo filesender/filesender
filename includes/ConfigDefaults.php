@@ -375,7 +375,8 @@ $default = array(
     'advanced_validation_token' => true,
     'advanced_validation_user' => true,
     'advanced_validation_principal' => true,
-    
+
+    'allow_unaligned_readchunk_range_requests' => true,
     
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',

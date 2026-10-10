@@ -130,12 +130,14 @@ class StorageCloudS3 extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
-        // Unencrypted files: honour the intra-object offset and requested length.
-        // Objects are stored at chunk_size-aligned offsets (see getObjectName), so an
-        // unaligned read (HTTP Range from media players, resumed downloads) must skip
-        // into the object and may span two objects.
-        if (empty($file->transfer->options['encryption']) && !is_null($offset) && !is_null($length)) {
-            return self::readRange($file, $offset, $length);
+        if(Config::isTrue('allow_unaligned_readchunk_range_requests')) {
+            // Unencrypted files: honour the intra-object offset and requested length.
+            // Objects are stored at chunk_size-aligned offsets (see getObjectName), so an
+            // unaligned read (HTTP Range from media players, resumed downloads) must skip
+            // into the object and may span two objects.
+            if (empty($file->transfer->options['encryption']) && !is_null($offset) && !is_null($length)) {
+                return self::readRange($file, $offset, $length);
+            }
         }
 
         $chunk_size = $file->transfer->chunk_size;
