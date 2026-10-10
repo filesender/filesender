@@ -130,6 +130,14 @@ class StorageCloudS3 extends StorageFilesystem
      */
     public static function readChunk(File $file, $offset, $length)
     {
+        // Unencrypted files: honour the intra-object offset and requested length.
+        // Objects are stored at chunk_size-aligned offsets (see getObjectName), so an
+        // unaligned read (HTTP Range from media players, resumed downloads) must skip
+        // into the object and may span two objects.
+        if (empty($file->transfer->options['encryption']) && !is_null($offset) && !is_null($length)) {
+            return self::readRange($file, $offset, $length);
+        }
+
         $chunk_size = $file->transfer->chunk_size;
         $crypted_chunk_size = $file->transfer->crypted_chunk_size;
         
@@ -167,6 +175,52 @@ class StorageCloudS3 extends StorageFilesystem
         return null;
     }
     
+    /**
+     * Read exactly $length bytes starting at $offset (unencrypted files only).
+     *
+     * @param File $file
+     * @param int $offset offset in bytes
+     * @param int $length number of bytes to read
+     *
+     * @return string|null data or null if nothing could be read
+     *
+     * @throws StorageFilesystemCannotReadException
+     */
+    private static function readRange(File $file, $offset, $length)
+    {
+        $chunk_size  = $file->transfer->chunk_size;
+        $bucket_name = self::getBucketName($file);
+        $data = '';
+
+        try {
+            $client = self::getClient();
+            while ($length > 0 && $offset < $file->size) {
+                $skip = $offset % $chunk_size;
+                $take = min($length, $chunk_size - $skip, $file->size - $offset);
+
+                $result = $client->getObject(array(
+                    'Bucket' => $bucket_name,
+                    'Key'    => self::getObjectName($file, $offset),
+                    'Range'  => 'bytes=' . $skip . '-' . ($skip + $take - 1),
+                ));
+
+                $part = (string) $result['Body'];
+                if ($part === '')
+                    break;
+
+                $data   .= $part;
+                $offset += strlen($part);
+                $length -= strlen($part);
+            }
+        } catch (Exception $e) {
+            $msg = 'S3: readRange() Can not read at offset ' . $offset;
+            Logger::info($msg . ' BaseException: ' . $e->getMessage());
+            throw new StorageFilesystemCannotReadException($msg);
+        }
+
+        return ($data === '') ? null : $data;
+    }
+
     /**
      * Write a chunk of data to file at offset
      *
