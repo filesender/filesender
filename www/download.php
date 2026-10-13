@@ -93,17 +93,22 @@ try {
                     $email = $user->saml_user_identification_uid;
                 }
                 
-                $found = false;
-                foreach($transfer->recipients as $r) {
-                    if( $r->email == $email ) {
-                        $recipient = $r;
-                        $found = true;
-                        break;
+                if (Utilities::validateEmail($email)) {
+                    $found = false;
+                    foreach($transfer->recipients as $r) {
+                        if( $r->email == $email ) {
+                            $recipient = $r;
+                            $found = true;
+                            break;
+                        }
                     }
+                    if( !$found ) {
+                        $recipient = $transfer->addRecipient($email);
+                    }
+                } else {
+                    Logger::warn('download: could not resolve caller email, not adding recipient');
                 }
-                if( !$found ) {
-                    $recipient = $transfer->addRecipient($email);
-                }
+               
                 $token = $recipient->token;
             }
         }
