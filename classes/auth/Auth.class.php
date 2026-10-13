@@ -512,6 +512,14 @@ class Auth
      */
     public static function isRegularUser()
     {
+        try {
+            $user = Auth::user();
+            if( !$user ) {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
         return !self::isAdmin() && !self::isRemote() && !self::isGuest();
     }
 
