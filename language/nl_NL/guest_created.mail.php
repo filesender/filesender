@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-subject: Gast voucher ontvangen
-subject: {guest.subject}
+onderwerp: Gastvoucher ontvangen
+onderwerp: {guest.subject}
 
 {alternative:plain}
 
@@ -20,9 +20,9 @@ Uitgever: {guest.user_email}
 Voucher link: {guest.upload_link}
 
 {if:guest.does_not_expire}
-De voucher verloopt niet.
+De voucher vervalt niet.
 {else}
-De voucher is beschikbaar tot {date:guest.expires} waarna ze automatisch verwijdert worden.
+De voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch verwijderd wordt.
 
 {if:guest.message}Persoonlijke boodschap van {guest.user_email}: {guest.message}{endif}
 
@@ -58,7 +58,7 @@ Hoogachtend,
         </tr>
         <tr>
 {if:guest.does_not_expire}
-            <td colspan="2">Deze voucher verloopt niet.</td>
+            <td colspan="2">Deze voucher vervalt niet.</td>
 {else}
             <td>Geldig tot</td>
             <td>{date:guest.expires}</td>

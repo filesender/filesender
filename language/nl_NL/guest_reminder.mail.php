@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-subject: (herinnering) gastgebruiker voucher ontvangen
-subject: (herinnering) {guest.subject}
+onderwerp: (herinnering) gastvoucher ontvangen
+onderwerp: (herinnering) {guest.subject}
 
 {alternative:plain}
 
@@ -19,7 +19,7 @@ Dit is een herinnering. Hieronder vindt u een voucher die toegang verleent tot {
 Uitgever: {guest.user_email}
 Voucher link: {guest.upload_link}
 
-Deze voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch verwijdert wordt.
+Deze voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch verwijderd wordt.
 
 {if:guest.message}Persoonlijke boodschap van {guest.user_email}: {guest.message}{endif}
 

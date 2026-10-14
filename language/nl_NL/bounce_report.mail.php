@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Fout bij afleveren bericht
+onderwerp: Fout bij afleveren bericht
 
 {alternative:plain}
 
@@ -24,7 +24,7 @@ Het is niet gelukt uw bericht(en) af te leveren bij een of meer van uw ontvanger
 {endif}
 {endeach}
 
-Verdere bijzonderheden kunt u vinden op {cfg:site_url}
+Meer details vindt u op {cfg:site_url}
 
 Hoogachtend,
 {cfg:site_name}
@@ -52,7 +52,7 @@ Hoogachtend,
 </ul>
 
 <p>
-   Verdere bijzonderheden kunt u vinden op <a href="{cfg:site_url}">{cfg:site_url}</a>
+  Meer details vindt u op <a href="{cfg:site_url}">{cfg:site_url}</a>
 </p>
 
 <p>

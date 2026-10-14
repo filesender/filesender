@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Bestand niet langer beschikbaar om te downloaden
+onderwerp: Bestand niet langer beschikbaar om te downloaden
 
 {alternative:plain}
 
@@ -25,7 +25,7 @@ Hoogachtend,
 </p>
 
 <p>
-    Het bestand {file.path} ({size:file.size}) is verwijderd uit de transfer n°{transfer.id} en kan niet langer worden gedownload
+    Het bestand {file.path} ({size:file.size}) is verwijderd uit de transfer n°{transfer.id} en kan niet langer worden gedownload.
 </p>
 
 <p>

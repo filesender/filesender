@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Gast voucher verstuurd
+onderwerp: Gastvoucher verstuurd
 
 {alternative:plain}
 
