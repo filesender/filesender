@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Ontvangstbevestiging
+onderwerp: Ontvangstbevestiging
 
 {alternative:plain}
 
@@ -21,7 +21,7 @@ Geachte heer, mevrouw,
 {files.first().path} ({size:files.first().size})
 {endif}
 
-U kunt toegang krijgen tot uw bestanden en meer details over downloadstatistieken voor deze transfers bekijken op de transfers-pagina op {files.first().transfer.link}.
+U kunt toegang krijgen tot uw bestanden en meer gedetailleerde downloadstatistieken voor deze transfers bekijken op de transfers-pagina op {files.first().transfer.link}.
 
 Hoogachtend,
 {cfg:site_name}
@@ -49,7 +49,7 @@ Hoogachtend,
 </p>
 
 <p>
-    U kunt toegang krijgen tot uw bestanden en meer details over downloadstatistieken voor deze transfers bekijken op de transfers-pagina op <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
+    U kunt toegang krijgen tot uw bestanden en meer gedetailleerde downloadstatistieken voor deze transfers bekijken op de transfers-pagina op <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
 </p>
 
 <p>

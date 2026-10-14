@@ -7,18 +7,18 @@
 // 
 // 
 ?>
-subject: Gastgebruiker beëindigd het uploaden van bestanden
+onderwerp: Gastgebruiker heeft uploaden van bestanden beëindigd
 
 {alternative:plain}
 
 Geachte heer, mevrouw,
 
-De volgende gastgebruiker heeft het uploaden van bestanden via uw voucher beëindigd :
+De volgende gastgebruiker heeft het uploaden van bestanden via uw voucher beëindigd:
 
 Gastgebruiker: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
 
-Het voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch verwijdert wordt.
+De voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch wordt verwijderd.
 
 Hoogachtend,
 {cfg:site_name}
@@ -30,7 +30,7 @@ Hoogachtend,
 </p>
 
 <p>
-    De volgende gastgebruiker heeft het uploaden van bestanden via uw voucher beëindigd :
+    De volgende gastgebruiker heeft het uploaden van bestanden via uw voucher beëindigd:
 </p>
 
 <table rules="rows">

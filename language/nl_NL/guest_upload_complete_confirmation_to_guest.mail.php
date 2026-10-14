@@ -7,18 +7,18 @@
 // 
 // 
 ?>
-subject: Gastgebruik om bestanden te versturen is beëindigd
+onderwerp: Gastgebruik om bestanden te versturen is beëindigd
 
 {alternative:plain}
 
 Geachte heer, mevrouw,
 
-De volgende gastgebruiker kan geen bestanden meer versturen :
+De volgende gastgebruiker kan geen bestanden meer versturen:
 
 Gastgebruiker: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
 
-Het voucher is geldig tot {date:guest.expires} waarna deze automatisch wordt verwijderd.
+De voucher is geldig tot {date:guest.expires} waarna deze automatisch wordt verwijderd.
 
 Hoogachtend,
 {cfg:site_name}
@@ -30,7 +30,7 @@ Hoogachtend,
 </p>
 
 <p>
-De volgende gastgebruiker kan geen bestanden meer versturen :
+De volgende gastgebruiker kan geen bestanden meer versturen:
 </p>
 
 <table rules="rows">
