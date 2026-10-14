@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-onderwerp: (herinnering) gastvoucher ontvangen
-onderwerp: (herinnering) {guest.subject}
+subject: (herinnering) gastvoucher ontvangen
+subject: (herinnering) {guest.subject}
 
 {alternative:plain}
 

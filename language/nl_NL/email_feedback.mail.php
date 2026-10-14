@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Feedbackformulier
+subject: Feedbackformulier
 {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gastgebruiker{endif}#{target_id} {target.email}
 
 {alternative:plain}

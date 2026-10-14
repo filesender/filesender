@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Gastgebruiker begint met het uploaden van bestanden
+subject: Gastgebruiker begint met het uploaden van bestanden
 
 {alternative:plain}
 

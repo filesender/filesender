@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Bestand niet langer beschikbaar om te downloaden
+subject: Bestand niet langer beschikbaar om te downloaden
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Gastvoucher vervallen
+subject: Gastvoucher vervallen
 
 {alternative:plain}
 

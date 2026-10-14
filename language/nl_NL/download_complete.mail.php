@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Download voltooid
+subject: Download voltooid
 
 {alternative:plain}
 

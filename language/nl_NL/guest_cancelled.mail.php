@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Gastvoucher geannuleerd
+subject: Gastvoucher geannuleerd
 
 {alternative:plain}
 
