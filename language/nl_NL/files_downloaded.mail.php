@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Ontvangstbevestiging
+subject: Ontvangstbevestiging
 
 {alternative:plain}
 

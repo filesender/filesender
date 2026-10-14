@@ -7,8 +7,8 @@
 // 
 // 
 ?>
-onderwerp: Gastvoucher ontvangen
-onderwerp: {guest.subject}
+subject: Gastvoucher ontvangen
+subject: {guest.subject}
 
 {alternative:plain}
 

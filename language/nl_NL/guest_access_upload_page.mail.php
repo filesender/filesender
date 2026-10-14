@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Gastgebruiker op uploadpagina {alternative:plain}
+subject: Gastgebruiker op uploadpagina {alternative:plain}
 
 Geachte heer, mevrouw,
 

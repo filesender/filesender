@@ -16,7 +16,7 @@
 // 
 // 
 ?>
-onderwerp: {cfg:site_name}: Eenmalige verificatiecode voor download
+subject: {cfg:site_name}: Eenmalige verificatiecode voor download
 
 {alternative:plain}
 

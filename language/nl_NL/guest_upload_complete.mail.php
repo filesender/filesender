@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Gastgebruiker heeft uploaden van bestanden beëindigd
+subject: Gastgebruiker heeft uploaden van bestanden beëindigd
 
 {alternative:plain}
 

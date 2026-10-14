@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Gastgebruik om bestanden te versturen is beëindigd
+subject: Gastgebruik om bestanden te versturen is beëindigd
 
 {alternative:plain}
 

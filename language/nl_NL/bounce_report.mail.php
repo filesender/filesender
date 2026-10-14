@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Fout bij afleveren bericht
+subject: Fout bij afleveren bericht
 
 {alternative:plain}
 
