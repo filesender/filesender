@@ -1,0 +1,28 @@
+.fs-logout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: var(--fs-modal-width);
+    margin: 0 auto;
+    text-align: center;
+}
+
+.fs-base-page .fs-logout__title {
+    margin-bottom: var(--fs-spacing-2x);
+}
+
+.fs-logout__text {
+    color: var(--fs-logout-text-color);
+}
+
+.fs-logout__text p {
+    margin: 0;
+}
+
+.fs-logout__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--fs-spacing-2x);
+    margin-top: var(--fs-spacing-4x);
+}

@@ -72,6 +72,11 @@ class Transfer extends DBObject
             'size' => 8,
             'null' => true
         ),
+        'transfer_name' => array(
+            'type' => 'string',
+            'size' => 250,
+            'null' => true
+        ),
         'subject' => array(
             'type' => 'string',
             'size' => 250,
@@ -371,6 +376,7 @@ class Transfer extends DBObject
     protected $user_email = null;
     protected $guest_id = null;
     protected $lang = null;
+    protected $transfer_name = null;
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
@@ -1246,7 +1252,7 @@ class Transfer extends DBObject
     {
         if (in_array($property, array(
             'id','status', 'user_id', 'user_email', 'guest_id',
-            'subject', 'message', 'created', 'made_available',
+            'transfer_name', 'subject', 'message', 'created', 'made_available',
             'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid',
             'password_version', 'password_encoding', 'password_encoding_string', 'password_hash_iterations'
             , 'client_entropy', 'roundtriptoken', 'guest_transfer_shown_to_user_who_invited_guest'
@@ -1447,6 +1453,9 @@ class Transfer extends DBObject
                 throw new BadLangCodeException($value);
             }
             $this->lang = (string)$value;
+        } elseif ($property == 'transfer_name') {
+            $value = trim((string)$value);
+            $this->transfer_name = ($value === '') ? null : mb_substr($value, 0, 250);
         } elseif ($property == 'subject') {
             $this->subject = (string)$value;
         } elseif ($property == 'message') {

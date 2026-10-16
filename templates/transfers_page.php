@@ -43,19 +43,16 @@
             <div class="col">
                 <div class="fs-my-transfers__title">
                     <h1>{tr:transfers_page}</h1>
-                    <p>{tr:transfer_page_subtitle}</p>
                 </div>
             </div>
         </div>
-
-        <hr />
 
         <div class="row">
             <div class="col">
                 <div class="fs-my-transfers__active-transfers">
                     <div class="row">
                         <div class="col">
-                            <h2>{tr:active_transfers}</h2>
+                            <h4>{tr:active_transfers}</h4>
                         </div>
                     </div>
                     <div class="row">
@@ -86,7 +83,7 @@
                 <div class="fs-my-transfers__expired-transfers">
                     <div class="row">
                         <div class="col">
-                            <h2>{tr:expired_transfers}</h2>
+                            <h4>{tr:expired_transfers}</h4>
                         </div>
                     </div>
                     <div class="row">

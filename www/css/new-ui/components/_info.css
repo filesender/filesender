@@ -12,7 +12,7 @@
   word-break: break-word;
 }
 
-.fs-info strong + span {
+.fs-info * + span {
   margin-left: var(--fs-spacing-half);
 }
 

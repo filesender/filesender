@@ -78,7 +78,7 @@ $(function() {
             if(invalid) {
                 input.addClass('invalid');
                 if(!marker) {
-                    marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+                    marker = $('<span class="invalid fa fa-exclamation-circle" />').attr({
                         title: lang.tr('invalid_recipient')
                     });
                     input.data('error_marker', marker);

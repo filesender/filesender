@@ -66,6 +66,7 @@ class RestEndpointTransfer extends RestEndpoint
             'id' => $transfer->id,
             'userid' => $transfer->userid,
             'user_email' => $transfer->user_email,
+            'transfer_name' => $transfer->transfer_name,
             'subject' => $transfer->subject,
             'message' => $transfer->message,
             'created' => RestUtilities::formatDate($transfer->created),
@@ -1256,6 +1257,15 @@ class RestEndpointTransfer extends RestEndpoint
             // Need to remind the transfer's availability to its recipients ?
             if ($data->remind) {
                 $transfer->remind();
+            }
+
+            if ($data->exists('transfer_name')) {
+                $transfer->transfer_name = Validate::filter_var_regex_log(
+                    "transfer.transfer_name",
+                    (string)$data->transfer_name,
+                    '/^.*$/'
+                );
+                $transfer->save();
             }
 
             // Modify transfer option

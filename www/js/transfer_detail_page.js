@@ -106,14 +106,13 @@ $(function() {
         filesender.client.getTransferAuditlog(transfer_id, function(log) {
 
             var popup = filesender.ui.wideInfoPopup(lang.tr('auditlog'));
-            popup.css('overflow','hidden');
 
             if(!log || !log.length) {
                 $('<p />').text(lang.tr('no_auditlog')).appendTo(popup);
                 return;
             }
 
-            var tbl = $('<table class="list" />').appendTo(popup);
+            var tbl = $('<table class="fs-table fs-table--responsive fs-table--striped list" />').appendTo(popup);
             var th = $('<tr />').appendTo($('<thead />').appendTo(tbl));
             $('<th class="date" />').text(lang.tr('date')).appendTo(th);
             $('<th />').text(lang.tr('action')).appendTo(th);
@@ -128,12 +127,12 @@ $(function() {
             var filtered = false;
 
             if(filter) {
-                var flt = $('<div class="filtered" />').text(lang.tr('filtered_transfer_log')).prependTo(popup);
+                var flt = $('<p class="fs-modal__note" />').text(lang.tr('filtered_transfer_log') + ' ').prependTo(popup);
                 $('<a href="#" />').text(lang.tr('view_full_log')).appendTo(flt).on('click', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
-                    $(this).closest('.wide_info').find('table tr').show('fast');
-                    $(this).closest('.filtered').hide('fast');
+                    popup.find('table tr').show('fast');
+                    flt.hide('fast');
                     filtered = false;
                     filterid = null;
                     return false;
@@ -156,7 +155,7 @@ $(function() {
                 }
                 if(filtered) tr.hide();
 
-                $('<td class="date" />').text(log[i].date.formatted).appendTo(tr);
+                $('<td class="date" />').attr('data-label', lang.tr('date')).text(log[i].date.formatted).appendTo(tr);
 
                 var lid = 'report_event_' + log[i].event;
 
@@ -167,18 +166,16 @@ $(function() {
                     rpl[ttlc]['path'] = rpl[ttlc]['name'];
                 }
 
-                $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
+                $('<td />').attr('data-label', lang.tr('action')).html(lang.tr(lid).r(rpl).out()).appendTo(tr);
 
-                $('<td />').text(log[i].author.ip).appendTo(tr);
+                $('<td />').attr('data-label', lang.tr('ip')).text(log[i].author.ip).appendTo(tr);
 
             }
 
-            var actions = $('<div class="actions" />').appendTo(popup);
+            var send_by_email = $('<button type="button" class="fs-button fs-button--inverted" />')
+                .html('<i class="fa fa-envelope"></i><span>' + lang.tr('send_to_my_email').out() + '</span>')
+                .prependTo(popup.closest('.fs-modal').find('.fs-modal__footer'));
 
-            var send_by_email = $('<a href="#" class="btn btn-secondary" />').text(lang.tr('send_to_my_email')).appendTo(actions);
-            $('<p>&nbsp;</p>').prependTo(send_by_email);
-            $('<span class="fa fa-lg fa-envelope" />').prependTo(send_by_email);
-            
             send_by_email.on('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -220,7 +217,7 @@ $(function() {
         });
 
         var prompt = filesender.ui.promptEmailMany(lang.tr('enter_to_email'), function(input) {
-            $('p.error', this).remove();
+            $('.fs-modal__error', this).remove();
             var raw_emails = input.split(/[,;]/);
 
             var emails = [];
@@ -258,7 +255,7 @@ $(function() {
             if(errors.length) {
                 console.log(errors);
                 for(var i=0; i<errors.length; i++)
-                    $('<p class="error message" />').text(errors[i].out()).appendTo(prompt);
+                    $('<p class="fs-modal__error" />').text(errors[i].out()).appendTo(prompt);
                 return false;
             }
 
@@ -278,13 +275,47 @@ $(function() {
             return true;
         })
 
-        prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
+        prompt.append('<p class="fs-modal__note">' + lang.tr('email_separator_msg') + '</p>');
+    });
+
+    var nameBlock = page.find('.fs-transfer-detail__name');
+    var nameInput = nameBlock.find('input[name="transfer-name"]');
+
+    var closeNameForm = function() {
+        nameBlock.removeClass('fs-transfer-detail__name--editing');
+        nameBlock.find('.fs-transfer-detail__name-edit').trigger('focus');
+    };
+
+    nameBlock.find('.fs-transfer-detail__name-edit').on('click', function() {
+        nameInput.val(nameBlock.attr('data-name') || '');
+        nameBlock.addClass('fs-transfer-detail__name--editing');
+        nameInput.trigger('focus');
+    });
+
+    nameBlock.find('.fs-transfer-detail__name-cancel').on('click', closeNameForm);
+
+    nameInput.on('keydown', function(e) {
+        if(e.key === 'Escape') closeNameForm();
+    });
+
+    nameBlock.find('.fs-transfer-detail__name-form').on('submit', function(e) {
+        e.preventDefault();
+        var id = $(this).closest('.fs-transfer-detail').attr('data-id');
+        if(!id || isNaN(id)) return;
+
+        var name = nameInput.val().trim();
+        filesender.client.renameTransfer(id, name, function() {
+            nameBlock.attr('data-name', name);
+            nameBlock.find('.fs-transfer-detail__name-title').text(name || lang.tr('transfer_name').out());
+            closeNameForm();
+            filesender.ui.notify('success', lang.tr('transfer_name_saved'));
+        });
     });
 
     // Remind buttons
-    $('[data-recipients-enabled=""] .fs-transfer-detail__actions [data-action="remind"]').addClass('disabled');
+    $('[data-recipients-enabled=""] button[data-action="remind"]').addClass('disabled');
 
-    $('[data-recipients-enabled="1"] .fs-transfer-detail__actions [data-action="remind"]').on('click', function() {
+    $('[data-recipients-enabled="1"] button[data-action="remind"]').on('click', function() {
         var id = $(this).closest('.fs-transfer-detail').attr('data-id');
         if(!id || isNaN(id)) return;
 
@@ -332,21 +363,10 @@ $(function() {
     });
     
     
-    // Copy download link
-    const copyToClipboard = (value) => {
-        navigator.clipboard.writeText(value).then((x) => {
-            filesender.ui.notify('info', lang.tr('copied_to_clipboard'));
-        }).catch((e) => {
-            console.error(e);
-            filesender.ui.notify('error', lang.tr('copied_to_clipboard_error'));
-        });
-    }
-
     $('#copy-to-clipboard').on('click', function(e) {
         const element = this.parentElement.querySelector('span');
         if (element) {
-            const value = element.textContent;
-            copyToClipboard(value);
+            filesender.ui.copyToClipboard(element.textContent, this);
         }
     });
 

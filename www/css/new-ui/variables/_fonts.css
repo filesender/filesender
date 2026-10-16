@@ -1,0 +1,31 @@
+:root {
+  --fs-font-family: "Nunito Sans", sans-serif;
+
+  --fs-font-size-scale-base: 1.4rem;
+
+  --fs-font-size-scale-down-01: 1.16rem;
+  --fs-font-size-scale-down-02: 0.97rem;
+  --fs-font-size-scale-down-03: 0.81rem;
+
+  --fs-font-size-scale-01: 1.68rem;
+  --fs-font-size-scale-02: 2.01rem;
+  --fs-font-size-scale-03: 2.41rem;
+  --fs-font-size-scale-04: 2.9rem;
+  --fs-font-size-scale-05: 3.48rem;
+  --fs-font-size-scale-06: 4.18rem;
+  --fs-font-size-scale-07: 5.01rem;
+  --fs-font-size-scale-08: 6.02rem;
+  --fs-font-size-scale-09: 7.22rem;
+  --fs-font-size-scale-10: 8.66rem;
+  --fs-font-size-scale-11: 10.4rem;
+
+  --fs-font-weight-thin: 100;
+  --fs-font-weight-extra-light: 200;
+  --fs-font-weight-light: 300;
+  --fs-font-weight-regular: 400;
+  --fs-font-weight-medium: 500;
+  --fs-font-weight-semi-bold: 600;
+  --fs-font-weight-bold: 700;
+  --fs-font-weight-extra-bold: 800;
+  --fs-font-weight-black: 900;
+}

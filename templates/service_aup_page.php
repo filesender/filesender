@@ -13,7 +13,7 @@ $ver = Config::get('service_aup_min_required_version');
 
                 <div class="service_aup_accept">
                     <a href="#" class="fs-button">
-                        <i class="fa fa-lg fa-check"></i>
+                        <i class="fa fa-check"></i>
                         {tr:ui2_accept_aup_1}
                     </a>
                 </div>
