@@ -7,14 +7,14 @@
 // 
 // 
 ?>
-subject: Terugkoppelingsformulier
+subject: Feedbackformulier
 {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gastgebruiker{endif}#{target_id} {target.email}
 
 {alternative:plain}
 
 Geachte heer, mevrouw,
 
-Wij ontvingen terugkoppeling per email van {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gastgebruiker{endif}#{target_id} {target.email}, u treft deze bijgesloten aan.
+Wij ontvingen feedback per email van {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gastgebruiker{endif}#{target_id} {target.email}, u vindt deze terug in bijlage.
 
 Hoogachtend,
 {cfg:site_name}
@@ -26,7 +26,7 @@ Hoogachtend,
 </p>
 
 <p>
-    Wij ontvingen terugkoppeling per email van {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gastgebruiker{endif}#{target_id} {target.email}, u treft deze bijgesloten aan.
+    Wij ontvingen feedback per email van {if:target_type=="recipient"}ontvanger{endif}{if:target_type=="guest"}gastgebruiker{endif}#{target_id} {target.email}, u vindt deze terug in bijlage.
 </p>
 
 <p>

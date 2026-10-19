@@ -13,7 +13,7 @@ subject: Dagstaat van uw transfers
 
 Geachte heer, mevrouw,
 
-Onderstaand gelieve aan te treffen een dagstaat van de downloads van uw transfer {transfer.id} (ge-upload op {date:transfer.created}) :
+Hieronder vindt u een overzicht van de downloads van uw transfer {transfer.id} (ge-upload op {date:transfer.created}) :
 
 {if:events} {each:events as event}
  - Ontvanger {event.who} heeft gedownload {if:event.what == "archive"}archief{else}bestand{event.what_name}{endif} op {datetime:event.when}
@@ -32,7 +32,7 @@ Hoogachtend,{cfg:site_name}
 </p>
 
 <p>
-    Onderstaand gelieve aan te treffen een dagstaat van de downloads van uw transfer {transfer.id} (ge-upload op {date:transfer.created}) :
+   Hieronder vindt u een overzicht van de downloads van uw transfer {transfer.id} (ge-upload op {date:transfer.created}) :
 </p>
 
 {if:events}

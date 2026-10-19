@@ -745,7 +745,7 @@ class Transfer extends DBObject
                 ),
                 array(':idp' => $idp)
             );
-            $idpused = $d['sizesum'];
+            $idpused = $d['sizesum'] ?? 0;
         }
         
         return array(

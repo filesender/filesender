@@ -7,11 +7,11 @@
 // 
 // 
 ?>
-subject: Gastgebruiker op upload-pagina {alternative:plain}
+subject: Gastgebruiker op uploadpagina {alternative:plain}
 
 Geachte heer, mevrouw,
 
-Gastgebruiker {guest.email} heeft uw voucher gebruikt om de upload-pagina te bezoeken.
+Gastgebruiker {guest.email} heeft uw voucher gebruikt om de uploadpagina te bezoeken.
 
 Hoogachtend,
 
@@ -24,7 +24,7 @@ Hoogachtend,
 </p>
 
 <p>
-    Gastgebruiker  <a href="mailto:{guest.email}">{guest.email}</a> heeft uw voucher gebruikt om de upload-pagina te bezoeken.
+    Gastgebruiker  <a href="mailto:{guest.email}">{guest.email}</a> heeft uw voucher gebruikt om de uploadpagina te bezoeken.
 </p>
 
 <p>

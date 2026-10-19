@@ -215,6 +215,7 @@ window.filesender.terasender = {
 	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=file.uploaded; //missing from file
         var job = {
             mode: this.mode,
+            fine_progress: 0,
             chunk: {
                 id: chunkid,
                 start: file.uploaded,

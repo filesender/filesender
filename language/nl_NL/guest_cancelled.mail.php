@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Gast voucher geannuleerd
+subject: Gastvoucher geannuleerd
 
 {alternative:plain}
 

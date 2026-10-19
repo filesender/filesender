@@ -73,6 +73,10 @@ try {
         // Getting associated transfer 
         $transfer = $recipient->transfer;
 
+        if ($transfer->isExpired() || $transfer->status == TransferStatuses::CLOSED) {
+            throw new TransferPresumedExpiredException();
+        }
+        
         // $recipient
         if( Utilities::isTrue(Config::get('download_verification_code_enabled'))) {
             $otp = DownloadOneTimePassword::mostRecentForDownload( $transfer, $recipient );
@@ -89,17 +93,22 @@ try {
                     $email = $user->saml_user_identification_uid;
                 }
                 
-                $found = false;
-                foreach($transfer->recipients as $r) {
-                    if( $r->email == $email ) {
-                        $recipient = $r;
-                        $found = true;
-                        break;
+                if (Utilities::validateEmail($email)) {
+                    $found = false;
+                    foreach($transfer->recipients as $r) {
+                        if( $r->email == $email ) {
+                            $recipient = $r;
+                            $found = true;
+                            break;
+                        }
                     }
+                    if( !$found ) {
+                        $recipient = $transfer->addRecipient($email);
+                    }
+                } else {
+                    Logger::warn('download: could not resolve caller email, not adding recipient');
                 }
-                if( !$found ) {
-                    $recipient = $transfer->addRecipient($email);
-                }
+               
                 $token = $recipient->token;
             }
         }
@@ -121,6 +130,13 @@ try {
                 
     } else
         throw new TokenIsMissingException();
+
+    // Closing a transfer deletes its file data from storage, while the
+    // transfer and its recipient tokens stay behind for the audit logs. Without
+    // this check the download proceeds and fails in the storage layer instead of
+    // telling the downloader that the transfer is gone.
+    if($transfer->isExpired() || $transfer->status == TransferStatuses::CLOSED)
+        throw new TransferPresumedExpiredException();
 
     
     // Are all files from the transfer ?
@@ -179,16 +195,31 @@ try {
         manageOptions($ret, $transfer, $recipient, $recently_downloaded);
     
 } catch (Exception $e) {
-    if(!array_key_exists('exception', $_SESSION))
-        $_SESSION['exception'] = [];
+    // The exception page reads the exception back out of the session, but a
+    // download over a recipient token never authenticates, so no session was
+    // started and $_SESSION does not exist. Writing to it then throws a
+    // TypeError from inside the error handler itself, which is how an expired
+    // link turns into a blank page and how the original exception goes
+    // missing.
+    //
+    // Once the file body has started streaming the headers are gone and
+    // neither the session cookie nor the redirect can still be sent, so there
+    // is nothing useful left to do here. The exception is logged by
+    // LoggingException either way, so skipping this costs no diagnostics.
+    if (!headers_sent()) {
+        Auth::ensure_php_session();
 
-    $_SESSION['exception'] = array_slice($_SESSION['exception'], -4);
-    
-    $sid = uniqid();
-    $_SESSION['exception'][$sid] = $e;
-    
-    $path = GUI::path() . '?s=exception&sid=' . $sid;
-    header('Location: ' . $path);
+        if (!isset($_SESSION['exception']) || !is_array($_SESSION['exception']))
+            $_SESSION['exception'] = [];
+
+        $_SESSION['exception'] = array_slice($_SESSION['exception'], -4);
+
+        $sid = uniqid();
+        $_SESSION['exception'][$sid] = $e;
+
+        $path = GUI::path() . '?s=exception&sid=' . $sid;
+        header('Location: ' . $path);
+    }
 }
 
 

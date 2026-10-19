@@ -616,7 +616,13 @@ class User extends DBObject
             }
         }
         
-        $prefs = array_filter($prefs);
+        // Preserve explicit boolean false — users must be able to turn off
+        // default-true advanced-settings toggles. PHP's default array_filter
+        // strips all falsy values, which wipes those choices and lets the
+        // config default win on the next render.
+        $prefs = array_filter($prefs, function ($v) {
+            return $v !== 0 && $v !== null && $v !== '';
+        });
         
         // Save if something changed
         if ($prefs !== $this->$prop) {
