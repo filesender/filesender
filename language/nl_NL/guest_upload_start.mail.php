@@ -13,12 +13,12 @@ subject: Gastgebruiker begint met het uploaden van bestanden
 
 Geachte heer, mevrouw,
 
-De volgende gastgebruiker is begonnen met het uploaden van bestanden via uw voucher :
+De volgende gastgebruiker is begonnen met het uploaden van bestanden via uw voucher:
 
 Gastgebruiker: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
 
-De voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch verwijdert wordt.
+De voucher is beschikbaar tot {date:guest.expires} waarna deze automatisch wordt verwijderd.
 
 Hoogachtend,
 {cfg:site_name}
@@ -30,7 +30,7 @@ Hoogachtend,
 </p>
 
 <p>
-  De volgende gastgebruiker is begonnen met het uploaden van bestanden via uw voucher :
+  De volgende gastgebruiker is begonnen met het uploaden van bestanden via uw voucher:
 </p>
 
 <table rules="rows">

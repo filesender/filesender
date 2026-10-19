@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Gastgebruiker voucher verlopen
+subject: Gastvoucher vervallen
 
 {alternative:plain}
 
 Geachte heer, mevrouw,
 
-Een gastgebruiker voucher van {guest.user_email} is verlopen.
+Een gastvoucher van {guest.user_email} is vervallen.
 
 Hoogachtend,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Hoogachtend,
 </p>
 
 <p>
-    Een gastgebruiker voucher van <a href="mailto:{guest.user_email}">{guest.user_email}</a> is verlopen.
+    Een gastvoucher van <a href="mailto:{guest.user_email}">{guest.user_email}</a> is vervallen.
 </p>
 
 <p>

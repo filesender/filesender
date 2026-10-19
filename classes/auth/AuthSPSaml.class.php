@@ -300,12 +300,10 @@ class AuthSPSaml
             $target = Utilities::http_build_query(array('s' => $landing_page, 'showsplash' => '1' ));
         }
         
-        $url = Utilities::http_build_query(array(
-            'AuthId' => self::$config['authentication_source'],
-            'ReturnTo' => $target,
-        ), self::$simplesamlphp_auth_simple->getLoginURL($target));
-
-        return $url;
+        // NB: No wrapping with Utilities::http_build_query() is required here
+        // SimpleSAML\Auth\Simple returns
+        // 'A URL which is suitable for use in link-elements'        
+        return self::$simplesamlphp_auth_simple->getLoginURL($target);
     }
     
     /**
@@ -323,12 +321,10 @@ class AuthSPSaml
             $target = Config::get('site_logouturl');
         }
         
-        $url = Utilities::http_build_query(array(
-            'AuthId' => self::$config['authentication_source'],
-            'ReturnTo' => $target,
-        ), self::$simplesamlphp_auth_simple->getLogoutURL($target));
-        
-        return $url;
+        // NB: No wrapping with Utilities::http_build_query() is required here
+        // SimpleSAML\Auth\Simple returns
+        // 'A URL which is suitable for use in link-elements'
+        return self::$simplesamlphp_auth_simple->getLogoutURL($target);
     }
     
     /**

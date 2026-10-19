@@ -432,6 +432,17 @@ var terasender_worker = {
      */
     reportDone: function() {
         this.log('Executed job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + ']');
+        
+        // The server only answers a chunk PUT with 200 after the whole chunk was
+        // stored, so on jobExecuted the chunk is by definition fully uploaded.
+        // Derive fine_progress from the chunk boundaries instead of trusting the
+        // browser's last xhr.upload.onprogress event: Firefox (in workers) can end
+        // the progress stream before loaded == total, which leaves the driver's
+        // file.fine_progress_done short of file.size and the transfer never completes.
+        if (this.job.file && this.job.file.id >= 0) {
+            this.job.fine_progress = this.job.chunk.end - this.job.chunk.start;
+        }
+        
         this.sendCommand('jobExecuted', this.job);
     },
     

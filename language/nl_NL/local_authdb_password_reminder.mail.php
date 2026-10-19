@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-onderwerp: Uitnodiging om {cfg:site_name} te gebruiken
+subject: Uitnodiging om {cfg:site_name} te gebruiken
 
 {alternatief:plain}
 
