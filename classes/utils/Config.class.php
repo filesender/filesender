@@ -868,6 +868,12 @@ class Config
         }
     }
 
+
+    public static function isTrue( $k )
+    {
+        return Utilities::isTrue(Config::get($k));
+    }
+    
     
 }
 
