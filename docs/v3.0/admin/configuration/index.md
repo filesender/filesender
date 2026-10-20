@@ -101,6 +101,7 @@ Specific debugging options inclide allow_pages_log_invalid_page
 * [cloud_s3_bulk_size](#cloud_s3_bulk_size)
 * [performance_allow_direct_copy_from_put_to_disk](#performance_allow_direct_copy_from_put_to_disk)
 * [performance_allow_early_session_release](#performance_allow_early_session_release)
+* [allow_unaligned_readchunk_range_requests](#allow_unaligned_readchunk_range_requests)
 
 ## Shredding
 
@@ -1194,6 +1195,14 @@ Default value to maintain AWS S3 compatibility is 1000. Other storage platforms 
 
 
 
+### allow_unaligned_readchunk_range_requests
+
+* __description:__ Allow range requests for ranges that do not start on a chunk boundary if implementend for the storage.
+* __mandatory:__ no.
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 3.14
+* __comment:__ Allow download.php to use start ranges that are not aligned to chunk_size offsets. This is currently only implemented in the S3 storage backend. This option is to allow installations to turn off the feature if it is causing any issues, other than that it should be able to be left in the default sewtting.
 
 ---
 

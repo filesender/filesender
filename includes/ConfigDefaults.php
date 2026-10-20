@@ -436,6 +436,7 @@ $default = array(
 
     'performance_allow_direct_copy_from_put_to_disk' => true,
     'performance_allow_early_session_release' => true,
+    'allow_unaligned_readchunk_range_requests' => true,
     
     'template_config_values_that_can_be_read_in_templates' => array(
         'default_guest_days_valid',
