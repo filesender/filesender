@@ -335,6 +335,16 @@ class Transfer extends DBObject
      * Config variables
      */
     const OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY = "allow_transfer_expiry_date_extension";
+
+    /**
+     * How many seconds past the maximum expiry date a requested expiry
+     * date can be and still be accepted. The browser works the date out from
+     * its own clock and time zone, so with default_transfer_days_valid equal to
+     * max_transfer_days_valid it can land a little after the maximum the
+     * server calculates. A date inside this margin is set to the maximum
+     * and a date beyond it is rejected.
+     */
+    const EXPIRE_MAX_MARGIN = 86400;
     
     /**
      * Set selectors
@@ -1461,7 +1471,13 @@ class Transfer extends DBObject
             }
             
             $value = floor((float)$value);
-            if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
+            $maxExpire = self::getMaxExpire();
+
+            if ($value > $maxExpire && $value <= $maxExpire + self::EXPIRE_MAX_MARGIN) {
+                $value = $maxExpire;
+            }
+
+            if ($value < floor(time() / (24 * 3600)) || $value > $maxExpire) {
                 throw new BadExpireException($value);
             }
 
@@ -2180,6 +2196,7 @@ class Transfer extends DBObject
             $this->__set('expires', $expires);
             $this->expiry_extensions++;
             $this->save();
+            $expires = $this->expires;
         }
         if ($this->needForward()) {
             ForwardAnotherServer::extendTransferExpiryDate($this, $expires);
