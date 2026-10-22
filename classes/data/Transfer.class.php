@@ -335,6 +335,8 @@ class Transfer extends DBObject
      * Config variables
      */
     const OBJECT_EXPIRY_DATE_EXTENSION_CONFIGKEY = "allow_transfer_expiry_date_extension";
+    // Allow a one-day margin for client/server timezone or DST skew, then clamp.
+    const MAX_EXPIRE_TOLERANCE = 86400;
     
     /**
      * Set selectors
@@ -1461,8 +1463,17 @@ class Transfer extends DBObject
             }
             
             $value = floor((float)$value);
-            if ($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
+            $max = self::getMaxExpire();
+            if ($value < floor(time() / (24 * 3600)) || $value > ($max + self::MAX_EXPIRE_TOLERANCE)) {
                 throw new BadExpireException($value);
+            }
+            
+            // Clamp requests that are just past the limit (see MAX_EXPIRE_TOLERANCE).
+            if ($value > $max) {
+                Logger::warn('Requested transfer expiry '.$value.' is '.($value - $max)
+                            .'s past the maximum '.$max.', clamped to the maximum'
+                            .' (client clock ahead, or client/server timezone or DST difference)');
+                $value = $max;
             }
 
             $this->expires = (string)$value;
