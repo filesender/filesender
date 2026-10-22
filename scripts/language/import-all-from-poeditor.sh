@@ -44,6 +44,8 @@ $SCRIPTDIR/download-language-from-poeditor.sh "lv"      "Latvian"           $dir
 $SCRIPTDIR/download-language-from-poeditor.sh "gl"      "Galician"          $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "ro"      "Romanian"          $dirname
 $SCRIPTDIR/download-language-from-poeditor.sh "de-at"   "Austria"           $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "nb"      "Norwegian_Bokmal"   $dirname
+$SCRIPTDIR/download-language-from-poeditor.sh "nn"      "Norwegian_Nynorsk"  $dirname
 
 
 

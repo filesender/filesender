@@ -62,6 +62,8 @@ importfile lv_LV   FileSender_3.0_Latvian.php
 importfile es_GA   FileSender_3.0_Galician.php
 importfile ro_RO   FileSender_3.0_Romanian.php
 importfile de_AT   FileSender_3.0_Austria.php
+importfile nb_NO   FileSender_3.0_Norwegian_Bokmal.php
+importfile nn_NO   FileSender_3.0_Norwegian_Nynorsk.php
 
 
 echo "Checking syntax of generated .php files, please wait..."
