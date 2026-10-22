@@ -1,7 +1,12 @@
 .fs-base-page {
     flex: 1;
-    background: var(--fs-bg-color);
-    padding: var(--fs-spacing-6x) var(--fs-spacing-2x);
+    background: var(--fs-base-page-background);
+    padding: var(--fs-base-page-padding-top) var(--fs-spacing-2x);
+}
+
+.fs-base-page__back {
+    display: inline-flex;
+    margin-bottom: var(--fs-base-page-title-gap);
 }
 
 .fs-base-page__header {
@@ -17,10 +22,12 @@
     margin-left: var(--fs-spacing-5x);
 }
 
+.fs-base-page h1 {
+    margin: 0 0 var(--fs-base-page-title-gap);
+}
+
 .fs-base-page__header h1 {
     text-align: left !important;
-    margin-left: 0;
-    margin-bottom: var(--fs-spacing-8x);
 }
 
 .fs-base-page__content {
@@ -39,4 +46,12 @@
 .fs-base-page .h2, .fs-base-page h1, .fs-base-page .h1 {
     width: auto !important;
     font-weight: bold;
+}
+
+.fs-base-page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--fs-spacing-2x);
+    margin-top: var(--fs-spacing-4x);
 }

@@ -56,7 +56,7 @@ $(function() {
     });
     
     // Save overrides
-    form.find('.save').button().on('click', function() {
+    form.find('.save').on('click', function() {
         var overrides = {};
         
         form.find('.parameter').each(function() {

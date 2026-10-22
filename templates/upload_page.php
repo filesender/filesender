@@ -62,7 +62,7 @@ $encryption_mandatory = Principal::isEncryptionMandatory();
 $encryption_checkbox_checked = '';
 $encryption_checkbox_classes = '';
 $expire_time_is_editable = true;
-$upload_directory_button_enabled = false;
+$upload_directory_button_enabled = true;
 
 if( !Config::get('disable_directory_upload')
     && Config::get('directory_upload_button_enabled')
@@ -154,12 +154,21 @@ if(Auth::isGuest()) {
 
 $allow_recipients = true;
 
+if( $encryption_mandatory ) {
+    $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
+    $encryption_checkbox_classes = '';
+}
+
+$isNotificationOption = function( $name ) {
+    return strpos($name, 'email_') !== false || strpos($name, 'notification') !== false;
+};
+
 /**
  * @param optionsToFilter is an array of options which we do not want to
  *                        show in the default panels on the left. This allows
  *                        some options to be displayed in other locations on the page.
  */
-$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email','forward_to_another_server', 'forward_server_name'), $idoverride = '' ) use ($guest_can_only_send_to_creator) {
+$displayoption = function( $name, $cfg, $disable = false, $forcedOption = false, $optionsToFilter = array('hide_sender_email','forward_to_another_server', 'forward_server_name'), $idoverride = '' ) use ($guest_can_only_send_to_creator, $encryption_checkbox_checked, &$openpgp_encrypt_passphrase_add_class) {
     $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
 
     if( in_array($name, $optionsToFilter)) {
@@ -200,7 +209,7 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
     if( !Auth::isGuest() &&
         $name == TransferOptions::OPENPGP_ENCRYPT_PASSPHRASE_TO_EMAIL)
     {
-            return;
+        return;
     }
 
     echo '<div data-option="'.$name.'" '. $extraDivAttrs .'>';
@@ -212,14 +221,31 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
         echo '</div>';
 
     } else {
-        $id = "fs-transfer__add-me-to-recipients";
-        if( $idoverride != '' ) {
-            $id = $idoverride;
+        $inputTex = $name;
+        if ($name === TransferOptions::ENCRYPTION) {
+            $inputTex = 'encrypt_files_with_password';
         }
-        echo '<div  id="'.$id.'" class="fs-switch">';
-        echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
-        echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
-        echo '</div>';
+
+        $idattr = '';
+        if( $idoverride != '' ) {
+            $idattr = ' id="'.$idoverride.'"';
+        }
+        $checkboxClass = 'fs-checkbox';
+        $labelIdAttr = '';
+        if ($name === TransferOptions::ENCRYPTION) {
+            $checkboxClass .= ' encryption-toggle-group';
+            $labelIdAttr = ' id="enctest1"';
+        }
+        echo '<label'.$idattr.' class="'.$checkboxClass.'">';
+        echo '    <label for="'.$name.'"'.$labelIdAttr.'>'.Lang::tr($inputTex).'</label>';
+        echo '    <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
+        echo '    <span class="fs-checkbox__mark"></span>';
+        echo '</label>';
+        if ($name === TransferOptions::ENCRYPTION) {
+            echo '<div class="encmand2" id="encmand2" data-related-to="encryption" hidden="true">';
+            echo '    <label id="enctest2">'.Lang::tr('encrypt_files_with_password').'</label>';
+            echo '</div>';
+        }
     }
 
     if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
@@ -227,14 +253,55 @@ $displayoption = function( $name, $cfg, $disable = false, $forcedOption = false,
     if($name == TransferOptions::WEB_NOTIFICATION_WHEN_UPLOAD_IS_COMPLETE && Browser::instance()->isFirefox)
         echo '<div class="info message"><a class="enable_web_notifications" href="#">'.Lang::tr('click_to_enable_web_notifications').'</a></div>';
 
+
+    if ($name === TransferOptions::ENCRYPTION) {
+        echo '<div id="encryption_options"  class="'.$openpgp_encrypt_passphrase_add_class.'"> </div>';
+        echo '<div id="encgroup1openpgp">';
+        echo '    <div id="encgroup1" class="fs-transfer__password">';
+        echo '        <div class="fs-transfer__password-top" id="encryption_password_container">';
+        echo '            <div class="fs-input-group">';
+        echo '                <input type="text" id="encryption_password" name="encryption_password" placeholder="'.Lang::tr('enter_your_password').'">';
+        echo '            </div>';
+        echo '            <div class="fs-transfer__generate-password password-gen-button">';
+        echo '                <span>'.Lang::tr('or').'&nbsp;</span>';
+        echo '                <button type="button" id="encryption_generate_password" class="fs-button">'.Lang::tr('generate_password').'</button>';
+        echo '            </div>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer" id="encryption_password_show_container">';
+        echo '            <label class="fs-checkbox">';
+        echo '                <label for="encryption_show_password">'.Lang::tr('file_encryption_show_password').'</label>';
+        echo '                <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >';
+        echo '                <span class="fs-checkbox__mark"></span>';
+        echo '            </label>';
+        echo '        </div>';
+        echo '        <div class="fs-transfer__password-bottom">';
+        echo '            <small>'.Lang::tr('password_share_tip').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_too_short').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_must_have_numbers').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_must_have_upper_and_lower_case').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">';
+        echo '            <small>'.Lang::tr('file_encryption_password_must_have_special_characters').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">';
+        echo '            <small>'.Lang::tr('encryption_password_container_can_have_text_only_min_password_length_message').'</small>';
+        echo '        </div>';
+        echo '        <div class="fieldcontainer" id="encryption_description_disabled_container">';
+        echo '            <small>'.Lang::tr('file_encryption_description_disabled').'</small>';
+        echo '        </div>';
+        echo '    </div>';
+        echo '</div>';
+
+    }
+
     echo '</div>';
 };
-
-
-if( $encryption_mandatory ) {
-    $encryption_checkbox_checked = ' checked="checked"  disabled="disabled" ';
-    $encryption_checkbox_classes = '';
-}
 
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
@@ -354,7 +421,7 @@ if( array_key_exists( 'hide_sender_email', $ops )) {
     <div class="box">
         {tr:read_only_mode}
     </div>
-<?php
+    <?php
     return;
 }
 
@@ -414,7 +481,7 @@ EOF;
 
         <div class="fs-transfer">
             <h1>
-                {tr:transfer_files}
+                {tr:upload_page}
             </h1>
 
             <div class="fs-transfer__step fs-transfer__step--active" data-step="1">
@@ -425,57 +492,36 @@ EOF;
         <?php } ?>
                 
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5 h-100">
                         <div class="fs-transfer__droparea">
-                            <input id="files" class="fs-transfer__input" type="file" name="file" multiple />
-                            <label for="files">
-                                <strong>{tr:start_selection_files}</strong>
-                                <span class="fs-button">
-                                <i class="fa fa-plus"></i>
-                                {tr:drag_drop_select}
-                            </span>
-                            </label>
+                            <span class="fs-transfer__select-text">
+                                <input id="files" class="fs-transfer__input" type="file" name="file" multiple />
 
-                            <?php if ($upload_directory_button_enabled) { ?>
-                                <div class="fs-transfer__directory">
+                                <label for="files">
+                                <span class="fs-link fs-link--primary fs-link--no-hover">
+                                    {tr:select_files}
+                                </span>
+                                </label>
+
+                                <?php if ($upload_directory_button_enabled) { ?>
+                                    <div class="fs-transfer__directory">
                                     <span>
-                                        {tr:or}
+                                        &nbsp;{tr:or}&nbsp;
                                     </span>
-                                    <label for="selectdir">
-                                        <span class="fs-button">
-                                            <i class="fa fa-folder"></i>
-                                            {tr:send_an_entire_directory}
+                                        <label for="selectdir">
+                                        <span class="fs-link fs-link--primary fs-link--no-hover">
+                                            {tr:or_a_folder}
                                         </span>
-                                    </label>
-                                    <input type="file" name="selectdir" id="selectdir" class="fs-transfer__input" webkitdirectory directory multiple mozdirectory />
-                                </div>
-                            <?php } ?>
+                                        </label>
+                                        <input type="file" name="selectdir" id="selectdir" class="fs-transfer__input" webkitdirectory directory multiple mozdirectory />
+                                    </div>
+                                <?php } ?>
+                            </span>
+
+                            <span class="fs-transfer__drop-text">{tr:or_use_drag_and_drop}</span>
                         </div>
-                    </div>
-                </div>
 
-                <!--            <div class="row">-->
-                <!--                <div class="col-12">-->
-                <!--                    --><?php //if (Config::get('upload_graph_bulk_display')) { ?>
-                <!--                        <div class="row">-->
-                <!--                            <div class="col-12">-->
-                <!--                                <div id="graph" class="uploadbulkgraph"><div id="graphDiv"><canvas id="speedChart"></canvas></div></div>-->
-                <!--                                <script type="text/javascript" src="{path:lib/chart.js/chart.min.js}"></script>-->
-                <!--                                <script type="text/javascript" src="{path:js/graph.js}"></script>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                    --><?php //} ?>
-                <!--                </div>-->
-                <!--            </div>-->
-            </div>
-
-            <div class="fs-transfer__step" data-step="2">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="fs-transfer__list">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
+                        <div class="fs-transfer__list fs-transfer__list--hidden">
                             <div class="fs-transfer__files">
                                 <table class="fs-table">
                                     <thead hidden="true">
@@ -491,10 +537,16 @@ EOF;
                                                 <span class="filename"></span>
                                                 <span class="filesize"></span>
                                                 <span class="remove stage1">
-                                                <button type="button" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text removebutton" alt="{tr:click_to_delete_file}">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </span>
+                                                    <button type="button" class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text removebutton" alt="{tr:click_to_delete_file}">
+                                                        <i class="fi fi-close"></i>
+                                                    </button>
+                                                </span>
+                                                <span class="fs-progress-circle">
+                                                    <span class="fs-progress-circle__value">0</span>
+                                                </span>
+                                                <span class="fs-transfer__file-uploaded">
+                                                    <i class="fi fi-valid"></i>
+                                                </span>
                                             </div>
                                             <div>
                                                 <span class="error"></span>
@@ -515,13 +567,6 @@ EOF;
                                                 </span>
                                                 <?php } ?>
                                             </div>
-                                            <div>
-                                            <span class="progressbar">
-                                                <div class="progress">
-                                                    <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </span>
-                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -530,15 +575,15 @@ EOF;
 
                             <div class="fs-transfer__add-buttons">
                                 <label for="files">
-                                    <span class="fs-button">
-                                        <i class="fa fa-plus"></i>
-                                        {tr:add_files}
+                                    <span class="fs-link fs-link--primary fs-link--no-hover">
+                                        <i class="fi fi-add"></i>
+                                        {tr:add_more_files}
                                     </span>
                                 </label>
                                 <?php if ($upload_directory_button_enabled) { ?>
                                     <label for="selectdir">
-                                        <span class="fs-button">
-                                            <i class="fa fa-folder"></i>
+                                        <span class="fs-link fs-link--primary fs-link--no-hover">
+                                        <i class="fi fi-add"></i>
                                             {tr:add_directory}
                                         </span>
                                     </label>
@@ -546,48 +591,12 @@ EOF;
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <hr />
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="fs-transfer__actions">
-                            <div class="fs-transfer__left">
-                                <button type="button" class="fs-button fs-button--danger fs-transfer__clear-all">
-                                    <i class="fa fa-trash"></i>
-                                    {tr:clear_all}
-                                </button>
-                            </div>
-                            <div class="fs-transfer__right">
-                                <button type="button" id="fs-transfer__next-step" class="fs-button fs-button--info fs-button--icon-right fs-transfer__next">
-                                    {tr:next}
-                                    <i class="fa fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="fs-transfer__step" data-step="3">
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-transfer__list fs-transfer__list--full">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
-                            <div class="fs-transfer__files">
-                                <table></table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                         <div class="fs-transfer__options">
                             <div class="fs-transfer__send-options">
                                 <div class="row">
                                     <div class="col-12">
-                                        <h5>
+                                        <h4>
                                             <?php if($show_get_a_link_or_email_choice_section_header) { ?>
                                                 {tr:choose_files}
                                             <?php
@@ -598,7 +607,7 @@ EOF;
                                                     echo "{tr:choose_files_forced_get_a_link}";
                                                 }
                                             } ?>
-                                        </h5>
+                                        </h4>
                                         <?php if($show_get_a_link_or_email_choice) { ?>
 
                                             <div class="fs-radio-group"
@@ -610,12 +619,9 @@ EOF;
                                                     <div class="fs-radio__option">
                                                         <span class="fs-radio__circle"></span>
                                                         <span class="fs-radio__text">
-                                                            {tr:a_transfer_link}
+                                                            {tr:get_a_transfer_link}
                                                          </span>
                                                     </div>
-                                                    <span class="fs-radio__info">
-                                                        {tr:a_transfer_link_tip}
-                                                    </span>
                                                 </label>
                                             </div>
                                         <?php } ?>
@@ -628,12 +634,9 @@ EOF;
                                                 <div class="fs-radio__option">
                                                     <span class="fs-radio__circle"></span>
                                                     <span class="fs-radio__text">
-                                                        {tr:an_email}
+                                                        {tr:send_an_email_transfer}
                                                     </span>
                                                 </div>
-                                                <span class="fs-radio__info">
-                                                    {tr:an_email_tip}
-                                                </span>
                                             </label>
                                         </div>
                                         <?php } ?>
@@ -658,104 +661,78 @@ EOF;
                             <?php } ?>
 
                             <div class="fs-transfer__transfer-fields <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-fields--show'; } ?>">
-                                <hr data-related-to="emailfrom" />
-
                                 <div class="row">
                                     <div class="col-12">
-                                        <div data-related-to="emailfrom">
-                                            <div class="<?php echo $openpgp_encrypt_passphrase_add_class ?>" ></div>
-
-                                            <?php $emails = Auth::isGuest() ? array(AuthGuest::getGuest()->email) : Auth::user()->email_addresses ?>
-
-                                            <?php if (count($emails) > 1) { ?>
-                                                <div class="fs-select">
-                                                    <label for="form">
-                                                        {tr:from}
-                                                    </label>
-                                                    <select id="from" name="from">
-                                                        <?php foreach ($emails as $email) { ?>
-                                                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                            <?php } else { ?>
-                                                <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
-                                                    <label for="from">
-                                                        {tr:from}
-                                                    </label>
-
-                                                    <input name="from" id="from" type="email"
-                                                           title="{tr:from}"
-                                                           value=""
-                                                           placeholder="<?php echo Template::sanitizeOutputEmail($emails[0]) ?>" disabled />
-
-                                                </div>
-                                            <?php } ?>
-                                        </div>
+                                        <div class="<?php echo $openpgp_encrypt_passphrase_add_class ?>" ></div>
                                     </div>
                                 </div>
 
+                                <?php if($allow_recipients) { ?>
 
-                                <div class="row">
-                                    <div class="col-12">
-                                        <?php if($allow_recipients) { ?>
+                                        <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                                             <div data-related-to="message"  id="recip">
-                                                <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
-                                                    <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
-                                                        <label for="to">
-                                                            {tr:send_transfer_to}
-                                                        </label>
-                                                        <?php
-                                                        echo '<div class="recipients">'
-                                                           . Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email)
-                                                                     . '</div>';
-                                                        ?>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-7 col-lg-8">
+                                                        <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
+                                                            <label for="to">
+                                                                {tr:email_to}
+                                                            </label>
 
-                                                    </div>
-                                                <?php } else { ?>
-                                                    <div class="fs-input-group fs-input-group--hide" data-transfer-type="transfer-email">
-                                                        <label for="to">
-                                                            {tr:send_transfer_to}
-                                                        </label>
-
-                                                        <div>
-                                                            <input name="to" id="to" type="email"
-                                                                   multiple title="{tr:email_separator_msg}"
-                                                                   value=""
-                                                                   placeholder="{tr:enter_to_email}" />
+                                                            <?php echo Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email) ?>
                                                         </div>
                                                     </div>
-
-                                                    <div class="fs-transfer__recipients recipients"></div>
-                                                <?php } ?>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <?php
+                                                        echo '<div class="fs-transfer__recipients recipients">'
+                                                            . Template::sanitizeOutputEmail(AuthGuest::getGuest()->user_email)
+                                                            . '</div>';
+                                                        ?>
+                                                    </div>
+                                                </div>
                                             </div>
+                                        <?php } else { ?>
+                                            <div data-related-to="message"  id="recip">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-7 col-lg-8">
+                                                        <div class="fs-input-group fs-input-group--hide mb-0" data-transfer-type="transfer-email">
+                                                            <label for="to">
+                                                                {tr:email_to}
+                                                            </label>
 
-                                            <div data-related-to="message" class="emailonly">
-                                                <div class="fs-input-group">
-                                                    <label for="subject">
-                                                        {tr:subject}
-                                                    </label>
-                                                    <input name="subject" id="subject" type="text"
-                                                           title="{tr:subject}"
-                                                           value=""
-                                                           placeholder="{tr:enter_to_subject}" />
+                                                            <div>
+                                                                <input name="to" id="to" type="email"
+                                                                       multiple title="{tr:email_separator_msg}"
+                                                                       value=""
+                                                                       placeholder="{tr:enter_to_email}" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
-                                                <label class="invalid" id="password_can_not_be_part_of_message_warning">
-                                                    {tr:password_can_not_be_part_of_message_warning}
-                                                </label>
-                                                <label class="invalid" id="password_can_not_be_part_of_message_error">
-                                                    {tr:password_can_not_be_part_of_message_error}
-                                                </label>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="fs-transfer__recipients recipients"></div>
+                                                    </div>
+                                                </div>
                                             </div>
+                                        <?php } ?>
 
+
+
+
+
+
+
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-7 col-lg-8">
                                             <div data-related-to="message" class="emailonly">
                                                 <div class="fs-input-group">
                                                     <label for="message">
-                                                        {tr:message}
+                                                        {tr:your_message}
                                                     </label>
-                                                    <textarea id="message" name="message" rows="3" placeholder="{tr:optional_message}"></textarea>
+                                                    <textarea id="message" name="message" rows="1" placeholder="{tr:optional_message}"></textarea>
                                                 </div>
 
                                                 <label class="invalid" id="message_can_not_contain_urls">{tr:message_can_not_contain_urls}</label>
@@ -769,16 +746,21 @@ EOF;
                                             <div class="openpgpinfo" id="openpgpinfo" >
                                                 <p>{tr:openpgp_upload_page_description}</p>
                                             </div>
-                                        <?php } ?> <!-- closing if($allow_recipients) -->
-                                        <?php if(Auth::isGuest()) { ?>
-                                            <div>
-                                                <input type="hidden" name="guest_token" value="<?php echo Template::Q(AuthGuest::getGuest()->token) ?>" />
-                                                <input type="hidden" id="guest_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->options)) ?>" />
-                                                <input type="hidden" id="guest_transfer_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
-                                            </div>
-                                        <?php } ?>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-5 col-lg-4 fs-transfer__actions">
+                                            <button type="button" id="fs-transfer__confirm" class="fs-button fs-button--icon-right">
+                                                {tr:transfer_files}
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php } ?> <!-- closing if($allow_recipients) -->
+                                <?php if(Auth::isGuest()) { ?>
+                                    <div>
+                                        <input type="hidden" name="guest_token" value="<?php echo Template::Q(AuthGuest::getGuest()->token) ?>" />
+                                        <input type="hidden" id="guest_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                                        <input type="hidden" id="guest_transfer_options" value="<?php echo Template::Q(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
+                                    </div>
+                                <?php } ?>
 
                                 <div class="row">
                                     <div class="col-12 lifted_options">
@@ -810,207 +792,129 @@ EOF;
 
                             
                             <div class="fs-transfer__transfer-settings <?php if(!$show_get_a_link_or_email_choice) { echo 'fs-transfer__transfer-settings--show'; } ?>">
-                                <hr />
-
-                                <strong>{tr:transfer_settings}</strong>
-
-                                <?php render_forward_to_another_server(); ?>
-
-                                <?php if(Config::get('encryption_enabled')) {  ?>
-                                    <div class="row">
-                                        <div id="encryption_options"  class="<?php echo $openpgp_encrypt_passphrase_add_class ?>"> </div>
-                                        <div class="col-12">
-                                            <div class="fs-switch encryption-toggle-group" data-related-to="encryption">
-                                                <input id="encryption" name="encryption" type="checkbox" <?php echo $encryption_checkbox_checked ?> />
-                                                <label for="encryption" id="enctest1">
-                                                    {tr:encrypt_files_with_password}
-                                                </label>
-                                            </div>
-
-                                            <div class="encmand2" id="encmand2" data-related-to="encryption" hidden="true">
-                                                <label id="enctest2">
-                                                    {tr:encrypt_files_with_password}
-                                                </label>
-                                            </div>
-                                            
-                                            
-                                            <div id="encgroup1openpgp">
-                                            <div id="encgroup1" class="fs-transfer__password">
-                                                <div class="fs-transfer__password-top" id="encryption_password_container">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-5">
-                                                            <div class="fs-input-group ">
-                                                                <input type="text" id="encryption_password" name="encryption_password" placeholder="{tr:enter_your_password}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-auto password-gen-button">
-                                                                <span>{tr:or}</span>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <div class="fs-transfer__generate-password password-gen-button">
-                                                                <button type="button" id="encryption_generate_password" class="fs-button">{tr:generate_password}</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="fieldcontainer" id="encryption_password_show_container">
-                                                    <input id="encryption_show_password" name="encryption_show_password" type="checkbox" checked="1" >
-                                                    <label class="cursor" for="encryption_show_password"> {tr:file_encryption_show_password}</label>
-                                                </div>
-
-                                                <div class="fs-transfer__password-bottom">
-                                                    <small>{tr:password_share_tip}</small>
-                                                </div>
-
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_too_short_message">
-                                                    <small>{tr:file_encryption_password_too_short}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_numbers_message">
-                                                    <small>{tr:file_encryption_password_must_have_numbers}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_upper_and_lower_case_message">
-                                                    <small>{tr:file_encryption_password_must_have_upper_and_lower_case}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_must_have_special_characters_message">
-                                                    <small>{tr:file_encryption_password_must_have_special_characters}</small>
-                                                </div>
-                                                <div class="fieldcontainer passwordvalidation" id="encryption_password_container_can_have_text_only_min_password_length_message">
-                                                    <small>{tr:encryption_password_container_can_have_text_only_min_password_length_message}</small>
-                                                </div>
-                                                <div class="fieldcontainer" id="encryption_description_disabled_container">
-                                                    <small>{tr:file_encryption_description_disabled}</small>
-                                                </div>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="fs-select expires-select-by-days">
-                                            <label for="expires-select">
-                                                {tr:expires_after}
-                                            </label>
-                                            <select id="expires-select" name="expires-select">
-                                                <?php foreach( $expireDays as $k => $v ) { ?>
-                                                    <?php 
-                                                    $sel = "";
-                                                    if( $expireDaysSelected == $v ) {
-                                                        $sel = " selected ";
-                                                    }
-                                                     ?>
-                                                    <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="fs-select fieldcontainer expires-select-by-picker">
-                                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
-
-                                            <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
-                                                   title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
-                                                   data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
-                                            />
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <?php
-                                if(Config::get('transfer_recipients_lang_selector_enabled')) {
-                                    $opts = array();
-                                    $code = Lang::getBaseCode();
-                                    foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-                                        $selected = ($id == $code) ? 'selected="selected"' : '';
-                                        $opts[] = '<option value="'.$id.'" '.$selected.'>'.Template::Q($dfn['name']).'</option>';
-                                    }
-
-                                    echo '<div class="fs-select">';
-                                    echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
-                                    echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
-                                    echo '</div>';
-                                }
-                                ?>
-
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="fs-collapse">
-                                            <button type="button" class="fs-button fs-collapse__open">
-                                                <i class="fa fa-chevron-down"></i>
-                                                <span>
-                                                    {tr:show_advanced_settings}
-                                                </span>
-                                            </button>
-                                            <button type="button" class="fs-button fs-collapse__close">
-                                                <i class="fa fa-chevron-up"></i>
-                                                <span>
-                                                    {tr:hide_advanced_settings}
-                                                </span>
+                                        <div class="fs-collapse mt-4">
+                                            <button type="button" class="fs-button fs-collapse__toggle">
+                                                <span>{tr:settings}</span>
+                                                <i class="fi fi-chevron-down"></i>
                                             </button>
                                             <div class="fs-collapse__content">
+                                                <?php render_forward_to_another_server(); ?>
                                                 <?php render_forward_to_another_server(true); ?>
+
                                                 <div class="row">
-                                                    <div class="col-12 basic_options">
+                                                    <div class="col-12 col-lg-6 basic_options">
                                                         <strong>
-                                                            {tr:advanced_upload_settings}
+                                                            {tr:general_settings}
                                                         </strong>
 
                                                         <?php if($canHideSenderEmail) { ?>
                                                             <?php if( $hideSenderEmailIsAdvanced ) {  ?>
-                                                                <hr data-related-to="topops" />
-                                                                <div class="row ">
-                                                                    <div class="col-12 hse">
-                                                                        <?php
-                                                                        $ops = Transfer::availableOptions();
-                                                                        if( array_key_exists( 'hide_sender_email', $ops )) {
-                                                                            $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
-                                                                        }
-                                                                        ?>
-                                                                    </div>
+                                                                <div class="hse">
+                                                                    <?php
+                                                                    $ops = Transfer::availableOptions();
+                                                                    if( array_key_exists( 'hide_sender_email', $ops )) {
+                                                                        $displayoption('hide_sender_email', $ops['hide_sender_email'], Auth::isGuest(), true, array(), 'hide_sender_email_id' );
+                                                                    }
+                                                                    ?>
                                                                 </div>
                                                             <?php } ?>
                                                         <?php } ?>
-                                                        
-                                                        <?php
-                                                            foreach(Transfer::availableOptions(false) as $name => $cfg) {
-                                                                if( !array_key_exists($name,$upload_options_handled)) {
-                                                                    $displayoption($name, $cfg, Auth::isGuest());
-                                                                }
-                                                            }
 
-                                                            foreach(Transfer::availableOptions(true) as $name => $cfg)  {
-                                                                if( !array_key_exists($name,$upload_options_handled)) {
+                                                        <?php
+                                                        foreach(array(false, true) as $advanced) {
+                                                            foreach(Transfer::availableOptions($advanced) as $name => $cfg) {
+                                                                if( !array_key_exists($name,$upload_options_handled) && !$isNotificationOption($name)) {
                                                                     $displayoption($name, $cfg, Auth::isGuest());
                                                                 }
                                                             }
+                                                        }
                                                         ?>
 
-                                                        
+                                                        <?php if(Config::get('terasender_enabled') && (Config::get('terasender_advanced') || Config::get('terasender_disableable'))) { ?>
+                                                            <div class="advanced_options">
+                                                                <?php if (Config::get('terasender_advanced')) { ?>
+                                                                    <strong>
+                                                                        {tr:terasender_settings}
+                                                                    </strong>
+                                                                    <div class="fs-input-group fs-input-group--vertical">
+                                                                        <label for="terasender_worker_count">
+                                                                            {tr:terasender_worker_count}
+                                                                        </label>
+
+                                                                        <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
+                                                                    </div>
+                                                                <?php } ?>
+                                                                <?php if (Config::get('terasender_disableable')) {
+                                                                    $displayoption('disable_terasender', array('default'=>false), false);
+                                                                }?>
+                                                            </div>
+                                                        <?php } ?>
+                                                    </div>
+
+                                                    <div class="col-12 col-lg-6 basic_options">
+                                                        <div class="fs-transfer__settings-selects">
+                                                            <div class="fs-select expires-select-by-days">
+                                                                <label for="expires-select">
+                                                                    {tr:expires_after}
+                                                                </label>
+                                                                <select id="expires-select" name="expires-select">
+                                                                    <?php foreach( $expireDays as $k => $v ) { ?>
+                                                                        <?php
+                                                                        $sel = "";
+                                                                        if( $expireDaysSelected == $v ) {
+                                                                            $sel = " selected ";
+                                                                        }
+                                                                        ?>
+                                                                        <option value="<?php echo $v ?>" <?php echo $sel ?> ><?php echo $v ?> {tr:days}</option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="fs-input-group expires-select-by-picker">
+                                                                <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+
+                                                                <div>
+                                                                    <input id="expires" name="expires" type="text" autocomplete="off" <?php if(!$expire_time_is_editable) echo " disabled "  ?>
+                                                                           title="<?php echo Lang::trWithConfigOverride('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>"
+                                                                           data-epoch="<?php echo Transfer::getDefaultExpire() ?>"
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                            <?php
+                                                            if(Config::get('transfer_recipients_lang_selector_enabled')) {
+                                                                $opts = array();
+                                                                $code = Lang::getBaseCode();
+                                                                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                                                    $selected = ($id == $code) ? 'selected="selected"' : '';
+                                                                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                                                }
+
+                                                                echo '<div class="fs-select">';
+                                                                echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
+                                                                echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
+                                                                echo '</div>';
+                                                            }
+                                                            ?>
+                                                        </div>
+
+                                                        <strong>
+                                                            {tr:notification_settings}
+                                                        </strong>
+
+                                                        <?php
+                                                        foreach(array(false, true) as $advanced) {
+                                                            foreach(Transfer::availableOptions($advanced) as $name => $cfg) {
+                                                                if( !array_key_exists($name,$upload_options_handled) && $isNotificationOption($name)) {
+                                                                    $displayoption($name, $cfg, Auth::isGuest());
+                                                                }
+                                                            }
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
-                                                <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
-                                                    <div class="row">
-                                                        <div class="col-12 advanced_options">
-                                                            <strong>
-                                                                {tr:terasender_settings}
-                                                            </strong>
-                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
-                                                                <div class="fs-input-group fs-input-group--vertical">
-                                                                    <label for="terasender_worker_count">
-                                                                        {tr:terasender_worker_count}
-                                                                    </label>
-
-                                                                    <input id="terasender_worker_count" name="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
-                                                                </div>
-                                                            <?php } ?>
-                                                            <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) {
-                                                                $displayoption('disable_terasender', array('default'=>false), false);
-                                                            }?>
-                                                        </div>
-                                                    </div>
-                                                <?php } /* End of advanced settings div. */ ?>
                                             </div>
                                         </div>
                                     </div>
@@ -1028,12 +932,13 @@ EOF;
                                 <?php if (Config::get('aup_enabled')) { ?>
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="fs-switch">
-                                                <input id="aup" name="aup" type="checkbox" <?php echo $aupChecked; ?> value="true" required />
+                                            <label class="fs-checkbox">
                                                 <label for="aup">
                                                     {tr:accepttoc}
                                                 </label>
-                                            </div>
+                                                <input id="aup" name="aup" type="checkbox" <?php echo $aupChecked; ?> value="true" required />
+                                                <span class="fs-checkbox__mark"></span>
+                                            </label>
 
                                             <div class="aupbox">
                                                 <div name="aupshowhide" id="aupshowhide" class="fs-link">
@@ -1051,50 +956,22 @@ EOF;
                         </div>
                     </div>
                 </div>
-
-                <hr />
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="fs-transfer__actions">
-                            <div class="fs-transfer__left">
-                                <button type="button" id="fs-transfer__previous-step" class="fs-button fs-button--info">
-                                    <i class="fa fa-arrow-left"></i>
-                                    {tr:previous}
-                                </button>
-                                <button type="button" id="fs-transfer__cancel" class="fs-button fs-button--danger">
-                                    <i class="fa fa-ban"></i>
-                                    {tr:cancel}
-                                </button>
-                            </div>
-                            <div class="fs-transfer__right">
-                                <button type="button" id="fs-transfer__confirm" class="fs-button fs-button--info fs-button--icon-right">
-                                    {tr:confirm}
-                                    <i class="fa fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <div class="fs-transfer__step" data-step="4">
+            <div class="fs-transfer__step" data-step="2">
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                         <div class="fs-transfer__list fs-transfer__list--full">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
                             <div class="fs-transfer__files">
                                 <table class="fs-table"></table>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                         <div class="fs-transfer__upload-detail fs-transfer__upload-uploading">
-                            <h5>
-
-                            </h5>
+                            <h4>
+                                {tr:uploading_your_transfer}
+                            </h4>
                             <div class="fs-progress-bar">
                                 <strong class="fs-progress-bar__value">0%</strong>
                                 <span class="fs-progress-bar__progress">
@@ -1120,7 +997,10 @@ EOF;
                                         </tr>
                                         <tr class="fs-transfer__number-of-files number_of_files">
                                             <td>{tr:number_of_files}</td>
-                                            <td id="fs-transfer__total-files" class="value">0 {tr:files_lowercase}</td>
+                                            <td id="fs-transfer__total-files">
+                                                <span class="value">0</span>
+                                                {tr:files_lowercase}
+                                            </td>
                                         </tr>
                                         <tr class="fs-transfer__estimated-info estimated_completion">
                                             <td>
@@ -1138,20 +1018,20 @@ EOF;
                                     </table>
                                 </div>
                                 <?php if(Config::get('upload_show_play_pause')) { ?>
-                                <div class="buttons">
-                                    <button type="button" id="fs-transfer__pause" class="fs-button fs-button--info fs-button--icon-right pausebutton">
-                                        {tr:pause}
-                                        <i class="fa fa-pause"></i>
-                                    </button>
-                                    <button type="button" id="fs-transfer__resume" class="fs-button fs-button--info fs-button--icon-right resumebutton" disabled="1">
-                                        {tr:resume}
-                                        <i class="fa fa-play"></i>
-                                    </button>
-                                    <button type="button" id="fs-transfer__stop" class="fs-button fs-button--info fs-button--icon-right stopbutton">
-                                        {tr:stop}
-                                        <i class="fa fa-stop"></i>
-                                    </button>
-                                </div>
+                                    <div class="fs-transfer__resume-buttons buttons">
+                                        <button type="button" id="fs-transfer__pause" class="fs-button fs-button--icon-right pausebutton">
+                                            {tr:pause}
+                                            <i class="fa fa-pause"></i>
+                                        </button>
+                                        <button type="button" id="fs-transfer__resume" class="fs-button fs-button--icon-right resumebutton" disabled="1">
+                                            {tr:resume}
+                                            <i class="fa fa-play"></i>
+                                        </button>
+                                        <button type="button" id="fs-transfer__stop" class="fs-button fs-button--icon-right stopbutton">
+                                            {tr:stop}
+                                            <i class="fa fa-stop"></i>
+                                        </button>
+                                    </div>
                                 <?php } ?>
                             </div>
                         </div>
@@ -1159,23 +1039,20 @@ EOF;
                 </div>
             </div>
 
-            <div class="fs-transfer__step" data-step="5">
+            <div class="fs-transfer__step" data-step="3">
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                         <div class="fs-transfer__list fs-transfer__list--full">
-                            <h6>
-                                {tr:selected_files}
-                            </h6>
                             <div class="fs-transfer__files">
                                 <table class="fs-table"></table>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                         <div class="fs-transfer__upload-detail fs-transfer__upload-finished">
-                            <h5>
+                            <h4>
                                 {tr:transfer_completed}
-                            </h5>
+                            </h4>
                             <div class="fs-transfer__forward-not-finished">
                                 <span></span>
                             </div>
@@ -1189,6 +1066,13 @@ EOF;
                                 <div class="stats">
                                     <table class="fs-table">
                                         <tbody>
+                                        <tr class="fs-transfer__number-of-files number_of_files">
+                                            <td>{tr:number_of_files}</td>
+                                            <td id="fs-transfer__total-files">
+                                                <span class="value">0</span>
+                                                {tr:files_lowercase}
+                                            </td>
+                                        </tr>
                                         <tr class="fs-transfer__total-info size">
                                             <td>{tr:ui2_total_size}</td>
                                             <td id="fs-transfer__total-size" class="value">0 MB</td>
@@ -1202,17 +1086,16 @@ EOF;
                                     {tr:your_download_link}
                                 </span>
                                 <div class="fs-copy">
-                                    <span class="download_link"></span>
+                                    <span class="fs-copy__value download_link"></span>
 
-                                    <button id="copy-to-clipboard" type="button" class="fs-button">
-                                        <i class="fa fa-copy"></i>
-                                        {tr:copy}
+                                    <button id="copy-to-clipboard" class="fs-copy__button" type="button" title="{tr:copy}" aria-label="{tr:copy}">
+                                        <i class='fi fi-copy'></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="fs-transfer__upload-recipients">
                                 <span>
-                                    {tr:your_transfer_was_sent}
+                                    {tr:your_transfer_was_sent}:
                                 </span>
                                 <div class="fs-badge-list">
                                 </div>
@@ -1238,18 +1121,15 @@ EOF;
                         </div>
                     </div>
                 </div>
-                <?php if(!Auth::isGuest()) { ?>
+
                 <div class="fs-transfer__upload-actions">
-                    <a id="detail-link" href=""type="button" class="fs-button fs-button--info" role="button">
-                        <i class="fa fa-file-lines"></i>
-                        {tr:transfer_details}
+                    <a id="detail-link" href=""type="button" class="fs-button fs-button--primary" role="button">
+                        {tr:see_transfer_details}
                     </a>
-                    <a href="?s=transfers" class="fs-button fs-button--info" role="button">
-                        <i class="fa fa-exchange"></i>
-                        {tr:all_my_transfers}
+                    <a href="?s=transfers" class="fs-button fs-button--inverted" role="button">
+                        {tr:go_to_all_my_transfers}
                     </a>
                 </div>
-                <?php } ?>
             </div>
         </div>
 
