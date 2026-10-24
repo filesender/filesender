@@ -20,6 +20,8 @@
     
     ?>
 
+    <h1>{tr:admin_page}</h1>
+
     <ul class="nav nav-tabs nav-tabs-coretop">
         <?php foreach($sections as $s) { ?>
             <li class="nav-item">
