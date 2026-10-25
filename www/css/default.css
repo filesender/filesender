@@ -2099,15 +2099,6 @@ progress {
   display: none;
 }
 
-.nav-tabs-coretop,
-.nav-link-coretop {
-  background: #fff3eb !important;
-}
-
-.nav-tabs-coretop {
-  border-bottom: 0px solid #dee2e6;
-}
-
 .navbar-bg {
   background: #efe3db;
 }
@@ -2885,25 +2876,6 @@ table.transfers .transfer_details .download_link input {
   margin: 0.4em auto;
 }
 
-.transfers_list_page_navigation {
-  margin: 0.25em;
-  text-align: center;
-  font-size: 1.2em;
-}
-
-.transfers_list_page_navigation span,
-.transfers_list_page_navigation a {
-  margin: 0 0.25em;
-}
-
-.transfers_list_page_navigation a {
-  text-decoration: underline;
-}
-
-.transfers_list_page_navigation span {
-  font-weight: bold;
-}
-
 /* Guests page */
 /* Guests table */
 table.guests tbody .guest[data-errors="1"] td {
@@ -2912,109 +2884,6 @@ table.guests tbody .guest[data-errors="1"] td {
 
 table.guests .guest .to .errors .details {
   margin-left: 0.25em;
-}
-
-/* Statistics page */
-.statistics_page #idpbutton {
-  width: 40px;
-}
-
-.statistics_page #idpselect {
-  max-width: calc(100% - 90px);
-}
-
-/* Admin page */
-/* Admin statistics */
-.admin_page .statistics_section .storage_usage_blocks {
-  margin-top: 1em;
-}
-
-.admin_page .statistics_section .storage_usage.warning tr[data-metric=available],
-.admin_page .statistics_section .storage_usage_blocks tr.warning {
-  background-color: #fcc;
-}
-
-/** Admin users */
-.admin_page .users_section .searching,
-.admin_page .users_section .no_results,
-.admin_page .users_section .client-logs {
-  display: none;
-}
-
-.admin_page .users_section .searching .searching,
-.admin_page .users_section .no_results .no_results {
-  display: table-row;
-  text-align: center;
-}
-
-.admin_page .users_section table {
-  margin: 0.5rem 0;
-  width: 100%;
-}
-
-.admin_page .users_section th {
-  border: 1px solid silver;
-  text-align: center;
-  font-weight: bold;
-}
-
-.admin_page .users_section td {
-  border: 1px solid silver;
-}
-
-.admin_page .users_section .results th + th,
-.admin_page .users_section .results td + td,
-.admin_page .users_section .client-logs th:first-child,
-.admin_page .users_section .client-logs td:first-child {
-  width: 8rem;
-}
-
-/* Admin sections */
-.admin_page .section h2, .admin_page .section .h2 {
-  width: 100%;
-  font-size: 1.2em;
-  font-weight: bold;
-  padding-bottom: 1em;
-  padding-top: 4px;
-}
-
-/* Admin config section */
-.admin_page .config_section .parameter {
-  margin: 0.5em 0;
-}
-
-.admin_page .config_section .parameter .is_default {
-  display: none;
-  font-style: italic;
-  color: #ccc;
-}
-
-.admin_page .config_section .parameter[data-is-default="1"] .is_default {
-  display: inline;
-}
-
-.admin_page .config_section .parameter .make_default {
-  display: inline;
-}
-
-.admin_page .config_section .parameter[data-is-default="1"] .make_default {
-  display: none;
-}
-
-.admin_page .config_section .parameter[data-is-default="1"] input,
-.admin_page .config_section .parameter[data-is-default="1"] textarea,
-.admin_page .config_section .parameter[data-is-default="1"] select {
-  color: #777;
-}
-
-.admin_page .config_section .parameter[data-is-default="1"] input:focus,
-.admin_page .config_section .parameter[data-is-default="1"] textarea:focus,
-.admin_page .config_section .parameter[data-is-default="1"] select:focus {
-  color: #000;
-}
-
-.admin_page .config_section .box + .box {
-  text-align: center;
 }
 
 /* Download page */
@@ -3203,25 +3072,6 @@ table.paginator a {
 
 #dialog-help strong {
   font-weight: bold;
-}
-
-/* dialogs  */
-.success-dialog .modal-content,
-.warning-dialog .modal-content,
-.error-dialog .modal-content {
-  overflow: hidden;
-}
-
-.success-dialog .modal-header {
-  background-color: #CFC;
-}
-
-.warning-dialog .modal-header {
-  background-color: #fcc;
-}
-
-.error-dialog .modal-header {
-  background-color: #faa;
 }
 
 .must_login_message {

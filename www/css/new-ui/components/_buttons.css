@@ -1,22 +1,22 @@
-.fs-button,
-.bootbox-accept,
-.btn-secondary {
+.fs-button {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.6rem;
   border: 0;
   border-radius: var(--fs-spacing-4x);
   cursor: pointer;
   height: var(--fs-spacing-6x);
-  padding: 0 var(--fs-spacing-3x);
+  padding: 0 var(--fs-spacing-2x);
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
-  color: var(--fs-light);
-  background: var(--fs-accent);
+  color: var(--fs-button-color);
+  background: var(--fs-button-background);
   white-space: normal;
+  gap: var(--fs-spacing-base);
 }
 
 .fs-button * {
@@ -24,50 +24,27 @@
 }
 
 .fs-button:hover {
-  color: var(--fs-light);
-  background: var(--fs-btn-hover);
+  color: var(--fs-button-hover-color);
+  background: var(--fs-button-hover-background);
 }
 
 .fs-button:active {
-  color: var(--fs-light);
-  background: var(--fs-btn-active);
-}
-
-.bootbox-accept:hover {
-  color: var(--fs-light);
-  background: var(--fs-btn-hover);
-}
-
-.bootbox-accept:active {
-  color: var(--fs-light);
-  background: var(--fs-btn-active);
-}
-
-.btn-secondary:hover {
-  color: var(--fs-light);
-  background: var(--fs-btn-hover);
-}
-
-.btn-secondary:active {
-  color: var(--fs-light);
-  background: var(--fs-btn-active);
+  color: var(--fs-button-active-color);
+  background: var(--fs-button-active-background);
 }
 
 .fs-button:disabled,
 .fs-button[disabled] {
   opacity: .3;
   cursor: not-allowed;
-  color: var(--fs-light) !important;
-  background: var(--fs-accent) !important;
+  color: var(--fs-button-disabled-color) !important;
+  background: var(--fs-button-disabled-background) !important;
 }
 
 .fs-button i {
-  margin-right: var(--fs-spacing-base);
-}
-
-.fs-button--icon-right i {
-  margin-right: 0;
-  margin-left: var(--fs-spacing-base);
+  font-size: var(--fs-icon-size);
+  line-height: 1;
+  text-align: center;
 }
 
 .fs-button--circle {
@@ -83,109 +60,24 @@
 
 .fs-button--transparent {
   background: transparent !important;
-  color: var(--fs-accent);
+  color: var(--fs-button-transparent-color);
 }
 
-.fs-button--transparent.fs-button--danger {
-  color: var(--fs-danger) !important;
-}
-
-.fs-button--transparent.fs-button--success {
-  color: var(--fs-success);
-}
-
-.fs-button--transparent.fs-button--info {
-  color: var(--fs-info);
-}
-
-.fs-button--success {
-  color: var(--fs-light);
-  background: var(--fs-btn);
-}
-
-.fs-button--success:hover {
-  color: var(--fs-light) !important;
-  background: var(--fs-btn-hover);
-}
-
-.fs-button--success:active {
-  color: var(--fs-light) !important;
-  background: var(--fs-btn-active) !important;
-}
-
-.fs-button--success:disabled,
-.fs-button--success[disabled] {
-  color: var(--fs-light) !important;
-  background: var(--fs-success) !important;
-}
-
-.fs-button--info {
-  color: var(--fs-light);
-  background: var(--fs-info);
-}
-
-.fs-button--info:hover {
-  background: var(--fs-info-hover) !important;
-  color: var(--fs-light) !important;
-}
-
-.fs-button--info:active {
-  background: var(--fs-info-active) !important;
-  color: var(--fs-light) !important;
-}
-
-.fs-button--info:disabled,
-.fs-button--info[disabled] {
-  color: var(--fs-light) !important;
-  background: var(--fs-info) !important;
-}
-
-.fs-button--warning {
-  color: var(--fs-text-color);
-  background: var(--fs-warning);
-}
-
-.fs-button--warning:hover {
-  background: var(--fs-warning-hover) !important;
-  color: var(--fs-text-color) !important;
-}
-
-.fs-button--warning:active {
-  background: var(--fs-warning-active) !important;
-  color: var(--fs-text-color) !important;
-}
-
-.fs-button--warning:disabled,
-.fs-button--warning[disabled] {
-  color: var(--fs-text-color) !important;
-  background: var(--fs-warning) !important;
-}
-
-.fs-button--danger {
-  color: var(--fs-light);
-  background: var(--fs-danger);
-}
-
-.fs-button--danger:hover {
-  background: var(--fs-danger-hover) !important;
-  color: var(--fs-light) !important;
-}
-
-.fs-button--danger:active {
-  background: var(--fs-danger-active) !important;
-  color: var(--fs-light) !important;
-}
-
-.fs-button--danger:disabled,
-.fs-button--danger[disabled] {
-  color: var(--fs-light) !important;
-  background: var(--fs-danger) !important;
-}
-
-.fs-button--no-text i {
-  margin-right: 0;
+.fs-button--transparent.fs-button--primary {
+  color: var(--fs-button-primary-color) !important;
 }
 
 a.fs-button {
   text-decoration: none;
+}
+
+.fs-button--inverted {
+  color: var(--fs-button-inverted-color);
+  background: transparent;
+  border: 2px solid var(--fs-button-inverted-border-color);
+}
+
+.fs-button--danger {
+  color: var(--fs-button-danger-color);
+  background: var(--fs-button-danger-background);
 }

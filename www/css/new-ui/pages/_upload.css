@@ -1,8 +1,11 @@
-
 .expires-select-by-picker {
     display: none;
 }
 .openpgpinfo {
     display: none;
+}
+
+.upload_page #graphDiv {
+    max-width: 100%;
 }
     

@@ -149,10 +149,16 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
     <div class="container">
         <div class="row">
             <div class="col">
-                <div class="fs-transfer-detail__header">
-                    <a id='fs-back-link' class='fs-link fs-link--circle'>
-                        <i class='fa fa-angle-left'></i>
-                    </a>
+                <a id='fs-back-link' class='fs-link fs-link--primary fs-link--no-hover fs-back-link'>
+                    <i class='fi fi-chevron-left'></i>
+                    <span>{tr:transfer_details_back}</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="fs-transfer-detail__header mt-5">
                     <h1>{tr:transfer_details}</h1>
                 </div>
             </div>
@@ -161,38 +167,57 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
         <div class="row">
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__details">
-                    <h2>{tr:transfer_details}</h2>
+                    <div class="fs-transfer-detail__name" data-name="<?php echo Template::Q($transfer->transfer_name) ?>">
+                        <div class="fs-transfer-detail__name-view">
+                            <h4 class="fs-transfer-detail__name-title"><?php echo $transfer->transfer_name ? Template::replaceTainted($transfer->transfer_name) : '{tr:transfer_name}' ?></h4>
+                            <button type="button" class="fs-button fs-button--transparent fs-button--primary fs-button--circle fs-transfer-detail__name-edit" title="{tr:edit_transfer_name}" aria-label="{tr:edit_transfer_name}">
+                                <i class="fi fi-pencil"></i>
+                            </button>
+                        </div>
+                        <form class="fs-transfer-detail__name-form">
+                            <label for="transfer-name" class="visually-hidden">{tr:transfer_name}</label>
+                            <div class="fs-input-inline">
+                                <input type="text" id="transfer-name" name="transfer-name" maxlength="250" placeholder="{tr:enter_transfer_name}">
+                                <button type="submit" class="fs-button fs-button--primary">
+                                    {tr:save}
+                                </button>
+                                <button type="button" class="fs-button fs-button--transparent fs-button--primary fs-button--circle fs-transfer-detail__name-cancel" title="{tr:cancel}" aria-label="{tr:cancel}">
+                                    <i class="fi fi-close"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     <?php if($transfer->status == TransferStatuses::FORWARDING) { ?>
                         <div class="fs-info fs-info--aligned">
                             <strong>{tr:forward_in_progress}</strong>
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:transfer_sent_on}:</strong>
+                        <strong>{tr:transfer_sent_on}</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:expiration_date}:</strong>
+                        <strong>{tr:expiration_date}</strong>
                         <span><?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires, true)) ?></span>
                     </div>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:from}:</strong>
+                        <strong>{tr:from}</strong>
                         <span><?php echo Template::replaceTainted($transfer->user_email) ?></span>
                     </div>
                     <?php if($transfer->subject) { ?>
                         <div class="fs-info fs-info--aligned">
-                            <strong>{tr:subject}:</strong>
+                            <strong>{tr:subject}</strong>
                             <span><?php echo Template::replaceTainted($transfer->subject) ?></span>
                         </div>
                     <?php } ?>
                     <?php if($transfer->message) { ?>
                         <div class="fs-info fs-info--aligned">
-                            <strong>{tr:message}:</strong>
+                            <strong>{tr:message}</strong>
                             <span><?php echo Template::replaceTainted($transfer->message) ?></span>
                         </div>
                     <?php } ?>
                     <div class="fs-info fs-info--aligned">
-                        <strong>{tr:encryption}:</strong>
+                        <strong>{tr:encryption}</strong>
                         <span>
                             <?php if ($isEncrypted) {
                                 echo Lang::tr('yes');
@@ -201,17 +226,66 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                             } ?>
                         </span>
                     </div>
-                    <div class="fs-info fs-info--aligned">
-                        <strong>{tr:downloads}:</strong>
-                        <span>
-                            <?php echo $downloadsCount ?>
-                        </span>
-                    </div>
                 </div>
+
+                <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+                    <div class="fs-transfer-detail__recipients">
+                        <h4>{tr:recipients}</h4>
+
+                        <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
+                            <span>{tr:your_transfer_was_sent}</span>
+                            <div class="fs-transfer-detail__recipient-list recipients">
+                                <?php foreach($transfer->recipients as $recipient) { ?>
+                                    <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                                        <?php
+                                        if(in_array($recipient->email, Auth::user()->email_addresses)) {
+                                            echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                                        } else {
+                                            echo '<span>'.Template::sanitizeOutput($recipient->identity).'</span>';
+                                        }
+                                        ?>
+
+                                        <span class="fs-badge-buttons-shell" >
+                                            <span data-action="remind" class="fa fa-repeat" title="{tr:send_reminder}"></span>
+                                            <span data-action="delete" class="fi fi-trash" title="{tr:delete}"></span>
+                                            <span data-action="auditlog" class="fa fa-history" title="{tr:open_recipient_auditlog}"></span>
+                                        </span>
+
+                                    </div>
+                                <?php } ?>
+
+                                <button type="button" class="fs-button fs-button--inverted mt-3" data-action="add_recipient" title="{tr:add_recipient}">
+                                    <i class="fi fi-add"></i>
+                                    <span>{tr:add_recipient}</span>
+                                </button>
+
+                                <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+                                    <button type="button" data-action="remind" class="fs-button fs-button--inverted mt-3">
+                                        <i class="fi fi-reminder"></i>
+                                        <span>{tr:send_reminder}</span>
+                                    </button>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
+                    <div class="fs-transfer-detail__link">
+                        <h4>{tr:download_link}</h4>
+                        <div class="fs-copy">
+                            <span class="fs-copy__value download_link"><?php echo $transfer->first_recipient->download_link ?></span>
+
+                            <button id="copy-to-clipboard" class="fs-copy__button" type="button" title="{tr:copy}" aria-label="{tr:copy}">
+                                <i class="fi fi-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
             <div class="col col-sm-12 col-md-6 col-lg-6">
                 <div class="fs-transfer-detail__files">
-                    <h2>{tr:transferred_files}</h2>
+                    <h4>{tr:transferred_files}</h4>
                     <?php if($canDownloadArchive) { ?>
                         <p class="fs-download__archive-hint">{tr:select_files_to_download}</p>
 
@@ -268,7 +342,7 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                                                 <?php if(!$transfer->is_expired) { ?>
 
                                                     <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
-                                                        <span class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}"
+                                                        <span class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text download" title="{tr:download}"
                                                               data-action="download"
                                                               data-id="<?php echo $file->id ?>"
                                                               data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
@@ -288,29 +362,25 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                                                               data-fileaead="<?php echo $file->aead; ?>"
                                                               data-transferid="<?php echo $transfer->id; ?>"
                                                         >
-                                                            <i class="fa fa-download"></i>
+                                                            <i class="fi fi-download"></i>
                                                         </span>
 
                                                     <?php } else {?>
-                                                        <a class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text download" title="{tr:download}"
-                                                           data-action="download"
-                                                           href="download.php?files_ids=<?php echo $file->id ?>">
-                                                            <i class="fa fa-download"></i>
+                                                        <a class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>">
+                                                            <i class="fi fi-download"></i>
                                                         </a>
                                                     <?php } ?>
                                                 <?php } ?>
 
-                                                <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--danger fs-button--no-text" title="{tr:delete}">
-                                                    <i class="fa fa-trash"></i>
-                                                </span>
-
                                                 <?php if($audit) { ?>
-                                                    <span data-action="auditlog" class="fs-button fs-button--small fs-button--transparent fs-button--info fs-button--no-text" title="{tr:open_file_auditlog}">
+                                                    <span data-action="auditlog" class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text" title="{tr:open_file_auditlog}">
                                                         <i class="fa fa-history"></i>
                                                     </span>
                                                 <?php } ?>
 
-                                                
+                                                <span data-action="delete" class="fs-button fs-button--small fs-button--transparent fs-button--primary fs-button--no-text" title="{tr:delete}">
+                                                    <i class="fi fi-close"></i>
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -327,9 +397,15 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
                         {tr:file_encryption_disabled}
                     </div>
                     <div class="fs-transfer-detail__total-size fs-download__total-size">
-                        <strong>{tr:total_transfer_size}:</strong>
+                        <strong>{tr:ui2_total_size}</strong>
                         <span class="fs-info-transfer-size">
                             <?php echo $formatFileSizeForDisplayQ($transfer->size) ?>
+                        </span>
+                    </div>
+                    <div class="fs-transfer-detail__total-size">
+                        <strong>{tr:downloads}</strong>
+                        <span>
+                            <?php echo $downloadsCount ?>
                         </span>
                     </div>
                     <?php if($canDownloadArchive) { ?>
@@ -364,155 +440,77 @@ $formatFileSizeForDisplayQ = function( $filesz ) use ($hasEncryptedMetadata)
             </div>
         </div>
 
-        <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
-            <div class="row">
-                <div class="col">
-                    <div class="fs-transfer-detail__recipients">
-                        <h2>{tr:recipients}</h2>
-
-                        <div class="fs-transfer__upload-recipients fs-transfer__upload-recipients--show">
-                            <span>
-                                <?php echo Lang::tr('your_transfer_was_sent') ?>
-                            </span>
-                            <div class="fs-badge-buttons-listv recipients">
-                                <br/>
-                                
-                                <?php foreach($transfer->recipients as $recipient) { ?>
-                                    <div class="fs-badge-buttons recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
-                                        <?php
-                                        if(in_array($recipient->email, Auth::user()->email_addresses)) {
-                                            echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
-                                        } else {
-                                            echo '<span>'.Template::sanitizeOutput($recipient->identity).'</span>';
-                                        }
-                                        ?>
-
-                                        <span class="fs-badge-buttons-shell" >
-                                            <span data-action="remind" class="fa    fa-lg fa-repeat" title="{tr:send_reminder}"></span>
-                                            <span data-action="delete" class="fa    fa-lg fa-trash-o" title="{tr:delete}"></span>
-                                            <span data-action="auditlog" class="fa  fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
-                                        </span>
-                                        
-                                    </div>
-                                    <br/>
-                                <?php } ?>
-
-                                <button type="button" class="fs-button" data-action="add_recipient" title="{tr:add_recipient}">
-                                    <i class="fa fa-lg fa-envelope-open"></i>
-                                    <span><?php echo Lang::tr('add_recipient') ?></span>
-                                </button>
-                                <br/>
-                            </div>
+        <?php
+            $hiddenOptions = array(
+                TransferOptions::GET_A_LINK,
+                TransferOptions::STORAGE_CLOUD_S3_BUCKET,
+                TransferOptions::FORWARD_SERVER_NAME,
+            );
+            $transferOptions = (array)$transfer->options;
+            $optionNames = array_unique(array_merge(
+                array_keys(Transfer::availableOptions()),
+                array_keys(array_filter($transferOptions))
+            ));
+            $optionsHtml = array('general' => '', 'notification' => '');
+            foreach ($optionNames as $o) {
+                if (in_array($o, $hiddenOptions)) {
+                    continue;
+                }
+                $active = !empty($transferOptions[$o]);
+                $label = Lang::tr($o);
+                if ($active && $o == TransferOptions::FORWARD_TO_ANOTHER_SERVER) {
+                    $label .= ' : '.ForwardAnotherServer::getServerLabel($transferOptions[TransferOptions::FORWARD_SERVER_NAME]);
+                }
+                if ($active && $o == TransferOptions::REDIRECT_URL_ON_COMPLETE) {
+                    $label .= ' : '.Template::sanitizeOutput($transferOptions[$o]);
+                }
+                $group = (strpos($o, 'email_') !== false || strpos($o, 'notification') !== false) ? 'notification' : 'general';
+                $optionsHtml[$group] .= '<div class="fs-transfer-detail__check'.($active ? '' : ' fs-transfer-detail__check--inactive').'">';
+                $optionsHtml[$group] .= '<i class="fi '.($active ? 'fi-valid' : 'fi-close').'"></i>';
+                $optionsHtml[$group] .= '<span>'.$label.'</span>';
+                $optionsHtml[$group] .= '</div>';
+            }
+        ?>
+        <div class="row">
+            <div class="col">
+                <div class="fs-transfer-detail__options">
+                    <h4>{tr:transfer_selected_options}</h4>
+                    <div class="row">
+                        <div class="col-12 col-lg-6 mt-4">
+                            <strong>{tr:general_settings}</strong>
+                            <?php echo $optionsHtml['general'] ? $optionsHtml['general'] : Lang::tr('none'); ?>
+                        </div>
+                        <div class="col-12 col-lg-6 mt-4">
+                            <strong>{tr:notification_settings}</strong>
+                            <?php echo $optionsHtml['notification'] ? $optionsHtml['notification'] : Lang::tr('none'); ?>
                         </div>
                     </div>
                 </div>
             </div>
-        <?php } ?>
-
-        <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
-            <div class="row">
-                <div class="col col-sm-12 col-md-8">
-                    <div class="fs-transfer-detail__link">
-                        <h2>{tr:download_link}</h2>
-                        <div class="fs-copy">
-                            <span class="download_link"><?php echo $transfer->first_recipient->download_link ?></span>
-
-                            <button id="copy-to-clipboard" type="button" class="fs-button">
-                                <i class="fa fa-copy"></i>
-                                {tr:copy}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
-
-        <?php if ($transfer->options) { ?>
-            <div class="row">
-                <div class="col">
-                    <div class="fs-transfer-detail__options">
-                        <h2>{tr:transfer_selected_options}</h2>
-                        <div class="row">
-                            <div class="col col-sm-12">
-                                <h3>{tr:advanced_transfer_options}</h3>
-
-                                <?php
-                                    $optionshtml = "";
-                                    if(count(array_filter($transfer->options))) {
-                                        foreach (array_keys(array_filter($transfer->options)) as $o) {
-                                            if ($o == TransferOptions::STORAGE_CLOUD_S3_BUCKET) {
-                                                // this option will never be shown to the user
-                                            } else if ( $o == TransferOptions::FORWARD_SERVER_NAME ) {
-                                                // no show
-                                            } else {
-                                                $checkboxClass = "fs-checkbox--disabled";
-
-                                                $optionshtml .= "<div class='fs-transfer-detail__check'>";
-                                                $optionshtml .= "<div class='fs-checkbox ".$checkboxClass."'>";
-                                                if( $o == TransferOptions::FORWARD_TO_ANOTHER_SERVER ) {
-                                                    $server_label = ForwardAnotherServer::getServerLabel($transfer->options[TransferOptions::FORWARD_SERVER_NAME]);
-                                                    $optionshtml .= "<label for='".$o."'>".Lang::tr($o)." : "
-                                                                 .$server_label."</label>";
-                                                } else {
-                                                    $optionshtml .= "<label for='".$o."'>".Lang::tr($o)."</label>";
-                                                }
-
-                                                if( $o == TransferOptions::EMAIL_DAILY_STATISTICS ) {
-                                                    $optionshtml .= "<input id='".$o."' data-option='".TransferOptions::EMAIL_DAILY_STATISTICS."' type='checkbox' checked disabled>";
-                                                } else {
-                                                    $optionshtml .= "<input id='".$o."' type='checkbox' checked disabled>";
-                                                }
-
-                                                $optionshtml .= "<span class='fs-checkbox__mark'></span>";
-                                                $optionshtml .= "</label>";
-                                                $optionshtml .= "</div>";
-                                                $optionshtml .= "</div>";
-                                            }
-                                        }
-                                    }
-
-                                    if($optionshtml != '') {
-                                        echo $optionshtml;
-                                    } else {
-                                        echo Lang::tr('none') ;
-                                    }
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
+        </div>
 
         <div class="row">
             <div class="col">
                 <div class="fs-transfer-detail__actions" >
-                    <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
-                        <button type="button" data-action="remind" class="fs-button">
-                            <i class="fa fa-repeat"></i>
-                            <span>{tr:send_reminder}</span>
-                        </button>
-                    <?php } ?>
-
                     <?php if($audit) { ?>
-                        <button type="button" data-action="auditlog" class="fs-button">
-                            <i class="fa fa-history"></i>
+                        <button type="button" data-action="auditlog" class="fs-button fs-button--inverted">
+                            <i class="fi fi-list"></i>
                             <span>{tr:see_transfer_logs}</span>
                         </button>
                     <?php } ?>
 
-                    <button type="button" data-action="delete" class="fs-button fs-button--danger">
-                        <i class="fa fa-trash"></i>
+                    <button type="button" data-action="delete" class="fs-button fs-button--inverted">
+                        <i class="fi fi-trash"></i>
                         <span>{tr:delete_transfer}</span>
                     </button>
 
                     <?php if($extend) { ?>
-                        <button type="button" data-action="extend" class="fs-button objectholder" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
+                        <button type="button" data-action="extend" class="fs-button fs-button--inverted objectholder" data-id="<?php echo $transfer->id ?>" data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>" >
                             <i class="fa fa-calendar-plus"></i>
                             <span>{tr:extend_expires}</span>
-                        </button>                        
+                        </button>
                     <?php } ?>
-                    
+
                 </div>
             </div>
         </div>

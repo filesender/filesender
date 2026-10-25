@@ -2,28 +2,61 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: var(--fs-hightlight-bg);
-  border: 1px solid var(--fs-accent);
+  gap: var(--fs-spacing-base);
+  background: var(--fs-copy-background);
   border-radius: var(--fs-spacing-4x);
-  font-weight: 700;
   margin-top: var(--fs-spacing-2x);
+  padding: var(--fs-spacing-half) var(--fs-spacing-half) var(--fs-spacing-half) var(--fs-spacing-3x);
 }
 
-.fs-copy span {
+.fs-copy__value {
   flex: 1;
-  font-size: 0.9rem;
-  padding: 0 var(--fs-spacing-3x);
+  min-width: 0;
+  font-size: 1.35rem;
   word-break: break-word;
 }
 
-.fs-copy button {
-  font-size: 0.9rem;
+.fs-copy--command .fs-copy__value {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1.3rem;
 }
 
-/* XS,SM */
+.fs-copy__button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--fs-spacing-5x);
+  height: var(--fs-spacing-5x);
+  padding: 0;
+  font-size: var(--fs-icon-size);
+  color: var(--fs-copy-button-color);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.fs-copy__button:hover {
+  background: var(--fs-copy-button-hover-background);
+}
+
+.fs-copy__button:focus-visible {
+  outline: 2px solid var(--fs-copy-button-color);
+  outline-offset: 2px;
+}
+
+.fs-copy__button i {
+  pointer-events: none;
+}
+
+.fs-copy__button--copied {
+  color: var(--fs-copy-button-copied-color);
+}
+
 @media (max-width: 767px) {
 
-  .fs-copy span {
-    font-size: 0.7rem;
+  .fs-copy__value {
+    font-size: 1.2rem;
   }
 }
