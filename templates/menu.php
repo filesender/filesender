@@ -46,6 +46,7 @@ $maybe_display_aggregate_statistics_menu = false;
     <div class="rightmenu">
         <ul>
         <?php
+            Template::display('!menu_extra_items');
             pagemenuitem('help');
             pagemenuitem('about');
             pagemenuitem('privacy');
