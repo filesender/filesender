@@ -768,6 +768,11 @@ class Lang
                         // Get subject
                         if (preg_match('`^\s*subject\s*:\s*(.+)$`i', $line, $m)) {
                             $subject[] = trim($m[1]);
+                        } elseif (preg_match('`^\s*[^\s:{}<>]+\s*:\s*(.+)$`u', $line, $m)) {
+                            // Some translations also translated the "subject" keyword
+                            // (ro_RO "Subiect:", ta_TAM, si_LK ...). Subject is the only
+                            // header, so accept any single word before the colon.
+                            $subject[] = trim($m[1]);
                         }
                     }
                 }
