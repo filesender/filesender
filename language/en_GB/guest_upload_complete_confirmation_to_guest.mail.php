@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Guest ended to upload files
+subject: Your upload is complete
 
 {alternative:plain}
 
 Dear Sir or Madam,
 
-The following guest ended to upload files using a guest voucher :
+You have finished uploading files using the following guest voucher:
 
 Guest: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
@@ -30,7 +30,7 @@ Best regards,
 </p>
 
 <p>
-The following guest ended to upload files using a guest voucher :
+You have finished uploading files using the following guest voucher:
 </p>
 
 <table rules="rows">
