@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Đã xóa quyền tải xuống
+subject: Đã xóa quyền tải xuống
 
 {thay thế:đồng bằng}
 

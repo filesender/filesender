@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-தலைப்பு: {target.type} #{target.id} பற்றிய அறிக்கை
+subject: {target.type} #{target.id} பற்றிய அறிக்கை
 
 {மாற்று: வெற்று}
 

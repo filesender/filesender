@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Traducerea subsolului de jos de la e-mail, comun pentru toate limbile
+subject: Traducerea subsolului de jos de la e-mail, comun pentru toate limbile
 
 {alternative:plain}
 

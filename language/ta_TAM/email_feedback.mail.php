@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-தலைப்பு: {if:target_type=="recipient"}பெறுநர்{endif}{if:target_type=="guest"}விருந்தினர்{endif}#{target_id} {target.email} இடமிருந்து கருத்து
+subject: {if:target_type=="recipient"}பெறுநர்{endif}{if:target_type=="guest"}விருந்தினர்{endif}#{target_id} {target.email} இடமிருந்து கருத்து
 
 {மாற்று: வெற்று}
 

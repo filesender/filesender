@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Permisiunea de descărcare a fost retrasă
+subject: Permisiunea de descărcare a fost retrasă
 
 {alternative:plain}
 

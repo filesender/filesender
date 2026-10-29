@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Voucher của khách đã hết hạn
+subject: Voucher của khách đã hết hạn
 
 {thay thế:đồng bằng}
 

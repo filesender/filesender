@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Tệp{if:transfer.files>1}s{endif} có sẵn để tải xuống
+subject: Tệp{if:transfer.files>1}s{endif} có sẵn để tải xuống
 chủ đề: {chuyển.subject}
 
 {thay thế:đồng bằng}

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Confirmare de descărcare
+subject: Confirmare de descărcare
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-විෂය: ගොනුව{if:transfer.files>1}s{endif} සාර්ථකව උඩුගත කරන ලදී
+subject: ගොනුව{if:transfer.files>1}s{endif} සාර්ථකව උඩුගත කරන ලදී
 
 {alternative:plain}
 

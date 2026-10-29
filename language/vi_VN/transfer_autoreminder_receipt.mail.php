@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Đã gửi lời nhắc tự động cho lô hàng tệp n°{transfer.id}
+subject: Đã gửi lời nhắc tự động cho lô hàng tệp n°{transfer.id}
 
 {thay thế:đồng bằng}
 

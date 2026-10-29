@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Feedback de la
+subject: Feedback de la
 {if:target_type=="recipient"}destinatarul dvs.{endif}
 {if:target_type=="guest"}invitatul dvs.{endif} {target.email}
 

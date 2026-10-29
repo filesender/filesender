@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-เรื่อง: รายงานเกี่ยวกับ {target.type} #{target.id}
+subject: รายงานเกี่ยวกับ {target.type} #{target.id}
 
 {ทางเลือก:ธรรมดา}
 

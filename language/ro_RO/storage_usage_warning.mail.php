@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Avertisment privind utilizarea spațiului de stocare
+subject: Avertisment privind utilizarea spațiului de stocare
 
 {alternative:plain}
 

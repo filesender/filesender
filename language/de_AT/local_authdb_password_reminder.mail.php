@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Betreff: Einladung zur Verwendung von FileSender
+subject: Einladung zur Verwendung von FileSender
 
 {alternative:plain}
 

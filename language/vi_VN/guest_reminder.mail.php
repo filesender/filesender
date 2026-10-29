@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: (nhắc nhở) nhận được voucher của khách
+subject: (nhắc nhở) nhận được voucher của khách
 chủ đề: (nhắc nhở) {guest.subject}
 
 {thay thế:đồng bằng}

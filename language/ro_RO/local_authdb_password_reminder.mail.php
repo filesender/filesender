@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Invitație de utilizare a serviciului {cfg:site_name}
+subject: Invitație de utilizare a serviciului {cfg:site_name}
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: {if:transfer.files>1}Fișiere disponibile{else}Fișier disponibil{endif} pentru descărcare
+subject: {if:transfer.files>1}Fișiere disponibile{else}Fișier disponibil{endif} pentru descărcare
 Subiect: {transfer.subject}
 
 {alternative:plain}

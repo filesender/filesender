@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Voucherul invitatului a fost anulat
+subject: Voucherul invitatului a fost anulat
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Voucher khách nhận được
+subject: Voucher khách nhận được
 chủ đề: {khách.chủ đề}
 
 {thay thế:đồng bằng}

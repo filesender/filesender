@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Fișier(e) expirat(e)
+subject: Fișier(e) expirat(e)
 
 {alternative:plain}
 

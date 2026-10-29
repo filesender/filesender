@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Eșec la livrarea mesajului
+subject: Eșec la livrarea mesajului
 
 {alternative:plain}
 

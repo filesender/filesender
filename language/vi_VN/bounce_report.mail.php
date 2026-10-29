@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Lỗi gửi tin nhắn
+subject: Lỗi gửi tin nhắn
 
 {thay thế:đồng bằng}
 

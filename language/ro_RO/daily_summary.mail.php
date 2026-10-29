@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Rezumatul zilnic privind transfer
+subject: Rezumatul zilnic privind transfer
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Fișier{if:transfer.files>1}e{endif} au fost încărcat{if:transfer.files>1}e{endif} cu succes
+subject: Fișier{if:transfer.files>1}e{endif} au fost încărcat{if:transfer.files>1}e{endif} cu succes
 
 {alternative:plain}
 

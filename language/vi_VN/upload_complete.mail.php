@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Tệp{if:transfer.files>1}s{endif} đã được tải lên thành công
+subject: Tệp{if:transfer.files>1}s{endif} đã được tải lên thành công
 
 {thay thế:đồng bằng}
 

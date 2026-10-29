@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Raport despre {target.type} #{target.id}
+subject: Raport despre {target.type} #{target.id}
 
 {alternative:plain}
 

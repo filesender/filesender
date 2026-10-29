@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Tải xuống hoàn tất
+subject: Tải xuống hoàn tất
 
 {thay thế:đồng bằng}
 

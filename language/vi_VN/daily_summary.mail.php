@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Chuyển tổng kết hàng ngày
+subject: Chuyển tổng kết hàng ngày
 
 {thay thế:đồng bằng}
 

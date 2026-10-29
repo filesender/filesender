@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Lời mời sử dụng {cfg:site_name}
+subject: Lời mời sử dụng {cfg:site_name}
 
 {thay thế:đồng bằng}
 

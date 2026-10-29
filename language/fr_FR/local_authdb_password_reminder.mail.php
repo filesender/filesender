@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Objet : Invitation à utiliser {cfg:site_name}
+subject: Invitation à utiliser {cfg:site_name}
 
 {alternative:plain}
 

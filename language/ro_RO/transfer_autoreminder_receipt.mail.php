@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Reamintire automată privind expedierea fișierului nr. {transfer.id}
+subject: Reamintire automată privind expedierea fișierului nr. {transfer.id}
 
 {alternative:plain}
 
