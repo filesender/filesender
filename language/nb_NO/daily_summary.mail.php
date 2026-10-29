@@ -23,7 +23,7 @@ Under finner du en oppsummering av nedlastinger for din overføring #{transfer.i
 Ingen nedlastinger
 {endif}
 
-Flere detaljer er tilgjengelig på {transfer.link}
+Flere detaljer er tilgjengelige på {transfer.link}
 
 Med hilsen,
 {cfg:site_name}
@@ -51,7 +51,7 @@ Med hilsen,
 {endif}
 
 <p>
-    Flere detaljer er tilgjengelig påt <a href="{transfer.link}">{transfer.link}</a>
+    Flere detaljer er tilgjengelige på <a href="{transfer.link}">{transfer.link}</a>
 </p>
 
 <p>

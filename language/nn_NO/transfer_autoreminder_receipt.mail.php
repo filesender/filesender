@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Automatiske påminningar sende for overføring nr. {transfer.id}
+subject: Automatiske påminningar er sende for overføring nr. {transfer.id}
 
 {alternative:plain}
 
 Hei,
 
-Ei automatisk påminning vart send til mottakarane som ikkje lasta ned filer frå overføringa di nr. {transfer.id} på {cfg:site_name} ({transfer.link}):
+Ei automatisk påminning vart sendt til mottakarane som ikkje lasta ned filer frå overføringa di nr. {transfer.id} på {cfg:site_name} ({transfer.link}):
 
 {each:recipients as recipient}
   - {recipient.email}
@@ -29,7 +29,7 @@ Med venleg helsing,
 </p>
 
 <p>
-    Ei automatisk påminning vart send til mottakarane som ikkje lasta ned filer frå <a href="{transfer.link}">overføringa nr. {transfer.id}</a> på <a href="{cfg:site_url}">{cfg:site_name}</a>:
+    Ei automatisk påminning vart sendt til mottakarane som ikkje lasta ned filer frå <a href="{transfer.link}">overføringa nr. {transfer.id}</a> på <a href="{cfg:site_url}">{cfg:site_name}</a>:
 </p>
 
 <p>

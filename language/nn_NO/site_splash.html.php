@@ -13,5 +13,5 @@
 Del filene dine trygt med {cfg:site_name}.
 </p>
 <p>
-Har du fått ei invitasjon? Følg instruksjonane i e-posten.
+Har du fått ein invitasjon? Følg instruksjonane i e-posten.
 </p>

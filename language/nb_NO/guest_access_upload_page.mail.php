@@ -13,7 +13,7 @@ subject: Gjesteopplaster åpnet opplastingssiden
 
 Hei,
 
-Gjesteopplaster {guest.email} har gått inn på opplastningssiden fra din invitasjon.
+Gjesteopplaster {guest.email} har åpnet opplastingssiden via invitasjonen din.
 
 Med hilsen,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Med hilsen,
 </p>
 
 <p>
-    Gjesteopplaster <a href="mailto:{guest.email}">{guest.email}</a> har gått inn på opplastningssiden fra din invitasjon.
+    Gjesteopplaster <a href="mailto:{guest.email}">{guest.email}</a> har åpnet opplastingssiden via invitasjonen din.
 </p>
 
 <p>

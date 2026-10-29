@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-subject: Fil(er) ikke lengre tilegnelig for nedlasting
+subject: Fil(er) ikke lengre tilgjengelig for nedlasting
 
 {alternative:plain}
 

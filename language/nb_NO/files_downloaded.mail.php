@@ -21,7 +21,7 @@ Hei,
 {files.first().path} ({size:files.first().size})
 {endif}
 
-Du kan kan se filen(e) og detaljert nedlastingsstatistikk på overføringsiden på {files.first().transfer.link}.
+Du kan se filen(e) og detaljert nedlastingsstatistikk på overføringsiden på {files.first().transfer.link}.
 
 Med hilsen,
 {cfg:site_name}
@@ -49,7 +49,7 @@ Med hilsen,
 </p>
 
 <p>
-    Du kan kan se filen(e) og se detaljert nedlastings statistikk på overføringsiden på  <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
+    Du kan se filen(e) og detaljert nedlastingsstatistikk på overføringsiden på  <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
 </p>
 
 <p>

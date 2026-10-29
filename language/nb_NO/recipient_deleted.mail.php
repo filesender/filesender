@@ -11,7 +11,7 @@ subject: Nedlastingstilgang fjernet
 
 {alternative:plain}
 
-Hei.
+Hei,
 
 Tilgangen til å laste ned filer fra overføring nr.  {transfer.id} er avsluttet.
 
@@ -21,7 +21,7 @@ Med vennlig hilsen
 {alternative:html}
 
 <p>
-    Hei.
+    Hei,
 </p>
 
 <p>

@@ -13,7 +13,7 @@ subject: Invitasjon til å bruke {cfg:site_name}
 
 Hei,
 
-Du har fått ei invitasjon til å bruke {cfg:site_name} på {cfg:site_url}.
+Du har fått ein invitasjon til å bruke {cfg:site_name} på {cfg:site_url}.
 Det mellombelse passordet ditt er {password}.
 
 Vi tilrår at du går til profilsida og endrar passordet når du tek til å bruke tenesta.
@@ -28,7 +28,7 @@ Med venleg helsing,
 </p>
 
 <p>
-Du har fått ei invitasjon til å bruke {cfg:site_name} på {cfg:site_url}.
+Du har fått ein invitasjon til å bruke {cfg:site_name} på {cfg:site_url}.
 Det mellombelse passordet ditt er {password}.</p>
 <p>
 Vi tilrår at du går til profilsida og endrar passordet når du tek til å bruke tenesta.
