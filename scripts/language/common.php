@@ -144,22 +144,24 @@ function write_translation_term_file( $code, $term, $data, $context ) {
     $fn = "$p/$term.$context.php";
 //    echo "translation file for $term at $fn \n";
 
-    $line = strtok($data, "\r\n");
-    if (preg_match('`^\s*subject\s*:\s*(.+)$`i', $line, $m)) {
-        // starts with english term
-        // no modifications needed
-    } else {
-        // This has a translated Subject: line and we should adjust it
-        if(preg_match('`^(\s*[^:]+\s*:\s*)(.+)$`i', $line, $m)) {
+    if( $context == 'mail' ) {
+        $line = strtok($data, "\r\n");
+        if (preg_match('`^\s*subject\s*:\s*(.+)$`i', $line, $m)) {
+            // starts with english term
+            // no modifications needed
+        } else {
+            // This has a translated Subject: line and we should adjust it
+            if(preg_match('`^(\s*[^:]+\s*:\s*)(.+)$`i', $line, $m)) {
 
-            $tr_subj = $m[1];
-            $subject = $m[2];
+                $tr_subj = $m[1];
+                $subject = $m[2];
 
-            $rest = substr($data, strlen($tr_subj));
-            $data = 'subject: ' . $rest;
-     }
-   }
-                                                         
+                $rest = substr($data, strlen($tr_subj));
+                $data = 'subject: ' . $rest;
+             }
+       }
+    }                                                 
+
     file_put_contents( $fn, $warningAboutChangingFile . $data );
 }
 
