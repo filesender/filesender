@@ -9,5 +9,5 @@
 ?>
 <p>
     {cfg:site_name} er en installasjon av FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>),
-    som er utviklet etter behovene til høyre utdannings og forskningsmiljøet.
+    som er utviklet for å møte behovene i universitets- og forskningsmiljøet.
 </p>

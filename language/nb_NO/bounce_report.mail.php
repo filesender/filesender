@@ -23,7 +23,7 @@ En eller flere av mottakerne klarte ikke å motta meldingen(e) dine:
 {endif}
 {endeach}
 
-Flere detaljer er tilgjengelig på {cfg:site_url}
+Flere detaljer er tilgjengelige på {cfg:site_url}
 
 Med hilsen,
 {cfg:site_name}
@@ -51,7 +51,7 @@ Med hilsen,
 </ul>
 
 <p>
-    Flere detaljer er tilgjengelig på <a href="{cfg:site_url}">{cfg:site_url}</a>
+    Flere detaljer er tilgjengelige på <a href="{cfg:site_url}">{cfg:site_url}</a>
 </p>
 
 <p>

@@ -8,7 +8,7 @@
 // 
 ?>
 <h2>Inviter ein gjestebrukar</h2>
-<p>Du kan sende filer til ein brukar utan konto ved å sende ei invitasjon:
+<p>Du kan sende filer til ein brukar utan konto ved å sende ein invitasjon:
 <li>Skriv inn e-postadressa til gjestebrukaren.</li>
 <li>Skriv inn eit emne og ei melding om nødvendig.</li>
 <li>Klikk på «Send invitasjon».</li></p>

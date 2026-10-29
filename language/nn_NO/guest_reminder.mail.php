@@ -14,7 +14,7 @@ subject: (påminning) {guest.subject}
 
 Hei,
 
-Dette er ei påminning. Nedanfor finn du ei invitasjon som gir tilgang til {cfg:site_name}. Du kan bruke henne til å laste opp ei gruppe filer og gjere dei tilgjengelege for ei gruppe personar.
+Dette er ei påminning. Nedanfor finn du ein invitasjon som gir tilgang til {cfg:site_name}. Du kan bruke han til å laste opp ei gruppe filer og gjere dei tilgjengelege for ei gruppe personar.
 
 Avsendar: {guest.user_email}
 Invitasjonslenkje: {guest.upload_link}
@@ -33,7 +33,7 @@ Med venleg helsing,
 </p>
 
 <p>
-    Dette er ei påminning. Nedanfor finn du ei invitasjon som gir tilgang til <a href="{cfg:site_url}">{cfg:site_name}</a>. Du kan bruke henne til å laste opp ei gruppe filer og gjere dei tilgjengelege for ei gruppe personar.
+    Dette er ei påminning. Nedanfor finn du ein invitasjon som gir tilgang til <a href="{cfg:site_url}">{cfg:site_name}</a>. Du kan bruke han til å laste opp ei gruppe filer og gjere dei tilgjengelege for ei gruppe personar.
 </p>
 
 <table rules="rows">

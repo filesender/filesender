@@ -7,13 +7,13 @@
 // 
 // 
 ?>
-subject: Gjesteinvitasjon send
+subject: Gjesteinvitasjon sendt
 
 {alternative:plain}
 
 Hei,
 
-Ei gjesteinvitasjon med tilgang til {cfg:site_name} er send til {guest.email}.
+Ein gjesteinvitasjon med tilgang til {cfg:site_name} er sendt til {guest.email}.
 
 Med venleg helsing,
 {cfg:site_name}
@@ -25,7 +25,7 @@ Med venleg helsing,
 </p>
 
 <p>
-    Ei gjesteinvitasjon med tilgang til <a href="{cfg:site_url}">{cfg:site_name}</a> er send til <a href="mailto:{guest.email}">{guest.email}</a>.
+    Ein gjesteinvitasjon med tilgang til <a href="{cfg:site_url}">{cfg:site_name}</a> er sendt til <a href="mailto:{guest.email}">{guest.email}</a>.
 </p>
 
 <p>

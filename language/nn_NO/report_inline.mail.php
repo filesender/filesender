@@ -22,7 +22,7 @@ Denne overføringa har {transfer.files} filer med ein samla storleik på {size:t
 
 Overføringa er/var tilgjengeleg til {date:transfer.expires}.
 
-Overføringa vart send til {transfer.recipients} mottakarar.
+Overføringa vart sendt til {transfer.recipients} mottakarar.
 {endif}
 {if:target.type == "File"}
 Fila heiter {file.path}, har storleiken {size:file.size} og er/var tilgjengeleg til {date:file.transfer.expires}.
@@ -54,7 +54,7 @@ Med venleg helsing,
     
     Overføringa er/var tilgjengeleg til {date:transfer.expires}.<br /><br />
     
-    Overføringa vart send til {transfer.recipients} mottakarar.
+    Overføringa vart sendt til {transfer.recipients} mottakarar.
     {endif}
     {if:target.type == "File"}
     Fila heiter {file.path}, har storleiken {size:file.size} og er/var tilgjengeleg til {date:file.transfer.expires}.

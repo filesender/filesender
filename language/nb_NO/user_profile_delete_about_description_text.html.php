@@ -8,5 +8,5 @@
 // 
 ?>
 <p>
-Ønsker du å slette din {cfg:site_name} konto? Du vil også slette alle dine filer, inviterte gjesteopplastere og din feilsøkingsinformasjon. Din institusjon styrer ditt brukernavn og passord. Slett disse hos din institusjon.
+Ønsker du å slette din {cfg:site_name}-konto? Du vil også slette alle filene dine, inviterte gjesteopplastere og feilsøkingsinformasjonen din. Institusjonen din styrer brukernavnet og passordet ditt. Slett disse hos institusjonen din.
 </p>

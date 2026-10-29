@@ -8,8 +8,8 @@
 // 
 ?>
 <h2>Inviter en Gjesteopplaster</h2>
-<p>Du kan sende filer til en brukere uten konto med en invitasjon:
-<li>Skriv inn e-postadressen til gjesteopplasteren.</li> 
+<p>Du kan sende filer til en bruker uten konto med en invitasjon:
+        <li>Skriv inn e-postadressen til gjesteopplasteren.</li>
 <li>Skriv inn emne og en melding hvis nødvendig.</li> 
 <li>Klikk på 'Send invitasjon'.</li></p>
-<p>Gjesteopplasteren mottar en e-post med invitasjons linken.</p>
+        <p>Gjesteopplasteren mottar en e-post med invitasjonslenken.</p>
