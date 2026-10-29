@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Tệp (s) đã bị xóa
+subject: Tệp (s) đã bị xóa
 
 {thay thế:đồng bằng}
 

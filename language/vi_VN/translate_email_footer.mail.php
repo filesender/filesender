@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: dịch chân trang email, được chia sẻ bởi tất cả các ngôn ngữ
+subject: dịch chân trang email, được chia sẻ bởi tất cả các ngôn ngữ
 
 {thay thế:đồng bằng}
 

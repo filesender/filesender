@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Pagina de încărcare pentru accesul invitaților
+subject: Pagina de încărcare pentru accesul invitaților
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-{alternative:plain}
+subject: plain}
 
 प्रिय महोदय वा महोदया,
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Fișierul nu mai este disponibil pentru descărcare
+subject: Fișierul nu mai este disponibil pentru descărcare
 
 {alternative:plain}
 

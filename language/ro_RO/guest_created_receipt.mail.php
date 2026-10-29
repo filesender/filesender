@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Voucherul pentru invitat este expediat
+subject: Voucherul pentru invitat este expediat
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-predmet: Poziv za korištenje {cfg:site_name}
+subject: Poziv za korištenje {cfg:site_name}
 
 {alternative:plain}
 

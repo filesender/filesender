@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: (Reamintire) Fișier{if:transfer.files>1}e{endif} disponibil{if:transfer.files>1}e{endif} pentru descărcare
+subject: (Reamintire) Fișier{if:transfer.files>1}e{endif} disponibil{if:transfer.files>1}e{endif} pentru descărcare
 Subiect: (Reamintire) {transfer.subject}
 
 {alternative:plain}

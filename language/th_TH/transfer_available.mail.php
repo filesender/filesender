@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-เรื่อง: ไฟล์{if:transfer.files>1}s{endif} พร้อมสำหรับการดาวน์โหลด
+subject: ไฟล์{if:transfer.files>1}s{endif} พร้อมสำหรับการดาวน์โหลด
 หัวเรื่อง: {transfer.subject}
 
 {ทางเลือก:ธรรมดา}

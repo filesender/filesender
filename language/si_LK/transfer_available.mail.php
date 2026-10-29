@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-විෂය: ගොනුව{if:transfer.files>1}s{endif} බාගත කිරීම සඳහා තිබේ
+subject: ගොනුව{if:transfer.files>1}s{endif} බාගත කිරීම සඳහා තිබේ
 විෂය: {transfer.subject}
 
 {alternative:plain}

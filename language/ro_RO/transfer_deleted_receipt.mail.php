@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Fișierul (fișierele) au fost șters(e)
+subject: Fișierul (fișierele) au fost șters(e)
 
 {alternative:plain}
 

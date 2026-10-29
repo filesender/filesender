@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-විෂය: ඔබේ {if:target_type=="recipient"}ලබන්නා{endif}{if:target_type=="guest"}ාආගන්තුක පරිශීලක{endif} {target.email} වෙතින් ප්‍රතිපෝෂණ
+subject: ඔබේ {if:target_type=="recipient"}ලබන්නා{endif}{if:target_type=="guest"}ාආගන්තුක පරිශීලක{endif} {target.email} වෙතින් ප්‍රතිපෝෂණ
 
 {alternative:plain}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-เรื่อง: ความคิดเห็นจาก {if:target_type=="recipient"}ผู้รับ{endif}{if:target_type=="guest"}guest{endif} ของคุณ {target.email}
+subject: ความคิดเห็นจาก {if:target_type=="recipient"}ผู้รับ{endif}{if:target_type=="guest"}guest{endif} ของคุณ {target.email}
 
 {ทางเลือก:ธรรมดา}
 

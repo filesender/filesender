@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Voucher khách đã gửi
+subject: Voucher khách đã gửi
 
 {thay thế:đồng bằng}
 

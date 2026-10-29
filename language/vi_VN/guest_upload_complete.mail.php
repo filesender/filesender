@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Khách đã kết thúc để tải lên các tập tin
+subject: Khách đã kết thúc để tải lên các tập tin
 
 {thay thế:đồng bằng}
 

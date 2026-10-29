@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-เรื่อง: ไฟล์{if:transfer.files>1}s{endif} อัปโหลดสำเร็จแล้ว
+subject: ไฟล์{if:transfer.files>1}s{endif} อัปโหลดสำเร็จแล้ว
 
 {ทางเลือก:ธรรมดา}
 

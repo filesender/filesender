@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-විෂය: {cfg:site_name} භාවිතා කිරීමට ආරාධනා
+subject: {cfg:site_name} භාවිතා කිරීමට ආරාධනා
 
 {alternative:plain}
 

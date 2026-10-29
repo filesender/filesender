@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Voucherul pentru invitat a expirat
+subject: Voucherul pentru invitat a expirat
 
 {alternative:plain}
 

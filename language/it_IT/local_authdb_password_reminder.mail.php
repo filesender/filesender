@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-oggetto: Invito a utilizzare {cfg:site_name}
+subject: Invito a utilizzare {cfg:site_name}
 
 {alternativa: semplice}
 

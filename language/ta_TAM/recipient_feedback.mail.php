@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-தலைப்பு: உங்கள் {if:target_type=="recipient"}பெறுநரிடமிருந்து{endif}{if:target_type=="guest"}விருந்தினர்{endif} {target.email} கருத்து
+subject: உங்கள் {if:target_type=="recipient"}பெறுநரிடமிருந்து{endif}{if:target_type=="guest"}விருந்தினர்{endif} {target.email} கருத்து
 
 {மாற்று: வெற்று}
 

@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Descărcare completă
+subject: Descărcare completă
 
 {alternative:plain} 
 

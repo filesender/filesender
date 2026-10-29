@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-temats: E-pasta kājenes tulkošana, ko koplieto visās valodās
+subject: E-pasta kājenes tulkošana, ko koplieto visās valodās
 
 {alternative:plain}
 

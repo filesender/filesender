@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Voucher của khách bị hủy
+subject: Voucher của khách bị hủy
 
 {thay thế:đồng bằng}
 

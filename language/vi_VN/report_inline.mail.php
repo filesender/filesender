@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Báo cáo về {target.type} #{target.id}
+subject: Báo cáo về {target.type} #{target.id}
 
 {thay thế:đồng bằng}
 

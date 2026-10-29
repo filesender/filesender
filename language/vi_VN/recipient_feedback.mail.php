@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Phản hồi từ {if:target_type=="recipient"}người nhận{endif}{if:target_type=="guest"}khách{endif} {target.email} của bạn
+subject: Phản hồi từ {if:target_type=="recipient"}người nhận{endif}{if:target_type=="guest"}khách{endif} {target.email} của bạn
 
 {thay thế:đồng bằng}
 

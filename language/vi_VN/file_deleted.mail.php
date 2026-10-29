@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Tệp không còn khả dụng để tải xuống
+subject: Tệp không còn khả dụng để tải xuống
 
 {thay thế:đồng bằng}
 

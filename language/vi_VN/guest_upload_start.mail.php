@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Khách bắt đầu tải tệp lên
+subject: Khách bắt đầu tải tệp lên
 
 {thay thế:đồng bằng}
 

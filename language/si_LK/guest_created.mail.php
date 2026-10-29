@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-විෂය: ආගන්තුක වවුචරය ලැබුණි
+subject: ආගන්තුක වවුචරය ලැබුණි
 විෂය: {guest.subject}
 
 {alternative:plain}

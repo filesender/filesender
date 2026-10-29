@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: (Reamintire) Ați primit voucherul pentru invitat
+subject: (Reamintire) Ați primit voucherul pentru invitat
 subject: (reminder) {guest.subject}
 
 {alternative:plain}

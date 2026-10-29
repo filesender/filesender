@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-විෂය: {target.type} #{target.id} ගැන වාර්තා කරන්න
+subject: {target.type} #{target.id} ගැන වාර්තා කරන්න
 
 {alternative:plain}
 

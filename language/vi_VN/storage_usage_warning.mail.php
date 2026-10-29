@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Cảnh báo sử dụng bộ nhớ
+subject: Cảnh báo sử dụng bộ nhớ
 
 {thay thế:đồng bằng}
 

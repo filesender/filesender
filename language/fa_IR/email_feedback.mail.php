@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-بازخورد از {if:target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email}
+subject: target_type=="recipient"}recipient{endif}{if:target_type=="guest"}guest{endif}#{target_id} {target.email}
 
 {alternative:plain}
 

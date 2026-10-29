@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Invitatul a început încărcarea fișierelor
+subject: Invitatul a început încărcarea fișierelor
 
 {alternative:plain}
 

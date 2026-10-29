@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-Subiect: Fișierul (fișierele) nu mai poate (pot) fi descărcat(e)
+subject: Fișierul (fișierele) nu mai poate (pot) fi descărcat(e)
 
 {alternative:plain}
 

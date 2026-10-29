@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-เรื่อง: Guest Voucher หมดอายุ
+subject: Guest Voucher หมดอายุ
 
 {ทางเลือก:ธรรมดา}
 

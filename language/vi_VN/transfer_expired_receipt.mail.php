@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: (Các) tệp đã hết hạn
+subject: (Các) tệp đã hết hạn
 
 {thay thế:đồng bằng}
 

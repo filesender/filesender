@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-temats: Fails{if:transfer.files>1}(-i){endif} veiksmīgi augšupielādēti
+subject: Fails{if:transfer.files>1}(-i){endif} veiksmīgi augšupielādēti
 
 {alternative:plain}
 

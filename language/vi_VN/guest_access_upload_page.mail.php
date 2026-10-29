@@ -7,7 +7,7 @@
 // 
 // 
 ?>
-chủ đề: Khách truy cập trang tải lên
+subject: Khách truy cập trang tải lên
 
 {thay thế:đồng bằng}
 
