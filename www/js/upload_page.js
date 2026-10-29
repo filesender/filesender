@@ -1318,10 +1318,12 @@ filesender.ui.evalUploadEnabled = function() {
         configStageOk = false;
     }
 
+    var aupNeededNutNotSelected = false;
     if(filesender.ui.nodes.aup.length) {
         if(!filesender.ui.nodes.aup.is(':checked')) {
             ok = false;
             configStageOk = false;
+            aupNeededNutNotSelected = true;
         }
     }
 
@@ -1369,7 +1371,9 @@ filesender.ui.evalUploadEnabled = function() {
     }
 
     if (filesender.ui.stage == 3) {
-        configStageOk = configStageOk || (filesender.ui.nodes.guest_token.length && filesender.ui.guest_can_only_send_to_me());
+        if( !aupNeededNutNotSelected ) {
+            configStageOk = configStageOk || (filesender.ui.nodes.guest_token.length && filesender.ui.guest_can_only_send_to_me());
+        }
         filesender.ui.nodes.stages.confirm.prop('disabled', !configStageOk);
         if (configStageOk) {
             filesender.ui.nodes.recipients.input.removeClass('invalid');
