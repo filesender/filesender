@@ -148,7 +148,7 @@ window.filesender.terasender = {
                 security_token:     this.security_token,
                 csrfptoken:         filesender.client.getCSRFToken(),
                 crypto_encrypted_archive_download: window.filesender.crypto_encrypted_archive_download,
-                crypto_encrypted_archive_download_fileidlist: this.crypto_encrypted_archive_download_fileidlist
+                crypto_encrypted_archive_download_fileidlist: window.filesender.crypto_encrypted_archive_download_fileidlist
             };
 
             this.log('allocateJob(recv) chunk:' + chunkid + ' giving job to worker');

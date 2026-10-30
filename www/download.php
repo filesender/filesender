@@ -401,6 +401,16 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         // Only a range that covers the last byte completes the download.
         if (!$range)
             return true;
+        if ($transfer->options['encryption'] == 1) {
+            // Encrypted ranges are addressed by the client using plain
+            // chunk_size offsets (chunkid * chunk_size), not the stored
+            // crypted_chunk_size layout. For a file spanning several chunks,
+            // the request for the last chunk therefore never reaches
+            // encrypted_size - 1. Consider the download complete when the
+            // requested range starts in the last chunk.
+            $last_chunk_start = (int) floor(max($file->size - 1, 0) / $file->chunk_size) * $file->chunk_size;
+            return ($range['start'] >= $last_chunk_start);
+        }
         return ($range['end'] >= $total_size - 1);
     };
 
