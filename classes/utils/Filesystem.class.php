@@ -95,7 +95,7 @@ class Filesystem
      *
      * @throws StorageFilesystemCannotDeleteException
      */
-    public static function deleteTreeRecursive($file_path, File $file = null)
+    public static function deleteTreeRecursive($file_path, ?File $file = null)
     {
         if (!file_exists($file_path)) {
             return;

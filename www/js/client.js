@@ -240,8 +240,9 @@ window.filesender.client = {
                 if(
                     (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
                     (options.ignore_authentication_required || filesender.client.authentication_required)
-                )
+                ) {
                     return;
+                }
 
                 if(
                     (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
