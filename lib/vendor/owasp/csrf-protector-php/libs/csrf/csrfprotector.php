@@ -84,6 +84,8 @@ if (!defined('__CSRF_PROTECTOR__')) {
          */
         public static $config = array();
 
+        public static $tokenKeepTime = 0;
+        
         /**
          */
         private static $errorHandler = null;
@@ -245,7 +247,7 @@ if (!defined('__CSRF_PROTECTOR__')) {
                     //action in case of failed validation
                     self::failedValidationAction();
                 } else {
-                    self::refreshToken();    //refresh token for successful validation
+                    self::refreshToken( $token );    //refresh token for successful validation
                 }
             } else if (!static::isURLallowed()) {
                 //currently for same origin only
@@ -257,7 +259,7 @@ if (!defined('__CSRF_PROTECTOR__')) {
                     //action in case of failed validation
                     self::failedValidationAction();
                 } else {
-                    self::refreshToken();    //refresh token for successful validation
+                    self::refreshToken( $token );    //refresh token for successful validation
                 }
             }    
         }
@@ -395,8 +397,30 @@ if (!defined('__CSRF_PROTECTOR__')) {
          * Returns: 
          * void
          */
-        public static function refreshToken()
+        public static function refreshToken( $oldtoken = null )
         {
+            if( self::$tokenKeepTime == -1 ) {
+                return;
+            }
+            
+            if( self::$tokenKeepTime > 0 ) {
+                if( $oldtoken && strlen($oldtoken)) {
+                    $pos = strpos($oldtoken, '.');
+                    if ($pos != false) {
+                        $s = substr( $oldtoken, $pos+1 );
+                        
+                        if(is_numeric($s)) {
+                            $v = (int)$s;
+                            if( $v ) {
+                                $dd = time() - $v;
+                                if( $dd < self::$tokenKeepTime ) {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             $token = self::generateAuthToken();
 
             if (!isset($_SESSION[self::$config['CSRFP_TOKEN']])
@@ -475,7 +499,9 @@ if (!defined('__CSRF_PROTECTOR__')) {
                     $token .= $c;
                 }
             }
-            return substr($token, 0, self::$config['tokenLength']);
+            $ret = substr($token, 0, self::$config['tokenLength']);
+            $ret .= "." . time();
+            return $ret;
         }
 
         /*

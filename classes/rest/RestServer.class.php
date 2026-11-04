@@ -207,6 +207,20 @@ class RestServer
                 $security_token_matches = $security_token && Utilities::checkSecurityToken($security_token);
             }
 
+            // token updating in the ts context is a todo item
+            if( Utilities::isTrue(Config::get('owasp_csrf_protector_enabled'))) {
+                if( $endpoint == "file") {
+                    if (in_array($method, array('put'))) {
+                        // If we want to cycle the token in a terasender upload we
+                        // need to have it handed around
+                        // ts worker1 -> controller -> worker [2...n]
+                        // and slightly stale tokens still accepted
+                        // for a grace period.
+                        csrfProtector::$tokenKeepTime = -1;
+                    }
+                }
+            }
+
             // if configured, ensure no nasty CSRF is going on
             Security::validateAgainstCSRF( true );
             

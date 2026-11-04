@@ -910,7 +910,7 @@ class User extends DBObject
         if( !$this->save_frequent_email_address ) {
             $this->frequent_recipients = array();
         }
-        Logger::dump("AAA beforesave ", $this->transfer_preferences );
+//        Logger::dump("AAA beforesave ", $this->transfer_preferences );
         if( Config::get('data_protection_user_transfer_preferences_disabled')) {
             $this->transfer_preferences = null;
         }
