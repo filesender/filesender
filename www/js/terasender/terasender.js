@@ -43,6 +43,13 @@ window.filesender.terasender = {
      * Job allocation lock
      */
     jobAllocationLocked: false,
+
+    /**
+     * Files whose chunks are all executed but whose completion was
+     * deferred by the workers_on_same_file guard; re-checked after
+     * every job (re)assignment so the gate can never stay latched.
+     */
+    deferred_completions: {},    
     
     /**
      * Workers stack
@@ -93,6 +100,8 @@ window.filesender.terasender = {
      */
     crypto_encrypted_archive_download_fileidlist: '',
 //    crypto_encrypted_archive_download: false,
+
+
     
     /**
      * Send command to worker
@@ -449,52 +458,92 @@ window.filesender.terasender = {
         file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.upload_chunk_size);
         
         var done = (file.fine_progress_done >= file.size) && !workers_on_same_file;
+
+        if(!done && (file.fine_progress_done >= file.size) && workers_on_same_file) {
+            this.deferred_completions[file.id] = true;
+        }
         
         file.fine_progress = done ? file.size : (fine_progress + file.fine_progress_done);
         
-        var t = this;
-        var complete = done ? function() {
-            var chunks_pending = false;
-            for(var i=0; i<t.transfer.files.length; i++)
-                if(t.transfer.files[i].uploaded < t.transfer.files[i].size) {
-                    chunks_pending = true;
-                    break;
-                }
-            
-            var workers_uploading = false;
-            for(var i=0; i<t.workers.length; i++)
-                if(t.workers[i].status == 'uploading') {
-                    workers_uploading = true;
-                    break;
-                }
-
-            if(chunks_pending || workers_uploading) return;
-            
-            //
-            // If the final chunks of the final two files are
-            // uploading it is possible that we can get here for the
-            // second last file and that would present a race
-            // condition between this reportComplete() whih itself
-            // calls transferComplete() which is not the case until we
-            // are finishing the last chunk of the last file.
-            //
-            // NOTE that we can not simply place the uploading_count
-            // test above and set 'var complete = false' because
-            // reportProgress() uses the callable complete as a
-            // boolean to indicate if we are on the last chunk of the
-            // file, which we are, but maybe not the last file as
-            // well.
-            //
-            if( uploading_count > 1 ) return;
-          
-            // Notify all done
-            t.transfer.reportComplete();
-            t.status = 'done';
-        } : false;
-        
+        var complete = false;
+        if( done ) {
+            complete = this.completionCallback(file, uploading_count);
+        }
         this.transfer.reportProgress(file, complete);
     },
 
+
+    completionCallback: function(file, uploading_count) {
+        var t = this;
+        var chunks_pending = false;
+        for(var i=0; i<t.transfer.files.length; i++)
+            if(t.transfer.files[i].uploaded < t.transfer.files[i].size) {
+                chunks_pending = true;
+                break;
+            }
+        
+        var workers_uploading = false;
+        for(var i=0; i<t.workers.length; i++)
+            if(t.workers[i].status == 'uploading') {
+                workers_uploading = true;
+                break;
+            }
+
+        if(chunks_pending || workers_uploading) return;
+        
+        //
+        // If the final chunks of the final two files are
+        // uploading it is possible that we can get here for the
+        // second last file and that would present a race
+        // condition between this reportComplete() whih itself
+        // calls transferComplete() which is not the case until we
+        // are finishing the last chunk of the last file.
+        //
+        // NOTE that we can not simply place the uploading_count
+        // test above and set 'var complete = false' because
+        // reportProgress() uses the callable complete as a
+        // boolean to indicate if we are on the last chunk of the
+        // file, which we are, but maybe not the last file as
+        // well.
+        //
+        if( uploading_count > 1 ) return;
+        
+        // Notify all done
+        t.transfer.reportComplete();
+        t.status = 'done';
+    },
+
+    recheckDeferredCompletions: function() {
+        for(var fid in this.deferred_completions) {
+            var file = null;
+            for(var i=0; i<this.transfer.files.length; i++)
+                if(this.transfer.files[i].id == fid) {
+                    file = this.transfer.files[i];
+                    break;
+                }
+
+            if(!file || (file.fine_progress_done < file.size)) {
+                delete this.deferred_completions[fid];
+                continue;
+            }
+
+            var workers_on_same_file = false, uploading_count = 0;
+            for(var i=0; i<this.workers.length; i++) {
+                if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
+                if(this.workers[i].file_id == fid) workers_on_same_file = true;
+                if(this.workers[i].status == 'uploading') uploading_count++;
+            }
+
+            if(workers_on_same_file) continue;
+
+            delete this.deferred_completions[fid];
+
+            this.log('Re-running deferred completion check for file ' + fid);
+            file.fine_progress = file.size;
+            this.transfer.reportProgress(file, this.completionCallback(file, uploading_count));
+        }
+    },
+    
     /**
      * Look through all the workers for the file that job is working
      * on and set the transfer.files starting upload offsets so that
@@ -566,7 +615,13 @@ window.filesender.terasender = {
                     this.workers_start_monitor_id = 0;
                 }
                 var gave = this.giveJob(worker_id, workerinterface);
-                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id, gave.file);
+                if(gave) {
+                    this.transfer.recordUploadStartedInWatchdog( 'worker:' + worker_id,
+                                                                 gave.file );
+                }
+                // make sure that deferred_completions is checked so that a file
+                // complete gets through to the server.
+                this.recheckDeferredCompletions();            
                 break;
 
             // This happens after the worker has already
