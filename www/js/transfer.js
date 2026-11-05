@@ -1110,10 +1110,16 @@ window.filesender.transfer = function() {
         var now = (new Date()).getTime();
         
         file.progress_reported = now;
+
+        if(complete && file.status == 'done') {
+            filesender.ui.log('File ' + file.name + ' already reported...');
+            // Already reported
+            return;
+        }
         
-        if(complete && file.status == 'done') return; // Already reported
-        
-        if(complete) file.status = 'done';
+        if(complete) {
+            file.status = 'done';
+        }
         
         if (complete) {
             filesender.ui.log('File ' + file.name + ' (' + file.size + ' bytes) uploaded');
