@@ -468,7 +468,7 @@ class Config
             }
 
             // make sure auditlogs outlive transfers by nominated number of days
-            $minv = self::$parameters['auditlog_lifetime']
+            $minv = self::$parameters['max_transfer_days_valid']
                   + self::$parameters['auditlog_must_be_n_days_longer_than_max_transfer_days_valid'];
             if( self::$parameters['auditlog_lifetime'] < $minv ) {
                 self::$parameters['auditlog_lifetime'] = $minv;
