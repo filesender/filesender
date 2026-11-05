@@ -1111,7 +1111,6 @@ window.filesender.transfer = function() {
         
         file.progress_reported = now;
 
-        filesender.ui.log("reportProgress(top) file " + file.name + " complete " + complete );
         if(complete && file.status == 'done') {
             filesender.ui.log('File ' + file.name + ' already reported...');
             // Already reported
