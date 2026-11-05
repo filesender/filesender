@@ -451,8 +451,9 @@ window.filesender.terasender = {
                 
             if(this.workers[i].id == worker_id) continue;
             
-            if(this.workers[i].file_id == job.file.id)
+            if(this.workers[i].file_id == job.file.id) {
                 workers_on_same_file = true;
+            }
         }
         
         file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.upload_chunk_size);
@@ -489,7 +490,9 @@ window.filesender.terasender = {
                 break;
             }
 
-        if(chunks_pending || workers_uploading) return;
+        if(chunks_pending || workers_uploading) {
+            return false;
+        }
         
         //
         // If the final chunks of the final two files are
@@ -506,11 +509,14 @@ window.filesender.terasender = {
         // file, which we are, but maybe not the last file as
         // well.
         //
-        if( uploading_count > 1 ) return;
+        if( uploading_count > 1 ) {
+            return false;
+        }
         
         // Notify all done
         t.transfer.reportComplete();
         t.status = 'done';
+        return true;
     },
 
     recheckDeferredCompletions: function() {
