@@ -465,11 +465,54 @@ window.filesender.terasender = {
         }
         
         file.fine_progress = done ? file.size : (fine_progress + file.fine_progress_done);
+
         
-        var complete = false;
-        if( done ) {
-            complete = this.completionCallback(file, uploading_count);
-        }
+        // var complete = false;
+        // if( done ) {
+        //     complete = this.completionCallback(file, uploading_count);
+        // }
+
+        var t = this;
+        var complete = done ? function() {
+            var chunks_pending = false;
+            for(var i=0; i<t.transfer.files.length; i++)
+                if(t.transfer.files[i].uploaded < t.transfer.files[i].size) {
+                    chunks_pending = true;
+                    break;
+                }
+            
+            var workers_uploading = false;
+            for(var i=0; i<t.workers.length; i++)
+                if(t.workers[i].status == 'uploading') {
+                    workers_uploading = true;
+                    break;
+                }
+
+            if(chunks_pending || workers_uploading) return;
+            
+            //
+            // If the final chunks of the final two files are
+            // uploading it is possible that we can get here for the
+            // second last file and that would present a race
+            // condition between this reportComplete() whih itself
+            // calls transferComplete() which is not the case until we
+            // are finishing the last chunk of the last file.
+            //
+            // NOTE that we can not simply place the uploading_count
+            // test above and set 'var complete = false' because
+            // reportProgress() uses the callable complete as a
+            // boolean to indicate if we are on the last chunk of the
+            // file, which we are, but maybe not the last file as
+            // well.
+            //
+            if( uploading_count > 1 ) return;
+          
+            // Notify all done
+            t.transfer.reportComplete();
+            t.status = 'done';
+        } : false;
+
+        
         this.transfer.reportProgress(file, complete);
     },
 
