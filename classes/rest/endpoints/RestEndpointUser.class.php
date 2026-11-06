@@ -366,6 +366,13 @@ END;
             }
         }
         if( $data->apisecretcreate ) {
+            // While API secrets expire, a new one may only be created from the
+            // web interface. Otherwise a request signed with a still-valid
+            // secret could replace it with a fresh one, and API access would
+            // never end even after the user lost access to the service.
+            if (User::getAuthSecretMaxAgeDays() && !Auth::isSP()) {
+                throw new RestAuthenticationRequiredException();
+            }
             $user->authSecretCreate();
         }
         if( $data->apisecretdelete ) {
