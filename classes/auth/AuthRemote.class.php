@@ -166,10 +166,10 @@ class AuthRemote
             // login extends them (see Auth::user_protected()).
             // Remote applications (auth_remote_applications) sign with their
             // own secret from the configuration, which has no expiry; this
-            // check applies only to the personal API secrets of users.            
+            // check applies only to the personal API secrets of users.
             if (!$application) {
                 if ($user->authSecretIsExpired()) {
-                    throw new AuthRemoteUserRejectedException($user->id, 'secret expired');
+                    throw new AuthRemoteUserSecretExpiredException($user->id, $user->auth_secret_expires);
                 }
 
                 // A secret created before expiry was enabled gets its expiry

@@ -75,6 +75,7 @@ $lang['auth_remote_signature_check_failed'] = 'Remote signature check failed';
 $lang['auth_remote_too_late'] = 'Authentication too late';
 $lang['auth_remote_unknown_application'] = 'Unknown remote application';
 $lang['auth_remote_user_rejected'] = 'User does not accept remote authentication';
+$lang['auth_remote_user_secret_expired'] = 'Your API secret has expired. Log in to the web interface to renew it.';
 $lang['auth_secret_expires_at'] = 'Your API secret is valid until: <strong>{datetime}</strong>';
 $lang['auth_secret_validity_info'] = 'Your API secret stays valid for {days} days after you last use this web interface. Every visit extends it.';
 $lang['auth_sp_attribute_email_hint'] = 'The authentication system that FileSender is using is missing the required email attribute for the user';
