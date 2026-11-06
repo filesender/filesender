@@ -726,6 +726,24 @@ class FileSenderCLI:
         """Process CLI command"""
         #post_transfer
         if self.download_link:
+            if "s=transfer_detail" in self.download_link:
+                print('Found transfer detail page, must construct link to download page...')
+                parsed_url = urllib.parse.urlparse(self.download_link)
+                query_string = parsed_url.query
+                query_params = urllib.parse.parse_qs(query_string)
+                tid = query_params['transfer_id'][0]
+                md = self.call(
+                    'get',
+                    '/transfer/'+tid,
+                    {},
+                    None,
+                    None,
+                    {}
+                )
+                token = md['recipients'][0].get('token')
+                components = self.download_link.split("?")
+                self.download_link = components[0] + '?s=download&token=' + token
+                
             self.download_transfer(self.download_link)
             sys.exit(0)
 
