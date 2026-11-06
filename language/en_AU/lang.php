@@ -598,6 +598,7 @@ $lang['resend_invitation'] = 'Send invitation again';
 $lang['reset_per_user_guest_expire_setting'] = 'Set to 0 to disable any specific setting for this User.';
 $lang['rest_access_forbidden'] = 'REST server denied access';
 $lang['rest_admin_required'] = 'Admin rights required';
+$lang['rest_auth_secret_create_web_only'] = 'A new API secret can only be created on your profile page in the web interface.';
 $lang['rest_authentication_required'] = 'REST authentication required';
 $lang['rest_bad_parameter'] = 'Bad REST parameter';
 $lang['rest_data_stale'] = 'Your request contains information that is too old.';
