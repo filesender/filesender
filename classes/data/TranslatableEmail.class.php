@@ -343,6 +343,14 @@ class TranslatableEmail extends DBObject
         }
         if ($to instanceof Recipient) {
             $lang = $to->transfer->lang;
+            // Same as in ApplicationMail::quickSend(): without this the
+            // address header gets a stringified object and the mail is lost.
+            $to = $to->email;
+        }
+        if ($to instanceof Guest) {
+            // Guest reaches here from Guest::remind() and friends, is neither
+            // User nor Recipient, and has the same __toString() shape.
+            $to = $to->email;
         }
         
         // Translate mail parts
