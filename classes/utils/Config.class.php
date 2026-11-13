@@ -422,6 +422,16 @@ class Config
             self::$parameters['auth_remote_user_autogenerate_secret'] = false;
         }
 
+        // auth_remote_user_secret_max_age_days must be a whole number of days
+        // greater than or equal to 0. Reject anything else at startup, so that
+        // a typo can't silently disable API key expiry.
+        $v = self::get('auth_remote_user_secret_max_age_days');
+        if (filter_var($v, FILTER_VALIDATE_INT, array('options' => array('min_range' => 0))) === false) {
+            throw new ConfigBadParameterException('auth_remote_user_secret_max_age_days');
+        }
+        self::$parameters['auth_remote_user_secret_max_age_days'] = (int)$v;
+
+
         $v = self::get('upload_page_password_can_not_be_part_of_message_handling');
         if( !$v || ($v != '' && $v != 'none' && $v != 'warning' && $v != 'error' )) {
             self::$parameters['upload_page_password_can_not_be_part_of_message_handling'] = 'warning';

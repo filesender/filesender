@@ -105,6 +105,13 @@ class User extends DBObject
             'type' => 'datetime',
             'null' => true
         ),
+        // When the API secret stops being accepted (UNIX timestamp, server time).
+        // Only used when auth_remote_user_secret_max_age_days > 0; null if the
+        // secret has no expiry yet. See authSecretIsExpired().
+        'auth_secret_expires' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
         'quota' => array(
             'type' => 'uint',
             'size' => 'big',
@@ -186,6 +193,7 @@ class User extends DBObject
     protected $last_activity = 0;
     protected $auth_secret = null;
     protected $auth_secret_created = null;
+    protected $auth_secret_expires = null;
     protected $quota = 0;
     protected $guest_expiry_default_days = null;
     protected $service_aup_accepted_version = 0;
@@ -257,18 +265,124 @@ class User extends DBObject
         }
     }
 
-    public function authSecretCreate() {
+    /**
+     * Get the maximum validity of API secrets after the last web login.
+     *
+     * @return int number of days, 0 if API secrets never expire
+     */
+    public static function getAuthSecretMaxAgeDays()
+    {
+        return (int)Config::get('auth_remote_user_secret_max_age_days');
+    }
+
+    /**
+     * Compute the expiry of an API secret, counted from the given time.
+     *
+     * The validity is counted in exact 24-hour periods of server time, so
+     * daylight saving changes don't shorten or lengthen it.
+     *
+     * @param int $now UNIX timestamp to count from
+     *
+     * @return int|null UNIX timestamp, or null if API secrets never expire
+     */
+    private static function computeAuthSecretExpiry($now)
+    {
+        $days = self::getAuthSecretMaxAgeDays();
+        return $days > 0 ? $now + $days * 86400 : null;
+    }
+
+    /**
+     * Create a new API secret for the user, replacing any existing one.
+     *
+     * Sets the creation date and, if auth_remote_user_secret_max_age_days
+     * is greater than 0, the expiry date. Saves the user.
+     */
+    public function authSecretCreate()
+    {
         $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateRandomUID());
         $this->auth_secret_created = time();
+        $this->auth_secret_expires = self::computeAuthSecretExpiry($this->auth_secret_created);
         $this->save();
     }
-    public function authSecretDelete() {
+
+    /**
+     * Delete the user's API secret together with its creation and expiry
+     * dates. Saves the user.
+     */
+    public function authSecretDelete()
+    {
         $this->auth_secret = null;
         $this->auth_secret_created = null;
+        $this->auth_secret_expires = null;
         $this->save();
     }
+
+    /**
+     * Check whether the user's API secret has expired.
+     *
+     * Expiry is only enforced when auth_remote_user_secret_max_age_days is
+     * greater than 0. A secret without an expiry date is not considered
+     * expired; it gets one on its next use (see authSecretEnsureExpiry()).
+     *
+     * @param int|null $now UNIX timestamp to compare with, defaults to time()
+     *
+     * @return bool true if the secret exists and its expiry date has passed
+     */
+    public function authSecretIsExpired($now = null)
+    {
+        if (!self::getAuthSecretMaxAgeDays() || !$this->auth_secret || !$this->auth_secret_expires) {
+            return false;
+        }
+        return $this->auth_secret_expires <= ($now ?? time());
+    }
+
+    /**
+     * Extend the user's API secret to auth_remote_user_secret_max_age_days
+     * from now.
+     *
+     * Always sets now + N days, even if the stored expiry is later, so that
+     * a shortened setting applies at the user's next web login. Does not
+     * save the user; the caller decides when to save.
+     *
+     * @param int|null $now UNIX timestamp to count from, defaults to time()
+     *
+     * @return bool true if the expiry was set, false if there is no secret
+     *              or expiry is disabled
+     */
+    public function authSecretExtend($now = null)
+    {
+        if (!$this->auth_secret || !self::getAuthSecretMaxAgeDays()) {
+            return false;
+        }
+        $this->auth_secret_expires = self::computeAuthSecretExpiry($now ?? time());
+        return true;
+    }
+
+    /**
+     * Give an API secret without an expiry date one, counted from now.
+     *
+     * Covers secrets created before auth_remote_user_secret_max_age_days
+     * was enabled: they stay valid for N days from their first use. Does
+     * not save the user.
+     *
+     * @param int|null $now UNIX timestamp to count from, defaults to time()
+     *
+     * @return bool true if an expiry date was set
+     */
+    public function authSecretEnsureExpiry($now = null)
+    {
+        if ($this->auth_secret_expires) {
+            return false;
+        }
+        return $this->authSecretExtend($now);
+    }
+
+    /**
+     * Delete the API secrets of all users, together with their creation and
+     * expiry dates. Used by the admin function to revoke all API keys.
+     */
     public static function authSecretDeleteAll() {
-        $statement = DBI::prepare('update '.self::getDBTable().' set auth_secret_created=null, auth_secret=null ');
+        $statement = DBI::prepare('update '.self::getDBTable().' set auth_secret_created=null, auth_secret=null, auth_secret_expires=null ');
         $statement->execute(array());
     }
     
@@ -726,7 +840,7 @@ class User extends DBObject
     {
         if (in_array($property, array(
             'id','additional_attributes', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
-            'auth_secret_created',
+            'auth_secret_created','auth_secret_expires',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name', 'quota', 'authid'
           , 'guest_expiry_default_days', 'service_aup_accepted_version', 'service_aup_accepted_time'
@@ -767,6 +881,10 @@ class User extends DBObject
             return $this->auth_secret_created ? Utilities::formatDate($this->auth_secret_created,true) : '';
         }
 
+        if( $property == 'auth_secret_expires_formatted' ) {
+            return $this->auth_secret_expires ? Utilities::formatDate($this->auth_secret_expires,true) : '';
+        }
+        
         if ($property == 'saml_user_identification_uid') {
             $a = Authentication::fromId($this->authid);
             return $a->saml_user_identification_uid;

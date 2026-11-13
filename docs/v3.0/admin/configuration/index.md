@@ -347,6 +347,7 @@ Specific debugging options inclide allow_pages_log_invalid_page
 * [auth_remote_applications](#auth_remote_applications)
 * [auth_remote_user_enabled](#auth_remote_user_enabled)
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
+* [auth_remote_user_secret_max_age_days](#auth_remote_user_secret_max_age_days)
 * [rest_allow_jsonp](#rest_allow_jsonp)
 
 ## Aggregate statistics
@@ -3744,6 +3745,16 @@ In this example, the application `appname` with secret `secret` has admin rights
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+### auth_remote_user_secret_max_age_days
+
+* __description:__ Number of days a user's API key (auth secret) stays valid after the user last used the web interface. Using the web interface, which requires logging in through the identity provider, extends the key to this many days from then, so the key keeps working as long as the user can still log in, and stops working at most this many days after the user loses access to the service. Requests signed with an expired key are rejected; the key is not deleted, and the next visit to the web interface makes it valid again. The validity is counted in exact 24-hour periods.
+* __mandatory:__ no
+* __type:__ integer, 0 or greater
+* __default:__ 0 (API keys never expire)
+* __available:__ since version <next release>
+* __1.x name:__
+* __comment:__ The expiry date is computed and checked on the server only, so client clock skew and time zones don't affect it. When this setting is first enabled, keys created before have no expiry date; they get one, this many days ahead, on their next use. A changed value applies to each key the next time its owner uses the web interface. Setting the value back to 0 disables the check; stored expiry dates are kept and apply again if a non-zero value is set later. To start afresh after enabling or re-enabling, delete all API keys. While this setting is non-zero, a new API key can only be created from the web interface, not with an API request.
 
 ### disclose
 
