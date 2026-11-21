@@ -116,14 +116,16 @@ $(function() {
     $('[data-recipients-enabled=""] [data-action="add_recipient"]').addClass('disabled');
 
     $('[data-recipients-enabled="1"] [data-action="add_recipient"]').on('click', function(event) {
-        var id = $(this).closest('[data-transfer]').attr('data-id');
+        var tr = $(this).closest('[data-transfer]');
+        var id = tr.attr('data-id');
         if(!id || isNaN(id)) return;
         event.stopPropagation();
 
         var recipients = [];
-        $('.transfer_details[data-id="' + id + '"] .recipients .recipient').each(function() {
-            recipients.push($(this).attr('data-email'));
-        });
+        var recipients_attr = tr.attr('data-recipients');
+        if (recipients_attr) {
+            recipients = recipients_attr.split(',');
+        }
 
         var prompt = filesender.ui.promptEmailMany(lang.tr('enter_to_email'), function(input) {
             $('p.error', this).remove();

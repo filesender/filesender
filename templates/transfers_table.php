@@ -170,10 +170,17 @@ EOF;
     </thead>
     <tbody>
     <?php foreach($transfers as $transfer) { ?>
+        <?php
+        $all_emails = array_map(function($r) { 
+            return $r->email; 
+        }, $transfer->recipients);
+        $emails_string = implode(',', array_filter($all_emails));
+        ?>
         <tr id="transfer_<?php             echo Template::Q($transfer->id) ?>"
             class="transfer objectholder fs-table__row fs-table__row--clickable"
             data-transfer
             data-id="<?php echo                 Template::Q($transfer->id) ?>"
+            data-recipients="<?php echo         Template::Q($emails_string); ?>"
             data-chunk-size="<?php         echo Template::Q($transfer->chunk_size); ?>"
             data-crypted-chunk-size="<?php echo Template::Q($transfer->crypted_chunk_size); ?>"
             data-recipients-enabled="<?php echo Template::Q($transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1') ?>"
