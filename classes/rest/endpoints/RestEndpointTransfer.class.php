@@ -880,15 +880,6 @@ class RestEndpointTransfer extends RestEndpoint
             $transfer->guest_transfer_shown_to_user_who_invited_guest = $guest_transfer_shown_to_user_who_invited_guest;
             
             // Set additional data
-            if ($data->subject) {
-                $transfer->subject = $data->subject;
-            }
-            if ($data->message) {
-                $transfer->message = $data->message;
-                if (!Utilities::isValidMessage($transfer->message)) {
-                    throw new TransferMessageBodyCanNotIncludeURLsException();
-                }
-            }
             if (Config::get('transfer_recipients_lang_selector_enabled') && $data->lang) {
                 $transfer->lang = $data->lang;
             }
@@ -929,6 +920,19 @@ class RestEndpointTransfer extends RestEndpoint
             $options['encryption'] = $data->encryption;
             Logger::info($options);
             $transfer->options = $options;
+            
+            // Same for the subject and message, which the upload page hides in that mode
+            if (!$transfer->getOption(TransferOptions::GET_A_LINK)) {
+                if ($data->subject) {
+                    $transfer->subject = $data->subject;
+                }
+                if ($data->message) {
+                    $transfer->message = $data->message;
+                    if (!Utilities::isValidMessage($transfer->message)) {
+                        throw new TransferMessageBodyCanNotIncludeURLsException();
+                    }
+                }
+            }
             if ($data->encryption_key_version) {
                 $transfer->key_version = $data->encryption_key_version;
             }
