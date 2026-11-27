@@ -118,3 +118,26 @@ class AuthRemoteUserRejectedException extends DetailedException
         );
     }
 }
+
+/**
+ * Remote user's API secret has expired
+ *
+ * Thrown when auth_remote_user_secret_max_age_days is non-zero and the
+ * user has not logged in to the web interface within that many days.
+ */
+class AuthRemoteUserSecretExpiredException extends DetailedException
+{
+    /**
+     * Constructor
+     *
+     * @param int $userid id of the user whose secret has expired
+     * @param int $expires UNIX timestamp of the expiry
+     */
+    public function __construct($userid, $expires)
+    {
+        parent::__construct(
+            'auth_remote_user_secret_expired', // Message to give to the user
+            array('userid' => $userid, 'expires' => $expires) // Details to log
+        );
+    }
+}

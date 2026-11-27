@@ -159,7 +159,26 @@ class AuthRemote
             if ($received_signature !== $signature) {
                 throw new AuthRemoteSignatureCheckFailedException($signed, $secret, $received_signature, $signature);
             }
-            
+
+            // Reject expired user API secrets. This is checked only after a
+            // valid signature, so unsigned requests learn nothing about the
+            // state of a key. Expired secrets are kept; the owner's next web
+            // login extends them (see Auth::user_protected()).
+            // Remote applications (auth_remote_applications) sign with their
+            // own secret from the configuration, which has no expiry; this
+            // check applies only to the personal API secrets of users.
+            if (!$application) {
+                if ($user->authSecretIsExpired()) {
+                    throw new AuthRemoteUserSecretExpiredException($user->id, $user->auth_secret_expires);
+                }
+
+                // A secret created before expiry was enabled gets its expiry
+                // date on first use; save at once, as this happens once per key
+                if ($user->authSecretEnsureExpiry()) {
+                    $user->save();
+                }
+            }
+
             // Register admin level if asked for and enabled
             if ($application) {
                 self::$isAdmin = $application->isAdmin;

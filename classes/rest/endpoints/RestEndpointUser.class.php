@@ -308,6 +308,7 @@ END;
      *
      * @throws RestAuthenticationRequiredException
      * @throws RestOwnershipRequiredException
+     * @throws RestAuthSecretCreateWebOnlyException
      */
     public function put($id = null)
     {
@@ -366,6 +367,16 @@ END;
             }
         }
         if( $data->apisecretcreate ) {
+            // While API secrets expire, a new one may only be created from the
+            // web interface, so that continued API access always depends on a
+            // recent web login. The API does not currently return a newly
+            // created secret, so a client could not use one anyway; this check
+            // keeps the guarantee that API calls cannot renew the secret without
+            // logging in to the web interface, even if the API is modified in
+            // the future.
+            if (User::getAuthSecretMaxAgeDays() && !Auth::isSP()) {
+                throw new RestAuthSecretCreateWebOnlyException();
+            }
             $user->authSecretCreate();
         }
         if( $data->apisecretdelete ) {

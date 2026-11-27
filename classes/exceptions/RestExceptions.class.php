@@ -129,6 +129,22 @@ class RestAuthenticationRequiredException extends RestException
 }
 
 /**
+ * A new API secret was requested with an API request while
+ * auth_remote_user_secret_max_age_days is non-zero; API secrets can then
+ * only be created from the profile page of the web interface
+ */
+class RestAuthSecretCreateWebOnlyException extends RestException
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct('rest_auth_secret_create_web_only', 403);
+    }
+}
+
+/**
  * REST roundtrip tokens to not match expected value
  */
 class RestRoundTripTokensInvalidException extends RestException

@@ -251,6 +251,22 @@ class Auth
                     }
                 }
                 
+                // A web (SP) login proves the user can still use the service,
+                // so extend their API secret to N days from now
+                // (auth_remote_user_secret_max_age_days). recordActivity()
+                // saves at most once an hour, so the stored expiry may be up
+                // to an hour short of N days; save at once only if the secret
+                // had no expiry yet or had already expired, so that API access
+                // works again immediately.
+                if (self::isSP()) {
+                    $expires_before = self::$user->auth_secret_expires;
+                    if (self::$user->authSecretExtend()) {
+                        if (!$expires_before || $expires_before <= time()) {
+                            $forceSave = true;
+                        }
+                    }
+                }
+
                 self::$user->recordActivity($forceSave); // Saves preferences and all above changes
             }
         }

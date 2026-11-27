@@ -70,6 +70,7 @@ $default = array(
     'auth_sp_idp_metadata_to_capture_frequency' => 0, // disabled.
 
     'auth_remote_user_autogenerate_secret' => false,
+    'auth_remote_user_secret_max_age_days' => 0, // API keys of remote users expire this many days after the user's last web login; 0 disables expiry
     'auth_remote_signature_algorithm' => 'sha1',
 
     'auth_warn_session_expired' => false,

@@ -378,6 +378,7 @@ EOF;
 
                     <?php
                         $tt = 0;
+                        $expiry_info = '';
                         $id = 'auth_secret';
 
                         if($page[$id]) {
@@ -388,6 +389,19 @@ EOF;
                             } else {
                                 $tt = Lang::tr('you_generated_this_auth_secret_at')->r('datetime', $v);
                             }
+
+                            // Expiry of the API secret (auth_remote_user_secret_max_age_days).
+                            // This page view has just extended the secret (see
+                            // Auth::user_protected()), so it is always valid here; show
+                            // when it will expire unless the user logs in again.
+                            $max_age_days = User::getAuthSecretMaxAgeDays();
+                            if ($max_age_days && $value) {
+                                $expiry_info = Lang::tr('auth_secret_expires_at')
+                                                   ->r('datetime', Auth::user()->auth_secret_expires_formatted)
+                                             .'<br>'
+                                             .Lang::tr('auth_secret_validity_info')->r('days', $max_age_days);
+                            }
+
                             $info['key'] = 'auth_secret';
                             //                echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
                         }
@@ -403,7 +417,7 @@ EOF;
                                 <h3>{tr:api_secret}</h3>
 
                                 <?php if($tt) { echo "<p>$tt</p>"; } ?>
-
+                                <?php if($expiry_info) { echo "<p>$expiry_info</p>"; } ?>
                                 <?php
                                 if ($value) {
                                     echo <<<EOT

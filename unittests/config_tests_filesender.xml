@@ -45,6 +45,7 @@
       <!--            <file>tests/report/ReportTest.php</file>        <! - Failed -->
       <!-- Failed -->
       <!-- Success -->
+      <file>tests/user/UserAuthSecretExpiryTest.php</file>
     </testsuite>
     <testsuite name="t">
       <file>tests/file/FileTest.php</file>
