@@ -171,7 +171,7 @@ EOF;
     <tbody>
     <?php foreach($transfers as $transfer) { ?>
         <tr id="transfer_<?php             echo Template::Q($transfer->id) ?>"
-            class="transfer objectholder fs-table__row fs-table__row--clickable"
+            class="transfer objectholder fs-table__row fs-table__row--clickable transfer_details"
             data-transfer
             data-id="<?php echo                 Template::Q($transfer->id) ?>"
             data-chunk-size="<?php         echo Template::Q($transfer->chunk_size); ?>"
@@ -202,14 +202,15 @@ EOF;
                 </td>
             <?php } ?>
 
-            <td data-label="{tr:recipients}">
+            <td class="recipients" data-label="{tr:recipients}">
                 <?php
                 $items = array();
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
                     if(in_array($recipient->email, Auth::user()->email_addresses)) {
                         $items[] = '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
                     } else if($recipient->email) {
-                        $items[] = '<a href="mailto:'.Template::sanitizeOutputEmail($recipient->email).'">'.Template::replaceTainted($recipient->identity).'</a>';
+                        $semail = Template::sanitizeOutputEmail($recipient->email);
+                        $items[] = '<a class="recipient" data-email="'.$semail.'" href="mailto:'.$semail.'">'.Template::replaceTainted($recipient->identity).'</a>';
                     } else {
                         $items[] = '<abbr title="'.Lang::tr('anonymous_details').'">'.Lang::tr('anonymous').'</abbr>';
                     }
